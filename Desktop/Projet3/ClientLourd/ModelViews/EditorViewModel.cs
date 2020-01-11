@@ -66,14 +66,10 @@ namespace ClientLourd.ModelViews
 
             Traits = editeur.traits;
 
-            // Pour chaque commande, on effectue la liaison avec des méthodes du modèle.            
-            Empiler = new RelayCommand<object>(editeur.Empiler, editeur.PeutEmpiler);
-            Depiler = new RelayCommand<object>(editeur.Depiler, editeur.PeutDepiler);
             // Pour les commandes suivantes, il est toujours possible des les activer.
             // Donc, aucune vérification de type Peut"Action" à faire.
             ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
             ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
-            Reinitialiser = new RelayCommand<object>(editeur.Reinitialiser);
         }
 
 

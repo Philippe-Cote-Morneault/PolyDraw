@@ -45,16 +45,5 @@ namespace ClientLourd.Views
             Point p = e.GetPosition(surfaceDessin);
             textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
-
-        private void DupliquerSelection(object sender, RoutedEventArgs e)
-        {
-            surfaceDessin.CopySelection();
-            surfaceDessin.Paste();
-        }
-
-        private void SupprimerSelection(object sender, RoutedEventArgs e) => surfaceDessin.CutSelection();
-
-
-
     }
 }
