@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\ced\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\ced\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Projet3.2040247890.00" t="ExcludeRecursive" />
+    <e p="C:\Users\ced\Desktop\Projet3\log3900\Desktop\Projet3" t="IncludeFlat">
+      <e p="ClientLourd" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ClientLourd.csproj" t="IncludeRecursive" />
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="Editor.cs" t="Include" />
+          <e p="ModelBase.cs" t="Include" />
+        </e>
+        <e p="ModelViews" t="Include">
+          <e p="EditorViewModel.cs" t="Include" />
+          <e p="ViewModelBase.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="App.g.cs" t="Include" />
+            <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
+            <e p="MainWindow.g.cs" t="Include" />
+            <e p="Views" t="Include">
+              <e p="Editor.g.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+          <e p="Settings.Designer.cs" t="Include" />
+          <e p="Settings.settings" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="crayon.png" t="Include" />
+          <e p="dupliquer.png" t="Include" />
+          <e p="efface.png" t="Include" />
+          <e p="efface_crayon.png" t="Include" />
+          <e p="lasso.png" t="Include" />
+          <e p="position.png" t="Include" />
+        </e>
+        <e p="Utilities" t="Include">
+          <e p="Commands" t="Include">
+            <e p="RelayCommand.cs" t="Include" />
+          </e>
+          <e p="Converters" t="Include">
+            <e p="BackgroundColorConverter.cs" t="Include" />
+            <e p="BorderConverter.cs" t="Include" />
+            <e p="EditorModeConverter.cs" t="Include" />
+          </e>
+          <e p="Enums" t="Include" />
+        </e>
+        <e p="Views" t="Include">
+          <e p="Editor.xaml" t="Include" />
+          <e p="Editor.xaml.cs" t="Include" />
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Projet3.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>
