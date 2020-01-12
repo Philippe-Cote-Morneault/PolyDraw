@@ -53,12 +53,12 @@ lint:
 			if [ "$$gofmt_output" ]; then \
 				echo "\033[1;33m" \
 				echo "$$gofmt_output"; \
-				echo "\033[31mGofmt failure ❌\033[0m";\
+				echo "\033[31m  Gofmt failure ❌\033[0m";\
 				exit 1; \
 			fi; \
 		fi; \
 	done
-	@echo "\033[92mGofmt success ✅\033[0m"
+	@echo "\033[92m  Gofmt success ✅\033[0m"
 	@echo
 	@echo • Checking golint
 	@output=$$($(GOLINT) ./...); \
@@ -66,10 +66,10 @@ lint:
 		while IFS= read -r line; do \
 			echo "  - \033[1;33m$$line\033[0m"; \
 		done <<< "$$output" ; \
-		echo "\033[31mGolint failure ❌\033[0m"; \
+		echo "\033[31m  Golint failure ❌\033[0m"; \
 		exit 1; \
-	fi; \
-	@echo "\033[Golint success ✅\033[0m";
+	fi;
+	@echo "\033[92m  Golint success ✅\033[0m"
 
 fix-lint:
 	go fmt ./...
