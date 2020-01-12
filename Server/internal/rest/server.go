@@ -3,13 +3,17 @@ package rest
 import (
 	"log"
 	"net/http"
+	"context"
+	"time"
 
 	"github.com/gorilla/mux"
 )
 
 type RestServer struct {
 	Router *mux.Router
+	h *http.Server
 }
+
 
 func (a *RestServer) Initialize() {
 	a.Router = mux.NewRouter()
@@ -18,8 +22,16 @@ func (a *RestServer) Initialize() {
 
 // Run the app on it's router
 func (a *RestServer) Run(host string) {
+	a.h = &http.Server{Addr: host, Handler: a.Router}
+
 	log.Printf("Server is starting on %s", host)
-	log.Fatal(http.ListenAndServe(host, a.Router))
+	log.Fatal(a.h.ListenAndServe())
+}
+
+func (a *RestServer) Shutdown() {
+	log.Println("\nShutting down the REST API server...")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	a.h.Shutdown(ctx)
 }
 
 type RequestHandlerFunction func(w http.ResponseWriter, r *http.Request)
