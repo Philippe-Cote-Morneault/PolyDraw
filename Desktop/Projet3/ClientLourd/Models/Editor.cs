@@ -33,7 +33,6 @@ namespace ClientLourd.Models
             get { return pointeSelectionnee; }
             set
             {
-                OutilSelectionne = "crayon";
                 pointeSelectionnee = value;
                 NotifyPropertyChanged();
             }
@@ -49,7 +48,6 @@ namespace ClientLourd.Models
             set
             {
                 couleurSelectionnee = value;
-                OutilSelectionne = "crayon";
                 NotifyPropertyChanged();
             }
         }
@@ -64,39 +62,8 @@ namespace ClientLourd.Models
             set
             {
                 tailleTrait = value;
-                OutilSelectionne = "crayon";
                 NotifyPropertyChanged();
             }
-        }
-
-
-        // S'il y a au moins 1 trait sur la surface, il est possible d'exécuter Empiler.
-        public bool PeutEmpiler(object o) => (traits.Count > 0);
-        // On retire le trait le plus récent de la surface de dessin et on le place sur une pile.
-        public void Empiler(object o)
-        {
-            try
-            {
-                Stroke trait = traits.Last();
-                traitsRetires.Add(trait);
-                traits.Remove(trait);
-            }
-            catch { }
-
-        }
-
-        // S'il y a au moins 1 trait sur la pile de traits retirés, il est possible d'exécuter Depiler.
-        public bool PeutDepiler(object o) => (traitsRetires.Count > 0);
-        // On retire le trait du dessus de la pile de traits retirés et on le place sur la surface de dessin.
-        public void Depiler(object o)
-        {
-            try
-            {
-                Stroke trait = traitsRetires.Last();
-                traits.Add(trait);
-                traitsRetires.Remove(trait);
-            }
-            catch { }
         }
 
         // On assigne une nouvelle forme de pointe passée en paramètre.
@@ -106,7 +73,6 @@ namespace ClientLourd.Models
         public void ChoisirOutil(string outil) => OutilSelectionne = outil;
 
         // On vide la surface de dessin de tous ses traits.
-        public void Reinitialiser(object o) => traits.Clear();
 
     }
 }
