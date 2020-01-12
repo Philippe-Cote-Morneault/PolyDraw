@@ -11,7 +11,7 @@ BUILD_HASH = $(shell git rev-parse HEAD)
 
 DIST_ROOT=dist
 PWD = $(shell pwd)
-DOCKERREGISTRY = log3900.azurecr.io
+DOCKERREGISTRY = registry.gitlab.com/jigsawcorp/log3900
 
 ifeq ($(RELEASE), True)
 DOCKERNAME = $(DOCKERREGISTRY)/server
