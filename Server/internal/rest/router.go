@@ -6,7 +6,6 @@ import (
 
 // setRouters sets the all required routers
 func (a *RestServer) setRouters() {
-	// Routing for handling the projects
 	a.Get("/hello", a.handleRequest(api.GetHello))
 	a.Get("/hello/{title}", a.handleRequest(api.GetHello))
 }
