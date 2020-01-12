@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (	
+	"gitlab.com/jigsawcorp/log3900/internal/rest"
+)
+
 
 func main() {
-	fmt.Println("hello world")
+	restServer := &rest.RestServer{}
+	restServer.Initialize()
+	restServer.Run(":3000")
 }
