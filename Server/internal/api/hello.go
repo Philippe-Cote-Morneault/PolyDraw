@@ -1,10 +1,11 @@
 package api
 
 import (
+	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 	"net/http"
 )
 
 func GetHello(w http.ResponseWriter, r *http.Request) {
 	message := map[string]int{"apple": 5, "lettuce": 7}
-	respondJSON(w, http.StatusOK, message)
+	rbody.JSON(w, http.StatusOK, message)
 }
