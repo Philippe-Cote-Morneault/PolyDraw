@@ -6,7 +6,7 @@ GOARCH ?= $(shell go env GOARCH)
 GOFLAGS ?= $(GOFLAGS:) -mod=vendor
 LDFLAGS = -s -w
 GO = go
-DOCKERNAME = log3900-server
+DOCKERNAME = log3900.azurecr.io/server
 BUILD_HASH = $(shell git rev-parse HEAD)
 
 DIST_ROOT=dist
@@ -27,6 +27,8 @@ endif
 package: build-linux build/Dockerfile
 	docker build -t $(DOCKERNAME) -f build/Dockerfile .
 
+deploy: package
+	docker push $(DOCKERNAME)
 clean:
 	go clean ./...
 	rm -rf $(DIST_ROOT)/
