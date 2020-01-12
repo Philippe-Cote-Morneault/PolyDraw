@@ -14,7 +14,7 @@ Server lint:
         - master
         - release
 Sever build:
-    image: log3900.azurecr.io/server-ci:latest
+    image: registry.gitlab.com/jigsawcorp/log3900/server-ci
     cache:
       paths:
         - /go/
