@@ -99,7 +99,7 @@
             </StackPanel>
         </Border>
 
-        <Grid DockPanel.Dock="Left" Margin="0,1,0,0">
+        <Grid DockPanel.Dock="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Name="colonne" Width="550" />
                 <ColumnDefinition Width="6" />
@@ -108,15 +108,15 @@
                 <RowDefinition Name="ligne" Height="310" />
                 <RowDefinition Height="6" />
             </Grid.RowDefinitions>
-            <Thumb Name="horizontal" Grid.Row="0" Grid.Column="1" Background="White" 
+            <Thumb Name="horizontal" Grid.Row="0" Grid.Column="1" Background="Red" 
                       Width="6" Height="6" DragDelta="GlisserMouvementRecu" 
                       DragStarted="GlisserCommence" DragCompleted="GlisserTermine"
                       />
-            <Thumb Name="diagonal" Grid.Row="1" Grid.Column="1" Background="White" 
+            <Thumb Name="diagonal" Grid.Row="1" Grid.Column="1" Background="Red" 
                       Width="6" Height="6" DragDelta="GlisserMouvementRecu" 
                       DragStarted="GlisserCommence" DragCompleted="GlisserTermine"
                       />
-            <Thumb Name="vertical" Grid.Row="1" Grid.Column="0" Background="White" 
+            <Thumb Name="vertical" Grid.Row="1" Grid.Column="0" Background="Red" 
                       Width="6" Height="6" DragDelta="GlisserMouvementRecu" 
                       DragStarted="GlisserCommence" DragCompleted="GlisserTermine"
                       />

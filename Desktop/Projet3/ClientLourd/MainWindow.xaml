@@ -8,10 +8,60 @@
         xmlns:local="clr-namespace:ClientLourd"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <DockPanel>
-        <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
-            <TextBlock HorizontalAlignment="Center" Text="Apps"/>
-        </materialDesign:ColorZone>
-        <views:Editor/>
-    </DockPanel>
+    <materialDesign:DrawerHost>
+        <DockPanel>
+            <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <materialDesign:Badged Badge="5" BadgeBackground="Red"> 
+                        <Button
+                            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                            CommandParameter="{x:Static Dock.Right}">
+                            <materialDesign:PackIcon Kind="Chat"  Foreground="White"/>
+                        </Button>
+                    </materialDesign:Badged>
+                </StackPanel>
+            </materialDesign:ColorZone>
+            <views:Editor/>
+        </DockPanel>
+        <materialDesign:DrawerHost.RightDrawerContent>
+            <DockPanel Width="300">
+                <DockPanel  DockPanel.Dock="Bottom">
+                    <Button DockPanel.Dock="Right" >
+                        <materialDesign:PackIcon VerticalAlignment="Center" Kind="Send"></materialDesign:PackIcon>
+                    </Button>
+                    <TextBox
+                        Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                        VerticalAlignment="Top"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto"
+                        materialDesign:HintAssist.Hint="Enter your message"/>
+                </DockPanel>
+                <TabControl DockPanel.Dock="Top">
+                    <TabItem>
+                        <TabItem.Header>
+                            <TextBlock Text="Joe"></TextBlock>
+                        </TabItem.Header>
+                        <ListView>
+                                 <ListViewItem HorizontalAlignment="Left">
+                                     <TextBlock Text="Yo !"/>
+                                 </ListViewItem>
+                                 <ListViewItem HorizontalAlignment="Right">
+                                     <TextBlock Text="Hi !"/>
+                                 </ListViewItem>
+                             </ListView>    
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <TextBlock Text="Joe"></TextBlock>
+                        </TabItem.Header>
+                        <ListView>
+                                 <ListViewItem HorizontalAlignment="Left">
+                                     <TextBlock Text="Hello !"/>
+                                 </ListViewItem>
+                             </ListView>    
+                    </TabItem>
+                </TabControl>
+            </DockPanel>
+        </materialDesign:DrawerHost.RightDrawerContent>
+    </materialDesign:DrawerHost>
 </Window>
