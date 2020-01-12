@@ -9,14 +9,14 @@ server:
   lint:
       stage: lint
       script:
-          - make lint
+          - cd Server && make lint
       only:
           - master
           - release
   build:
       stage: build
       script:
-          - make package
+          - cd Server && make build
       only:
           - master
           - release
