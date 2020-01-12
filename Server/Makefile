@@ -1,4 +1,4 @@
-.PHONY: build clean run
+.PHONY: build clean run lint lint-fix
 
 GOPATH ?= $(shell go env GOPATH)
 GOFLAGS ?= $(GOFLAGS:) -mod=vendor
@@ -18,3 +18,21 @@ clean:
 
 run: build
 	./$(DIST_ROOT)server
+
+lint:
+	@for package in $$(go list ./...); do \
+		echo "Checking "$$package; \
+		files=$$(go list -f '{{range .GoFiles}}{{$$.Dir}}/{{.}} {{end}}' $$package); \
+		if [ "$$files" ]; then \
+			gofmt_output=$$(gofmt -d -s $$files 2>&1); \
+			if [ "$$gofmt_output" ]; then \
+				echo "$$gofmt_output"; \
+				echo "Gofmt failure"; \
+				exit 1; \
+			fi; \
+		fi; \
+	done
+	@echo Gofmt success
+
+lint-fix:
+	go fmt ./...
