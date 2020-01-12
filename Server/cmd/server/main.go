@@ -7,12 +7,12 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
 )
 
-var restServer *rest.RestServer
+var restServer *rest.Server
 
 func main() {
 	graceful.CatchSigterm(onSIGTERM)
 
-	restServer = &rest.RestServer{}
+	restServer = &rest.Server{}
 
 	hRestServer := make(chan bool)
 	go func() {

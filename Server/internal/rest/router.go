@@ -8,7 +8,7 @@ import (
 )
 
 // setRouters sets the all required routers
-func (a *RestServer) setRouters() {
+func (a *Server) setRouters() {
 	a.Get("/hello", a.handleRequest(api.GetHello))
 	a.Get("/hello/{title}", a.handleRequest(api.GetHello))
 }

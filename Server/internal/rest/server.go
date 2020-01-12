@@ -9,12 +9,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type RestServer struct {
+// Server represents a restserver
+type Server struct {
 	Router *mux.Router
 	h      *http.Server
 }
 
-func (a *RestServer) Initialize() {
+// Initialize method to call when creating a new rest server
+func (a *Server) Initialize() {
 	a.Router = mux.NewRouter()
 	a.Router.Use(logMiddleware)
 	a.setRouters()
@@ -24,7 +26,7 @@ func (a *RestServer) Initialize() {
 }
 
 // Run the app on it's router
-func (a *RestServer) Run(host string) {
+func (a *Server) Run(host string) {
 	a.h = &http.Server{Addr: host, Handler: a.Router}
 
 	log.Printf("[REST] -> Server is started on %s", host)
@@ -32,33 +34,39 @@ func (a *RestServer) Run(host string) {
 }
 
 // Shutdown handler to close the server when a signal is catched
-func (a *RestServer) Shutdown() {
+func (a *Server) Shutdown() {
 	log.Println("[REST] -> Shutting down the REST API server...")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	a.h.Shutdown(ctx)
 }
 
+// RequestHandlerFunction type to use for various http verbs
 type RequestHandlerFunction func(w http.ResponseWriter, r *http.Request)
 
-func (a *RestServer) handleRequest(handler RequestHandlerFunction) http.HandlerFunc {
+func (a *Server) handleRequest(handler RequestHandlerFunction) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		handler(w, r)
 	}
 }
 
 // Functions that can be called by the various HTTP requests types
-func (a *RestServer) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
+
+//Get handler for method GET
+func (a *Server) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("GET")
 }
 
-func (a *RestServer) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
+//Post handler for method POST
+func (a *Server) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("POST")
 }
 
-func (a *RestServer) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
+//Put handler for method PUT
+func (a *Server) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("PUT")
 }
 
-func (a *RestServer) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
+//Delete handler for method DELETE
+func (a *Server) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("DELETE")
 }
