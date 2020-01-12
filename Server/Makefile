@@ -1,23 +1,33 @@
 .PHONY: build clean run lint fix-lint
 
 GOPATH ?= $(shell go env GOPATH)
+GOOS ?= $(shell go env GOOS)
+GOARCH ?= $(shell go env GOARCH)
 GOFLAGS ?= $(GOFLAGS:) -mod=vendor
-GO=go
+LDFLAGS = -s -w
+GO = go
 BUILD_HASH = $(shell git rev-parse HEAD)
 
-DIST_ROOT=dist/
+DIST_ROOT=dist
 PWD = $(shell pwd)
 
 build:
-	GOBIN=$(PWD)/$(DIST_ROOT) \
-	$(GO) install ./... 
+	$(GO) build -i -o $(DIST_ROOT)/server ./cmd/server
 
+build-linux: build
+ifneq ($(GOOS)/$(GOARCH), linux/amd64)
+	GOOS=linux \
+	GOARCH=amd64 \
+	$(GO) build -i -ldflags="$(LDFLAGS)" -o $(DIST_ROOT)/server-linux ./cmd/server
+else
+	cp $(DIST_ROOT)/server $(DIST_ROOT)/server-linux
+endif
 clean:
 	go clean ./...
-	rm -rf $(DIST_ROOT)
+	rm -rf $(DIST_ROOT)/
 
 run: build
-	./$(DIST_ROOT)server
+	./$(DIST_ROOT)/server
 
 lint:
 	@for package in $$(go list ./...); do \
