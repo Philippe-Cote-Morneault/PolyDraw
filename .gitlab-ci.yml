@@ -5,22 +5,28 @@ stages:
 Server lint:
     image: registry.gitlab.com/jigsawcorp/log3900/server-ci
     cache:
+      key: ${CI_COMMIT_REF_SLUG}
       paths:
-        - /go
+        - .cache
     stage: lint
     script:
-        - cd Server && make lint
+      - export GOPATH="$CI_PROJECT_DIR/.cache"
+      - ln -s /go/ .cache || true
+      - cd Server && make lint
     only:
         - master
         - release
 Sever build:
     image: registry.gitlab.com/jigsawcorp/log3900/server-ci
     cache:
+      key: ${CI_COMMIT_REF_SLUG}
       paths:
-        - /go
+        - .cache
     stage: build
     script:
-        - cd Server && make build
+      - export GOPATH="$CI_PROJECT_DIR/.cache"
+      - ln -s /go/ .cache || true
+      - cd Server && make build
     only:
         - master
         - release
