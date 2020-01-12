@@ -16,7 +16,11 @@ type RestServer struct {
 
 func (a *RestServer) Initialize() {
 	a.Router = mux.NewRouter()
+	a.Router.Use(logMiddleware)
 	a.setRouters()
+
+	// Set 404 handle and call logMiddleware
+	a.Router.NotFoundHandler = logMiddleware(http.HandlerFunc(defaultRoute))
 }
 
 // Run the app on it's router
@@ -42,7 +46,6 @@ func (a *RestServer) handleRequest(handler RequestHandlerFunction) http.HandlerF
 }
 
 // Functions that can be called by the various HTTP requests types
-
 func (a *RestServer) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("GET")
 }
