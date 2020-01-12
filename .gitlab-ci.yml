@@ -6,7 +6,7 @@ Server lint:
     image: registry.gitlab.com/jigsawcorp/log3900/server-ci
     cache:
       paths:
-        - /go/
+        - /go
     stage: lint
     script:
         - cd Server && make lint
@@ -17,7 +17,7 @@ Sever build:
     image: registry.gitlab.com/jigsawcorp/log3900/server-ci
     cache:
       paths:
-        - /go/
+        - /go
     stage: build
     script:
         - cd Server && make build
