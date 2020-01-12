@@ -1,4 +1,4 @@
-.PHONY: build clean run lint lint-fix
+.PHONY: build clean run lint fix-lint
 
 GOPATH ?= $(shell go env GOPATH)
 GOFLAGS ?= $(GOFLAGS:) -mod=vendor
@@ -34,5 +34,5 @@ lint:
 	done
 	@echo Gofmt success
 
-lint-fix:
+fix-lint:
 	go fmt ./...
