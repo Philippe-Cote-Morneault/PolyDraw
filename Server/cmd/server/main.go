@@ -13,6 +13,7 @@ func main() {
 	graceful.CatchSigterm(onSIGTERM)
 
 	restServer = &rest.RestServer{}
+
 	hRestServer := make(chan bool)
 	go func() {
 		restServer.Initialize()
@@ -20,7 +21,7 @@ func main() {
 		hRestServer <- true
 	}()
 
-	log.Printf("REST API server launched!")
+	log.Printf("Server is starting jobs!")
 
 	//TODO Launch other servers and handles
 

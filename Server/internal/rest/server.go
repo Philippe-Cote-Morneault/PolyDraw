@@ -27,12 +27,13 @@ func (a *RestServer) Initialize() {
 func (a *RestServer) Run(host string) {
 	a.h = &http.Server{Addr: host, Handler: a.Router}
 
-	log.Printf("Server is starting on %s", host)
-	log.Fatal(a.h.ListenAndServe())
+	log.Printf("[REST] -> Server is started on %s", host)
+	log.Fatal("[REST] -> ", a.h.ListenAndServe())
 }
 
+// Shutdown handler to close the server when a signal is catched
 func (a *RestServer) Shutdown() {
-	log.Println("\nShutting down the REST API server...")
+	log.Println("[REST] -> Shutting down the REST API server...")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	a.h.Shutdown(ctx)
 }
