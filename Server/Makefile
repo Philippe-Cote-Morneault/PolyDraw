@@ -11,11 +11,12 @@ BUILD_HASH = $(shell git rev-parse HEAD)
 
 DIST_ROOT=dist
 PWD = $(shell pwd)
+DOCKERREGISTRY = log3900.azurecr.io
 
 ifeq ($(RELEASE), True)
-DOCKERNAME = log3900.azurecr.io/server
+DOCKERNAME = $(DOCKERREGISTRY)/server
 else
-DOCKERNAME = log3900.azurecr.io/server-dev
+DOCKERNAME = $(DOCKERREGISTRY)/server-dev
 endif
 
 build:
@@ -30,8 +31,8 @@ else
 	cp $(DIST_ROOT)/server $(DIST_ROOT)/server-linux
 endif
 
-package: build-linux build/Dockerfile
-	docker build -t $(DOCKERNAME) -f build/Dockerfile .
+package: build-linux build/server/Dockerfile
+	docker build -t $(DOCKERNAME) -f build/server/Dockerfile .
 
 deploy: package
 	docker push $(DOCKERNAME)
@@ -73,3 +74,9 @@ lint:
 
 fix-lint:
 	go fmt ./...
+
+ci-package: build/ci/Dockerfile
+	docker build -t $(DOCKERREGISTRY)/server-ci -f build/ci/Dockerfile .
+
+ci-deploy: ci-package
+	docker push $(DOCKERREGISTRY)/server-ci
