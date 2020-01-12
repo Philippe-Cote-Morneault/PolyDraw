@@ -1,5 +1,5 @@
 .PHONY: build clean run lint fix-lint package
-
+SHELL = bash
 GOPATH ?= $(shell go env GOPATH)
 GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
@@ -52,25 +52,25 @@ lint:
 		if [ "$$files" ]; then \
 			gofmt_output=$$(gofmt -d -s $$files 2>&1); \
 			if [ "$$gofmt_output" ]; then \
-				echo "\033[1;33m" \
+				echo -e "\033[1;33m" \
 				echo "$$gofmt_output"; \
-				echo "\033[31m  Gofmt failure ❌\033[0m";\
+				echo -e "\033[31m  Gofmt failure ❌\033[0m";\
 				exit 1; \
 			fi; \
 		fi; \
 	done
-	@echo "\033[92m  Gofmt success ✅\033[0m"
+	@echo -e "\033[92m  Gofmt success ✅\033[0m"
 	@echo
 	@echo • Checking golint
 	@output=$$($(GOLINT) ./...); \
 	if [ "$$output" ]; then \
 		while IFS= read -r line; do \
-			echo "  - \033[1;33m$$line\033[0m"; \
+			echo -e "  - \033[1;33m$$line\033[0m"; \
 		done <<< "$$output" ; \
-		echo "\033[31m  Golint failure ❌\033[0m"; \
+		echo -e "\033[31m  Golint failure ❌\033[0m"; \
 		exit 1; \
 	fi;
-	@echo "\033[92m  Golint success ✅\033[0m"
+	@echo -e "\033[92m  Golint success ✅\033[0m"
 
 fix-lint:
 	go fmt ./...
