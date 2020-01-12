@@ -1,22 +1,26 @@
-server:
-  image: log3900.azurecr.io/server-ci:latest
-  stages:
-    - build
-    - lint
-  cache:
-    paths:
-      - /go/
-  lint:
-      stage: lint
-      script:
-          - cd Server && make lint
-      only:
-          - master
-          - release
-  build:
-      stage: build
-      script:
-          - cd Server && make build
-      only:
-          - master
-          - release
+stages:
+  - build
+  - lint
+
+Server lint:
+    image: log3900.azurecr.io/server-ci:latest
+    cache:
+      paths:
+        - /go/
+    stage: lint
+    script:
+        - cd Server && make lint
+    only:
+        - master
+        - release
+Sever build:
+    image: log3900.azurecr.io/server-ci:latest
+    cache:
+      paths:
+        - /go/
+    stage: build
+    script:
+        - cd Server && make build
+    only:
+        - master
+        - release
