@@ -38,7 +38,7 @@ namespace ClientLourd.Views
             if (nom == "vertical" || nom == "diagonal") ligne.Height = new GridLength(Math.Max(32, ligne.Height.Value + e.VerticalChange));
         }
 
-        // Pour la gestion de l'affichage de position du pointeur.
+        // Pour la gToolsList_OnSelectionChangedition du pointeur.
         private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
@@ -46,15 +46,18 @@ namespace ClientLourd.Views
             textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 
-        private void DupliquerSelection(object sender, RoutedEventArgs e)
+
+        private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            surfaceDessin.CopySelection();
-            surfaceDessin.Paste();
+            string tool = (ToolsList.SelectedItem as ListBoxItem)?.Tag as string;
+            (DataContext as EditorViewModel)?.ChoisirOutil.Execute(tool);
         }
-
-        private void SupprimerSelection(object sender, RoutedEventArgs e) => surfaceDessin.CutSelection();
-
-
+        
+        private void TipsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string tip = (TipsList.SelectedItem as ListBoxItem)?.Tag as string;
+            (DataContext as EditorViewModel)?.ChoisirPointe.Execute(tip);
+        }
 
     }
 }

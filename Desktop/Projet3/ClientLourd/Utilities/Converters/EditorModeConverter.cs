@@ -18,8 +18,6 @@ namespace ClientLourd.Utilities.Converters
         {
             switch (value)
             {
-                case "lasso":
-                    return InkCanvasEditingMode.Select;
                 case "efface_segment":
                     return InkCanvasEditingMode.EraseByPoint;
                 case "efface_trait":
