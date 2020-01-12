@@ -14,17 +14,15 @@ func main() {
 
 	restServer = &rest.RestServer{}
 	hRestServer := make(chan bool)
-	go func(){
+	go func() {
 		restServer.Initialize()
 		restServer.Run(":3000")
 		hRestServer <- true
 	}()
-	
+
 	log.Printf("REST API server launched!")
 
-	
 	//TODO Launch other servers and handles
-	
 
 	<-hRestServer
 }

@@ -1,9 +1,9 @@
 package rest
 
 import (
+	"context"
 	"log"
 	"net/http"
-	"context"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -11,9 +11,8 @@ import (
 
 type RestServer struct {
 	Router *mux.Router
-	h *http.Server
+	h      *http.Server
 }
-
 
 func (a *RestServer) Initialize() {
 	a.Router = mux.NewRouter()
