@@ -1,4 +1,4 @@
-.PHONY: build clean run lint fix-lint
+.PHONY: build clean run lint fix-lint package
 
 GOPATH ?= $(shell go env GOPATH)
 GOOS ?= $(shell go env GOOS)
@@ -6,6 +6,7 @@ GOARCH ?= $(shell go env GOARCH)
 GOFLAGS ?= $(GOFLAGS:) -mod=vendor
 LDFLAGS = -s -w
 GO = go
+DOCKERNAME = log3900-server
 BUILD_HASH = $(shell git rev-parse HEAD)
 
 DIST_ROOT=dist
@@ -22,6 +23,10 @@ ifneq ($(GOOS)/$(GOARCH), linux/amd64)
 else
 	cp $(DIST_ROOT)/server $(DIST_ROOT)/server-linux
 endif
+
+package: build-linux build/Dockerfile
+	docker build -t $(DOCKERNAME) -f build/Dockerfile .
+
 clean:
 	go clean ./...
 	rm -rf $(DIST_ROOT)/
