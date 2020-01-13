@@ -57,7 +57,6 @@ Server package PROD:
     - export RELEASE=True
     - cd Server && make package
   only:
-    - dev-server
     - master
     - release
 
