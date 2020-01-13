@@ -30,7 +30,7 @@ Server build:
   script:
     - export GOPATH="$CI_PROJECT_DIR/.go"
     - cp -r /go $GOPATH 
-    - cd Server && make build
+    - cd Server && make build-linux
   only:
     - master
     - release
