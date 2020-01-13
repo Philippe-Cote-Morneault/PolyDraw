@@ -1,4 +1,5 @@
-.PHONY: build clean run lint fix-lint package
+.PHONY: build clean run lint fix-lint package race
+
 SHELL = bash
 GOPATH ?= $(shell go env GOPATH)
 GOOS ?= $(shell go env GOOS)
@@ -38,11 +39,14 @@ deploy: package
 	docker push $(DOCKERNAME)
 
 clean:
-	go clean ./...
+	$(GO) clean ./...
 	rm -rf $(DIST_ROOT)/
 
 run: build
 	./$(DIST_ROOT)/server
+
+race:
+	$(GO) run -race ./cmd/server
 
 lint:
 	@echo • Checking gofmt
@@ -73,7 +77,7 @@ lint:
 	@echo -e "\033[92m  Golint success ✅\033[0m"
 
 fix-lint:
-	go fmt ./...
+	$(GO) fmt ./...
 
 ci-package: build/ci/Dockerfile
 	docker build -t $(DOCKERREGISTRY)/server-ci -f build/ci/Dockerfile .
