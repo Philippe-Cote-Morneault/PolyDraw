@@ -1,6 +1,8 @@
 stages:
   - build
   - lint
+  - package
+  - deploy
 
 Server lint:
   image: registry.gitlab.com/jigsawcorp/log3900/server-ci
@@ -30,6 +32,22 @@ Server build:
     - cp -r /go $GOPATH 
     - cd Server && make build
   only:
-      - master
-      - release
-      - dev-server
+    - master
+    - release
+    - dev-server
+
+Server package:
+  tags:
+    - shell
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - export GOPATH="$CI_PROJECT_DIR/.go"
+      - .go
+  stage: package
+  script:
+    - cd Server && make package
+  only:
+    - master
+    - release
+    - dev-server
