@@ -43,11 +43,6 @@ Server build:
 Server package:
   tags:
     - shell
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - export GOPATH="$CI_PROJECT_DIR/.go"
-      - .go
   stage: package
   script:
     - cd Server && make package
