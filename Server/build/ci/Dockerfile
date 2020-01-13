@@ -4,5 +4,6 @@ FROM golang:latest
 # Install golint
 ENV GOPATH /go
 ENV PATH ${GOPATH}/bin:$PATH
-RUN go get -u golang.org/x/lint/golint && mkdir /workdir
+RUN go get -u golang.org/x/lint/golint
+
 WORKDIR /workdir/
