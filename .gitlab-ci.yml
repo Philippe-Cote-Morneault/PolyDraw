@@ -35,6 +35,10 @@ Server build:
     - master
     - release
     - dev-server
+  artifacts:
+    paths:
+      - Server/dist/
+    expire_in: 1 week
 
 Server package:
   tags:
