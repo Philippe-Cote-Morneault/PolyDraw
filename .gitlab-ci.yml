@@ -40,13 +40,43 @@ Server build:
       - Server/dist/
     expire_in: 1 week
 
-Server package:
+Server package DEV:
   tags:
     - shell
   stage: package
   script:
     - cd Server && make package
   only:
+    - dev-server
+
+Server package PROD:
+  tags:
+    - shell
+  stage: package
+  script:
+    - export RELEASE=True
+    - cd Server && make package
+  only:
+    - dev-server
     - master
     - release
+
+Server deploy DEV:
+  tags:
+    - shell
+  stage: deploy
+  script:
+    - cd Server && make deploy
+  only:
     - dev-server
+
+Server deploy PROD:
+  tags:
+    - shell
+  stage: deploy
+  script:
+    - export RELEASE=True
+    - cd Server && make deploy
+  only:
+    - release
+    - master
