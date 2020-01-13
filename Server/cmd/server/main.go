@@ -7,12 +7,11 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
 )
 
-var restServer *rest.Server
-
 func main() {
-	graceful.CatchSigterm(onSIGTERM)
+	restServer := &rest.Server{}
 
-	restServer = &rest.Server{}
+	graceful.Register(restServer.Shutdown, "REST server")
+	graceful.ListenSIG()
 
 	hRestServer := make(chan bool)
 	go func() {
@@ -26,10 +25,4 @@ func main() {
 	//TODO Launch other servers and handles
 
 	<-hRestServer
-}
-
-// Call this function on crtl+c
-// use safe shutdown any process
-func onSIGTERM() {
-	restServer.Shutdown()
 }
