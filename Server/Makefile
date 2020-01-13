@@ -1,4 +1,4 @@
-.PHONY: build clean run lint fix-lint package race
+.PHONY: clean run lint fix-lint race build build-linux
 
 SHELL = bash
 GOPATH ?= $(shell go env GOPATH)
@@ -22,17 +22,17 @@ endif
 
 build:
 	$(GO) build -i -o $(DIST_ROOT)/server ./cmd/server
-
-build-linux: build
+	
+build-linux:
 ifneq ($(GOOS)/$(GOARCH), linux/amd64)
 	GOOS=linux \
 	GOARCH=amd64 \
 	$(GO) build -i -ldflags="$(LDFLAGS)" -o $(DIST_ROOT)/server-linux ./cmd/server
 else
-	cp $(DIST_ROOT)/server $(DIST_ROOT)/server-linux
+	$(GO) build -i -ldflags="$(LDFLAGS)" -o $(DIST_ROOT)/server-linux ./cmd/server
 endif
 
-package: build-linux build/server/Dockerfile
+package: dist/server-linux build/server/Dockerfile
 	docker build -t $(DOCKERNAME) -f build/server/Dockerfile .
 
 deploy: package
