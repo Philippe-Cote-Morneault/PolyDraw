@@ -16,6 +16,8 @@ Server lint:
   only:
       - master
       - release
+      - dev-server
+
 Server build:
   image: registry.gitlab.com/jigsawcorp/log3900/server-ci
   cache:
@@ -30,3 +32,4 @@ Server build:
   only:
       - master
       - release
+      - dev-server
