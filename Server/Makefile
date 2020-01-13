@@ -27,8 +27,10 @@ build-linux:
 ifneq ($(GOOS)/$(GOARCH), linux/amd64)
 	GOOS=linux \
 	GOARCH=amd64 \
+	CGO_ENABLED=0 \
 	$(GO) build -i -ldflags="$(LDFLAGS)" -o $(DIST_ROOT)/server-linux ./cmd/server
 else
+	CGO_ENABLED=0 \
 	$(GO) build -i -ldflags="$(LDFLAGS)" -o $(DIST_ROOT)/server-linux ./cmd/server
 endif
 
