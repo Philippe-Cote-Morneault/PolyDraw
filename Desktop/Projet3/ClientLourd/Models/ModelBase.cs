@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Models
 {
-    abstract class ModelBase : INotifyPropertyChanged
+    public abstract class ModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

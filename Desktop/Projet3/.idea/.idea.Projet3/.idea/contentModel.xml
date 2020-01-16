@@ -14,9 +14,11 @@
         <e p="MainWindow.xaml.cs" t="Include" />
         <e p="Models" t="Include">
           <e p="Editor.cs" t="Include" />
+          <e p="Message.cs" t="Include" />
           <e p="ModelBase.cs" t="Include" />
         </e>
         <e p="ModelViews" t="Include">
+          <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>
@@ -26,7 +28,11 @@
             <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
             <e p="MainWindow.g.cs" t="Include" />
             <e p="Views" t="Include">
+              <e p="Chat.g.cs" t="Include" />
               <e p="Editor.g.cs" t="Include" />
+              <e p="Window" t="Include">
+                <e p="SimpleWindow.g.cs" t="Include" />
+              </e>
             </e>
           </e>
         </e>
@@ -60,6 +66,10 @@
           <e p="Chat.xaml.cs" t="Include" />
           <e p="Editor.xaml" t="Include" />
           <e p="Editor.xaml.cs" t="Include" />
+          <e p="Window" t="Include">
+            <e p="SimpleWindow.xaml" t="Include" />
+            <e p="SimpleWindow.xaml.cs" t="Include" />
+          </e>
         </e>
       </e>
       <e p="packages" t="ExcludeRecursive" />

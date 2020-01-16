@@ -84,7 +84,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Editor.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="ModelViews\ChatViewModel.cs" />
     <Compile Include="ModelViews\EditorViewModel.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ModelViews\ViewModelBase.cs" />

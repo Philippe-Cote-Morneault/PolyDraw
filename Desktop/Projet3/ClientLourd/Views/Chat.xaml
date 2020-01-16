@@ -6,30 +6,12 @@
              xmlns:local="clr-namespace:ClientLourd.Views"
              mc:Ignorable="d">
     <DockPanel MinWidth="300">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <TextBox Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Name="MessageTextBox" />
+            <Button Content="Send" Command="{Binding SendMessageCommand}" CommandParameter="{Binding ElementName=MessageTextBox, Path=Text}"/>
+        </StackPanel>
         <TabControl DockPanel.Dock="Top">
-            <TabItem>
-                <TabItem.Header>
-                    <TextBlock Text="Joe"></TextBlock>
-                </TabItem.Header>
-                <ListView>
-                         <ListViewItem HorizontalAlignment="Left">
-                             <TextBlock Text="Yo !"/>
-                         </ListViewItem>
-                         <ListViewItem HorizontalAlignment="Right">
-                             <TextBlock Text="Hi !"/>
-                         </ListViewItem>
-                     </ListView>    
-            </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <TextBlock Text="Joe"></TextBlock>
-                </TabItem.Header>
-                <ListView>
-                         <ListViewItem HorizontalAlignment="Left">
-                             <TextBlock Text="Hello !"/>
-                         </ListViewItem>
-                     </ListView>    
-            </TabItem>
+            li
         </TabControl>
     </DockPanel>
 </UserControl>

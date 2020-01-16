@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using ClientLourd.ModelViews;
 
 namespace ClientLourd.Views
 {
@@ -7,6 +8,7 @@ namespace ClientLourd.Views
         public Chat()
         {
             InitializeComponent();
+            DataContext = new ChatViewModel();
         }
     }
 }
