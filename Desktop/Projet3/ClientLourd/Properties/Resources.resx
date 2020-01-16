@@ -118,22 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="crayon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\crayon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="blacklogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\blacklogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="dupliquer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dupliquer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="LogoMakr_4YSBb4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LogoMakr_4YSBb4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="efface" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\efface.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="efface_crayon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\efface_crayon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="lasso" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lasso.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="position" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\position.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="LogoMakr_4YSBb41" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LogoMakr_4YSBb4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -39,12 +39,9 @@
           <e p="Settings.settings" t="Include" />
         </e>
         <e p="Resources" t="Include">
-          <e p="crayon.png" t="Include" />
-          <e p="dupliquer.png" t="Include" />
-          <e p="efface.png" t="Include" />
-          <e p="efface_crayon.png" t="Include" />
-          <e p="lasso.png" t="Include" />
-          <e p="position.png" t="Include" />
+          <e p="blacklogo.png" t="Include" />
+          <e p="LogoMakr_4YSBb4.png" t="Include" />
+          <e p="WhiteLogo.png" t="Include" />
         </e>
         <e p="Utilities" t="Include">
           <e p="Commands" t="Include">
@@ -55,9 +52,12 @@
             <e p="BorderConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
           </e>
+          <e p="Dialogs" t="Include" />
           <e p="Enums" t="Include" />
         </e>
         <e p="Views" t="Include">
+          <e p="Chat.xaml" t="Include" />
+          <e p="Chat.xaml.cs" t="Include" />
           <e p="Editor.xaml" t="Include" />
           <e p="Editor.xaml.cs" t="Include" />
         </e>
