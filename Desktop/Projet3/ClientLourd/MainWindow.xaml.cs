@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClientLourd.Utilities.Window;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd
 {
@@ -23,6 +25,14 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            SimpleWindow chatWindow = new SimpleWindow();
+            RightDrawerContent.Children.Clear();
+            chatWindow.MainStackPanel.Children.Add(ChatBox);
+            chatWindow.Show();
         }
     }
 }

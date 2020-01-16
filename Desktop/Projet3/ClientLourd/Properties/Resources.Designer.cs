@@ -63,9 +63,9 @@ namespace ClientLourd.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap crayon {
+        internal static System.Drawing.Bitmap blacklogo {
             get {
-                object obj = ResourceManager.GetObject("crayon", resourceCulture);
+                object obj = ResourceManager.GetObject("blacklogo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace ClientLourd.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dupliquer {
+        internal static System.Drawing.Bitmap LogoMakr_4YSBb4 {
             get {
-                object obj = ResourceManager.GetObject("dupliquer", resourceCulture);
+                object obj = ResourceManager.GetObject("LogoMakr_4YSBb4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,39 +83,9 @@ namespace ClientLourd.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap efface {
+        internal static System.Drawing.Bitmap LogoMakr_4YSBb41 {
             get {
-                object obj = ResourceManager.GetObject("efface", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap efface_crayon {
-            get {
-                object obj = ResourceManager.GetObject("efface_crayon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap lasso {
-            get {
-                object obj = ResourceManager.GetObject("lasso", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap position {
-            get {
-                object obj = ResourceManager.GetObject("position", resourceCulture);
+                object obj = ResourceManager.GetObject("LogoMakr_4YSBb41", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

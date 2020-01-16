@@ -8,60 +8,46 @@
         xmlns:local="clr-namespace:ClientLourd"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <materialDesign:DrawerHost>
+    <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
         <DockPanel>
             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <materialDesign:Badged Badge="5" BadgeBackground="Red"> 
-                        <Button
+                <DockPanel>
+                    <ToggleButton DockPanel.Dock="Left" Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                  HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"/>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignIconForegroundButton}" 
                             Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
                             CommandParameter="{x:Static Dock.Right}">
-                            <materialDesign:PackIcon Kind="Chat"  Foreground="White"/>
-                        </Button>
-                    </materialDesign:Badged>
-                </StackPanel>
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <materialDesign:PackIcon Kind="Chat"/>
+                    </Button>
+                    <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
+                </DockPanel>
             </materialDesign:ColorZone>
             <views:Editor/>
         </DockPanel>
+        
+        
         <materialDesign:DrawerHost.RightDrawerContent>
-            <DockPanel Width="300">
-                <DockPanel  DockPanel.Dock="Bottom">
-                    <Button DockPanel.Dock="Right" >
-                        <materialDesign:PackIcon VerticalAlignment="Center" Kind="Send"></materialDesign:PackIcon>
-                    </Button>
-                    <TextBox
-                        Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-                        VerticalAlignment="Top"
-                        TextWrapping="Wrap"
-                        VerticalScrollBarVisibility="Auto"
-                        materialDesign:HintAssist.Hint="Enter your message"/>
-                </DockPanel>
-                <TabControl DockPanel.Dock="Top">
-                    <TabItem>
-                        <TabItem.Header>
-                            <TextBlock Text="Joe"></TextBlock>
-                        </TabItem.Header>
-                        <ListView>
-                                 <ListViewItem HorizontalAlignment="Left">
-                                     <TextBlock Text="Yo !"/>
-                                 </ListViewItem>
-                                 <ListViewItem HorizontalAlignment="Right">
-                                     <TextBlock Text="Hi !"/>
-                                 </ListViewItem>
-                             </ListView>    
-                    </TabItem>
-                    <TabItem>
-                        <TabItem.Header>
-                            <TextBlock Text="Joe"></TextBlock>
-                        </TabItem.Header>
-                        <ListView>
-                                 <ListViewItem HorizontalAlignment="Left">
-                                     <TextBlock Text="Hello !"/>
-                                 </ListViewItem>
-                             </ListView>    
-                    </TabItem>
-                </TabControl>
+            <DockPanel x:Name="RightDrawerContent">
+                <views:Chat x:Name="ChatBox"/>
             </DockPanel>
         </materialDesign:DrawerHost.RightDrawerContent>
+        
+        <materialDesign:DrawerHost.LeftDrawerContent>
+            <DockPanel>
+                <ToggleButton Margin="16" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" Name="MenuToggleButton"/>
+                <ListView>
+                    <ListViewItem>
+                        <TextBlock Text="bonjour"/>
+                    </ListViewItem>
+                </ListView>
+            </DockPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
     </materialDesign:DrawerHost>
+    
+    
 </Window>
