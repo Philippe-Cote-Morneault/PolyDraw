@@ -27,7 +27,8 @@
                     <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
                 </DockPanel>
             </materialDesign:ColorZone>
-            <views:Editor/>
+            <views:Login/>
+            <!--<views:Editor/>-->
         </DockPanel>
         
         
