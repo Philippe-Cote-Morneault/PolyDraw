@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace ClientLourd.Views.Window
+namespace ClientLourd.Views
 {
     public partial class Conversation : UserControl
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models;
@@ -8,11 +9,88 @@ using ClientLourd.Utilities.Commands;
 
 namespace ClientLourd.ModelViews
 {
-    public class ChatViewModel
+    public class ChatViewModel: ViewModelBase
     {
 
         public ChatViewModel()
         {
+            User user1 = new User()
+            {
+                ID = "1",
+                Name = "user1",
+            };
+            
+            User user2 = new User()
+            {
+                ID = "2",
+                Name = "user2",
+            };
+            
+            User user3 = new User()
+            {
+                ID = "3",
+                Name = "user3",
+            };
+
+            ObservableCollection<Message> messages1 = new ObservableCollection<Message>()
+            {
+                new Message()
+                {
+                    Date = new DateTime(1991, 01, 01),
+                    User = user1,
+                    Text = "Messge 2",
+                },
+                new Message()
+                {
+                    Date = new DateTime(1990, 01, 01),
+                    User = user1,
+                    Text = "Messge 1",
+                },
+                new Message()
+                {
+                    Date = new DateTime(1993, 01, 01),
+                    User = user2,
+                    Text = "Messge 3",
+                },
+            };
+            
+            ObservableCollection<Message> messages2 = new ObservableCollection<Message>()
+            {
+                new Message()
+                {
+                    Date = new DateTime(2019, 01, 01),
+                    User = user2,
+                    Text = "Today is what happened to yesterday.",
+                },
+                new Message()
+                {
+                    Date = new DateTime(2010, 01, 01),
+                    User = user1,
+                    Text = "You will be the last person to buy a Chrysler",
+                },
+                new Message()
+                {
+                    Date = new DateTime(2000, 01, 01),
+                    User = user3,
+                    Text = "The true Southern watermelon is a boon apart, and not to be mentioned with commoner things.  It is chief of the world's luxuries, king by the grace of God over all the fruits of the earth.  When one has tasted it, he knows what the angels eat.  It was not a Southern watermelon that Eve took; we know it because she repented.",
+                },
+            };
+
+            Channels = new ObservableCollection<Channel>()
+            {
+                new Channel()
+                {
+                    Name = "channel1",
+                    Messages = messages1,
+                },
+                new Channel()
+                {
+                    Name = "channel2",
+                    Messages = messages2,
+                }
+            };
+            
+            
             
         }
 
@@ -21,11 +99,8 @@ namespace ClientLourd.ModelViews
         {
             get
             {
-                if (_sendMessageCommand == null)
-                {
-                    _sendMessageCommand = new RelayCommand<string>(param => this.SendMessage(param));
-                }
-                return _sendMessageCommand;
+                return _sendMessageCommand ??
+                       (_sendMessageCommand = new RelayCommand<string>(param => this.SendMessage(param)));
             }
         }
 
@@ -34,25 +109,21 @@ namespace ClientLourd.ModelViews
             MessageBox.Show(message);
         }
         
-        public ObservableCollection<Message> ReceivedMessages
+        public ObservableCollection<Channel> Channels
         {
-            get
+            get { return _channels; }
+            set
             {
-                return new ObservableCollection<Message>(_receivedMessage);
+                if (value != _channels)
+                {
+                    _channels = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
-        private ObservableCollection<Message> _receivedMessage;
+        private ObservableCollection<Channel> _channels;
         
-        public ObservableCollection<Message> SentMessages
-        {
-            get
-            {
-                return new ObservableCollection<Message>(_sentMessage);
-            }
-        }
-
-        private ObservableCollection<Message> _sentMessage;
         
     }
 }

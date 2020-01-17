@@ -13,6 +13,7 @@
         <e p="MainWindow.xaml" t="Include" />
         <e p="MainWindow.xaml.cs" t="Include" />
         <e p="Models" t="Include">
+          <e p="Channel.cs" t="Include" />
           <e p="Editor.cs" t="Include" />
           <e p="Message.cs" t="Include" />
           <e p="ModelBase.cs" t="Include" />
@@ -26,10 +27,12 @@
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="App.g.cs" t="Include" />
+            <e p="ClientLourd_Content.g.cs" t="Include" />
             <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
             <e p="MainWindow.g.cs" t="Include" />
             <e p="Views" t="Include">
               <e p="Chat.g.cs" t="Include" />
+              <e p="Conversation.g.cs" t="Include" />
               <e p="Editor.g.cs" t="Include" />
               <e p="Window" t="Include">
                 <e p="SimpleWindow.g.cs" t="Include" />
@@ -48,6 +51,7 @@
         <e p="Resources" t="Include">
           <e p="blacklogo.png" t="Include" />
           <e p="LogoMakr_4YSBb4.png" t="Include" />
+          <e p="poly.png" t="Include" />
           <e p="WhiteLogo.png" t="Include" />
         </e>
         <e p="Utilities" t="Include">
@@ -57,6 +61,7 @@
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
             <e p="BorderConverter.cs" t="Include" />
+            <e p="ComparatorToBooleanConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
           </e>
           <e p="Dialogs" t="Include" />
@@ -65,11 +70,11 @@
         <e p="Views" t="Include">
           <e p="Chat.xaml" t="Include" />
           <e p="Chat.xaml.cs" t="Include" />
+          <e p="Conversation.xaml" t="Include" />
+          <e p="Conversation.xaml.cs" t="Include" />
           <e p="Editor.xaml" t="Include" />
           <e p="Editor.xaml.cs" t="Include" />
           <e p="Window" t="Include">
-            <e p="Conversation.xaml" t="Include" />
-            <e p="Conversation.xaml.cs" t="Include" />
             <e p="SimpleWindow.xaml" t="Include" />
             <e p="SimpleWindow.xaml.cs" t="Include" />
           </e>

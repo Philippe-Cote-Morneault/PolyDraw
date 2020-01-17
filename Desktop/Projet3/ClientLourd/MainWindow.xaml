@@ -7,9 +7,10 @@
         xmlns:views="clr-namespace:ClientLourd.Views"
         xmlns:local="clr-namespace:ClientLourd"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        WindowState="Maximized"
+        Title="MainWindow">
     <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-        <DockPanel>
+        <DockPanel x:Name="MainDockPanel">
             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
                 <DockPanel>
                     <ToggleButton DockPanel.Dock="Left" Style="{StaticResource MaterialDesignHamburgerToggleButton}" 

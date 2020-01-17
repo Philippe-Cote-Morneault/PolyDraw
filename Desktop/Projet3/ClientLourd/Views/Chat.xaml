@@ -3,14 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:local="clr-namespace:ClientLourd.Views"
              mc:Ignorable="d">
-    <DockPanel MinWidth="300">
+    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=Width, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
             <TextBox Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Name="MessageTextBox" />
             <Button Content="Send" Command="{Binding SendMessageCommand}" CommandParameter="{Binding ElementName=MessageTextBox, Path=Text}"/>
         </StackPanel>
-        <TabControl Name="ConversationTabControl" DockPanel.Dock="Top">
+        <TabControl  Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>                    
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <local:Conversation/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
     </DockPanel>
 </UserControl>
