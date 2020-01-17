@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
+	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
 )
 
@@ -22,7 +23,8 @@ func main() {
 
 	log.Printf("Server is starting jobs!")
 
-	//TODO Launch other servers and handles
+	// Launch socket thread and service
+	go socket.StartListening()
 
 	<-hRestServer
 }
