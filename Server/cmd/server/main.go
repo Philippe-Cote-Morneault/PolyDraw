@@ -24,7 +24,7 @@ func main() {
 	log.Printf("Server is starting jobs!")
 
 	// Launch socket thread and service
-	go socket.StartListening()
+	go socket.StartListening(":5011")
 
 	<-hRestServer
 }
