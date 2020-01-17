@@ -6,8 +6,8 @@ import (
 )
 
 // Starts listening to incoming socket connections
-func StartListening() {
-	ln, err := net.Listen("tcp", ":8080")
+func StartListening(host string) {
+	ln, err := net.Listen("tcp", host)
 	if err != nil {
 		// handle error
 		fmt.Println(err)
