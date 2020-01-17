@@ -89,11 +89,13 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="ModelViews\ChatViewModel.cs" />
     <Compile Include="ModelViews\EditorViewModel.cs" />
+    <Compile Include="ModelViews\MainViewModel.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ModelViews\ViewModelBase.cs" />
     <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
+    <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>

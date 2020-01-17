@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientLourd.Utilities.Window;
 using MaterialDesignThemes.Wpf;
-
+using ClientLourd.ModelViews;
 namespace ClientLourd
 {
     /// <summary>
@@ -25,6 +25,7 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)

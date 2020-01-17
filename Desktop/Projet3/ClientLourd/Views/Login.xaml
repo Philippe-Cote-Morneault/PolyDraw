@@ -17,7 +17,6 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
-
                 <RowDefinition Height="*"></RowDefinition>
 
             </Grid.RowDefinitions>
@@ -34,6 +33,7 @@
 
             <StackPanel Grid.Row="2">
                 <TextBox
+                    
                     Margin="20 0 20 0"
                     x:Name="NameTextBox"
                     materialDesign:HintAssist.Hint="Username"
@@ -52,9 +52,11 @@
 
 
             <Button Grid.Row="4"
+                IsDefault="True"
                 Margin="40 0 40 0"
                 Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                ToolTip="Resource name: MaterialDesignRaisedLightDarkButton">
+                    Command="{Binding Path=LoginCommand}"
+                    CommandParameter="{Binding ElementName=NameTextBox, Path=Text}">
                 Login
             </Button>
 

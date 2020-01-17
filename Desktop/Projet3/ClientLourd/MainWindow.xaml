@@ -6,32 +6,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ClientLourd.Views"
         xmlns:local="clr-namespace:ClientLourd"
+        xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
+        <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter"/>
+
+    </Window.Resources>
     <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-        <DockPanel>
-            <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
-                <DockPanel>
-                    <ToggleButton DockPanel.Dock="Left" Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
-                                  HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"/>
-                    <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignIconForegroundButton}" 
-                            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
-                            CommandParameter="{x:Static Dock.Right}">
-                        <Button.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
-                            </ContextMenu>
-                        </Button.ContextMenu>
-                        <materialDesign:PackIcon Kind="Chat"/>
-                    </Button>
-                    <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
-                </DockPanel>
-            </materialDesign:ColorZone>
-            <views:Login/>
-            <!--<views:Editor/>-->
-        </DockPanel>
-        
-        
+        <Grid>
+            <DockPanel Name="MainDockPanel" Visibility="{Binding Path=IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
+                <materialDesign:ColorZone  DockPanel.Dock="Top" Mode="PrimaryMid">
+                    <DockPanel>
+                        <ToggleButton DockPanel.Dock="Left" Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                      HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"/>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                                CommandParameter="{x:Static Dock.Right}">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                            <materialDesign:PackIcon Kind="Chat"/>
+                        </Button>
+                        <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
+                    </DockPanel>
+                </materialDesign:ColorZone>
+
+                <views:Editor/>
+            </DockPanel>
+            <DockPanel Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                <views:Login/>
+            </DockPanel>
+        </Grid>
+
+
         <materialDesign:DrawerHost.RightDrawerContent>
             <DockPanel x:Name="RightDrawerContent">
                 <views:Chat x:Name="ChatBox"/>
