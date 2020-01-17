@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace ClientLourd.Models
 {
@@ -29,13 +30,13 @@ namespace ClientLourd.Models
             {
                 if (value != _messages)
                 {
-                    _messages = value;
+                    _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
                     NotifyPropertyChanged();
                 }
                 
             }
         }
         private ObservableCollection<Message> _messages;
-
+        
     }
 }
