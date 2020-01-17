@@ -61,7 +61,7 @@
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
             <e p="BorderConverter.cs" t="Include" />
-            <e p="DivideValueConverter.cs" t="Include" />
+            <e p="ComparatorToBooleanConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
           </e>
           <e p="Dialogs" t="Include" />

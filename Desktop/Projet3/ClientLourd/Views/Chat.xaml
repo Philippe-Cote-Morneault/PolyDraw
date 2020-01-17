@@ -6,10 +6,7 @@
              xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:local="clr-namespace:ClientLourd.Views"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <converters:DivideValueConverter x:Key="DivideValueConverter"/>
-    </UserControl.Resources>
-    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=Width, Converter={StaticResource DivideValueConverter}, ConverterParameter=4}">
+    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=Width, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
             <TextBox Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Name="MessageTextBox" />
             <Button Content="Send" Command="{Binding SendMessageCommand}" CommandParameter="{Binding ElementName=MessageTextBox, Path=Text}"/>

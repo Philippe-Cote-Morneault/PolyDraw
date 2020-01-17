@@ -25,6 +25,12 @@ namespace ClientLourd.ModelViews
                 ID = "2",
                 Name = "user2",
             };
+            
+            User user3 = new User()
+            {
+                ID = "3",
+                Name = "user3",
+            };
 
             ObservableCollection<Message> messages1 = new ObservableCollection<Message>()
             {
@@ -65,7 +71,7 @@ namespace ClientLourd.ModelViews
                 new Message()
                 {
                     Date = new DateTime(2000, 01, 01),
-                    User = user2,
+                    User = user3,
                     Text = "The true Southern watermelon is a boon apart, and not to be mentioned with commoner things.  It is chief of the world's luxuries, king by the grace of God over all the fruits of the earth.  When one has tasted it, he knows what the angels eat.  It was not a Southern watermelon that Eve took; we know it because she repented.",
                 },
             };
@@ -74,12 +80,12 @@ namespace ClientLourd.ModelViews
             {
                 new Channel()
                 {
-                    Name = "c1",
+                    Name = "channel1",
                     Messages = messages1,
                 },
                 new Channel()
                 {
-                    Name = "c2",
+                    Name = "channel2",
                     Messages = messages2,
                 }
             };
@@ -93,11 +99,8 @@ namespace ClientLourd.ModelViews
         {
             get
             {
-                if (_sendMessageCommand == null)
-                {
-                    _sendMessageCommand = new RelayCommand<string>(param => this.SendMessage(param));
-                }
-                return _sendMessageCommand;
+                return _sendMessageCommand ??
+                       (_sendMessageCommand = new RelayCommand<string>(param => this.SendMessage(param)));
             }
         }
 
