@@ -3,9 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:local="clr-namespace:ClientLourd.Views"
              mc:Ignorable="d">
-    <DockPanel MinWidth="300">
+    <UserControl.Resources>
+        <converters:DivideValueConverter x:Key="DivideValueConverter"/>
+    </UserControl.Resources>
+    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=Width, Converter={StaticResource DivideValueConverter}, ConverterParameter=4}">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
             <TextBox Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Name="MessageTextBox" />
             <Button Content="Send" Command="{Binding SendMessageCommand}" CommandParameter="{Binding ElementName=MessageTextBox, Path=Text}"/>

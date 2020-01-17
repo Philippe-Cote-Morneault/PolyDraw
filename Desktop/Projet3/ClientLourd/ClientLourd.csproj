@@ -95,6 +95,7 @@
     <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
+    <Compile Include="Utilities\Converters\DivideValueConverter.cs" />
     <Compile Include="Views\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
     </Compile>

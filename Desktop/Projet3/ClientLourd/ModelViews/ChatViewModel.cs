@@ -32,16 +32,19 @@ namespace ClientLourd.ModelViews
                 {
                     Date = new DateTime(1991, 01, 01),
                     User = user1,
+                    Text = "Messge 2",
                 },
                 new Message()
                 {
                     Date = new DateTime(1990, 01, 01),
                     User = user1,
+                    Text = "Messge 1",
                 },
                 new Message()
                 {
                     Date = new DateTime(1993, 01, 01),
                     User = user2,
+                    Text = "Messge 3",
                 },
             };
             
@@ -51,16 +54,19 @@ namespace ClientLourd.ModelViews
                 {
                     Date = new DateTime(2019, 01, 01),
                     User = user2,
+                    Text = "Today is what happened to yesterday.",
                 },
                 new Message()
                 {
                     Date = new DateTime(2010, 01, 01),
                     User = user1,
+                    Text = "You will be the last person to buy a Chrysler",
                 },
                 new Message()
                 {
                     Date = new DateTime(2000, 01, 01),
                     User = user2,
+                    Text = "The true Southern watermelon is a boon apart, and not to be mentioned with commoner things.  It is chief of the world's luxuries, king by the grace of God over all the fruits of the earth.  When one has tasted it, he knows what the angels eat.  It was not a Southern watermelon that Eve took; we know it because she repented.",
                 },
             };
 
