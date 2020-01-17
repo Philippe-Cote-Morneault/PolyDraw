@@ -9,12 +9,6 @@ namespace ClientLourd.Views
         {
             InitializeComponent();
             DataContext = new ChatViewModel();
-            ImportConversations();
-        }
-
-        private void ImportConversations()
-        {
-            
         }
     }
 }

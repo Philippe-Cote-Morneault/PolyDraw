@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models;
@@ -8,11 +9,76 @@ using ClientLourd.Utilities.Commands;
 
 namespace ClientLourd.ModelViews
 {
-    public class ChatViewModel
+    public class ChatViewModel: ViewModelBase
     {
 
         public ChatViewModel()
         {
+            User user1 = new User()
+            {
+                ID = "1",
+                Name = "user1",
+            };
+            
+            User user2 = new User()
+            {
+                ID = "2",
+                Name = "user2",
+            };
+
+            ObservableCollection<Message> messages1 = new ObservableCollection<Message>()
+            {
+                new Message()
+                {
+                    Date = new DateTime(1991, 01, 01),
+                    User = user1,
+                },
+                new Message()
+                {
+                    Date = new DateTime(1990, 01, 01),
+                    User = user1,
+                },
+                new Message()
+                {
+                    Date = new DateTime(1993, 01, 01),
+                    User = user2,
+                },
+            };
+            
+            ObservableCollection<Message> messages2 = new ObservableCollection<Message>()
+            {
+                new Message()
+                {
+                    Date = new DateTime(2019, 01, 01),
+                    User = user2,
+                },
+                new Message()
+                {
+                    Date = new DateTime(2010, 01, 01),
+                    User = user1,
+                },
+                new Message()
+                {
+                    Date = new DateTime(2000, 01, 01),
+                    User = user2,
+                },
+            };
+
+            Channels = new ObservableCollection<Channel>()
+            {
+                new Channel()
+                {
+                    Name = "c1",
+                    Messages = messages1,
+                },
+                new Channel()
+                {
+                    Name = "c2",
+                    Messages = messages2,
+                }
+            };
+            
+            
             
         }
 
@@ -34,25 +100,21 @@ namespace ClientLourd.ModelViews
             MessageBox.Show(message);
         }
         
-        public ObservableCollection<Message> ReceivedMessages
+        public ObservableCollection<Channel> Channels
         {
-            get
+            get { return _channels; }
+            set
             {
-                return new ObservableCollection<Message>(_receivedMessage);
+                if (value != _channels)
+                {
+                    _channels = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
-        private ObservableCollection<Message> _receivedMessage;
+        private ObservableCollection<Channel> _channels;
         
-        public ObservableCollection<Message> SentMessages
-        {
-            get
-            {
-                return new ObservableCollection<Message>(_sentMessage);
-            }
-        }
-
-        private ObservableCollection<Message> _sentMessage;
         
     }
 }

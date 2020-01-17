@@ -10,7 +10,17 @@
             <TextBox Width="200" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Name="MessageTextBox" />
             <Button Content="Send" Command="{Binding SendMessageCommand}" CommandParameter="{Binding ElementName=MessageTextBox, Path=Text}"/>
         </StackPanel>
-        <TabControl Name="ConversationTabControl" DockPanel.Dock="Top">
+        <TabControl  Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>                    
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <local:Conversation/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
     </DockPanel>
 </UserControl>

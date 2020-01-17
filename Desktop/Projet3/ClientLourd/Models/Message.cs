@@ -10,7 +10,6 @@ namespace ClientLourd.Models
         }
 
         private DateTime _date;
-
         public DateTime Date
         {
             get
@@ -22,6 +21,23 @@ namespace ClientLourd.Models
                 if (value != _date)
                 {
                     _date = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        
+        private User _user;
+        public User User
+        {
+            get
+            {
+                return _user;
+            }
+            set
+            {
+                if (value != _user)
+                {
+                    _user = value;
                     NotifyPropertyChanged();
                 }
             }
