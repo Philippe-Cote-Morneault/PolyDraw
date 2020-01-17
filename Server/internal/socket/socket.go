@@ -5,6 +5,9 @@ import (
 	"net"
 )
 
+type Server struct {
+	listener *net.Listener
+}
 // Starts listening to incoming socket connections
 func StartListening(host string) {
 	ln, err := net.Listen("tcp", host)
