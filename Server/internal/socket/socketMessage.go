@@ -4,7 +4,7 @@ import "time"
 
 // Represents a message sent over socket
 type SocketMessage struct {
-	Type messageType
+	Type int
 	Data interface{}
 	Time time.Time
 }
