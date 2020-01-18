@@ -7,11 +7,12 @@ import (
 )
 
 type Server struct {
-	listener *net.Listener
+	listener            *net.Listener
 	clientSocketManager *ClientSocketManager
 }
+
 // Starts listening to incoming socket connections
-func (server *Server)StartListening(host string) {
+func (server *Server) StartListening(host string) {
 	listener, err := net.Listen("tcp", host)
 	if err != nil {
 		fmt.Println(err)

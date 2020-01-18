@@ -9,24 +9,24 @@ import (
 type ClientSocketManager struct {
 	clients            map[uuid.UUID]*ClientSocket
 	messageSubscribers map[int]map[uuid.UUID]MessageCallback
-	eventSubscribers map[int]map[uuid.UUID]EventCallback
+	eventSubscribers   map[int]map[uuid.UUID]EventCallback
 }
 
 func newClientSocketManager() *ClientSocketManager {
 	manager := new(ClientSocketManager)
 	manager.clients = make(map[uuid.UUID]*ClientSocket)
-	manager.messageSubscribers = make(map[int] map[uuid.UUID]MessageCallback)
-	manager.eventSubscribers = make(map[int] map[uuid.UUID]EventCallback)
+	manager.messageSubscribers = make(map[int]map[uuid.UUID]MessageCallback)
+	manager.eventSubscribers = make(map[int]map[uuid.UUID]EventCallback)
 
 	return manager
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
-func (manager *ClientSocketManager) registerClient(client *ClientSocket)  {
+func (manager *ClientSocketManager) registerClient(client *ClientSocket) {
 	manager.clients[client.id] = client
 }
 
-func (manager *ClientSocketManager) unregisterClient(clientId uuid.UUID)  {
+func (manager *ClientSocketManager) unregisterClient(clientId uuid.UUID) {
 	if clientConnection, ok := manager.clients[clientId]; ok {
 		clientConnection.socket.Close()
 		delete(manager.clients, clientId)

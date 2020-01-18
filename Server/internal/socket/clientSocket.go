@@ -7,5 +7,5 @@ import (
 
 type ClientSocket struct {
 	socket net.Conn
-	id uuid.UUID
+	id     uuid.UUID
 }

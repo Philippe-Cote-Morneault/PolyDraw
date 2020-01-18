@@ -58,7 +58,7 @@ func (manager *ClientSocketManager) SendMessageToSocketId(message SocketMessage,
 	return nil
 }
 
-func (manager *ClientSocketManager) SendRawMessageToSocketId(message RawMessage,id uuid.UUID) error {
+func (manager *ClientSocketManager) SendRawMessageToSocketId(message RawMessage, id uuid.UUID) error {
 	if clientConnection, ok := manager.clients[id]; ok {
 		_, err := clientConnection.socket.Write(message.ToBytesSlice())
 		if err != nil {
