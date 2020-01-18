@@ -42,6 +42,7 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 				// If the connection is closed, unregister client
 				manager.unregisterClient(clientId)
 				clientConnection.socket.Close()
+				manager.notifyEventSubscribers(SocketEvent.Disconnection, clientConnection)
 				break
 			}
 			if length > 0 {
@@ -70,7 +71,7 @@ func (manager *ClientSocketManager) notifyMessageSubscribers(message SocketMessa
 	}
 }
 
-func (manager *ClientSocketManager) notifyEventSubscribers(eventType int, client ClientSocket) {
+func (manager *ClientSocketManager) notifyEventSubscribers(eventType int, client *ClientSocket) {
 	if callbacks, ok := manager.eventSubscribers[eventType]; ok {
 		for _, callback := range callbacks {
 			// TODO: Figure out if sender will be username or id
