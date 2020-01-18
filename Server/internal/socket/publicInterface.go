@@ -6,20 +6,39 @@ import (
 )
 
 // The passed callback will be called when messageType event is received. Returns a uuid used to unsubscribe
-func (manager *ClientSocketManager) Subscribe(messageType int, callback SocketCallback) uuid.UUID {
-	if _, ok := manager.subscribers[messageType]; !ok {
-		manager.subscribers[messageType] = make(map[uuid.UUID]SocketCallback)
+func (manager *ClientSocketManager) SubscribeToMessage(messageType int, callback MessageCallback) uuid.UUID {
+	if _, ok := manager.messageSubscribers[messageType]; !ok {
+		manager.messageSubscribers[messageType] = make(map[uuid.UUID]MessageCallback)
 	}
 
 	callbackId := uuid.New()
-	manager.subscribers[messageType][callbackId] = callback
+	manager.messageSubscribers[messageType][callbackId] = callback
 
 	return callbackId
 }
 
-func (manager *ClientSocketManager) Unsubscribe(messageType int, callbackId uuid.UUID) {
-	if _, ok := manager.subscribers[messageType]; ok {
-		callbacks := manager.subscribers[messageType]
+func (manager *ClientSocketManager) UnsubscribeFromMessage(messageType int, callbackId uuid.UUID) {
+	if _, ok := manager.messageSubscribers[messageType]; ok {
+		callbacks := manager.messageSubscribers[messageType]
+		delete(callbacks, callbackId)
+	}
+}
+
+// The passed callback will be called when eventType event is received. Returns a uuid used to unsubscribe
+func (manager *ClientSocketManager) SubscribeToEvent(eventType int, callback EventCallback) uuid.UUID {
+	if _, ok := manager.eventSubscribers[eventType]; !ok {
+		manager.eventSubscribers[eventType] = make(map[uuid.UUID]EventCallback)
+	}
+
+	callbackId := uuid.New()
+	manager.eventSubscribers[eventType][callbackId] = callback
+
+	return callbackId
+}
+
+func (manager *ClientSocketManager) UnsubscribeFromEvent(eventType int, callbackId uuid.UUID) {
+	if _, ok := manager.eventSubscribers[eventType]; ok {
+		callbacks := manager.eventSubscribers[eventType]
 		delete(callbacks, callbackId)
 	}
 }
