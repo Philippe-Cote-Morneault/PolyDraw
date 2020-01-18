@@ -1,7 +1,6 @@
 package socket
 
 import (
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/vmihailenco/msgpack/v4"
 )
@@ -12,11 +11,11 @@ type ClientSocketManager struct {
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
-func (manager *ClientSocketManager) RegisterClient(client *ClientSocket)  {
+func (manager *ClientSocketManager) registerClient(client *ClientSocket)  {
 	manager.clients[client.id] = client
 }
 
-func (manager *ClientSocketManager) UnregisterClient(clientId uuid.UUID)  {
+func (manager *ClientSocketManager) unregisterClient(clientId uuid.UUID)  {
 	if clientConnection, ok := manager.clients[clientId]; ok {
 		clientConnection.socket.Close()
 		delete(manager.clients, clientId)
@@ -30,7 +29,7 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 			length, err := clientConnection.socket.Read(message)
 			if err != nil {
 				// If the connection is closed, unregister client
-				manager.UnregisterClient(clientId)
+				manager.unregisterClient(clientId)
 				clientConnection.socket.Close()
 				break
 			}
@@ -41,7 +40,6 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 					// TODO Handle this error
 					break
 				}
-				fmt.Println(socketMessage)
 				manager.notifySubscribers(socketMessage)
 			}
 		} else {
@@ -52,14 +50,6 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 	}
 }
 
-func (manager *ClientSocketManager) Subscribe(messageType int, callback SocketCallback) {
-	if _, ok := manager.subscribers[messageType]; !ok {
-		manager.subscribers[messageType] = []SocketCallback{}
-	}
-	manager.subscribers[messageType] = append(manager.subscribers[messageType], callback)
-	fmt.Println(len(manager.subscribers[messageType]))
-}
-
 func (manager *ClientSocketManager) notifySubscribers(message SocketMessage) {
 	if callbacks, ok := manager.subscribers[message.Type]; ok {
 		for _, callback := range callbacks {
@@ -68,3 +58,4 @@ func (manager *ClientSocketManager) notifySubscribers(message SocketMessage) {
 		}
 	}
 }
+
