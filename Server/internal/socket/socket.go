@@ -28,8 +28,8 @@ func (server *Server)StartListening(host string) {
 		}
 		clientSocket := &ClientSocket{socket: connection, id: uuid.New()}
 		server.clientSocketManager.registerClient(clientSocket)
-		fmt.Println(connection.RemoteAddr())
 		go server.clientSocketManager.receive(clientSocket.id)
+		server.clientSocketManager.notifyEventSubscribers(SocketEvent.Connection, clientSocket)
 	}
 }
 
