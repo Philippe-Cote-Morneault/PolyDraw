@@ -18,10 +18,7 @@ func (server *Server)StartListening(host string) {
 	}
 	server.listener = &listener
 
-	server.clientSocketManager = &ClientSocketManager{
-		clients: make(map[uuid.UUID]*ClientSocket),
-		subscribers: make(map[int] map[uuid.UUID]SocketCallback),
-	}
+	server.clientSocketManager = newClientSocketManager()
 
 	// Listen for new socket connections and create client for each new connection
 	for {
