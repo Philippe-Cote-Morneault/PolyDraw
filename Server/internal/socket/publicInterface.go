@@ -47,8 +47,8 @@ func (manager *ClientSocketManager) UnsubscribeFromEvent(eventType int, callback
 	}
 }
 
-// SendMessageToSocketID sends a SocketMessage to the socketID
-func (manager *ClientSocketManager) SendMessageToSocketID(message SocketMessage, socketID uuid.UUID) error {
+// SendMessageToSocketID sends a SerializableMessage to the socketID
+func (manager *ClientSocketManager) SendMessageToSocketID(message SerializableMessage, socketID uuid.UUID) error {
 	if clientConnection, ok := manager.clients[socketID]; ok {
 		serializedMessage, err := msgpack.Marshal(message)
 		if err != nil {
@@ -76,7 +76,7 @@ func (manager *ClientSocketManager) SendRawMessageToSocketID(message RawMessage,
 }
 
 // SendMessageToUsername sends a message to a client socket from username associated to the user of the socket.
-func (manager *ClientSocketManager) SendMessageToUsername(message SocketMessage, username string) {
+func (manager *ClientSocketManager) SendMessageToUsername(message SerializableMessage, username string) {
 	// TODO: Implement when we have user service
 }
 

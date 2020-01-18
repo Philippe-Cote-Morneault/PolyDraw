@@ -2,8 +2,8 @@ package socket
 
 import "time"
 
-// SocketMessage Represents a serializable message sent over socket
-type SocketMessage struct {
+// SerializableMessage Represents a serializable message sent over socket
+type SerializableMessage struct {
 	Type int
 	Data interface{}
 	Time time.Time

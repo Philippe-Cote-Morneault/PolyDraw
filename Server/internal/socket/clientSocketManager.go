@@ -47,7 +47,7 @@ func (manager *ClientSocketManager) receive(clientID uuid.UUID) {
 				break
 			}
 			if length > 0 {
-				var socketMessage SocketMessage
+				var socketMessage SerializableMessage
 				err := msgpack.Unmarshal(message, &socketMessage)
 				if err != nil {
 					// TODO Handle this error
@@ -63,7 +63,7 @@ func (manager *ClientSocketManager) receive(clientID uuid.UUID) {
 	}
 }
 
-func (manager *ClientSocketManager) notifyMessageSubscribers(message SocketMessage) {
+func (manager *ClientSocketManager) notifyMessageSubscribers(message SerializableMessage) {
 	if callbacks, ok := manager.messageSubscribers[message.Type]; ok {
 		for _, callback := range callbacks {
 			// TODO: Figure out if sender will be username or id
