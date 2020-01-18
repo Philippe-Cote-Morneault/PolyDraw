@@ -6,8 +6,18 @@ import (
 )
 
 type ClientSocketManager struct {
-	clients map[uuid.UUID]*ClientSocket
-	subscribers map[int]map[uuid.UUID]SocketCallback
+	clients            map[uuid.UUID]*ClientSocket
+	messageSubscribers map[int]map[uuid.UUID]MessageCallback
+	eventSubscribers map[int]map[uuid.UUID]EventCallback
+}
+
+func newClientSocketManager() *ClientSocketManager {
+	manager := new(ClientSocketManager)
+	manager.clients = make(map[uuid.UUID]*ClientSocket)
+	manager.messageSubscribers = make(map[int] map[uuid.UUID]MessageCallback)
+	manager.eventSubscribers = make(map[int] map[uuid.UUID]EventCallback)
+
+	return manager
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
@@ -51,7 +61,7 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 }
 
 func (manager *ClientSocketManager) notifySubscribers(message SocketMessage) {
-	if callbacks, ok := manager.subscribers[message.Type]; ok {
+	if callbacks, ok := manager.messageSubscribers[message.Type]; ok {
 		for _, callback := range callbacks {
 			// TODO: Figure out if sender will be username or id
 			callback(message, "")
