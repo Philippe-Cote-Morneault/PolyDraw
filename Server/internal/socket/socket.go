@@ -30,7 +30,7 @@ func (server *Server)StartListening(host string) {
 			fmt.Println(err)
 		}
 		clientSocket := &ClientSocket{socket: connection, id: uuid.New()}
-		server.clientSocketManager.RegisterClient(clientSocket)
+		server.clientSocketManager.registerClient(clientSocket)
 		fmt.Println(connection.RemoteAddr())
 		go server.clientSocketManager.receive(clientSocket.id)
 	}
