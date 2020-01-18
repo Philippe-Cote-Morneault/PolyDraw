@@ -20,7 +20,7 @@ func (server *Server)StartListening(host string) {
 
 	server.clientSocketManager = &ClientSocketManager{
 		clients: make(map[uuid.UUID]*ClientSocket),
-		subscribers: make(map[int][]SocketCallback),
+		subscribers: make(map[int] map[uuid.UUID]SocketCallback),
 	}
 
 	// Listen for new socket connections and create client for each new connection
@@ -35,5 +35,7 @@ func (server *Server)StartListening(host string) {
 		go server.clientSocketManager.receive(clientSocket.id)
 	}
 }
+
+
 
 
