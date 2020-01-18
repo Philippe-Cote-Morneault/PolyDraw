@@ -10,19 +10,25 @@ type Server struct {
 	clientSocketManager *ClientSocketManager
 }
 // Starts listening to incoming socket connections
-func StartListening(host string) {
-	ln, err := net.Listen("tcp", host)
+func (server *Server)StartListening(host string) {
+	listener, err := net.Listen("tcp", host)
 	if err != nil {
-		// handle error
 		fmt.Println(err)
 	}
+	server.listener = &listener
+
+	server.clientSocketManager = &ClientSocketManager{
+		clients: make(map[*ClientSocket]bool),
+	}
 	for {
-		conn, err := ln.Accept()
+		connection, err := (*server.listener).Accept()
 		if err != nil {
-			// handle error
 			fmt.Println(err)
 		}
-		fmt.Println(conn.RemoteAddr())
+		clientSocket := &ClientSocket{socket: connection}
+		server.clientSocketManager.RegisterClient(clientSocket)
+		fmt.Println(connection.RemoteAddr())
+		go server.clientSocketManager.receive(clientSocket)
 	}
 }
 
