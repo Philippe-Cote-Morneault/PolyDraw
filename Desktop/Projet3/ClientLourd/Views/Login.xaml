@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              xmlns:local="clr-namespace:ClientLourd.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
@@ -36,8 +37,16 @@
                     
                     Margin="20 0 20 0"
                     x:Name="NameTextBox"
+                    MaxLength="12"
                     materialDesign:HintAssist.Hint="Username"
-                    materialDesign:HintAssist.HelperText="Helper text longer than error">
+                    materialDesign:HintAssist.HelperText="">
+                    <TextBox.Text>
+                        <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:UsernameRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
                 </TextBox>
             </StackPanel>
 
@@ -45,6 +54,7 @@
                 <PasswordBox
                     Margin="20 0 20 0"
                     x:Name="PasswordBox"
+                    MaxLength="12"
                     materialDesign:HintAssist.Hint="Password"
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     materialDesign:HintAssist.HelperText="At least 8 characters" />
@@ -57,6 +67,9 @@
                 Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding Path=LoginCommand}"
                     CommandParameter="{Binding ElementName=NameTextBox, Path=Text}">
+                <!--<Button.CommandParameter>
+                    
+                </Button.CommandParameter>-->
                 Login
             </Button>
 

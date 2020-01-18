@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.ValidationRules;
 
 namespace ClientLourd.ModelViews
 {
@@ -13,11 +14,14 @@ namespace ClientLourd.ModelViews
 
         RelayCommand<string> _loginCommand;
         bool _isLoggedIn;
+        string _username;
 
         public MainViewModel()
         {
             _isLoggedIn = false;
+            _username = "";
         }
+
 
         public bool IsLoggedIn
         {
@@ -31,6 +35,23 @@ namespace ClientLourd.ModelViews
                 if (value != _isLoggedIn)
                 {
                     _isLoggedIn = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public string Username
+        {
+            get
+            {
+                return _username;
+            }
+
+            set
+            {
+                if (value != _username)
+                {
+                    _username = value;
                     NotifyPropertyChanged();
                 }
             }

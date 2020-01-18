@@ -95,7 +95,9 @@
     <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
+    <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
     <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
+    <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
