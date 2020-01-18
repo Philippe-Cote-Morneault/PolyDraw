@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Mobile</string>
+    <string name="login_welcome">Welcome!</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_username_error">The username cannot be empty</string>
+    <string name="login_password_hint">At least 8 characters</string>
+    <string name="login_password_error">The password cannot be empty</string>
+    <string name="login_button">Login</string>
+    <string name="login_signup">Don\'t have an account? Sign up</string>
 </resources>
