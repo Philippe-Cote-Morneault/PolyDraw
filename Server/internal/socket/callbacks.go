@@ -6,4 +6,4 @@ import "time"
 type MessageCallback = func(message SocketMessage, sender string)
 
 // Callback signature when socket events occur
-type EventCallback = func(client ClientSocket, timestamp time.Time)
+type EventCallback = func(client *ClientSocket, timestamp time.Time)
