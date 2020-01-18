@@ -74,3 +74,18 @@ func (manager *ClientSocketManager) SendRawMessageToSocketId(message RawMessage,
 func (manager *ClientSocketManager) SendMessageToUsername(message SocketMessage, username string) {
 
 }
+
+func (manager *ClientSocketManager) RemoveClientFromId(clientId uuid.UUID) error {
+	if clientConnection, ok := manager.clients[clientId]; ok {
+		err := clientConnection.socket.Close()
+
+		// Remove from client map if socket is successfully closed
+		if err == nil {
+			delete(manager.clients, clientId)
+		}
+
+		return err
+	}
+
+	return nil
+}
