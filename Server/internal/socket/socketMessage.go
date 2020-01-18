@@ -1,11 +1,16 @@
 package socket
 
-type SocketMessage struct {
+import "time"
 
+// Represents a message sent over socket
+type SocketMessage struct {
+	Type messageType
+	Data interface{}
+	Time time.Time
 }
 
 // Quick implementation of enum to represent different message types
-type messageList struct {
+type messageType struct {
 	ServerConnection int
 	ServerDisconnection int
 	UserDisconnected int
@@ -19,7 +24,7 @@ type messageList struct {
 }
 
 // Enum for public use
-var MessageType = &messageList{
+var MessageType = &messageType{
 	ServerConnection: 0,
 	ServerDisconnection: 1,
 	UserDisconnected: 2,
