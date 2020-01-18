@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientLourd.Utilities.Window;
+using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd

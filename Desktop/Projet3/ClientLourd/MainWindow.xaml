@@ -15,16 +15,22 @@
                 <DockPanel>
                     <ToggleButton DockPanel.Dock="Left" Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
                                   HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}"/>
-                    <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignIconForegroundButton}" 
-                            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
-                            CommandParameter="{x:Static Dock.Right}">
-                        <Button.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
-                            </ContextMenu>
-                        </Button.ContextMenu>
-                        <materialDesign:PackIcon Kind="Chat"/>
-                    </Button>
+                    <materialDesign:Badged 
+                        DockPanel.Dock="Right" 
+                        BadgePlacementMode="BottomLeft" 
+                        BadgeBackground="{StaticResource SecondaryAccentBrush}"
+                        Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
+                        <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                                CommandParameter="{x:Static Dock.Right}">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                            <materialDesign:PackIcon Kind="Chat"/>
+                        </Button>
+                    </materialDesign:Badged>
                     <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
                 </DockPanel>
             </materialDesign:ColorZone>
