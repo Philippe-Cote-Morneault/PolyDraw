@@ -19,7 +19,9 @@ func (server *Server)StartListening(host string) {
 
 	server.clientSocketManager = &ClientSocketManager{
 		clients: make(map[*ClientSocket]bool),
+		subscribers: make(map[int][]SocketCallback),
 	}
+
 	for {
 		connection, err := (*server.listener).Accept()
 		if err != nil {
