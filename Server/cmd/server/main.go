@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
+	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
+	"log"
 )
 
 func main() {
@@ -21,8 +21,9 @@ func main() {
 	}()
 
 	log.Printf("Server is starting jobs!")
-
-	//TODO Launch other servers and handles
+	// Launch socket thread and service
+	socketServer := &socket.Server{}
+	go socketServer.StartListening(":5011")
 
 	<-hRestServer
 }
