@@ -36,4 +36,3 @@ var MessageType = &messageType{
 	UserLeftChannel: 25,
 	CreateChannel: 26,
 }
-

@@ -79,5 +79,3 @@ func (manager *ClientSocketManager) notifyEventSubscribers(eventType int, client
 		}
 	}
 }
-
-

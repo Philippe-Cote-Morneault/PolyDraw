@@ -32,7 +32,3 @@ func (server *Server)StartListening(host string) {
 		server.clientSocketManager.notifyEventSubscribers(SocketEvent.Connection, clientSocket)
 	}
 }
-
-
-
-
