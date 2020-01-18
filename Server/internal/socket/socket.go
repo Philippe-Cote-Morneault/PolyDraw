@@ -6,12 +6,13 @@ import (
 	"net"
 )
 
+// Server represents a Socket server
 type Server struct {
 	listener            *net.Listener
 	clientSocketManager *ClientSocketManager
 }
 
-// Starts listening to incoming socket connections
+// StartListening starts listening to incoming socket connections
 func (server *Server) StartListening(host string) {
 	listener, err := net.Listen("tcp", host)
 	if err != nil {

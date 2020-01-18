@@ -2,8 +2,8 @@ package socket
 
 import "time"
 
-// Callback signature when socket messages are transmitted
+// MessageCallback is the subscriber function called when messages are received on the socket
 type MessageCallback = func(message SocketMessage, sender string)
 
-// Callback signature when socket events occur
+// EventCallback is te subscriber function called when socket events occur
 type EventCallback = func(client *ClientSocket, timestamp time.Time)

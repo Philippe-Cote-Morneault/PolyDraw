@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// ClientSocketManager manages all client sockets connected and subscribers
 type ClientSocketManager struct {
 	clients            map[uuid.UUID]*ClientSocket
 	messageSubscribers map[int]map[uuid.UUID]MessageCallback
@@ -26,21 +27,21 @@ func (manager *ClientSocketManager) registerClient(client *ClientSocket) {
 	manager.clients[client.id] = client
 }
 
-func (manager *ClientSocketManager) unregisterClient(clientId uuid.UUID) {
-	if clientConnection, ok := manager.clients[clientId]; ok {
+func (manager *ClientSocketManager) unregisterClient(clientID uuid.UUID) {
+	if clientConnection, ok := manager.clients[clientID]; ok {
 		clientConnection.socket.Close()
-		delete(manager.clients, clientId)
+		delete(manager.clients, clientID)
 	}
 }
 
-func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
+func (manager *ClientSocketManager) receive(clientID uuid.UUID) {
 	for {
-		if clientConnection, ok := manager.clients[clientId]; ok {
+		if clientConnection, ok := manager.clients[clientID]; ok {
 			message := make([]byte, 4096)
 			length, err := clientConnection.socket.Read(message)
 			if err != nil {
 				// If the connection is closed, unregister client
-				manager.unregisterClient(clientId)
+				manager.unregisterClient(clientID)
 				clientConnection.socket.Close()
 				manager.notifyEventSubscribers(SocketEvent.Disconnection, clientConnection)
 				break

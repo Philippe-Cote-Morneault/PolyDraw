@@ -6,7 +6,7 @@ type socketEvent struct {
 	Disconnection int
 }
 
-// Enum for public use
+// SocketEvent represents an event that can occur with sockets.
 var SocketEvent = &socketEvent{
 	Connection:    0,
 	Disconnection: 1,

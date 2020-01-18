@@ -2,7 +2,7 @@ package socket
 
 import "time"
 
-// Represents a message sent over socket
+// SocketMessage Represents a serializable message sent over socket
 type SocketMessage struct {
 	Type int
 	Data interface{}
@@ -23,7 +23,7 @@ type messageType struct {
 	CreateChannel       int
 }
 
-// Enum for public use
+// MessageType represents the available message types to send to clients.
 var MessageType = &messageType{
 	ServerConnection:    0,
 	ServerDisconnection: 1,
