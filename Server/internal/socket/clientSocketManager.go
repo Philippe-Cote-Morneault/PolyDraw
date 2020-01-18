@@ -3,6 +3,7 @@ package socket
 import (
 	"github.com/google/uuid"
 	"github.com/vmihailenco/msgpack/v4"
+	"time"
 )
 
 type ClientSocketManager struct {
@@ -50,7 +51,7 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 					// TODO Handle this error
 					break
 				}
-				manager.notifySubscribers(socketMessage)
+				manager.notifyMessageSubscribers(socketMessage)
 			}
 		} else {
 			// Client connection does not exist anymore
@@ -60,7 +61,7 @@ func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 	}
 }
 
-func (manager *ClientSocketManager) notifySubscribers(message SocketMessage) {
+func (manager *ClientSocketManager) notifyMessageSubscribers(message SocketMessage) {
 	if callbacks, ok := manager.messageSubscribers[message.Type]; ok {
 		for _, callback := range callbacks {
 			// TODO: Figure out if sender will be username or id
@@ -68,4 +69,14 @@ func (manager *ClientSocketManager) notifySubscribers(message SocketMessage) {
 		}
 	}
 }
+
+func (manager *ClientSocketManager) notifyEventSubscribers(eventType int, client ClientSocket) {
+	if callbacks, ok := manager.eventSubscribers[eventType]; ok {
+		for _, callback := range callbacks {
+			// TODO: Figure out if sender will be username or id
+			callback(client, time.Now())
+		}
+	}
+}
+
 
