@@ -1,6 +1,9 @@
 package socket
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/vmihailenco/msgpack/v4"
+)
 
 type ClientSocketManager struct {
 	clients map[*ClientSocket]bool
@@ -29,9 +32,9 @@ func (manager *ClientSocketManager) receive(client *ClientSocket) {
 			break
 		}
 		if length > 0 {
-			fmt.Println("Received message from socket:")
-			fmt.Println(length)
-			fmt.Println(string(message))
+			var socketMessage SocketMessage
+			msgpack.Unmarshal(message, &socketMessage)
+			fmt.Println(socketMessage)
 		}
 	}
 }
