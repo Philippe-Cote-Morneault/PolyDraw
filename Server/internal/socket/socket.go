@@ -7,6 +7,7 @@ import (
 
 type Server struct {
 	listener *net.Listener
+	clientSocketManager *ClientSocketManager
 }
 // Starts listening to incoming socket connections
 func StartListening(host string) {
