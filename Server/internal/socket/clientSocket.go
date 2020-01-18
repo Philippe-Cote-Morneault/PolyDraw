@@ -1,8 +1,8 @@
 package socket
 
 import (
-	"net"
 	"github.com/google/uuid"
+	"net"
 )
 
 type ClientSocket struct {

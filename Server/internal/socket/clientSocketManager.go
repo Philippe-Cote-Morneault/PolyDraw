@@ -2,43 +2,52 @@ package socket
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/vmihailenco/msgpack/v4"
 )
 
 type ClientSocketManager struct {
-	clients map[*ClientSocket]bool
+	clients map[uuid.UUID]*ClientSocket
 	subscribers map[int][]SocketCallback
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
 func (manager *ClientSocketManager) RegisterClient(client *ClientSocket)  {
-	manager.clients[client] = true
+	manager.clients[client.id] = client
 }
 
-func (manager *ClientSocketManager) UnregisterClient(client *ClientSocket)  {
-	if connectionActive := manager.clients[client]; connectionActive {
-		client.socket.Close()
-		delete(manager.clients, client)
+func (manager *ClientSocketManager) UnregisterClient(clientId uuid.UUID)  {
+	if clientConnection, ok := manager.clients[clientId]; ok {
+		clientConnection.socket.Close()
+		delete(manager.clients, clientId)
 	}
 }
 
-func (manager *ClientSocketManager) receive(client *ClientSocket) {
+func (manager *ClientSocketManager) receive(clientId uuid.UUID) {
 	for {
-		message := make([]byte, 4096)
-		length, err := client.socket.Read(message)
-		if err != nil {
-			manager.UnregisterClient(client)
-			client.socket.Close()
-			break
-		}
-		if length > 0 {
-			var socketMessage SocketMessage
-			err := msgpack.Unmarshal(message, &socketMessage)
+		if clientConnection, ok := manager.clients[clientId]; ok {
+			message := make([]byte, 4096)
+			length, err := clientConnection.socket.Read(message)
 			if err != nil {
-				// TODO Handle this error
+				// If the connection is closed, unregister client
+				manager.UnregisterClient(clientId)
+				clientConnection.socket.Close()
 				break
 			}
-			manager.notifySubscribers(socketMessage)
+			if length > 0 {
+				var socketMessage SocketMessage
+				err := msgpack.Unmarshal(message, &socketMessage)
+				if err != nil {
+					// TODO Handle this error
+					break
+				}
+				fmt.Println(socketMessage)
+				manager.notifySubscribers(socketMessage)
+			}
+		} else {
+			// Client connection does not exist anymore
+			// TODO: Handle trying to read from connection when it doesn't exist anymore
+			break
 		}
 	}
 }
