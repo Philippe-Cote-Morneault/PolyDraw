@@ -7,7 +7,7 @@ import (
 
 type ClientSocketManager struct {
 	clients map[uuid.UUID]*ClientSocket
-	subscribers map[int][]SocketCallback
+	subscribers map[int]map[uuid.UUID]SocketCallback
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
