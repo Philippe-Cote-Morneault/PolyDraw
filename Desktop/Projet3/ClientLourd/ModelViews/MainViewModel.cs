@@ -18,13 +18,11 @@ namespace ClientLourd.ModelViews
         RelayCommand<object[]> _loginCommand;
         bool _isLoggedIn;
         string _username;
-        string _password;
 
         public MainViewModel()
         {
             _isLoggedIn = false;
             _username = "";
-            _password = "";
         }
 
 
@@ -57,23 +55,6 @@ namespace ClientLourd.ModelViews
                 if (value != _username)
                 {
                     _username = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public string Password
-        {
-            get
-            {
-                return _password;
-            }
-
-            set
-            {
-                if (value != _password)
-                {
-                    _password = value;
                     NotifyPropertyChanged();
                 }
             }
