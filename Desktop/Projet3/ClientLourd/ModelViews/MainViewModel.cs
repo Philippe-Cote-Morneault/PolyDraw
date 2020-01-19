@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.ValidationRules;
+
 
 namespace ClientLourd.ModelViews
 {
     class MainViewModel: ViewModelBase
     {
 
-        RelayCommand<string> _loginCommand;
+        RelayCommand<object[]> _loginCommand;
         bool _isLoggedIn;
         string _username;
+        string _password;
 
         public MainViewModel()
         {
             _isLoggedIn = false;
             _username = "";
+            _password = "";
         }
 
 
@@ -57,25 +62,51 @@ namespace ClientLourd.ModelViews
             }
         }
 
-        
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+
+            set
+            {
+                if (value != _password)
+                {
+                    _password = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
         public ICommand LoginCommand
         {
             get
             {
-                return _loginCommand ?? (_loginCommand = new RelayCommand<string>(param => Authentify(param) ,param => UsernameValid(param)));
+                return _loginCommand ?? (_loginCommand = new RelayCommand<object[]>(param => Authentify(param) ,param => CredentialsValid(param)));
             }
         }
 
-        void Authentify(string username) {
+        void Authentify(object[] param) {
             IsLoggedIn = true;
-
+            
 
         }
 
-        bool UsernameValid(string username)
+        bool CredentialsValid(object[] param)
         {
-            return !String.IsNullOrWhiteSpace(username);
+            
+            string username = (string)param[0];
+            string password = (param[1] as PasswordBox).Password;
+
+            LoginInputRules loginInputValidator = new LoginInputRules();
+
+            return (loginInputValidator.LengthIsOk(username) && loginInputValidator.LengthIsOk(password) &&
+                    !loginInputValidator.stringIsEmpty(username) && !loginInputValidator.stringIsEmpty(password));
         }
 
     }
+
+    
 }

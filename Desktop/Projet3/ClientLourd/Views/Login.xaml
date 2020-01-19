@@ -6,10 +6,14 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
+
              xmlns:local="clr-namespace:ClientLourd.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
+    </UserControl.Resources>
     <materialDesign:Card Width="300" Margin="0 20 0 20">
         <Grid>
             <Grid.RowDefinitions>
@@ -27,11 +31,13 @@
                 
             </StackPanel>
             
+            <!--Logo-->
             <StackPanel Grid.Row="1">
                 <!-- Might change if we translate  ClientLourd in English-->
                 <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../Resources/blacklogo.png" ></Image>
             </StackPanel>
-
+            
+            <!--Username-->
             <StackPanel Grid.Row="2">
                 <TextBox
                     
@@ -49,7 +55,8 @@
                     </TextBox.Text>
                 </TextBox>
             </StackPanel>
-
+            
+            <!--Password-->
             <StackPanel Grid.Row="3">
                 <PasswordBox
                     Margin="20 0 20 0"
@@ -57,19 +64,22 @@
                     MaxLength="12"
                     materialDesign:HintAssist.Hint="Password"
                     materialDesign:TextFieldAssist.HasClearButton="True"
-                    materialDesign:HintAssist.HelperText="At least 8 characters" />
+                    materialDesign:HintAssist.HelperText="At least 4 characters">
+                </PasswordBox>
             </StackPanel>
 
-
+            <!--Login button-->
             <Button Grid.Row="4"
                 IsDefault="True"
                 Margin="40 0 40 0"
                 Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                    Command="{Binding Path=LoginCommand}"
-                    CommandParameter="{Binding ElementName=NameTextBox, Path=Text}">
-                <!--<Button.CommandParameter>
-                    
-                </Button.CommandParameter>-->
+                    Command="{Binding Path=LoginCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                        <Binding ElementName="NameTextBox" Path="Text"></Binding>
+                        <Binding ElementName="PasswordBox"></Binding>
+                    </MultiBinding>
+                </Button.CommandParameter>
                 Login
             </Button>
 

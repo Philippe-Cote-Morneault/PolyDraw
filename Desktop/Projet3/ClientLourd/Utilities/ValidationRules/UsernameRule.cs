@@ -18,19 +18,19 @@ namespace ClientLourd.Utilities.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             string username = (string)value;
+            LoginInputRules loginInputValidator = new LoginInputRules();
 
-            if (String.IsNullOrWhiteSpace(username))
+            if (loginInputValidator.stringIsEmpty(username))
             {
                 return new ValidationResult(false, "The username cannot be empty.");
             }
 
-            if (username.Length < 5 || username.Length > 12)
+            if (!loginInputValidator.LengthIsOk(username))
             { 
-                return new ValidationResult(false, "The username must be between 5 and 12 characters.");
+                return new ValidationResult(false, "The username must be between 4 and 12 characters.");
             }
 
             return ValidationResult.ValidResult; 
         }
-
     }
 }
