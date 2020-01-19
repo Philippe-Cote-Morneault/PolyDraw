@@ -90,12 +90,20 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="ModelViews\ChatViewModel.cs" />
     <Compile Include="ModelViews\EditorViewModel.cs" />
+    <Compile Include="ModelViews\MainViewModel.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ModelViews\ViewModelBase.cs" />
     <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
+    <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
+    <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
+    <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
+    <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />
+    <Compile Include="Views\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
     </Compile>
@@ -120,6 +128,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Conversation.xaml" />
     <Page Include="Views\Window\SimpleWindow.xaml">
       <SubType>Designer</SubType>
