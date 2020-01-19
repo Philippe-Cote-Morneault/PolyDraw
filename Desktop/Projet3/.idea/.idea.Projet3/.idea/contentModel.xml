@@ -22,6 +22,7 @@
         <e p="ModelViews" t="Include">
           <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
+          <e p="MainViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -34,6 +35,7 @@
               <e p="Chat.g.cs" t="Include" />
               <e p="Conversation.g.cs" t="Include" />
               <e p="Editor.g.cs" t="Include" />
+              <e p="Login.g.cs" t="Include" />
               <e p="Window" t="Include">
                 <e p="SimpleWindow.g.cs" t="Include" />
               </e>
@@ -63,9 +65,15 @@
             <e p="BorderConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
+            <e p="MultiBindingConverter.cs" t="Include" />
+            <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Dialogs" t="Include" />
           <e p="Enums" t="Include" />
+          <e p="ValidationRules" t="Include">
+            <e p="LoginInputRules.cs" t="Include" />
+            <e p="UsernameRule.cs" t="Include" />
+          </e>
         </e>
         <e p="Views" t="Include">
           <e p="Chat.xaml" t="Include" />
@@ -74,6 +82,8 @@
           <e p="Conversation.xaml.cs" t="Include" />
           <e p="Editor.xaml" t="Include" />
           <e p="Editor.xaml.cs" t="Include" />
+          <e p="Login.xaml" t="Include" />
+          <e p="Login.xaml.cs" t="Include" />
           <e p="Window" t="Include">
             <e p="SimpleWindow.xaml" t="Include" />
             <e p="SimpleWindow.xaml.cs" t="Include" />

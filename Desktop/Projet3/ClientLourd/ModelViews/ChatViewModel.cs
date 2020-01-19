@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models;
@@ -11,6 +12,22 @@ namespace ClientLourd.ModelViews
 {
     public class ChatViewModel: ViewModelBase
     {
+
+        private int _newMessages;
+        private int _messagesCount;
+
+        public int NewMessages
+        {
+            get => _newMessages;
+            set
+            {
+                if (value != _newMessages)
+                {
+                    _newMessages = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         public ChatViewModel()
         {
@@ -106,7 +123,17 @@ namespace ClientLourd.ModelViews
 
         private void SendMessage(string message)
         {
-            MessageBox.Show(message);
+            User user1 = new User()
+            {
+                ID = "1",
+                Name = "user1",
+            };
+            Message mes = new Message();
+            mes.Text = message;
+            mes.User = user1;
+            mes.Date = DateTime.Now;
+            Channels[0].Messages.Add(mes);
+            UpdateMessagesCount();
         }
         
         public ObservableCollection<Channel> Channels
@@ -120,6 +147,17 @@ namespace ClientLourd.ModelViews
                     NotifyPropertyChanged();
                 }
             }
+        }
+
+        private void UpdateMessagesCount()
+        {
+            var currentMessageCount = 0;
+            foreach (var messages in Channels.Select(c => c.Messages))
+            {
+                currentMessageCount += messages.Count;
+            }
+            NewMessages += currentMessageCount - _messagesCount;
+            _messagesCount = currentMessageCount;
         }
 
         private ObservableCollection<Channel> _channels;
