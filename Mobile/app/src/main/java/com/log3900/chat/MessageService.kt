@@ -4,17 +4,25 @@ enum class MessageEvent {
     MESSAGE_RECEIVED
 }
 class MessageService {
-    var subscribers: MutableMap<MessageEvent, (Message) -> Unit> = mutableMapOf()
+    private var subscribers: MutableMap<MessageEvent, MutableList<(Message) -> Unit>> = mutableMapOf()
 
     fun sendMessage(message: Message) {
         // TODO: Make call to socket service to send message.
     }
 
-    private fun initialize() {
-        // TODO: Make call to socket service to listen to message receiving event and pass receiveMessage function.
+    fun subscribe(event: MessageEvent, callback: (Message) -> Unit) {
+        if (subscribers[event] == null) {
+            subscribers[event] = mutableListOf()
+        }
+
+        subscribers[event]?.add(callback)
     }
 
     fun receiveMessage(message: Message) {
 
+    }
+
+    private fun initialize() {
+        // TODO: Make call to socket service to listen to message receiving event and pass receiveMessage function.
     }
 }
