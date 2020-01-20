@@ -28,7 +28,7 @@ func ListenSIG() {
 	go func() {
 		<-c
 		onSIGTERM()
-		os.Exit(1)
+		os.Exit(0)
 	}()
 }
 

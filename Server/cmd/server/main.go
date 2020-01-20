@@ -9,21 +9,27 @@ import (
 
 func main() {
 	restServer := &rest.Server{}
+	socketServer := &socket.Server{}
 
 	graceful.Register(restServer.Shutdown, "REST server")
+	graceful.Register(socketServer.Shutdown, "Socket server")
 	graceful.ListenSIG()
 
-	hRestServer := make(chan bool)
+	log.Printf("Server is starting jobs!")
+
+	handleRest := make(chan bool)
 	go func() {
 		restServer.Initialize()
 		restServer.Run(":3000")
-		hRestServer <- true
+		handleRest <- true
 	}()
 
-	log.Printf("Server is starting jobs!")
-	// Launch socket thread and service
-	socketServer := &socket.Server{}
-	go socketServer.StartListening(":5011")
+	handleSocket := make(chan bool)
+	go func() {
+		socketServer.StartListening(":3001")
+		handleSocket <- true
+	}()
 
-	<-hRestServer
+	<-handleRest
+	<-handleSocket
 }
