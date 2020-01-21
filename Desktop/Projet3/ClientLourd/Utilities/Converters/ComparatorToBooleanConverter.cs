@@ -1,23 +1,23 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class ComparatorToBooleanConverter : IValueConverter
+    public class ComparatorToBooleanConverter : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
-                if (parameter != null)
-                    return value.ToString() == parameter.ToString();
-            throw new InvalidEnumArgumentException();
+            return values.All(v => v.ToString() == values[0].ToString());
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter,
-            System.Globalization.CultureInfo culture)
+        public object[] ConvertBack(
+            object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
+
     }
 }

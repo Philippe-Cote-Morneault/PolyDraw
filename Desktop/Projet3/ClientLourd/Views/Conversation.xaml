@@ -16,7 +16,13 @@
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                     <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=Width, Converter={StaticResource DivisionMathConverter}, ConverterParameter=8}" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=User.Name, Converter={StaticResource ComparatorToBooleanConverter}, ConverterParameter=user1}" Value="True">
+                        <DataTrigger Value="true">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
+                                    <Binding Path="User.Name"/>
+                                    <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                </MultiBinding>
+                            </DataTrigger.Binding>
                             <Setter Property="HorizontalAlignment" Value="Right"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
@@ -31,7 +37,13 @@
                                     <Style TargetType="materialDesign:Chip">
                                         <Setter Property="Background" Value="WhiteSmoke"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=User.Name, Converter={StaticResource ComparatorToBooleanConverter}, ConverterParameter=user1}" Value="True">
+                                            <DataTrigger Value="true">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                        <Binding Path="User.Name"/>
+                                                        <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
                                                 <Setter Property="Background" Value="LightBlue"/>
                                             </DataTrigger>
                                         </Style.Triggers>
