@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:local="clr-namespace:ClientLourd.Views"
              mc:Ignorable="d">
-    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=Width, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
+    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
             <DockPanel DockPanel.Dock="Bottom"  >
                 <Button Margin="5" 
                         IsDefault="True" 
