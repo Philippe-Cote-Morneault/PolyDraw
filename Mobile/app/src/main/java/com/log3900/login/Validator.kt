@@ -10,6 +10,6 @@ object Validator {
 
     fun validatePassword(password: String) = password.isNotEmpty() && password.isValidLen()
 
-    private fun String.isAlphanumeric(): Boolean = this.matches(Regex("[a-zA-Z0-9]"))
+    private fun String.isAlphanumeric(): Boolean = this.matches(Regex("[a-zA-Z0-9]+"))
     private fun String.isValidLen(): Boolean = this.length in minLength..maxLength
 }
