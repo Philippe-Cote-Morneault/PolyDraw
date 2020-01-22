@@ -8,7 +8,7 @@
 <!--        <item name="colorAccent">@color/colorAccent</item>-->
 <!--    </style>-->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
-        <item name="colorPrimary">@color/colorPrimary</item>
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
 <!--        <item name="android:windowBackground">@color/colorLightThemeBackground</item>-->
     </style>
 
