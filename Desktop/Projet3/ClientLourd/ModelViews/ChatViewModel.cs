@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models;
 using ClientLourd.Utilities.Commands;
@@ -112,28 +113,38 @@ namespace ClientLourd.ModelViews
         }
 
             
-        RelayCommand<string> _sendMessageCommand; public ICommand SendMessageCommand
+        RelayCommand<TextBox> _sendMessageCommand; public ICommand SendMessageCommand
         {
             get
             {
                 return _sendMessageCommand ??
-                       (_sendMessageCommand = new RelayCommand<string>(param => this.SendMessage(param)));
+                       (_sendMessageCommand = new RelayCommand<TextBox>(param => this.SendMessage(param)));
             }
         }
 
-        private void SendMessage(string message)
+        private void SendMessage(TextBox tBox)
         {
-            User user1 = new User()
+            string message = tBox.Text;
+            if (!String.IsNullOrEmpty(message))
             {
-                ID = "1",
-                Name = "user1",
-            };
-            Message mes = new Message();
-            mes.Text = message;
-            mes.User = user1;
-            mes.Date = DateTime.Now;
-            Channels[0].Messages.Add(mes);
-            UpdateMessagesCount();
+                User user1 = new User()
+                {
+                    ID = "1",
+                    Name = "user1",
+                };
+                Message mes = new Message();
+                mes.Text = message;
+                mes.User = user1;
+                mes.Date = DateTime.Now;
+                Channels[0].Messages.Add(mes);
+                UpdateMessagesCount();
+                clearTextBox(tBox);
+            }
+        }
+
+        private void clearTextBox(TextBox tbox)
+        {
+            tbox.Text = "";
         }
         
         public ObservableCollection<Channel> Channels
