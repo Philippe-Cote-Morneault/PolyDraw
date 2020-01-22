@@ -14,7 +14,7 @@
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
     </UserControl.Resources>
-    <materialDesign:Card Width="300" Margin="0 20 0 20">
+    <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
         <Grid>
             <Grid.RowDefinitions>
 
