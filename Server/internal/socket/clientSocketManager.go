@@ -1,10 +1,18 @@
 package socket
 
 import (
+	"net"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/vmihailenco/msgpack/v4"
-	"time"
 )
+
+// ClientSocket is a client connected to the socket
+type ClientSocket struct {
+	socket net.Conn
+	id     uuid.UUID
+}
 
 // ClientSocketManager manages all client sockets connected and subscribers
 type ClientSocketManager struct {
