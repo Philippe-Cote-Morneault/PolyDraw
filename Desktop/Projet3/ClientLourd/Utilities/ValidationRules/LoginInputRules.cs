@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
 
 namespace ClientLourd.Utilities.ValidationRules
 {
@@ -13,7 +15,7 @@ namespace ClientLourd.Utilities.ValidationRules
 
         }
 
-        public bool stringIsEmpty(string myInput)
+        public bool StringIsEmpty(string myInput)
         {
             return String.IsNullOrWhiteSpace(myInput);
         }
@@ -21,6 +23,13 @@ namespace ClientLourd.Utilities.ValidationRules
         public bool LengthIsOk(string myInput)
         {
             return myInput.Length >= 4 && myInput.Length <= 12;
+        }
+
+        public bool IsAlphaNumeric(string myInput)
+        {
+            Regex r = new Regex("^[a-zA-Z0-9]*$");
+
+            return r.IsMatch(myInput);
         }
     }
 }

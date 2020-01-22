@@ -20,9 +20,14 @@ namespace ClientLourd.Utilities.ValidationRules
             string username = (string)value;
             LoginInputRules loginInputValidator = new LoginInputRules();
 
-            if (loginInputValidator.stringIsEmpty(username))
+            if (loginInputValidator.StringIsEmpty(username))
             {
                 return new ValidationResult(false, "The username cannot be empty.");
+            }
+
+            if (!loginInputValidator.IsAlphaNumeric(username))
+            {
+                return new ValidationResult(false, "The username must only contain alphanumeric characters.");
             }
 
             if (!loginInputValidator.LengthIsOk(username))

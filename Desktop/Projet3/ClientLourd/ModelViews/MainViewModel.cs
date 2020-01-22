@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.ValidationRules;
-
+using ClientLourd.Services.Network;
 
 namespace ClientLourd.ModelViews
 {
@@ -18,11 +18,14 @@ namespace ClientLourd.ModelViews
         RelayCommand<object[]> _loginCommand;
         bool _isLoggedIn;
         string _username;
+        RestClient _restClient;
 
         public MainViewModel()
         {
             _isLoggedIn = false;
             _username = "";
+            _restClient = new RestClient();
+
         }
 
 
@@ -71,7 +74,7 @@ namespace ClientLourd.ModelViews
 
         void Authentify(object[] param) {
             IsLoggedIn = true;
-            
+            _restClient.Login("yo", "yo");
 
         }
 
@@ -84,7 +87,7 @@ namespace ClientLourd.ModelViews
             LoginInputRules loginInputValidator = new LoginInputRules();
 
             return (loginInputValidator.LengthIsOk(username) && loginInputValidator.LengthIsOk(password) &&
-                    !loginInputValidator.stringIsEmpty(username) && !loginInputValidator.stringIsEmpty(password));
+                    !loginInputValidator.StringIsEmpty(username) && !loginInputValidator.StringIsEmpty(password));
         }
 
     }
