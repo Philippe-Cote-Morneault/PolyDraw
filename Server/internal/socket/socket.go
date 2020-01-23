@@ -34,6 +34,7 @@ func (server *Server) StartListening(host string) {
 	for {
 		connection, err := (*server.listener).Accept()
 		if err != nil {
+
 			server.closingMutex.Lock()
 			if !server.closing {
 				log.Fatal("[SOCKET] -> ", err)

@@ -12,6 +12,12 @@ type SerializableMessage struct {
 	Time time.Time
 }
 
+// Quick implementation of enum to represent different socket events.
+type socketEvent struct {
+	Connection    int
+	Disconnection int
+}
+
 // Quick implementation of enum to represent different message types
 type messageType struct {
 	ServerConnection    int
@@ -38,12 +44,6 @@ var MessageType = &messageType{
 	LeaveChannel:        24,
 	UserLeftChannel:     25,
 	CreateChannel:       26,
-}
-
-// Quick implementation of enum to represent different socket events.
-type socketEvent struct {
-	Connection    int
-	Disconnection int
 }
 
 // SocketEvent represents an event that can occur with sockets.
