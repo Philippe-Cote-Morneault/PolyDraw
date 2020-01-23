@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
     </UserControl.Resources>
-        <ListBox  ItemsSource="{Binding Messages}">
+        <ListBox IsEnabled="False"  ItemsSource="{Binding Messages}">
             <ListBox.Resources>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalAlignment" Value="Left"/>
