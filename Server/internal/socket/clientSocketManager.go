@@ -1,11 +1,12 @@
 package socket
 
 import (
+	"fmt"
 	"net"
-	"time"
+	"sync"
 
 	"github.com/google/uuid"
-	"github.com/vmihailenco/msgpack/v4"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
 // ClientSocket is a client connected to the socket
@@ -16,92 +17,73 @@ type ClientSocket struct {
 
 // ClientSocketManager manages all client sockets connected and subscribers
 type ClientSocketManager struct {
-	clients            map[uuid.UUID]*ClientSocket
-	messageSubscribers map[int]map[uuid.UUID]MessageCallback
-	eventSubscribers   map[int]map[uuid.UUID]EventCallback
+	mutexMap sync.Mutex
+	clients  map[uuid.UUID]*ClientSocket
 }
 
 func newClientSocketManager() *ClientSocketManager {
 	manager := new(ClientSocketManager)
+	manager.mutexMap.Lock()
+
 	manager.clients = make(map[uuid.UUID]*ClientSocket)
-	manager.messageSubscribers = make(map[int]map[uuid.UUID]MessageCallback)
-	manager.eventSubscribers = make(map[int]map[uuid.UUID]EventCallback)
+
+	manager.mutexMap.Unlock()
 
 	return manager
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
 func (manager *ClientSocketManager) registerClient(client *ClientSocket) {
-	//Make threadsafe
+	defer manager.mutexMap.Unlock()
+	manager.mutexMap.Lock()
+
 	manager.clients[client.id] = client
 }
 
 func (manager *ClientSocketManager) unregisterClient(clientID uuid.UUID) {
-	//TODO make threadsafe
+	defer manager.mutexMap.Unlock()
+
+	manager.mutexMap.Lock()
 	if clientConnection, ok := manager.clients[clientID]; ok {
-		clientConnection.socket.Close()
+		manager.close(clientConnection)
+
 		delete(manager.clients, clientID)
 	}
 }
 
-func (manager *ClientSocketManager) receive(clientID uuid.UUID, closing chan bool) {
+func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing chan bool) {
 	defer wg.Done() //Defer so once everything is completed we can return
+	cancel := make(chan struct{})
+	defer close(cancel) //Defer cancel so we end the thread if no signal is called
 
-	if clientConnection, ok := manager.clients[clientID]; ok {
-		cancel := make(chan struct{})
-
-		defer close(cancel) //Defer cancel so we end the thread if no signal is called
-
-		go func() {
-			select {
-			case <-closing:
-				clientConnection.socket.Close()
-			case <-cancel:
-				return
-			}
-		}()
-
-		for {
-			message := make([]byte, 4096)
-			length, err := clientConnection.socket.Read(message)
-			if err != nil {
-				// If the connection is closed, unregister client
-				manager.unregisterClient(clientID)
-				clientConnection.socket.Close()
-				manager.notifyEventSubscribers(SocketEvent.Disconnection, clientConnection)
-				break
-			}
-			if length > 0 {
-				var socketMessage SerializableMessage
-				err := msgpack.Unmarshal(message, &socketMessage)
-				if err != nil {
-					// TODO Handle this error
-					break
-				}
-				manager.notifyMessageSubscribers(socketMessage)
-			}
+	go func() {
+		select {
+		case <-closing:
+			manager.close(clientSocket)
+		case <-cancel:
+			return
 		}
-	} else {
-		// Client connection does not exist anymore
-		// TODO: Handle trying to read from connection when it doesn't exist anymore
+	}()
+
+	cbroadcast.Broadcast(BSocketConnected, clientSocket.id) //Broadcast to all the services that a new connection is made
+	for {
+		message := make([]byte, 4096)
+		length, err := clientSocket.socket.Read(message)
+		if err != nil {
+			// If the connection is closed, unregister client
+			manager.unregisterClient(clientSocket.id)
+			fmt.Println("Err inside Read")
+			break
+		}
+		if length > 0 {
+			cbroadcast.Broadcast(BSocketReceive, message)
+			//TODO parse message or count on a service to do it
+		}
 	}
 
 }
 
-func (manager *ClientSocketManager) notifyMessageSubscribers(message SerializableMessage) {
-	if callbacks, ok := manager.messageSubscribers[message.Type]; ok {
-		for _, callback := range callbacks {
-			// TODO: Figure out if sender will be username or id
-			callback(message, "")
-		}
-	}
-}
-
-func (manager *ClientSocketManager) notifyEventSubscribers(eventType int, client *ClientSocket) {
-	if callbacks, ok := manager.eventSubscribers[eventType]; ok {
-		for _, callback := range callbacks {
-			// TODO: Figure out if sender will be username or id
-			callback(client, time.Now())
-		}
-	}
+func (manager *ClientSocketManager) close(clientSocket *ClientSocket) {
+	clientSocket.socket.Close()
+	cbroadcast.Broadcast(BSocketCloseClient, clientSocket.id) //Broadcast to all the services that the connection is closed
 }
