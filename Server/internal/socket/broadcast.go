@@ -27,6 +27,7 @@ const BSocketReceive = "socket:receive"
 //BSize default buffer size for broadcast
 const BSize = 20
 
+//RegisterBroadcast Register all the broadcast for the socket
 func RegisterBroadcast() {
 	cbroadcast.Register(BSocketReady, BSize)
 	cbroadcast.Register(BSocketDisconnect, BSize)
