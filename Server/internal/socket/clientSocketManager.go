@@ -1,7 +1,6 @@
 package socket
 
 import (
-	"fmt"
 	"net"
 	"sync"
 
@@ -72,7 +71,6 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 		if err != nil {
 			// If the connection is closed, unregister client
 			manager.unregisterClient(clientSocket.id)
-			fmt.Println("Err inside Read")
 			break
 		}
 		if length > 0 {
