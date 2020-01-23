@@ -5,7 +5,8 @@ import "gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 //BSocketReady broadcasted when the socket is ready
 const BSocketReady = "socket:ready"
 
-//BSocketDisconnect broadcasted when the socket is disconnected for a client
+//BSocketDisconnect broadcasted when the socket is disconnected for a client with the disconnect message
+//Sends the client id a uuid
 const BSocketDisconnect = "socket:disconnect"
 
 //BSocketConnected broadcasted when the socket is connected for a client
@@ -26,7 +27,7 @@ const BSocketReceive = "socket:receive"
 //BSize default buffer size for broadcast
 const BSize = 20
 
-func registerBroadcast() {
+func RegisterBroadcast() {
 	cbroadcast.Register(BSocketReady, BSize)
 	cbroadcast.Register(BSocketDisconnect, BSize)
 	cbroadcast.Register(BSocketConnected, BSize)

@@ -23,8 +23,6 @@ var wg sync.WaitGroup //Wait group used for shutdown
 
 // StartListening starts listening to incoming socket connections
 func (server *Server) StartListening(host string) {
-	registerBroadcast()
-
 	server.mutex.Lock()
 	server.running = true
 	server.closingChannel = make(chan bool)
@@ -38,10 +36,10 @@ func (server *Server) StartListening(host string) {
 	server.mutex.Unlock()
 
 	server.clientSocketManager = newClientSocketManager()
+	cbroadcast.Broadcast(BSocketReady, nil)
 
 	// Listen for new socket connections and create client for each new connection
 	for {
-		cbroadcast.Broadcast(BSocketReady, nil)
 		connection, err := (*server.listener).Accept()
 		if err != nil {
 
