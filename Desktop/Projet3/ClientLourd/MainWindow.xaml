@@ -58,7 +58,8 @@
                 <views:Chat x:Name="ChatBox"/>
             </DockPanel>
         </materialDesign:DrawerHost.RightDrawerContent>
-        
+            
+        <!--Hamburger menu-->
         <materialDesign:DrawerHost.LeftDrawerContent>
             <DockPanel>
                 <ToggleButton Margin="16" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" Name="MenuToggleButton"/>

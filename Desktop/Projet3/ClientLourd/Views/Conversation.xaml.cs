@@ -6,7 +6,7 @@ namespace ClientLourd.Views
     {
         public Conversation()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
     }
 }

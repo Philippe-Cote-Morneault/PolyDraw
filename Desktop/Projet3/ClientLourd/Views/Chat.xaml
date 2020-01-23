@@ -4,19 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:local="clr-namespace:ClientLourd.Views"
-             mc:Ignorable="d">
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             mc:Ignorable="d"
+             xmlns:c="clr-namespace:ClientLourd.ModelViews">
+    <UserControl.Resources>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
+        <c:MainViewModel x:Key="MainViewModel"/>
+    </UserControl.Resources>
     <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
         <DockPanel Background="WhiteSmoke" DockPanel.Dock="Bottom">
             <Button Margin="5" 
                         IsDefault="True" 
                         Style="{DynamicResource MaterialDesignToolForegroundButton}"
                         DockPanel.Dock="Right" 
-                        Command="{Binding SendMessageCommand}" 
-                        CommandParameter="{Binding ElementName=MessageTextBox, Path=.}">
+                        Command="{Binding SendMessageCommand}">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource MultiBindingConverter}" >
+                        <Binding ElementName="MessageTextBox" Path="."></Binding>
+                        <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                    </MultiBinding>
+                </Button.CommandParameter>
                 <materialDesign:PackIcon Kind="Send"/>
             </Button>
+
             <TextBox 
                 Background="White"
                     Margin="5" 

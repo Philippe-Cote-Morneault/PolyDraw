@@ -113,28 +113,26 @@ namespace ClientLourd.ModelViews
         }
 
             
-        RelayCommand<TextBox> _sendMessageCommand; public ICommand SendMessageCommand
+        RelayCommand<object[]> _sendMessageCommand; public ICommand SendMessageCommand
         {
             get
             {
                 return _sendMessageCommand ??
-                       (_sendMessageCommand = new RelayCommand<TextBox>(param => this.SendMessage(param)));
+                       (_sendMessageCommand = new RelayCommand<object[]>(param => this.SendMessage(param)));
             }
         }
 
-        private void SendMessage(TextBox tBox)
+        private void SendMessage(object[] param)
         {
+            TextBox tBox = param[0] as TextBox;
+            string username = param[1] as string;
             string message = tBox.Text;
+
             if (!String.IsNullOrEmpty(message))
             {
-                User user1 = new User()
-                {
-                    ID = "1",
-                    Name = "user1",
-                };
                 Message mes = new Message();
                 mes.Text = message;
-                mes.User = user1;
+                mes.User = new User(){ ID = username, Name = username,};
                 mes.Date = DateTime.Now;
                 Channels[0].Messages.Add(mes);
                 UpdateMessagesCount();
