@@ -2,7 +2,6 @@ package socket
 
 import (
 	"encoding/binary"
-	"log"
 	"net"
 	"sync"
 
@@ -47,7 +46,6 @@ func (manager *ClientSocketManager) unregisterClient(clientID uuid.UUID) {
 	manager.mutexMap.Lock()
 	if clientConnection, ok := manager.clients[clientID]; ok {
 		manager.close(clientConnection)
-
 		delete(manager.clients, clientID)
 	}
 }
@@ -71,46 +69,48 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 	const minPacketLength = 3
 
 	for {
-		buffer := make([]byte, buffSize)
+		buffer := make([]byte, minPacketLength)
+		TLBuffer := make([]byte, minPacketLength)
 		length, err := clientSocket.socket.Read(buffer)
-		if err != nil {
+
+		if err != nil || length == 0 {
 			// If the connection is closed, unregister client
 			manager.unregisterClient(clientSocket.id)
 			break
 		}
-		if length < buffSize && length > minPacketLength {
-			offset := 0
-			remainingBytes := length
 
-			for remainingBytes > minPacketLength {
-				size := int(binary.BigEndian.Uint16(buffer[1+offset:3+offset])) + 3
-				message := make([]byte, size)
+		if length > 0 {
+			//We wait until we have all the three bytes needed for TL of TLV
+			copy(TLBuffer, buffer)
+			closed := false
+			TLLength := length
+			for TLLength < 3 {
+				buffer := make([]byte, 1) //We get one by one the remaining bytes
+				length, err := clientSocket.socket.Read(buffer)
 
-				copy(message, buffer[offset:size+offset])
-				cbroadcast.Broadcast(BSocketReceive, message)
-
-				offset += size
-				remainingBytes -= size
-
-				if remainingBytes < 0 {
-					//TODO missing bytes
-					log.Printf("Bad formatting missing bytes according to size")
+				if err != nil || length == 0 {
+					// If the connection is closed, unregister client
+					manager.unregisterClient(clientSocket.id)
+					closed = true
+					break
 				}
+				copy(TLBuffer[TLLength:], buffer)
+				TLLength++
+			}
+			if closed {
+				break
+			}
 
-			}
-			if remainingBytes > 0 {
-				//TODO remaining bytes
-				log.Printf("Bad formatting residuals bytes")
-			}
-		} else if length == buffSize {
-			//The message is not complete we must get the size and the remaining bytes
-			size := int(binary.BigEndian.Uint16(buffer[1:3])) + 3
-			remainingBytesPacket := size - length
-			message := make([]byte, size) // Make size for the message
-			copy(message, buffer)
+			// We have all the bytes needed to read the rest of the packet
+			size := binary.BigEndian.Uint16(TLBuffer[1:3])
+			totalLength := int(size) + 3
+			typeMessage := TLBuffer[0]
+
+			remainingBytesPacket := totalLength - 3
+			messageBytes := make([]byte, totalLength) // Make size for the message
+			copy(messageBytes, TLBuffer)
 
 			for remainingBytesPacket > 0 {
-
 				if remainingBytesPacket < buffSize {
 					buffer = make([]byte, remainingBytesPacket)
 				} else {
@@ -121,16 +121,23 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 				if err != nil {
 					// If the connection is closed, unregister client
 					manager.unregisterClient(clientSocket.id)
+					closed = true
 					break
 				}
-				copy(message[(size-remainingBytesPacket):], buffer[:length])
+				copy(messageBytes[(totalLength-remainingBytesPacket):], buffer[:length])
 				remainingBytesPacket -= length
 			}
+			if closed {
+				break
+			}
+
 			//Message is complete we can send the broadcast
+			message := RawMessage{}
+			message.ParseMessage(typeMessage, size, messageBytes)
+
 			cbroadcast.Broadcast(BSocketReceive, message)
 		}
 	}
-
 }
 
 func (manager *ClientSocketManager) close(clientSocket *ClientSocket) {

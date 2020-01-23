@@ -68,3 +68,10 @@ func (message *RawMessage) ToBytesSlice() []byte {
 
 	return bytes
 }
+
+// ParseMessage create the message object
+func (message *RawMessage) ParseMessage(typeMessage byte, length uint16, bytes []byte) {
+	message.Type = typeMessage
+	message.Length = length
+	message.Bytes = bytes[3:]
+}

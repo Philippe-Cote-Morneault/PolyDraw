@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
@@ -46,8 +45,11 @@ func main() {
 			case <-ready:
 				log.Println("Socket is ready")
 			case data := <-receiver:
-				fmt.Println()
-				fmt.Printf("%#x", data)
+				message, ok := data.(socket.RawMessage)
+
+				if ok {
+					log.Printf("Socket data received: %#x | %d | %#x -> %s", message.Type, message.Length, message.Bytes, message.Bytes)
+				}
 
 				//fmt.Printf("data: %s | %#x\n", data, data)
 			case id := <-connected:
