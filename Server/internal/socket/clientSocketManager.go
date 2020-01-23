@@ -32,19 +32,36 @@ func newClientSocketManager() *ClientSocketManager {
 
 // Registers a new client to the manager. Will listen to messages from this client.
 func (manager *ClientSocketManager) registerClient(client *ClientSocket) {
+	//Make threadsafe
 	manager.clients[client.id] = client
 }
 
 func (manager *ClientSocketManager) unregisterClient(clientID uuid.UUID) {
+	//TODO make threadsafe
 	if clientConnection, ok := manager.clients[clientID]; ok {
 		clientConnection.socket.Close()
 		delete(manager.clients, clientID)
 	}
 }
 
-func (manager *ClientSocketManager) receive(clientID uuid.UUID) {
-	for {
-		if clientConnection, ok := manager.clients[clientID]; ok {
+func (manager *ClientSocketManager) receive(clientID uuid.UUID, closing chan bool) {
+	defer wg.Done() //Defer so once everything is completed we can return
+
+	if clientConnection, ok := manager.clients[clientID]; ok {
+		cancel := make(chan struct{})
+
+		defer close(cancel) //Defer cancel so we end the thread if no signal is called
+
+		go func() {
+			select {
+			case <-closing:
+				clientConnection.socket.Close()
+			case <-cancel:
+				return
+			}
+		}()
+
+		for {
 			message := make([]byte, 4096)
 			length, err := clientConnection.socket.Read(message)
 			if err != nil {
@@ -63,12 +80,12 @@ func (manager *ClientSocketManager) receive(clientID uuid.UUID) {
 				}
 				manager.notifyMessageSubscribers(socketMessage)
 			}
-		} else {
-			// Client connection does not exist anymore
-			// TODO: Handle trying to read from connection when it doesn't exist anymore
-			break
 		}
+	} else {
+		// Client connection does not exist anymore
+		// TODO: Handle trying to read from connection when it doesn't exist anymore
 	}
+
 }
 
 func (manager *ClientSocketManager) notifyMessageSubscribers(message SerializableMessage) {

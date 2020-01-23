@@ -11,15 +11,21 @@ import (
 
 // Server represents a Socket server
 type Server struct {
-	closing             bool
-	closingMutex        sync.Mutex
+	running             bool
+	mutex               sync.Mutex
+	closingChannel      chan bool
 	listener            *net.Listener
 	clientSocketManager *ClientSocketManager
 }
 
+var wg sync.WaitGroup //Wait group used for shutdown
+
 // StartListening starts listening to incoming socket connections
 func (server *Server) StartListening(host string) {
-	server.closing = false
+	server.mutex.Lock()
+
+	server.running = true
+	server.closingChannel = make(chan bool)
 	log.Printf("[SOCKET] -> Server is started on %s", host)
 
 	listener, err := net.Listen("tcp", host)
@@ -28,6 +34,7 @@ func (server *Server) StartListening(host string) {
 	}
 	server.listener = &listener
 
+	server.mutex.Unlock()
 	server.clientSocketManager = newClientSocketManager()
 
 	// Listen for new socket connections and create client for each new connection
@@ -35,28 +42,40 @@ func (server *Server) StartListening(host string) {
 		connection, err := (*server.listener).Accept()
 		if err != nil {
 
-			server.closingMutex.Lock()
-			if !server.closing {
+			server.mutex.Lock()
+			if server.running {
 				log.Fatal("[SOCKET] -> ", err)
 			}
-			server.closingMutex.Unlock()
+			server.mutex.Unlock()
 		}
 		clientSocket := &ClientSocket{socket: connection, id: uuid.New()}
 		server.clientSocketManager.registerClient(clientSocket)
-		go server.clientSocketManager.receive(clientSocket.id)
+
+		wg.Add(1)
+		go server.clientSocketManager.receive(clientSocket.id, server.closingChannel)
+
 		server.clientSocketManager.notifyEventSubscribers(SocketEvent.Connection, clientSocket)
 	}
 }
 
 //Shutdown close the socket properly
 func (server *Server) Shutdown() {
-	server.closingMutex.Lock()
-	server.closing = true
-	server.closingMutex.Unlock()
+	server.mutex.Lock()
+	server.running = false
+	server.mutex.Unlock()
+
+	close(server.closingChannel)
+
+	wg.Wait() //Wait for all the receivers to end
 
 	log.Println("[SOCKET] -> Shutting down the socket server...")
 	//TODO send a to all the games to close them
-	(*server.listener).Close()
+
+	server.mutex.Lock()
+	if server.listener != nil {
+		(*server.listener).Close()
+	}
+	server.mutex.Unlock()
 }
 
 // SubscribeToMessage associates a callback to a message type. When a message is received on a socket with the specified message type, the callback
