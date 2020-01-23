@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClientLourd.ModelViews;
 
 namespace ClientLourd.Views
 {
@@ -23,6 +25,7 @@ namespace ClientLourd.Views
         public Login()
         {
             InitializeComponent();
+            DataContext = new LoginViewModel();
         }
     }
 }

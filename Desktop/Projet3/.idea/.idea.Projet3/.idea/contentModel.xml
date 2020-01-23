@@ -22,6 +22,7 @@
         <e p="ModelViews" t="Include">
           <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
+          <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>

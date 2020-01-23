@@ -18,7 +18,7 @@
     </Window.Resources>
     <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
         <Grid>
-            <DockPanel Name="MainDockPanel" Visibility="{Binding Path=IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
+            <DockPanel Name="MainDockPanel" Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
                 <materialDesign:ColorZone  DockPanel.Dock="Top" Mode="PrimaryMid">
                     <DockPanel>
                         <ToggleButton DockPanel.Dock="Left" Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
@@ -48,7 +48,7 @@
                 <views:Editor/>
             </DockPanel>
             <DockPanel Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <views:Login/>
+                <views:Login x:Name="LoginScreen"/>
             </DockPanel>
         </Grid>
 
