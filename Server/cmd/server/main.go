@@ -1,15 +1,19 @@
 package main
 
 import (
+	"fmt"
+	"log"
+
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
-	"log"
 )
 
 func main() {
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}
+	socket.RegisterBroadcast()
 
 	graceful.Register(restServer.Shutdown, "REST server")
 	graceful.Register(socketServer.Shutdown, "Socket server")
@@ -28,6 +32,31 @@ func main() {
 	go func() {
 		socketServer.StartListening(":3001")
 		handleSocket <- true
+	}()
+
+	//Message viewer
+	go func() {
+		ready, _, _ := cbroadcast.Subscribe(socket.BSocketReady)
+		receiver, _, _ := cbroadcast.Subscribe(socket.BSocketReceive)
+		connected, _, _ := cbroadcast.Subscribe(socket.BSocketConnected)
+		close, _, _ := cbroadcast.Subscribe(socket.BSocketCloseClient)
+
+		for {
+			select {
+			case <-ready:
+				log.Println("Socket is ready")
+			case data := <-receiver:
+				fmt.Println()
+				fmt.Printf("%#x", data)
+
+				//fmt.Printf("data: %s | %#x\n", data, data)
+			case id := <-connected:
+				log.Printf("connected id: %s", id)
+			case id := <-close:
+				log.Printf("disconnect id: %s", id)
+			}
+		}
+
 	}()
 
 	<-handleRest

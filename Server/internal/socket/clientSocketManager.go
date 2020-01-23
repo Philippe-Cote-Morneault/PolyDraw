@@ -1,6 +1,8 @@
 package socket
 
 import (
+	"encoding/binary"
+	"log"
 	"net"
 	"sync"
 
@@ -65,17 +67,67 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 	}()
 
 	cbroadcast.Broadcast(BSocketConnected, clientSocket.id) //Broadcast to all the services that a new connection is made
+	const buffSize = 4096
+	const minPacketLength = 3
+
 	for {
-		message := make([]byte, 4096)
-		length, err := clientSocket.socket.Read(message)
+		buffer := make([]byte, buffSize)
+		length, err := clientSocket.socket.Read(buffer)
 		if err != nil {
 			// If the connection is closed, unregister client
 			manager.unregisterClient(clientSocket.id)
 			break
 		}
-		if length > 0 {
+		if length < buffSize && length > minPacketLength {
+			offset := 0
+			remainingBytes := length
+
+			for remainingBytes > minPacketLength {
+				size := int(binary.BigEndian.Uint16(buffer[1+offset:3+offset])) + 3
+				message := make([]byte, size)
+
+				copy(message, buffer[offset:size+offset])
+				cbroadcast.Broadcast(BSocketReceive, message)
+
+				offset += size
+				remainingBytes -= size
+
+				if remainingBytes < 0 {
+					//TODO missing bytes
+					log.Printf("Bad formatting missing bytes according to size")
+				}
+
+			}
+			if remainingBytes > 0 {
+				//TODO remaining bytes
+				log.Printf("Bad formatting residuals bytes")
+			}
+		} else if length == buffSize {
+			//The message is not complete we must get the size and the remaining bytes
+			size := int(binary.BigEndian.Uint16(buffer[1:3])) + 3
+			remainingBytesPacket := size - length
+			message := make([]byte, size) // Make size for the message
+			copy(message, buffer)
+
+			for remainingBytesPacket > 0 {
+
+				if remainingBytesPacket < buffSize {
+					buffer = make([]byte, remainingBytesPacket)
+				} else {
+					buffer = make([]byte, buffSize)
+				}
+
+				length, err := clientSocket.socket.Read(buffer)
+				if err != nil {
+					// If the connection is closed, unregister client
+					manager.unregisterClient(clientSocket.id)
+					break
+				}
+				copy(message[(size-remainingBytesPacket):], buffer[:length])
+				remainingBytesPacket -= length
+			}
+			//Message is complete we can send the broadcast
 			cbroadcast.Broadcast(BSocketReceive, message)
-			//TODO parse message or count on a service to do it
 		}
 	}
 

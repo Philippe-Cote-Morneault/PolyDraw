@@ -52,7 +52,6 @@ func Subscribe(name string) (Channel, chan bool, error) {
 	if channel, ok := channels[name]; ok {
 		reader := make(Channel, channel.bufferSize)
 		channels[name].subscribers = append(channel.subscribers, reader)
-		fmt.Printf("Subscribed to %s\n", name)
 		return reader, channels[name].closer, nil
 	}
 
@@ -94,7 +93,6 @@ func Broadcast(name string, data interface{}) error {
 func Close(name string) error {
 	defer mutex.Unlock()
 	if channel, ok := channels[name]; ok {
-		fmt.Printf("Closing to %d\n", len(channel.subscribers))
 		close(channel.closer)
 		return nil
 	}
