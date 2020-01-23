@@ -46,8 +46,8 @@
                     MaxLength="12"
                     materialDesign:HintAssist.Hint="Username"
                     materialDesign:HintAssist.HelperText="">
-                    <TextBox.Text>
-                        <Binding Path="Username" UpdateSourceTrigger="PropertyChanged">
+                    <TextBox.Text >
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.Username" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True"/>
                             </Binding.ValidationRules>
