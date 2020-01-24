@@ -134,8 +134,11 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 			//Message is complete we can send the broadcast
 			message := RawMessage{}
 			message.ParseMessage(typeMessage, size, messageBytes)
-
-			cbroadcast.Broadcast(BSocketReceive, message)
+			messageReceived := RawMessageReceived{
+				message:  message,
+				socketid: clientSocket.id,
+			}
+			cbroadcast.Broadcast(BSocketReceive, messageReceived)
 		}
 	}
 }
