@@ -22,6 +22,7 @@ const BSocketCloseClient = "socket:closeclient"
 const BSocketClose = "socket:close"
 
 //BSocketReceive broadcasted when the socket received data for a client
+//Sends the RawMessageReceived struct contains a message and a client id
 const BSocketReceive = "socket:receive"
 
 //BSize default buffer size for broadcast
