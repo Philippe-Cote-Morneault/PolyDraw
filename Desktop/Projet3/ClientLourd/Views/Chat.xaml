@@ -25,15 +25,17 @@
                         <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
                     </MultiBinding>
                 </Button.CommandParameter>
-                <materialDesign:PackIcon Kind="Send"/>
+                <materialDesign:PackIcon Kind="Send" Foreground="{StaticResource PrimaryHueMidBrush}"/>
             </Button>
 
             <TextBox 
                 Background="White"
-                    Margin="5" 
+                    Margin="10" 
+                    materialDesign:HintAssist.Hint="Type your message..."
                     TextWrapping="Wrap" 
                     Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" 
-                    MaxLines="3"  
+                    MaxLines="2"  
+                    MinLines="2"  
                     Name="MessageTextBox" />
             </DockPanel>
         <TabControl SelectedIndex="0" Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
