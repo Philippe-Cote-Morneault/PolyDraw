@@ -12,6 +12,12 @@ type SerializableMessage struct {
 	Time time.Time
 }
 
+// Quick implementation of enum to represent different socket events.
+type socketEvent struct {
+	Connection    int
+	Disconnection int
+}
+
 // Quick implementation of enum to represent different message types
 type messageType struct {
 	ServerConnection    int
@@ -40,12 +46,6 @@ var MessageType = &messageType{
 	CreateChannel:       26,
 }
 
-// Quick implementation of enum to represent different socket events.
-type socketEvent struct {
-	Connection    int
-	Disconnection int
-}
-
 // SocketEvent represents an event that can occur with sockets.
 var SocketEvent = &socketEvent{
 	Connection:    0,
@@ -67,4 +67,11 @@ func (message *RawMessage) ToBytesSlice() []byte {
 	copy(bytes[3:], message.Bytes)
 
 	return bytes
+}
+
+// ParseMessage create the message object
+func (message *RawMessage) ParseMessage(typeMessage byte, length uint16, bytes []byte) {
+	message.Type = typeMessage
+	message.Length = length
+	message.Bytes = bytes[3:]
 }

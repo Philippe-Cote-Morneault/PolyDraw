@@ -1,11 +1,12 @@
 package socket
 
 import (
+	"encoding/binary"
 	"net"
-	"time"
+	"sync"
 
 	"github.com/google/uuid"
-	"github.com/vmihailenco/msgpack/v4"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
 // ClientSocket is a client connected to the socket
@@ -16,75 +17,130 @@ type ClientSocket struct {
 
 // ClientSocketManager manages all client sockets connected and subscribers
 type ClientSocketManager struct {
-	clients            map[uuid.UUID]*ClientSocket
-	messageSubscribers map[int]map[uuid.UUID]MessageCallback
-	eventSubscribers   map[int]map[uuid.UUID]EventCallback
+	mutexMap sync.Mutex
+	clients  map[uuid.UUID]*ClientSocket
 }
 
 func newClientSocketManager() *ClientSocketManager {
 	manager := new(ClientSocketManager)
+	manager.mutexMap.Lock()
+
 	manager.clients = make(map[uuid.UUID]*ClientSocket)
-	manager.messageSubscribers = make(map[int]map[uuid.UUID]MessageCallback)
-	manager.eventSubscribers = make(map[int]map[uuid.UUID]EventCallback)
+
+	manager.mutexMap.Unlock()
 
 	return manager
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
 func (manager *ClientSocketManager) registerClient(client *ClientSocket) {
+	defer manager.mutexMap.Unlock()
+	manager.mutexMap.Lock()
+
 	manager.clients[client.id] = client
 }
 
 func (manager *ClientSocketManager) unregisterClient(clientID uuid.UUID) {
+	defer manager.mutexMap.Unlock()
+
+	manager.mutexMap.Lock()
 	if clientConnection, ok := manager.clients[clientID]; ok {
-		clientConnection.socket.Close()
+		manager.close(clientConnection)
 		delete(manager.clients, clientID)
 	}
 }
 
-func (manager *ClientSocketManager) receive(clientID uuid.UUID) {
+func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing chan bool) {
+	defer wg.Done() //Defer so once everything is completed we can return
+	cancel := make(chan struct{})
+	defer close(cancel) //Defer cancel so we end the thread if no signal is called
+
+	go func() {
+		select {
+		case <-closing:
+			manager.close(clientSocket)
+		case <-cancel:
+			return
+		}
+	}()
+
+	cbroadcast.Broadcast(BSocketConnected, clientSocket.id) //Broadcast to all the services that a new connection is made
+	const buffSize = 4096
+	const minPacketLength = 3
+
 	for {
-		if clientConnection, ok := manager.clients[clientID]; ok {
-			message := make([]byte, 4096)
-			length, err := clientConnection.socket.Read(message)
-			if err != nil {
-				// If the connection is closed, unregister client
-				manager.unregisterClient(clientID)
-				clientConnection.socket.Close()
-				manager.notifyEventSubscribers(SocketEvent.Disconnection, clientConnection)
-				break
-			}
-			if length > 0 {
-				var socketMessage SerializableMessage
-				err := msgpack.Unmarshal(message, &socketMessage)
-				if err != nil {
-					// TODO Handle this error
-					break
-				}
-				manager.notifyMessageSubscribers(socketMessage)
-			}
-		} else {
-			// Client connection does not exist anymore
-			// TODO: Handle trying to read from connection when it doesn't exist anymore
+		buffer := make([]byte, minPacketLength)
+		TLBuffer := make([]byte, minPacketLength)
+		length, err := clientSocket.socket.Read(buffer)
+
+		if err != nil || length == 0 {
+			// If the connection is closed, unregister client
+			manager.unregisterClient(clientSocket.id)
 			break
 		}
-	}
-}
 
-func (manager *ClientSocketManager) notifyMessageSubscribers(message SerializableMessage) {
-	if callbacks, ok := manager.messageSubscribers[message.Type]; ok {
-		for _, callback := range callbacks {
-			// TODO: Figure out if sender will be username or id
-			callback(message, "")
+		if length > 0 {
+			//We wait until we have all the three bytes needed for TL of TLV
+			copy(TLBuffer, buffer)
+			closed := false
+			TLLength := length
+			for TLLength < 3 {
+				buffer := make([]byte, 1) //We get one by one the remaining bytes
+				length, err := clientSocket.socket.Read(buffer)
+
+				if err != nil || length == 0 {
+					// If the connection is closed, unregister client
+					manager.unregisterClient(clientSocket.id)
+					closed = true
+					break
+				}
+				copy(TLBuffer[TLLength:], buffer)
+				TLLength++
+			}
+			if closed {
+				break
+			}
+
+			// We have all the bytes needed to read the rest of the packet
+			size := binary.BigEndian.Uint16(TLBuffer[1:3])
+			totalLength := int(size) + 3
+			typeMessage := TLBuffer[0]
+
+			remainingBytesPacket := totalLength - 3
+			messageBytes := make([]byte, totalLength) // Make size for the message
+			copy(messageBytes, TLBuffer)
+
+			for remainingBytesPacket > 0 {
+				if remainingBytesPacket < buffSize {
+					buffer = make([]byte, remainingBytesPacket)
+				} else {
+					buffer = make([]byte, buffSize)
+				}
+
+				length, err := clientSocket.socket.Read(buffer)
+				if err != nil {
+					// If the connection is closed, unregister client
+					manager.unregisterClient(clientSocket.id)
+					closed = true
+					break
+				}
+				copy(messageBytes[(totalLength-remainingBytesPacket):], buffer[:length])
+				remainingBytesPacket -= length
+			}
+			if closed {
+				break
+			}
+
+			//Message is complete we can send the broadcast
+			message := RawMessage{}
+			message.ParseMessage(typeMessage, size, messageBytes)
+
+			cbroadcast.Broadcast(BSocketReceive, message)
 		}
 	}
 }
 
-func (manager *ClientSocketManager) notifyEventSubscribers(eventType int, client *ClientSocket) {
-	if callbacks, ok := manager.eventSubscribers[eventType]; ok {
-		for _, callback := range callbacks {
-			// TODO: Figure out if sender will be username or id
-			callback(client, time.Now())
-		}
-	}
+func (manager *ClientSocketManager) close(clientSocket *ClientSocket) {
+	clientSocket.socket.Close()
+	cbroadcast.Broadcast(BSocketCloseClient, clientSocket.id) //Broadcast to all the services that the connection is closed
 }
