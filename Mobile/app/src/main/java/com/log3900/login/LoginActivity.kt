@@ -21,11 +21,11 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<TextInputEditText>(R.id.password).text.toString()
 
         if (!Validator.validateUsername(username)) {
-            val usernameLayout: TextInputLayout = findViewById<TextInputLayout>(R.id.login_username_layout)
+            val usernameLayout: TextInputLayout = findViewById(R.id.login_username_layout)
             usernameLayout.error = "Invalid name (must be 4-12 alphanumeric characters)"
             return
         } else if (!Validator.validatePassword(password)) {
-            val passwordLayout: TextInputLayout = findViewById<TextInputLayout>(R.id.login_password_layout)
+            val passwordLayout: TextInputLayout = findViewById(R.id.login_password_layout)
             passwordLayout.error = "Invalid password (must be 4-12 characters)"
             return
         }
