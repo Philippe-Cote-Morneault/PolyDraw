@@ -36,7 +36,7 @@
                     MaxLines="3"  
                     Name="MessageTextBox" />
             </DockPanel>
-        <TabControl SelectedIndex="0"  Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
+        <TabControl SelectedIndex="0" Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>                    

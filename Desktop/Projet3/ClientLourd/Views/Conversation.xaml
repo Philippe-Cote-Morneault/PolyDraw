@@ -10,12 +10,13 @@
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
     </UserControl.Resources>
-        <ListBox IsEnabled="False"  ItemsSource="{Binding Messages}">
+    <ListBox ItemsSource="{Binding Messages}">
             <ListBox.Resources>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                     <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=8}" />
-                    <Style.Triggers>
+                <Setter Property="IsEnabled" Value="False"/>
+                <Style.Triggers>
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
                                 <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
@@ -28,36 +29,36 @@
                     </Style.Triggers>
                 </Style>
             </ListBox.Resources>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border Padding="5">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                    <Border  Padding="5">
                         <StackPanel Orientation="Vertical">
-                            <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                <materialDesign:Chip.Style>
-                                    <Style TargetType="materialDesign:Chip">
-                                        <Setter Property="Background" Value="WhiteSmoke"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Value="true">
-                                                <DataTrigger.Binding>
-                                                    <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                        <Binding Path="User.Name"/>
-                                                        <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
-                                                    </MultiBinding>
-                                                </DataTrigger.Binding>
-                                                <Setter Property="Background" Value="LightBlue"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </materialDesign:Chip.Style>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="5" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding User.Name}"/>
-                                    <TextBlock Margin="5" Style="{StaticResource MaterialDesignOverlineTextBlock}" VerticalAlignment="Center" Text="{Binding Date}"/>
-                                </StackPanel>
-                              <materialDesign:Chip.Icon>
-                                  <materialDesign:PackIcon Kind="Person"/>
-                              </materialDesign:Chip.Icon>
-                            </materialDesign:Chip>
-                            <materialDesign:Card
+                        <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                            <materialDesign:Chip.Style>
+                                <Style TargetType="materialDesign:Chip">
+                                    <Setter Property="Background" Value="WhiteSmoke"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Value="true">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                    <Binding Path="User.Name"/>
+                                                    <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Background" Value="LightBlue"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:Chip.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding User.Name}"/>
+                                <TextBlock Margin="5" Style="{StaticResource MaterialDesignOverlineTextBlock}" VerticalAlignment="Center" Text="{Binding Date}"/>
+                            </StackPanel>
+                            <materialDesign:Chip.Icon>
+                                <materialDesign:PackIcon Kind="Person"/>
+                            </materialDesign:Chip.Icon>
+                        </materialDesign:Chip>
+                        <materialDesign:Card
                                 Padding="5"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                         <TextBlock TextWrapping="Wrap"  Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding Text}"/>
