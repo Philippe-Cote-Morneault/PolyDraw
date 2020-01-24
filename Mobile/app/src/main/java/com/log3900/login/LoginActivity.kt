@@ -1,9 +1,12 @@
 package com.log3900.login
 
 import android.os.Bundle
+import android.os.Handler
 import android.os.PersistableBundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -30,7 +33,26 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
+        changeLoadingView(true)
+
         // TODO: Send login info
         println("No errors")
+        Handler().postDelayed({
+            println("hello from delayed")
+            changeLoadingView(false)
+        }, 2000L)
+    }
+
+    private fun changeLoadingView(isLoading: Boolean) {
+        val loginButton: Button = findViewById(R.id.login_btn)
+        val progressBar: ProgressBar = findViewById(R.id.login_progressbar)
+
+        if (isLoading) {
+            loginButton.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+        } else {
+            loginButton.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        }
     }
 }
