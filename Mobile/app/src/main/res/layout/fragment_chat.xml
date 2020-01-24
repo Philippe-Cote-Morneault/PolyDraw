@@ -11,7 +11,7 @@
         android:id="@+id/fragment_chat_top_layout"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="0.15"
+        android:layout_weight="0.10"
         android:background="#673AB7"
         android:orientation="horizontal"></LinearLayout>
 
@@ -24,10 +24,10 @@
     <LinearLayout
         android:id="@+id/fragment_chat_bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="0.1"
+        android:layout_height="100dp"
         android:background="#B0FFFFFF"
-        android:gravity="center">
+        android:gravity="center"
+        android:minHeight="100dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="0dp"
