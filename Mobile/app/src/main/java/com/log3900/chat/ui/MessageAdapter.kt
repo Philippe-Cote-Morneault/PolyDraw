@@ -9,10 +9,18 @@ import com.log3900.chat.Message
 import java.util.*
 
 class MessageAdapter(val messages: LinkedList<Message>) : RecyclerView.Adapter<MessageViewHolder>() {
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val textView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_message, parent, false) as View
 
         return MessageViewHolder(textView)
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+
+        this.recyclerView = recyclerView
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
@@ -21,5 +29,19 @@ class MessageAdapter(val messages: LinkedList<Message>) : RecyclerView.Adapter<M
 
     override fun getItemCount(): Int {
         return messages.size
+    }
+
+    fun prependMessage(message: Message) {
+        messages.addFirst(message)
+        notifyItemInserted(0)
+    }
+
+    fun appendMessage(message: Message) {
+        messages.addLast(message)
+        notifyItemInserted(messages.size - 1)
+
+        if (!recyclerView.canScrollVertically(1)) {
+            recyclerView.smoothScrollToPosition(messages.size - 1)
+        }
     }
 }
