@@ -17,6 +17,7 @@
           <e p="Editor.cs" t="Include" />
           <e p="Message.cs" t="Include" />
           <e p="ModelBase.cs" t="Include" />
+          <e p="TLV.cs" t="Include" />
           <e p="User.cs" t="Include" />
         </e>
         <e p="ModelViews" t="Include">
@@ -58,8 +59,10 @@
           <e p="WhiteLogo.png" t="Include" />
         </e>
         <e p="Services" t="Include">
-          <e p="Network" t="Include">
+          <e p="RestService" t="Include">
             <e p="RestClient.cs" t="Include" />
+          </e>
+          <e p="SocketService" t="Include">
             <e p="SocketClient.cs" t="Include" />
           </e>
         </e>
@@ -76,7 +79,9 @@
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Dialogs" t="Include" />
-          <e p="Enums" t="Include" />
+          <e p="Enums" t="Include">
+            <e p="SocketMessageTypes.cs" t="Include" />
+          </e>
           <e p="ValidationRules" t="Include">
             <e p="LoginInputRules.cs" t="Include" />
             <e p="UsernameRule.cs" t="Include" />

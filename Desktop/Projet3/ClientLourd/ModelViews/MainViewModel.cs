@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
-using ClientLourd.Utilities.Commands;
-using ClientLourd.Utilities.ValidationRules;
-using ClientLourd.Services.Network;
+﻿using ClientLourd.Services.Rest;
+using ClientLourd.Services.SocketService;
 
 namespace ClientLourd.ModelViews
 {
@@ -17,11 +8,13 @@ namespace ClientLourd.ModelViews
 
         string _username;
         RestClient _restClient;
+        SocketClient _socketClient;
 
         public MainViewModel()
         {
             _username = "";
             _restClient = new RestClient();
+            _socketClient = new SocketClient("1234");
         }
 
         public string Username
