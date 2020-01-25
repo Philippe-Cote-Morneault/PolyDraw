@@ -2,4 +2,4 @@ package com.log3900.chat
 
 import java.util.*
 
-class Channel(channelName: String, channelID: UUID)
+class Channel(var channelName: String, var ID: UUID)
