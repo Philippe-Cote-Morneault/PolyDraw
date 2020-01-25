@@ -18,6 +18,7 @@ class MessageService {
 
     fun sendMessage(message: Message) {
         // TODO: Make call to socket service to send message.
+        //socketService.sendMessage(message)
     }
 
     fun subscribe(event: MessageEvent, handler: Handler) {
@@ -28,11 +29,33 @@ class MessageService {
         subscribers[event]?.add(handler)
     }
 
-    fun receiveMessage(message: Message) {
+    fun notifySubscribers(event: MessageEvent, message: android.os.Message) {
+        if (subscribers.containsKey(event)) {
+            val handlers = subscribers[event]
+            for (handler in handlers.orEmpty()) {
+                handler.sendMessage(message)
+            }
+        }
+    }
 
+    fun receiveMessage(message: Message) {
+        val tempMessage = android.os.Message()
+        tempMessage.what = MessageEvent.MESSAGE_RECEIVED.ordinal
+        notifySubscribers(MessageEvent.MESSAGE_RECEIVED, android.os.Message())
     }
 
     private fun initialize() {
         // TODO: Make call to socket service to listen to message receiving event and pass receiveMessage function.
+        /*
+        handler = Handler(object: Handler.Callback {
+            override fun handleMessage(msg: android.os.Message): Boolean {
+                if (msg.obj is Message) {
+                    receiveMessage(msg.obj as Message)
+                }
+                return true
+            }
+        })
+        */
+        //socketService.subscribe(SocketEvent.MessageReceived, handler)
     }
 }
