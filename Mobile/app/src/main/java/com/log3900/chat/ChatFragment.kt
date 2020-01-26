@@ -5,15 +5,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.*
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.chat.ui.MessageAdapter
@@ -53,9 +50,6 @@ class ChatFragment : Fragment() {
                 messageService.notifySubscribers(MessageEvent.MESSAGE_RECEIVED,tempMessage)
                 ++i
             }
-           // Looper.prepare()
-            //val hand = Handler()
-            //println("tid of new thread = " + Thread.currentThread().id)
         }
 
         thread.start()
@@ -86,26 +80,7 @@ class ChatFragment : Fragment() {
 
         messagesTest.add(Message("user send this 2", UUID.randomUUID(), UUID.randomUUID(), "admin", Date()))
 
-        //messageService = MessageService()
-
-        setupToolbar()
-
         return rootView
-    }
-
-    fun setupToolbar() {
-        //(activity as AppCompatActivity).setSupportActionBar(toolbar)
-        //(activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        //(activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator()
-        //setHasOptionsMenu(true)
-       // onCreateOptionsMenu()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        println("INFLATING MENU")
-        toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
-        //inflater.inflate(R.menu.fragment_chat_top_menu, menu)
     }
 
     inner class SendMessageButtonListener : View.OnClickListener {
@@ -120,8 +95,34 @@ class ChatFragment : Fragment() {
         }
     }
 
+
+    /**
+     * Used to assign all variables holding UI elements for this fragment and setup listeners.
+     *
+     * @param rootView the root view of this fragment
+     */
     private fun setupUiElements(rootView: View) {
         viewManager = LinearLayoutManager(activity)
+
+        setupMessagesRecyclerView(rootView)
+
+        sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
+        sendMessageButton.setOnClickListener(SendMessageButtonListener())
+
+        setupToolbar(rootView)
+
+        drawer = rootView.findViewById(R.id.fragment_chat_drawer_layout)
+    }
+
+    private fun setupToolbar(rootView: View) {
+        toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
+        toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+
+        toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
+    }
+
+    private fun setupMessagesRecyclerView(rootView: View) {
         messagesRecyclerView = rootView.findViewById(R.id.fragment_chat_message_recycler_view)
         messagesViewAdapter = MessageAdapter(LinkedList())
         messagesRecyclerView.apply {
@@ -129,19 +130,13 @@ class ChatFragment : Fragment() {
             layoutManager = viewManager
             adapter = messagesViewAdapter
         }
-
-        sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
-        sendMessageButton.setOnClickListener(SendMessageButtonListener())
-
-        toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
-        toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
-
-        toolbar.setNavigationOnClickListener {toolbarNavigationClick()}
-
-        drawer = rootView.findViewById(R.id.fragment_chat_drawer_layout)
     }
-    private fun toolbarNavigationClick() {
+
+    /**
+     * Handles click on the top toolbar navigation icon. Closes and opens the navigation drawer, which contains the channel list.
+     *
+     */
+    private fun onToolbarNavigationClick() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(Gravity.LEFT)
         } else {
