@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item_message_outer_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,7 +20,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_shape_2"
@@ -28,26 +29,36 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/circle_1" />
 
             <TextView
                 android:id="@+id/list_item_message_username"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_weight="0.5"
-                android:gravity="center|center_horizontal"
-                android:text="TextView" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:maxLength="12"
+                android:padding="0dp"
+
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/list_item_message_date"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_weight="0.3"
-                android:gravity="center|center_horizontal"
-                android:text="TextView" />
-        </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:gravity="center"
+                android:padding="0dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@id/imageView"
+                app:layout_constraintTop_toBottomOf="@id/list_item_message_username" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
