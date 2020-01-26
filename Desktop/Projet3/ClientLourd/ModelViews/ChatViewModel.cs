@@ -11,11 +11,12 @@ using ClientLourd.Utilities.Commands;
 
 namespace ClientLourd.ModelViews
 {
-    public class ChatViewModel: ViewModelBase
+    public class ChatViewModel : ViewModelBase
     {
 
         private int _newMessages;
         private int _messagesCount;
+
 
         public int NewMessages
         {
@@ -30,8 +31,26 @@ namespace ClientLourd.ModelViews
             }
         }
 
+        private int _selectedChannelIndex;
+
+        public int SelectedChannelIndex
+        {
+            get
+            {
+                return _selectedChannelIndex;
+            }
+            set
+            {
+                if (value != _selectedChannelIndex)
+                {
+                    _selectedChannelIndex = value;
+                }
+            }
+        }
+
         public ChatViewModel()
         {
+            _selectedChannelIndex = 0;
             User user1 = new User()
             {
                 ID = "1",
@@ -134,7 +153,7 @@ namespace ClientLourd.ModelViews
                 mes.Text = message;
                 mes.User = new User(){ ID = username, Name = username,};
                 mes.Date = DateTime.Now;
-                Channels[0].Messages.Add(mes);
+                Channels[SelectedChannelIndex].Messages.Add(mes);
                 UpdateMessagesCount();
                 clearTextBox(tBox);
             }
