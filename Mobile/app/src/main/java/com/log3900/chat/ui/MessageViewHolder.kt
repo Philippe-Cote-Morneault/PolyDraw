@@ -29,10 +29,10 @@ class MessageViewHolder : RecyclerView.ViewHolder {
         usernameTextView.text = message.senderName
         dateTextView.text = message.timestamp.toString()
 
-        var constraintSet = ConstraintSet()
+        val constraintSet = ConstraintSet()
         constraintSet.clone(view)
 
-        if (message.senderName.equals(username)) {
+        if (message.senderName == username) {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.START)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
         }
