@@ -6,33 +6,39 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             xmlns:extensionProperties="clr-namespace:ClientLourd.Utilities.ScrollBar"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
     </UserControl.Resources>
-    <ListBox ItemsSource="{Binding Messages}">
-            <ListBox.Resources>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                    <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=8}" />
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+
+        <ListBox ItemsSource="{Binding Messages}">
+        <ListBox.Resources>
+            <Style TargetType="ListBoxItem">
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=8}" />
                 <Setter Property="IsEnabled" Value="False"/>
                 <Style.Triggers>
-                        <DataTrigger Value="true">
-                            <DataTrigger.Binding>
-                                <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
-                                    <Binding Path="User.Name"/>
-                                    <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
-                                </MultiBinding>
-                            </DataTrigger.Binding>
-                            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListBox.Resources>
+                    <DataTrigger Value="true">
+                        <DataTrigger.Binding>
+                            <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
+                                <Binding Path="User.Name"/>
+                                <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                            </MultiBinding>
+                        </DataTrigger.Binding>
+                        <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ListBox.Resources>
         <ListBox.ItemTemplate>
-            <DataTemplate>
+
+                <DataTemplate>
+
                     <Border  Padding="5">
-                        <StackPanel Orientation="Vertical">
+
+                    <StackPanel Orientation="Vertical">
                         <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
                             <materialDesign:Chip.Style>
                                 <Style TargetType="materialDesign:Chip">
@@ -61,11 +67,16 @@
                         <materialDesign:Card
                                 Padding="5"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                        <TextBlock TextWrapping="Wrap"  Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding Text}"/>
-                            </materialDesign:Card> 
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                            <TextBlock TextWrapping="Wrap"  Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding Text}"/>
+                        </materialDesign:Card>
+
+                    </StackPanel>
+                </Border>
+
+            </DataTemplate>
+
+        </ListBox.ItemTemplate>
+    </ListBox>
+    </ScrollViewer>
+
 </UserControl>

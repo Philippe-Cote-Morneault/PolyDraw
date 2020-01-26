@@ -170,7 +170,8 @@ namespace ClientLourd.ModelViews
         }
 
         private ObservableCollection<Channel> _channels;
+
         
-        
+
     }
 }

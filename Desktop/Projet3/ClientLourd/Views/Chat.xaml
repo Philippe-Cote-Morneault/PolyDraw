@@ -46,6 +46,7 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
+                    <!--Conversation here-->
                     <local:Conversation/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
