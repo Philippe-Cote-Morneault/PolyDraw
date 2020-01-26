@@ -3,50 +3,44 @@ package com.log3900.chat
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
+import android.view.*
 import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.chat.ui.MessageAdapter
 import com.log3900.utils.ui.KeyboardHelper
 import java.lang.Thread.sleep
 import java.util.*
-import kotlin.collections.ArrayList
-
-
-
 
 
 var username = "admin"
 
 class ChatFragment : Fragment() {
+    // Services
     private lateinit var messageService: MessageService
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: MessageAdapter
+    // UI elements
+    private lateinit var messagesRecyclerView: RecyclerView
+    private lateinit var messagesViewAdapter: MessageAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var sendMessageButton: Button
-    public lateinit var handler: Handler
-
+    private lateinit var toolbar: Toolbar
+    private lateinit var drawer: DrawerLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_chat, container, false)
 
+        setupUiElements(rootView)
+
         messageService = MessageService()
-
-
-        println("tid of ChatFragment = " + Thread.currentThread().id)
 
         val thread = Thread{
             var i = 1
@@ -68,15 +62,15 @@ class ChatFragment : Fragment() {
 
 
 
-        handler = Handler(object: Handler.Callback {
+        val handler = Handler(object: Handler.Callback {
             override fun handleMessage(msg: android.os.Message): Boolean {
                 println("inside callback, tid = " + Thread.currentThread().id)
                 println(msg.toString())
 
-                viewAdapter.messages.addLast(msg.obj as Message)
-                viewAdapter.notifyItemInserted(viewAdapter.messages.size - 1)
-                if (!recyclerView.canScrollVertically(1)) {
-                    recyclerView.smoothScrollToPosition(viewAdapter.messages.size - 1)
+                messagesViewAdapter.messages.addLast(msg.obj as Message)
+                messagesViewAdapter.notifyItemInserted(messagesViewAdapter.messages.size - 1)
+                if (!messagesRecyclerView.canScrollVertically(1)) {
+                    messagesRecyclerView.smoothScrollToPosition(messagesViewAdapter.messages.size - 1)
                 }
                 return true
             }
@@ -91,39 +85,67 @@ class ChatFragment : Fragment() {
         }
 
         messagesTest.add(Message("user send this 2", UUID.randomUUID(), UUID.randomUUID(), "admin", Date()))
-        viewManager = LinearLayoutManager(activity)
-        viewAdapter = MessageAdapter(messagesTest)
-        recyclerView = rootView.findViewById(R.id.fragment_chat_message_recycler_view)
-        recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
-
-        sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
-        sendMessageButton.setOnClickListener(SendMessageButtonListener())
-
 
         //messageService = MessageService()
 
+        setupToolbar()
+
         return rootView
+    }
+
+    fun setupToolbar() {
+        //(activity as AppCompatActivity).setSupportActionBar(toolbar)
+        //(activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        //(activity as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator()
+        //setHasOptionsMenu(true)
+       // onCreateOptionsMenu()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        println("INFLATING MENU")
+        toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
+        //inflater.inflate(R.menu.fragment_chat_top_menu, menu)
     }
 
     inner class SendMessageButtonListener : View.OnClickListener {
         override fun onClick(v: View) {
             val messageInput: TextInputEditText = v.rootView.findViewById(R.id.fragment_chat_new_message_input)
-            //this@ChatFragment.messageService.sendMessage(Message(messageInput.text.toString(), UUID.randomUUID(), UUID.randomUUID(), "sender1", Date()))
+            val messageText = messageInput.text.toString()
             messageInput.text?.clear()
-            var runnable = Runnable{ println(Date().toString()) }
-
-            var msg = android.os.Message()
-            msg.what = 1
-            handler.sendMessage(msg)
+            messageService.sendMessage(messageText)
 
             KeyboardHelper.hideKeyboard(activity as Activity)
 
-            //handler.post(runnable)
+        }
+    }
 
+    private fun setupUiElements(rootView: View) {
+        viewManager = LinearLayoutManager(activity)
+        messagesRecyclerView = rootView.findViewById(R.id.fragment_chat_message_recycler_view)
+        messagesViewAdapter = MessageAdapter(LinkedList())
+        messagesRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = messagesViewAdapter
+        }
+
+        sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
+        sendMessageButton.setOnClickListener(SendMessageButtonListener())
+
+        toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
+        toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+
+        toolbar.setNavigationOnClickListener {toolbarNavigationClick()}
+
+        drawer = rootView.findViewById(R.id.fragment_chat_drawer_layout)
+    }
+    private fun toolbarNavigationClick() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(Gravity.LEFT)
+        } else {
+            drawer.openDrawer(Gravity.LEFT)
         }
     }
 }

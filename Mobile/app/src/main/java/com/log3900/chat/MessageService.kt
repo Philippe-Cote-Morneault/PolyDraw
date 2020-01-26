@@ -1,7 +1,9 @@
 package com.log3900.chat
 
 import android.os.Handler
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayList
 
 enum class MessageEvent {
     MESSAGE_RECEIVED
@@ -9,6 +11,7 @@ enum class MessageEvent {
 
 class MessageService {
     private var subscribers: ConcurrentHashMap<MessageEvent, ArrayList<Handler>> = ConcurrentHashMap()
+    private lateinit var currentChannel : Channel
     // TODO: Add SocketService when it is implemented
     //private lateinit var socketService: SocketService
 
@@ -19,6 +22,10 @@ class MessageService {
     fun sendMessage(message: Message) {
         // TODO: Make call to socket service to send message.
         //socketService.sendMessage(message)
+    }
+
+    fun sendMessage(messageText: String) {
+        Message(messageText, currentChannel.ID, UUID.randomUUID(), "username", Date())
     }
 
     fun subscribe(event: MessageEvent, handler: Handler) {
@@ -57,5 +64,8 @@ class MessageService {
         })
         */
         //socketService.subscribe(SocketEvent.MessageReceived, handler)
+
+        // TODO: Make rest call to get all channels the user can join
+        currentChannel = Channel("General", UUID.randomUUID())
     }
 }
