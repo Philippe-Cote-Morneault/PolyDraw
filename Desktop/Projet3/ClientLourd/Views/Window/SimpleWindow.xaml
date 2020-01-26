@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ClientLourd.Utilities.Window"
         mc:Ignorable="d"
         Title="SimpleWindow" Height="450" Width="800">
-    <StackPanel Name="MainStackPanel">
+    <DockPanel Name="MainStackPanel">
         
-    </StackPanel>
+    </DockPanel>
 </Window>
