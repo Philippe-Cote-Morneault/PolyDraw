@@ -41,21 +41,6 @@ class ChatFragment : Fragment() {
 
         subscribeToEvents()
 
-        val thread = Thread{
-            var i = 1
-            while (true) {
-                sleep(3000)
-                println("notifying, tid = " + Thread.currentThread().id)
-                val tempMessage = android.os.Message()
-                tempMessage.obj = Message("nessage" + i, UUID.randomUUID(), UUID.randomUUID(), "username" + i, Date())
-                tempMessage.what = MessageEvent.MESSAGE_RECEIVED.ordinal
-                messageService.notifySubscribers(MessageEvent.MESSAGE_RECEIVED,tempMessage)
-                ++i
-            }
-        }
-
-        thread.start()
-
         return rootView
     }
 
@@ -81,6 +66,7 @@ class ChatFragment : Fragment() {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
         toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
         toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+        toolbar.setTitle("General")
 
         toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
     }
@@ -95,13 +81,15 @@ class ChatFragment : Fragment() {
         }
     }
 
+    /**
+     * Subscribes to all events from services this fragment wants to handle.
+     *
+     */
     private fun subscribeToEvents() {
-        val handler = Handler{ msg ->
+        messageService.subscribe(MessageEvent.MESSAGE_RECEIVED, Handler{ msg ->
             onNewMessageReceived(msg)
             true
-        }
-
-        messageService.subscribe(MessageEvent.MESSAGE_RECEIVED, handler)
+        })
     }
 
     /**
