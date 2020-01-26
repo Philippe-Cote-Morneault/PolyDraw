@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.chat.Message
 import com.log3900.chat.username
+import com.log3900.utils.format.DateFormatter
 
 class MessageViewHolder : RecyclerView.ViewHolder {
     private var view: ConstraintLayout
@@ -27,7 +28,7 @@ class MessageViewHolder : RecyclerView.ViewHolder {
         this.message = message
         messageTextView.text = message.message
         usernameTextView.text = message.senderName
-        dateTextView.text = message.timestamp.toString()
+        dateTextView.text = DateFormatter.formatDate(message.timestamp)
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(view)
