@@ -53,16 +53,6 @@ class MessageService {
 
     private fun initialize() {
         // TODO: Make call to socket service to listen to message receiving event and pass receiveMessage function.
-        /*
-        handler = Handler(object: Handler.Callback {
-            override fun handleMessage(msg: android.os.Message): Boolean {
-                if (msg.obj is Message) {
-                    receiveMessage(msg.obj as Message)
-                }
-                return true
-            }
-        })
-        */
         //socketService.subscribe(SocketEvent.MessageReceived, handler)
 
         // TODO: Make rest call to get all channels the user can join
