@@ -31,9 +31,14 @@ namespace ClientLourd
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            SimpleWindow chatWindow = new SimpleWindow();
+            SimpleWindow chatWindow = new SimpleWindow(ChatBox);
             RightDrawerContent.Children.Clear();
             chatWindow.MainStackPanel.Children.Add(ChatBox);
+
+            chatWindow.DataContext = this.DataContext;
+            chatWindow.Owner = this;
+            chatWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             chatWindow.Show();
         }
     }

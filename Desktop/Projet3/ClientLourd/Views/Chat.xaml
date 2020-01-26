@@ -38,7 +38,6 @@
                     MinLines="2"  
                     Name="MessageTextBox" />
             </DockPanel>
-        <!--<TabControl SelectedIndex="0" Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">-->
         <TabControl SelectedIndex="{Binding SelectedChannelIndex}" Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
             <TabControl.ItemTemplate>
                 <DataTemplate>
