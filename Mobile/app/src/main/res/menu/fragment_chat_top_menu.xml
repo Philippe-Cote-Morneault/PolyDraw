@@ -4,5 +4,5 @@
 
     <item
         android:title="Channels"
-        android:icon="@drawable/ic_menu_share"/>
+        android:icon="@drawable/ic_launcher_background"/>
 </menu>
