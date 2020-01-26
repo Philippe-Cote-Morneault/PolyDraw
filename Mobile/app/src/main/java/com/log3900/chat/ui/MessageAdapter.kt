@@ -31,11 +31,21 @@ class MessageAdapter(val messages: LinkedList<Message>) : RecyclerView.Adapter<M
         return messages.size
     }
 
+    /**
+     * Adds a message before the oldest nessage.
+     *
+     * @param message the message to add
+     */
     fun prependMessage(message: Message) {
         messages.addFirst(message)
         notifyItemInserted(0)
     }
 
+    /**
+     * Adds a message after the most recent message.
+     *
+     * @param message the message to add
+     */
     fun appendMessage(message: Message) {
         messages.addLast(message)
         notifyItemInserted(messages.size - 1)
