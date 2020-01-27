@@ -12,16 +12,14 @@ import kotlin.collections.ArrayList
 class ReadSocketThread(var inputStream: BufferedInputStream): Thread() {
     var subscribers: ConcurrentHashMap<MessageEvent, ArrayList<Handler>> = ConcurrentHashMap()
 
-
-
     override fun run(){
         println("Pret a recevoir...")
-
         while (true){
             var message: android.os.Message? = readMessage()
             if(message != null){
                 notifySubscribers(message)
             }
+
 
         }
     }
@@ -42,30 +40,27 @@ class ReadSocketThread(var inputStream: BufferedInputStream): Thread() {
     private fun readMessage() : android.os.Message?{
 
         try {
-            var typeBytes = ByteArray(1)
-            inputStream.read(typeBytes, 0, 1)
-            var type: Byte = ByteBuffer.wrap(typeBytes).get()
-            println("Le type est $type")
+            var type = ByteArray(1)
+            inputStream.read(type)
+            println("Le type est " + ByteBuffer.wrap(type).get().toString())
 
-            var tailleBytes: ByteArray = ByteArray(2)
-            inputStream.read(tailleBytes, 0, 2)
-            var taille: Short = ByteBuffer.wrap(tailleBytes).getShort()
-            println("La taille est $taille")
+            var length = ByteArray(2)
+            inputStream.read(length)
+            println(ByteBuffer.wrap(length).getShort().toInt())
 
+            var values = ByteArray(ByteBuffer.wrap(length).getShort().toInt())
+            inputStream.read(values)
 
-            var messageB = ByteArray(taille.toInt())
-            inputStream.read(messageB, 0, taille.toInt())
-
-            var dataJson = JSONObject(String(messageB, Charsets.UTF_8))
+            var dataJson = JSONObject(String(values, Charsets.UTF_8))
 
             println("Avant stringify")
             println(dataJson.toString())
             println("Apres stringify")
 
             var message = android.os.Message()
-            message.what = type as Int
+            message.what = ByteBuffer.wrap(type).get() as Int
 
-            message.obj = Message(message = dataJson.get("message") as String,
+            message.obj = MessageReceived(message = dataJson.get("message") as String,
                 channelID = dataJson.get("channelID") as UUID,
                 senderID = dataJson.get("senderID") as UUID,
                 senderName = dataJson.get("senderName") as String,
