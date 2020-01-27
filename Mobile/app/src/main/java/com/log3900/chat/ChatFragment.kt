@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
@@ -32,6 +33,8 @@ class ChatFragment : Fragment() {
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
 
+    private lateinit var channelFragment: ChannelFragment
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_chat, container, false)
 
@@ -41,7 +44,17 @@ class ChatFragment : Fragment() {
 
         subscribeToEvents()
 
+        addChildrenFragments()
+
         return rootView
+    }
+
+    private fun addChildrenFragments() {
+        val fragmentTransaction = childFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_chat_drawer_container_element, ChannelFragment())
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     /**
