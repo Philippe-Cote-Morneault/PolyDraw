@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql" //Need to import it for gorm mysql support
+	_ "github.com/jinzhu/gorm/dialects/postgres" //Need to import it for gorm mysql support
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //Need to import it for gorm sqlite support
@@ -60,5 +60,5 @@ func DBClose() {
 //migrate run database migration for the database
 func migrate() {
 	log.Println("Migrating database")
-	dbVariable.AutoMigrate(&User{})
+	dbVariable.Debug().AutoMigrate(&User{})
 }
