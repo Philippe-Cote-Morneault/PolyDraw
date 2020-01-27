@@ -1,16 +1,13 @@
 package com.log3900.socketServices
 
 import android.os.Handler
+import org.json.JSONObject
 import java.io.BufferedInputStream
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.io.BufferedOutputStream
 
-
-enum class MessageEvent(var eventType: Int) {
-    MESSAGE_RECEIVED(20),
-}
 
 class SocketService{
     private var socket:Socket = Socket()
@@ -36,5 +33,18 @@ class SocketService{
         }
 
         readSocketThread.subscribers[event]?.add(handler)
+    }
+
+    fun sendMessage(message:MessageSent){
+        var dataJson = JSONObject()
+        dataJson.put("message", message.message)
+        dataJson.put("channelID", message.channelID)
+
+        var values = dataJson.toString().toByteArray()
+
+        outputStream.write(values.size)
+        outputStream.write(values)
+        outputStream.flush()
+
     }
 }
