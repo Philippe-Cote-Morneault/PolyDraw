@@ -53,7 +53,6 @@ class LoginActivity : AppCompatActivity() {
                     .setMessage(message)
                     .setPositiveButton("Ok", null)
                     .show()
-
                 changeLoadingView(false)
             }
             override fun onFailure(call: Call<ResponseBody?>?, t: Throwable?) {
