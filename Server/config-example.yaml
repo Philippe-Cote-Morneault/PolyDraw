@@ -1,4 +1,10 @@
 # Example configuration file for the server
+
+# The config file can be located in the following paths
+# - ./config.yaml
+# - $HOME/.polydraw/config.yaml
+# - /etc/polydraw/config.yaml
+
 database:
     engine: sqlite3
     connection: ":memory:"
