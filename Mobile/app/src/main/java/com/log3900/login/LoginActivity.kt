@@ -8,9 +8,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import retrofit2.Callback
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Response
+import java.net.SocketTimeoutException
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,10 +43,34 @@ class LoginActivity : AppCompatActivity() {
 
         // TODO: Send login info
         println("No errors")
-        Handler().postDelayed({
-            println("hello from delayed")
-            changeLoadingView(false)
-        }, 2000L)
+
+        val call = RestClient.testRequestService.getHello()
+        call.enqueue(object : Callback<ResponseBody?> {
+            override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
+                val message: String? = response?.body()?.string() ?: "Error with response body"
+                println(message)
+                MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Dialog_Alert)
+                    .setMessage(message)
+                    .setPositiveButton("Ok", null)
+                    .show()
+
+                changeLoadingView(false)
+            }
+            override fun onFailure(call: Call<ResponseBody?>?, t: Throwable?) {
+                val errMessage: String =
+                    if (t is SocketTimeoutException)
+                        "Error: Timeout"
+                    else
+                        "Error: Couldn't authentificate"
+                println(errMessage)
+                MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Dialog_Alert)
+                    .setMessage(errMessage)
+                    .setPositiveButton("Ok", null)
+                    .setNegativeButton("Retry", null)
+                    .show()
+                changeLoadingView(false)
+            }
+        })
     }
 
     private fun changeLoadingView(isLoading: Boolean) {
