@@ -3,6 +3,7 @@ package logger
 import (
 	"log"
 
+	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
@@ -41,6 +42,8 @@ func (l *Logger) Register() {
 }
 
 func (l *Logger) listen() {
+	defer service.Closed()
+
 	//Message viewer
 	for {
 		select {

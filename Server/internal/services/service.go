@@ -1,5 +1,9 @@
 package service
 
+import "sync"
+
+import "log"
+
 //Service interface used to represent a service
 type Service interface {
 	//Start the service
@@ -16,6 +20,7 @@ type Service interface {
 }
 
 var services []Service
+var wg sync.WaitGroup
 
 //Add a service to the pool of services
 func Add(service Service) {
@@ -32,6 +37,7 @@ func StartAll() {
 
 	for _, service := range services {
 		service.Start()
+		wg.Add(1)
 	}
 }
 
@@ -40,4 +46,12 @@ func ShutdownAll() {
 	for _, service := range services {
 		service.Shutdown()
 	}
+	log.Println("[Services] -> Waiting for all services to shutdown")
+	wg.Wait()
+	log.Println("[Services] -> All services are closed!")
+}
+
+// Closed called by a service once done
+func Closed() {
+	wg.Done()
 }

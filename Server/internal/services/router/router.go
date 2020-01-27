@@ -2,9 +2,11 @@ package router
 
 import (
 	"fmt"
+	"log"
+
+	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
-	"log"
 )
 
 //Router the router service
@@ -43,6 +45,8 @@ func (r *Router) Shutdown() {
 }
 
 func (r *Router) listen() {
+	defer service.Closed()
+
 	for {
 		select {
 		case data := <-r.receiveChan:

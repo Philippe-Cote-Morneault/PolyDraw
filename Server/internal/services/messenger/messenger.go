@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/google/uuid"
+	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
@@ -43,6 +44,8 @@ func (m *Messenger) subscribe() {
 }
 
 func (m *Messenger) listen() {
+	defer service.Closed()
+
 	h := handler{}
 	h.init()
 	for {
