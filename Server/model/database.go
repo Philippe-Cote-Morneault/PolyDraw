@@ -37,6 +37,7 @@ func DBConnect() {
 	dbVariable = db
 
 	migrate()
+	log.Println("Migration complete!")
 }
 
 //DB Return the database object

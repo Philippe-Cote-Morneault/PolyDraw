@@ -12,11 +12,13 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/router"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
+	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
 )
 
 func main() {
 	config.Init()
+	model.DBConnect()
 
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}
@@ -25,6 +27,7 @@ func main() {
 	graceful.Register(restServer.Shutdown, "REST server")
 	graceful.Register(socketServer.Shutdown, "Socket server")
 	graceful.Register(service.ShutdownAll, "Services") //Shutdown all services
+	graceful.Register(model.DBClose, "Database")
 
 	graceful.ListenSIG()
 
