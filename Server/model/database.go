@@ -4,9 +4,11 @@ import (
 	"log"
 	"time"
 
+	_ "github.com/go-sql-driver/mysql" //Need to import it for gorm mysql support
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite" //Need to import it for gorm
+	_ "github.com/jinzhu/gorm/dialects/sqlite" //Need to import it for gorm sqlite support
+
 	"github.com/spf13/viper"
 )
 
