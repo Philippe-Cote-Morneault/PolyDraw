@@ -7,8 +7,8 @@ namespace ClientLourd.ModelViews
     {
 
         string _username;
-        RestClient _restClient;
-        SocketClient _socketClient;
+        public RestClient _restClient;
+        public SocketClient _socketClient;
 
         public MainViewModel()
         {

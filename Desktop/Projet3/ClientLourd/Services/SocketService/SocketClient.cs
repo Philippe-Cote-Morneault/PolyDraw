@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Services.SocketService
 {
-    class SocketClient
+    public class SocketClient
     {
         private const int PORT = 3001;
         private const string IP = "127.0.0.1";
@@ -25,8 +25,8 @@ namespace ClientLourd.Services.SocketService
 
         public void sendMessage(string message)
         {
-            //TODO 
-            throw new NotImplementedException();
+            var bytes = Encoding.ASCII.GetBytes(message);
+            _stream.Write(bytes, 0, bytes.Length);
         }
 
         private void InitializeConnection(IPAddress ip, string token)

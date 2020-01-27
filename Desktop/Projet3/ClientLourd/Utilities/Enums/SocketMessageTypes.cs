@@ -5,7 +5,7 @@
         ServerConnection = 0,
         ServerDisconnection = 1,
         UserDisconnected =2 ,
-        MessgeSent = 20,
+        MessageSent = 20,
         MessageReceived = 21,
         JoinChannel = 22,
         UserJoinedChannel = 23,

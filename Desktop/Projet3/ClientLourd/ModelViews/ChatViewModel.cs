@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models;
+using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 
 namespace ClientLourd.ModelViews
@@ -28,6 +29,10 @@ namespace ClientLourd.ModelViews
                     NotifyPropertyChanged();
                 }
             }
+        }
+        public SocketClient SocketClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
         }
 
         public ChatViewModel()
@@ -127,7 +132,7 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
-
+            SocketClient.sendMessage(message);
             if (!String.IsNullOrEmpty(message))
             {
                 Message mes = new Message();
