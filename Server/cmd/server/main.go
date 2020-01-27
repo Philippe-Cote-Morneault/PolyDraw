@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/spf13/viper"
+	"gitlab.com/jigsawcorp/log3900/internal/config"
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/services/logger"
@@ -13,6 +16,8 @@ import (
 )
 
 func main() {
+	config.Init()
+
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}
 	socket.RegisterBroadcast()
@@ -26,17 +31,16 @@ func main() {
 	registerServices()
 
 	log.Printf("Server is starting jobs!")
-
 	handleRest := make(chan bool)
 	go func() {
 		restServer.Initialize()
-		restServer.Run(":3000")
+		restServer.Run(fmt.Sprintf("%s:%s", viper.GetString("rest.address"), viper.GetString("rest.port")))
 		handleRest <- true
 	}()
 
 	handleSocket := make(chan bool)
 	go func() {
-		socketServer.StartListening(":3001")
+		socketServer.StartListening(fmt.Sprintf("%s:%s", viper.GetString("socket.address"), viper.GetString("socket.port")))
 		handleSocket <- true
 	}()
 
