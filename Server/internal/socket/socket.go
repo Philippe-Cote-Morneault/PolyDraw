@@ -1,6 +1,7 @@
 package socket
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -78,8 +79,18 @@ func (server *Server) Shutdown() {
 }
 
 // SendMessageToSocketID sends a SerializableMessage to the socketID
-func (manager *ClientSocketManager) SendMessageToSocketID(message SerializableMessage, socketID uuid.UUID) error {
-	if clientConnection, ok := manager.clients[socketID]; ok {
+//TODO remove possibly
+func SendMessageToSocketID(message SerializableMessage, socketID uuid.UUID) error {
+	m := clientSocketManagerInstance
+
+	if m == nil {
+		return fmt.Errorf("The clientSocketManger was not instanced")
+	}
+
+	defer m.mutexMap.Unlock()
+	m.mutexMap.Lock()
+
+	if clientConnection, ok := m.clients[socketID]; ok {
 		serializedMessage, err := msgpack.Marshal(message)
 		if err != nil {
 			return err
@@ -93,8 +104,14 @@ func (manager *ClientSocketManager) SendMessageToSocketID(message SerializableMe
 }
 
 // SendRawMessageToSocketID sends a message to a socket with the specified id with raw bytes.
-func (manager *ClientSocketManager) SendRawMessageToSocketID(message RawMessage, id uuid.UUID) error {
-	if clientConnection, ok := manager.clients[id]; ok {
+func SendRawMessageToSocketID(message RawMessage, id uuid.UUID) error {
+	m := clientSocketManagerInstance
+	if m == nil {
+		return fmt.Errorf("The clientSocketManger was not instanced")
+	}
+	defer m.mutexMap.Unlock()
+	m.mutexMap.Lock()
+	if clientConnection, ok := m.clients[id]; ok {
 		_, err := clientConnection.socket.Write(message.ToBytesSlice())
 		if err != nil {
 			// TODO: Handle error when writing
@@ -106,7 +123,12 @@ func (manager *ClientSocketManager) SendRawMessageToSocketID(message RawMessage,
 }
 
 // RemoveClientFromID removes a client socket from the ClientID.
-func (manager *ClientSocketManager) RemoveClientFromID(clientID uuid.UUID) {
-	manager.unregisterClient(clientID)
+func RemoveClientFromID(clientID uuid.UUID) error {
+	m := clientSocketManagerInstance
+	if m == nil {
+		return fmt.Errorf("The clientSocketManger was not instanced")
+	}
+	m.unregisterClient(clientID)
 	//TODO error management
+	return nil
 }

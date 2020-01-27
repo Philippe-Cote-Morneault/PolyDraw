@@ -21,15 +21,22 @@ type ClientSocketManager struct {
 	clients  map[uuid.UUID]*ClientSocket
 }
 
+var clientSocketManagerInstance *ClientSocketManager
+
 func newClientSocketManager() *ClientSocketManager {
-	manager := new(ClientSocketManager)
-	manager.mutexMap.Lock()
+	if clientSocketManagerInstance == nil {
+		manager := new(ClientSocketManager)
+		manager.mutexMap.Lock()
 
-	manager.clients = make(map[uuid.UUID]*ClientSocket)
+		manager.clients = make(map[uuid.UUID]*ClientSocket)
 
-	manager.mutexMap.Unlock()
+		manager.mutexMap.Unlock()
 
-	return manager
+		clientSocketManagerInstance = manager
+
+		return manager
+	}
+	return clientSocketManagerInstance
 }
 
 // Registers a new client to the manager. Will listen to messages from this client.
@@ -135,8 +142,8 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 			message := RawMessage{}
 			message.ParseMessage(typeMessage, size, messageBytes)
 			messageReceived := RawMessageReceived{
-				message:  message,
-				socketid: clientSocket.id,
+				Payload:  message,
+				SocketID: clientSocket.id,
 			}
 			cbroadcast.Broadcast(BSocketReceive, messageReceived)
 		}
