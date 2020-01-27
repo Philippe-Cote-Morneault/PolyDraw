@@ -34,10 +34,8 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 			return
 		}
 		for k := range h.connections {
-			if k != message.SocketID {
-				// Send message to the socket in async way
-				go socket.SendRawMessageToSocketID(rawMessage, k)
-			}
+			// Send message to the socket in async way
+			go socket.SendRawMessageToSocketID(rawMessage, k)
 		}
 	} else {
 		log.Printf("[Messenger] -> Wrong data format. Dropping packet!")
