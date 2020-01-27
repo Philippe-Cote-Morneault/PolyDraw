@@ -79,10 +79,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="start">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <FrameLayout
+                android:id="@+id/fragment_chat_drawer_container_element"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#AA2020" />
+                android:layout_height="match_parent"/>
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
