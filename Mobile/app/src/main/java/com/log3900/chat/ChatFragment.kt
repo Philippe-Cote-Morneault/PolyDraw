@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.*
 import android.widget.Button
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -32,7 +31,6 @@ class ChatFragment : Fragment() {
     private lateinit var sendMessageButton: Button
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
-    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_chat, container, false)
@@ -44,11 +42,6 @@ class ChatFragment : Fragment() {
         subscribeToEvents()
 
         return rootView
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        toggle.syncState()
     }
 
     /**
@@ -67,19 +60,15 @@ class ChatFragment : Fragment() {
         setupToolbar(rootView)
 
         drawer = rootView.findViewById(R.id.fragment_chat_drawer_layout)
-        toggle = ActionBarDrawerToggle(activity, drawer, toolbar, R.string.nav_app_bar_open_drawer_description, R.string.nav_app_bar_open_drawer_description)
-        toggle.setHomeAsUpIndicator(R.drawable.ic_hamburger_menu)
-        //toggle.syncState()
-        //toggle.onDrawerClosed()
     }
 
     private fun setupToolbar(rootView: View) {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
         toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
-        //toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
         toolbar.setTitle("General")
 
-        //toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
+        toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
     }
 
     private fun setupMessagesRecyclerView(rootView: View) {
