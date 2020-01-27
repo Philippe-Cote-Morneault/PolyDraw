@@ -4,10 +4,10 @@ import (
 	"log"
 	"time"
 
-	_ "github.com/jinzhu/gorm/dialects/postgres" //Need to import it for gorm mysql support
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite" //Need to import it for gorm sqlite support
+	_ "github.com/jinzhu/gorm/dialects/postgres" //Need to import it for gorm mysql support
+	_ "github.com/jinzhu/gorm/dialects/sqlite"   //Need to import it for gorm sqlite support
 
 	"github.com/spf13/viper"
 )
