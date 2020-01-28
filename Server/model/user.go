@@ -16,17 +16,20 @@ type User struct {
 }
 
 //New Generate a new user with a bearer token
-func (u *User) New(Username string) {
+func (u *User) New(Username string) error {
 	u.Username = Username
 	u.FirstName = "Serge"
 	u.LastName = "Paquette"
 	u.Email = "serge.paquette@veryrealemail.com"
 	u.HashedPassword = "random crap for now"
 
-	bearer, err := secureb.GenerateRandomString(32)
+	bearer, err := secureb.GenerateToken()
 	if err != nil {
 		log.Println("Cannot create user bearer")
 		log.Println(err)
+		return err
 	}
 	u.Bearer = bearer
+
+	return err
 }
