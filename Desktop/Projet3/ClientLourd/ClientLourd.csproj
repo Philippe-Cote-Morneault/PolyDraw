@@ -126,6 +126,7 @@
     <Compile Include="ModelViews\LoginViewModel.cs" />
     <Compile Include="ModelViews\MainViewModel.cs" />
     <Compile Include="Services\RestService\RestClient.cs" />
+    <Compile Include="Services\Serializer\Serializer.cs" />
     <Compile Include="Services\SocketService\SocketClient.cs" />
     <Compile Include="Services\SocketService\SocketEventsPublisher.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
@@ -209,7 +210,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utilities\Dialogs\" />
-    <Folder Include="Utilities\Enums\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\LogoMakr_4YSBb4.png" />

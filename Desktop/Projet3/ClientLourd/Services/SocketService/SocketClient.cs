@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using ClientLourd.Models;
 using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.Services.SocketService
@@ -28,10 +29,9 @@ namespace ClientLourd.Services.SocketService
             _receiver.Start();
         }
 
-        public void sendMessage(string message)
+        public void sendMessage(TLV tlv)
         {
-            var bytes = Encoding.ASCII.GetBytes(message);
-            _stream.Write(bytes, 0, bytes.Length);
+            _socket.Send(Serializer.Serializer.ToByteArray(tlv));
         }
 
         private void InitializeConnection(IPAddress ip, string token)
