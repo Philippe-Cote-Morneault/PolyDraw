@@ -60,5 +60,5 @@ func DBClose() {
 //migrate run database migration for the database
 func migrate() {
 	log.Println("Migrating database")
-	dbVariable.Debug().AutoMigrate(&User{})
+	dbVariable.AutoMigrate(&User{})
 }
