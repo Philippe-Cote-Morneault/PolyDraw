@@ -5,12 +5,19 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
+	"gitlab.com/jigsawcorp/log3900/pkg/secureb"
 )
 
 type authRequest struct {
 	Username string
+}
+
+type authResponse struct {
+	Bearer       string
+	SessionToken string
 }
 
 // PostAuth authenticate using password
@@ -35,13 +42,22 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 	model.DB().Where("Username = ?", request.Username).First(&user)
 
 	if user.Username == "" {
-		//The username is not set.
-		rbody.JSON(w, http.StatusOK, map[string]string{"username": "Empty"})
-	} else {
-		rbody.JSON(w, http.StatusOK, map[string]string{"username": "Not empty"})
-
+		//The user does not already exists create it
+		user = model.User{}
+		if user.New(request.Username) != nil {
+			rbody.JSONError(w, 400, "The user could not be created!")
+			return
+		}
+		model.DB().Create(&user)
 	}
 
+	//Generate session
+	sessionToken, _ := secureb.GenerateToken()
+	for !auth.IsTokenAvailable(sessionToken) {
+		sessionToken, _ = secureb.GenerateToken()
+	}
+	auth.Register(sessionToken, user.ID)
+	rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken})
 }
 
 //PostAuthToken authenticate using the bearer token
