@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/google/uuid"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
@@ -53,9 +55,18 @@ func (r *Router) listen() {
 			message, ok := data.(socket.RawMessageReceived)
 
 			if ok {
-				//Route the message to the correct service
-				r.route(message)
+				//Route the message to the correct service if authenticated
+				if auth.IsAuthenticated(message) {
+					r.route(message)
+				}
 			}
+		case data := <-r.closingChan:
+			socketID, ok := data.(uuid.UUID)
+
+			if ok && auth.IsAuthenticatedQuick(socketID) {
+				cbroadcast.Broadcast(socket.BSocketAuthCloseClient, socketID)
+			}
+
 		case <-r.shutdown:
 			return
 		}
@@ -65,12 +76,12 @@ func (r *Router) listen() {
 
 //route the message to the correct service
 func (r *Router) route(message socket.RawMessageReceived) {
-
-	//Check for a handle and broadcast the message
-	if broadcast, ok := r.routes[message.Payload.MessageType]; ok {
-		cbroadcast.Broadcast(broadcast, message)
-	} else {
-		log.Printf("[SRouter] -> No route for %d", message.Payload.MessageType)
+	if message.Payload.MessageType != 0 {
+		if broadcast, ok := r.routes[message.Payload.MessageType]; ok {
+			cbroadcast.Broadcast(broadcast, message)
+		} else {
+			log.Printf("[SRouter] -> No route for %d", message.Payload.MessageType)
+		}
 	}
 }
 
