@@ -9,6 +9,7 @@ using System.Windows.Input;
 using ClientLourd.Models;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.ModelViews
 {
@@ -141,7 +142,7 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
-            SocketClient.sendMessage(message);
+            this.SocketSendMessage(message);
             if (!String.IsNullOrEmpty(message))
             {
                 Message mes = new Message();
@@ -152,6 +153,11 @@ namespace ClientLourd.ModelViews
                 UpdateMessagesCount();
                 clearTextBox(tBox);
             }
+        }
+
+        private void SocketSendMessage(object content)
+        {            
+            SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, content));
         }
 
         private void clearTextBox(TextBox tbox)

@@ -62,6 +62,9 @@
           <e p="RestService" t="Include">
             <e p="RestClient.cs" t="Include" />
           </e>
+          <e p="Serializer" t="Include">
+            <e p="Serializer.cs" t="Include" />
+          </e>
           <e p="SocketService" t="Include">
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
