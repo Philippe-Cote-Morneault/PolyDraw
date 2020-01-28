@@ -47,6 +47,9 @@ func (server *Server) StartListening(host string) {
 			server.mutex.Lock()
 			if server.running {
 				log.Fatal("[SOCKET] -> ", err)
+			} else {
+				//We exit the function
+				return
 			}
 			server.mutex.Unlock()
 		}
