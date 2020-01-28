@@ -34,8 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_welcome"
-                android:textSize="40sp"
 
+                android:textSize="40sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -67,7 +67,9 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="12" />
+                    android:maxLength="12"
+                    android:maxLines="1"
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
