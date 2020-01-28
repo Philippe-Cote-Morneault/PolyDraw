@@ -61,4 +61,5 @@ func DBClose() {
 func migrate() {
 	log.Println("Migrating database")
 	dbVariable.AutoMigrate(&User{})
+	dbVariable.AutoMigrate(&Session{})
 }

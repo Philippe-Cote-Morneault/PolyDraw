@@ -4,6 +4,8 @@ import "gitlab.com/jigsawcorp/log3900/pkg/secureb"
 
 import "log"
 
+import "github.com/google/uuid"
+
 //User represented in the database
 type User struct {
 	Base
@@ -13,6 +15,15 @@ type User struct {
 	Email          string
 	HashedPassword string
 	Bearer         string
+}
+
+//Session represents a session in the database
+type Session struct {
+	Base
+	User         User `gorm:"foreignkey:UserID"`
+	UserID       uuid.UUID
+	SocketID     uuid.UUID
+	SessionToken string
 }
 
 //New Generate a new user with a bearer token
