@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                     if (t is SocketTimeoutException)
                         "Error: Timeout"
                     else
-                        "Error: Couldn't authentificate"
+                        "Error: Couldn't authenticate"
                 println(errMessage)
                 MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Dialog_Alert)
                     .setMessage(errMessage)
