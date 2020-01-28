@@ -8,6 +8,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/config"
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/services/logger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/router"
@@ -29,7 +30,7 @@ func main() {
 	graceful.Register(service.ShutdownAll, "Services") //Shutdown all services
 	graceful.Register(model.DBClose, "Database")
 
-	graceful.ListenSIG()
+	handleGraceful := graceful.ListenSIG()
 
 	registerServices()
 
@@ -51,9 +52,12 @@ func main() {
 
 	<-handleRest
 	<-handleSocket
+	<-handleGraceful
+
 }
 
 func registerServices() {
+	service.Add(&auth.Auth{})
 	service.Add(&logger.Logger{})
 	service.Add(&router.Router{})
 	service.Add(&messenger.Messenger{})

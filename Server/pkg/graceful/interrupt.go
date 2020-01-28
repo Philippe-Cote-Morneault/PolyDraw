@@ -13,6 +13,7 @@ type subscriberStruct struct {
 }
 
 var subscriber []subscriberStruct
+var closed chan bool
 
 // Register a function to be called when sigterm is raised
 func Register(f func(), name string) {
@@ -21,15 +22,17 @@ func Register(f func(), name string) {
 		name: name})
 }
 
-// ListenSIG register a thread to listen to a SIGTERM signal
-func ListenSIG() {
+// ListenSIG register a thread to listen to a SIGTERM signal returns a signal to wait untill the functions are all called
+func ListenSIG() chan bool {
 	c := make(chan os.Signal)
+	closed = make(chan bool)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
 		onSIGTERM()
 		os.Exit(0)
 	}()
+	return closed
 }
 
 func onSIGTERM() {
@@ -37,4 +40,5 @@ func onSIGTERM() {
 		log.Printf("Stopping %s", sub.name)
 		sub.f()
 	}
+	close(closed)
 }
