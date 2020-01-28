@@ -38,3 +38,9 @@ func GenerateRandomString(s int) (string, error) {
 	}
 	return base64.URLEncoding.EncodeToString(b), err
 }
+
+//GenerateToken returns a token with secure bytes generated
+func GenerateToken() (string, error) {
+	str, err := GenerateRandomString(32)
+	return str, err
+}
