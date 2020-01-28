@@ -52,7 +52,7 @@ func UnRegisterSocket(socketID uuid.UUID) {
 	if removingSessions.IsSet() {
 		return
 	}
-	model.DB().Debug().Where("socket_id = ?", socketID).First(&session)
+	model.DB().Where("socket_id = ?", socketID).First(&session)
 
 	if session.ID != uuid.Nil {
 		token := session.SessionToken
