@@ -37,6 +37,10 @@ namespace ClientLourd.ModelViews
 
         public ChatViewModel()
         {
+            SocketClient.MessageReceived += SocketClientOnMessageReceived;
+            
+            
+            
             User user1 = new User()
             {
                 ID = "1",
@@ -117,7 +121,12 @@ namespace ClientLourd.ModelViews
             
         }
 
-            
+        private void SocketClientOnMessageReceived(object source, EventArgs args)
+        {
+            //TODO
+        }
+
+
         RelayCommand<object[]> _sendMessageCommand; public ICommand SendMessageCommand
         {
             get

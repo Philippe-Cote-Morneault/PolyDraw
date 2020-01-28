@@ -15,14 +15,14 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler HealthCheck;
         
         
-        protected virtual void OnUserCreatedChannel(object source)
+        protected virtual void OnUserCreatedChannel(object source, EventArgs e)
         {
-            UserCreatedChannel?.Invoke(source, EventArgs.Empty);
+            UserCreatedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnUserLeftChannel(object source)
+        protected virtual void OnUserLeftChannel(object source, EventArgs e)
         {
-            UserLeftChannel?.Invoke(source, EventArgs.Empty);
+            UserLeftChannel?.Invoke(source, e);
         }
 
         protected virtual void OnServerDisconnected(object source)
@@ -30,14 +30,14 @@ namespace ClientLourd.Services.SocketService
             ServerDisconnected?.Invoke(source, EventArgs.Empty);
         }
 
-        protected virtual void OnUserJoinedChannel(object source)
+        protected virtual void OnUserJoinedChannel(object source, EventArgs e)
         {
-            UserJoinedChannel?.Invoke(source, EventArgs.Empty);
+            UserJoinedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnMessageReceived(object source)
+        protected virtual void OnMessageReceived(object source, EventArgs e)
         {
-            MessageReceived?.Invoke(source, EventArgs.Empty);
+            MessageReceived?.Invoke(source, e);
         }
 
         protected virtual void OnConnectionResponse(object source)
