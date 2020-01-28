@@ -64,6 +64,7 @@
           </e>
           <e p="SocketService" t="Include">
             <e p="SocketClient.cs" t="Include" />
+            <e p="SocketEventsPublisher.cs" t="Include" />
           </e>
         </e>
         <e p="Utilities" t="Include">

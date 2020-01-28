@@ -1,18 +1,23 @@
 ﻿using System;
+using System.IO;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.Services.SocketService
 {
-    public class SocketClient
+    public class SocketClient : SocketEventsPublisher
     {
+        
         private const int PORT = 3001;
         private const string IP = "127.0.0.1";
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
+        
         public SocketClient(string token)
         {
             //TODO catch exception
@@ -38,22 +43,48 @@ namespace ClientLourd.Services.SocketService
         } 
         private void MessagesListener()
         {
-            Byte[] bytes = new Byte[1024];
+            byte[] bytes = new byte[4096];
             while (_socket.Connected)
             {
-                //TODO read the messages
-                //receive the message
-                int bytesCount = 3;
-                _stream.Read(bytes, 0, 1);
-                _stream.Read(bytes, 1, 2);
-                _stream.Read(bytes, 1, BitConverter.ToInt16(bytes, 1));
-                
-                //Encode the message
-                Console.WriteLine(Encoding.ASCII.GetString(bytes, 0, bytesCount));
+                // Read the type and the length
+                _stream.Read(bytes, 0, 3);
+                int length = bytes[1] << 8 + bytes[2];
+                if (length > 0)
+                {
+                    //Read the data
+                    _stream.Read(bytes, 3, length);
+                }
+                SocketMessageTypes type = (SocketMessageTypes)bytes[0];
+                switch (type)
+                {
+                    case SocketMessageTypes.ServerConnectionResponse:
+                        OnConnectionResponse(null);
+                        break;
+                    case SocketMessageTypes.ServerDisconnection:
+                        OnServerDisconnected(null);
+                        break;
+                    case SocketMessageTypes.HealthCheck:
+                        OnHealthCheck(null);
+                        break;
+                    case SocketMessageTypes.MessageReceived:
+                        OnMessageReceived(null);
+                        break;
+                    case SocketMessageTypes.UserJoinedChannel:
+                        OnUserJoinedChannel(null);
+                        break;
+                    case SocketMessageTypes.UserLeftChannel:
+                        OnUserLeftChannel(null);
+                        break;
+                    case SocketMessageTypes.UserCreatedChannel:
+                        OnUserCreatedChannel(null);
+                        break;
+                    default:
+                        throw new InvalidDataException();
+                }
+
             }            
         }
-        
-        
-        
+
+
     }
 }
