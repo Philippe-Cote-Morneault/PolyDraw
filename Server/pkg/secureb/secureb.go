@@ -29,6 +29,12 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 // number generator fails to function correctly, in which
 // case the caller should not continue.
 func GenerateRandomString(s int) (string, error) {
-	b, err := GenerateRandomBytes(s)
+	var err error
+	var b []byte
+
+	b, err = GenerateRandomBytes(s)
+	for i := 0; err != nil && i < 3; i++ {
+		b, err = GenerateRandomBytes(s)
+	}
 	return base64.URLEncoding.EncodeToString(b), err
 }
