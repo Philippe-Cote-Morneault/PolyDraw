@@ -57,10 +57,9 @@ func main() {
 }
 
 func registerServices() {
-	service.Add(&auth.Auth{})
-	service.Add(&router.Router{})
 	service.Add(&messenger.Messenger{})
-
+	service.Add(&router.Router{})
 	service.Add(&logger.Logger{})
+	service.Add(&auth.Auth{})
 
 }
