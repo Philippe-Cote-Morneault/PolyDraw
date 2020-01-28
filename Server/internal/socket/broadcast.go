@@ -13,6 +13,14 @@ const BSocketConnected = "socket:connect"
 //Sends the client id a uuid
 const BSocketCloseClient = "socket:closeclient"
 
+//BSocketAuthConnected broadcasted when the socket is connected for a client, only fires if the socket is authenthicated
+//Sends the client id a uuid
+const BSocketAuthConnected = "socket:authconnect"
+
+//BSocketAuthCloseClient broadcasted when the socket is closed for a client, only fires if the socket is authenthicated
+//Sends the client id a uuid
+const BSocketAuthCloseClient = "socket:authcloseclient"
+
 //BSocketClose broadcasted when the socket is closed for all client
 //Nil is closed by itself or the error if it is a server error
 const BSocketClose = "socket:close"
@@ -29,6 +37,8 @@ func RegisterBroadcast() {
 	cbroadcast.Register(BSocketReady, BSize)
 	cbroadcast.Register(BSocketConnected, BSize)
 	cbroadcast.Register(BSocketCloseClient, BSize)
+	cbroadcast.Register(BSocketAuthConnected, BSize)
+	cbroadcast.Register(BSocketAuthCloseClient, BSize)
 	cbroadcast.Register(BSocketClose, BSize)
 	cbroadcast.Register(BSocketReceive, BSize)
 }
