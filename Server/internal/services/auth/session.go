@@ -107,6 +107,13 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 		token := string(bytes)
 
 		if userID, ok := tokenAvailable[token]; ok {
+
+			if HasUserSession(userID) {
+				log.Printf("[Auth] -> Connection already exists dropping %s", messageReceived.SocketID)
+				sendAuthResponse(false, messageReceived.SocketID)
+				return false
+			}
+
 			model.DB().Create(&model.Session{
 				UserID:       userID,
 				SessionToken: token,
