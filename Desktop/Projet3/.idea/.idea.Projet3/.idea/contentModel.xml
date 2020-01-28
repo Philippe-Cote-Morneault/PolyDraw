@@ -79,9 +79,11 @@
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
-          <e p="Dialogs" t="Include" />
           <e p="Enums" t="Include">
             <e p="SocketMessageTypes.cs" t="Include" />
+          </e>
+          <e p="SocketEventsArguments" t="Include">
+            <e p="MessageReceivedEventArgs.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">
             <e p="LoginInputRules.cs" t="Include" />

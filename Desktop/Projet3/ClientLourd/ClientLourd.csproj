@@ -136,6 +136,7 @@
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
     <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
     <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
+    <Compile Include="Utilities\SocketEventsArguments\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
     <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />
     <Compile Include="Views\Login.xaml.cs">
@@ -208,7 +209,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Utilities\Dialogs\" />
     <Folder Include="Utilities\Enums\" />
   </ItemGroup>
   <ItemGroup>
