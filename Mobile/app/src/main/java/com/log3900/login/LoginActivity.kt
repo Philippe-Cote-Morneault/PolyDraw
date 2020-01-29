@@ -52,9 +52,9 @@ class LoginActivity : AppCompatActivity() {
         call.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
                 val message: String? = response?.body()?.string() ?: "Error with response body"
-                println(message)
+                println("(${response?.code()}) $message")
                 MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Light_Dialog_Alert)
-                    .setMessage(message)
+                    .setMessage("(${response?.code()}) $message")
                     .setPositiveButton("Ok", null)
                     .show()
                 changeLoadingView(false)
@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
                     if (t is SocketTimeoutException)
                         "Error: Timeout"
                     else
-                        "Error: Couldn't authenticate"
+                        "Error: Couldn't authenticate ($t)"
                 println(errMessage)
                 MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Light_Dialog_Alert)
                     .setMessage(errMessage)

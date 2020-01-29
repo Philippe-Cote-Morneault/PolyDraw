@@ -8,14 +8,14 @@ import retrofit2.http.GET
 import java.util.concurrent.TimeUnit
 
 interface TestRequestService {
-    @GET("api/gibberish/")
+    @GET("h1/5-15/")
     fun getHello(): Call<ResponseBody>
 }
 
 object RestClient {
     // TODO: Replace url with:
 //    private const val baseUrl = "http://log3900.fsae.polymtl.ca:5000/"
-    private const val baseUrl = "https://www.randomtext.me/api/gibberish/h1/5-15/"
+    private const val baseUrl = "https://www.randomtext.me/api/gibberish/"
     private val httpClient = OkHttpClient().newBuilder()
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
