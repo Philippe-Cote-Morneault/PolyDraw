@@ -26,23 +26,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun sendLoginInfo(view: View) {
-        val username = findViewById<TextInputEditText>(R.id.username).text.toString()
-        val password = findViewById<TextInputEditText>(R.id.password).text.toString()
-        val usernameLayout: TextInputLayout = findViewById(R.id.login_username_layout)
-        val passwordLayout: TextInputLayout = findViewById(R.id.login_password_layout)
 
-        if (!Validator.validateUsername(username)) {
-            usernameLayout.error = "Invalid name (must be 4-12 alphanumeric characters)"
-            passwordLayout.error = null
+        val validLoginInfo: Boolean = validateLoginInfo()
+        if (!validLoginInfo)
             return
-        } else if (!Validator.validatePassword(password)) {
-            usernameLayout.error = null
-            passwordLayout.error = "Invalid password (must be 4-12 characters)"
-            return
-        }
-
-        usernameLayout.error = null
-        passwordLayout.error = null
         changeLoadingView(true)
 
         // TODO: Send login info
@@ -74,6 +61,28 @@ class LoginActivity : AppCompatActivity() {
                 changeLoadingView(false)
             }
         })
+    }
+
+    private fun validateLoginInfo(): Boolean {
+        val username = findViewById<TextInputEditText>(R.id.username).text.toString()
+        val password = findViewById<TextInputEditText>(R.id.password).text.toString()
+        val usernameLayout: TextInputLayout = findViewById(R.id.login_username_layout)
+        val passwordLayout: TextInputLayout = findViewById(R.id.login_password_layout)
+
+        if (!Validator.validateUsername(username)) {
+            usernameLayout.error = "Invalid name (must be 4-12 alphanumeric characters)"
+            passwordLayout.error = null
+            return false
+        } else if (!Validator.validatePassword(password)) {
+            usernameLayout.error = null
+            passwordLayout.error = "Invalid password (must be 4-12 characters)"
+            return false
+        }
+
+        usernameLayout.error = null
+        passwordLayout.error = null
+
+        return true
     }
 
     private fun changeLoadingView(isLoading: Boolean) {
