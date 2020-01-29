@@ -25,6 +25,15 @@ namespace ClientLourd.Views
         public Login()
         {
             InitializeComponent();
+            this.Loaded += Load;
+            
+        }
+
+
+        public void Load(object sender, RoutedEventArgs e)
+        {
+           NameTextBox.Focus();
+
         }
     }
 }

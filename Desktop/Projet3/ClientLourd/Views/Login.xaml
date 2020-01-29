@@ -28,23 +28,24 @@
                 <RowDefinition Height="*"></RowDefinition>
 
             </Grid.RowDefinitions>
-            
+
             <StackPanel Grid.Row="0">
                 <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Padding="0 10 0 10">Welcome!</TextBlock>
-                
+
             </StackPanel>
-            
+
             <!--Logo-->
             <StackPanel Grid.Row="1">
                 <!-- Might change if we translate  ClientLourd in English-->
                 <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../Resources/blacklogo.png" ></Image>
             </StackPanel>
-            
+
             <!--Username-->
             <StackPanel Grid.Row="2">
                 <TextBox
                     
                     Margin="20 0 20 0"
+                    
                     x:Name="NameTextBox"
                     MaxLength="12"
                     materialDesign:HintAssist.Hint="Username"
@@ -58,7 +59,7 @@
                     </TextBox.Text>
                 </TextBox>
             </StackPanel>
-            
+
             <!--Password-->
             <StackPanel Grid.Row="3">
                 <PasswordBox

@@ -13,24 +13,7 @@
         <c:MainViewModel x:Key="MainViewModel"/>
     </UserControl.Resources>
     <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
-        <DockPanel Background="WhiteSmoke" DockPanel.Dock="Bottom">
-           <!-- <Button Margin="5" 
-                            IsDefault="True" 
-                            Style="{DynamicResource MaterialDesignToolForegroundButton}"
-                            DockPanel.Dock="Right" 
-                            Command="{Binding SendMessageCommand}">
-                <Button.CommandParameter>
-                    <MultiBinding Converter="{StaticResource MultiBindingConverter}" >
-                        <Binding ElementName="MessageTextBox" Path="."></Binding>
-                        <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
-                    </MultiBinding>
-                </Button.CommandParameter>
-                <materialDesign:PackIcon Kind="Send" Foreground="{StaticResource PrimaryHueMidBrush}"/>
-            </Button>
-
-            <Button DockPanel.Dock="Right">
-                <materialDesign:PackIcon Kind="CheckboxMultipleBlankOutline" />
-            </Button>-->
+        <DockPanel Background="WhiteSmoke" DockPanel.Dock="Bottom" FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <Button Margin="5" 
                             IsDefault="True" 
@@ -53,6 +36,7 @@
             <TextBox 
                 Background="White"
                     Margin="10" 
+                
                     materialDesign:HintAssist.Hint="Type your message..."
                     TextWrapping="Wrap" 
                     Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" 

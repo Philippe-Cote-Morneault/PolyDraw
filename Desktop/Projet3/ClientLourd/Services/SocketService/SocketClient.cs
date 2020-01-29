@@ -36,6 +36,7 @@ namespace ClientLourd.Services.SocketService
 
         public void sendMessage(TLV tlv)
         {
+
             _socket.Send(tlv.GetBytes());
         }
 
