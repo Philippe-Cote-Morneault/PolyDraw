@@ -106,6 +106,12 @@
           <e p="Chat.xaml.cs" t="Include" />
           <e p="Conversation.xaml" t="Include" />
           <e p="Conversation.xaml.cs" t="Include" />
+          <e p="Dialogs" t="Include">
+            <e p="ClosableErrorDialog.xaml" t="Include" />
+            <e p="ClosableErrorDialog.xaml.cs" t="Include" />
+            <e p="ErrorDialog.xaml" t="Include" />
+            <e p="ErrorDialog.xaml.cs" t="Include" />
+          </e>
           <e p="Editor.xaml" t="Include" />
           <e p="Editor.xaml.cs" t="Include" />
           <e p="Login.xaml" t="Include" />

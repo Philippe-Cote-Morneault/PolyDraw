@@ -8,6 +8,7 @@ using ClientLourd.Services.Rest;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Exceptions.Rest;
 using ClientLourd.Utilities.ValidationRules;
+using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ModelViews
@@ -66,7 +67,7 @@ namespace ClientLourd.ModelViews
             }
             catch (RestException e)
             {
-                DialogHost.Show(e.Message);
+                DialogHost.Show(new ClosableErrorDialog(e));
                 IsLoggedIn = false;
             }
         }

@@ -143,6 +143,12 @@
     <Compile Include="Utilities\SocketEventsArguments\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
     <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />
+    <Compile Include="Views\Dialogs\ClosableErrorDialog.xaml.cs">
+      <DependentUpon>ClosableErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ErrorDialog.xaml.cs">
+      <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -170,6 +176,8 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\ErrorDialog.xaml" />
     <Page Include="Views\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
