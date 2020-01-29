@@ -1,10 +1,13 @@
 package model
 
-import "gitlab.com/jigsawcorp/log3900/pkg/secureb"
+import (
+	"encoding/json"
+	"log"
+	"net/http"
 
-import "log"
-
-import "github.com/google/uuid"
+	"github.com/google/uuid"
+	"gitlab.com/jigsawcorp/log3900/pkg/secureb"
+)
 
 //User represented in the database
 type User struct {
@@ -43,4 +46,24 @@ func (u *User) New(Username string) error {
 	u.Bearer = bearer
 
 	return err
+}
+
+// AllUsers Function Test to get All Users #Allan
+func AllUsers(w http.ResponseWriter, r *http.Request) {
+	var users []User
+	DB().Find(&users)
+	json.NewEncoder(w).Encode(users)
+
+}
+
+// FindUserByName Function to find a User by Name
+func FindUserByName(username string) bool {
+	var user User
+	DB().Where("username = ?", username).Find(&user)
+	return user.Username == username
+}
+
+// AddUser add user in DB
+func AddUser(user *User) {
+	DB().Create(&user)
 }
