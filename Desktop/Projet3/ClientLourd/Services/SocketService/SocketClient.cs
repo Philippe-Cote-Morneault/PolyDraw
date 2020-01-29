@@ -52,7 +52,7 @@ namespace ClientLourd.Services.SocketService
             {
                 // Read the type and the length
                 _stream.Read(bytes, 0, 3);
-                int length = bytes[1] << 8 + bytes[2];
+                int length = (bytes[1] << 8) + bytes[2];
                 if (length > 0)
                 {
                     //Read the data
