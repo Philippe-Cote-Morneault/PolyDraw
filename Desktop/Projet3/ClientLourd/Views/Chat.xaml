@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:ClientLourd.Views"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d"
+             xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              xmlns:c="clr-namespace:ClientLourd.ModelViews">
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
@@ -33,17 +34,28 @@
                     <materialDesign:PackIcon Kind="CheckboxMultipleBlankOutline" Foreground="{StaticResource PrimaryHueMidBrush}" />
                 </Button>
             </StackPanel>
-            <TextBox 
-                Background="White"
-                    Margin="10" 
+            <StackPanel>
+
+                <TextBox
+                    Background="White"
+                    Margin="10 10 10 5" 
                 
                     materialDesign:HintAssist.Hint="Type your message..."
                     TextWrapping="Wrap" 
                     Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" 
                     MaxLines="2"  
                     MinLines="2"  
-                    Name="MessageTextBox" />
-            </DockPanel>
+                    Name="MessageTextBox" 
+                    MaxLength="1000"
+                >
+
+            </TextBox>
+                <TextBlock Foreground="Gray" Margin="12 0 0 5" HorizontalAlignment="Left" Text="{Binding ElementName=MessageTextBox, Path=Text.Length, StringFormat={}{0}/1000}"></TextBlock>
+            </StackPanel>
+            
+
+
+        </DockPanel>
         <TabControl SelectedIndex="{Binding SelectedChannelIndex}" Name="ConversationTabControl" ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
             <TabControl.ItemTemplate>
                 <DataTemplate>
