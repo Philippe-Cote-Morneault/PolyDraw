@@ -52,18 +52,19 @@ namespace ClientLourd.Services.SocketService
             //TODO correct buffer size
             byte[] bytes = new byte[4096];
             dynamic data = null;
+            
             while (_socket.Connected)
             {
                 // Read the type and the length
                 _stream.Read(bytes, 0, 3);
+                SocketMessageTypes type = (SocketMessageTypes)bytes[0];
                 int length = (bytes[1] << 8) + bytes[2];
                 if (length > 0)
                 {
                     //Read the data
                     _stream.Read(bytes, 3, length);
-                    data = MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(), ContractlessStandardResolver.Options);
+                    data = RetreiveData(type, bytes);
                 }
-                SocketMessageTypes type = (SocketMessageTypes)bytes[0];
                 switch (type)
                 {
                     case SocketMessageTypes.ServerConnectionResponse:
@@ -94,6 +95,19 @@ namespace ClientLourd.Services.SocketService
             }            
         }
 
+        private dynamic RetreiveData(SocketMessageTypes type, byte[] bytes)
+        {
+            switch (type)
+            {
+                //Raw bytes
+                case SocketMessageTypes.ServerConnectionResponse:
+                    return bytes.Skip(3).ToArray();
+                //Message pack
+                default:
+                    return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(), ContractlessStandardResolver.Options);
+            }
+        }
+        
 
     }
 }
