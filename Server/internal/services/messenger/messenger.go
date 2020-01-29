@@ -38,8 +38,8 @@ func (m *Messenger) Shutdown() {
 //subscribe to broadcast channels
 func (m *Messenger) subscribe() {
 	m.messageSentChan, _, _ = cbroadcast.Subscribe(BMessageSent)
-	m.connectedChan, _, _ = cbroadcast.Subscribe(socket.BSocketConnected)
-	m.disconnectChan, _, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
+	m.connectedChan, _, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
+	m.disconnectChan, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
 
 }
 

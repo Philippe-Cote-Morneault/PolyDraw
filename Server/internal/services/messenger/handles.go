@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 )
 
@@ -21,10 +22,15 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 	timestamp := int(time.Now().Unix())
 	if message.Payload.DecodeMessagePack(&messageParsed) == nil {
 		//Send to all other connected users
+		user, err := auth.GetUserID(message.SocketID)
+		if err != nil {
+			log.Printf("[Messenger] -> %s", err)
+		}
+		log.Printf("[Messenger] -> Received: \"%s\" Username: \"%s\" CanalID: %s", messageParsed.Message, user.Username, messageParsed.CanalID)
 		messageToFoward := MessageReceived{
 			CanalID:    messageParsed.CanalID,
-			SenderID:   message.SocketID.String(),
-			SenderName: "Joe",
+			SenderID:   user.ID.String(),
+			SenderName: user.Username,
 			Message:    messageParsed.Message,
 			Timestamp:  timestamp,
 		}

@@ -1,15 +1,13 @@
 package model
 
 import (
-	"log"
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" //Need to import it for gorm mysql support
 	_ "github.com/jinzhu/gorm/dialects/sqlite"   //Need to import it for gorm sqlite support
-
 	"github.com/spf13/viper"
+	"log"
+	"time"
 )
 
 //Base model to use with every model
@@ -60,5 +58,6 @@ func DBClose() {
 //migrate run database migration for the database
 func migrate() {
 	log.Println("Migrating database")
-	dbVariable.Debug().AutoMigrate(&User{})
+	dbVariable.AutoMigrate(&User{})
+	dbVariable.AutoMigrate(&Session{})
 }

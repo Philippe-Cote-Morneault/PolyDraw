@@ -43,10 +43,10 @@ func StartAll() {
 
 //ShutdownAll the services in the pool
 func ShutdownAll() {
+	log.Println("[Services] -> Waiting for all services to shutdown")
 	for _, service := range services {
 		service.Shutdown()
 	}
-	log.Println("[Services] -> Waiting for all services to shutdown")
 	wg.Wait()
 	log.Println("[Services] -> All services are closed!")
 }
