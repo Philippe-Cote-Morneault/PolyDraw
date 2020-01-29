@@ -20,7 +20,8 @@
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter"/>
     </Window.Resources>
-
+    <materialDesign:DialogHost CloseOnClickAway="True">
+        
     <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
         <Grid>
             <DockPanel  Name="MainDockPanel" Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
@@ -77,6 +78,7 @@
             </DockPanel>
         </materialDesign:DrawerHost.LeftDrawerContent>
     </materialDesign:DrawerHost>
+</materialDesign:DialogHost>
     
     
 </Window>

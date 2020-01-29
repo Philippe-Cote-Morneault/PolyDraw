@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Net;
 using ClientLourd.Utilities.Exceptions.Rest;
 using MaterialDesignThemes.Wpf;
@@ -31,11 +32,11 @@ namespace ClientLourd.Services.Rest
                     var tokens = deseralizer.Deserialize<dynamic>(response);
                     return tokens["SessionToken"];
                 case HttpStatusCode.Conflict:
-                    throw new RestConflictException(response.Content);
+                    throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.BadRequest:
-                    throw new RestBadRequestException(response.Content);
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
-                    throw new RestException(response.Content);
+                    throw new RestException();
                     
             }
         }
