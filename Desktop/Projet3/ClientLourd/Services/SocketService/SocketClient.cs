@@ -40,9 +40,12 @@ namespace ClientLourd.Services.SocketService
         private void InitializeConnection(IPAddress ip, string token)
         {
             //TODO send the token
+            //Create the socket
             _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            //Connect the socket to the end point
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
+            //sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
         } 
         private void MessagesListener()
         {

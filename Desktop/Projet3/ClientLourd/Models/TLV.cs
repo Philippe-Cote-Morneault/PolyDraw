@@ -12,18 +12,32 @@ namespace ClientLourd.Models
 {
     public class TLV
     {
+        public TLV(SocketMessageTypes type)
+        {
+            Type = (byte) ((int) type);
+        }
+        
+        /// <summary>
+        /// Serialize the message using message pack
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="message"></param>
         public TLV(SocketMessageTypes type, dynamic message)
         {
             Type = (byte) ((int) type);
             Value = MessagePackSerializer.Serialize(message, ContractlessStandardResolver.Options);
         }
-
-        public TLV(byte type, UInt16 length, byte[] value)
+        
+        /// <summary>
+        /// Convert the message in byte 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="message"></param>
+        public TLV(SocketMessageTypes type, string message)
         {
-            Type = type;
-            Value = value;
+            Type = (byte) ((int) type);
+            Value = Encoding.ASCII.GetBytes(message);
         }
-
 
         public byte[] GetBytes()
         {
@@ -45,7 +59,14 @@ namespace ClientLourd.Models
 
         public UInt16 Length
         {
-            get { return (UInt16) Value.Length; }
+            get
+            {
+                if (Value != null)
+                {
+                    return (UInt16) Value.Length;
+                }
+                return 0;
+            }
         }
         public byte[] Value { get; private set; }
 

@@ -7,8 +7,7 @@ namespace ClientLourd.Utilities.SocketEventsArguments
         public MessageReceivedEventArgs(dynamic data)
         {
             ChannelId = data["CanalID"];
-            Date = new DateTime(1970, 1, 1, 0, 0, 0, 0).
-                AddSeconds(Math.Round(1372061224000 / 1000d)).ToLocalTime();
+            Date = UnixTimeStampToDateTime(data["Timestamp"]);
             Message = data["Message"];
             UserName = data["SenderName"];
             UserId = data["SenderID"];
@@ -19,5 +18,13 @@ namespace ClientLourd.Utilities.SocketEventsArguments
         public string UserName { get; private set; }
         public string Message { get; private set; }
         public string UserId { get; private set; }
+
+
+        private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
     }
 }
