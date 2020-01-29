@@ -5,12 +5,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:ClientLourd.Views"
+        xmlns:viewModels="clr-namespace:ClientLourd.ModelViews"
         xmlns:local="clr-namespace:ClientLourd"
         xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
 
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="MainWindow">
+    <Window.DataContext>
+        <viewModels:MainViewModel/>
+    </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter"/>

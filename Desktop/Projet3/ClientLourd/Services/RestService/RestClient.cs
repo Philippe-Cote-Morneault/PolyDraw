@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RestSharp;
-using MessagePack.Formatters;
-namespace ClientLourd.Services.Network
+
+namespace ClientLourd.Services.Rest
 {
     class RestClient
     {

@@ -26,7 +26,6 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)

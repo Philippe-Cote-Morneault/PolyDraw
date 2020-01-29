@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models;
+using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Utilities.SocketEventsArguments;
 
 namespace ClientLourd.ModelViews
 {
@@ -15,7 +15,6 @@ namespace ClientLourd.ModelViews
     {
 
         private int _newMessages;
-        private int _messagesCount;
 
 
         public int NewMessages
@@ -29,6 +28,10 @@ namespace ClientLourd.ModelViews
                     NotifyPropertyChanged();
                 }
             }
+        }
+        public SocketClient SocketClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
         }
 
         private int _selectedChannelIndex;
@@ -50,88 +53,26 @@ namespace ClientLourd.ModelViews
 
         public ChatViewModel()
         {
-            _selectedChannelIndex = 0;
-            User user1 = new User()
-            {
-                ID = "1",
-                Name = "user1",
-            };
-            
-            User user2 = new User()
-            {
-                ID = "2",
-                Name = "user2",
-            };
-            
-            User user3 = new User()
-            {
-                ID = "3",
-                Name = "user3",
-            };
-
-            ObservableCollection<Message> messages1 = new ObservableCollection<Message>()
-            {
-                new Message()
-                {
-                    Date = new DateTime(1991, 01, 01),
-                    User = user1,
-                    Text = "Messge 2",
-                },
-                new Message()
-                {
-                    Date = new DateTime(1990, 01, 01),
-                    User = user1,
-                    Text = "Messge 1",
-                },
-                new Message()
-                {
-                    Date = new DateTime(1993, 01, 01),
-                    User = user2,
-                    Text = "Messge 3",
-                },
-            };
-            
-            ObservableCollection<Message> messages2 = new ObservableCollection<Message>()
-            {
-                new Message()
-                {
-                    Date = new DateTime(2019, 01, 01),
-                    User = user2,
-                    Text = "Today is what happened to yesterday.",
-                },
-                new Message()
-                {
-                    Date = new DateTime(2010, 01, 01),
-                    User = user1,
-                    Text = "You will be the last person to buy a Chrysler",
-                },
-                new Message()
-                {
-                    Date = new DateTime(2000, 01, 01),
-                    User = user3,
-                    Text = "The true Southern watermelon is a boon apart, and not to be mentioned with commoner things.  It is chief of the world's luxuries, king by the grace of God over all the fruits of the earth.  When one has tasted it, he knows what the angels eat.  It was not a Southern watermelon that Eve took; we know it because she repented.",
-                },
-            };
-
-            Channels = new ObservableCollection<Channel>()
+            SocketClient.MessageReceived += SocketClientOnMessageReceived;
+            _channels = new ObservableCollection<Channel>()
             {
                 new Channel()
                 {
-                    Name = "channel1",
-                    Messages = messages1,
+                    Messages = new ObservableCollection<Message>(),
+                    Name = "Global",
                 },
-                new Channel()
-                {
-                    Name = "channel2",
-                    Messages = messages2,
-                }
             };
-            
-            
-            
         }
 
-            
+        private void SocketClientOnMessageReceived(object source, EventArgs e)
+        {
+            var args = (MessageReceivedEventArgs) e;
+            Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
+            App.Current.Dispatcher.Invoke(() => { Channels[0].Messages.Add(m); });
+            NewMessages++;
+        }
+
+
         RelayCommand<object[]> _sendMessageCommand; public ICommand SendMessageCommand
         {
             get
@@ -146,22 +87,10 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
-
-            if (!String.IsNullOrEmpty(message))
-            {
-                Message mes = new Message();
-                mes.Text = message;
-                mes.User = new User(){ ID = username, Name = username,};
-                mes.Date = DateTime.Now;
-                Channels[SelectedChannelIndex].Messages.Add(mes);
-                UpdateMessagesCount();
-                clearTextBox(tBox);
-            }
-        }
-
-        private void clearTextBox(TextBox tbox)
-        {
-            tbox.Text = "";
+            var data = new {Message = message, CanalID = "0"};
+            SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
+            //Clear the chat textbox
+            tBox.Text = "";
         }
         
         public ObservableCollection<Channel> Channels
@@ -177,16 +106,6 @@ namespace ClientLourd.ModelViews
             }
         }
 
-        private void UpdateMessagesCount()
-        {
-            var currentMessageCount = 0;
-            foreach (var messages in Channels.Select(c => c.Messages))
-            {
-                currentMessageCount += messages.Count;
-            }
-            NewMessages += currentMessageCount - _messagesCount;
-            _messagesCount = currentMessageCount;
-        }
 
         private ObservableCollection<Channel> _channels;
 

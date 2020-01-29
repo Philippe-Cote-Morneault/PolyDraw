@@ -2,8 +2,10 @@
 {
     public class User : ModelBase
     {
-        public User()
+        public User(string name, string id)
         {
+            Name = name;
+            ID = id;
         }
 
         public string Name
