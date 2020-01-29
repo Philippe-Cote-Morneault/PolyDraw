@@ -62,6 +62,9 @@
           <e p="RestService" t="Include">
             <e p="RestClient.cs" t="Include" />
           </e>
+          <e p="Serializer" t="Include">
+            <e p="Serializer.cs" t="Include" />
+          </e>
           <e p="SocketService" t="Include">
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
@@ -79,9 +82,11 @@
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
-          <e p="Dialogs" t="Include" />
           <e p="Enums" t="Include">
             <e p="SocketMessageTypes.cs" t="Include" />
+          </e>
+          <e p="SocketEventsArguments" t="Include">
+            <e p="MessageReceivedEventArgs.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">
             <e p="LoginInputRules.cs" t="Include" />

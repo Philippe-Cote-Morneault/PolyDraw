@@ -1,5 +1,5 @@
 ﻿using System;
-
+using ClientLourd.Utilities.SocketEventsArguments;
 namespace ClientLourd.Services.SocketService
 {
     public class SocketEventsPublisher
@@ -35,8 +35,9 @@ namespace ClientLourd.Services.SocketService
             UserJoinedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnMessageReceived(object source, EventArgs e)
+        protected virtual void OnMessageReceived(object source, dynamic data)
         {
+            var e = new MessageReceivedEventArgs(data);
             MessageReceived?.Invoke(source, e);
         }
 
