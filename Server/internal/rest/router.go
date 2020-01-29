@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"gitlab.com/jigsawcorp/log3900/internal/api"
-	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
 
@@ -12,8 +11,8 @@ import (
 func (a *Server) setRouters() {
 	a.Get("/hello", a.handleRequest(api.GetHello))
 	a.Get("/hello/{title}", a.handleRequest(api.GetHello))
-	a.Post("/auth", a.handleRequest(api.LoginUser))
-	a.Get("/users", a.handleRequest(model.AllUsers))
+	a.Post("/auth", a.handleRequest(api.PostAuth))
+	a.Get("/users", a.handleRequest(api.GetUsers))
 }
 
 func defaultRoute(w http.ResponseWriter, r *http.Request) {

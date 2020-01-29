@@ -1,59 +1,76 @@
 package api
 
 import (
-	"log"
 	"encoding/json"
 	"net/http"
-	"github.com/dgrijalva/jwt-go"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
+	"gitlab.com/jigsawcorp/log3900/pkg/secureb"
 )
 
-// LoginUser Method to test post request for login
-func LoginUser(w http.ResponseWriter, r *http.Request) {
-	var user *model.User
+type authRequest struct {
+	Username string
+}
+
+type authResponse struct {
+	Bearer       string
+	SessionToken string
+}
+
+// PostAuth authenticate using password
+func PostAuth(w http.ResponseWriter, r *http.Request) {
+	var request authRequest
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&user)
+	err := decoder.Decode(&request)
 
 	if err != nil {
-		// rbody.JSONError(w, http.StatusBadRequest, "Error of username"})// Gestion d'erreur a voir avec erreur 400
+		rbody.JSONError(w, http.StatusBadRequest, err.Error())
+		return
 	}
-	// Check the username with db and send token if not found
-	if model.FindUserByName(user.Username) {
-		rbody.JSONError(w, http.StatusConflict, "Username already taken, please choose another username")
+
+	if len(request.Username) < 4 || len(request.Username) > 12 {
+		rbody.JSONError(w, http.StatusBadRequest, "The username must be between 4 and 12 characters")
+		return
+	}
+
+	//TEMPORARY FIX
+	//Get the user if not create it.
+	var user model.User
+	if !model.FindUserByName(request.Username, &user) {
+		//The user does not already exists create it
+		user = model.User{}
+		if user.New(request.Username) != nil {
+			rbody.JSONError(w, http.StatusBadRequest, "The user could not be created!")
+			return
+		}
+		model.AddUser(&user)
+	}
+
+	//Check if there is already a session
+	if auth.HasUserSession(user.ID) {
+		//There is already a session we abort the creation of a new session
+		rbody.JSONError(w, http.StatusConflict, "The user already has an other session tied to this account. Please disconnect the other session before connecting.")
+		return
+	}
+
+	if ok, sessionToken := auth.HasUserToken(user.ID); ok {
+		//The token is already registered
+		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken})
 	} else {
-		var tokenString string = generateToken(user)
-		user.Bearer = tokenString
-		// Insert in database
-		model.AddUser(user)
-		rbody.JSON(w, http.StatusOK, map[string]string{"Bearer": "?Bearer?", "SessionToken": tokenString})
-		// Launch timeout token
+		//Generate session token
+		sessionToken, _ := secureb.GenerateToken()
+		for !auth.IsTokenAvailable(sessionToken) {
+			sessionToken, _ = secureb.GenerateToken()
+		}
+		auth.Register(sessionToken, user.ID)
+		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken})
 	}
+
 }
 
-func generateToken(user *model.User) string {
-	// Voir pour changer le protocole du token pour ameliorer la securite (RSA ou ECDSA)
-	var signingKey = []byte("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjEyMzQ1Njc4OTAifQ.eKHf9rvGRaIEEuOHrQ9KJ9ZdRqkD37kHaeKKFzebOpU")
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username": user.Username,
-	})
+//PostAuthToken authenticate using the bearer token
+func PostAuthToken(w http.ResponseWriter, r *http.Request) {
 
-	tokenString, err := token.SignedString(signingKey)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return tokenString
-}
-
-func parseToken(tokenString string) {
-	// Voir pour changer le protocole du token pour ameliorer la securite (RSA ou ECDSA)
-	var signingKey = []byte("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjEyMzQ1Njc4OTAifQ.eKHf9rvGRaIEEuOHrQ9KJ9ZdRqkD37kHaeKKFzebOpU")
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return signingKey, nil
-	})
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		log.Println(claims["username"])
-	} else {
-		log.Fatal(err)
-	}
 }

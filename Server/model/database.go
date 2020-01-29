@@ -1,13 +1,13 @@
 package model
 
 import (
-	"log"
-	"time"
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" //Need to import it for gorm mysql support
 	_ "github.com/jinzhu/gorm/dialects/sqlite"   //Need to import it for gorm sqlite support
 	"github.com/spf13/viper"
+	"log"
+	"time"
 )
 
 //Base model to use with every model
@@ -38,9 +38,6 @@ func DBConnect() {
 
 	migrate()
 	log.Println("Migration complete!")
-
-	// Temp User just for test #Allan
-	AddUser(&User{Username: "allanUsername", Email: "AllanEmail", HashedPassword: "passwordHashed", Bearer: "HereIsAToken"})
 }
 
 //DB Return the database object

@@ -1,9 +1,7 @@
 package model
 
 import (
-	"encoding/json"
 	"log"
-	"net/http"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/pkg/secureb"
@@ -48,17 +46,8 @@ func (u *User) New(Username string) error {
 	return err
 }
 
-// AllUsers Function Test to get All Users #Allan
-func AllUsers(w http.ResponseWriter, r *http.Request) {
-	var users []User
-	DB().Find(&users)
-	json.NewEncoder(w).Encode(users)
-
-}
-
 // FindUserByName Function to find a User by Name
-func FindUserByName(username string) bool {
-	var user User
+func FindUserByName(username string, user *User) bool {
 	DB().Where("username = ?", username).Find(&user)
 	return user.Username == username
 }
