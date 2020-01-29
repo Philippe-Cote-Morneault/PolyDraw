@@ -18,7 +18,6 @@ namespace ClientLourd.ModelViews
     {
 
         private int _newMessages;
-        private int _messagesCount;
 
         public int NewMessages
         {
@@ -52,9 +51,9 @@ namespace ClientLourd.ModelViews
 
         private void SocketClientOnMessageReceived(object source, MessageReceivedEventArgs e)
         {
-            //TODO
             Message m = new Message(e.Date, new User(e.UserName, e.UserId), e.Message);
             App.Current.Dispatcher.Invoke(() => { Channels[0].Messages.Add(m); });
+            NewMessages++;
         }
 
 
@@ -74,6 +73,8 @@ namespace ClientLourd.ModelViews
             string message = tBox.Text;
             var data = new {Message = message, CanalID = "0"};
             SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
+            //Clear the chat textbox
+            tBox.Text = "";
         }
         
         public ObservableCollection<Channel> Channels
@@ -89,16 +90,6 @@ namespace ClientLourd.ModelViews
             }
         }
 
-        private void UpdateMessagesCount()
-        {
-            var currentMessageCount = 0;
-            foreach (var messages in Channels.Select(c => c.Messages))
-            {
-                currentMessageCount += messages.Count;
-            }
-            NewMessages += currentMessageCount - _messagesCount;
-            _messagesCount = currentMessageCount;
-        }
 
         private ObservableCollection<Channel> _channels;
         

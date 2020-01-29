@@ -119,7 +119,6 @@
     <Compile Include="Models\Editor.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ModelBase.cs" />
-    <Compile Include="Models\SocketMessages\MessageSent.cs" />
     <Compile Include="Models\TLV.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="ModelViews\ChatViewModel.cs" />

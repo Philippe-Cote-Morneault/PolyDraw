@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using ClientLourd.Utilities.Enums;
 using MessagePack;
-using ClientLourd.Models.SocketMessages;
 using MessagePack.Resolvers;
 
 namespace ClientLourd.Models
