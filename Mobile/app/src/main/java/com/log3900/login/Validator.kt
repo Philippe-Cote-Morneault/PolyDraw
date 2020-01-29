@@ -1,15 +1,18 @@
 package com.log3900.login
 
 object Validator {
-    private const val minLength = 4
-    private const val maxLength = 12
+    const val minUsernameLength = 4
+    const val maxUsernameLength = 12
+    const val minPasswordLength = 8
+    const val maxPasswordLength = 64
 
     fun validateUsername(username: String) = username.isNotEmpty()
             && username.isAlphanumeric()
-            && username.isValidLen()
+            && username.isValidUsernameLen()
 
-    fun validatePassword(password: String) = password.isNotEmpty() && password.isValidLen()
+    fun validatePassword(password: String) = password.isNotEmpty() && password.isValidPasswordLen()
 
     private fun String.isAlphanumeric(): Boolean = this.matches(Regex("[a-zA-Z0-9]+"))
-    private fun String.isValidLen(): Boolean = this.length in minLength..maxLength
+    private fun String.isValidUsernameLen(): Boolean = this.length in minUsernameLength..maxUsernameLength
+    private fun String.isValidPasswordLen(): Boolean = this.length in minPasswordLength..maxPasswordLength
 }

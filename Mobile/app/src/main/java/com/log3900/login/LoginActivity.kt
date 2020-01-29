@@ -70,12 +70,12 @@ class LoginActivity : AppCompatActivity() {
         val passwordLayout: TextInputLayout = findViewById(R.id.login_password_layout)
 
         if (!Validator.validateUsername(username)) {
-            usernameLayout.error = "Invalid name (must be 4-12 alphanumeric characters)"
+            usernameLayout.error = "Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)"
             passwordLayout.error = null
             return false
         } else if (!Validator.validatePassword(password)) {
             usernameLayout.error = null
-            passwordLayout.error = "Invalid password (must be 4-12 characters)"
+            passwordLayout.error = "Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)"
             return false
         }
 
