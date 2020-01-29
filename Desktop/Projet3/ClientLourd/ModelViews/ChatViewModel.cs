@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -49,9 +46,10 @@ namespace ClientLourd.ModelViews
             };
         }
 
-        private void SocketClientOnMessageReceived(object source, MessageReceivedEventArgs e)
+        private void SocketClientOnMessageReceived(object source, EventArgs e)
         {
-            Message m = new Message(e.Date, new User(e.UserName, e.UserId), e.Message);
+            var args = (MessageReceivedEventArgs) e;
+            Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels[0].Messages.Add(m); });
             NewMessages++;
         }
