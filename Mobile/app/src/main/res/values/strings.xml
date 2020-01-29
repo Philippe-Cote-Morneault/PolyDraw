@@ -1,4 +1,5 @@
 <resources>
+    <!--login-->
     <string name="app_name">Mobile</string>
     <string name="login_welcome">Welcome!</string>
     <string name="login_username_hint">Username</string>
@@ -8,4 +9,7 @@
     <string name="login_password_error">The password cannot be empty</string>
     <string name="login_button">Login</string>
     <string name="login_signup">Don\'t have an account? Sign up</string>
+
+    <!--fragment_chat-->
+    <string name="fragment_chat_send_message_button_text">Send</string>
 </resources>
