@@ -87,10 +87,13 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
-            var data = new {Message = message, CanalID = "0"};
-            SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
-            //Clear the chat textbox
-            tBox.Text = "";
+            if (!string.IsNullOrEmpty(message))
+            {
+                var data = new {Message = message, CanalID = "0"};
+                SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
+                //Clear the chat textbox
+                tBox.Text = "";
+            }
         }
         
         public ObservableCollection<Channel> Channels

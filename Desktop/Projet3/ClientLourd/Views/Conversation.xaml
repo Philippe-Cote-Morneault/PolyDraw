@@ -12,8 +12,8 @@
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto" extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
-            <ListBox ItemsSource="{Binding Messages}">
-            <ListBox.Resources>
+            <ListBox ItemsSource="{Binding Messages}" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+                <ListBox.Resources>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                     <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=8}" />
