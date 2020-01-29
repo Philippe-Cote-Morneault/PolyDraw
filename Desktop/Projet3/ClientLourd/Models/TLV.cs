@@ -3,26 +3,22 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using ClientLourd.Utilities.Enums;
-using ClientLourd.Services.Serializer;
+using MessagePack;
+using ClientLourd.Models.SocketMessages;
 
 namespace ClientLourd.Models
+
 {
-    [Serializable()]
     public class TLV
     {
-        public TLV(SocketMessageTypes type, string message)
+        public TLV(SocketMessageTypes type, string message, string canalID)
         {
-            //TODO
+            //TODO Change this
             Type = (byte) ((int) type);
             Value = Encoding.ASCII.GetBytes(message);
+            MessageSent ms = new MessageSent() { message = message, canalID = canalID };
+            Value = MessagePackSerializer.Serialize(ms);
             Length = (UInt16) Value.Length;
-        }
-
-        public TLV(SocketMessageTypes type, object value)
-        {
-            Type = (byte)((int)type);
-            Value = Serializer.ToByteArray(value);
-            Length = (UInt16)Value.Length;
         }
 
         public TLV(byte type, UInt16 length, byte[] value)
@@ -32,6 +28,22 @@ namespace ClientLourd.Models
             Value = value;
         }
 
+
+        public byte[] GetBytes()
+        {
+            byte[] bytes = new Byte[1 + 2 + Value.Length];
+            bytes[0] = Type;
+
+            byte[] lengthInBytes = BitConverter.GetBytes(Length);
+
+            // Convert to big-endian
+            Array.Reverse(lengthInBytes);
+        
+            lengthInBytes.CopyTo(bytes, 1);
+            Value.CopyTo(bytes, 3);
+
+            return bytes;
+        }
 
         public byte Type { get; set; }
         public UInt16 Length { get; set; }

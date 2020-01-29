@@ -38,7 +38,7 @@ namespace ClientLourd.ModelViews
 
         public ChatViewModel()
         {
-            SocketClient.MessageReceived += SocketClientOnMessageReceived;
+            //SocketClient.MessageReceived += SocketClientOnMessageReceived;
             
             
             
@@ -142,7 +142,7 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
-            this.SocketSendMessage(message);
+            SocketSendMessage(message);
             if (!String.IsNullOrEmpty(message))
             {
                 Message mes = new Message();
@@ -155,9 +155,9 @@ namespace ClientLourd.ModelViews
             }
         }
 
-        private void SocketSendMessage(object content)
+        private void SocketSendMessage(string message)
         {            
-            SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, content));
+            SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, message, "channel1"));
         }
 
         private void clearTextBox(TextBox tbox)

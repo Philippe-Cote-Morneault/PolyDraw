@@ -34,14 +34,13 @@ namespace ClientLourd.Services.SocketService
 
         public void sendMessage(TLV tlv)
         {
-            _socket.Send(Serializer.Serializer.ToByteArray(tlv));
+            _socket.Send(tlv.GetBytes());
         }
 
         private void InitializeConnection(IPAddress ip, string token)
         {
             //TODO send the token
             _socket.Connect(new IPEndPoint(ip, PORT));
-            _socket.Send(Encoding.ASCII.GetBytes($"token: {token}"));
             _stream = new NetworkStream(_socket);
         } 
         private void MessagesListener()
