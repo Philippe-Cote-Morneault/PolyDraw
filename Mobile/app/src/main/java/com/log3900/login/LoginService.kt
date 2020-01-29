@@ -1,0 +1,26 @@
+package com.log3900.login
+
+import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.GET
+import java.util.concurrent.TimeUnit
+
+object RestClient {
+    private const val baseUrl = "http://log3900.fsae.polymtl.ca:5000/"
+    private val httpClient = OkHttpClient().newBuilder()
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .writeTimeout(20, TimeUnit.SECONDS)
+        .build()
+
+    private val retrofit = Retrofit.Builder()
+        .addConverterFactory(MoshiConverterFactory.create())
+        .baseUrl(baseUrl)
+        .client(httpClient)
+        .build()
+
+    val authenticationService: AuthenticationService = retrofit.create(AuthenticationService::class.java)
+}
