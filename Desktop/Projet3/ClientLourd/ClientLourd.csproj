@@ -136,6 +136,9 @@
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
     <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
     <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
+    <Compile Include="Utilities\Exceptions\Rest\RestConflictException.cs" />
+    <Compile Include="Utilities\Exceptions\Rest\RestBadRequestException.cs" />
+    <Compile Include="Utilities\Exceptions\Rest\RestException.cs" />
     <Compile Include="Utilities\ScrollBar\ScrollViewerExtensions.cs" />
     <Compile Include="Utilities\SocketEventsArguments\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
@@ -211,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utilities\Enums\" />
+    <Folder Include="Utilities\Exceptions\Socket" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\LogoMakr_4YSBb4.png" />

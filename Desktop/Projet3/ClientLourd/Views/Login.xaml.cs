@@ -25,7 +25,6 @@ namespace ClientLourd.Views
         public Login()
         {
             InitializeComponent();
-            DataContext = new LoginViewModel();
         }
     }
 }

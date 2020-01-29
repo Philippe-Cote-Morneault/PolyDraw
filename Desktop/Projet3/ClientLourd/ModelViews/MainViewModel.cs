@@ -14,7 +14,7 @@ namespace ClientLourd.ModelViews
         {
             _username = "";
             _restClient = new RestClient();
-            _socketClient = new SocketClient("1234");
+            _socketClient = new SocketClient();
         }
 
         public string Username

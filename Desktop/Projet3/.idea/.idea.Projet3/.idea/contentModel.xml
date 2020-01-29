@@ -35,6 +35,7 @@
             <e p="MainWindow.g.cs" t="Include" />
             <e p="Views" t="Include">
               <e p="Chat.g.cs" t="Include" />
+              <e p="Conversation.g.cs" t="Include" />
               <e p="Editor.g.cs" t="Include" />
               <e p="Login.g.cs" t="Include" />
               <e p="Window" t="Include">
@@ -80,6 +81,14 @@
           </e>
           <e p="Enums" t="Include">
             <e p="SocketMessageTypes.cs" t="Include" />
+          </e>
+          <e p="Exceptions" t="Include">
+            <e p="Rest" t="Include">
+              <e p="RestBadRequestException.cs" t="Include" />
+              <e p="RestConflictException.cs" t="Include" />
+              <e p="RestException.cs" t="Include" />
+            </e>
+            <e p="Socket" t="Include" />
           </e>
           <e p="ScrollBar" t="Include">
             <e p="ScrollViewerExtensions.cs" t="Include" />

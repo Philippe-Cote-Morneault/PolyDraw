@@ -22,14 +22,16 @@ namespace ClientLourd.Services.SocketService
         private NetworkStream _stream;
         private Task _receiver;
         
-        public SocketClient(string token)
+        public SocketClient()
         {
             //TODO catch exception
             var ip = IPAddress.Parse(IP);
-            InitializeConnection(ip,token);
-            //Start a message listener
-            _receiver = new Task(MessagesListener);
-            _receiver.Start();
+            //Create the socket
+            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            //Connect the socket to the end point
+            _socket.Connect(new IPEndPoint(ip, PORT));
+            _stream = new NetworkStream(_socket);
+            InitializeConnection("token");
         }
 
         public void sendMessage(TLV tlv)
@@ -37,15 +39,13 @@ namespace ClientLourd.Services.SocketService
             _socket.Send(tlv.GetBytes());
         }
 
-        private void InitializeConnection(IPAddress ip, string token)
+        public void InitializeConnection(string token)
         {
             //TODO send the token
-            //Create the socket
-            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            //Connect the socket to the end point
-            _socket.Connect(new IPEndPoint(ip, PORT));
-            _stream = new NetworkStream(_socket);
             //sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
+            //Start a message listener
+            _receiver = new Task(MessagesListener);
+            _receiver.Start();
         } 
         private void MessagesListener()
         {
