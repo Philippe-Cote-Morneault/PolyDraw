@@ -77,3 +77,8 @@ func (a *Server) Put(path string, f func(w http.ResponseWriter, r *http.Request)
 func (a *Server) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("DELETE")
 }
+
+//Head handler for method GET
+func (a *Server) Head(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("HEAD")
+}
