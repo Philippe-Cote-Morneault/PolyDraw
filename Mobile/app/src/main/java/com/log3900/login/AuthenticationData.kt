@@ -6,8 +6,8 @@ data class AuthenticationRequest(
 )
 
 data class AuthenticationResponse(
-    val status: Int,
-    val bearer: String,         // TODO: Replace with correct type
+//    val status: Int,
+//    val bearer: String,         // TODO: Replace with correct type
     val sessionToken: String,   // TODO: Replace with correct type
     val error: String
 )
