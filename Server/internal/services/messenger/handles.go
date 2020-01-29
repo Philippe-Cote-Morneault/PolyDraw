@@ -26,9 +26,9 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 		if err != nil {
 			log.Printf("[Messenger] -> %s", err)
 		}
-		log.Printf("[Messenger] -> Received: \"%s\" Username: \"%s\" CanalID: %s", messageParsed.Message, user.Username, messageParsed.CanalID)
+		log.Printf("[Messenger] -> Received: \"%s\" Username: \"%s\" ChannelID: %s", messageParsed.Message, user.Username, messageParsed.ChannelID)
 		messageToFoward := MessageReceived{
-			CanalID:    messageParsed.CanalID,
+			ChannelID:  messageParsed.ChannelID,
 			SenderID:   user.ID.String(),
 			SenderName: user.Username,
 			Message:    messageParsed.Message,
