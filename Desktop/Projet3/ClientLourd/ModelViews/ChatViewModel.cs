@@ -89,7 +89,7 @@ namespace ClientLourd.ModelViews
             string message = tBox.Text;
             if (!string.IsNullOrEmpty(message))
             {
-                var data = new {Message = message, CanalID = "0"};
+                var data = new {Message = message, ChannelID = "0"};
                 SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
                 //Clear the chat textbox
                 tBox.Text = "";

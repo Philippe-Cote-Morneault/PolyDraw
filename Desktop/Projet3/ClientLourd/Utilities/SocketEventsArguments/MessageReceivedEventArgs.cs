@@ -6,7 +6,7 @@ namespace ClientLourd.Utilities.SocketEventsArguments
     {
         public MessageReceivedEventArgs(dynamic data)
         {
-            ChannelId = data["CanalID"];
+            ChannelId = data["ChannelID"];
             Date = UnixTimeStampToDateTime(data["Timestamp"]);
             Message = data["Message"];
             UserName = data["SenderName"];
