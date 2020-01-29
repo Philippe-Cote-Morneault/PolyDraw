@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System.Net.Sockets;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Services.Rest;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Services.Rest;
+using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Exceptions.Rest;
 using ClientLourd.Utilities.ValidationRules;
 using MaterialDesignThemes.Wpf;
@@ -20,6 +22,10 @@ namespace ClientLourd.ModelViews
         public RestClient RestClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._restClient; }
+        }
+        public SocketClient SocketClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
         }
         
         RelayCommand<object[]> _loginCommand;
@@ -54,7 +60,8 @@ namespace ClientLourd.ModelViews
             string password = (param[1] as PasswordBox).Password;
             try
             {
-                RestClient.Login(username, password);
+                string token = RestClient.Login(username, password);
+                SocketClient.InitializeConnection(token);
                 IsLoggedIn = true;
             }
             catch (RestException e)

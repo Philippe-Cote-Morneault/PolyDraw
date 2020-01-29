@@ -3,6 +3,8 @@ using System.Net;
 using ClientLourd.Utilities.Exceptions.Rest;
 using MaterialDesignThemes.Wpf;
 using RestSharp;
+using RestSharp.Extensions;
+using RestSharp.Serialization.Json;
 
 namespace ClientLourd.Services.Rest
 {
@@ -22,10 +24,12 @@ namespace ClientLourd.Services.Rest
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username});
             IRestResponse response= _client.Post(request);
+            var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return response.Content;
+                    var tokens = deseralizer.Deserialize<dynamic>(response);
+                    return tokens["SessionToken"];
                 case HttpStatusCode.Conflict:
                     throw new RestConflictException(response.Content);
                 case HttpStatusCode.BadRequest:
