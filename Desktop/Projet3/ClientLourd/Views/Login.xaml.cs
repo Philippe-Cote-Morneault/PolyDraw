@@ -33,7 +33,7 @@ namespace ClientLourd.Views
 
         public void Load(object sender, RoutedEventArgs e)
         {
-            NameTextBox.Focus();
+           NameTextBox.Focus();
 
         }
     }

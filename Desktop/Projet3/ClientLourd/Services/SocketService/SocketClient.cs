@@ -34,6 +34,7 @@ namespace ClientLourd.Services.SocketService
 
         public void sendMessage(TLV tlv)
         {
+
             _socket.Send(tlv.GetBytes());
         }
 
@@ -45,7 +46,7 @@ namespace ClientLourd.Services.SocketService
             //Connect the socket to the end point
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
-            //sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
+            sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
         } 
         private void MessagesListener()
         {

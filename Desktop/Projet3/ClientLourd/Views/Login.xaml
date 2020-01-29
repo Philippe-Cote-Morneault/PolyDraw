@@ -39,7 +39,7 @@
             </StackPanel>
 
             <!--Username-->
-            <StackPanel Grid.Row="2" FocusManager.FocusedElement="{Binding ElementName=NameTextBox}">
+            <StackPanel Grid.Row="2">
                 <TextBox
                     
                     Margin="20 0 20 0"
