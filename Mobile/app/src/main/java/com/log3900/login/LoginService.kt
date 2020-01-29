@@ -4,18 +4,12 @@ import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import java.util.concurrent.TimeUnit
 
-interface TestRequestService {
-    @GET("h1/5-15/")
-    fun getHello(): Call<ResponseBody>
-}
-
 object RestClient {
-    // TODO: Replace url with:
-//    private const val baseUrl = "http://log3900.fsae.polymtl.ca:5000/"
-    private const val baseUrl = "https://www.randomtext.me/api/gibberish/"
+    private const val baseUrl = "http://log3900.fsae.polymtl.ca:5000/"
     private val httpClient = OkHttpClient().newBuilder()
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)
@@ -23,9 +17,10 @@ object RestClient {
         .build()
 
     private val retrofit = Retrofit.Builder()
+        .addConverterFactory(MoshiConverterFactory.create())
         .baseUrl(baseUrl)
         .client(httpClient)
         .build()
 
-    val testRequestService: TestRequestService = retrofit.create(TestRequestService::class.java)
+    val authenticationService: AuthenticationService = retrofit.create(AuthenticationService::class.java)
 }

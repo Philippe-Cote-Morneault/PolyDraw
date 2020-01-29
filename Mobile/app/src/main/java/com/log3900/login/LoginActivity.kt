@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun sendLoginInfo(view: View) {
-
+        val username = findViewById<TextInputEditText>(R.id.username).text.toString()
         val validLoginInfo: Boolean = validateLoginInfo()
         if (!validLoginInfo)
             return
@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
         // TODO: Send login info
         println("No errors")
 
-        val call = RestClient.testRequestService.getHello()
+        val call = RestClient.authenticationService.authenticate(AuthenticationRequest(username))
         call.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
                 val message: String? = response?.body()?.string() ?: "Error with response body"
