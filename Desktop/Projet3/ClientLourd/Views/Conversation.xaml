@@ -61,7 +61,7 @@
                         <materialDesign:Card
                                 Padding="5"
                                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                        <TextBlock TextWrapping="Wrap"  Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding Text}"/>
+                                        <TextBlock TextWrapping="Wrap"  Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding Content}"/>
                             </materialDesign:Card> 
                         </StackPanel>
                     </Border>

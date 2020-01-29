@@ -4,9 +4,11 @@ namespace ClientLourd.Models
 {
     public class Message: ModelBase
     {
-        public Message()
+        public Message(DateTime date, User user, string content)
         {
-                 
+            Date = date;
+            User = user;
+            Content = content;
         }
 
         private DateTime _date;
@@ -43,18 +45,18 @@ namespace ClientLourd.Models
             }
         }
         
-        private string _text;
-        public string Text
+        private string _content;
+        public string Content
         {
             get
             {
-                return _text;
+                return _content;
             }
             set
             {
-                if (value != _text)
+                if (value != _content)
                 {
-                    _text = value;
+                    _content = value;
                     NotifyPropertyChanged();
                 }
             }

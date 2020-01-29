@@ -17,6 +17,9 @@
           <e p="Editor.cs" t="Include" />
           <e p="Message.cs" t="Include" />
           <e p="ModelBase.cs" t="Include" />
+          <e p="SocketMessages" t="Include">
+            <e p="MessageSent.cs" t="Include" />
+          </e>
           <e p="TLV.cs" t="Include" />
           <e p="User.cs" t="Include" />
         </e>
@@ -61,9 +64,6 @@
         <e p="Services" t="Include">
           <e p="RestService" t="Include">
             <e p="RestClient.cs" t="Include" />
-          </e>
-          <e p="Serializer" t="Include">
-            <e p="Serializer.cs" t="Include" />
           </e>
           <e p="SocketService" t="Include">
             <e p="SocketClient.cs" t="Include" />

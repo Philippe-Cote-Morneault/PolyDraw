@@ -5,7 +5,7 @@ namespace ClientLourd.Services.SocketService
     public class SocketEventsPublisher
     {
         
-        public delegate void SocketEventHandler(object source, EventArgs args);
+        public delegate void SocketEventHandler(object source, MessageReceivedEventArgs args);
         public event SocketEventHandler ConnectionResponse;
         public event SocketEventHandler ServerDisconnected;
         public event SocketEventHandler MessageReceived;
@@ -15,22 +15,22 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler HealthCheck;
         
         
-        protected virtual void OnUserCreatedChannel(object source, EventArgs e)
+        protected virtual void OnUserCreatedChannel(object source, MessageReceivedEventArgs e)
         {
             UserCreatedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnUserLeftChannel(object source, EventArgs e)
+        protected virtual void OnUserLeftChannel(object source, MessageReceivedEventArgs e)
         {
             UserLeftChannel?.Invoke(source, e);
         }
 
         protected virtual void OnServerDisconnected(object source)
         {
-            ServerDisconnected?.Invoke(source, EventArgs.Empty);
+            ServerDisconnected?.Invoke(source, null);
         }
 
-        protected virtual void OnUserJoinedChannel(object source, EventArgs e)
+        protected virtual void OnUserJoinedChannel(object source, MessageReceivedEventArgs e)
         {
             UserJoinedChannel?.Invoke(source, e);
         }
@@ -43,12 +43,12 @@ namespace ClientLourd.Services.SocketService
 
         protected virtual void OnConnectionResponse(object source)
         {
-            ConnectionResponse?.Invoke(source, EventArgs.Empty);
+            ConnectionResponse?.Invoke(source, null);
         }
 
         protected virtual void OnHealthCheck(object source)
         {
-            HealthCheck?.Invoke(source, EventArgs.Empty);
+            HealthCheck?.Invoke(source, null);
         }
     }
 }

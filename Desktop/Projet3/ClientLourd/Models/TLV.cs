@@ -5,26 +5,22 @@ using System.Text;
 using ClientLourd.Utilities.Enums;
 using MessagePack;
 using ClientLourd.Models.SocketMessages;
+using MessagePack.Resolvers;
 
 namespace ClientLourd.Models
 
 {
     public class TLV
     {
-        public TLV(SocketMessageTypes type, string message, string canalID)
+        public TLV(SocketMessageTypes type, dynamic message)
         {
-            //TODO Change this
             Type = (byte) ((int) type);
-            Value = Encoding.ASCII.GetBytes(message);
-            MessageSent ms = new MessageSent() { message = message, canalID = canalID };
-            Value = MessagePackSerializer.Serialize(ms);
-            Length = (UInt16) Value.Length;
+            Value = MessagePackSerializer.Serialize(message, ContractlessStandardResolver.Options);
         }
 
         public TLV(byte type, UInt16 length, byte[] value)
         {
             Type = type;
-            Length = length;
             Value = value;
         }
 
@@ -45,9 +41,13 @@ namespace ClientLourd.Models
             return bytes;
         }
 
-        public byte Type { get; set; }
-        public UInt16 Length { get; set; }
-        public byte[] Value { get; set; }
+        public byte Type { get; private set; }
+
+        public UInt16 Length
+        {
+            get { return (UInt16) Value.Length; }
+        }
+        public byte[] Value { get; private set; }
 
 
         

@@ -26,8 +26,8 @@ namespace ClientLourd.Services.SocketService
         {
             //TODO catch exception
             var ip = IPAddress.Parse(IP);
-            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             InitializeConnection(ip,token);
+            //Start a message listener
             _receiver = new Task(MessagesListener);
             _receiver.Start();
         }
@@ -40,6 +40,7 @@ namespace ClientLourd.Services.SocketService
         private void InitializeConnection(IPAddress ip, string token)
         {
             //TODO send the token
+            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
         } 
