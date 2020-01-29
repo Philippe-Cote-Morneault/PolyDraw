@@ -35,7 +35,8 @@ class LoginActivity : AppCompatActivity() {
         // TODO: Send login info
         println("No errors")
 
-        val call = RestClient.authenticationService.authenticate(AuthenticationRequest(username))
+        val authData = AuthenticationRequest(username)
+        val call = RestClient.authenticationService.authenticate(authData)
         call.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
                 val message: String? = response?.body()?.string() ?: "Error with response body"
