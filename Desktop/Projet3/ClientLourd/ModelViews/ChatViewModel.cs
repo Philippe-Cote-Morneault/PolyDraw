@@ -71,6 +71,7 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
+            // TODO: Change CanalID to ChannelID once the server changed it as well
             var data = new {Message = message, CanalID = "0"};
             SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
             //Clear the chat textbox

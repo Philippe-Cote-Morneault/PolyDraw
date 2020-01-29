@@ -26,6 +26,8 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
+            Style = (Style)FindResource(typeof(Window));
+
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
