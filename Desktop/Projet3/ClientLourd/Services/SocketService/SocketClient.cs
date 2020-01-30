@@ -26,6 +26,7 @@ namespace ClientLourd.Services.SocketService
         private NetworkStream _stream;
         private Task _receiver;
         private Task _connectionManager;
+        private string _token;
 
         public SocketClient()
         {
@@ -37,10 +38,11 @@ namespace ClientLourd.Services.SocketService
             //Connect the socket to the end point
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
+            _token = "";
         }
 
 
-        void ManageConnection()
+        /*void ManageConnection()
         {
             while(true)
             {
@@ -49,9 +51,8 @@ namespace ClientLourd.Services.SocketService
                     Reconnect();
                 }
                
-                Thread.Sleep(1000);
             }
-        }
+        }*/
 
         void Reconnect()
         {
@@ -60,6 +61,7 @@ namespace ClientLourd.Services.SocketService
 
             while (!isConnected)
             {
+                Thread.Sleep(1000);
                 try
                 {
                     //TODO Change to DNS...
@@ -67,11 +69,11 @@ namespace ClientLourd.Services.SocketService
                     _socket.Connect(new IPEndPoint(IPAddress.Parse(HostName), PORT)); _stream = new NetworkStream(_socket);
                     _stream = new NetworkStream(_socket);
                     isConnected = true;
-                    //_receiver.Start();
+                    MessageBox.Show("Has successfully been reconnected");
+                    InitializeConnection(_token);
                 }
                 catch (Exception e)
                 {
-
                     
                 }
             } 
@@ -87,7 +89,15 @@ namespace ClientLourd.Services.SocketService
 
         public void sendMessage(TLV tlv)
         {
-            _socket.Send(tlv.GetBytes());
+            try
+            {
+                _socket.Send(tlv.GetBytes());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error while sending data from socket");
+            }
+            
         }
 
         public void InitializeConnection(string token)
@@ -97,67 +107,70 @@ namespace ClientLourd.Services.SocketService
             _receiver = new Task(MessagesListener);
             _receiver.Start();
 
-
-            _connectionManager = new Task(ManageConnection);
-            _connectionManager.Start();
             sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
+            _token = token;
+            // _connectionManager = new Task(ManageConnection);
+            //_connectionManager.Start();
         } 
         private void MessagesListener()
         {
             //TODO correct buffer size
-            byte[] bytes = new byte[4096];
+            byte[] bytes = new byte[4096];  
             dynamic data = null;
 
 
-            while (_socket.Connected)
-            {
-                // Read the type and the length
-                try
+           while (SocketIsConnected())
+           // while (_socket.Connected)
+
+                {
+                    // Read the type and the length
+                    try
                 {
                     _stream.Read(bytes, 0, 3);
+
+                    SocketMessageTypes type = (SocketMessageTypes)bytes[0];
+                    int length = (bytes[1] << 8) + bytes[2];
+                    if (length > 0)
+                    {
+                        //Read the data
+                        _stream.Read(bytes, 3, length);
+                        data = RetreiveData(type, bytes);
+                    }
+                    switch (type)
+                    {
+                        case SocketMessageTypes.ServerConnectionResponse:
+                            OnConnectionResponse(this);
+                            break;
+                        case SocketMessageTypes.ServerDisconnection:
+                            OnServerDisconnected(this);
+                            break;
+                        case SocketMessageTypes.HealthCheck:
+                            OnHealthCheck(this);
+                            break;
+                        case SocketMessageTypes.MessageReceived:
+                            OnMessageReceived(this, data);
+                            break;
+                        case SocketMessageTypes.UserJoinedChannel:
+                            OnUserJoinedChannel(this, data);
+                            break;
+                        case SocketMessageTypes.UserLeftChannel:
+                            OnUserLeftChannel(this, data);
+                            break;
+                        case SocketMessageTypes.UserCreatedChannel:
+                            OnUserCreatedChannel(this, data);
+                            break;
+                        default:
+                            throw new InvalidDataException();
+                    }
                 }
                 catch (Exception e)
                 {
+                    MessageBox.Show("Error while reading socket!");
                     _receiver.Dispose();
                 }
+            }
 
-
-                SocketMessageTypes type = (SocketMessageTypes)bytes[0];
-                int length = (bytes[1] << 8) + bytes[2];
-                if (length > 0)
-                {
-                    //Read the data
-                    _stream.Read(bytes, 3, length);
-                    data = RetreiveData(type, bytes);
-                }
-                switch (type)
-                {
-                    case SocketMessageTypes.ServerConnectionResponse:
-                        OnConnectionResponse(this);
-                        break;
-                    case SocketMessageTypes.ServerDisconnection:
-                        OnServerDisconnected(this);
-                        break;
-                    case SocketMessageTypes.HealthCheck:
-                        OnHealthCheck(this);
-                        break;
-                    case SocketMessageTypes.MessageReceived:
-                        OnMessageReceived(this, data);
-                        break;
-                    case SocketMessageTypes.UserJoinedChannel:
-                        OnUserJoinedChannel(this, data);
-                        break;
-                    case SocketMessageTypes.UserLeftChannel:
-                        OnUserLeftChannel(this, data);
-                        break;
-                    case SocketMessageTypes.UserCreatedChannel:
-                        OnUserCreatedChannel(this, data);
-                        break;
-                    default:
-                        throw new InvalidDataException();
-                }
-
-            }            
+            Reconnect();
         }
 
         private dynamic RetreiveData(SocketMessageTypes type, byte[] bytes)
