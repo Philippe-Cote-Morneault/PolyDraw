@@ -72,7 +72,7 @@
                 <ToggleButton Margin="16" DockPanel.Dock="Top" Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" Name="MenuToggleButton"/>
                 <ListView>
                     <ListViewItem>
-                        <TextBlock Text="bonjour"/>
+                        <Button Command="{Binding Path=LogoutCommand}" CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}" Content="Logout"></Button>
                     </ListViewItem>
                 </ListView>
             </DockPanel>

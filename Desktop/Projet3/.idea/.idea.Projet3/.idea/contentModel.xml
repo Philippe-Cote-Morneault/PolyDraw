@@ -36,6 +36,10 @@
             <e p="Views" t="Include">
               <e p="Chat.g.cs" t="Include" />
               <e p="Conversation.g.cs" t="Include" />
+              <e p="Dialogs" t="Include">
+                <e p="ClosableErrorDialog.g.cs" t="Include" />
+                <e p="ErrorDialog.g.cs" t="Include" />
+              </e>
               <e p="Editor.g.cs" t="Include" />
               <e p="Login.g.cs" t="Include" />
               <e p="Window" t="Include">
@@ -97,6 +101,7 @@
             <e p="MessageReceivedEventArgs.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">
+            <e p="ChatInputBoxRule.cs" t="Include" />
             <e p="LoginInputRules.cs" t="Include" />
             <e p="UsernameRule.cs" t="Include" />
           </e>
