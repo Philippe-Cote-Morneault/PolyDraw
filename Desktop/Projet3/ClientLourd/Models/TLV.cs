@@ -38,7 +38,7 @@ namespace ClientLourd.Models
 
         public byte[] GetBytes()
         {
-            byte[] bytes = new Byte[1 + 2 + Value.Length];
+            byte[] bytes = new Byte[1 + 2 + (Value !=null ? Value.Length : 0)];
             bytes[0] = Type;
 
             byte[] lengthInBytes = BitConverter.GetBytes(Length);
@@ -47,7 +47,7 @@ namespace ClientLourd.Models
             Array.Reverse(lengthInBytes);
         
             lengthInBytes.CopyTo(bytes, 1);
-            Value.CopyTo(bytes, 3);
+            Value?.CopyTo(bytes, 3);
 
             return bytes;
         }

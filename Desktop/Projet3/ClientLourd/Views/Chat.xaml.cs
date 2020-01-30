@@ -10,5 +10,10 @@ namespace ClientLourd.Views
             InitializeComponent();
             DataContext = new ChatViewModel();
         }
+
+        public void Init()
+        {
+            ((ChatViewModel)DataContext).Init();
+        }
     }
 }

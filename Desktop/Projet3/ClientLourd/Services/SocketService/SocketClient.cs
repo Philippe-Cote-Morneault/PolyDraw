@@ -38,9 +38,15 @@ namespace ClientLourd.Services.SocketService
             _socket.Send(tlv.GetBytes());
         }
 
+        public void Close()
+        {
+            sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
+            _stream.Close();
+            _socket.Close();
+        }
+
         public void InitializeConnection(string token)
         {
-            //TODO send the token
             //Start a message listener
             _receiver = new Task(MessagesListener);
             _receiver.Start();

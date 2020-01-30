@@ -17,16 +17,21 @@ namespace ClientLourd.ModelViews
     {
         public LoginViewModel()
         {
-            _isLoggedIn = false;
+            Init();
+        }
+
+        public override void Init()
+        {
+            IsLoggedIn = false;
         }
         
         public RestClient RestClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._restClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
         public SocketClient SocketClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
         
         RelayCommand<object[]> _loginCommand;
