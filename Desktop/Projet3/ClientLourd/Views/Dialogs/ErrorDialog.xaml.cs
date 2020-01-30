@@ -18,6 +18,7 @@ namespace ClientLourd.Views.Dialogs
         public ErrorDialog(string message)
         {
             InitializeComponent();
+            DataContext = this;
             Error = message;
         }
 
