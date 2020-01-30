@@ -5,7 +5,9 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using ClientLourd.Models;
 using ClientLourd.Utilities.Enums;
 using MessagePack;
@@ -15,23 +17,73 @@ namespace ClientLourd.Services.SocketService
 {
     public class SocketClient : SocketEventsPublisher
     {
-        
-        private const int PORT = 5001;
-        private const string HostName = "log3900.fsae.polymtl.ca";
+
+        //private const int PORT = 5001;
+        private const int PORT = 3001;
+        //private const string HostName = "log3900.fsae.polymtl.ca";
+        private const string HostName = "127.0.0.1";
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        
+        private Task _connectionManager;
+
         public SocketClient()
         {
             //TODO catch exception
-            var ip = Dns.GetHostAddresses(HostName)[0];
+            //var ip = Dns.GetHostAddresses(HostName)[0];
+            var ip = IPAddress.Parse(HostName);
             //Create the socket
             _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             //Connect the socket to the end point
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
         }
+
+
+        void ManageConnection()
+        {
+            while(true)
+            {
+                if (!SocketIsConnected())
+                {
+                    Reconnect();
+                }
+               
+                Thread.Sleep(1000);
+            }
+        }
+
+        void Reconnect()
+        {
+            _socket.Close();
+            bool isConnected = false;
+
+            while (!isConnected)
+            {
+                try
+                {
+                    //TODO Change to DNS...
+                    _socket = new Socket(IPAddress.Parse(HostName).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    _socket.Connect(new IPEndPoint(IPAddress.Parse(HostName), PORT)); _stream = new NetworkStream(_socket);
+                    _stream = new NetworkStream(_socket);
+                    isConnected = true;
+                    //_receiver.Start();
+                }
+                catch (Exception e)
+                {
+
+                    
+                }
+            } 
+            
+
+        }
+
+        bool SocketIsConnected()
+        {
+            return !((_socket.Poll(1000, SelectMode.SelectRead) && (_socket.Available == 0)) || !_socket.Connected);
+        }
+
 
         public void sendMessage(TLV tlv)
         {
@@ -44,6 +96,10 @@ namespace ClientLourd.Services.SocketService
             //Start a message listener
             _receiver = new Task(MessagesListener);
             _receiver.Start();
+
+
+            _connectionManager = new Task(ManageConnection);
+            _connectionManager.Start();
             sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
         } 
         private void MessagesListener()
@@ -51,11 +107,21 @@ namespace ClientLourd.Services.SocketService
             //TODO correct buffer size
             byte[] bytes = new byte[4096];
             dynamic data = null;
-            
+
+
             while (_socket.Connected)
             {
                 // Read the type and the length
-                _stream.Read(bytes, 0, 3);
+                try
+                {
+                    _stream.Read(bytes, 0, 3);
+                }
+                catch (Exception e)
+                {
+                    _receiver.Dispose();
+                }
+
+
                 SocketMessageTypes type = (SocketMessageTypes)bytes[0];
                 int length = (bytes[1] << 8) + bytes[2];
                 if (length > 0)
