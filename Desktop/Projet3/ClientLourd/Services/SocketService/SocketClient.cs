@@ -41,6 +41,7 @@ namespace ClientLourd.Services.SocketService
         public void Close()
         {
             sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
+            _stream.Close();
             _socket.Close();
         }
 

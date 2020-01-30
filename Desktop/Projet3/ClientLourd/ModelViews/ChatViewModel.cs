@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,7 +32,7 @@ namespace ClientLourd.ModelViews
         }
         public SocketClient SocketClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
         private int _selectedChannelIndex;
@@ -53,8 +54,7 @@ namespace ClientLourd.ModelViews
 
         public ChatViewModel()
         {
-            SocketClient.MessageReceived += SocketClientOnMessageReceived;
-            _channels = new ObservableCollection<Channel>()
+            Channels = new ObservableCollection<Channel>()
             {
                 new Channel()
                 {
@@ -62,6 +62,14 @@ namespace ClientLourd.ModelViews
                     Name = "Global",
                 },
             };
+            Init();
+        }
+
+        public override void Init()
+        {
+            SocketClient.MessageReceived += SocketClientOnMessageReceived;
+            Channels.ToList().ForEach(c => c.Messages.Clear());
+            NewMessages = 0;
         }
 
         private void SocketClientOnMessageReceived(object source, EventArgs e)

@@ -14,6 +14,7 @@ namespace ClientLourd.ModelViews
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
+        public abstract void Init();
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

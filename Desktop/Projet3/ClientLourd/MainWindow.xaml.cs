@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -26,6 +27,20 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
+            ((MainViewModel)DataContext).UserLogout += OnUserLogout;
+        }
+
+        private void OnUserLogout(object source, EventArgs args)
+        {
+            Init();
+            ChatBox.Init();
+            LoginScreen.Init();
+        }
+
+        private void Init()
+        {
+            ((ViewModelBase)DataContext).Init();
+            MenuToggleButton.IsChecked = false;
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)

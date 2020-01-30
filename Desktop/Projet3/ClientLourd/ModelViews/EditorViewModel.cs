@@ -113,5 +113,8 @@ namespace ClientLourd.ModelViews
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
 
+        public override void Init()
+        {
+        }
     }
 }

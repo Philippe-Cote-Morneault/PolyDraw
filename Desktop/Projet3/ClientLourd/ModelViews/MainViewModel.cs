@@ -13,14 +13,19 @@ namespace ClientLourd.ModelViews
     {
 
         string _username;
-        public RestClient _restClient;
-        public SocketClient _socketClient;
+        public RestClient RestClient { get; set; }
+        public SocketClient SocketClient { get; set; }
 
         public MainViewModel()
         {
-            _username = "";
-            _restClient = new RestClient();
-            _socketClient = new SocketClient();
+            Init();
+        }
+
+        public override void Init()
+        {
+            Username = "";
+            RestClient = new RestClient();
+            SocketClient = new SocketClient();
         }
 
         private RelayCommand<LoginViewModel> _logoutCommand;
@@ -35,8 +40,7 @@ namespace ClientLourd.ModelViews
 
         private void Logout(LoginViewModel lvm)
         {
-            _socketClient.Close();
-            lvm.IsLoggedIn = false;
+            SocketClient.Close();
             OnUserLogout(this);
         }
         public delegate void LogOutHandler(object source, EventArgs args);
