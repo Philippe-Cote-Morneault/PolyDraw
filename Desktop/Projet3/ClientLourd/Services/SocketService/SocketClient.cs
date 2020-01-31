@@ -11,6 +11,7 @@ using System.Windows;
 using ClientLourd.Models;
 using ClientLourd.Utilities.Enums;
 using MessagePack;
+using System.Timers;
 using MessagePack.Resolvers;
 
 namespace ClientLourd.Services.SocketService
@@ -25,7 +26,7 @@ namespace ClientLourd.Services.SocketService
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        private Task _connectionManager;
+        private System.Timers.Timer _timer;
 
         public SocketClient()
         {
@@ -38,38 +39,26 @@ namespace ClientLourd.Services.SocketService
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
 
-            var timer = new Timer
-            {
-                Interval = 3000;
-            };
-            timer.Elapsed += ElapsedTimer;
-            timer.Start();
+            _timer = new System.Timers.Timer(4000);
+            _timer.Elapsed += ElapsedTimer;
+            _timer.Start();
         }
 
         private void ElapsedTimer(object sender, ElapsedEventArgs e)
         {
-            timer.Stop();
+            _timer.Stop();
             if (!IsConnected())
             {
                 // TODO: Return to Login page
                 // TODO: Show error message
                 MessageBox.Show("Socket connection interrupted");
+
+                return;
             }
-            timer.Start();
+
+            _timer.Start();
         }
 
-
-        /*void ManageConnection()
-        {
-            while(true)
-            {
-                if (!SocketIsConnected())
-                {
-                    Reconnect();
-                }
-               
-            }
-        }*/
 
         void Reconnect()
         {
@@ -87,7 +76,6 @@ namespace ClientLourd.Services.SocketService
                     _stream = new NetworkStream(_socket);
                     isConnected = true;
                     MessageBox.Show("Has successfully been reconnected");
-                    InitializeConnection(_token);
                 }
                 catch (Exception e)
                 {
@@ -125,8 +113,6 @@ namespace ClientLourd.Services.SocketService
             _receiver.Start();
 
             sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
-            // _connectionManager = new Task(ManageConnection);
-            //_connectionManager.Start();
         } 
         private void MessagesListener()
         {
