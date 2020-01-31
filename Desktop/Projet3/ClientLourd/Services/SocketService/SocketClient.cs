@@ -18,10 +18,13 @@ namespace ClientLourd.Services.SocketService
     public class SocketClient : SocketEventsPublisher
     {
 
-        //private const int PORT = 5001;
-        private const int PORT = 3001;
-        //private const string HostName = "log3900.fsae.polymtl.ca";
-        private const string HostName = "127.0.0.1";
+        // If running on a local server, comment out these lines
+        //private const int PORT = 3001;
+        //private const string HostName = "127.0.0.1";
+
+        private const int PORT = 5001;
+        private const string HostName = "log3900.fsae.polymtl.ca";
+        
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
@@ -57,9 +60,11 @@ namespace ClientLourd.Services.SocketService
         {
             try
             {
-                //var ip = Dns.GetHostAddresses(HostName)[0];
-                var ip = IPAddress.Parse(HostName);
+                var ip = Dns.GetHostAddresses(HostName)[0];
 
+                // If connected on a local server, use the line below
+                //var ip = IPAddress.Parse(HostName);
+                
                 //Create the socket
                 _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
