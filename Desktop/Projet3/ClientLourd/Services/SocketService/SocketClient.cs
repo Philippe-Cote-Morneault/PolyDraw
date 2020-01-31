@@ -26,7 +26,6 @@ namespace ClientLourd.Services.SocketService
         private NetworkStream _stream;
         private Task _receiver;
         private Task _connectionManager;
-        private string _token;
 
         public SocketClient()
         {
@@ -38,7 +37,25 @@ namespace ClientLourd.Services.SocketService
             //Connect the socket to the end point
             _socket.Connect(new IPEndPoint(ip, PORT));
             _stream = new NetworkStream(_socket);
-            _token = "";
+
+            var timer = new Timer
+            {
+                Interval = 3000;
+            };
+            timer.Elapsed += ElapsedTimer;
+            timer.Start();
+        }
+
+        private void ElapsedTimer(object sender, ElapsedEventArgs e)
+        {
+            timer.Stop();
+            if (!IsConnected())
+            {
+                // TODO: Return to Login page
+                // TODO: Show error message
+                MessageBox.Show("Socket connection interrupted");
+            }
+            timer.Start();
         }
 
 
@@ -81,9 +98,9 @@ namespace ClientLourd.Services.SocketService
 
         }
 
-        bool SocketIsConnected()
+        bool IsConnected()
         {
-            return !((_socket.Poll(1000, SelectMode.SelectRead) && (_socket.Available == 0)) || !_socket.Connected);
+            return !((_socket.Poll(500, SelectMode.SelectRead) && (_socket.Available == 0)) || !_socket.Connected);
         }
 
 
@@ -108,7 +125,6 @@ namespace ClientLourd.Services.SocketService
             _receiver.Start();
 
             sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
-            _token = token;
             // _connectionManager = new Task(ManageConnection);
             //_connectionManager.Start();
         } 
@@ -119,13 +135,11 @@ namespace ClientLourd.Services.SocketService
             dynamic data = null;
 
 
-           while (SocketIsConnected())
-           // while (_socket.Connected)
-
+           while (IsConnected())
+            {
+                try
                 {
                     // Read the type and the length
-                    try
-                {
                     _stream.Read(bytes, 0, 3);
 
                     SocketMessageTypes type = (SocketMessageTypes)bytes[0];
@@ -169,8 +183,6 @@ namespace ClientLourd.Services.SocketService
                     _receiver.Dispose();
                 }
             }
-
-            Reconnect();
         }
 
         private dynamic RetreiveData(SocketMessageTypes type, byte[] bytes)
