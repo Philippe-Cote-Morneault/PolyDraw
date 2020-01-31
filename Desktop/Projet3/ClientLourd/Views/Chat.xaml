@@ -13,7 +13,7 @@
         <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
         <c:MainViewModel x:Key="MainViewModel"/>
     </UserControl.Resources>
-    <DockPanel Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}">
+    <DockPanel >
         <DockPanel Background="WhiteSmoke" DockPanel.Dock="Bottom" FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <Button Margin="5" 
