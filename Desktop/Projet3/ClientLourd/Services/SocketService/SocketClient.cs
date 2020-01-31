@@ -40,7 +40,6 @@ namespace ClientLourd.Services.SocketService
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error while sending data from socket");
             }
             
         }
@@ -71,7 +70,6 @@ namespace ClientLourd.Services.SocketService
             }
             catch (Exception e)
             {
-                MessageBox.Show("Couldn't connect to the server.");
                 return;
             }
 
@@ -135,7 +133,6 @@ namespace ClientLourd.Services.SocketService
                 catch (Exception e)
                 {
                     // Here, an exception can be thrown on a logout.
-                    MessageBox.Show("Exception thrown while reading from the client socket");
                 }
             }
         }

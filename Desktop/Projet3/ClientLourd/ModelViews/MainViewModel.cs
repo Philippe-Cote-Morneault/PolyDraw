@@ -73,7 +73,7 @@ namespace ClientLourd.ModelViews
 
         private void SocketClientOnConnectionLost(object source, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate 
+            Application.Current.Dispatcher.Invoke(delegate 
             {
                 DialogHost.Show(new ClosableErrorDialog("You have lost connection to the server! Returning to the login page..."));
             });
