@@ -6,6 +6,7 @@ using ClientLourd.Services.Rest;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ModelViews
 {
@@ -21,6 +22,17 @@ namespace ClientLourd.ModelViews
             Init();
         }
 
+        
+        private RelayCommand<DrawerHost> _openDrawerCommand;
+
+        public ICommand OpenDrawerCommand
+        {
+            get
+            {
+                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<DrawerHost>(drawer => drawer.IsRightDrawerOpen = !drawer.IsRightDrawerOpen));
+            }
+        }
+        
         public override void Init()
         {
             Username = "";

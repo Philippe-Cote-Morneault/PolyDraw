@@ -16,13 +16,19 @@
     <Window.DataContext>
         <viewModels:MainViewModel/>
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="OemTilde"
+                    Command="{Binding OpenDrawerCommand}"
+                    CommandParameter="{Binding ElementName=Drawer}">
+        </KeyBinding>
+    </Window.InputBindings>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter"/>
     </Window.Resources>
     <materialDesign:DialogHost CloseOnClickAway="True">
         
-    <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+    <materialDesign:DrawerHost x:Name="Drawer" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
         <Grid>
             <DockPanel  Name="MainDockPanel" Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
                 <materialDesign:ColorZone  DockPanel.Dock="Top" Mode="PrimaryMid">
