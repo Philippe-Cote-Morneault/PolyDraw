@@ -21,17 +21,6 @@ namespace ClientLourd.ModelViews
         {
             Init();
         }
-
-        
-        private RelayCommand<DrawerHost> _openDrawerCommand;
-
-        public ICommand OpenDrawerCommand
-        {
-            get
-            {
-                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<DrawerHost>(drawer => drawer.IsRightDrawerOpen = !drawer.IsRightDrawerOpen));
-            }
-        }
         
         public override void Init()
         {

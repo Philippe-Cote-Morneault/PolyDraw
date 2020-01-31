@@ -9,6 +9,7 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Utilities.SocketEventsArguments;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ModelViews
 {
@@ -86,6 +87,14 @@ namespace ClientLourd.ModelViews
             {
                 return _clearNotificationCommand ??
                        (_clearNotificationCommand = new RelayCommand<object>(param => NewMessages = 0));
+            }
+        }
+        
+        private RelayCommand<DrawerHost> _openDrawerCommand; public ICommand OpenDrawerCommand
+        {
+            get
+            {
+                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<DrawerHost>(drawer => drawer.IsRightDrawerOpen = !drawer.IsRightDrawerOpen));
             }
         }
 

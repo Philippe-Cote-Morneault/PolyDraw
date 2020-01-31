@@ -18,7 +18,7 @@
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding Key="OemTilde"
-                    Command="{Binding OpenDrawerCommand}"
+                    Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}"
                     CommandParameter="{Binding ElementName=Drawer}">
         </KeyBinding>
     </Window.InputBindings>
