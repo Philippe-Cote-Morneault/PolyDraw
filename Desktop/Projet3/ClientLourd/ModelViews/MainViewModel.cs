@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Services.Rest;
@@ -16,26 +17,30 @@ namespace ClientLourd.ModelViews
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
 
+
         public MainViewModel()
         {
             Init();
         }
+        
 
         public override void Init()
         {
             Username = "";
             RestClient = new RestClient();
             SocketClient = new SocketClient();
-        }
+            SocketClient.ConnectionLost += SocketClientOnConnectionLost;
+
+        }   
 
         private RelayCommand<LoginViewModel> _logoutCommand;
 
         public ICommand LogoutCommand
         {
-            get { return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>(lvm => Logout(lvm))); }
+            get { return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>( lvm => Logout())); }
         }
 
-        private void Logout(LoginViewModel lvm)
+        private void Logout()
         {
             SocketClient.Close();
             OnUserLogout(this);
@@ -63,6 +68,11 @@ namespace ClientLourd.ModelViews
         protected virtual void OnUserLogout(object source)
         {
             UserLogout?.Invoke(source, EventArgs.Empty);
+        }
+
+        private void SocketClientOnConnectionLost(object source, EventArgs e)
+        {
+            Logout();
         }
     }
 }

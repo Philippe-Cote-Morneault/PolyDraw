@@ -14,7 +14,12 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler UserLeftChannel;
         public event SocketEventHandler UserCreatedChannel;
         public event SocketEventHandler HealthCheck;
+        public event SocketEventHandler ConnectionLost;
 
+        protected virtual void OnConnectionLost(object source)
+        {
+            ConnectionLost?.Invoke(source, EventArgs.Empty);
+        }
 
         protected virtual void OnUserCreatedChannel(object source, EventArgs e)
         {

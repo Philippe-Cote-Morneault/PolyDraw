@@ -33,9 +33,12 @@ namespace ClientLourd
 
         private void OnUserLogout(object source, EventArgs args)
         {
-            Init();
-            ChatBox.Init();
-            LoginScreen.Init();
+            Dispatcher.Invoke(() => 
+            {
+                Init();
+                ChatBox.Init();
+                LoginScreen.Init();
+            }); 
         }
 
         private void Init()

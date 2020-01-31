@@ -69,7 +69,7 @@ namespace ClientLourd.ModelViews
             Channels.ToList().ForEach(c => c.Messages.Clear());
             NewMessages = 0;
         }
-
+      
         private void SocketClientOnMessageReceived(object source, EventArgs e)
         {
             var args = (MessageReceivedEventArgs) e;

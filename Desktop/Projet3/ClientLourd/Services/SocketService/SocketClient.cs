@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using ClientLourd.Models;
@@ -26,72 +25,12 @@ namespace ClientLourd.Services.SocketService
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        private System.Timers.Timer _timer;
-
+        private Timer _timer;
 
         public SocketClient()
         {
-            //TODO catch exception
-            //var ip = Dns.GetHostAddresses(HostName)[0];
-            var ip = IPAddress.Parse(HostName);
-            //Create the socket
-            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            //Connect the socket to the end point
-            _socket.Connect(new IPEndPoint(ip, PORT));
-            _stream = new NetworkStream(_socket);
-
-            _timer = new System.Timers.Timer(4000);
-            _timer.Elapsed += ElapsedTimer;
-            _timer.Start();
-        }
-
-        private void ElapsedTimer(object sender, ElapsedEventArgs e)
-        {
-            _timer.Stop();
-            if (!IsConnected())
-            {
-                // TODO: Return to Login page
-                // TODO: Show error message
-                MessageBox.Show("Socket connection interrupted");
-
-                return;
-            }
-
-            _timer.Start();
-        }
-
-
-        void Reconnect()
-        {
-            _socket.Close();
-            bool isConnected = false;
-
-            while (!isConnected)
-            {
-                Thread.Sleep(1000);
-                try
-                {
-                    //TODO Change to DNS...
-                    _socket = new Socket(IPAddress.Parse(HostName).AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                    _socket.Connect(new IPEndPoint(IPAddress.Parse(HostName), PORT)); _stream = new NetworkStream(_socket);
-                    _stream = new NetworkStream(_socket);
-                    isConnected = true;
-                    MessageBox.Show("Has successfully been reconnected");
-                }
-                catch (Exception e)
-                {
-                    
-                }
-            } 
-            
 
         }
-
-        bool IsConnected()
-        {
-            return !((_socket.Poll(500, SelectMode.SelectRead) && (_socket.Available == 0)) || !_socket.Connected);
-        }
-
 
         public void sendMessage(TLV tlv)
         {
@@ -108,13 +47,36 @@ namespace ClientLourd.Services.SocketService
 
         public void Close()
         {
-            sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
-            _stream.Close();
-            _socket.Close();
+           _timer.Stop();
+           _timer.Dispose();
+           sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
+           _stream.Close();
+           _socket.Close();
         }
 
         public void InitializeConnection(string token)
         {
+            try
+            {
+                //var ip = Dns.GetHostAddresses(HostName)[0];
+                var ip = IPAddress.Parse(HostName);
+
+                //Create the socket
+                _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+                //Connect the socket to the end point
+                _socket.Connect(new IPEndPoint(ip, PORT));
+                _stream = new NetworkStream(_socket);
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Couldn't connect to the server.");
+                return;
+            }
+
+            InitializeTimer();
+
             //Start a message listener
             _receiver = new Task(MessagesListener);
             _receiver.Start();
@@ -172,8 +134,8 @@ namespace ClientLourd.Services.SocketService
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Error while reading socket!");
-                    _receiver.Dispose();
+                    // Here, an exception can be thrown on a logout.
+                    MessageBox.Show("Exception thrown while reading from the client socket");
                 }
             }
         }
@@ -189,6 +151,38 @@ namespace ClientLourd.Services.SocketService
                 default:
                     return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(),
                         ContractlessStandardResolver.Options);
+            }
+        }
+
+        private void InitializeTimer()
+        {
+            _timer = new Timer(4000);
+            _timer.Elapsed += CheckConnection;
+            _timer.Start();
+        }
+
+        private void CheckConnection(object sender, ElapsedEventArgs e)
+        {
+            _timer.Stop();
+
+            if (!IsConnected())
+            {
+                OnConnectionLost(this);
+                return;
+            }
+
+            _timer.Start();
+        }
+
+        public bool IsConnected()
+        {
+            try
+            {
+                return !(!_socket.Connected || (_socket.Poll(500, SelectMode.SelectRead) && (_socket.Available == 0)));
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
     }
