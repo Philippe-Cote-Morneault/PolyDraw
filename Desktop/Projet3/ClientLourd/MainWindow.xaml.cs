@@ -55,5 +55,11 @@ namespace ClientLourd
 
             chatWindow.Show();
         }
+
+        private void ChatToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            //Clear the notification when chatToggleButton is checked or unchecked
+            ((ChatViewModel)ChatBox.DataContext).ClearNotificationCommand.Execute(null);
+        }
     }
 }

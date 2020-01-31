@@ -80,6 +80,14 @@ namespace ClientLourd.ModelViews
             NewMessages++;
         }
 
+        RelayCommand<object> _clearNotificationCommand; public ICommand ClearNotificationCommand
+        {
+            get
+            {
+                return _clearNotificationCommand ??
+                       (_clearNotificationCommand = new RelayCommand<object>(param => NewMessages = 0));
+            }
+        }
 
         RelayCommand<object[]> _sendMessageCommand; public ICommand SendMessageCommand
         {
