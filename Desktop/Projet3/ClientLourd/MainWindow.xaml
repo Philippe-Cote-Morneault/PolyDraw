@@ -16,16 +16,22 @@
     <Window.DataContext>
         <viewModels:MainViewModel/>
     </Window.DataContext>
-    <Window.InputBindings>
-        <KeyBinding Key="OemTilde"
-                    Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}"
-                    CommandParameter="{Binding ElementName=Drawer}">
-        </KeyBinding>
-    </Window.InputBindings>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="OemTilde"
+            Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}">
+            <KeyBinding.CommandParameter>
+                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                    <Binding ElementName="ChatToggleButton" Path="IsEnabled"></Binding>
+                    <Binding ElementName="Drawer"></Binding>
+                </MultiBinding>
+            </KeyBinding.CommandParameter>
+        </KeyBinding>
+    </Window.InputBindings>
     <materialDesign:DialogHost CloseOnClickAway="True">
         
         <Grid>
@@ -38,46 +44,48 @@
                                       Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
                                       HorizontalAlignment="Right" Margin="16"
                                       Name="MenuToggleButton"/>
-                            <!-- Badge and button -->
-                            <materialDesign:Badged
-                                DockPanel.Dock="Right" 
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                BadgePlacementMode="BottomLeft"
-                                Name="NotificationCounter"
-                                Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
-                                BadgeBackground="{StaticResource SecondaryAccentBrush}"
-                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
-                                
+                            <!-- Use for hiding the button when the chat is export-->
+                            <Grid DockPanel.Dock="Right"
+                                  Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <!-- Badge and button -->
+                                <materialDesign:Badged
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    BadgePlacementMode="BottomLeft"
+                                    Name="NotificationCounter"
+                                    Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
+                                    BadgeBackground="{StaticResource SecondaryAccentBrush}"
+                                    Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
+                                    
+                                    <ToggleButton
+                                        Name="ChatToggleButton"
+                                        Checked="ChatToggleButton_OnChecked"
+                                        Unchecked="ChatToggleButton_OnChecked"
+                                        Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
+                                        <ToggleButton.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
+                                            </ContextMenu>
+                                        </ToggleButton.ContextMenu>
+                                      <materialDesign:PackIcon
+                                          Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                          Kind="Chat"
+                                        Height="24"
+                                        Width="24" />
+                                    </ToggleButton>
+                                </materialDesign:Badged>
+
+                                <!-- button without badge -->
                                 <ToggleButton
-                                    Name="ChatToggleButton"
-                                    Checked="ChatToggleButton_OnChecked"
-                                    Unchecked="ChatToggleButton_OnChecked"
-                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
-                                    <ToggleButton.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
-                                        </ContextMenu>
-                                    </ToggleButton.ContextMenu>
+                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                    IsChecked="{Binding ElementName=Drawer, Path=IsRightDrawerOpen}"
+                                    Visibility="{Binding ElementName=NotificationCounter, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
                                   <materialDesign:PackIcon
-                                      Foreground="{StaticResource MaterialDesignDarkForeground}"
-                                      Kind="Chat"
+                                    Kind="Chat"
                                     Height="24"
                                     Width="24" />
                                 </ToggleButton>
-                            </materialDesign:Badged>
-
-                            <!-- button without badge -->
-                            <ToggleButton
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
-                                IsChecked="{Binding ElementName=Drawer, Path=IsRightDrawerOpen}"
-                                Visibility="{Binding ElementName=NotificationCounter, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                              <materialDesign:PackIcon
-                                Kind="Chat"
-                                Height="24"
-                                Width="24" />
-                            </ToggleButton>
+                            </Grid>
 
                         <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
                     </DockPanel>

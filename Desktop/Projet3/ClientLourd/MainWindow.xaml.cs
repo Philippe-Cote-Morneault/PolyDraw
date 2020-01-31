@@ -49,10 +49,11 @@ namespace ClientLourd
             RightDrawerContent.Children.Clear();
             chatWindow.MainStackPanel.Children.Add(ChatBox);
 
-            chatWindow.DataContext = this.DataContext;
+            //chatWindow.DataContext = this.DataContext;
+            ChatToggleButton.IsEnabled = false;
             chatWindow.Owner = this;
             chatWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
+            chatWindow.Closed += (o, args) => { ChatToggleButton.IsEnabled = true; };
             chatWindow.Show();
         }
 

@@ -90,11 +90,11 @@ namespace ClientLourd.ModelViews
             }
         }
         
-        private RelayCommand<DrawerHost> _openDrawerCommand; public ICommand OpenDrawerCommand
+        private RelayCommand<object[]> _openDrawerCommand; public ICommand OpenDrawerCommand
         {
             get
             {
-                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<DrawerHost>(drawer => drawer.IsRightDrawerOpen = !drawer.IsRightDrawerOpen));
+                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(param => ((DrawerHost)param[1]).IsRightDrawerOpen = !((DrawerHost)param[1]).IsRightDrawerOpen, param => (bool)param[0]));
             }
         }
 
