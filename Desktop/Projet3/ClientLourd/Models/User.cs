@@ -20,8 +20,9 @@
                 }
             }
         }
+
         private string _name;
-        
+
         public string ID
         {
             get { return _id; }
@@ -34,6 +35,7 @@
                 }
             }
         }
+
         private string _id;
     }
 }

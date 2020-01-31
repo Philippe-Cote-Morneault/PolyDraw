@@ -25,24 +25,23 @@ namespace ClientLourd.ModelViews
         {
             IsLoggedIn = false;
         }
-        
+
         public RestClient RestClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
+
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
-        
+
         RelayCommand<object[]> _loginCommand;
         bool _isLoggedIn;
+
         public bool IsLoggedIn
         {
-            get
-            {
-                return _isLoggedIn;
-            }
+            get { return _isLoggedIn; }
 
             set
             {
@@ -53,17 +52,19 @@ namespace ClientLourd.ModelViews
                 }
             }
         }
-        
+
         public ICommand LoginCommand
         {
             get
             {
-                return _loginCommand ?? (_loginCommand = new RelayCommand<object[]>(param => Authentify(param) ,param => CredentialsValid(param)));
+                return _loginCommand ?? (_loginCommand =
+                           new RelayCommand<object[]>(param => Authentify(param), param => CredentialsValid(param)));
             }
         }
 
-        void Authentify(object[] param) {
-            string username = (string)param[0];
+        void Authentify(object[] param)
+        {
+            string username = (string) param[0];
             string password = (param[1] as PasswordBox).Password;
             try
             {
@@ -84,7 +85,8 @@ namespace ClientLourd.ModelViews
             {
                 return false;
             }
-            string username = (string)param[0];
+
+            string username = (string) param[0];
             string password = (param[1] as PasswordBox).Password;
 
             LoginInputRules loginInputValidator = new LoginInputRules();

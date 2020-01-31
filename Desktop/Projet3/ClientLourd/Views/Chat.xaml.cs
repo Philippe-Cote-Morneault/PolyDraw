@@ -13,7 +13,7 @@ namespace ClientLourd.Views
 
         public void Init()
         {
-            ((ChatViewModel)DataContext).Init();
+            ((ChatViewModel) DataContext).Init();
         }
     }
 }

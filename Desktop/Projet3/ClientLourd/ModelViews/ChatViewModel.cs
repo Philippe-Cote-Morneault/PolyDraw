@@ -15,7 +15,6 @@ namespace ClientLourd.ModelViews
 {
     public class ChatViewModel : ViewModelBase
     {
-
         private int _newMessages;
 
 
@@ -31,6 +30,7 @@ namespace ClientLourd.ModelViews
                 }
             }
         }
+
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
@@ -40,10 +40,7 @@ namespace ClientLourd.ModelViews
 
         public int SelectedChannelIndex
         {
-            get
-            {
-                return _selectedChannelIndex;
-            }
+            get { return _selectedChannelIndex; }
             set
             {
                 if (value != _selectedChannelIndex)
@@ -81,7 +78,9 @@ namespace ClientLourd.ModelViews
             NewMessages++;
         }
 
-        RelayCommand<object> _clearNotificationCommand; public ICommand ClearNotificationCommand
+        RelayCommand<object> _clearNotificationCommand;
+
+        public ICommand ClearNotificationCommand
         {
             get
             {
@@ -89,16 +88,22 @@ namespace ClientLourd.ModelViews
                        (_clearNotificationCommand = new RelayCommand<object>(param => NewMessages = 0));
             }
         }
-        
-        private RelayCommand<object[]> _openDrawerCommand; public ICommand OpenDrawerCommand
+
+        private RelayCommand<object[]> _openDrawerCommand;
+
+        public ICommand OpenDrawerCommand
         {
             get
             {
-                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(param => ((DrawerHost)param[1]).IsRightDrawerOpen = !((DrawerHost)param[1]).IsRightDrawerOpen, param => (bool)param[0]));
+                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(
+                           param => ((DrawerHost) param[1]).IsRightDrawerOpen =
+                               !((DrawerHost) param[1]).IsRightDrawerOpen, param => (bool) param[0]));
             }
         }
 
-        RelayCommand<object[]> _sendMessageCommand; public ICommand SendMessageCommand
+        RelayCommand<object[]> _sendMessageCommand;
+
+        public ICommand SendMessageCommand
         {
             get
             {
@@ -120,7 +125,7 @@ namespace ClientLourd.ModelViews
                 tBox.Text = "";
             }
         }
-        
+
         public ObservableCollection<Channel> Channels
         {
             get { return _channels; }
@@ -136,8 +141,5 @@ namespace ClientLourd.ModelViews
 
 
         private ObservableCollection<Channel> _channels;
-
-        
-
     }
 }

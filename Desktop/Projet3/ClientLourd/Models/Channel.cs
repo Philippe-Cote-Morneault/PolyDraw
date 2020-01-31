@@ -3,21 +3,22 @@ using System.Linq;
 
 namespace ClientLourd.Models
 {
-    public class Channel: ModelBase
+    public class Channel : ModelBase
     {
-        public Channel() {}
+        public Channel()
+        {
+        }
 
         public string Name
         {
             get { return _name; }
-            set 
+            set
             {
                 if (value != _name)
                 {
                     _name = value;
                     NotifyPropertyChanged();
                 }
-                
             }
         }
 
@@ -26,17 +27,16 @@ namespace ClientLourd.Models
         public ObservableCollection<Message> Messages
         {
             get { return _messages; }
-            set 
+            set
             {
                 if (value != _messages)
                 {
                     _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
                     NotifyPropertyChanged();
                 }
-                
             }
         }
+
         private ObservableCollection<Message> _messages;
-        
     }
 }

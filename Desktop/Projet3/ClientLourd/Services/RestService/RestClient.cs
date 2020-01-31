@@ -24,7 +24,7 @@ namespace ClientLourd.Services.Rest
             RestRequest request = new RestRequest("auth");
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username});
-            IRestResponse response= _client.Post(request);
+            IRestResponse response = _client.Post(request);
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
             {
@@ -37,7 +37,6 @@ namespace ClientLourd.Services.Rest
                     throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
                     throw new RestException();
-                    
             }
         }
     }

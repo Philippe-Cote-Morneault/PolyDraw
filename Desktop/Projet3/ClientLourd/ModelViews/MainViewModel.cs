@@ -10,9 +10,8 @@ using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ModelViews
 {
-    class MainViewModel: ViewModelBase
+    class MainViewModel : ViewModelBase
     {
-
         string _username;
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
@@ -21,7 +20,7 @@ namespace ClientLourd.ModelViews
         {
             Init();
         }
-        
+
         public override void Init()
         {
             Username = "";
@@ -33,10 +32,7 @@ namespace ClientLourd.ModelViews
 
         public ICommand LogoutCommand
         {
-            get
-            {
-                return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>(lvm => Logout(lvm)));
-            }
+            get { return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>(lvm => Logout(lvm))); }
         }
 
         private void Logout(LoginViewModel lvm)
@@ -44,15 +40,14 @@ namespace ClientLourd.ModelViews
             SocketClient.Close();
             OnUserLogout(this);
         }
+
         public delegate void LogOutHandler(object source, EventArgs args);
+
         public event LogOutHandler UserLogout;
 
         public string Username
         {
-            get
-            {
-                return _username;
-            }
+            get { return _username; }
 
             set
             {
@@ -70,6 +65,4 @@ namespace ClientLourd.ModelViews
             UserLogout?.Invoke(source, EventArgs.Empty);
         }
     }
-
-    
 }

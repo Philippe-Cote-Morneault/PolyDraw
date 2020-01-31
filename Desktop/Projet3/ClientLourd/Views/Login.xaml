@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="ClientLourd.Views.Login"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              xmlns:viewModels="clr-namespace:ClientLourd.ModelViews"
@@ -12,20 +12,20 @@
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d">
     <UserControl.DataContext>
-        <viewModels:LoginViewModel/>
+        <viewModels:LoginViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
     </UserControl.Resources>
     <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
         <Grid>
             <Grid.RowDefinitions>
 
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
 
             </Grid.RowDefinitions>
 
@@ -37,23 +37,24 @@
             <!--Logo-->
             <StackPanel Grid.Row="1">
                 <!-- Might change if we translate  ClientLourd in English-->
-                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../Resources/blacklogo.png" ></Image>
+                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../Resources/blacklogo.png" />
             </StackPanel>
 
             <!--Username-->
             <StackPanel Grid.Row="2">
                 <TextBox
-                    
+
                     Margin="20 0 20 0"
-                    
+
                     x:Name="NameTextBox"
                     MaxLength="12"
                     materialDesign:HintAssist.Hint="Username"
                     materialDesign:HintAssist.HelperText="">
-                    <TextBox.Text >
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.Username" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                    <TextBox.Text>
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+                                 Path="DataContext.Username" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <rules:UsernameRule ValidatesOnTargetUpdated="True"/>
+                                <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -68,20 +69,19 @@
                     MaxLength="12"
                     materialDesign:HintAssist.Hint="Password"
                     materialDesign:TextFieldAssist.HasClearButton="True"
-                    materialDesign:HintAssist.HelperText="At least 4 characters">
-                </PasswordBox>
+                    materialDesign:HintAssist.HelperText="At least 4 characters" />
             </StackPanel>
 
             <!--Login button-->
             <Button Grid.Row="4"
-                IsDefault="True"
-                Margin="40 0 40 0"
-                Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    IsDefault="True"
+                    Margin="40 0 40 0"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding Path=LoginCommand}">
                 <Button.CommandParameter>
                     <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                        <Binding ElementName="NameTextBox" Path="Text"></Binding>
-                        <Binding ElementName="PasswordBox"></Binding>
+                        <Binding ElementName="NameTextBox" Path="Text" />
+                        <Binding ElementName="PasswordBox" />
                     </MultiBinding>
                 </Button.CommandParameter>
                 Login

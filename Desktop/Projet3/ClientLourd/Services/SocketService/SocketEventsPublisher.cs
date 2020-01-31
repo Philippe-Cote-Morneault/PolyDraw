@@ -1,11 +1,12 @@
 ﻿using System;
 using ClientLourd.Utilities.SocketEventsArguments;
+
 namespace ClientLourd.Services.SocketService
 {
     public class SocketEventsPublisher
     {
-        
         public delegate void SocketEventHandler(object source, EventArgs args);
+
         public event SocketEventHandler ConnectionResponse;
         public event SocketEventHandler ServerDisconnected;
         public event SocketEventHandler MessageReceived;
@@ -13,8 +14,8 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler UserLeftChannel;
         public event SocketEventHandler UserCreatedChannel;
         public event SocketEventHandler HealthCheck;
-        
-        
+
+
         protected virtual void OnUserCreatedChannel(object source, EventArgs e)
         {
             UserCreatedChannel?.Invoke(source, e);

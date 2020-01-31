@@ -5,9 +5,10 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
-             mc:Ignorable="d"
-             >
+             mc:Ignorable="d">
     <DockPanel Name="DockPanel">
-        <Button Margin="10" Content="Ok" HorizontalAlignment="Center" Width="{Binding ElementName=DockPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"  Command="materialDesign:DialogHost.CloseDialogCommand" DockPanel.Dock="Bottom"/>
+        <Button Margin="10" Content="Ok" HorizontalAlignment="Center"
+                Width="{Binding ElementName=DockPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
+                Command="materialDesign:DialogHost.CloseDialogCommand" DockPanel.Dock="Bottom" />
     </DockPanel>
 </UserControl>

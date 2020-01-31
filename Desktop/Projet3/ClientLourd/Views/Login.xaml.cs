@@ -31,13 +31,12 @@ namespace ClientLourd.Views
         public void Init()
         {
             PasswordBox.Clear();
-            ((LoginViewModel)DataContext).Init();
+            ((LoginViewModel) DataContext).Init();
         }
 
         public void Load(object sender, RoutedEventArgs e)
         {
-           NameTextBox.Focus();
-
+            NameTextBox.Focus();
         }
     }
 }

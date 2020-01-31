@@ -11,123 +11,127 @@
 
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="MainWindow"
-        >
+        Title="MainWindow">
     <Window.DataContext>
-        <viewModels:MainViewModel/>
+        <viewModels:MainViewModel />
     </Window.DataContext>
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
-        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
-        <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="OemTilde"
-            Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}">
+                    Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}">
             <KeyBinding.CommandParameter>
                 <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                    <Binding ElementName="ChatToggleButton" Path="IsEnabled"></Binding>
-                    <Binding ElementName="Drawer"></Binding>
+                    <Binding ElementName="ChatToggleButton" Path="IsEnabled" />
+                    <Binding ElementName="Drawer" />
                 </MultiBinding>
             </KeyBinding.CommandParameter>
         </KeyBinding>
     </Window.InputBindings>
     <materialDesign:DialogHost CloseOnClickAway="True">
-        
+
         <Grid>
-            <DockPanel  Name="MainDockPanel" Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
-                <materialDesign:ColorZone  DockPanel.Dock="Top" Mode="PrimaryMid">
+            <DockPanel Name="MainDockPanel"
+                       Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
+                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
                     <!-- Menu bar-->
                     <DockPanel>
                         <!-- Hamburger menu toggle -->
-                        <ToggleButton DockPanel.Dock="Left" 
-                                      Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                        <ToggleButton DockPanel.Dock="Left"
+                                      Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                       HorizontalAlignment="Right" Margin="16"
-                                      Name="MenuToggleButton"/>
-                            <!-- Use for hiding the button when the chat is export-->
-                            <Grid DockPanel.Dock="Right"
-                                  Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <!-- Badge and button -->
-                                <materialDesign:Badged
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    BadgePlacementMode="BottomLeft"
-                                    Name="NotificationCounter"
-                                    Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
-                                    BadgeBackground="{StaticResource SecondaryAccentBrush}"
-                                    Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
-                                    
-                                    <ToggleButton
-                                        Name="ChatToggleButton"
-                                        Checked="ChatToggleButton_OnChecked"
-                                        Unchecked="ChatToggleButton_OnChecked"
-                                        Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
-                                        <ToggleButton.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Header="Export as a new window" Click="MenuItem_OnClick"/>
-                                            </ContextMenu>
-                                        </ToggleButton.ContextMenu>
-                                      <materialDesign:PackIcon
-                                          Foreground="{StaticResource MaterialDesignDarkForeground}"
-                                          Kind="Chat"
+                                      Name="MenuToggleButton" />
+                        <!-- Use for hiding the button when the chat is export-->
+                        <Grid DockPanel.Dock="Right"
+                              Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <!-- Badge and button -->
+                            <materialDesign:Badged
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                BadgePlacementMode="BottomLeft"
+                                Name="NotificationCounter"
+                                Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
+                                BadgeBackground="{StaticResource SecondaryAccentBrush}"
+                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
+
+                                <ToggleButton
+                                    Name="ChatToggleButton"
+                                    Checked="ChatToggleButton_OnChecked"
+                                    Unchecked="ChatToggleButton_OnChecked"
+                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
+                                    <ToggleButton.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Export as a new window" Click="MenuItem_OnClick" />
+                                        </ContextMenu>
+                                    </ToggleButton.ContextMenu>
+                                    <materialDesign:PackIcon
+                                        Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                        Kind="Chat"
                                         Height="24"
                                         Width="24" />
-                                    </ToggleButton>
-                                </materialDesign:Badged>
+                                </ToggleButton>
+                            </materialDesign:Badged>
 
-                                <!-- button without badge -->
-                                <ToggleButton
-                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
-                                    IsChecked="{Binding ElementName=Drawer, Path=IsRightDrawerOpen}"
-                                    Visibility="{Binding ElementName=NotificationCounter, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                                  <materialDesign:PackIcon
+                            <!-- button without badge -->
+                            <ToggleButton
+                                Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                IsChecked="{Binding ElementName=Drawer, Path=IsRightDrawerOpen}"
+                                Visibility="{Binding ElementName=NotificationCounter, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                                <materialDesign:PackIcon
                                     Kind="Chat"
                                     Height="24"
                                     Width="24" />
-                                </ToggleButton>
-                            </Grid>
+                            </ToggleButton>
+                        </Grid>
 
-                        <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="Resources/WhiteLogo.png" ></Image>
+                        <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
+                               Source="Resources/WhiteLogo.png" />
                     </DockPanel>
                 </materialDesign:ColorZone>
 
-            <materialDesign:DrawerHost  
-                x:Name="Drawer" 
-                IsRightDrawerOpen="{Binding ElementName=ChatToggleButton, Path=IsChecked }"
-                IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-                <views:Editor/>
-                
-                <materialDesign:DrawerHost.RightDrawerContent>
-                    <DockPanel 
-                        Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}"
-                        x:Name="RightDrawerContent">
-                        <views:Chat x:Name="ChatBox"/>
-                    </DockPanel>
-                </materialDesign:DrawerHost.RightDrawerContent>
-                    
-                <!--Hamburger menu-->
-                <materialDesign:DrawerHost.LeftDrawerContent>
-                    <DockPanel>
-                        <ListView>
+                <materialDesign:DrawerHost
+                    x:Name="Drawer"
+                    IsRightDrawerOpen="{Binding ElementName=ChatToggleButton, Path=IsChecked }"
+                    IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+                    <views:Editor />
+
+                    <materialDesign:DrawerHost.RightDrawerContent>
+                        <DockPanel
+                            Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}"
+                            x:Name="RightDrawerContent">
+                            <views:Chat x:Name="ChatBox" />
+                        </DockPanel>
+                    </materialDesign:DrawerHost.RightDrawerContent>
+
+                    <!--Hamburger menu-->
+                    <materialDesign:DrawerHost.LeftDrawerContent>
+                        <DockPanel>
+                            <ListView>
                                 <ListViewItem>
-                                        <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding Path=LogoutCommand}" CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}" Content="Logout"></Button>
+                                    <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding Path=LogoutCommand}"
+                                            CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}"
+                                            Content="Logout" />
                                 </ListViewItem>
-                        </ListView>
-                    </DockPanel>
-                </materialDesign:DrawerHost.LeftDrawerContent>
-                
-                
-                
-            </materialDesign:DrawerHost>
+                            </ListView>
+                        </DockPanel>
+                    </materialDesign:DrawerHost.LeftDrawerContent>
+
+
+                </materialDesign:DrawerHost>
             </DockPanel>
             <!--Login screen-->
-            <DockPanel Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <views:Login x:Name="LoginScreen"/>
+            <DockPanel
+                Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                <views:Login x:Name="LoginScreen" />
             </DockPanel>
         </Grid>
 
 
-</materialDesign:DialogHost>
-    
-    
+    </materialDesign:DialogHost>
+
+
 </Window>

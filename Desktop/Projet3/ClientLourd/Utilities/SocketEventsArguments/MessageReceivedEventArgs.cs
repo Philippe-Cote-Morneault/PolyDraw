@@ -12,7 +12,7 @@ namespace ClientLourd.Utilities.SocketEventsArguments
             UserName = data["SenderName"];
             UserId = data["SenderID"];
         }
-        
+
         public string ChannelId { get; private set; }
         public DateTime Date { get; private set; }
         public string UserName { get; private set; }

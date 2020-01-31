@@ -15,13 +15,12 @@ namespace ClientLourd.Services.SocketService
 {
     public class SocketClient : SocketEventsPublisher
     {
-        
         private const int PORT = 5001;
         private const string HostName = "log3900.fsae.polymtl.ca";
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        
+
         public SocketClient()
         {
             //TODO catch exception
@@ -51,18 +50,19 @@ namespace ClientLourd.Services.SocketService
             _receiver = new Task(MessagesListener);
             _receiver.Start();
             sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
-        } 
+        }
+
         private void MessagesListener()
         {
             //TODO correct buffer size
             byte[] bytes = new byte[4096];
             dynamic data = null;
-            
+
             while (_socket.Connected)
             {
                 // Read the type and the length
                 _stream.Read(bytes, 0, 3);
-                SocketMessageTypes type = (SocketMessageTypes)bytes[0];
+                SocketMessageTypes type = (SocketMessageTypes) bytes[0];
                 int length = (bytes[1] << 8) + bytes[2];
                 if (length > 0)
                 {
@@ -70,6 +70,7 @@ namespace ClientLourd.Services.SocketService
                     _stream.Read(bytes, 3, length);
                     data = RetreiveData(type, bytes);
                 }
+
                 switch (type)
                 {
                     case SocketMessageTypes.ServerConnectionResponse:
@@ -96,8 +97,7 @@ namespace ClientLourd.Services.SocketService
                     default:
                         throw new InvalidDataException();
                 }
-
-            }            
+            }
         }
 
         private dynamic RetreiveData(SocketMessageTypes type, byte[] bytes)
@@ -109,10 +109,9 @@ namespace ClientLourd.Services.SocketService
                     return bytes.Skip(3).ToArray();
                 //Message pack
                 default:
-                    return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(), ContractlessStandardResolver.Options);
+                    return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(),
+                        ContractlessStandardResolver.Options);
             }
         }
-        
-
     }
 }

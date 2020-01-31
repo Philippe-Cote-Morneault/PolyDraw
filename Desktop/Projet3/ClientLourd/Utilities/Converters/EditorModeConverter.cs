@@ -26,7 +26,8 @@ namespace ClientLourd.Utilities.Converters
                     return InkCanvasEditingMode.Ink;
             }
         }
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => System.Windows.DependencyProperty.UnsetValue;
 
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture) => System.Windows.DependencyProperty.UnsetValue;
     }
 }

@@ -22,7 +22,7 @@ namespace ClientLourd.Views.Dialogs
             Error = message;
         }
 
-        public string Error 
+        public string Error
         {
             get { return _error; }
             set

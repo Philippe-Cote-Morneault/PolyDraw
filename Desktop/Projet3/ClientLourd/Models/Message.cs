@@ -2,7 +2,7 @@
 
 namespace ClientLourd.Models
 {
-    public class Message: ModelBase
+    public class Message : ModelBase
     {
         public Message(DateTime date, User user, string content)
         {
@@ -12,12 +12,10 @@ namespace ClientLourd.Models
         }
 
         private DateTime _date;
+
         public DateTime Date
         {
-            get
-            {
-                return _date;
-            }
+            get { return _date; }
             set
             {
                 if (value != _date)
@@ -27,14 +25,12 @@ namespace ClientLourd.Models
                 }
             }
         }
-        
+
         private User _user;
+
         public User User
         {
-            get
-            {
-                return _user;
-            }
+            get { return _user; }
             set
             {
                 if (value != _user)
@@ -44,14 +40,12 @@ namespace ClientLourd.Models
                 }
             }
         }
-        
+
         private string _content;
+
         public string Content
         {
-            get
-            {
-                return _content;
-            }
+            get { return _content; }
             set
             {
                 if (value != _content)

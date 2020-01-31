@@ -7,7 +7,6 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-
     /// <summary>
     /// Permet de générer une couleur en fonction de la chaine passée en paramètre.
     /// Par exemple, pour chaque bouton d'un groupe d'option on compare son nom avec l'élément actif (sélectionné) du groupe.
@@ -20,6 +19,8 @@ namespace ClientLourd.Utilities.Converters
         {
             return (value.ToString() == parameter.ToString()) ? "#FF58BDFA" : "#00000000";
         }
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) => System.Windows.DependencyProperty.UnsetValue;
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture) => System.Windows.DependencyProperty.UnsetValue;
     }
 }

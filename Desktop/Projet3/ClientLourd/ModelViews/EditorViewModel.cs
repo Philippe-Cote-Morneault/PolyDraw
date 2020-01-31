@@ -61,7 +61,7 @@ namespace ClientLourd.ModelViews
 
             // On initialise les attributs de dessin avec les valeurs de départ du modèle.
             AttributsDessin = new DrawingAttributes();
-            AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+            AttributsDessin.Color = (Color) ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             AjusterPointe();
 
             Traits = editeur.traits;
@@ -84,7 +84,7 @@ namespace ClientLourd.ModelViews
         {
             if (e.PropertyName == "CouleurSelectionnee")
             {
-                AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+                AttributsDessin.Color = (Color) ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             }
             else if (e.PropertyName == "OutilSelectionne")
             {
@@ -108,7 +108,8 @@ namespace ClientLourd.ModelViews
         /// </summary>
         private void AjusterPointe()
         {
-            AttributsDessin.StylusTip = (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
+            AttributsDessin.StylusTip =
+                (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
             AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }

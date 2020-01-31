@@ -55,7 +55,7 @@ namespace ClientLourd.Utilities.Commands
         ///</returns>
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute((T)parameter);
+            return _canExecute == null ? true : _canExecute((T) parameter);
         }
 
         ///<summary>
@@ -73,7 +73,7 @@ namespace ClientLourd.Utilities.Commands
         ///<param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
         public void Execute(object parameter)
         {
-            _execute((T)parameter);
+            _execute((T) parameter);
         }
 
         #endregion

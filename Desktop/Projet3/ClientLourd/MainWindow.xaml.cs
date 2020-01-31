@@ -17,6 +17,7 @@ using ClientLourd.Utilities.Window;
 using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.ModelViews;
+
 namespace ClientLourd
 {
     /// <summary>
@@ -27,7 +28,7 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
-            ((MainViewModel)DataContext).UserLogout += OnUserLogout;
+            ((MainViewModel) DataContext).UserLogout += OnUserLogout;
         }
 
         private void OnUserLogout(object source, EventArgs args)
@@ -39,7 +40,7 @@ namespace ClientLourd
 
         private void Init()
         {
-            ((ViewModelBase)DataContext).Init();
+            ((ViewModelBase) DataContext).Init();
             MenuToggleButton.IsChecked = false;
         }
 
@@ -60,7 +61,7 @@ namespace ClientLourd
         private void ChatToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             //Clear the notification when chatToggleButton is checked or unchecked
-            ((ChatViewModel)ChatBox.DataContext).ClearNotificationCommand.Execute(null);
+            ((ChatViewModel) ChatBox.DataContext).ClearNotificationCommand.Execute(null);
         }
     }
 }

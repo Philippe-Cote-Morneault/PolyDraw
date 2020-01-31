@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class MultiBindingConverter: IMultiValueConverter
+    class MultiBindingConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -20,5 +20,4 @@ namespace ClientLourd.Utilities.Converters
             throw new NotImplementedException();
         }
     }
-    
 }

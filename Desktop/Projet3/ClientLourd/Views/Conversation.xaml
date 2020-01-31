@@ -9,69 +9,81 @@
              xmlns:extensionProperties="clr-namespace:ClientLourd.Utilities.ScrollBar"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
+        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
-            <ListBox Name="ConversationList" ItemsSource="{Binding Messages}" PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
-                <ListBox.Resources>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+        <ListBox Name="ConversationList" ItemsSource="{Binding Messages}"
+                 PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
+            <ListBox.Resources>
                 <Style TargetType="ListBoxItem">
-                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                    <Setter Property="Width" Value="{Binding ElementName=ConversationList, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}" />
-                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="Width"
+                            Value="{Binding ElementName=ConversationList, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}" />
+                    <Setter Property="IsEnabled" Value="False" />
                     <Style.Triggers>
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
                                 <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
-                                    <Binding Path="User.Name"/>
-                                    <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                    <Binding Path="User.Name" />
+                                    <Binding Path="DataContext.Username"
+                                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                 </MultiBinding>
                             </DataTrigger.Binding>
-                            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
-                            <Setter Property="FlowDirection" Value="RightToLeft"></Setter>
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="FlowDirection" Value="RightToLeft" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
 
-                    <DataTemplate>
-                        <StackPanel FlowDirection="LeftToRight" Orientation="Vertical">
-                            <Border  Padding="5 5 5 0">
+                <DataTemplate>
+                    <StackPanel FlowDirection="LeftToRight" Orientation="Vertical">
+                        <Border Padding="5 5 5 0">
 
                             <StackPanel Orientation="Vertical">
                                 <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                     <materialDesign:Chip.Style>
                                         <Style TargetType="materialDesign:Chip">
-                                            <Setter Property="Background" Value="WhiteSmoke"/>
+                                            <Setter Property="Background" Value="WhiteSmoke" />
                                             <Style.Triggers>
                                                 <DataTrigger Value="true">
                                                     <DataTrigger.Binding>
-                                                        <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                            <Binding Path="User.Name"/>
-                                                            <Binding Path="DataContext.Username" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                                        <MultiBinding
+                                                            Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                            <Binding Path="User.Name" />
+                                                            <Binding Path="DataContext.Username"
+                                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                                         </MultiBinding>
                                                     </DataTrigger.Binding>
-                                                    <Setter Property="Background" Value="LightBlue"/>
+                                                    <Setter Property="Background" Value="LightBlue" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </materialDesign:Chip.Style>
-                                        <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding User.Name}"/>
+                                    <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                               Text="{Binding User.Name}" />
                                     <materialDesign:Chip.Icon>
-                                        <materialDesign:PackIcon Kind="Person"/>
+                                        <materialDesign:PackIcon Kind="Person" />
                                     </materialDesign:Chip.Icon>
                                 </materialDesign:Chip>
                                 <materialDesign:Card
-                                        Padding="5"
-                                        materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                                <TextBlock TextWrapping="Wrap"  Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding Content}"/>
-                                    </materialDesign:Card> 
-                                </StackPanel>
-                            </Border>
-                            <TextBlock Margin="5" TextWrapping="Wrap" Style="{StaticResource MaterialDesignOverlineTextBlock}" VerticalAlignment="Center" Text="{Binding Date}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
+                                    Padding="5"
+                                    materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                    <TextBlock TextWrapping="Wrap"
+                                               Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                               Text="{Binding Content}" />
+                                </materialDesign:Card>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Margin="5" TextWrapping="Wrap"
+                                   Style="{StaticResource MaterialDesignOverlineTextBlock}" VerticalAlignment="Center"
+                                   Text="{Binding Date}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </ScrollViewer>
 </UserControl>
