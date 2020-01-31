@@ -7,6 +7,7 @@ using ClientLourd.Services.Rest;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views;
+using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ModelViews
@@ -72,6 +73,10 @@ namespace ClientLourd.ModelViews
 
         private void SocketClientOnConnectionLost(object source, EventArgs e)
         {
+            Application.Current.Dispatcher.Invoke((Action)delegate 
+            {
+                DialogHost.Show(new ClosableErrorDialog("You have lost connection to the server! Returning to the login page..."));
+            });
             Logout();
         }
     }

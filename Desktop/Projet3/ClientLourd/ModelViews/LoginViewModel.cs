@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Services.Rest;
 using ClientLourd.Utilities.Commands;
-using ClientLourd.Services.Rest;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Exceptions.Rest;
 using ClientLourd.Utilities.ValidationRules;
