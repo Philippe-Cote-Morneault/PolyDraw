@@ -8,7 +8,7 @@ namespace ClientLourd.Views
     {
         public Conversation()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
         private void UIElement_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -19,7 +19,7 @@ namespace ClientLourd.Views
                 var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
                 eventArg.RoutedEvent = MouseWheelEvent;
                 eventArg.Source = sender;
-                var parent = ((Control)sender).Parent as UIElement;
+                var parent = ((Control) sender).Parent as UIElement;
                 parent?.RaiseEvent(eventArg);
             }
         }

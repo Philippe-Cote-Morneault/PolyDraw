@@ -12,7 +12,6 @@ namespace ClientLourd.Utilities.ValidationRules
     {
         public LoginInputRules()
         {
-
         }
 
         public bool StringIsEmpty(string myInput)

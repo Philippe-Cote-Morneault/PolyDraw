@@ -13,21 +13,20 @@ namespace ClientLourd.Models
 
         // Outil actif dans l'éditeur
         private string outilSelectionne = "crayon";
+
         public string OutilSelectionne
         {
-            get 
-            { 
-                return outilSelectionne; 
-            }
+            get { return outilSelectionne; }
             set
             {
-                outilSelectionne = value; 
+                outilSelectionne = value;
                 NotifyPropertyChanged();
             }
         }
 
         // Forme de la pointe du crayon
         private string pointeSelectionnee = "ronde";
+
         public string PointeSelectionnee
         {
             get { return pointeSelectionnee; }
@@ -40,6 +39,7 @@ namespace ClientLourd.Models
 
         // Couleur des traits tracés par le crayon.
         private string couleurSelectionnee = "Black";
+
         public string CouleurSelectionnee
         {
             get { return couleurSelectionnee; }
@@ -54,6 +54,7 @@ namespace ClientLourd.Models
 
         // Grosseur des traits tracés par le crayon.
         private int tailleTrait = 11;
+
         public int TailleTrait
         {
             get { return tailleTrait; }
@@ -73,6 +74,5 @@ namespace ClientLourd.Models
         public void ChoisirOutil(string outil) => OutilSelectionne = outil;
 
         // On vide la surface de dessin de tous ses traits.
-
     }
 }

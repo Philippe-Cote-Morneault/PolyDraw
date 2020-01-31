@@ -8,16 +8,15 @@ using System.Windows.Controls;
 
 namespace ClientLourd.Utilities.ValidationRules
 {
-    class UsernameRule: ValidationRule
+    class UsernameRule : ValidationRule
     {
         public UsernameRule()
         {
-
         }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string username = (string)value;
+            string username = (string) value;
             LoginInputRules loginInputValidator = new LoginInputRules();
 
             if (loginInputValidator.StringIsEmpty(username))
@@ -31,11 +30,11 @@ namespace ClientLourd.Utilities.ValidationRules
             }
 
             if (!loginInputValidator.LengthIsOk(username))
-            { 
+            {
                 return new ValidationResult(false, "The username must be between 4 and 12 characters.");
             }
 
-            return ValidationResult.ValidResult; 
+            return ValidationResult.ValidResult;
         }
     }
 }

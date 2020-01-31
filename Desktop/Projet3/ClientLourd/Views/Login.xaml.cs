@@ -26,14 +26,17 @@ namespace ClientLourd.Views
         {
             InitializeComponent();
             this.Loaded += Load;
-            
         }
 
+        public void Init()
+        {
+            PasswordBox.Clear();
+            ((LoginViewModel) DataContext).Init();
+        }
 
         public void Load(object sender, RoutedEventArgs e)
         {
-           NameTextBox.Focus();
-
+            NameTextBox.Focus();
         }
     }
 }

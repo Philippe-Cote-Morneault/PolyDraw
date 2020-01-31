@@ -13,11 +13,11 @@ namespace ClientLourd.Utilities.Converters
         {
             return values.All(v => v.ToString() == values[0].ToString());
         }
+
         public object[] ConvertBack(
             object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
-
     }
 }

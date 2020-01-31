@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,12 +9,12 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Utilities.SocketEventsArguments;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ModelViews
 {
     public class ChatViewModel : ViewModelBase
     {
-
         private int _newMessages;
 
 
@@ -29,19 +30,17 @@ namespace ClientLourd.ModelViews
                 }
             }
         }
+
         public SocketClient SocketClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
         private int _selectedChannelIndex;
 
         public int SelectedChannelIndex
         {
-            get
-            {
-                return _selectedChannelIndex;
-            }
+            get { return _selectedChannelIndex; }
             set
             {
                 if (value != _selectedChannelIndex)
@@ -53,8 +52,7 @@ namespace ClientLourd.ModelViews
 
         public ChatViewModel()
         {
-            SocketClient.MessageReceived += SocketClientOnMessageReceived;
-            _channels = new ObservableCollection<Channel>()
+            Channels = new ObservableCollection<Channel>()
             {
                 new Channel()
                 {
@@ -62,6 +60,14 @@ namespace ClientLourd.ModelViews
                     Name = "Global",
                 },
             };
+            Init();
+        }
+
+        public override void Init()
+        {
+            SocketClient.MessageReceived += SocketClientOnMessageReceived;
+            Channels.ToList().ForEach(c => c.Messages.Clear());
+            NewMessages = 0;
         }
 
         private void SocketClientOnMessageReceived(object source, EventArgs e)
@@ -72,8 +78,32 @@ namespace ClientLourd.ModelViews
             NewMessages++;
         }
 
+        RelayCommand<object> _clearNotificationCommand;
 
-        RelayCommand<object[]> _sendMessageCommand; public ICommand SendMessageCommand
+        public ICommand ClearNotificationCommand
+        {
+            get
+            {
+                return _clearNotificationCommand ??
+                       (_clearNotificationCommand = new RelayCommand<object>(param => NewMessages = 0));
+            }
+        }
+
+        private RelayCommand<object[]> _openDrawerCommand;
+
+        public ICommand OpenDrawerCommand
+        {
+            get
+            {
+                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(
+                           param => ((DrawerHost) param[1]).IsRightDrawerOpen =
+                               !((DrawerHost) param[1]).IsRightDrawerOpen, param => (bool) param[0]));
+            }
+        }
+
+        RelayCommand<object[]> _sendMessageCommand;
+
+        public ICommand SendMessageCommand
         {
             get
             {
@@ -95,7 +125,7 @@ namespace ClientLourd.ModelViews
                 tBox.Text = "";
             }
         }
-        
+
         public ObservableCollection<Channel> Channels
         {
             get { return _channels; }
@@ -111,8 +141,5 @@ namespace ClientLourd.ModelViews
 
 
         private ObservableCollection<Channel> _channels;
-
-        
-
     }
 }

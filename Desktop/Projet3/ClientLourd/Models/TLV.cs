@@ -13,7 +13,7 @@ namespace ClientLourd.Models
         {
             Type = (byte) ((int) type);
         }
-        
+
         /// <summary>
         /// Serialize the message using message pack
         /// </summary>
@@ -24,7 +24,7 @@ namespace ClientLourd.Models
             Type = (byte) ((int) type);
             Value = MessagePackSerializer.Serialize(message, ContractlessStandardResolver.Options);
         }
-        
+
         /// <summary>
         /// Convert the message in byte 
         /// </summary>
@@ -38,16 +38,16 @@ namespace ClientLourd.Models
 
         public byte[] GetBytes()
         {
-            byte[] bytes = new Byte[1 + 2 + Value.Length];
+            byte[] bytes = new Byte[1 + 2 + (Value != null ? Value.Length : 0)];
             bytes[0] = Type;
 
             byte[] lengthInBytes = BitConverter.GetBytes(Length);
 
             // Convert to big-endian
             Array.Reverse(lengthInBytes);
-        
+
             lengthInBytes.CopyTo(bytes, 1);
-            Value.CopyTo(bytes, 3);
+            Value?.CopyTo(bytes, 3);
 
             return bytes;
         }
@@ -62,12 +62,11 @@ namespace ClientLourd.Models
                 {
                     return (UInt16) Value.Length;
                 }
+
                 return 0;
             }
         }
+
         public byte[] Value { get; private set; }
-
-
-        
     }
 }

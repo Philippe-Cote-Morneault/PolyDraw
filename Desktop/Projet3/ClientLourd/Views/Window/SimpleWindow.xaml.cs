@@ -35,7 +35,7 @@ namespace ClientLourd.Utilities.Window
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             MainStackPanel.Children.Clear();
-            ((ClientLourd.MainWindow)this.Owner).RightDrawerContent.Children.Add(this._chatBox);
+            ((ClientLourd.MainWindow) this.Owner).RightDrawerContent.Children.Add(this._chatBox);
         }
     }
 }

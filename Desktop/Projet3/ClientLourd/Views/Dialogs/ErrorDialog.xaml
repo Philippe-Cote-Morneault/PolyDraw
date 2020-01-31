@@ -8,10 +8,14 @@
              mc:Ignorable="d"
              MaxWidth="400">
     <DockPanel Margin="10">
-      <materialDesign:PackIcon  Margin="10" Height="50" Width="50" Kind="WarningCircle" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
-      <StackPanel Orientation="Vertical">
-          <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline3TextBlock}" TextWrapping="Wrap" Text="Error !"/>
-          <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap" Text="{Binding Path=Error, UpdateSourceTrigger=PropertyChanged}"/>
-      </StackPanel>
+        <materialDesign:PackIcon Margin="10" Height="50" Width="50" Kind="WarningCircle" DockPanel.Dock="Top"
+                                 HorizontalAlignment="Center" />
+        <StackPanel Orientation="Vertical">
+            <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                       TextWrapping="Wrap" Text="Error !" />
+            <TextBlock TextAlignment="Center" HorizontalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap"
+                       Text="{Binding Path=Error, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
     </DockPanel>
 </UserControl>

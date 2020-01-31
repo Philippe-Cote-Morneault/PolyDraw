@@ -28,6 +28,7 @@ namespace ClientLourd.Services.SocketService
         private Task _receiver;
         private System.Timers.Timer _timer;
 
+
         public SocketClient()
         {
             //TODO catch exception
@@ -105,21 +106,27 @@ namespace ClientLourd.Services.SocketService
             
         }
 
+        public void Close()
+        {
+            sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
+            _stream.Close();
+            _socket.Close();
+        }
+
         public void InitializeConnection(string token)
         {
-            //TODO send the token
             //Start a message listener
             _receiver = new Task(MessagesListener);
             _receiver.Start();
 
             sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
-        } 
+        }
+
         private void MessagesListener()
         {
             //TODO correct buffer size
             byte[] bytes = new byte[4096];  
             dynamic data = null;
-
 
            while (IsConnected())
             {
@@ -180,10 +187,9 @@ namespace ClientLourd.Services.SocketService
                     return bytes.Skip(3).ToArray();
                 //Message pack
                 default:
-                    return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(), ContractlessStandardResolver.Options);
+                    return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(),
+                        ContractlessStandardResolver.Options);
             }
         }
-        
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,26 +18,30 @@ namespace ClientLourd.ModelViews
     {
         public LoginViewModel()
         {
-            _isLoggedIn = false;
+            Init();
         }
-        
+
+        public override void Init()
+        {
+            IsLoggedIn = false;
+        }
+
         public RestClient RestClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._restClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
+
         public SocketClient SocketClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?._socketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
-        
+
         RelayCommand<object[]> _loginCommand;
         bool _isLoggedIn;
+
         public bool IsLoggedIn
         {
-            get
-            {
-                return _isLoggedIn;
-            }
+            get { return _isLoggedIn; }
 
             set
             {
@@ -47,17 +52,19 @@ namespace ClientLourd.ModelViews
                 }
             }
         }
-        
+
         public ICommand LoginCommand
         {
             get
             {
-                return _loginCommand ?? (_loginCommand = new RelayCommand<object[]>(param => Authentify(param) ,param => CredentialsValid(param)));
+                return _loginCommand ?? (_loginCommand =
+                           new RelayCommand<object[]>(param => Authentify(param), param => CredentialsValid(param)));
             }
         }
 
-        void Authentify(object[] param) {
-            string username = (string)param[0];
+        void Authentify(object[] param)
+        {
+            string username = (string) param[0];
             string password = (param[1] as PasswordBox).Password;
             try
             {
@@ -78,7 +85,8 @@ namespace ClientLourd.ModelViews
             {
                 return false;
             }
-            string username = (string)param[0];
+
+            string username = (string) param[0];
             string password = (param[1] as PasswordBox).Password;
 
             LoginInputRules loginInputValidator = new LoginInputRules();

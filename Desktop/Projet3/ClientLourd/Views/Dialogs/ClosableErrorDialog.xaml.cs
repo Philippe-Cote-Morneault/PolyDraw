@@ -10,12 +10,11 @@ namespace ClientLourd.Views.Dialogs
             InitializeComponent();
             DockPanel.Children.Add(new ErrorDialog(e));
         }
-        
+
         public ClosableErrorDialog(string message)
         {
             InitializeComponent();
             DockPanel.Children.Add(new ErrorDialog(message));
         }
-        
     }
 }

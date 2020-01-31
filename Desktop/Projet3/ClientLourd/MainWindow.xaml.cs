@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,6 +17,7 @@ using ClientLourd.Utilities.Window;
 using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.ModelViews;
+
 namespace ClientLourd
 {
     /// <summary>
@@ -26,6 +28,20 @@ namespace ClientLourd
         public MainWindow()
         {
             InitializeComponent();
+            ((MainViewModel) DataContext).UserLogout += OnUserLogout;
+        }
+
+        private void OnUserLogout(object source, EventArgs args)
+        {
+            Init();
+            ChatBox.Init();
+            LoginScreen.Init();
+        }
+
+        private void Init()
+        {
+            ((ViewModelBase) DataContext).Init();
+            MenuToggleButton.IsChecked = false;
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -34,11 +50,18 @@ namespace ClientLourd
             RightDrawerContent.Children.Clear();
             chatWindow.MainStackPanel.Children.Add(ChatBox);
 
-            chatWindow.DataContext = this.DataContext;
+            chatWindow.DataContext = DataContext;
+            ChatToggleButton.IsEnabled = false;
             chatWindow.Owner = this;
             chatWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
+            chatWindow.Closed += (o, args) => { ChatToggleButton.IsEnabled = true; };
             chatWindow.Show();
+        }
+
+        private void ChatToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            //Clear the notification when chatToggleButton is checked or unchecked
+            ((ChatViewModel) ChatBox.DataContext).ClearNotificationCommand.Execute(null);
         }
     }
 }
