@@ -33,7 +33,18 @@
     </Window.InputBindings>
     <materialDesign:DialogHost CloseOnClickAway="True">
 
-        <Grid>
+        <Grid >
+            <WrapPanel ZIndex="1"
+                        Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                        HorizontalAlignment="Center" 
+                       VerticalAlignment="Center">
+                <ProgressBar
+                    Height="50"
+                    Width="50"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="0"
+                    IsIndeterminate="True" />
+            </WrapPanel>
             <DockPanel Name="MainDockPanel"
                        Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
                 <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
