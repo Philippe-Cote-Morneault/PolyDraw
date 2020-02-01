@@ -12,8 +12,8 @@ namespace ClientLourd.Services.Rest
     public class RestClient
     {
         private RestSharp.RestClient _client;
-        //private const string URL = "http://log3900.fsae.polymtl.ca:5000";
-        private const string URL = "http://127.0.0.1:3000";
+        private const string URL = "http://log3900.fsae.polymtl.ca:5000";
+        //private const string URL = "http://127.0.0.1:3000";
 
         public RestClient()
         {
@@ -37,7 +37,7 @@ namespace ClientLourd.Services.Rest
                 case HttpStatusCode.BadRequest:
                     throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
-                    throw new RestException();
+                    throw new RestException(response.ErrorMessage);
             }
         }
     }
