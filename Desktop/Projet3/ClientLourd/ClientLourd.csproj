@@ -157,8 +157,8 @@
     <Compile Include="Views\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Window\SimpleWindow.xaml.cs">
-      <DependentUpon>SimpleWindow.xaml</DependentUpon>
+    <Compile Include="Views\Window\ChatWindow.xaml.cs">
+      <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
@@ -185,7 +185,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Conversation.xaml" />
-    <Page Include="Views\Window\SimpleWindow.xaml">
+    <Page Include="Views\Window\ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

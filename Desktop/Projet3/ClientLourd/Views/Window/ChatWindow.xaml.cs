@@ -20,22 +20,24 @@ namespace ClientLourd.Utilities.Window
     /// <summary>
     /// Interaction logic for SimpleWindow.xaml
     /// </summary>
-    public partial class SimpleWindow : System.Windows.Window
+    public partial class ChatWindow : System.Windows.Window
     {
-        ClientLourd.Views.Chat _chatBox;
+        Chat _chatBox;
 
-        public SimpleWindow(ClientLourd.Views.Chat ChatBox)
+        public ChatWindow(ClientLourd.Views.Chat ChatBox)
         {
             _chatBox = ChatBox;
-
             InitializeComponent();
+            MainStackPanel.Children.Add(ChatBox);
             Closing += OnWindowClosing;
         }
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             MainStackPanel.Children.Clear();
-            ((ClientLourd.MainWindow) this.Owner).RightDrawerContent.Children.Add(this._chatBox);
+            ((MainWindow) Owner).RightDrawerContent.Children.Add(_chatBox);
+            ((MainWindow) Owner).ChatToggleButton.IsEnabled = true;
+            ((MainWindow) Owner).ClearChatNotification();
         }
     }
 }

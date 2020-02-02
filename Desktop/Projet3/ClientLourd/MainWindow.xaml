@@ -31,7 +31,7 @@
             </KeyBinding.CommandParameter>
         </KeyBinding>
     </Window.InputBindings>
-    <materialDesign:DialogHost CloseOnClickAway="True">
+    <materialDesign:DialogHost CloseOnClickAway="False">
 
         <Grid >
             <WrapPanel ZIndex="1"
@@ -70,12 +70,13 @@
 
                                 <ToggleButton
                                     Name="ChatToggleButton"
+                                    ToolTip="Open the chat"
                                     Checked="ChatToggleButton_OnChecked"
                                     Unchecked="ChatToggleButton_OnChecked"
                                     Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
                                     <ToggleButton.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Export as a new window" Click="MenuItem_OnClick" />
+                                            <MenuItem Header="Export as a new window" Click="ExportChat" />
                                         </ContextMenu>
                                     </ToggleButton.ContextMenu>
                                     <materialDesign:PackIcon
@@ -123,6 +124,7 @@
                             <ListView>
                                 <ListViewItem>
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
+                                            ToolTip="Disconnect and return to the login screen"
                                             Command="{Binding Path=LogoutCommand}"
                                             CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}"
                                             Content="Logout" />

@@ -123,8 +123,8 @@
           <e p="Login.xaml" t="Include" />
           <e p="Login.xaml.cs" t="Include" />
           <e p="Window" t="Include">
-            <e p="SimpleWindow.xaml" t="Include" />
-            <e p="SimpleWindow.xaml.cs" t="Include" />
+            <e p="ChatWindow.xaml" t="Include" />
+            <e p="ChatWindow.xaml.cs" t="Include" />
           </e>
         </e>
       </e>
