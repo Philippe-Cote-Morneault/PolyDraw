@@ -16,6 +16,10 @@ class SocketService : Service() {
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
     private val binder = SocketBinder()
 
+    companion object {
+        lateinit var instance: SocketService
+    }
+
     fun sendMessage(event: Event, data: ByteArray) {
         val message = android.os.Message()
         message.what = Request.SEND_MESSAGE.ordinal
@@ -73,6 +77,8 @@ class SocketService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
+
         Thread(Runnable {
             Looper.prepare()
             socketHandler = SocketHandler
