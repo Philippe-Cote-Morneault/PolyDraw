@@ -90,7 +90,7 @@ namespace ClientLourd.Services.SocketService
         private void MessagesListener()
         {
             //TODO correct buffer size
-            byte[] bytes = new byte[4096];  
+            byte[] typeAndLength = new byte[3];  
             dynamic data = null;
 
            while (IsConnected())
@@ -98,14 +98,15 @@ namespace ClientLourd.Services.SocketService
                 try
                 {
                     // Read the type and the length
-                    _stream.Read(bytes, 0, 3);
+                    _stream.Read(typeAndLength, 0, 3);
 
-                    SocketMessageTypes type = (SocketMessageTypes)bytes[0];
-                    int length = (bytes[1] << 8) + bytes[2];
+                    SocketMessageTypes type = (SocketMessageTypes)typeAndLength[0];
+                    int length = (typeAndLength[1] << 8) + typeAndLength[2];
                     if (length > 0)
                     {
                         //Read the data
-                        _stream.Read(bytes, 3, length);
+                        byte[] bytes = new byte[length];
+                        _stream.Read(bytes, 0, length);
                         data = RetreiveData(type, bytes);
                     }
                     switch (type)
@@ -148,11 +149,10 @@ namespace ClientLourd.Services.SocketService
             {
                 //Raw bytes
                 case SocketMessageTypes.ServerConnectionResponse:
-                    return bytes.Skip(3).ToArray();
+                    return bytes;
                 //Message pack
                 default:
-                    return MessagePackSerializer.Deserialize<dynamic>(bytes.Skip(3).ToArray(),
-                        ContractlessStandardResolver.Options);
+                    return MessagePackSerializer.Deserialize<dynamic>(bytes, ContractlessStandardResolver.Options);
             }
         }
 
