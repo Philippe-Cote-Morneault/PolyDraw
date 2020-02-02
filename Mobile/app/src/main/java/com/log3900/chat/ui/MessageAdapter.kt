@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
-import com.log3900.chat.Message
+import com.log3900.chat.ReceivedMessage
 import java.util.*
 
-class MessageAdapter(val messages: LinkedList<Message>) : RecyclerView.Adapter<MessageViewHolder>() {
+class MessageAdapter(val messages: LinkedList<ReceivedMessage>) : RecyclerView.Adapter<MessageViewHolder>() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
@@ -36,7 +36,7 @@ class MessageAdapter(val messages: LinkedList<Message>) : RecyclerView.Adapter<M
      *
      * @param message the message to add
      */
-    fun prependMessage(message: Message) {
+    fun prependMessage(message: ReceivedMessage) {
         messages.addFirst(message)
         notifyItemInserted(0)
     }
@@ -46,7 +46,7 @@ class MessageAdapter(val messages: LinkedList<Message>) : RecyclerView.Adapter<M
      *
      * @param message the message to add
      */
-    fun appendMessage(message: Message) {
+    fun appendMessage(message: ReceivedMessage) {
         messages.addLast(message)
         notifyItemInserted(messages.size - 1)
 
