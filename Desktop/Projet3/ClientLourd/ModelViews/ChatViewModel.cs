@@ -61,6 +61,12 @@ namespace ClientLourd.ModelViews
                 },
             };
             Init();
+            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ChatOpen += OnChatOpen;
+        }
+
+        private void OnChatOpen(object source, EventArgs args)
+        {
+      //      MessageBox.Show("Test");
         }
 
         public override void Init()
