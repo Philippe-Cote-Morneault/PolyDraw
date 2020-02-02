@@ -38,5 +38,17 @@ namespace ClientLourd.Views
         {
             NameTextBox.Focus();
         }
+        
+        public static readonly DependencyProperty IsWaitingProperty = DependencyProperty.Register("IsWaiting", typeof(Boolean), typeof(Login), new PropertyMetadata(false));
+
+
+        public bool IsWaiting
+        {
+            get { return (bool)GetValue(IsWaitingProperty); }
+            set { SetValue(IsWaitingProperty, value); }
+        }
+
+        
+        
     }
 }

@@ -10,12 +10,14 @@
              xmlns:local="clr-namespace:ClientLourd.Views"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             Name="Control"
              mc:Ignorable="d">
     <UserControl.DataContext>
         <viewModels:LoginViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
     <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
         <Grid>
@@ -43,9 +45,7 @@
             <!--Username-->
             <StackPanel Grid.Row="2">
                 <TextBox
-
                     Margin="20 0 20 0"
-
                     x:Name="NameTextBox"
                     MaxLength="12"
                     materialDesign:HintAssist.Hint="Username"
@@ -76,6 +76,7 @@
             <Button Grid.Row="4"
                     IsDefault="True"
                     Margin="40 0 40 0"
+                    IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding Path=LoginCommand}">
                 <Button.CommandParameter>
