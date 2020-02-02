@@ -17,14 +17,13 @@ namespace ClientLourd.Services.SocketService
 {
     public class SocketClient : SocketEventsPublisher
     {
-
         // If running on a local server, comment out these lines
         //private const int PORT = 3001;
         //private const string HostName = "127.0.0.1";
 
         private const int PORT = 5001;
         private const string HostName = "log3900.fsae.polymtl.ca";
-        
+
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
@@ -32,7 +31,6 @@ namespace ClientLourd.Services.SocketService
 
         public SocketClient()
         {
-
         }
 
         public void sendMessage(TLV tlv)
@@ -44,16 +42,15 @@ namespace ClientLourd.Services.SocketService
             catch (Exception e)
             {
             }
-            
         }
 
         public void Close()
         {
-           _timer.Stop();
-           _timer.Dispose();
-           sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
-           _stream.Close();
-           _socket.Close();
+            _timer.Stop();
+            _timer.Dispose();
+            sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
+            _stream.Close();
+            _socket.Close();
         }
 
         public void InitializeConnection(string token)
@@ -64,14 +61,13 @@ namespace ClientLourd.Services.SocketService
 
                 // If connected on a local server, use the line below
                 //var ip = IPAddress.Parse(HostName);
-                
+
                 //Create the socket
                 _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 //Connect the socket to the end point
                 _socket.Connect(new IPEndPoint(ip, PORT));
                 _stream = new NetworkStream(_socket);
-
             }
             catch (Exception e)
             {
@@ -90,17 +86,17 @@ namespace ClientLourd.Services.SocketService
         private void MessagesListener()
         {
             //TODO correct buffer size
-            byte[] typeAndLength = new byte[3];  
+            byte[] typeAndLength = new byte[3];
             dynamic data = null;
 
-           while (IsConnected())
+            while (IsConnected())
             {
                 try
                 {
                     // Read the type and the length
                     _stream.Read(typeAndLength, 0, 3);
 
-                    SocketMessageTypes type = (SocketMessageTypes)typeAndLength[0];
+                    SocketMessageTypes type = (SocketMessageTypes) typeAndLength[0];
                     int length = (typeAndLength[1] << 8) + typeAndLength[2];
                     if (length > 0)
                     {
@@ -109,6 +105,7 @@ namespace ClientLourd.Services.SocketService
                         _stream.Read(bytes, 0, length);
                         data = RetreiveData(type, bytes);
                     }
+
                     switch (type)
                     {
                         case SocketMessageTypes.ServerConnectionResponse:

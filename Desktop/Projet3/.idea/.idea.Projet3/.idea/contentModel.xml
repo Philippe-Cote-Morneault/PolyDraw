@@ -43,7 +43,7 @@
               <e p="Editor.g.cs" t="Include" />
               <e p="Login.g.cs" t="Include" />
               <e p="Window" t="Include">
-                <e p="SimpleWindow.g.cs" t="Include" />
+                <e p="ChatWindow.g.cs" t="Include" />
               </e>
             </e>
           </e>

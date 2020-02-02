@@ -33,10 +33,10 @@
     </Window.InputBindings>
     <materialDesign:DialogHost CloseOnClickAway="False">
 
-        <Grid >
+        <Grid>
             <WrapPanel ZIndex="1"
-                       Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                       HorizontalAlignment="Center" 
+                       Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       HorizontalAlignment="Center"
                        VerticalAlignment="Center">
                 <ProgressBar
                     Height="50"
@@ -139,7 +139,8 @@
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <views:Login x:Name="LoginScreen" IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}"/>
+                <views:Login x:Name="LoginScreen"
+                             IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </Grid>
 

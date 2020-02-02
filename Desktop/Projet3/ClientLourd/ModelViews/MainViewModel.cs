@@ -23,7 +23,7 @@ namespace ClientLourd.ModelViews
         {
             Init();
         }
-        
+
 
         public override void Init()
         {
@@ -33,10 +33,10 @@ namespace ClientLourd.ModelViews
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient = new SocketClient();
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
-
         }
 
         private bool _isWaiting;
+
         /// <summary>
         /// Indicate if the progress bar must be visible
         /// </summary>
@@ -54,7 +54,11 @@ namespace ClientLourd.ModelViews
 
         public ICommand LogoutCommand
         {
-            get { return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>( lvm => Logout(), lvm => !IsWaiting)); }
+            get
+            {
+                return _logoutCommand ??
+                       (_logoutCommand = new RelayCommand<LoginViewModel>(lvm => Logout(), lvm => !IsWaiting));
+            }
         }
 
         private void Logout()
@@ -89,9 +93,11 @@ namespace ClientLourd.ModelViews
 
         private void SocketClientOnConnectionLost(object source, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(delegate 
+            Application.Current.Dispatcher.Invoke(delegate
             {
-                DialogHost.Show(new ClosableErrorDialog("You have lost connection to the server! Returning to the login page..."));
+                DialogHost.Show(
+                    new ClosableErrorDialog(
+                        "You have lost connection to the server! Returning to the login page..."));
             });
             Logout();
         }
