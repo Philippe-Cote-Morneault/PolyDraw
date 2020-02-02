@@ -2,53 +2,31 @@ package com.log3900.socket
 
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import com.daveanthonythomas.moshipack.MoshiPack
-import com.log3900.socketServices.MessageEvent
-import com.log3900.socketServices.MessageReceived
-import com.log3900.socketServices.ReadSocketThread
-import org.json.JSONObject
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.net.InetAddress
-import java.net.InetSocketAddress
 import java.net.Socket
-import java.net.SocketException
-import java.nio.ByteBuffer
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 
-enum class Event(var eventType: Byte) {
-    MESSAGE_RECEIVED(21),
-    MESSAGE_SENT(20)
-}
-
 class SocketService : Service() {
-    private var socket: Socket = Socket()
-    private lateinit var inputStream: DataInputStream
-    private lateinit var outputStream: DataOutputStream
+    private lateinit var socketHandler: SocketHandler
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
     private var listenToMessages = true
-
-    fun disconnect() {
-        socket.close()
-    }
+    private val binder = SocketBinder()
 
     fun sendMessage(event: Event, data: ByteArray) {
-        outputStream.writeByte(event.eventType.toInt())
-        outputStream.writeShort(data.size)
-        outputStream.write(data)
+        val message = android.os.Message()
+        message.what = Request.SEND_MESSAGE.ordinal
+        message.obj = Message(event, data)
+        socketHandler.sendRequest(message)
     }
 
     fun sendSerializedMessage(event: Event, data: Any) {
         val serializedMessage = MoshiPack().packToByteArray(data)
-        outputStream.writeByte(event.eventType.toInt())
-        outputStream.writeShort(serializedMessage.size)
-        outputStream.write(serializedMessage)
+        sendMessage(event, serializedMessage)
     }
 
     fun subscribe(event: Event, handler: Handler) {
@@ -60,43 +38,15 @@ class SocketService : Service() {
     }
 
     fun startListening() {
-
+        val message = android.os.Message()
+        message.what = Request.START_READING.ordinal
+        socketHandler.sendRequest(message)
     }
 
     fun stopListening() {
-
-    }
-
-    private fun listenToMessages() {
-        while (listenToMessages) {
-           val message = readMessage()
-            if (message != null) {
-                notifySubscribers(message)
-            }
-        }
-    }
-
-    fun readMessage(): Message? {
-            try {
-                val typeByte = inputStream.readByte()
-                val type = Event.values().find { it.eventType == typeByte }
-                    ?: throw IllegalArgumentException("Invalid message type")
-
-                println("Le type est " + type)
-
-                val length = inputStream.readShort()
-                println("length = " + length.toInt())
-
-                var values = ByteArray(length.toInt())
-                inputStream.read(values)
-
-                return Message(type, values)
-
-            } catch (e: SocketException){
-                // Gestion de la deconnexion a voir avec Samuel & Martin
-                println("Connexion off")
-                return null
-            }
+        val message = android.os.Message()
+        message.what = Request.STOP_READING.ordinal
+        socketHandler.sendRequest(message)
     }
 
     private fun notifySubscribers(message: Message){
@@ -112,24 +62,38 @@ class SocketService : Service() {
         }
     }
 
+    private fun onMessageRead(message: android.os.Message) {
+        if (message.obj is Message) {
+            notifySubscribers(message.obj as Message)
+        }
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return binder
     }
 
     override fun onCreate() {
         super.onCreate()
-        println("inside onCreate")
-        println("inside init")
-        //socket = Socket()
-        //println("Connexion...")
-        //socket.connect(InetSocketAddress(InetAddress.getByName("192.168.0.99"), 4201))
-        //println("Connexion etablie...")
-        // outputStream = DataOutputStream(socket.getOutputStream())
+        Thread(Runnable {
+            Looper.prepare()
+            socketHandler = SocketHandler
+            socketHandler.createRequestHandler()
+            socketHandler.startReadingMessages(Handler { msg ->
+                onMessageRead(msg)
+                true
+            })
+        }).start()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disconnect()
+        val request = android.os.Message()
+        request.what = Request.DISCONNECT.ordinal
+        socketHandler.sendRequest(request)
+    }
+
+    inner class SocketBinder : Binder() {
+        fun getService(): SocketService = this@SocketService
     }
 
 }
