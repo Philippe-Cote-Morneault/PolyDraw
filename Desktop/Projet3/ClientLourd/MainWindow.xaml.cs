@@ -34,12 +34,12 @@ namespace ClientLourd
 
         private void OnUserLogout(object source, EventArgs args)
         {
-            Dispatcher.Invoke(() => 
+            Dispatcher.Invoke(() =>
             {
                 Init();
                 ChatBox.Init();
                 LoginScreen.Init();
-            }); 
+            });
         }
 
         private void Init()
@@ -63,9 +63,9 @@ namespace ClientLourd
             //Clear the notification when chatToggleButton is checked or unchecked
             ((ChatViewModel) ChatBox.DataContext).ClearNotificationCommand.Execute(null);
         }
-        
+
         RelayCommand<object> _exportChatCommand;
-        
+
         /// <summary>
         /// Command use to export the chat as an external window
         /// </summary>
@@ -74,10 +74,11 @@ namespace ClientLourd
             get
             {
                 return _exportChatCommand ??
-                       (_exportChatCommand = new RelayCommand<object>(param => ExportChat(this, null), o => ChatToggleButton.IsEnabled));
+                       (_exportChatCommand = new RelayCommand<object>(param => ExportChat(this, null),
+                           o => ChatToggleButton.IsEnabled));
             }
         }
-        
+
         private void ExportChat(object sender, RoutedEventArgs e)
         {
             Drawer.IsRightDrawerOpen = false;
@@ -91,6 +92,5 @@ namespace ClientLourd
             ChatToggleButton.IsEnabled = false;
             chatWindow.Show();
         }
-        
     }
 }

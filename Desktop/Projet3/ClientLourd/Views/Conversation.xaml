@@ -10,6 +10,7 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
+        <converter:DateConverter x:Key="DateConverter" />
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
                   extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
@@ -80,7 +81,7 @@
                         </Border>
                         <TextBlock Margin="5" TextWrapping="Wrap"
                                    Style="{StaticResource MaterialDesignOverlineTextBlock}" VerticalAlignment="Center"
-                                   Text="{Binding Date}" />
+                                   Text="{Binding Date, Converter={StaticResource DateConverter}}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

@@ -133,6 +133,7 @@
     <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\DateConverter.cs" />
     <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
     <Compile Include="Utilities\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />

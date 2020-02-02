@@ -4,16 +4,21 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class InverseBooleanConverter : IValueConverter
+    public class DateConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && !(bool) value;
+            DateTime date = (DateTime) value;
+            if (date.Date == DateTime.Today)
+            {
+                return date.ToString("hh:mm:ss tt");
+            }
+            return date.ToString("dd/MM/yyyy");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && !(bool) value;
+            throw new NotImplementedException();
         }
     }
 }

@@ -26,8 +26,10 @@ namespace ClientLourd
             }
             catch
             {
-                MessageBox.Show($"{e.Exception.Message} The application will close.", String.Empty, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{e.Exception.Message} The application will close.", String.Empty, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
+
             Current.Shutdown();
         }
     }

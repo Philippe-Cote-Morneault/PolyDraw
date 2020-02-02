@@ -28,10 +28,7 @@ namespace ClientLourd.ModelViews
 
         public RestClient RestClient
         {
-            get
-            {
-                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient;
-            }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public SocketClient SocketClient

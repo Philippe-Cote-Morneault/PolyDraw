@@ -43,7 +43,7 @@
               <e p="Editor.g.cs" t="Include" />
               <e p="Login.g.cs" t="Include" />
               <e p="Window" t="Include">
-                <e p="SimpleWindow.g.cs" t="Include" />
+                <e p="ChatWindow.g.cs" t="Include" />
               </e>
             </e>
           </e>
@@ -79,6 +79,7 @@
             <e p="BackgroundColorConverter.cs" t="Include" />
             <e p="BorderConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
+            <e p="DateConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
