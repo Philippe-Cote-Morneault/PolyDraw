@@ -23,7 +23,7 @@ namespace ClientLourd.Services.SocketService
 
         private const int PORT = 5001;
         private const string HostName = "log3900.fsae.polymtl.ca";
-
+        
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
@@ -61,7 +61,7 @@ namespace ClientLourd.Services.SocketService
 
                 // If connected on a local server, use the line below
                 //var ip = IPAddress.Parse(HostName);
-
+                
                 //Create the socket
                 _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 

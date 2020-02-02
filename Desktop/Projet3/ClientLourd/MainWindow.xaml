@@ -66,13 +66,17 @@
                                 Name="NotificationCounter"
                                 Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
                                 BadgeBackground="{StaticResource SecondaryAccentBrush}"
-                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
+                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}"
+                                
+                                >
 
                                 <ToggleButton
                                     Name="ChatToggleButton"
                                     ToolTip="Open the chat"
                                     Checked="ChatToggleButton_OnChecked"
                                     Unchecked="ChatToggleButton_OnChecked"
+                                    Command="{Binding Path=OpenChatCommand}"
+                                    CommandParameter="{Binding Path=DataContext}"
                                     Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
                                     <ToggleButton.ContextMenu>
                                         <ContextMenu>
@@ -84,6 +88,7 @@
                                         Kind="Chat"
                                         Height="24"
                                         Width="24" />
+                                    
                                 </ToggleButton>
                             </materialDesign:Badged>
 
@@ -131,10 +136,11 @@
                                 </ListViewItem>
                             </ListView>
                         </DockPanel>
+
                     </materialDesign:DrawerHost.LeftDrawerContent>
 
-
                 </materialDesign:DrawerHost>
+
             </DockPanel>
             <!--Login screen-->
             <DockPanel

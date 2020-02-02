@@ -55,6 +55,7 @@
                     MinLines="2"
                     Name="MessageTextBox"
                     MaxLength="1000" />
+
                 <TextBlock Foreground="Gray" Margin="12 0 0 5" HorizontalAlignment="Left"
                            Text="{Binding ElementName=MessageTextBox, Path=Text.Length, StringFormat={}{0}/1000}" />
             </StackPanel>
