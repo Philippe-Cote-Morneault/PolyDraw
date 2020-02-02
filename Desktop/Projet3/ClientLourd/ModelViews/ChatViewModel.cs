@@ -117,7 +117,7 @@ namespace ClientLourd.ModelViews
             TextBox tBox = param[0] as TextBox;
             string username = param[1] as string;
             string message = tBox.Text;
-            if (!string.IsNullOrEmpty(message))
+            if (!string.IsNullOrWhiteSpace(message))
             {
                 var data = new {Message = message, ChannelID = "0"};
                 SocketClient.sendMessage(new TLV(SocketMessageTypes.MessageSent, data));
