@@ -108,13 +108,18 @@ object SocketHandler {
     fun readMessage() {
         try {
             val typeByte = inputStream.readByte()
+
             val type = Event.values().find { it.eventType == typeByte }
                 ?: throw IllegalArgumentException("Invalid message type")
 
             val length = inputStream.readShort()
 
             var values = ByteArray(length.toInt())
-            inputStream.read(values)
+            var totalReadBytes = 0
+            while (totalReadBytes < length) {
+                val amountRead = inputStream.read(values)
+                totalReadBytes += amountRead
+            }
 
             val message = Message(type, values)
 
