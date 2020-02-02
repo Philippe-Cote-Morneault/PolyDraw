@@ -9,6 +9,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketException
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicBoolean
 
 enum class Request {
     SEND_MESSAGE,
@@ -25,7 +26,7 @@ object SocketHandler {
     private var outputStream: DataOutputStream
     private var requestHandler: Handler? = null
     private var messageReadListener: Handler? = null
-    private var readMessages = false
+    private var readMessages = AtomicBoolean(false)
 
     init {
         socket = Socket("10.0.2.2", 5123)
@@ -42,19 +43,13 @@ object SocketHandler {
                 true
             }
             lock.countDown()
+            Looper.loop()
         }).start()
         lock.await()
     }
 
-    fun startReadingMessages(handler: Handler) {
+    fun setMessageReadListener(handler: Handler) {
         messageReadListener = handler
-        readMessages = true
-        Thread(Runnable {
-            while(readMessages) {
-                readMessage()
-            }
-        }).start()
-
     }
 
     fun sendRequest(message: android.os.Message) {
@@ -79,10 +74,10 @@ object SocketHandler {
                 }
             }
             Request.START_READING.ordinal -> {
-
+                onReadMessage()
             }
             Request.STOP_READING.ordinal -> {
-
+                onStopReadingMessages()
             }
             Request.DISCONNECT.ordinal -> {
                 onDisconnect()
@@ -92,6 +87,21 @@ object SocketHandler {
                     messageReadListener = message.obj as Handler
                 }
             }
+        }
+    }
+
+    fun onStopReadingMessages() {
+        readMessages.compareAndSet(true, false)
+    }
+
+    fun onReadMessage() {
+        if (!readMessages.get()) {
+            readMessages.compareAndSet(false, true)
+            Thread(Runnable {
+                while (readMessages.get()) {
+                    readMessage()
+                }
+            }).start()
         }
     }
 

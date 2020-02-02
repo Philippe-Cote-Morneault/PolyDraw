@@ -14,7 +14,6 @@ import kotlin.collections.ArrayList
 class SocketService : Service() {
     private lateinit var socketHandler: SocketHandler
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
-    private var listenToMessages = true
     private val binder = SocketBinder()
 
     fun sendMessage(event: Event, data: ByteArray) {
@@ -78,10 +77,14 @@ class SocketService : Service() {
             Looper.prepare()
             socketHandler = SocketHandler
             socketHandler.createRequestHandler()
-            socketHandler.startReadingMessages(Handler { msg ->
+            socketHandler.setMessageReadListener(Handler { msg ->
                 onMessageRead(msg)
                 true
             })
+            val req = android.os.Message()
+            req.what = Request.START_READING.ordinal
+            socketHandler.sendRequest(req)
+            Looper.loop()
         }).start()
     }
 
