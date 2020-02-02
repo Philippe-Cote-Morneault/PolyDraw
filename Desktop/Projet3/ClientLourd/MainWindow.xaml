@@ -8,10 +8,10 @@
         xmlns:viewModels="clr-namespace:ClientLourd.ModelViews"
         xmlns:local="clr-namespace:ClientLourd"
         xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
-
+        Name="PolyDraw"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="MainWindow">
+        Title="PolyDraw">
     <Window.DataContext>
         <viewModels:MainViewModel />
     </Window.DataContext>
@@ -31,9 +31,20 @@
             </KeyBinding.CommandParameter>
         </KeyBinding>
     </Window.InputBindings>
-    <materialDesign:DialogHost CloseOnClickAway="True">
+    <materialDesign:DialogHost CloseOnClickAway="False">
 
-        <Grid>
+        <Grid >
+            <WrapPanel ZIndex="1"
+                       Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center">
+                <ProgressBar
+                    Height="50"
+                    Width="50"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="0"
+                    IsIndeterminate="True" />
+            </WrapPanel>
             <DockPanel Name="MainDockPanel"
                        Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
                 <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
@@ -61,6 +72,7 @@
 
                                 <ToggleButton
                                     Name="ChatToggleButton"
+                                    ToolTip="Open the chat"
                                     Checked="ChatToggleButton_OnChecked"
                                     Unchecked="ChatToggleButton_OnChecked"
                                     Command="{Binding Path=OpenChatCommand}"
@@ -68,7 +80,7 @@
                                     Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
                                     <ToggleButton.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Export as a new window" Click="MenuItem_OnClick" />
+                                            <MenuItem Header="Export as a new window" Click="ExportChat" />
                                         </ContextMenu>
                                     </ToggleButton.ContextMenu>
                                     <materialDesign:PackIcon
@@ -117,6 +129,7 @@
                             <ListView>
                                 <ListViewItem>
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
+                                            ToolTip="Disconnect and return to the login screen"
                                             Command="{Binding Path=LogoutCommand}"
                                             CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}"
                                             Content="Logout" />
@@ -132,7 +145,7 @@
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <views:Login x:Name="LoginScreen" />
+                <views:Login x:Name="LoginScreen" IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}"/>
             </DockPanel>
         </Grid>
 

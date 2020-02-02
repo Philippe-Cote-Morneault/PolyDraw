@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,7 +28,10 @@ namespace ClientLourd.ModelViews
 
         public RestClient RestClient
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get
+            {
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient;
+            }
         }
 
         public SocketClient SocketClient
@@ -61,19 +65,19 @@ namespace ClientLourd.ModelViews
             }
         }
 
-        void Authentify(object[] param)
+        async Task Authentify(object[] param)
         {
             string username = (string) param[0];
             string password = (param[1] as PasswordBox).Password;
             try
             {
-                string token = RestClient.Login(username, password);
+                var token = await RestClient.Login(username, password);
                 SocketClient.InitializeConnection(token);
                 IsLoggedIn = true;
             }
             catch (RestException e)
             {
-                DialogHost.Show(new ClosableErrorDialog(e));
+                await DialogHost.Show(new ClosableErrorDialog(e));
                 IsLoggedIn = false;
             }
         }

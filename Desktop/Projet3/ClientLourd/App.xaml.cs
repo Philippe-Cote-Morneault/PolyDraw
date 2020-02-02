@@ -20,7 +20,14 @@ namespace ClientLourd
         private async void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            await DialogHost.Show(new ClosableErrorDialog($"{e.Exception.Message} The application will close."));
+            try
+            {
+                await DialogHost.Show(new ClosableErrorDialog($"{e.Exception.Message} The application will close."));
+            }
+            catch
+            {
+                MessageBox.Show($"{e.Exception.Message} The application will close.", String.Empty, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             Current.Shutdown();
         }
     }

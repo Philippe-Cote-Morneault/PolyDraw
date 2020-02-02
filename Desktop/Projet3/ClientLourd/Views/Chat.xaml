@@ -19,6 +19,7 @@
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <Button Margin="5"
                         IsDefault="True"
+                        ToolTip="Send the message"
                         Style="{DynamicResource MaterialDesignToolForegroundButton}"
 
                         Command="{Binding SendMessageCommand}">
@@ -32,7 +33,11 @@
                     <materialDesign:PackIcon Kind="Send" Foreground="{StaticResource PrimaryHueMidBrush}" />
                 </Button>
 
-                <Button Style="{DynamicResource MaterialDesignToolForegroundButton}">
+                <Button 
+                    Name="ExportButton"
+                    ToolTip="Export the chat as a new window"
+                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ExportChatCommand}"
+                    Style="{DynamicResource MaterialDesignToolForegroundButton}">
                     <materialDesign:PackIcon Kind="CheckboxMultipleBlankOutline"
                                              Foreground="{StaticResource PrimaryHueMidBrush}" />
                 </Button>

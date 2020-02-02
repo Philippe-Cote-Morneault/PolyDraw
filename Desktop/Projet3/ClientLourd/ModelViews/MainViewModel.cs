@@ -29,16 +29,32 @@ namespace ClientLourd.ModelViews
         {
             Username = "";
             RestClient = new RestClient();
+            RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
+            RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient = new SocketClient();
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
 
-        }   
+        }
+
+        private bool _isWaiting;
+        /// <summary>
+        /// Indicate if the progress bar must be visible
+        /// </summary>
+        public bool IsWaiting
+        {
+            get { return _isWaiting; }
+            set
+            {
+                _isWaiting = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         private RelayCommand<LoginViewModel> _logoutCommand;
 
         public ICommand LogoutCommand
         {
-            get { return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>( lvm => Logout())); }
+            get { return _logoutCommand ?? (_logoutCommand = new RelayCommand<LoginViewModel>( lvm => Logout(), lvm => !IsWaiting)); }
         }
 
         private void Logout()
