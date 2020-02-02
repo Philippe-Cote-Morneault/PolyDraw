@@ -20,9 +20,9 @@ enum class Request {
 }
 
 object SocketHandler {
-    private lateinit var socket: Socket
-    private lateinit var inputStream: DataInputStream
-    private lateinit var outputStream: DataOutputStream
+    private var socket: Socket
+    private var inputStream: DataInputStream
+    private var outputStream: DataOutputStream
     private var requestHandler: Handler? = null
     private var messageReadListener: Handler? = null
     private var readMessages = false
