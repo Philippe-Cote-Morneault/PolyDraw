@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ClientLourd.Views
+namespace ClientLourd.Views.Controls
 {
     public partial class Conversation : UserControl
     {

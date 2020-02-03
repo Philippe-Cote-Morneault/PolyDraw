@@ -113,21 +113,24 @@
           </e>
         </e>
         <e p="Views" t="Include">
-          <e p="Chat.xaml" t="Include" />
-          <e p="Chat.xaml.cs" t="Include" />
-          <e p="Conversation.xaml" t="Include" />
-          <e p="Conversation.xaml.cs" t="Include" />
+          <e p="Controls" t="Include">
+            <e p="Chat.xaml" t="Include" />
+            <e p="Chat.xaml.cs" t="Include" />
+            <e p="Conversation.xaml" t="Include" />
+            <e p="Conversation.xaml.cs" t="Include" />
+            <e p="Editor.xaml" t="Include" />
+            <e p="Editor.xaml.cs" t="Include" />
+            <e p="Login.xaml" t="Include" />
+            <e p="Login.xaml.cs" t="Include" />
+          </e>
           <e p="Dialogs" t="Include">
             <e p="ClosableErrorDialog.xaml" t="Include" />
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
           </e>
-          <e p="Editor.xaml" t="Include" />
-          <e p="Editor.xaml.cs" t="Include" />
-          <e p="Login.xaml" t="Include" />
-          <e p="Login.xaml.cs" t="Include" />
-          <e p="Window" t="Include">
+          <e p="ToolTips" t="Include" />
+          <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />
             <e p="ChatWindow.xaml.cs" t="Include" />
           </e>

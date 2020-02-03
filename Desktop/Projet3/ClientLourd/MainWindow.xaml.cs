@@ -17,7 +17,7 @@ using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.ModelViews;
 using ClientLourd.Utilities.Commands;
-using ClientLourd.Views.Window;
+using ClientLourd.Views.Windows;
 
 namespace ClientLourd
 {

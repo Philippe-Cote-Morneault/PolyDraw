@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
+using ClientLourd.Views.Controls;
 
-namespace ClientLourd.Views.Window
+namespace ClientLourd.Views.Windows
 {
     /// <summary>
     /// Interaction logic for SimpleWindow.xaml
@@ -9,7 +10,7 @@ namespace ClientLourd.Views.Window
     {
         Chat _chatBox;
 
-        public ChatWindow(ClientLourd.Views.Chat ChatBox)
+        public ChatWindow(Chat ChatBox)
         {
             _chatBox = ChatBox;
             InitializeComponent();
