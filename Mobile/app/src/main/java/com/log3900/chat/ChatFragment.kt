@@ -1,6 +1,7 @@
 package com.log3900.chat
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -17,9 +18,6 @@ import com.log3900.chat.ui.MessageAdapter
 import com.log3900.utils.ui.KeyboardHelper
 import java.lang.Thread.sleep
 import java.util.*
-
-
-var username = "admin"
 
 class ChatFragment : Fragment() {
     // Services
@@ -73,7 +71,7 @@ class ChatFragment : Fragment() {
 
     private fun setupMessagesRecyclerView(rootView: View) {
         messagesRecyclerView = rootView.findViewById(R.id.fragment_chat_message_recycler_view)
-        messagesViewAdapter = MessageAdapter(LinkedList())
+        messagesViewAdapter = MessageAdapter(LinkedList(), activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)?.getString(getString(R.string.preference_file_username_key), "nil")!!)
         messagesRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = viewManager

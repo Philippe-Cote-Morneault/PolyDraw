@@ -8,13 +8,13 @@ import com.log3900.R
 import com.log3900.chat.ReceivedMessage
 import java.util.*
 
-class MessageAdapter(val messages: LinkedList<ReceivedMessage>) : RecyclerView.Adapter<MessageViewHolder>() {
+class MessageAdapter(val messages: LinkedList<ReceivedMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val textView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_message, parent, false) as View
 
-        return MessageViewHolder(textView)
+        return MessageViewHolder(textView, username)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
