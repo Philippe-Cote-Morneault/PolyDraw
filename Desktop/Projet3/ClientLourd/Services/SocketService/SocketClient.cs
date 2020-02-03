@@ -28,11 +28,27 @@ namespace ClientLourd.Services.SocketService
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        private Timer _timer;
+        private Timer _pollTimer;
+        private Timer _healthCheckTimer;
 
         public SocketClient()
         {
+            HealthCheck += OnHealthCheck;
         }
+
+        private void OnHealthCheck(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                //We stop the timer 
+                _healthCheckTimer.Stop();
+                //We send the healthCheck response to the server
+                sendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
+                //Restart the timer
+                _healthCheckTimer.Start();
+            });
+        }
+
 
         public void sendMessage(Tlv tlv)
         {
@@ -47,9 +63,9 @@ namespace ClientLourd.Services.SocketService
 
         public void Close()
         {
-            _timer.Stop();
-            _timer.Dispose();
             sendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
+            _pollTimer.Close();
+            _healthCheckTimer.Close();
             _stream.Close();
             _socket.Close();
         }
@@ -75,7 +91,7 @@ namespace ClientLourd.Services.SocketService
                 return;
             }
 
-            InitializeTimer();
+            InitializeTimers();
 
             //Start a message listener
             _receiver = new Task(MessagesListener);
@@ -154,16 +170,25 @@ namespace ClientLourd.Services.SocketService
             }
         }
 
-        private void InitializeTimer()
+        private void InitializeTimers()
         {
-            _timer = new Timer(4000);
-            _timer.Elapsed += CheckConnection;
-            _timer.Start();
+            _pollTimer = new Timer(4000);
+            _pollTimer.Elapsed += CheckConnection;
+            _pollTimer.Start();
+            _healthCheckTimer = new Timer(10000);
+            _healthCheckTimer.Elapsed += TriggerConnectionLost;
+            _healthCheckTimer.Start();
         }
+
+        private void TriggerConnectionLost(object sender, ElapsedEventArgs e)
+        {
+            OnConnectionLost(this);
+        }
+        
 
         private void CheckConnection(object sender, ElapsedEventArgs e)
         {
-            _timer.Stop();
+            _pollTimer.Stop();
 
             if (!IsConnected())
             {
@@ -171,7 +196,7 @@ namespace ClientLourd.Services.SocketService
                 return;
             }
 
-            _timer.Start();
+            _pollTimer.Start();
         }
 
         public bool IsConnected()

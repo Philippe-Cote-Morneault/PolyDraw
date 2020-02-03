@@ -7,6 +7,7 @@
         ServerDisconnection = 2,
         UserDisconnected = 3,
         HealthCheck = 9,
+        HealthCheckResponse = 10,
         MessageSent = 20,
         MessageReceived = 21,
         JoinChannel = 22,
