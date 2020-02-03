@@ -55,7 +55,7 @@ class SocketService : Service() {
     private fun notifySubscribers(message: Message){
         val handlerMessage = android.os.Message()
         handlerMessage.what = message.type.eventType.toInt()
-        handlerMessage.obj = message.data
+        handlerMessage.obj = message
 
         if (subscribers.containsKey(message.type)) {
             val handlers = subscribers[message.type]
