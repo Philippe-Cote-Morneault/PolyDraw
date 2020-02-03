@@ -29,7 +29,7 @@ object SocketHandler {
     private var readMessages = AtomicBoolean(false)
 
     init {
-        socket = Socket("10.0.2.2", 5123)
+        socket = Socket("log3900.fsae.polymtl.ca", 5001)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
     }
