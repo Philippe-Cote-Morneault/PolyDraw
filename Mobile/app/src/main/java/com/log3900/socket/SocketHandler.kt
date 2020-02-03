@@ -117,7 +117,7 @@ object SocketHandler {
             var values = ByteArray(length.toInt())
             var totalReadBytes = 0
             while (totalReadBytes < length) {
-                val amountRead = inputStream.read(values)
+                val amountRead = inputStream.read(values, totalReadBytes, length - totalReadBytes)
                 totalReadBytes += amountRead
             }
 
