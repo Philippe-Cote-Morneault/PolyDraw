@@ -120,7 +120,7 @@ class ChatFragment : Fragment() {
      * @param message the chat message received
      */
     private fun onNewMessageReceived(message: android.os.Message) {
-        messagesViewAdapter.messages.addLast(message.obj as Message)
+        messagesViewAdapter.messages.addLast(message.obj as ReceivedMessage)
         messagesViewAdapter.notifyItemInserted(messagesViewAdapter.messages.size - 1)
         if (!messagesRecyclerView.canScrollVertically(1)) {
             messagesRecyclerView.smoothScrollToPosition(messagesViewAdapter.messages.size - 1)
