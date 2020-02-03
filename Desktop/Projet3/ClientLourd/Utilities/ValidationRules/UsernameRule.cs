@@ -33,7 +33,7 @@ namespace ClientLourd.Utilities.ValidationRules
                 return new ValidationResult(false, "The username must only contain alphanumeric characters.");
             }
 
-            if (!loginInputValidator.LengthIsOk(username))
+            if (!loginInputValidator.UsernameLengthIsOk(username))
             {
                 return new ValidationResult(false, "The username must be between 4 and 12 characters.");
             }

@@ -91,7 +91,7 @@ namespace ClientLourd.ModelViews
 
             LoginInputRules loginInputValidator = new LoginInputRules();
 
-            return (loginInputValidator.LengthIsOk(username) && loginInputValidator.LengthIsOk(password) &&
+            return (loginInputValidator.UsernameLengthIsOk(username) && loginInputValidator.PasswordLengthIsOk(password) &&
                     !loginInputValidator.StringIsWhiteSpace(username) && !loginInputValidator.StringIsWhiteSpace(password));
         }
     }

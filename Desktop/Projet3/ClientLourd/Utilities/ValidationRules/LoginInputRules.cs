@@ -23,11 +23,16 @@ namespace ClientLourd.Utilities.ValidationRules
             return String.IsNullOrWhiteSpace(myInput);
         }
 
-        public bool LengthIsOk(string myInput)
+        public bool UsernameLengthIsOk(string myInput)
         {
             return myInput.Length >= 4 && myInput.Length <= 12;
         }
 
+        public bool PasswordLengthIsOk(string myInput)
+        {
+            return myInput.Length >= 4 && myInput.Length <= 64;
+        }
+        
         public bool IsAlphaNumeric(string myInput)
         {
             Regex r = new Regex("^[a-zA-Z0-9]*$");
