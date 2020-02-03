@@ -1,21 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using ClientLourd.ModelViews;
-using ClientLourd.Views;
+﻿using System.ComponentModel;
+using ClientLourd.Views.Controls;
 
-namespace ClientLourd.Utilities.Window
+namespace ClientLourd.Views.Windows
 {
     /// <summary>
     /// Interaction logic for SimpleWindow.xaml
@@ -24,7 +10,7 @@ namespace ClientLourd.Utilities.Window
     {
         Chat _chatBox;
 
-        public ChatWindow(ClientLourd.Views.Chat ChatBox)
+        public ChatWindow(Chat ChatBox)
         {
             _chatBox = ChatBox;
             InitializeComponent();

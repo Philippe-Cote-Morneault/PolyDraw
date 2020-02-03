@@ -8,6 +8,7 @@
         xmlns:viewModels="clr-namespace:ClientLourd.ModelViews"
         xmlns:local="clr-namespace:ClientLourd"
         xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+        xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
         Name="PolyDraw"
         mc:Ignorable="d"
         WindowState="Maximized"
@@ -113,13 +114,13 @@
                     x:Name="Drawer"
                     IsRightDrawerOpen="{Binding ElementName=ChatToggleButton, Path=IsChecked }"
                     IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-                    <views:Editor />
+                    <controls:Editor />
 
                     <materialDesign:DrawerHost.RightDrawerContent>
                         <DockPanel
                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}"
                             x:Name="RightDrawerContent">
-                            <views:Chat x:Name="ChatBox" />
+                            <controls:Chat x:Name="ChatBox" />
                         </DockPanel>
                     </materialDesign:DrawerHost.RightDrawerContent>
 
@@ -145,7 +146,7 @@
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <views:Login x:Name="LoginScreen"
+                <controls:Login x:Name="LoginScreen"
                              IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </Grid>

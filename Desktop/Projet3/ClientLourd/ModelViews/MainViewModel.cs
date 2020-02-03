@@ -3,7 +3,7 @@ using System.ComponentModel.Design;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using ClientLourd.Services.Rest;
+using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views;

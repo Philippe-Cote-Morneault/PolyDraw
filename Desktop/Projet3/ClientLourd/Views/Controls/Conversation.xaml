@@ -1,19 +1,19 @@
-﻿<UserControl x:Class="ClientLourd.Views.Conversation"
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Conversation"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:local="clr-namespace:ClientLourd.Views"
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
-             xmlns:extensionProperties="clr-namespace:ClientLourd.Utilities.ScrollBar"
+             xmlns:extensions="clr-namespace:ClientLourd.Utilities.Extensions"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
         <converter:DateConverter x:Key="DateConverter" />
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                  extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+                  extensions:ScrollViewerExtensions.AlwaysScrollToEnd="True">
         <ListBox Name="ConversationList" ItemsSource="{Binding Messages}"
                  PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
             <ListBox.Resources>

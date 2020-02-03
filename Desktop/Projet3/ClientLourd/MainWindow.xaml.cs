@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ClientLourd.Utilities.Window;
 using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.ModelViews;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Views.Windows;
 
 namespace ClientLourd
 {

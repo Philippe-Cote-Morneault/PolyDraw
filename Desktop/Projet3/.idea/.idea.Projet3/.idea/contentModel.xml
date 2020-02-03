@@ -13,12 +13,30 @@
         <e p="MainWindow.xaml" t="Include" />
         <e p="MainWindow.xaml.cs" t="Include" />
         <e p="Models" t="Include">
-          <e p="Channel.cs" t="Include" />
-          <e p="Editor.cs" t="Include" />
-          <e p="Message.cs" t="Include" />
-          <e p="ModelBase.cs" t="Include" />
-          <e p="TLV.cs" t="Include" />
-          <e p="User.cs" t="Include" />
+          <e p="Bindable" t="Include">
+            <e p="Channel.cs" t="Include" />
+            <e p="Editor.cs" t="Include" />
+            <e p="Message.cs" t="Include" />
+            <e p="ModelBase.cs" t="Include" />
+            <e p="User.cs" t="Include" />
+          </e>
+          <e p="Enums" t="Include">
+            <e p="SocketMessageTypes.cs" t="Include" />
+          </e>
+          <e p="EventsArguments" t="Include">
+            <e p="MessageReceivedEventArgs.cs" t="Include" />
+          </e>
+          <e p="Exceptions" t="Include">
+            <e p="Rest" t="Include">
+              <e p="RestBadRequestException.cs" t="Include" />
+              <e p="RestConflictException.cs" t="Include" />
+              <e p="RestException.cs" t="Include" />
+            </e>
+            <e p="Socket" t="Include" />
+          </e>
+          <e p="NonBindable" t="Include">
+            <e p="TLV.cs" t="Include" />
+          </e>
         </e>
         <e p="ModelViews" t="Include">
           <e p="ChatViewModel.cs" t="Include" />
@@ -85,22 +103,8 @@
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
-          <e p="Enums" t="Include">
-            <e p="SocketMessageTypes.cs" t="Include" />
-          </e>
-          <e p="Exceptions" t="Include">
-            <e p="Rest" t="Include">
-              <e p="RestBadRequestException.cs" t="Include" />
-              <e p="RestConflictException.cs" t="Include" />
-              <e p="RestException.cs" t="Include" />
-            </e>
-            <e p="Socket" t="Include" />
-          </e>
-          <e p="ScrollBar" t="Include">
+          <e p="Extensions" t="Include">
             <e p="ScrollViewerExtensions.cs" t="Include" />
-          </e>
-          <e p="SocketEventsArguments" t="Include">
-            <e p="MessageReceivedEventArgs.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">
             <e p="ChatInputBoxRule.cs" t="Include" />
@@ -109,21 +113,24 @@
           </e>
         </e>
         <e p="Views" t="Include">
-          <e p="Chat.xaml" t="Include" />
-          <e p="Chat.xaml.cs" t="Include" />
-          <e p="Conversation.xaml" t="Include" />
-          <e p="Conversation.xaml.cs" t="Include" />
+          <e p="Controls" t="Include">
+            <e p="Chat.xaml" t="Include" />
+            <e p="Chat.xaml.cs" t="Include" />
+            <e p="Conversation.xaml" t="Include" />
+            <e p="Conversation.xaml.cs" t="Include" />
+            <e p="Editor.xaml" t="Include" />
+            <e p="Editor.xaml.cs" t="Include" />
+            <e p="Login.xaml" t="Include" />
+            <e p="Login.xaml.cs" t="Include" />
+          </e>
           <e p="Dialogs" t="Include">
             <e p="ClosableErrorDialog.xaml" t="Include" />
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
           </e>
-          <e p="Editor.xaml" t="Include" />
-          <e p="Editor.xaml.cs" t="Include" />
-          <e p="Login.xaml" t="Include" />
-          <e p="Login.xaml.cs" t="Include" />
-          <e p="Window" t="Include">
+          <e p="ToolTips" t="Include" />
+          <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />
             <e p="ChatWindow.xaml.cs" t="Include" />
           </e>

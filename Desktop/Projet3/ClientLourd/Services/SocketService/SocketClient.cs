@@ -8,9 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using ClientLourd.Models;
-using ClientLourd.Utilities.Enums;
 using MessagePack;
 using System.Timers;
+using ClientLourd.Models.Enums;
+using ClientLourd.Models.NonBindable;
 using MessagePack.Resolvers;
 
 namespace ClientLourd.Services.SocketService
@@ -33,7 +34,7 @@ namespace ClientLourd.Services.SocketService
         {
         }
 
-        public void sendMessage(TLV tlv)
+        public void sendMessage(Tlv tlv)
         {
             try
             {
@@ -48,7 +49,7 @@ namespace ClientLourd.Services.SocketService
         {
             _timer.Stop();
             _timer.Dispose();
-            sendMessage(new TLV(SocketMessageTypes.ServerDisconnection));
+            sendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
             _stream.Close();
             _socket.Close();
         }
@@ -80,7 +81,7 @@ namespace ClientLourd.Services.SocketService
             _receiver = new Task(MessagesListener);
             _receiver.Start();
 
-            sendMessage(new TLV(SocketMessageTypes.ServerConnection, token));
+            sendMessage(new Tlv(SocketMessageTypes.ServerConnection, token));
         }
 
         private void MessagesListener()

@@ -1,10 +1,6 @@
-﻿using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows.Ink;
+﻿using System.Windows.Ink;
 
-
-namespace ClientLourd.Models
+namespace ClientLourd.Models.Bindable
 {
     class Editor : ModelBase
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClientLourd.Utilities.SocketEventsArguments
+namespace ClientLourd.Models.EventsArguments
 {
     public class MessageReceivedEventArgs : EventArgs
     {

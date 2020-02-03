@@ -5,6 +5,7 @@ using System.Windows.Ink;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using ClientLourd.Models.Bindable;
 
 
 namespace ClientLourd.ModelViews

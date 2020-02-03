@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using ClientLourd.ModelViews;
 
-namespace ClientLourd.Views
+namespace ClientLourd.Views.Controls
 {
     public partial class Chat : UserControl
     {

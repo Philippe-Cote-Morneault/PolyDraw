@@ -1,14 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
-using ClientLourd.Utilities.Exceptions.Rest;
-using MaterialDesignThemes.Wpf;
+using ClientLourd.Models.Exceptions.Rest;
 using RestSharp;
-using RestSharp.Extensions;
 using RestSharp.Serialization.Json;
 
-namespace ClientLourd.Services.Rest
+namespace ClientLourd.Services.RestService
 {
     public class RestClient
     {
