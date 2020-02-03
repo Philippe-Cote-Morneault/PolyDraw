@@ -7,7 +7,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.chat.ReceivedMessage
-import com.log3900.chat.username
 import com.log3900.utils.format.DateFormatter
 
 class MessageViewHolder : RecyclerView.ViewHolder {
@@ -15,13 +14,15 @@ class MessageViewHolder : RecyclerView.ViewHolder {
     private var messageTextView: TextView
     private var usernameTextView: TextView
     private var dateTextView: TextView
+    private var username: String
     private lateinit var message: ReceivedMessage
 
-    constructor(itemView: View) : super(itemView) {
+    constructor(itemView: View, username: String) : super(itemView) {
         view = itemView.findViewById(R.id.list_item_message_outer_layout)
         messageTextView = itemView.findViewById(R.id.list_item_message_text)
         usernameTextView = itemView.findViewById(R.id.list_item_message_username)
         dateTextView = itemView.findViewById(R.id.list_item_message_date)
+        this.username = username
     }
 
     fun bind(message: ReceivedMessage) {
