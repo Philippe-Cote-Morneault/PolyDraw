@@ -9,10 +9,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /* TODO: token validation */
-
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        setContentView(R.layout.activity_main)
     }
 }
