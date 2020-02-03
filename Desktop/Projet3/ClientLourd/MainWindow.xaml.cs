@@ -46,6 +46,7 @@ namespace ClientLourd
         {
             ((ViewModelBase) DataContext).Init();
             MenuToggleButton.IsChecked = false;
+            _chatWindow?.Close();
         }
 
         /// <summary>
@@ -63,6 +64,8 @@ namespace ClientLourd
             //Clear the notification when chatToggleButton is checked or unchecked
             ((ChatViewModel) ChatBox.DataContext).ClearNotificationCommand.Execute(null);
         }
+
+        private ChatWindow _chatWindow;
 
         RelayCommand<object> _exportChatCommand;
 
@@ -83,14 +86,14 @@ namespace ClientLourd
         {
             Drawer.IsRightDrawerOpen = false;
             RightDrawerContent.Children.Clear();
-            ChatWindow chatWindow = new ChatWindow(ChatBox)
+            _chatWindow = new ChatWindow(ChatBox)
             {
                 Title = "Chat",
                 DataContext = DataContext,
                 Owner = this,
             };
             ChatToggleButton.IsEnabled = false;
-            chatWindow.Show();
+            _chatWindow.Show();
         }
     }
 }
