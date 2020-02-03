@@ -103,7 +103,7 @@
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
-          <e p="ScrollBar" t="Include">
+          <e p="Extensions" t="Include">
             <e p="ScrollViewerExtensions.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">

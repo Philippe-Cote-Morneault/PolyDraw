@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace ClientLourd.Utilities.ScrollBar
+namespace ClientLourd.Utilities.Extensions
 {
     /// <summary>
     /// Code by StackOverflow user Magikos. Ref: https://stackoverflow.com/questions/2984803/how-to-automatically-scroll-scrollviewer-only-if-the-user-did-not-change-scrol

@@ -143,7 +143,7 @@
     <Compile Include="Utilities\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
     <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
-    <Compile Include="Utilities\ScrollBar\ScrollViewerExtensions.cs" />
+    <Compile Include="Utilities\Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Utilities\ValidationRules\ChatInputBoxRule.cs" />
     <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
     <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />

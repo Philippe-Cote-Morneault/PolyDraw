@@ -6,14 +6,14 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
-             xmlns:extensionProperties="clr-namespace:ClientLourd.Utilities.ScrollBar"
+             xmlns:extensions="clr-namespace:ClientLourd.Utilities.Extensions"
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
         <converter:DateConverter x:Key="DateConverter" />
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                  extensionProperties:ScrollViewerExtensions.AlwaysScrollToEnd="True">
+                  extensions:ScrollViewerExtensions.AlwaysScrollToEnd="True">
         <ListBox Name="ConversationList" ItemsSource="{Binding Messages}"
                  PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
             <ListBox.Resources>
