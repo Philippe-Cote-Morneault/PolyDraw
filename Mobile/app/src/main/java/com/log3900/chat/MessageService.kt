@@ -25,11 +25,7 @@ class MessageService {
     }
 
     fun sendMessage(message: SentMessage) {
-        val moshi = MoshiPack({
-            add(TimeStampAdapter())
-            add(UUIDAdapter())
-        })
-        socketService.sendMessage(Event.MESSAGE_SENT, moshi.packToByteArray(message))
+        socketService.sendSerializedMessage(Event.MESSAGE_SENT, message)
     }
 
     fun sendMessage(messageText: String) {
