@@ -4,6 +4,8 @@ import android.os.Handler
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
+import com.log3900.utils.format.moshi.TimeStampAdapter
+import com.log3900.utils.format.moshi.UUIDAdapter
 import java.net.Socket
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -23,11 +25,15 @@ class MessageService {
     }
 
     fun sendMessage(message: SentMessage) {
-        socketService.sendMessage(Event.MESSAGE_SENT, MoshiPack().packToByteArray(message))
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+        })
+        socketService.sendMessage(Event.MESSAGE_SENT, moshi.packToByteArray(message))
     }
 
     fun sendMessage(messageText: String) {
-        val message = SentMessage(messageText, UUID.randomUUID().toString())
+        val message = SentMessage(messageText, UUID.randomUUID())
         sendMessage(message)
     }
 
@@ -51,8 +57,12 @@ class MessageService {
     fun receiveMessage(message: com.log3900.socket.Message) {
         val tempMessage = android.os.Message()
         tempMessage.what = MessageEvent.MESSAGE_RECEIVED.ordinal
-        tempMessage.obj = MoshiPack().unpack(message.data) as ReceivedMessage
-        notifySubscribers(MessageEvent.MESSAGE_RECEIVED, android.os.Message())
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+        })
+        tempMessage.obj = moshi.unpack(message.data) as ReceivedMessage
+        notifySubscribers(MessageEvent.MESSAGE_RECEIVED, tempMessage)
     }
 
     private fun initialize() {
