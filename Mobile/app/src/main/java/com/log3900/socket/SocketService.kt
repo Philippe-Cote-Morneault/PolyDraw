@@ -7,6 +7,8 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import com.daveanthonythomas.moshipack.MoshiPack
+import com.log3900.utils.format.moshi.TimeStampAdapter
+import com.log3900.utils.format.moshi.UUIDAdapter
 import java.net.Socket
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
@@ -28,8 +30,11 @@ class SocketService : Service() {
     }
 
     fun sendSerializedMessage(event: Event, data: Any) {
-        val serializedMessage = MoshiPack().packToByteArray(data)
-        sendMessage(event, serializedMessage)
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+        })
+        sendMessage(event, moshi.packToByteArray(data))
     }
 
     fun subscribe(event: Event, handler: Handler) {
