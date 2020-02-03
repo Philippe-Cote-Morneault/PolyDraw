@@ -1,5 +1,6 @@
 package com.log3900.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
@@ -12,8 +13,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Callback
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.log3900.MainActivity
 import com.log3900.R
+import com.log3900.socket.Event
+import com.log3900.socket.Message
+import com.log3900.socket.SocketService
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
@@ -41,12 +47,29 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
                 val message: String? = response?.body()?.string() ?: "Error with response body"
                 println("(${response?.code()}) $message")
-                MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Light_Dialog_Alert)
-                    .setMessage("(${response?.code()}) $message")
-                    .setPositiveButton("Ok", null)
-                    .show()
                 changeLoadingView(false)
+
+                // TODO: Change the code to get a JSON response instead of a raw one
+                val jsonResponse = JSONObject(message)
+                println(jsonResponse)
+                if (jsonResponse.has("SessionToken")) {
+                    println("found sessionToken")
+                    SocketService.instance.subscribe(Event.SERVER_RESPONSE, Handler {
+                        println("inside handler")
+                        if ((it.obj as Message).data[0].toInt() == 1) {
+                            handleSocketResponse()
+                        }
+                        else {
+                            println("connection refused")
+                        }
+                        true
+                    })
+
+                    println("sending request to server")
+                    SocketService.instance.sendMessage(Event.SOCKET_CONNECTION, (jsonResponse.get("SessionToken") as String).toByteArray(Charsets.UTF_8))
+                }
             }
+
             override fun onFailure(call: Call<ResponseBody?>?, t: Throwable?) {
                 val errMessage: String =
                     if (t is SocketTimeoutException)
@@ -54,14 +77,17 @@ class LoginActivity : AppCompatActivity() {
                     else
                         "Error: Couldn't authenticate ($t)"
                 println(errMessage)
-                MaterialAlertDialogBuilder(this@LoginActivity, R.style.Theme_MaterialComponents_Light_Dialog_Alert)
-                    .setMessage(errMessage)
-                    .setPositiveButton("Ok", null)
-                    .setNegativeButton("Retry", null)
-                    .show()
-                changeLoadingView(false)
             }
         })
+    }
+
+    fun handleSocketResponse() {
+        val progressBar: ProgressBar = findViewById(R.id.login_progressbar)
+        println("starting new intent")
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        finish()
     }
 
     private fun validateLoginInfo(): Boolean {
