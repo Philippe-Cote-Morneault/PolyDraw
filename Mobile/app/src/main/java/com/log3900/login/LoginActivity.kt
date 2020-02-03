@@ -1,15 +1,13 @@
 package com.log3900.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.PersistableBundle
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Callback
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -57,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
                     SocketService.instance.subscribe(Event.SERVER_RESPONSE, Handler {
                         println("inside handler")
                         if ((it.obj as Message).data[0].toInt() == 1) {
-                            handleSocketResponse()
+                            startMainActivity(username)
                         }
                         else {
                             println("connection refused")
@@ -81,9 +79,14 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    fun handleSocketResponse() {
-        val progressBar: ProgressBar = findViewById(R.id.login_progressbar)
-        println("starting new intent")
+    fun startMainActivity(username: String) {
+        val preferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        if (preferences != null) {
+            with (preferences.edit()) {
+                putString(getString(R.string.preference_file_username_key), username)
+                commit()
+            }
+        }
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
