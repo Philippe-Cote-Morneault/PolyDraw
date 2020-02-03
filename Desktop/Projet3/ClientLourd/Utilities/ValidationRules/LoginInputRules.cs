@@ -13,8 +13,12 @@ namespace ClientLourd.Utilities.ValidationRules
         public LoginInputRules()
         {
         }
-
+        
         public bool StringIsEmpty(string myInput)
+        {
+            return String.IsNullOrEmpty(myInput);
+        }
+        public bool StringIsWhiteSpace(string myInput)
         {
             return String.IsNullOrWhiteSpace(myInput);
         }
