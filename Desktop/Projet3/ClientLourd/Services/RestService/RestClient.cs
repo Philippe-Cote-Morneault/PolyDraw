@@ -16,7 +16,10 @@ namespace ClientLourd.Services.RestService
 
         public RestClient()
         {
-            _client = new RestSharp.RestClient(URL);
+            _client = new RestSharp.RestClient(URL)
+            {
+                Timeout = 10000,
+            };
         }
 
         public async Task<string> Login(string username, string password)

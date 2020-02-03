@@ -32,7 +32,6 @@
               <e p="RestConflictException.cs" t="Include" />
               <e p="RestException.cs" t="Include" />
             </e>
-            <e p="Socket" t="Include" />
           </e>
           <e p="NonBindable" t="Include">
             <e p="TLV.cs" t="Include" />
@@ -52,15 +51,17 @@
             <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
             <e p="MainWindow.g.cs" t="Include" />
             <e p="Views" t="Include">
-              <e p="Chat.g.cs" t="Include" />
-              <e p="Conversation.g.cs" t="Include" />
+              <e p="Controls" t="Include">
+                <e p="Chat.g.cs" t="Include" />
+                <e p="Conversation.g.cs" t="Include" />
+                <e p="Editor.g.cs" t="Include" />
+                <e p="Login.g.cs" t="Include" />
+              </e>
               <e p="Dialogs" t="Include">
                 <e p="ClosableErrorDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
               </e>
-              <e p="Editor.g.cs" t="Include" />
-              <e p="Login.g.cs" t="Include" />
-              <e p="Window" t="Include">
+              <e p="Windows" t="Include">
                 <e p="ChatWindow.g.cs" t="Include" />
               </e>
             </e>

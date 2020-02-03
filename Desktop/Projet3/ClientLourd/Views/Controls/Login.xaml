@@ -39,7 +39,7 @@
             <!--Logo-->
             <StackPanel Grid.Row="1">
                 <!-- Might change if we translate  ClientLourd in English-->
-                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../Resources/blacklogo.png" />
+                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../../Resources/blacklogo.png" />
             </StackPanel>
 
             <!--Username-->
