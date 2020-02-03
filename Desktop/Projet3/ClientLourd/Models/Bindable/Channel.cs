@@ -1,11 +1,12 @@
-﻿namespace ClientLourd.Models
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+
+namespace ClientLourd.Models.Bindable
 {
-    public class User : ModelBase
+    public class Channel : ModelBase
     {
-        public User(string name, string id)
+        public Channel()
         {
-            Name = name;
-            ID = id;
         }
 
         public string Name
@@ -23,19 +24,19 @@
 
         private string _name;
 
-        public string ID
+        public ObservableCollection<Message> Messages
         {
-            get { return _id; }
+            get { return _messages; }
             set
             {
-                if (value != _id)
+                if (value != _messages)
                 {
-                    _id = value;
+                    _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        private string _id;
+        private ObservableCollection<Message> _messages;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClientLourd.Models
+namespace ClientLourd.Models.Bindable
 {
     public class Message : ModelBase
     {

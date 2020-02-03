@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Text;
-using ClientLourd.Utilities.Enums;
+using ClientLourd.Models.Enums;
 using MessagePack;
 using MessagePack.Resolvers;
 
-namespace ClientLourd.Models
+namespace ClientLourd.Models.NonBindable
 
 {
-    public class TLV
+    public class Tlv
     {
-        public TLV(SocketMessageTypes type)
+        public Tlv(SocketMessageTypes type)
         {
             Type = (byte) ((int) type);
         }
@@ -19,7 +19,7 @@ namespace ClientLourd.Models
         /// </summary>
         /// <param name="type"></param>
         /// <param name="message"></param>
-        public TLV(SocketMessageTypes type, dynamic message)
+        public Tlv(SocketMessageTypes type, dynamic message)
         {
             Type = (byte) ((int) type);
             Value = MessagePackSerializer.Serialize(message, ContractlessStandardResolver.Options);
@@ -30,7 +30,7 @@ namespace ClientLourd.Models
         /// </summary>
         /// <param name="type"></param>
         /// <param name="message"></param>
-        public TLV(SocketMessageTypes type, string message)
+        public Tlv(SocketMessageTypes type, string message)
         {
             Type = (byte) ((int) type);
             Value = Encoding.ASCII.GetBytes(message);
