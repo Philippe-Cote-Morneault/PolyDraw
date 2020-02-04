@@ -14,6 +14,8 @@ type messageType struct {
 	ServerConnectionResponse int
 	ServerDisconnection      int
 	UserDisconnected         int
+	HealthCheck              int
+	HealthCheckResponse      int
 	MessageSent              int
 	MessageReceived          int
 	JoinChannel              int
@@ -29,6 +31,8 @@ var MessageType = &messageType{
 	ServerConnectionResponse: 1,
 	UserDisconnected:         2,
 	ServerDisconnection:      3,
+	HealthCheck:              9,
+	HealthCheckResponse:      10,
 	MessageSent:              20,
 	MessageReceived:          21,
 	JoinChannel:              22,
