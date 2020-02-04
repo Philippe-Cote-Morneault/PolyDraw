@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Callback
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -75,6 +76,12 @@ class LoginActivity : AppCompatActivity() {
                     else
                         "Error: Couldn't authenticate ($t)"
                 println(errMessage)
+
+                MaterialAlertDialogBuilder(this@LoginActivity)
+                    .setMessage("$errMessage. Please retry.")
+                    .setPositiveButton("OK", null)
+                    .show()
+                changeLoadingView(false)
             }
         })
     }
