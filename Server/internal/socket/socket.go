@@ -110,7 +110,7 @@ func SendMessageToSocketID(message SerializableMessage, socketID uuid.UUID) erro
 func SendRawMessageToSocketID(message RawMessage, id uuid.UUID) error {
 	m := clientSocketManagerInstance
 	if m == nil {
-		return fmt.Errorf("The clientSocketManger was not instanced")
+		panic("The clientSocketManger was not instanced")
 	}
 	defer m.mutexMap.Unlock()
 	m.mutexMap.Lock()
