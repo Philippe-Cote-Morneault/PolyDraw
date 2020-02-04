@@ -26,6 +26,7 @@ type HealthCheck struct {
 //Init the messenger service
 func (h *HealthCheck) Init() {
 	h.shutdown = make(chan bool)
+	h.closing = new(int32)
 	*h.closing = 0
 	h.connections = make(map[uuid.UUID]bool)
 	h.subscribe()
