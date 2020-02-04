@@ -120,6 +120,7 @@
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\User.cs" />
+    <Compile Include="Models\Constants\Networks.cs" />
     <Compile Include="Models\Enums\SocketMessageTypes.cs" />
     <Compile Include="Models\EventsArguments\MessageReceivedEventArgs.cs" />
     <Compile Include="Models\Exceptions\Rest\RestBadRequestException.cs" />

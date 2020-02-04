@@ -8,11 +8,11 @@
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
-             xmlns:c="clr-namespace:ClientLourd.ModelViews"
-             xmlns:controls="clr-namespace:ClientLourd.Views.Controls">
+             xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
-        <c:MainViewModel x:Key="MainViewModel" />
+        <viewModels:MainViewModel x:Key="MainViewModel" />
     </UserControl.Resources>
     <DockPanel>
         <DockPanel Background="WhiteSmoke" DockPanel.Dock="Bottom"

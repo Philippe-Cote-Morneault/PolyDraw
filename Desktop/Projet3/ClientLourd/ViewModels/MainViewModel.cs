@@ -1,16 +1,13 @@
 ﻿using System;
-using System.ComponentModel.Design;
-using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
-using ClientLourd.Views;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
-namespace ClientLourd.ModelViews
+namespace ClientLourd.ViewModels
 {
     class MainViewModel : ViewModelBase
     {

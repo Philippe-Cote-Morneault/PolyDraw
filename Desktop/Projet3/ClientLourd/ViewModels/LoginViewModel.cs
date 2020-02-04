@@ -1,18 +1,16 @@
-﻿using System;
-using System.Net.Sockets;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models.Exceptions.Rest;
 using ClientLourd.Services.RestService;
-using ClientLourd.Utilities.Commands;
 using ClientLourd.Services.SocketService;
+using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
-namespace ClientLourd.ModelViews
+namespace ClientLourd.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {

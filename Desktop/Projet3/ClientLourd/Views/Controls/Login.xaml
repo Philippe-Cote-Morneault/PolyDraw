@@ -6,10 +6,10 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
-             xmlns:viewModels="clr-namespace:ClientLourd.ModelViews"
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              Name="Control"
              mc:Ignorable="d">
     <UserControl.DataContext>

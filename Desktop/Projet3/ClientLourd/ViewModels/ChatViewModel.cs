@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ClientLourd.Models;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.Enums;
 using ClientLourd.Models.EventsArguments;
@@ -13,7 +12,7 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using MaterialDesignThemes.Wpf;
 
-namespace ClientLourd.ModelViews
+namespace ClientLourd.ViewModels
 {
     public class ChatViewModel : ViewModelBase
     {

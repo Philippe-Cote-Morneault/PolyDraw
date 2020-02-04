@@ -10,6 +10,7 @@ using System.Windows;
 using ClientLourd.Models;
 using MessagePack;
 using System.Timers;
+using ClientLourd.Models.Constants;
 using ClientLourd.Models.Enums;
 using ClientLourd.Models.NonBindable;
 using MessagePack.Resolvers;
@@ -22,8 +23,6 @@ namespace ClientLourd.Services.SocketService
         //private const int PORT = 3001;
         //private const string HostName = "127.0.0.1";
 
-        private const int PORT = 5001;
-        private const string HostName = "log3900.fsae.polymtl.ca";
         
         private Socket _socket;
         private NetworkStream _stream;
@@ -58,7 +57,7 @@ namespace ClientLourd.Services.SocketService
         {
             try
             {
-                var ip = Dns.GetHostAddresses(HostName)[0];
+                var ip = Dns.GetHostAddresses(Networks.HOST_NAME)[0];
 
                 // If connected on a local server, use the line below
                 //var ip = IPAddress.Parse(HostName);
@@ -67,7 +66,7 @@ namespace ClientLourd.Services.SocketService
                 _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 //Connect the socket to the end point
-                _socket.Connect(new IPEndPoint(ip, PORT));
+                _socket.Connect(new IPEndPoint(ip, Networks.SOCKET_PORT));
                 _stream = new NetworkStream(_socket);
             }
             catch (Exception e)

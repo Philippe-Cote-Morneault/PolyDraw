@@ -1,14 +1,10 @@
-﻿using ClientLourd.Models;
-using ClientLourd.Utilities.Commands;
-using System;
+﻿using System.ComponentModel;
 using System.Windows.Ink;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Utilities.Commands;
 
-
-namespace ClientLourd.ModelViews
+namespace ClientLourd.ViewModels
 {
     class EditorViewModel : ViewModelBase
     {

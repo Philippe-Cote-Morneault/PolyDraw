@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using ClientLourd.Models.Constants;
 using ClientLourd.Models.Exceptions.Rest;
 using RestSharp;
 using RestSharp.Serialization.Json;
@@ -10,13 +11,9 @@ namespace ClientLourd.Services.RestService
     public class RestClient
     {
         private RestSharp.RestClient _client;
-
-        private const string URL = "http://log3900.fsae.polymtl.ca:5000";
-        //private const string URL = "http://127.0.0.1:3000";
-
         public RestClient()
         {
-            _client = new RestSharp.RestClient(URL)
+            _client = new RestSharp.RestClient($"http://{Networks.HOST_NAME}:{Networks.REST_PORT}")
             {
                 Timeout = 10000,
             };

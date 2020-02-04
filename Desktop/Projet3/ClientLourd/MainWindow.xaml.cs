@@ -15,8 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
-using ClientLourd.ModelViews;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.ViewModels;
 using ClientLourd.Views.Windows;
 
 namespace ClientLourd

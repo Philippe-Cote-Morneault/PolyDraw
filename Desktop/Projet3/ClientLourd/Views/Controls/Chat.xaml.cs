@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using ClientLourd.ModelViews;
+using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls
 {
