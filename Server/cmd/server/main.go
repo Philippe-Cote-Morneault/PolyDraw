@@ -9,6 +9,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/services/healthcheck"
 	"gitlab.com/jigsawcorp/log3900/internal/services/logger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/router"
@@ -61,5 +62,5 @@ func registerServices() {
 	service.Add(&router.Router{})
 	service.Add(&logger.Logger{})
 	service.Add(&auth.Auth{})
-
+	service.Add(&healthcheck.HealthCheck{})
 }
