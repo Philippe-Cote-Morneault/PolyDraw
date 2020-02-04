@@ -1,7 +1,6 @@
 package router
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/google/uuid"
@@ -86,13 +85,11 @@ func (r *Router) route(message socket.RawMessageReceived) {
 }
 
 //handle a route that the router needs to handle
-func (r *Router) handle(messageType int, broadcastName string) error {
+func (r *Router) handle(messageType int, broadcastName string) {
 	if messageType > 255 || messageType < 0 {
-		return fmt.Errorf("Can not have a message type bellow 0 or over 255")
+		panic("Can not have a message type bellow 0 or over 255")
 	}
 	r.routes[byte(messageType)] = broadcastName
-
-	return nil
 }
 
 func (r *Router) subscribe() {
