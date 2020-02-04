@@ -38,6 +38,7 @@ func (h *HealthCheck) handleNewHost(socketID uuid.UUID) {
 		if !hasPhoned {
 			log.Printf("[Healthcheck] -> Connection %s did not respond. Closing the connection", socketID)
 			socket.RemoveClientFromID(socketID)
+			return
 		}
 
 		//Atomic check to make sure that the we can exit the loop
