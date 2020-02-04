@@ -53,34 +53,42 @@ namespace ClientLourd.Services.SocketService
             _socket.Close();
         }
 
-        public void InitializeConnection(string token)
+        public Task InitializeConnection(string token)
         {
-            try
+            return Task.Factory.StartNew(() =>
             {
-                var ip = Dns.GetHostAddresses(Networks.HOST_NAME)[0];
+                OnStartWaiting(this);
+                try
+                {
+                    var ip = Dns.GetHostAddresses(Networks.HOST_NAME)[0];
 
-                // If connected on a local server, use the line below
-                //var ip = IPAddress.Parse(HostName);
+                    // If connected on a local server, use the line below
+                    //var ip = IPAddress.Parse(HostName);
+
+                    //Create the socket
+                    _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+                    //Connect the socket to the end point
+                    _socket.Connect(new IPEndPoint(ip, Networks.SOCKET_PORT));
+                    _stream = new NetworkStream(_socket);
+
+                    InitializeTimer();
+
+                    //Start a message listener
+                    _receiver = new Task(MessagesListener);
+                    _receiver.Start();
+
+                    //send the session token
+                    sendMessage(new Tlv(SocketMessageTypes.ServerConnection, token));
+                    OnStopWaiting(this);
+                }
+                catch(Exception e)
+                {
+                    OnStopWaiting(this);
+                    throw;
+                }
                 
-                //Create the socket
-                _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-                //Connect the socket to the end point
-                _socket.Connect(new IPEndPoint(ip, Networks.SOCKET_PORT));
-                _stream = new NetworkStream(_socket);
-            }
-            catch (Exception e)
-            {
-                return;
-            }
-
-            InitializeTimer();
-
-            //Start a message listener
-            _receiver = new Task(MessagesListener);
-            _receiver.Start();
-
-            sendMessage(new Tlv(SocketMessageTypes.ServerConnection, token));
+            });
         }
 
         private void MessagesListener()

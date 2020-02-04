@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Services.RestService;
@@ -29,6 +30,8 @@ namespace ClientLourd.ViewModels
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient = new SocketClient();
+            SocketClient.StartWaiting += (source, args) => { IsWaiting = true; };
+            SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
         }
 

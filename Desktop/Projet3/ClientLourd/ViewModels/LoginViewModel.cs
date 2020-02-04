@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -67,10 +68,10 @@ namespace ClientLourd.ViewModels
             try
             {
                 var token = await RestClient.Login(username, password);
-                SocketClient.InitializeConnection(token);
+                await SocketClient.InitializeConnection(token);
                 IsLoggedIn = true;
             }
-            catch (RestException e)
+            catch (Exception e)
             {
                 await DialogHost.Show(new ClosableErrorDialog(e));
                 IsLoggedIn = false;

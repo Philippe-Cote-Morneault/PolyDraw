@@ -15,7 +15,9 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler UserCreatedChannel;
         public event SocketEventHandler HealthCheck;
         public event SocketEventHandler ConnectionLost;
-
+        public event SocketEventHandler StartWaiting;
+        public event SocketEventHandler StopWaiting;
+        
         protected virtual void OnConnectionLost(object source)
         {
             ConnectionLost?.Invoke(source, EventArgs.Empty);
@@ -55,6 +57,16 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnHealthCheck(object source)
         {
             HealthCheck?.Invoke(source, EventArgs.Empty);
+        }
+
+        protected virtual void OnStartWaiting(object source)
+        {
+            StartWaiting?.Invoke(source, EventArgs.Empty);
+        }
+
+        protected virtual void OnStopWaiting(object source)
+        {
+            StopWaiting?.Invoke(source, EventArgs.Empty);
         }
     }
 }
