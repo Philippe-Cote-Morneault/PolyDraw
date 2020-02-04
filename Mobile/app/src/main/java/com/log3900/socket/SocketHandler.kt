@@ -4,6 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.io.EOFException
+import java.io.IOException
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -57,9 +59,13 @@ object SocketHandler {
     }
 
     private fun onWriteMessage(message: Message) {
-        outputStream.writeByte(message.type.eventType.toInt())
-        outputStream.writeShort(message.data.size)
-        outputStream.write(message.data)
+        try {
+            outputStream.writeByte(message.type.eventType.toInt())
+            outputStream.writeShort(message.data.size)
+            outputStream.write(message.data)
+        } catch (e: IOException) {
+
+        }
     }
 
     fun onDisconnect() {
@@ -132,6 +138,8 @@ object SocketHandler {
         } catch (e: SocketException){
             // Gestion de la deconnexion a voir avec Samuel & Martin
             println("Connexion off")
+        } catch (e: EOFException) {
+
         }
     }
 }
