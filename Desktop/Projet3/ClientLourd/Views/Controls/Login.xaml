@@ -69,7 +69,7 @@
                     MaxLength="64"
                     materialDesign:HintAssist.Hint="Password"
                     materialDesign:TextFieldAssist.HasClearButton="True"
-                    materialDesign:HintAssist.HelperText="At least 4 characters" />
+                    materialDesign:HintAssist.HelperText="At least 8 characters" />
             </StackPanel>
 
             <!--Login button-->

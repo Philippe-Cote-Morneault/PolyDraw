@@ -30,7 +30,7 @@ namespace ClientLourd.Utilities.ValidationRules
 
         public bool PasswordLengthIsOk(string myInput)
         {
-            return myInput.Length >= 4 && myInput.Length <= 64;
+            return myInput.Length >= 8 && myInput.Length <= 64;
         }
         
         public bool IsAlphaNumeric(string myInput)
