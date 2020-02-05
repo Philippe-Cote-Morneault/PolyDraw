@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -29,8 +30,9 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
+	username := strings.ToLower(request.Username)
 
-	if len(request.Username) < 4 || len(request.Username) > 12 {
+	if len(username) < 4 || len(username) > 12 {
 		rbody.JSONError(w, http.StatusBadRequest, "The username must be between 4 and 12 characters")
 		return
 	}
@@ -38,10 +40,10 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 	//TEMPORARY FIX
 	//Get the user if not create it.
 	var user model.User
-	if !model.FindUserByName(request.Username, &user) {
+	if !model.FindUserByName(username, &user) {
 		//The user does not already exists create it
 		user = model.User{}
-		if user.New(request.Username) != nil {
+		if user.New(username) != nil {
 			rbody.JSONError(w, http.StatusBadRequest, "The user could not be created!")
 			return
 		}
