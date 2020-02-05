@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.util.TypedValue
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
@@ -58,15 +59,27 @@ class ChatFragment : Fragment() {
         setupToolbar(rootView)
 
         drawer = rootView.findViewById(R.id.fragment_chat_drawer_layout)
+
+        rootView.findViewById<TextInputEditText>(R.id.fragment_chat_new_message_input).setOnClickListener{ v -> onMessageTextInputClick(v)}
+
+        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+            val heightDiff = rootView.rootView.height - rootView.height
+            val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200f, context?.resources?.displayMetrics)
+            if (heightDiff > pixels) {
+                // TODO: Add call to scroll
+            }
+        }
+
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     private fun setupToolbar(rootView: View) {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
-        toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+        //toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
+        //toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
         toolbar.setTitle("General")
 
-        toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
+        //toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
     }
 
     private fun setupMessagesRecyclerView(rootView: View) {
@@ -110,9 +123,10 @@ class ChatFragment : Fragment() {
         {
             messageService.sendMessage(messageText)
         }
+    }
 
-        KeyboardHelper.hideKeyboard(activity as Activity)
-
+    private fun onMessageTextInputClick(v: View) {
+        messagesViewAdapter.scrollToBottom()
     }
 
     /**
@@ -121,10 +135,6 @@ class ChatFragment : Fragment() {
      * @param message the chat message received
      */
     private fun onNewMessageReceived(message: android.os.Message) {
-        messagesViewAdapter.messages.addLast(message.obj as ReceivedMessage)
-        messagesViewAdapter.notifyItemInserted(messagesViewAdapter.messages.size - 1)
-        if (!messagesRecyclerView.canScrollVertically(1)) {
-            messagesRecyclerView.smoothScrollToPosition(messagesViewAdapter.messages.size - 1)
-        }
+        messagesViewAdapter.appendMessage(message.obj as ReceivedMessage)
     }
 }

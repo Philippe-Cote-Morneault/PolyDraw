@@ -4,6 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.io.EOFException
+import java.io.IOException
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -21,14 +23,15 @@ enum class Request {
 }
 
 object SocketHandler {
-    private var socket: Socket
-    private var inputStream: DataInputStream
-    private var outputStream: DataOutputStream
+    private lateinit var socket: Socket
+    private lateinit var inputStream: DataInputStream
+    private lateinit var outputStream: DataOutputStream
     private var requestHandler: Handler? = null
     private var messageReadListener: Handler? = null
+    private var connectionErrorListener: Handler? = null
     private var readMessages = AtomicBoolean(false)
 
-    init {
+    fun connect() {
         socket = Socket("log3900.fsae.polymtl.ca", 5001)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
@@ -52,14 +55,22 @@ object SocketHandler {
         messageReadListener = handler
     }
 
+    fun setConnectionErrorListener(handler: Handler) {
+        connectionErrorListener = handler
+    }
+
     fun sendRequest(message: android.os.Message) {
         requestHandler?.sendMessage(message)
     }
 
     private fun onWriteMessage(message: Message) {
-        outputStream.writeByte(message.type.eventType.toInt())
-        outputStream.writeShort(message.data.size)
-        outputStream.write(message.data)
+        try {
+            outputStream.writeByte(message.type.eventType.toInt())
+            outputStream.writeShort(message.data.size)
+            outputStream.write(message.data)
+        } catch (e: IOException) {
+
+        }
     }
 
     fun onDisconnect() {
@@ -130,8 +141,15 @@ object SocketHandler {
             }
 
         } catch (e: SocketException){
-            // Gestion de la deconnexion a voir avec Samuel & Martin
-            println("Connexion off")
+            handlerError()
+        } catch (e: EOFException) {
+            handlerError()
         }
+    }
+
+    private fun handlerError() {
+        val message = android.os.Message()
+        message.what = SocketEvent.CONNECTION_ERROR.ordinal
+        connectionErrorListener?.sendMessage(message)
     }
 }

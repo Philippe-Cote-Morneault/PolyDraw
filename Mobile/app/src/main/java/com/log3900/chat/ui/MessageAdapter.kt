@@ -13,7 +13,6 @@ class MessageAdapter(val messages: LinkedList<ReceivedMessage>, val username: St
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val textView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_message, parent, false) as View
-
         return MessageViewHolder(textView, username)
     }
 
@@ -53,5 +52,14 @@ class MessageAdapter(val messages: LinkedList<ReceivedMessage>, val username: St
         if (!recyclerView.canScrollVertically(1)) {
             recyclerView.smoothScrollToPosition(messages.size - 1)
         }
+    }
+
+    fun isScrolledToBottom(): Boolean {
+        return !recyclerView.canScrollVertically(1)
+    }
+
+    fun scrollToBottom() {
+        //recyclerView.smoothScrollToPosition(messages.size - 1)
+        recyclerView.scrollToPosition(messages.size - 1)
     }
 }

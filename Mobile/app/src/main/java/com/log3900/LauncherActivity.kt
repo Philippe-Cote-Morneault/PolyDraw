@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch
 class LauncherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startService(Intent(this, SocketService::class.java))
+        //startService(Intent(this, SocketService::class.java))
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
