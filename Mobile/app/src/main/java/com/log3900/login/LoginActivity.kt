@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         val call = RestClient.authenticationService.authenticate(authData)
         call.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
-                val message: String? = response?.body()?.string() ?: "Error with response body"
+                val message: String = response?.body()?.string() ?: "Error with response body"
                 println("(${response?.code()}) $message")
                 changeLoadingView(false)
 
