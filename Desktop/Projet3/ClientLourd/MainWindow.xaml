@@ -138,8 +138,12 @@
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
                                             ToolTip="Disconnect and return to the login screen"
                                             Command="{Binding Path=LogoutCommand}"
-                                            CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}"
-                                            Content="Logout" />
+                                            CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Power" Height="15" Width="15" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Logout"/>
+                                        </StackPanel>
+                                    </Button>
                                 </ListViewItem>
                             </ListView>
                         </DockPanel>
