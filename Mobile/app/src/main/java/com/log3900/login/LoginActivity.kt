@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
                 println(jsonResponse)
                 if (jsonResponse.has("SessionToken")) {
                     println("found sessionToken")
-                    SocketService.instance.subscribe(Event.SERVER_RESPONSE, Handler {
+                    SocketService.instance.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
                         println("inside handler")
                         if ((it.obj as Message).data[0].toInt() == 1) {
                             startMainActivity(username)
