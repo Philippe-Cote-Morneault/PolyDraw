@@ -51,8 +51,12 @@ class LoginActivity : AppCompatActivity() {
                 println("(${response?.code()}) $message")
                 changeLoadingView(false)
 
-                if (response?.body() == null)
-                    return
+                if (response?.body() == null) {
+                    MaterialAlertDialogBuilder(this@LoginActivity)
+                        .setMessage("Oops, something went wrong! $response")
+                        .setPositiveButton("Ok", null)
+                        .show()
+                }
 
                 // TODO: Change the code to get a JSON response instead of a raw one
                 val jsonResponse = JSONObject(message)
