@@ -69,7 +69,7 @@ object SocketHandler {
             outputStream.writeShort(message.data.size)
             outputStream.write(message.data)
         } catch (e: IOException) {
-
+            handlerError()
         }
     }
 
@@ -148,6 +148,7 @@ object SocketHandler {
     }
 
     private fun handlerError() {
+        readMessages.set(false)
         val message = android.os.Message()
         message.what = SocketEvent.CONNECTION_ERROR.ordinal
         connectionErrorListener?.sendMessage(message)
