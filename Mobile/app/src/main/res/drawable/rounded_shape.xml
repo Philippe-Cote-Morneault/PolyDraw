@@ -4,12 +4,12 @@
     android:shape="rectangle"   >
 
     <solid
-        android:color="#888888" >
+        android:color="#ffffff" >
     </solid>
 
     <stroke
         android:width="2dp"
-        android:color="#C4CDE0" >
+        android:color="@color/color_primary_mid_brush" >
     </stroke>
 
     <padding

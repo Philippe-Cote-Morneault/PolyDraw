@@ -10,7 +10,7 @@
         android:id="@+id/fragment_chat_top_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#673AB7"
+        android:background="@color/color_primary_mid_brush"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,7 +42,7 @@
                 android:id="@+id/fragment_chat_bottom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="#B0FFFFFF"
+                android:background="#F5F5F5"
                 android:gravity="center"
                 android:minHeight="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
