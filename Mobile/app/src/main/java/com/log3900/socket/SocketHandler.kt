@@ -144,7 +144,7 @@ object SocketHandler {
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
                     connectionErrorListener?.sendEmptyMessage(SocketEvent.CONNECTION_ERROR.ordinal)
-                }, 15000)
+                }, 6000)
                 onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
             }
             else if (messageReadListener != null) {
