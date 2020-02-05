@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyTheme.DayNight">
+        android:theme="@style/MyTheme.DayNight"
+        android:name=".MainApplication">
         <activity
             android:name=".LauncherActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
