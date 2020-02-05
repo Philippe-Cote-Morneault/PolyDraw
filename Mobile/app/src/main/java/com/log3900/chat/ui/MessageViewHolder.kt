@@ -20,7 +20,7 @@ class MessageViewHolder : RecyclerView.ViewHolder {
     constructor(itemView: View, username: String) : super(itemView) {
         view = itemView.findViewById(R.id.list_item_message_outer_layout)
         messageTextView = itemView.findViewById(R.id.list_item_message_text)
-        usernameTextView = itemView.findViewById(R.id.list_item_message_username)
+        usernameTextView = itemView.findViewById(R.id.list_item_message_header)
         dateTextView = itemView.findViewById(R.id.list_item_message_date)
         messageTextView.maxLines = Integer.MAX_VALUE
         this.username = username

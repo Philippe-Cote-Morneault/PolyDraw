@@ -26,11 +26,11 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
-        <activity android:name=".login.LoginActivity" />
+        <activity
+            android:name=".login.LoginActivity"/>
 
         <service android:name=".socket.SocketService"/>
         <service android:name=".session.MonitoringService"/>
