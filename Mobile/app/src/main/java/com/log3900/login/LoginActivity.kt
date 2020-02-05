@@ -8,6 +8,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Callback
@@ -107,6 +108,7 @@ class LoginActivity : AppCompatActivity() {
                 commit()
             }
         }
+        Toast.makeText(applicationContext, "Welcome, $username!", Toast.LENGTH_LONG).show()
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
