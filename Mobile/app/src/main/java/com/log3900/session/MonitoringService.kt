@@ -6,7 +6,9 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.Message
 import com.log3900.socket.*
+import java.util.*
 
 
 class MonitoringService : Service() {
@@ -34,6 +36,11 @@ class MonitoringService : Service() {
                 println("socket service is not created")
             }
             socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, Handler {
+                handleEvent(it)
+                true
+            })
+
+            socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, Handler {
                 handleMessage(it)
                 true
             })
@@ -46,8 +53,17 @@ class MonitoringService : Service() {
         socketService = null
     }
 
-    fun handleMessage(message: android.os.Message) {
+    fun handleEvent(message: android.os.Message) {
         println("connection error!")
+        when (message.what) {
+            SocketEvent.CONNECTED.ordinal -> {
+
+            }
+        }
+    }
+
+    fun handleMessage(message: Message) {
+
     }
 
     inner class MonitoringBinder : Binder() {

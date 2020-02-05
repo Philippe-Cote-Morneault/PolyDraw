@@ -10,8 +10,10 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketException
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.timerTask
 
 enum class Request {
     SEND_MESSAGE,
@@ -30,11 +32,14 @@ object SocketHandler {
     private var messageReadListener: Handler? = null
     private var connectionErrorListener: Handler? = null
     private var readMessages = AtomicBoolean(false)
+    private var socketHealthcheckTimer: Timer = Timer()
 
     fun connect() {
-        socket = Socket("log3900.fsae.polymtl.ca", 5001)
+        socket = Socket("log3900.fsae.polymtl.ca", 5011)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
+
+
     }
 
     fun createRequestHandler() {
@@ -134,7 +139,15 @@ object SocketHandler {
 
             val message = Message(type, values)
 
-            if (messageReadListener != null) {
+            if (message.type == Event.HEALTH_CHECK_SERVER) {
+                socketHealthcheckTimer.cancel()
+                socketHealthcheckTimer = Timer()
+                socketHealthcheckTimer.schedule( timerTask {
+                    connectionErrorListener?.sendEmptyMessage(SocketEvent.CONNECTION_ERROR.ordinal)
+                }, 15000)
+                onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
+            }
+            else if (messageReadListener != null) {
                 val msg = android.os.Message()
                 msg.obj = message
                 messageReadListener?.sendMessage(msg)
