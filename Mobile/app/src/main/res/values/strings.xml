@@ -1,6 +1,6 @@
 <resources>
     <!--login-->
-    <string name="app_name">Mobile</string>
+    <string name="app_name">PolyDraw</string>
     <string name="login_welcome">Welcome!</string>
     <string name="login_username_hint">Username</string>
     <string name="login_username_error">The username cannot be empty</string>
