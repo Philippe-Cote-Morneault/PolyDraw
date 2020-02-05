@@ -57,11 +57,18 @@ class LoginActivity : AppCompatActivity() {
                         println("inside handler")
                         if ((it.obj as Message).data[0].toInt() == 1) {
                             startMainActivity(username)
+                            true
                         }
                         else {
                             println("connection refused")
+                            // TODO: Confirm if this returns
+                            MaterialAlertDialogBuilder(this@LoginActivity)
+                                .setMessage("Error: Connection refused.")
+                                .setPositiveButton("OK", null)
+                                .show()
+                            changeLoadingView(false)
+                            false
                         }
-                        true
                     })
 
                     println("sending request to server")
