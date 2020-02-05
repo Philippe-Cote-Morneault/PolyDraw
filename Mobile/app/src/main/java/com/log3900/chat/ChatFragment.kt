@@ -66,7 +66,7 @@ class ChatFragment : Fragment() {
             val heightDiff = rootView.rootView.height - rootView.height
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200f, context?.resources?.displayMetrics)
             if (heightDiff > pixels) {
-                // TODO: Add call to scroll
+                messagesViewAdapter.scrollToBottom()
             }
         }
 
@@ -119,9 +119,9 @@ class ChatFragment : Fragment() {
         val messageInput: TextInputEditText = v.rootView.findViewById(R.id.fragment_chat_new_message_input)
         val messageText = messageInput.text.toString()
         messageInput.text?.clear()
-        if (messageText != "") 
+        if (messageText != "" && messageText.trim().length > 0)
         {
-            messageService.sendMessage(messageText)
+            messageService.sendMessage(messageText.trim())
         }
     }
 
