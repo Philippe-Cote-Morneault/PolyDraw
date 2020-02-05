@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     fun sendLoginInfo(view: View) {
@@ -57,11 +59,18 @@ class LoginActivity : AppCompatActivity() {
                         println("inside handler")
                         if ((it.obj as Message).data[0].toInt() == 1) {
                             startMainActivity(username)
+                            true
                         }
                         else {
                             println("connection refused")
+                            // TODO: Confirm if this returns
+                            MaterialAlertDialogBuilder(this@LoginActivity)
+                                .setMessage("Error: Connection refused.")
+                                .setPositiveButton("OK", null)
+                                .show()
+                            changeLoadingView(false)
+                            false
                         }
-                        true
                     })
 
                     println("sending request to server")

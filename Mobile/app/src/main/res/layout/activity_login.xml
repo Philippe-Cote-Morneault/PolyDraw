@@ -7,12 +7,10 @@
     android:layout_height="match_parent"
     android:paddingLeft="400dp"
     android:paddingRight="400dp">
-    <!-- TODO Don't hardcode layout width...-->
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="350dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
+        android:layout_height="wrap_content"
         android:paddingStart="100dp"
         android:paddingTop="100dp"
         android:paddingEnd="100dp"
@@ -20,8 +18,8 @@
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
 
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -33,11 +31,13 @@
                 android:id="@+id/welcome_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
 
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="48dp"
                 android:text="@string/login_welcome"
                 android:textAlignment="center"
                 android:textSize="40sp"
+                app:layout_constraintBottom_toTopOf="@+id/logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,12 +46,12 @@
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
 
+                android:layout_marginBottom="48dp"
                 android:src="@drawable/polydraw"
+                app:layout_constraintBottom_toTopOf="@+id/login_username_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/welcome_text" />
+                app:layout_constraintStart_toStartOf="parent" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -59,14 +59,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="64dp"
                 android:layout_marginEnd="24dp"
 
+                android:layout_marginBottom="32dp"
                 android:hint="@string/login_username_hint"
                 app:errorEnabled="true"
+                app:layout_constraintBottom_toTopOf="@+id/login_password_layout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/logo">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
@@ -81,17 +81,17 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/login_password_layout"
                 android:layout_width="match_parent"
-                android:layout_height="76dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="64dp"
                 android:layout_marginEnd="24dp"
+                android:layout_marginBottom="16dp"
                 android:hint="@string/login_password_hint"
                 app:endIconMode="password_toggle"
-                app:errorEnabled="true"
 
+                app:errorEnabled="true"
+                app:layout_constraintBottom_toTopOf="@+id/login_btn"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/login_username_layout">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
@@ -108,14 +108,12 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
 
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:onClick="sendLoginInfo"
                 android:text="@string/login_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/login_password_layout"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ProgressBar
                 android:id="@+id/login_progressbar"
@@ -124,13 +122,11 @@
                 android:layout_marginStart="24dp"
 
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/login_btn"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/login_password_layout"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
