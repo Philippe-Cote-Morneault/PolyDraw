@@ -10,7 +10,7 @@ import (
 )
 
 func (h *HealthCheck) handleNewHost(socketID uuid.UUID) {
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 5)
 
 	for {
 
@@ -28,7 +28,7 @@ func (h *HealthCheck) handleNewHost(socketID uuid.UUID) {
 			socket.RemoveClientFromID(socketID)
 		}
 
-		time.Sleep(time.Second * 10)
+		time.Sleep(time.Second * 5)
 
 		//Check if the client has phoned back home
 		h.m.RLock()
