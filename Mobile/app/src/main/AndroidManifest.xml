@@ -33,5 +33,6 @@
         <activity android:name=".login.LoginActivity" />
 
         <service android:name=".socket.SocketService"/>
+        <service android:name=".session.MonitoringService"/>
     </application>
 </manifest>
