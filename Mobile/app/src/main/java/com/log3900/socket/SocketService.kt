@@ -133,6 +133,9 @@ class SocketService : Service() {
         }).start()
     }
 
+    fun disconnect() {
+        
+    }
     override fun onCreate() {
         super.onCreate()
         instance = this
