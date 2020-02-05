@@ -11,12 +11,10 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 
 enum class SocketEvent {
-    CONNECTION_LOST,
+    CONNECTION_ERROR,
     CONNECTED,
-    CONNECTION_FAILED,
     DISCONNECTED
 }
-
 
 class SocketService : Service() {
     private lateinit var socketHandler: SocketHandler

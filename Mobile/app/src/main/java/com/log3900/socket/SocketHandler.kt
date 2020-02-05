@@ -141,16 +141,15 @@ object SocketHandler {
             }
 
         } catch (e: SocketException){
-            // Gestion de la deconnexion a voir avec Samuel & Martin
-            println("Connexion off")
+            handlerError()
         } catch (e: EOFException) {
-
+            handlerError()
         }
     }
 
-    private fun handlerError(error: SocketEvent) {
+    private fun handlerError() {
         val message = android.os.Message()
-        message.what = error.ordinal
+        message.what = SocketEvent.CONNECTION_ERROR.ordinal
         connectionErrorListener?.sendMessage(message)
     }
 }
