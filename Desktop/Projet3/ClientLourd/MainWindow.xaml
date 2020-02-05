@@ -127,6 +127,12 @@
                     <!--Hamburger menu-->
                     <materialDesign:DrawerHost.LeftDrawerContent>
                         <DockPanel>
+                            <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" Padding="10">
+                                <StackPanel Orientation="Vertical">
+                                    <materialDesign:PackIcon Kind="Person" Height="40" Width="40" HorizontalAlignment="Center" ></materialDesign:PackIcon>
+                                    <TextBlock Text="{Binding Username}" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                                </StackPanel>
+                            </materialDesign:ColorZone>
                             <ListView>
                                 <ListViewItem>
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
