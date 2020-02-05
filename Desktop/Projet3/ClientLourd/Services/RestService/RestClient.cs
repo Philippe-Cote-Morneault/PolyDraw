@@ -13,7 +13,10 @@ namespace ClientLourd.Services.RestService
         private RestSharp.RestClient _client;
         public RestClient()
         {
+
             _client = new RestSharp.RestClient($"http://{Networks.HOST_NAME}:{Networks.REST_PORT}")
+            // For local server usage
+            //_client = new RestSharp.RestClient("http://127.0.0.1:3000")
             {
                 Timeout = 10000,
             };

@@ -13,13 +13,14 @@ namespace ClientLourd.Views.Controls
         public Login()
         {
             InitializeComponent();
-            this.Loaded += Load;
+            Loaded += Load;
         }
 
         public void Init()
         {
             PasswordBox.Clear();
             ((LoginViewModel) DataContext).Init();
+
         }
 
         public void Load(object sender, RoutedEventArgs e)

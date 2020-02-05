@@ -102,8 +102,6 @@ namespace ClientLourd.ViewModels
             Logout();
         }
 
-
-   
         public delegate void ChatOpenHandler(object source, EventArgs args);
 
         public event ChatOpenHandler ChatOpen;

@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls
@@ -9,7 +11,15 @@ namespace ClientLourd.Views.Controls
         {
             InitializeComponent();
             DataContext = new ChatViewModel();
+            (DataContext as ChatViewModel).ChatOpen += OnChatOpen;
+
         }
+
+        private void OnChatOpen(object source, EventArgs args)
+        {
+            MessageTextBox.Focus();
+        }
+
 
         public void Init()
         {

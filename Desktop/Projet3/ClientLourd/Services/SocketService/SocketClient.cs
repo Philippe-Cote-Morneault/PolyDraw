@@ -19,7 +19,7 @@ namespace ClientLourd.Services.SocketService
 {
     public class SocketClient : SocketEventsPublisher
     {
-        // If running on a local server, comment out these lines
+        // For local server usage
         //private const int PORT = 3001;
         //private const string HostName = "127.0.0.1";
 
@@ -69,7 +69,8 @@ namespace ClientLourd.Services.SocketService
                     _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                     //Connect the socket to the end point
-                    _socket.Connect(new IPEndPoint(ip, Networks.SOCKET_PORT));
+                    //_socket.Connect(new IPEndPoint(ip, Networks.SOCKET_PORT));
+                    _socket.Connect(new IPEndPoint(ip, 3001));
                     _stream = new NetworkStream(_socket);
 
                     InitializeTimer();

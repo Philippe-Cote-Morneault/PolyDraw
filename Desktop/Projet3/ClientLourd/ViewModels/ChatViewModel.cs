@@ -67,7 +67,8 @@ namespace ClientLourd.ViewModels
 
         private void OnChatOpen(object source, EventArgs args)
         {
-      //      MessageBox.Show("Test");
+            OnChatOpen(source);
+
         }
 
         public override void Init()
@@ -102,10 +103,14 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(
-                           param => ((DrawerHost) param[1]).IsRightDrawerOpen =
-                               !((DrawerHost) param[1]).IsRightDrawerOpen, param => (bool) param[0]));
+                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(param => OpenChatDrawer(param), param => (bool) param[0]));
             }
+        }
+
+        public void OpenChatDrawer(object[] param)
+        {
+            ((DrawerHost)param[1]).IsRightDrawerOpen = !((DrawerHost)param[1]).IsRightDrawerOpen;
+            OnChatOpen(this);
         }
 
         RelayCommand<object[]> _sendMessageCommand;
@@ -146,7 +151,16 @@ namespace ClientLourd.ViewModels
             }
         }
 
-
         private ObservableCollection<Channel> _channels;
+
+        public delegate void ChatOpenHandler(object source, EventArgs args);
+
+        public event ChatOpenHandler ChatOpen;
+
+        protected virtual void OnChatOpen(object source)
+        {
+            ChatOpen?.Invoke(source, EventArgs.Empty);
+        }
+
     }
 }
