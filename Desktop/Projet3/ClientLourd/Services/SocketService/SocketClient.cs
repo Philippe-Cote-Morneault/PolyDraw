@@ -175,7 +175,7 @@ namespace ClientLourd.Services.SocketService
             _pollTimer = new Timer(4000);
             _pollTimer.Elapsed += CheckConnection;
             _pollTimer.Start();
-            _healthCheckTimer = new Timer(15000);
+            _healthCheckTimer = new Timer(60000);
             _healthCheckTimer.Elapsed += TriggerConnectionLost;
             _healthCheckTimer.Start();
         }
