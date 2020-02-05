@@ -6,7 +6,6 @@ import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
-import java.net.Socket
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
@@ -64,7 +63,7 @@ class MessageService {
     private fun initialize() {
         socketService = SocketService.instance
 
-        socketService.subscribe(Event.MESSAGE_RECEIVED, Handler {
+        socketService.subscribeToMessage(Event.MESSAGE_RECEIVED, Handler {
             receiveMessage(it.obj as com.log3900.socket.Message)
             true
         })

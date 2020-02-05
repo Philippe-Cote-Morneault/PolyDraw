@@ -23,14 +23,15 @@ enum class Request {
 }
 
 object SocketHandler {
-    private var socket: Socket
-    private var inputStream: DataInputStream
-    private var outputStream: DataOutputStream
+    private lateinit var socket: Socket
+    private lateinit var inputStream: DataInputStream
+    private lateinit var outputStream: DataOutputStream
     private var requestHandler: Handler? = null
     private var messageReadListener: Handler? = null
+    private var connectionErrorListener: Handler? = null
     private var readMessages = AtomicBoolean(false)
 
-    init {
+    fun connect() {
         socket = Socket("log3900.fsae.polymtl.ca", 5001)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
@@ -52,6 +53,10 @@ object SocketHandler {
 
     fun setMessageReadListener(handler: Handler) {
         messageReadListener = handler
+    }
+
+    fun setConnectionErrorListener(handler: Handler) {
+        connectionErrorListener = handler
     }
 
     fun sendRequest(message: android.os.Message) {
@@ -141,5 +146,11 @@ object SocketHandler {
         } catch (e: EOFException) {
 
         }
+    }
+
+    private fun handlerError(error: SocketEvent) {
+        val message = android.os.Message()
+        message.what = error.ordinal
+        connectionErrorListener?.sendMessage(message)
     }
 }
