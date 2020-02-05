@@ -22,7 +22,7 @@
                     <Setter Property="Width"
                             Value="{Binding ElementName=ConversationList, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=1.5}" />
                     <Setter Property="IsEnabled" Value="False" />
-                    <Stytsteste.Triggers>
+                    <Style.Triggers>
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
                                 <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
