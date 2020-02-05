@@ -58,7 +58,8 @@
                                                                      RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                                         </MultiBinding>
                                                     </DataTrigger.Binding>
-                                                    <Setter Property="Background" Value="LightBlue" />
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -71,17 +72,74 @@
                                     </materialDesign:Chip.Icon>
                                 </materialDesign:Chip>
                                 <materialDesign:Card
-                                    Padding="5"
+                                    UniformCornerRadius="10"
+                                    Padding="10"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                    <materialDesign:Card.Style>
+                                        <Style TargetType="materialDesign:Card">
+                                            <Style.Triggers>
+                                                <DataTrigger Value="true">
+                                                    <DataTrigger.Binding>
+                                                        <MultiBinding
+                                                            Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                            <Binding Path="User.Name" />
+                                                            <Binding Path="DataContext.Username"
+                                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+                                                    <Setter  Property="Background"  Value="{StaticResource PrimaryHueMidBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:Card.Style>
                                     <TextBlock TextWrapping="Wrap"
-                                               Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                               Text="{Binding Content}" />
+                                               FontSize="16"
+                                               Text="{Binding Content}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Value="true">
+                                                                        <DataTrigger.Binding>
+                                                                            <MultiBinding
+                                                                                Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                                                <Binding Path="User.Name" />
+                                                                                <Binding Path="DataContext.Username"
+                                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                                            </MultiBinding>
+                                                                        </DataTrigger.Binding>
+                                                                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                        </TextBlock>
                                 </materialDesign:Card>
                             </StackPanel>
                         </Border>
                         <TextBlock Margin="5" TextWrapping="Wrap"
-                                   Style="{StaticResource MaterialDesignOverlineTextBlock}" VerticalAlignment="Center"
-                                   Text="{Binding Date, Converter={StaticResource DateConverter}}" />
+                                   FontSize="10"
+                                    VerticalAlignment="Center"
+                                   Text="{Binding Date, Converter={StaticResource DateConverter}}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Value="true">
+                                                    <DataTrigger.Binding>
+                                                        <MultiBinding
+                                                            Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                            <Binding Path="User.Name" />
+                                                            <Binding Path="DataContext.Username"
+                                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                        </MultiBinding>
+                                                    </DataTrigger.Binding>
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

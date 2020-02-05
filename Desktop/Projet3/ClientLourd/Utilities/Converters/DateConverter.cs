@@ -11,7 +11,7 @@ namespace ClientLourd.Utilities.Converters
             DateTime date = (DateTime) value;
             if (date.Date == DateTime.Today)
             {
-                return date.ToString("hh:mm:ss tt");
+                return date.ToString("HH:mm:ss");
             }
             return date.ToString("dd/MM/yyyy");
         }
