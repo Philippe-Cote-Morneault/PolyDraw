@@ -22,7 +22,7 @@ namespace ClientLourd.Services.SocketService
         //private const int PORT = 3001;
         //private const string HostName = "127.0.0.1";
 
-        private const int PORT = 5001;
+        private const int PORT = 5011;
         private const string HostName = "log3900.fsae.polymtl.ca";
         
         private Socket _socket;
@@ -175,7 +175,7 @@ namespace ClientLourd.Services.SocketService
             _pollTimer = new Timer(4000);
             _pollTimer.Elapsed += CheckConnection;
             _pollTimer.Start();
-            _healthCheckTimer = new Timer(10000);
+            _healthCheckTimer = new Timer(15000);
             _healthCheckTimer.Elapsed += TriggerConnectionLost;
             _healthCheckTimer.Start();
         }
