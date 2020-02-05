@@ -46,9 +46,12 @@ class LoginActivity : AppCompatActivity() {
         val call = RestClient.authenticationService.authenticate(authData)
         call.enqueue(object : Callback<ResponseBody?> {
             override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
-                val message: String? = response?.body()?.string() ?: "Error with response body"
+                val message: String = response?.body()?.string() ?: "Error with response body"
                 println("(${response?.code()}) $message")
                 changeLoadingView(false)
+
+                if (response?.body() == null)
+                    return
 
                 // TODO: Change the code to get a JSON response instead of a raw one
                 val jsonResponse = JSONObject(message)
@@ -88,7 +91,8 @@ class LoginActivity : AppCompatActivity() {
 
                 MaterialAlertDialogBuilder(this@LoginActivity)
                     .setMessage("$errMessage. Please retry.")
-                    .setPositiveButton("OK", null)
+                    .setPositiveButton("Retry") { _, _ -> sendLoginInfo(view) }
+                    .setNegativeButton("Cancel", null)
                     .show()
                 changeLoadingView(false)
             }
