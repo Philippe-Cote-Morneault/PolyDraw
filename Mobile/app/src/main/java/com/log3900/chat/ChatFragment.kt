@@ -66,7 +66,7 @@ class ChatFragment : Fragment() {
             val heightDiff = rootView.rootView.height - rootView.height
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200f, context?.resources?.displayMetrics)
             if (heightDiff > pixels) {
-                // TODO: Add call to scroll
+                messagesViewAdapter.scrollToBottom()
             }
         }
 

@@ -27,7 +27,8 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
         <activity android:name=".login.LoginActivity" />
 
