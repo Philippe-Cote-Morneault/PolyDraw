@@ -22,7 +22,7 @@ class MonitoringService : Service() {
     private var socketService: SocketService? = null
 
     companion object {
-        lateinit var instance: MonitoringService
+        var instance: MonitoringService? = null
     }
 
     override fun onBind(intent: Intent?): IBinder? {
