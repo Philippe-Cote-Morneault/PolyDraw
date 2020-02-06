@@ -27,11 +27,26 @@ namespace ClientLourd.Services.SocketService
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        private Timer _timer;
+        private Timer _healthCheckTimer;
 
         public SocketClient()
         {
+            HealthCheck += OnHealthCheck;
         }
+
+        private void OnHealthCheck(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                //We stop the timer 
+                _healthCheckTimer.Stop();
+                //We send the healthCheck response to the server
+                sendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
+                //Restart the timer
+                _healthCheckTimer.Start();
+            });
+        }
+
 
         public void sendMessage(Tlv tlv)
         {
@@ -46,9 +61,8 @@ namespace ClientLourd.Services.SocketService
 
         public void Close()
         {
-            _timer.Stop();
-            _timer.Dispose();
             sendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
+            _healthCheckTimer.Close();
             _stream.Close();
             _socket.Close();
         }
@@ -83,7 +97,7 @@ namespace ClientLourd.Services.SocketService
                     sendMessage(new Tlv(SocketMessageTypes.ServerConnection, token));
                     OnStopWaiting(this);
                 }
-                catch(Exception e)
+                catch
                 {
                     OnStopWaiting(this);
                     throw;
@@ -94,7 +108,6 @@ namespace ClientLourd.Services.SocketService
 
         private void MessagesListener()
         {
-            //TODO correct buffer size
             byte[] typeAndLength = new byte[3];
             dynamic data = null;
 
@@ -142,9 +155,9 @@ namespace ClientLourd.Services.SocketService
                             throw new InvalidDataException();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
-                    // Here, an exception can be thrown on a logout.
+                    // Here, an exception can be thrown on a logout or if the read timeout.
                 }
             }
         }
@@ -164,23 +177,16 @@ namespace ClientLourd.Services.SocketService
 
         private void InitializeTimer()
         {
-            _timer = new Timer(4000);
-            _timer.Elapsed += CheckConnection;
-            _timer.Start();
+            _healthCheckTimer = new Timer(60000);
+            _healthCheckTimer.Elapsed += TriggerConnectionLost;
+            _healthCheckTimer.Start();
         }
 
-        private void CheckConnection(object sender, ElapsedEventArgs e)
+        private void TriggerConnectionLost(object sender, ElapsedEventArgs e)
         {
-            _timer.Stop();
-
-            if (!IsConnected())
-            {
-                OnConnectionLost(this);
-                return;
-            }
-
-            _timer.Start();
+            OnConnectionLost(this);
         }
+        
 
         public bool IsConnected()
         {
@@ -188,7 +194,7 @@ namespace ClientLourd.Services.SocketService
             {
                 return !(!_socket.Connected || (_socket.Poll(500, SelectMode.SelectRead) && (_socket.Available == 0)));
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }
