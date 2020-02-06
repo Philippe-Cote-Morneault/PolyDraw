@@ -2,6 +2,7 @@ package com.log3900
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.MenuItem
 import android.view.View
 
@@ -17,6 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.login.LoginActivity
+import com.log3900.socket.SocketEvent
 
 
 import com.log3900.socket.SocketService
@@ -71,10 +73,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        SocketService.instance?.disconnectSocket()
-        finish()
+        val handler = Handler{
+            intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+            true
+        }
+        SocketService.instance?.disconnectSocket(handler)
     }
 
 }

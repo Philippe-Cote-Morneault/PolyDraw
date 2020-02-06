@@ -8,6 +8,7 @@ import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
 
 enum class SocketEvent {
@@ -93,6 +94,10 @@ class SocketService : Service() {
         }
     }
 
+    fun unsubscribeFromEvent(event: SocketEvent, handler: Handler) {
+
+    }
+
     private fun onMessageRead(message: android.os.Message) {
         if (message.obj is Message) {
             notifyMessageSubscribers(message.obj as Message)
@@ -133,10 +138,17 @@ class SocketService : Service() {
         }).start()
     }
 
-    fun disconnectSocket() {
-        val req = android.os.Message()
-        req.what = Request.DISCONNECT.ordinal
-        socketHandler.sendRequest(req)
+    fun disconnectSocket(handler: Handler?) {
+        //val req = android.os.Message()
+        //req.what = Request.DISCONNECT.ordinal
+        //socketHandler.sendRequest(req)
+        socketHandler.setDisconnectionListener(Handler {
+            handler?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
+            notifyEventSubscribers(SocketEvent.DISCONNECTED, it)
+            socketHandler.setConnectionErrorListener(null)
+            true
+        })
+        socketHandler.onDisconnect()
     }
 
     fun getSocketState(): State {

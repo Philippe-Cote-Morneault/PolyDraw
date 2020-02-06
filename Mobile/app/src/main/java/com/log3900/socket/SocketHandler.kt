@@ -28,6 +28,7 @@ enum class Request {
 enum class State {
     CONNECTED,
     DISCONNECTED,
+    DISCONNECTING,
     ERROR
 }
 
@@ -38,6 +39,7 @@ object SocketHandler {
     private var requestHandler: Handler? = null
     private var messageReadListener: Handler? = null
     private var connectionErrorListener: Handler? = null
+    private var disconnectionErrorListener: Handler? = null
     private var readMessages = AtomicBoolean(false)
     private var socketHealthcheckTimer: Timer = Timer()
     public var state: AtomicReference<State> = AtomicReference(State.DISCONNECTED)
@@ -64,13 +66,18 @@ object SocketHandler {
         lock.await()
     }
 
-    fun setMessageReadListener(handler: Handler) {
+    fun setMessageReadListener(handler: Handler?) {
         messageReadListener = handler
     }
 
-    fun setConnectionErrorListener(handler: Handler) {
+    fun setConnectionErrorListener(handler: Handler?) {
         connectionErrorListener = handler
     }
+
+    fun setDisconnectionListener(handler: Handler?) {
+        disconnectionErrorListener = handler
+    }
+
 
     fun sendRequest(message: android.os.Message) {
         requestHandler?.sendMessage(message)
@@ -87,8 +94,8 @@ object SocketHandler {
     }
 
     fun onDisconnect() {
+        state.set(State.DISCONNECTING)
         socket.close()
-        state.set(State.DISCONNECTED)
     }
 
     private fun handleRequest(message: android.os.Message) {
@@ -170,7 +177,12 @@ object SocketHandler {
     }
 
     private fun handlerError() {
-        if (state.get() != State.ERROR) {
+        if (state.get() == State.DISCONNECTING) {
+            state.set(State.DISCONNECTED)
+            readMessages.set(false)
+            disconnectionErrorListener?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
+        }
+        else if (state.get() != State.ERROR) {
             state.set(State.ERROR)
             readMessages.set(false)
             val message = android.os.Message()
