@@ -46,6 +46,7 @@ namespace ClientLourd
         {
             ((ViewModelBase) DataContext).Init();
             MenuToggleButton.IsChecked = false;
+            ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();
         }
 

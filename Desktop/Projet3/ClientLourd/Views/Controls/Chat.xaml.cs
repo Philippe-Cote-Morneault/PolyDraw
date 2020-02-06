@@ -24,6 +24,7 @@ namespace ClientLourd.Views.Controls
         public void Init()
         {
             ((ChatViewModel) DataContext).Init();
+            MessageTextBox.Clear();
         }
     }
 }
