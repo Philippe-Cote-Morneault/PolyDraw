@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun logout() {
         intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-        SocketService.instance.disconnect()
+        SocketService.instance?.disconnectSocket()
         finish()
     }
 
