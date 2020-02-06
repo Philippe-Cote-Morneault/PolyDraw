@@ -17,7 +17,8 @@
         <activity
             android:name=".LauncherActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +31,8 @@
             android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
         <activity
-            android:name=".login.LoginActivity"/>
+            android:name=".login.LoginActivity"
+            android:noHistory="true"/>
 
         <activity android:name=".shared.ui.WarningDialog" />
 
