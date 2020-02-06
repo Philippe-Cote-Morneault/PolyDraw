@@ -20,7 +20,6 @@ import com.log3900.R
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
@@ -47,63 +46,62 @@ class LoginActivity : AppCompatActivity() {
 
         val authData = AuthenticationRequest(username)
         val call = RestClient.authenticationService.authenticate(authData)
-        call.enqueue(object : Callback<ResponseBody?> {
-            override fun onResponse(call: Call<ResponseBody?>?, response: Response<ResponseBody?>?) {
-                val message: String = response?.body()?.string() ?: "Error with response body"
-                println("(${response?.code()}) $message")
-                changeLoadingView(false)
-
-                if (response?.body() == null) {
-                    MaterialAlertDialogBuilder(this@LoginActivity)
-                        .setMessage("Oops, something went wrong! $response")
-                        .setPositiveButton("Ok", null)
-                        .show()
-                }
-
-                // TODO: Change the code to get a JSON response instead of a raw one
-                val jsonResponse = JSONObject(message)
-                println(jsonResponse)
-                if (jsonResponse.has("SessionToken")) {
-                    println("found sessionToken")
-                    SocketService.instance.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
-                        println("inside handler")
-                        if ((it.obj as Message).data[0].toInt() == 1) {
-                            startMainActivity(username)
-                            true
-                        }
-                        else {
-                            println("connection refused")
-                            // TODO: Confirm if this returns
-                            MaterialAlertDialogBuilder(this@LoginActivity)
-                                .setMessage("Error: Connection refused.")
-                                .setPositiveButton("OK", null)
-                                .show()
-                            changeLoadingView(false)
-                            false
-                        }
-                    })
-
-                    println("sending request to server")
-                    SocketService.instance.sendMessage(Event.SOCKET_CONNECTION, (jsonResponse.get("SessionToken") as String).toByteArray(Charsets.UTF_8))
+        call.enqueue(object : Callback<AuthResponse> {
+            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                val res: AuthResponse = response.body() ?: parseError(response.errorBody().string())
+                when(response.code()) {
+                    200 -> handleSuccessAuth(res.bearer!!, res.sessionToken!!)
+                    else -> handleErrorAuth(res.error ?: "Internal error")
                 }
             }
 
-            override fun onFailure(call: Call<ResponseBody?>?, t: Throwable?) {
+            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                 val errMessage: String =
                     if (t is SocketTimeoutException)
-                        "Error: Timeout"
+                        "Timeout"
                     else
-                        "Error: Couldn't authenticate ($t)"
+                        "Couldn't authenticate ($t)"
                 println(errMessage)
-
-                MaterialAlertDialogBuilder(this@LoginActivity)
-                    .setMessage("$errMessage. Please retry.")
-                    .setPositiveButton("Retry") { _, _ -> sendLoginInfo(view) }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-                changeLoadingView(false)
+                handleErrorAuth(errMessage)
             }
         })
+    }
+
+    private fun handleSuccessAuth(bearer: String, session: String) {
+        // TODO: Change the code to get a JSON response instead of a raw one
+        println("found sessionToken")
+        SocketService.instance.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
+            println("inside handler")
+            if ((it.obj as Message).data[0].toInt() == 1) {
+                val username = findViewById<TextInputEditText>(R.id.username).text.toString()
+                startMainActivity(username)
+                true
+            } else {
+                println("connection refused")
+                handleErrorAuth("Connection refused.")
+                false
+            }
+        })
+
+        println("sending request to server")
+        SocketService.instance.sendMessage(
+            Event.SOCKET_CONNECTION,
+            session.toByteArray(Charsets.UTF_8))
+    }
+
+
+    private fun handleErrorAuth(error: String) {
+        MaterialAlertDialogBuilder(this@LoginActivity)
+            .setMessage("Error: $error")
+            .setPositiveButton("Retry", null) //{ _, _ -> sendLoginInfo() }
+            .setNegativeButton("Cancel", null)
+            .show()
+        changeLoadingView(false)
+    }
+
+    private fun parseError(errorBody: String): AuthResponse {
+        val json = JSONObject(errorBody)
+        return AuthResponse(null, null, error = json["Error"].toString())
     }
 
     fun startMainActivity(username: String) {

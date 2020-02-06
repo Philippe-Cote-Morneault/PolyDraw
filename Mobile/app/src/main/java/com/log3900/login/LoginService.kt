@@ -1,5 +1,7 @@
 package com.log3900.login
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -16,8 +18,12 @@ object RestClient {
         .writeTimeout(20, TimeUnit.SECONDS)
         .build()
 
+    private val moshi = Moshi.Builder()
+        .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
+        .build()
+
     private val retrofit = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(baseUrl)
         .client(httpClient)
         .build()
