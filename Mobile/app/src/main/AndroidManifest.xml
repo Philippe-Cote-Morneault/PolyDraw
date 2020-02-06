@@ -32,6 +32,8 @@
         <activity
             android:name=".login.LoginActivity"/>
 
+        <activity android:name=".shared.ui.WarningDialog" />
+
         <service android:name=".socket.SocketService"/>
         <service android:name=".session.MonitoringService"/>
     </application>
