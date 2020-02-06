@@ -35,8 +35,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="48dp"
                 android:text="@string/login_welcome"
+                android:textColor="@color/color_on_background"
                 android:textAlignment="center"
-                android:textSize="40sp"
+                android:textSize="30sp"
                 app:layout_constraintBottom_toTopOf="@+id/logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +49,7 @@
                 android:layout_height="wrap_content"
 
                 android:layout_marginBottom="48dp"
-                android:src="@drawable/polydraw"
+                android:src="@drawable/polydraw_black"
                 app:layout_constraintBottom_toTopOf="@+id/login_username_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -72,6 +73,7 @@
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/color_background"
                     android:inputType="text"
                     android:maxLength="12"
                     android:maxLines="1" />
@@ -87,8 +89,8 @@
                 android:layout_marginBottom="16dp"
                 android:hint="@string/login_password_hint"
                 app:endIconMode="password_toggle"
-
                 app:errorEnabled="true"
+
                 app:layout_constraintBottom_toTopOf="@+id/login_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -97,6 +99,7 @@
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/color_background"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>

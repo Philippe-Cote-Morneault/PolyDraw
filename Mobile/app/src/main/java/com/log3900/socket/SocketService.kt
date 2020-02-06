@@ -23,7 +23,7 @@ class SocketService : Service() {
     private val binder = SocketBinder()
 
     companion object {
-        lateinit var instance: SocketService
+        var instance: SocketService? = null
     }
 
     fun sendMessage(event: Event, data: ByteArray) {
@@ -122,11 +122,25 @@ class SocketService : Service() {
                     notifyEventSubscribers(SocketEvent.values()[msg.what], msg)
                     true
                 })
+
+                subscribeToMessage(Event.HEALTH_CHECK_SERVER, Handler {msg ->
+                    true
+                })
             } catch (e: Exception) {
                 println("could not connect")
             }
             Looper.loop()
         }).start()
+    }
+
+    fun disconnectSocket() {
+        val req = android.os.Message()
+        req.what = Request.DISCONNECT.ordinal
+        socketHandler.sendRequest(req)
+    }
+
+    fun getSocketState(): State {
+        return socketHandler.state.get()
     }
 
     override fun onCreate() {
@@ -142,6 +156,7 @@ class SocketService : Service() {
         val request = android.os.Message()
         request.what = Request.DISCONNECT.ordinal
         socketHandler.sendRequest(request)
+        instance = null
     }
 
     inner class SocketBinder : Binder() {

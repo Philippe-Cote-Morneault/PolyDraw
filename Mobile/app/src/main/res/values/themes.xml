@@ -6,7 +6,7 @@
     <!--Base custom theme which will be shared between both light and dark theme variants-->
     <style name="Base.MyTheme" parent="Base.MaterialThemeBuilder">
         <!--Material color attributes -->
-        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimary">@color/color_primary_mid_brush</item>
         <item name="colorPrimaryVariant">@color/color_primary_variant</item>
         <item name="colorSecondary">@color/color_secondary</item>
         <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
@@ -26,7 +26,7 @@
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
     </style>
 
-    <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight">
 
         <item name="android:statusBarColor">?colorSurface</item>
         <item name="android:windowLightStatusBar">true</item>
