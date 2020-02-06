@@ -2,6 +2,8 @@ package com.log3900.socket
 
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.EOFException
@@ -13,6 +15,7 @@ import java.net.SocketException
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.timerTask
 
 enum class Request {
@@ -22,6 +25,12 @@ enum class Request {
     CONNECT,
     DISCONNECT,
     SET_MESSAGE_LISTENER
+}
+
+enum class State {
+    CONNECTED,
+    DISCONNECTED,
+    ERROR
 }
 
 object SocketHandler {
@@ -34,12 +43,13 @@ object SocketHandler {
     private var readMessages = AtomicBoolean(false)
     private var socketHealthcheckTimer: Timer = Timer()
 
+    public var state: AtomicReference<State> = AtomicReference(State.DISCONNECTED)
+
     fun connect() {
         socket = Socket("log3900.fsae.polymtl.ca", 5011)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
-
-
+        state.set(State.CONNECTED)
     }
 
     fun createRequestHandler() {
@@ -80,6 +90,7 @@ object SocketHandler {
 
     fun onDisconnect() {
         socket.close()
+        state.set(State.DISCONNECTED)
     }
 
     private fun handleRequest(message: android.os.Message) {
@@ -143,7 +154,7 @@ object SocketHandler {
                 socketHealthcheckTimer.cancel()
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
-                    connectionErrorListener?.sendEmptyMessage(SocketEvent.CONNECTION_ERROR.ordinal)
+                    handlerError()
                 }, 6000)
                 onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
             }
@@ -161,9 +172,12 @@ object SocketHandler {
     }
 
     private fun handlerError() {
-        readMessages.set(false)
-        val message = android.os.Message()
-        message.what = SocketEvent.CONNECTION_ERROR.ordinal
-        connectionErrorListener?.sendMessage(message)
+        if (state.get() != State.ERROR) {
+            state.set(State.ERROR)
+            readMessages.set(false)
+            val message = android.os.Message()
+            message.what = SocketEvent.CONNECTION_ERROR.ordinal
+            connectionErrorListener?.sendMessage(message)
+        }
     }
 }
