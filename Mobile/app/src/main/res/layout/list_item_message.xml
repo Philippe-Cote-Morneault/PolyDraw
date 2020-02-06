@@ -24,30 +24,37 @@
             android:id="@+id/list_item_message_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:chipIcon="@drawable/ic_person"
+            app:chipIcon="@mipmap/ic_person_colored_round"
             android:gravity="center"
-            android:text="hello"
-            ></com.google.android.material.chip.Chip>
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/list_item_message_text_card_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="10dp"
+            >
+
+            <TextView
+                android:id="@+id/list_item_message_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:minHeight="50dp"
+                android:text="TextView"
+                android:padding="10dp"/>
+        </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/list_item_message_text"
+            android:id="@+id/list_item_message_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#C3C2ADAD"
-            android:gravity="center_vertical"
-            android:minHeight="50dp"
-            android:text="TextView"
-            android:padding="10dp"/>
-
-    <TextView
-        android:id="@+id/list_item_message_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:gravity="center"
-        android:padding="0dp"
-        android:text="TextView" />
+            android:layout_marginStart="20dp"
+            android:padding="0dp"
+            android:text="TextView" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

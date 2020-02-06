@@ -122,6 +122,10 @@ class SocketService : Service() {
                     notifyEventSubscribers(SocketEvent.values()[msg.what], msg)
                     true
                 })
+
+                subscribeToMessage(Event.HEALTH_CHECK_SERVER, Handler {msg ->
+                    true
+                })
             } catch (e: Exception) {
                 println("could not connect")
             }
@@ -129,6 +133,9 @@ class SocketService : Service() {
         }).start()
     }
 
+    fun disconnect() {
+        
+    }
     override fun onCreate() {
         super.onCreate()
         instance = this

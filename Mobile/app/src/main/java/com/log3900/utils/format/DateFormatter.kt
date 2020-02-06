@@ -1,6 +1,7 @@
 package com.log3900.utils.format
 
 import android.app.Activity
+import android.text.format.DateUtils
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import java.text.DateFormat
@@ -11,7 +12,13 @@ class DateFormatter {
     companion object {
 
         fun formatDate(date: Date): String {
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm:ss")
+            var dateFormat: SimpleDateFormat? = null
+            if (DateUtils.isToday(date.time)) {
+                dateFormat = SimpleDateFormat("hh:mm:ss")
+            }
+            else {
+                dateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm:ss")
+            }
             val dateString = dateFormat.format(date)
             return dateString
         }
