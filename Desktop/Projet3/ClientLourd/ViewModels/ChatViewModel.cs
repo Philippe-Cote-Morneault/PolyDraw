@@ -10,6 +10,7 @@ using ClientLourd.Models.EventsArguments;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ViewModels
@@ -132,9 +133,16 @@ namespace ClientLourd.ViewModels
             if (!string.IsNullOrWhiteSpace(message))
             {
                 var data = new {Message = message, ChannelID = "0"};
-                SocketClient.sendMessage(new Tlv(SocketMessageTypes.MessageSent, data));
-                //Clear the chat textbox
-                tBox.Text = "";
+                try
+                {
+                    SocketClient.SendMessage(new Tlv(SocketMessageTypes.MessageSent, data));
+                    //Clear the chat textbox
+                    tBox.Text = "";
+                }
+                catch(Exception e)
+                {
+                    DialogHost.Show(new ClosableErrorDialog(e));
+                }
             }
         }
 

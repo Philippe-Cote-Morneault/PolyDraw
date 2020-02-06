@@ -40,28 +40,39 @@ namespace ClientLourd.Services.SocketService
             {
                 //We stop the timer 
                 _healthCheckTimer.Stop();
-                //We send the healthCheck response to the server
-                sendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
+                try
+                {
+                    //We send the healthCheck response to the server
+                    SendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
+                }
+                catch
+                {
+                    //If an error occured the health check Timer will handle it
+                }
                 //Restart the timer
                 _healthCheckTimer.Start();
             });
         }
 
-
-        public void sendMessage(Tlv tlv)
+        /// <summary>
+        /// Send a message to the server. Should be in a try catch block
+        /// </summary>
+        /// <param name="tlv"></param>
+        public void SendMessage(Tlv tlv)
         {
-            try
-            {
-                _socket.Send(tlv.GetBytes());
-            }
-            catch (Exception e)
-            {
-            }
+            _socket.Send(tlv.GetBytes());
         }
 
         public void Close()
         {
-            sendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
+            try
+            {
+                SendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
+            }
+            catch
+            {
+                //The connection will be close 
+            }
             _healthCheckTimer.Close();
             _stream.Close();
             _socket.Close();
@@ -94,7 +105,7 @@ namespace ClientLourd.Services.SocketService
                     _receiver.Start();
 
                     //send the session token
-                    sendMessage(new Tlv(SocketMessageTypes.ServerConnection, token));
+                    SendMessage(new Tlv(SocketMessageTypes.ServerConnection, token));
                     OnStopWaiting(this);
                 }
                 catch
@@ -110,8 +121,8 @@ namespace ClientLourd.Services.SocketService
         {
             byte[] typeAndLength = new byte[3];
             dynamic data = null;
-
-            while (IsConnected())
+            //TODO cancel the Task using a token
+            while (_socket.Connected)
             {
                 try
                 {
@@ -177,7 +188,7 @@ namespace ClientLourd.Services.SocketService
 
         private void InitializeTimer()
         {
-            _healthCheckTimer = new Timer(60000);
+            _healthCheckTimer = new Timer(6000);
             _healthCheckTimer.Elapsed += TriggerConnectionLost;
             _healthCheckTimer.Start();
         }
@@ -185,19 +196,6 @@ namespace ClientLourd.Services.SocketService
         private void TriggerConnectionLost(object sender, ElapsedEventArgs e)
         {
             OnConnectionLost(this);
-        }
-        
-
-        public bool IsConnected()
-        {
-            try
-            {
-                return !(!_socket.Connected || (_socket.Poll(500, SelectMode.SelectRead) && (_socket.Available == 0)));
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }

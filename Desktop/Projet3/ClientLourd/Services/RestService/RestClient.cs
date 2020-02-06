@@ -39,7 +39,7 @@ namespace ClientLourd.Services.RestService
                 case HttpStatusCode.BadRequest:
                     throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
-                    throw new RestException(response.ErrorMessage);
+throw new RestException(response.ErrorMessage);
             }
         }
 
