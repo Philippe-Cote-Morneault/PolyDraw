@@ -8,10 +8,8 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.EOFException
 import java.io.IOException
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.Socket
-import java.net.SocketException
+import java.lang.Exception
+import java.net.*
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -42,11 +40,11 @@ object SocketHandler {
     private var connectionErrorListener: Handler? = null
     private var readMessages = AtomicBoolean(false)
     private var socketHealthcheckTimer: Timer = Timer()
-
     public var state: AtomicReference<State> = AtomicReference(State.DISCONNECTED)
 
     fun connect() {
-        socket = Socket("log3900.fsae.polymtl.ca", 5011)
+        socket = Socket()
+        socket.connect(InetSocketAddress("log3900.fsae.polymtl.ca", 5011), 10000)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
         state.set(State.CONNECTED)
