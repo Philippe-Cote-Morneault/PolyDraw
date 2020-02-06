@@ -16,9 +16,12 @@ Server lint:
     - cp -r /go $GOPATH 
     - cd Server && make lint
   only:
+    refs:
       - master
       - release
       - dev-server
+    changes:
+      - Server/**/*
 
 Server build:
   image: registry.gitlab.com/jigsawcorp/log3900/server-ci
@@ -32,9 +35,12 @@ Server build:
     - cp -r /go $GOPATH 
     - cd Server && make build-linux
   only:
-    - master
-    - release
-    - dev-server
+    refs:
+      - master
+      - release
+      - dev-server
+    changes:
+      - Server/**/*
   artifacts:
     paths:
       - Server/dist/
@@ -47,7 +53,10 @@ Server package DEV:
   script:
     - cd Server && make package
   only:
-    - dev-server
+    refs:
+      - dev-server
+    changes:
+      - Server/**/*
 
 Server package PROD:
   tags:
@@ -57,8 +66,11 @@ Server package PROD:
     - export RELEASE=True
     - cd Server && make package
   only:
-    - master
-    - release
+    refs:
+      - master
+      - release
+    changes:
+      - Server/**/*
 
 Server deploy DEV:
   tags:
@@ -68,7 +80,10 @@ Server deploy DEV:
     - cd Server && make deploy
     - curl "http://172.20.1.31/cgi-bin/deploy-dev.sh?key=$TOKEN_DEV"
   only:
-    - dev-server
+    refs:
+      - dev-server
+    changes:
+      - Server/**/*
 
 Server deploy PROD:
   tags:
@@ -79,5 +94,8 @@ Server deploy PROD:
     - cd Server && make deploy
     - curl "http://172.20.1.31/cgi-bin/deploy-prod.sh?key=$TOKEN_PROD"
   only:
-    - release
-    - master
+    refs:
+      - release
+      - master
+    changes:
+      - Server/**/*
