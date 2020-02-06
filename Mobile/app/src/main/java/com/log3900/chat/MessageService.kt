@@ -61,7 +61,7 @@ class MessageService {
     }
 
     private fun initialize() {
-        socketService = SocketService.instance
+        socketService = SocketService.instance!!
 
         socketService.subscribeToMessage(Event.MESSAGE_RECEIVED, Handler {
             receiveMessage(it.obj as com.log3900.socket.Message)
