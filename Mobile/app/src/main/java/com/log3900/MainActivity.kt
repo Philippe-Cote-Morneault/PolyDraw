@@ -3,11 +3,14 @@ package com.log3900
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.AppBarConfiguration
@@ -33,9 +36,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val hideShowMessage: FloatingActionButton = findViewById(R.id.hideShowMessage)
-        hideShowMessage.setOnClickListener{ view ->
-            Snackbar.make(view, "Hide/Show Message", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        hideShowMessage.setOnClickListener{ _ ->
+
+            var chatView = (supportFragmentManager.findFragmentById(R.id.fragment) as Fragment).view
+            when(chatView!!.visibility){
+                View.INVISIBLE -> chatView!!.visibility = View.VISIBLE
+                View.VISIBLE -> chatView!!.visibility = View.INVISIBLE
+            }
         }
 
 
