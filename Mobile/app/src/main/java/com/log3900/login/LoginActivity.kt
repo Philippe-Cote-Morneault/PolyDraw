@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                 val errMessage: String =
                     if (t is SocketTimeoutException)
-                        "Timeout"
+                        "The connection took too long"
                     else
                         "Couldn't authenticate ($t)"
                 println(errMessage)
