@@ -24,17 +24,6 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/fragment"-->
-<!--        android:name="com.log3900.chat.ChatFragment"-->
-<!--        android:layout_width="349dp"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="1.0" />-->
-
-
 
 
 
