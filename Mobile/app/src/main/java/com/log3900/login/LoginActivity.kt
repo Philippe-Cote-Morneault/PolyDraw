@@ -16,25 +16,45 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.log3900.MainActivity
 import com.log3900.R
-import com.log3900.socket.Event
-import com.log3900.socket.Message
-import com.log3900.socket.SocketService
+import com.log3900.shared.ui.ProgressDialog
+import com.log3900.socket.*
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
+import java.util.*
+import kotlin.concurrent.timerTask
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (SocketService.instance?.getSocketState() != State.CONNECTED) {
+            val socketConnectionDialog = ProgressDialog()
+            socketConnectionDialog.show(supportFragmentManager, "progressDialog")
+            val timer = Timer()
+            timer.schedule( timerTask {
+                SocketService.instance?.connectToSocket()
+                // TODO: Ask user if he wants to try again connecting
+            }, 10000)
+            SocketService.instance?.subscribeToEvent(SocketEvent.CONNECTED, Handler{
+                socketConnectionDialog.dismiss()
+                timer.cancel()
+                true
+            })
+        }
     }
 
     fun sendLoginInfo(view: View) {
-        val username = findViewById<TextInputEditText>(R.id.username).text.toString()
+        val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
         val validLoginInfo: Boolean = validateLoginInfo()
         if (!validLoginInfo)
             return
@@ -63,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
                 println(jsonResponse)
                 if (jsonResponse.has("SessionToken")) {
                     println("found sessionToken")
-                    SocketService.instance.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
+                    SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
                         println("inside handler")
                         if ((it.obj as Message).data[0].toInt() == 1) {
                             startMainActivity(username)
@@ -82,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
                     })
 
                     println("sending request to server")
-                    SocketService.instance.sendMessage(Event.SOCKET_CONNECTION, (jsonResponse.get("SessionToken") as String).toByteArray(Charsets.UTF_8))
+                    SocketService.instance?.sendMessage(Event.SOCKET_CONNECTION, (jsonResponse.get("SessionToken") as String).toByteArray(Charsets.UTF_8))
                 }
             }
 
