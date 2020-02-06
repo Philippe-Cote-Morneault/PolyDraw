@@ -1,6 +1,7 @@
 package com.log3900.session
 
 import android.app.AlertDialog
+import android.app.LauncherActivity
 import android.app.Service
 import android.content.DialogInterface
 import android.content.Intent
@@ -79,6 +80,11 @@ class MonitoringService : Service() {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             val intent = Intent(this, WarningDialog::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, LauncherActivity::class.java)
+            intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }
