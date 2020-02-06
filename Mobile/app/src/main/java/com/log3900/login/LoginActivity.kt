@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -34,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun sendLoginInfo(view: View) {
+        hideKeyboard(view)
         val username = findViewById<TextInputEditText>(R.id.username).text.toString()
         val validLoginInfo: Boolean = validateLoginInfo()
         if (!validLoginInfo)
@@ -119,6 +121,11 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
+    // TODO: Utility function?
+    private fun hideKeyboard(view: View) {
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
     private fun validateLoginInfo(): Boolean {
         val username = findViewById<TextInputEditText>(R.id.username).text.toString()
         val password = findViewById<TextInputEditText>(R.id.password).text.toString()
