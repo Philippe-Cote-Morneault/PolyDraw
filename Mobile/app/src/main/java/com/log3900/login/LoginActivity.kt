@@ -22,7 +22,6 @@ import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.socket.*
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
@@ -94,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
     private fun handleSuccessAuth(bearer: String, session: String) {
         // TODO: Change the code to get a JSON response instead of a raw one
         println("found sessionToken")
-        SocketService.instance.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
+        SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             println("inside handler")
             if ((it.obj as Message).data[0].toInt() == 1) {
                 val username = findViewById<TextInputEditText>(R.id.username).text.toString()
@@ -108,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
         })
 
         println("sending request to server")
-        SocketService.instance.sendMessage(
+        SocketService.instance?.sendMessage(
             Event.SOCKET_CONNECTION,
             session.toByteArray(Charsets.UTF_8))
     }
