@@ -6,6 +6,7 @@ import android.view.MenuItem
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.navigateUp
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -47,7 +49,15 @@ class MainActivity : AppCompatActivity() {
             ), drawerLayout)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+
         navView.setupWithNavController(navController)
+        navView.menu.findItem(R.id.logoutButton).setOnMenuItemClickListener { item: MenuItem? ->
+            when (item!!.itemId) {
+                R.id.logoutButton -> logout()
+            }
+            true
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -56,12 +66,11 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    // TODO: link to logout button
     private fun logout() {
         intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-        // TODO: Reset views? Needs test
         SocketService.instance.disconnect()
         finish()
     }
+
 }
