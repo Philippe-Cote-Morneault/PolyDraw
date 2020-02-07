@@ -46,7 +46,8 @@ class MessageViewHolder : RecyclerView.ViewHolder {
         if (message.senderName == username) {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.START)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
-            messageBoxCardView.setBackgroundColor(Color.parseColor("#3F51B5"))
+            messageTextView.setBackgroundColor(Color.parseColor("#3F51B5"))
+            messageTextView.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
             view.findViewById<LinearLayout>(R.id.list_item_message_inner_layout).gravity = Gravity.END
             usernameTextView.visibility = View.GONE
             usernameTextView.setTextColor(Color.parseColor("#FFFFFF"))
@@ -56,7 +57,8 @@ class MessageViewHolder : RecyclerView.ViewHolder {
         else {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.END)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.START, R.id.list_item_message_outer_layout, ConstraintSet.START, 15)
-            messageBoxCardView.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            messageTextView.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            messageTextView.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
             view.findViewById<LinearLayout>(R.id.list_item_message_inner_layout).gravity = Gravity.START
             usernameTextView.visibility = View.VISIBLE
             usernameTextView.setTextColor(Color.parseColor("#000000"))
