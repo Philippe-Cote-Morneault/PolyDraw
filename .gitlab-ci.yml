@@ -1,0 +1,83 @@
+stages:
+  - build
+  - lint
+  - package
+  - deploy
+
+Server lint:
+  image: registry.gitlab.com/jigsawcorp/log3900/server-ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .go
+  stage: lint
+  script:
+    - export GOPATH="$CI_PROJECT_DIR/.go"
+    - cp -r /go $GOPATH 
+    - cd Server && make lint
+  only:
+      - master
+      - release
+      - dev-server
+
+Server build:
+  image: registry.gitlab.com/jigsawcorp/log3900/server-ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .go
+  stage: build
+  script:
+    - export GOPATH="$CI_PROJECT_DIR/.go"
+    - cp -r /go $GOPATH 
+    - cd Server && make build-linux
+  only:
+    - master
+    - release
+    - dev-server
+  artifacts:
+    paths:
+      - Server/dist/
+    expire_in: 1 week
+
+Server package DEV:
+  tags:
+    - shell
+  stage: package
+  script:
+    - cd Server && make package
+  only:
+    - dev-server
+
+Server package PROD:
+  tags:
+    - shell
+  stage: package
+  script:
+    - export RELEASE=True
+    - cd Server && make package
+  only:
+    - master
+    - release
+
+Server deploy DEV:
+  tags:
+    - shell
+  stage: deploy
+  script:
+    - cd Server && make deploy
+    - curl "http://172.20.1.31/cgi-bin/deploy-dev.sh?key=$TOKEN_DEV"
+  only:
+    - dev-server
+
+Server deploy PROD:
+  tags:
+    - shell
+  stage: deploy
+  script:
+    - export RELEASE=True
+    - cd Server && make deploy
+    - curl "http://172.20.1.31/cgi-bin/deploy-prod.sh?key=$TOKEN_PROD"
+  only:
+    - release
+    - master

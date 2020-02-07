@@ -1,0 +1,168 @@
+﻿<Window x:Class="ClientLourd.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:ClientLourd.Views"
+        xmlns:local="clr-namespace:ClientLourd"
+        xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+        xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+        xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
+        Name="PolyDraw"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        Title="PolyDraw">
+    <Window.DataContext>
+        <viewModels:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="OemTilde"
+                    Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}">
+            <KeyBinding.CommandParameter>
+                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                    <Binding ElementName="ChatToggleButton" Path="IsEnabled" />
+                    <Binding ElementName="Drawer" />
+                </MultiBinding>
+            </KeyBinding.CommandParameter>
+        </KeyBinding>
+    </Window.InputBindings>
+    <materialDesign:DialogHost CloseOnClickAway="False">
+
+        <Grid>
+            <WrapPanel ZIndex="1"
+                       Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <ProgressBar
+                    Height="50"
+                    Width="50"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="0"
+                    IsIndeterminate="True" />
+            </WrapPanel>
+            <DockPanel Name="MainDockPanel"
+                       Visibility="{Binding ElementName=LoginScreen, Path=DataContext.IsLoggedIn, Converter={StaticResource VisibleIfTrueConverter}}">
+                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
+                    <!-- Menu bar-->
+                    <DockPanel>
+                        <!-- Hamburger menu toggle -->
+                        <ToggleButton DockPanel.Dock="Left"
+                                      Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                      HorizontalAlignment="Right" Margin="16"
+                                      Name="MenuToggleButton" />
+                        <!-- Use for hiding the button when the chat is export-->
+                        <Grid DockPanel.Dock="Right"
+                              Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <!-- Badge and button -->
+                            <materialDesign:Badged
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                BadgePlacementMode="BottomLeft"
+                                Name="NotificationCounter"
+                                Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
+                                BadgeBackground="{StaticResource SecondaryAccentBrush}"
+                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}"
+                                
+                                >
+
+                                <ToggleButton
+                                    Name="ChatToggleButton"
+                                    ToolTip="Open the chat"
+                                    Checked="ChatToggleButton_OnChecked"
+                                    Unchecked="ChatToggleButton_OnChecked"
+                                    Command="{Binding Path=OpenChatCommand}"
+                                    CommandParameter="{Binding Path=DataContext}"
+                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
+                                    <ToggleButton.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Export as a new window" Click="ExportChat" />
+                                        </ContextMenu>
+                                    </ToggleButton.ContextMenu>
+                                    <materialDesign:PackIcon
+                                        Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                        Kind="Chat"
+                                        Height="24"
+                                        Width="24" />
+                                    
+                                </ToggleButton>
+                            </materialDesign:Badged>
+
+                            <!-- button without badge -->
+                            <ToggleButton
+                                Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                IsChecked="{Binding ElementName=Drawer, Path=IsRightDrawerOpen}"
+                                Visibility="{Binding ElementName=NotificationCounter, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                                <materialDesign:PackIcon
+                                    Kind="Chat"
+                                    Height="24"
+                                    Width="24" />
+                            </ToggleButton>
+                        </Grid>
+
+                        <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
+                               Source="Resources/WhiteLogo.png" />
+                    </DockPanel>
+                </materialDesign:ColorZone>
+
+                <materialDesign:DrawerHost
+                    x:Name="Drawer"
+                    IsRightDrawerOpen="{Binding ElementName=ChatToggleButton, Path=IsChecked }"
+                    IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+                    <controls:Editor />
+
+                    <materialDesign:DrawerHost.RightDrawerContent>
+                        <DockPanel
+                            Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}"
+                            x:Name="RightDrawerContent">
+                            <controls:Chat x:Name="ChatBox" />
+                        </DockPanel>
+                    </materialDesign:DrawerHost.RightDrawerContent>
+
+                    <!--Hamburger menu-->
+                    <materialDesign:DrawerHost.LeftDrawerContent>
+                        <DockPanel>
+                            <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" Padding="10">
+                                <StackPanel Orientation="Vertical">
+                                    <materialDesign:PackIcon Kind="Person" Height="40" Width="40" HorizontalAlignment="Center" ></materialDesign:PackIcon>
+                                    <TextBlock Text="{Binding Username}" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                            <ListView>
+                                <ListViewItem>
+                                    <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
+                                            ToolTip="Disconnect and return to the login screen"
+                                            Command="{Binding Path=LogoutCommand}"
+                                            CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Power" Height="15" Width="15" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Logout"/>
+                                        </StackPanel>
+                                    </Button>
+                                </ListViewItem>
+                            </ListView>
+                        </DockPanel>
+
+                    </materialDesign:DrawerHost.LeftDrawerContent>
+
+                </materialDesign:DrawerHost>
+
+            </DockPanel>
+            <!--Login screen-->
+            <DockPanel
+                Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                <controls:Login x:Name="LoginScreen"
+                             IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
+        </Grid>
+
+
+    </materialDesign:DialogHost>
+
+
+</Window>
