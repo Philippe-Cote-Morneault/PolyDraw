@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_item_message_outer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#36FFFFFF">
+
+    <LinearLayout
+        android:id="@+id/list_item_message_inner_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/list_item_message_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@mipmap/ic_person_colored_round"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:gravity="center"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/list_item_message_text_card_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="10dp"
+            app:contentPadding="0dp"
+            >
+
+            <TextView
+                android:id="@+id/list_item_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:minHeight="50dp"
+                android:padding="10dp"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/list_item_message_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:padding="0dp"
+            android:text="TextView" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
