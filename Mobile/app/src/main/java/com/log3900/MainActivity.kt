@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 
@@ -83,6 +84,12 @@ class MainActivity : AppCompatActivity() {
             finish()
             true
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("POTATO", "onDestroy")
+        SocketService.instance?.disconnectSocket(null)
     }
 
 }
