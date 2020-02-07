@@ -48,7 +48,7 @@ class MessageViewHolder : RecyclerView.ViewHolder {
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
             messageTextView.setBackgroundColor(Color.parseColor("#3F51B5"))
             messageTextView.setTextColor(Color.parseColor("#FFFFFF"))
-            messageTextView.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
+            messageTextView.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
             view.findViewById<LinearLayout>(R.id.list_item_message_inner_layout).gravity = Gravity.END
             usernameTextView.visibility = View.GONE
             usernameTextView.setTextColor(Color.parseColor("#FFFFFF"))
