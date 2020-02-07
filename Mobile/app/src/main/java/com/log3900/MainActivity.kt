@@ -75,11 +75,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        SocketService.instance?.sendMessage(Event.CLIENT_DISCONNECT, byteArrayOf())
-        intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        startActivity(intent)
-        finish()
+
+        SocketService.instance?.disconnectSocket(Handler {
+            SocketService.instance?.sendMessage(Event.CLIENT_DISCONNECT, byteArrayOf())
+            intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
+            true
+        })
     }
 
 }
