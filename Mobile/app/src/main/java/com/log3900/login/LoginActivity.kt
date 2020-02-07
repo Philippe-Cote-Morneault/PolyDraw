@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             println("inside handler")
             if ((it.obj as Message).data[0].toInt() == 1) {
-                val username = findViewById<TextInputEditText>(R.id.username).text.toString()
+                val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
                 startMainActivity(username)
                 true
             } else {
