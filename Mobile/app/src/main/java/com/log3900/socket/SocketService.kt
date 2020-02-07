@@ -145,9 +145,10 @@ class SocketService : Service() {
         socketHandler.setDisconnectionListener(Handler {
             handler?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
             notifyEventSubscribers(SocketEvent.DISCONNECTED, it)
-            socketHandler.setConnectionErrorListener(null)
+            socketHandler.setDisconnectionListener(null)
             true
         })
+        socketHandler.setConnectionErrorListener(null)
         socketHandler.onDisconnect()
     }
 
