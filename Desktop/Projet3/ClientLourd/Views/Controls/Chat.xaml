@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Chat"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             mc:Ignorable="d"
+             xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
+             xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
+    <UserControl.Resources>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <viewModels:MainViewModel x:Key="MainViewModel" />
+    </UserControl.Resources>
+    <DockPanel>
+        <DockPanel Background="WhiteSmoke" DockPanel.Dock="Bottom"
+                   FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
+            <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
+                <Button Margin="5"
+                        IsDefault="True"
+                        ToolTip="Send the message"
+                        Style="{DynamicResource MaterialDesignToolForegroundButton}"
+
+                        Command="{Binding SendMessageCommand}">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                            <Binding ElementName="MessageTextBox" Path="." />
+                            <Binding Path="DataContext.Username"
+                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                    <materialDesign:PackIcon Kind="Send" Foreground="{StaticResource PrimaryHueMidBrush}" />
+                </Button>
+
+                <Button
+                    Name="ExportButton"
+                    ToolTip="Export the chat as a new window"
+                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ExportChatCommand}"
+                    Style="{DynamicResource MaterialDesignToolForegroundButton}">
+                    <materialDesign:PackIcon Kind="CheckboxMultipleBlankOutline"
+                                             Foreground="{StaticResource PrimaryHueMidBrush}" />
+                </Button>
+            </StackPanel>
+            <StackPanel>
+
+                <TextBox
+                    Background="White"
+                    Margin="10 10 10 5"
+
+                    materialDesign:HintAssist.Hint="Type your message..."
+                    TextWrapping="Wrap"
+                    Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
+                    MaxLines="2"
+                    MinLines="2"
+                    Name="MessageTextBox"
+                    MaxLength="1000" />
+
+                <TextBlock Foreground="Gray" Margin="12 0 0 5" HorizontalAlignment="Left"
+                           Text="{Binding ElementName=MessageTextBox, Path=Text.Length, StringFormat={}{0}/1000}" />
+            </StackPanel>
+
+
+        </DockPanel>
+        <TabControl SelectedIndex="{Binding SelectedChannelIndex}" Name="ConversationTabControl"
+                    ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <!--Conversation here-->
+                    <controls:Conversation />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </DockPanel>
+</UserControl>
