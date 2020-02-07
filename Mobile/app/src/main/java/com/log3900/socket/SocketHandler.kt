@@ -2,12 +2,10 @@ package com.log3900.socket
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.io.EOFException
-import java.io.IOException
+import java.io.*
 import java.lang.Exception
 import java.net.*
 import java.util.*
@@ -89,12 +87,14 @@ object SocketHandler {
             outputStream.writeShort(message.data.size)
             outputStream.write(message.data)
         } catch (e: IOException) {
+            Log.d("POTATO", "SOCKETHANDLER: IOException in onWriteMessage() = " + e.toString() + ", state = " + state.get())
             handlerError()
         }
     }
 
     fun onDisconnect() {
         state.set(State.DISCONNECTING)
+        socketHealthcheckTimer.cancel()
         socket.close()
     }
 
@@ -156,12 +156,14 @@ object SocketHandler {
             val message = Message(type, values)
 
             if (message.type == Event.HEALTH_CHECK_SERVER) {
+                Log.d("POTATO", "Received server healthcheck")
+                onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
                 socketHealthcheckTimer.cancel()
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
+                    Log.d("POTATO", "Did not received server healtcheck")
                     handlerError()
                 }, 6000)
-                onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
             }
             else if (messageReadListener != null) {
                 val msg = android.os.Message()
@@ -170,21 +172,30 @@ object SocketHandler {
             }
 
         } catch (e: SocketException){
+            val sw = StringWriter()
+            val pw = PrintWriter(sw)
+            e.printStackTrace(pw)
+            Log.d("POTATO", "SOCKETHANDLER: SocketException in readMessage() = " + e.toString() + ", state = " + state.get() + " " + sw.toString())
             handlerError()
         } catch (e: EOFException) {
+            Log.d("POTATO", "SOCKETHANDLER: EOFException in readMessage() = " + e.toString() + ", state = " + state.get())
             handlerError()
         }
     }
 
     private fun handlerError() {
         if (state.get() == State.DISCONNECTING) {
+            Log.d("POTATO", "handlerError(), state is disconnecting so not doing anything")
             state.set(State.DISCONNECTED)
             readMessages.set(false)
             disconnectionErrorListener?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
         }
-        else if (state.get() != State.ERROR) {
+        else if (state.get() == State.CONNECTED) {
+            Log.d("POTATO", "handlerError(), state is not error")
             state.set(State.ERROR)
+            socketHealthcheckTimer.cancel()
             readMessages.set(false)
+            socket.close()
             val message = android.os.Message()
             message.what = SocketEvent.CONNECTION_ERROR.ordinal
             connectionErrorListener?.sendMessage(message)

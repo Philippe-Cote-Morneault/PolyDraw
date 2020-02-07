@@ -1,9 +1,12 @@
 package com.log3900.login
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -43,16 +46,33 @@ class LoginActivity : AppCompatActivity() {
         if (SocketService.instance?.getSocketState() != State.CONNECTED) {
             val socketConnectionDialog = ProgressDialog()
             socketConnectionDialog.show(supportFragmentManager, "progressDialog")
-            val timer = Timer()
-            timer.schedule( timerTask {
-                SocketService.instance?.connectToSocket()
-                // TODO: Ask user if he wants to try again connecting
-            }, 10000)
+            val timer = object: CountDownTimer(60000, 15000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    if (SocketService.instance?.getSocketState() != State.CONNECTED) {
+                        SocketService.instance?.connectToSocket()
+                    }
+                }
+
+                override fun onFinish() {
+                    Log.d("POTATO", "onFinish called")
+                    socketConnectionDialog.dismiss()
+                    AlertDialog.Builder(this@LoginActivity)
+                        .setTitle("Connection Error")
+                        .setMessage("Could not establish connection to server after 4 attempts. The application will now close.")
+                        .setPositiveButton("Ok") { dialog, which ->
+                            finishAffinity()
+                        }
+                        .setCancelable(false)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show()
+                }
+            }
             SocketService.instance?.subscribeToEvent(SocketEvent.CONNECTED, Handler{
                 socketConnectionDialog.dismiss()
                 timer.cancel()
                 true
             })
+            timer.start()
         }
     }
 
@@ -96,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             println("inside handler")
             if ((it.obj as Message).data[0].toInt() == 1) {
-                val username = findViewById<TextInputEditText>(R.id.username).text.toString()
+                val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
                 startMainActivity(username)
                 true
             } else {
@@ -135,7 +155,6 @@ class LoginActivity : AppCompatActivity() {
                 commit()
             }
         }
-        Toast.makeText(applicationContext, "Welcome, $username!", Toast.LENGTH_LONG).show()
         val intent = Intent(this@LoginActivity, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)

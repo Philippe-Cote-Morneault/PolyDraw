@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.log3900.MainActivity
@@ -61,7 +62,7 @@ class MonitoringService : Service() {
     }
 
     fun handleEvent(message: android.os.Message) {
-        println("connection error!")
+        Log.d("POTATO", "CONNECTIONEROR = " + message.toString())
         when (message.what) {
             SocketEvent.CONNECTED.ordinal -> {
                 onConnectionError()
