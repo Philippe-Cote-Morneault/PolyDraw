@@ -16,7 +16,7 @@ class WarningDialog : Activity() {
 
         AlertDialog.Builder(this)
             .setTitle("Connection Error")
-            .setMessage("There was a connection error")
+            .setMessage("You will be redirected to the login page.")
             .setPositiveButton("OK") {dialog, which ->
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP)
