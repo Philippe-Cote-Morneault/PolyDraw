@@ -95,6 +95,7 @@ object SocketHandler {
 
     fun onDisconnect() {
         state.set(State.DISCONNECTING)
+        socketHealthcheckTimer.cancel()
         socket.close()
     }
 
