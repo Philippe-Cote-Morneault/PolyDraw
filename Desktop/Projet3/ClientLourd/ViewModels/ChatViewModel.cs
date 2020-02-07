@@ -5,11 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
-using ClientLourd.Models.Enums;
-using ClientLourd.Models.EventsArguments;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 

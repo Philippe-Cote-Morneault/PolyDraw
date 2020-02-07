@@ -124,13 +124,13 @@
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\User.cs" />
-    <Compile Include="Models\Constants\Networks.cs" />
-    <Compile Include="Models\Enums\SocketMessageTypes.cs" />
-    <Compile Include="Models\EventsArguments\MessageReceivedEventArgs.cs" />
-    <Compile Include="Models\Exceptions\Rest\RestBadRequestException.cs" />
-    <Compile Include="Models\Exceptions\Rest\RestConflictException.cs" />
-    <Compile Include="Models\Exceptions\Rest\RestException.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
+    <Compile Include="Services\RestService\RestBadRequestException.cs" />
+    <Compile Include="Services\RestService\RestConflictException.cs" />
+    <Compile Include="Services\RestService\RestException.cs" />
+    <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
+    <Compile Include="Utilities\Constants\Networks.cs" />
+    <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -237,9 +237,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\poly.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\ToolTips\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />

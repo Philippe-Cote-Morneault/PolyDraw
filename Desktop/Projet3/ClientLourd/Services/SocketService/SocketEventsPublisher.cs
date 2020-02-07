@@ -1,5 +1,4 @@
 ﻿using System;
-using ClientLourd.Models.EventsArguments;
 
 namespace ClientLourd.Services.SocketService
 {

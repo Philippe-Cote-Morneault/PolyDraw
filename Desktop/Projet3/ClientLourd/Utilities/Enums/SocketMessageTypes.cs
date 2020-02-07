@@ -1,4 +1,4 @@
-﻿namespace ClientLourd.Models.Enums
+﻿namespace ClientLourd.Utilities.Enums
 {
     public enum SocketMessageTypes
     {

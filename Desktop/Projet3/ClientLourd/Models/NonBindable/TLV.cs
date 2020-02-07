@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using ClientLourd.Models.Enums;
+using ClientLourd.Utilities.Enums;
 using MessagePack;
 using MessagePack.Resolvers;
 

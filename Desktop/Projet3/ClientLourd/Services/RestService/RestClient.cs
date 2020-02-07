@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using ClientLourd.Models.Constants;
-using ClientLourd.Models.Exceptions.Rest;
+using ClientLourd.Utilities.Constants;
 using RestSharp;
 using RestSharp.Serialization.Json;
 

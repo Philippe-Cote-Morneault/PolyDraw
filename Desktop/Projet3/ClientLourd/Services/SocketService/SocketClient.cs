@@ -10,9 +10,9 @@ using System.Windows;
 using ClientLourd.Models;
 using MessagePack;
 using System.Timers;
-using ClientLourd.Models.Constants;
-using ClientLourd.Models.Enums;
 using ClientLourd.Models.NonBindable;
+using ClientLourd.Utilities.Constants;
+using ClientLourd.Utilities.Enums;
 using MessagePack.Resolvers;
 
 namespace ClientLourd.Services.SocketService

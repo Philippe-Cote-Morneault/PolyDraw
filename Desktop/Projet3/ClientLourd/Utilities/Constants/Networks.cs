@@ -1,4 +1,4 @@
-﻿namespace ClientLourd.Models.Constants
+﻿namespace ClientLourd.Utilities.Constants
 {
     public static class Networks
     {
