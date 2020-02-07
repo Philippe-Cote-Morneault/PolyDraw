@@ -25,7 +25,9 @@ class ProgressDialog : DialogFragment() {
                 false
             }
         })
+
 */
+        isCancelable = false
         return dialog
     }
 
