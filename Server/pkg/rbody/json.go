@@ -2,6 +2,7 @@ package rbody
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -20,5 +21,6 @@ func JSON(w http.ResponseWriter, status int, payload interface{}) {
 
 // JSONError makes the error response with payload as json format
 func JSONError(w http.ResponseWriter, code int, message string) {
-	JSON(w, code, map[string]string{"error": message})
+	log.Printf("[REST] %d -> %s", code, message)
+	JSON(w, code, map[string]string{"Error": message})
 }

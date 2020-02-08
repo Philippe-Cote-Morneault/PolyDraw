@@ -30,7 +30,14 @@ func (a *Server) Run(host string) {
 	a.h = &http.Server{Addr: host, Handler: a.Router}
 
 	log.Printf("[REST] -> Server is started on %s", host)
-	log.Fatal("[REST] -> ", a.h.ListenAndServe())
+
+	err := a.h.ListenAndServe()
+	if err != nil {
+		errString := err.Error()
+		if errString != "http: Server closed" {
+			log.Fatal("[REST] -> ", err)
+		}
+	}
 }
 
 // Shutdown handler to close the server when a signal is catched
@@ -69,4 +76,9 @@ func (a *Server) Put(path string, f func(w http.ResponseWriter, r *http.Request)
 //Delete handler for method DELETE
 func (a *Server) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("DELETE")
+}
+
+//Head handler for method GET
+func (a *Server) Head(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	a.Router.HandleFunc(path, f).Methods("HEAD")
 }

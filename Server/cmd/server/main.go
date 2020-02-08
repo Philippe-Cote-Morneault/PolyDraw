@@ -1,35 +1,66 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/spf13/viper"
+	"gitlab.com/jigsawcorp/log3900/internal/config"
 	"gitlab.com/jigsawcorp/log3900/internal/rest"
+	service "gitlab.com/jigsawcorp/log3900/internal/services"
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/services/healthcheck"
+	"gitlab.com/jigsawcorp/log3900/internal/services/logger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/router"
+	"gitlab.com/jigsawcorp/log3900/internal/socket"
+	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/graceful"
 )
 
-var restServer *rest.Server
-
 func main() {
-	graceful.CatchSigterm(onSIGTERM)
+	config.Init()
+	model.DBConnect()
 
-	restServer = &rest.Server{}
+	restServer := &rest.Server{}
+	socketServer := &socket.Server{}
+	socket.RegisterBroadcast()
 
-	hRestServer := make(chan bool)
-	go func() {
-		restServer.Initialize()
-		restServer.Run(":3000")
-		hRestServer <- true
-	}()
+	graceful.Register(restServer.Shutdown, "REST server")
+	graceful.Register(socketServer.Shutdown, "Socket server")
+	graceful.Register(service.ShutdownAll, "Services") //Shutdown all services
+	graceful.Register(model.DBClose, "Database")
+
+	handleGraceful := graceful.ListenSIG()
+
+	registerServices()
 
 	log.Printf("Server is starting jobs!")
+	handleRest := make(chan bool)
+	go func() {
+		restServer.Initialize()
+		restServer.Run(fmt.Sprintf("%s:%s", viper.GetString("rest.address"), viper.GetString("rest.port")))
+		handleRest <- true
+	}()
 
-	//TODO Launch other servers and handles
+	handleSocket := make(chan bool)
+	go func() {
+		socketServer.StartListening(fmt.Sprintf("%s:%s", viper.GetString("socket.address"), viper.GetString("socket.port")))
+		handleSocket <- true
+	}()
 
-	<-hRestServer
+	service.StartAll()
+
+	<-handleRest
+	<-handleSocket
+	<-handleGraceful
+
 }
 
-// Call this function on crtl+c
-// use safe shutdown any process
-func onSIGTERM() {
-	restServer.Shutdown()
+func registerServices() {
+	service.Add(&messenger.Messenger{})
+	service.Add(&router.Router{})
+	service.Add(&logger.Logger{})
+	service.Add(&auth.Auth{})
+	service.Add(&healthcheck.HealthCheck{})
 }

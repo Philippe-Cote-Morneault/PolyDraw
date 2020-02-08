@@ -9,8 +9,9 @@ import (
 
 // setRouters sets the all required routers
 func (a *Server) setRouters() {
-	a.Get("/hello", a.handleRequest(api.GetHello))
-	a.Get("/hello/{title}", a.handleRequest(api.GetHello))
+	a.Head("/healthcheck", a.handleRequest(api.HeadHealthcheck))
+	a.Post("/auth", a.handleRequest(api.PostAuth))
+	a.Get("/users", a.handleRequest(api.GetUsers))
 }
 
 func defaultRoute(w http.ResponseWriter, r *http.Request) {
