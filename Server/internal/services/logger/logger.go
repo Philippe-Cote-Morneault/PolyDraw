@@ -53,7 +53,7 @@ func (l *Logger) listen() {
 			message, ok := data.(socket.RawMessageReceived)
 
 			if ok {
-				log.Printf("[Logger] -> Socket data received: %d | %d | %#x", message.Payload.MessageType, message.Payload.Length, message.Payload.Bytes)
+				log.Printf("[Logger] -> Socket data received: %s | %d | %d | %#x", message.SocketID, message.Payload.MessageType, message.Payload.Length, message.Payload.Bytes)
 			}
 
 			//fmt.Printf("data: %s | %#x\n", data, data)
