@@ -32,6 +32,7 @@
             <e p="MainWindow.g.cs" t="Include" />
             <e p="Views" t="Include">
               <e p="Controls" t="Include">
+                <e p="ChannelSection.g.cs" t="Include" />
                 <e p="Chat.g.cs" t="Include" />
                 <e p="Conversation.g.cs" t="Include" />
                 <e p="Editor.g.cs" t="Include" />
@@ -111,6 +112,8 @@
         </e>
         <e p="Views" t="Include">
           <e p="Controls" t="Include">
+            <e p="ChannelSection.xaml" t="Include" />
+            <e p="ChannelSection.xaml.cs" t="Include" />
             <e p="Chat.xaml" t="Include" />
             <e p="Chat.xaml.cs" t="Include" />
             <e p="Conversation.xaml" t="Include" />
