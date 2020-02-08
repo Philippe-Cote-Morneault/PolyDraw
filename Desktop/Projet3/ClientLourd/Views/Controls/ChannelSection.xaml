@@ -6,9 +6,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:customCommands="clr-namespace:ClientLourd.Utilities.Commands"
+             Name="ChannelsSection"
              mc:Ignorable="d">
     <Grid >
-       <TreeView Cursor="Hand">
+       <TreeView Name="MainTree" Cursor="Hand">
          <TreeViewItem ItemsSource="{Binding JoinedChannels}">
              <TreeViewItem.Header>
                  <StackPanel Orientation="Horizontal">
@@ -18,36 +20,42 @@
              </TreeViewItem.Header>
              <TreeViewItem.ItemTemplate>
                  <DataTemplate>
-                     <StackPanel Orientation="Horizontal">
+                     <Grid>
+                         <Grid.ContextMenu>
+                             <ContextMenu>
+                                <MenuItem Tag="{Binding}" Click="LeaveChannelClick" Header="Leave">
+                                    <MenuItem.Icon>
+                                        <materialDesign:PackIcon Foreground="Red" Kind="Minus"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                         </Grid.ContextMenu>
                          <TextBlock Text="{Binding Name}"/>
-                     </StackPanel>
+                     </Grid>
                  </DataTemplate>
              </TreeViewItem.ItemTemplate>
          </TreeViewItem>
-         <TreeViewItem ItemsSource="{Binding AvailableChannels}">
+         <TreeViewItem  ItemsSource="{Binding AvailableChannels}">
              <TreeViewItem.Header>
                  <StackPanel Orientation="Horizontal">
                      <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center" Kind="AccountMultipleRemoveOutline"/>
                      <TextBlock Text="available" VerticalAlignment="Center"/>
                  </StackPanel>
              </TreeViewItem.Header>
-             <TreeViewItem.CommandBindings>
-                 <CommandBinding Command="{Binding JoinGroupCommand}" />
-             </TreeViewItem.CommandBindings>
              <TreeViewItem.ItemTemplate>
                  <DataTemplate>
-                     <StackPanel Orientation="Horizontal">
-                         <StackPanel.ContextMenu>
+                     <Grid>
+                         <Grid.ContextMenu>
                              <ContextMenu>
-                                <MenuItem Header="join">
+                                <MenuItem Tag="{Binding}" Click="JoinChannelClick" Header="Join">
                                     <MenuItem.Icon>
-                                        <materialDesign:PackIcon Kind="Plus"/>
+                                        <materialDesign:PackIcon Foreground="Green" Kind="Plus"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
-                         </StackPanel.ContextMenu>
+                         </Grid.ContextMenu>
                          <TextBlock Text="{Binding Name}"/>
-                     </StackPanel>
+                     </Grid>
                  </DataTemplate>
              </TreeViewItem.ItemTemplate>
          </TreeViewItem>

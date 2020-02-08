@@ -60,19 +60,28 @@ namespace ClientLourd.ViewModels
                 {
                     Messages = new ObservableCollection<Message>(),
                     Name = "Global",
-                    Members = new ObservableCollection<User>(),
+                    Members = new ObservableCollection<User>()
+                    {
+                        new User("test","2323"),
+                    },
                 },
                 new Channel()
                 {
                     Messages = new ObservableCollection<Message>(),
                     Name = "test1",
-                    Members = new ObservableCollection<User>(),
+                    Members = new ObservableCollection<User>()
+                    {
+                        new User("test","2323"),
+                    },
                 },
                 new Channel()
                 {
                     Messages = new ObservableCollection<Message>(),
                     Name = "test2",
-                    Members = new ObservableCollection<User>(),
+                    Members = new ObservableCollection<User>()
+                    {
+                        new User("jow","2323"),
+                    },
                 },
             };
             Init();
@@ -110,9 +119,43 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _joinChannelCommand ??
-                       (_joinChannelCommand = new RelayCommand<Channel>(param => param.Members.Add(new User("test", "1")),
-                           param => AvailableChannels.Count > 0));
+                       (_joinChannelCommand = new RelayCommand<Channel>(param => JoinChannel(param)));
             }
+        }
+
+        public void JoinChannel(Channel channel)
+        {
+            channel.Members.Add(new User("test", "1"));
+            UpdateChannels();
+        }
+        
+        
+        RelayCommand<Channel> _leaveChannelCommand;
+
+        public ICommand LeaveChannelCommand
+        {
+            get
+            {
+                return _leaveChannelCommand ??
+                       (_leaveChannelCommand = new RelayCommand<Channel>(param => LeaveChannel(param)));
+            }
+        }
+
+        public void LeaveChannel(Channel channel)
+        {
+            //TODO change the name
+            channel.Members.Remove(channel.Members.First(u => u.Name == "test"));
+            UpdateChannels();
+        }
+        
+        
+        
+
+        private void UpdateChannels()
+        {
+            NotifyPropertyChanged("Channels");
+            NotifyPropertyChanged("JoinedChannels");
+            NotifyPropertyChanged("AvailableChannels");
         }
         
         
