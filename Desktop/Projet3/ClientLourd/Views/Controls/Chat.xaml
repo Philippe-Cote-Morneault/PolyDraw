@@ -77,19 +77,16 @@
         
         
         <!-- Message section-->
-        <TabControl SelectedIndex="{Binding SelectedChannelIndex}" Name="ConversationTabControl"
-                    ItemsSource="{Binding Channels}" DockPanel.Dock="Top">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <!--Conversation here-->
-                    <controls:Conversation />
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
+        <Border BorderBrush="Gray" BorderThickness="1">
+            <DockPanel>
+                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" BorderBrush="Gray" BorderThickness="0 0 0 1">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <materialDesign:PackIcon Kind="UsersGroup" Height="24" Width="24" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding SelectedChannel.Name}" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <controls:Conversation />
+            </DockPanel>
+        </Border>
     </DockPanel>
 </UserControl>

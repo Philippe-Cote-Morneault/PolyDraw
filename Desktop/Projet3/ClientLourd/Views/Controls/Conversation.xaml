@@ -14,7 +14,7 @@
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
                   extensions:ScrollViewerExtensions.AlwaysScrollToEnd="True">
-        <ListBox Name="ConversationList" ItemsSource="{Binding Messages}"
+        <ListBox Name="ConversationList" ItemsSource="{Binding SelectedChannel.Messages}"
                  PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
             <ListBox.Resources>
                 <Style TargetType="ListBoxItem">

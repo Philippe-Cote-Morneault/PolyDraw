@@ -10,7 +10,7 @@
              Name="ChannelsSection"
              mc:Ignorable="d">
     <Grid >
-       <TreeView Name="MainTree" Cursor="Hand">
+       <TreeView Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
          <TreeViewItem ItemsSource="{Binding JoinedChannels}">
              <TreeViewItem.Header>
                  <StackPanel Orientation="Horizontal">
@@ -35,7 +35,7 @@
                  </DataTemplate>
              </TreeViewItem.ItemTemplate>
          </TreeViewItem>
-         <TreeViewItem  ItemsSource="{Binding AvailableChannels}">
+         <TreeViewItem ItemsSource="{Binding AvailableChannels}">
              <TreeViewItem.Header>
                  <StackPanel Orientation="Horizontal">
                      <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center" Kind="AccountMultipleRemoveOutline"/>

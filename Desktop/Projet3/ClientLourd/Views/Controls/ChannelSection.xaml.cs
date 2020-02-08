@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using ClientLourd.Models.Bindable;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls
@@ -18,6 +19,17 @@ namespace ClientLourd.Views.Controls
         private void LeaveChannelClick(object sender, RoutedEventArgs e)
         {
             ((ChatViewModel)DataContext).LeaveChannelCommand.Execute(((MenuItem)sender).Tag);
+        }
+
+        private void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            //TODO check if the channel is available or joined
+            var tree = (TreeView) sender;
+            var channel = (Channel)tree.SelectedItem;
+            if (channel != null)
+            {
+                ((ChatViewModel)DataContext).ChangeChannelCommand.Execute(channel);
+            }
         }
     }
 }

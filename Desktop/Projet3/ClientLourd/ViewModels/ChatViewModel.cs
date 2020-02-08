@@ -19,7 +19,9 @@ namespace ClientLourd.ViewModels
     {
         private int _newMessages;
 
-
+        /// <summary>
+        /// New message counter
+        /// </summary>
         public int NewMessages
         {
             get => _newMessages;
@@ -38,16 +40,17 @@ namespace ClientLourd.ViewModels
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
-        private int _selectedChannelIndex;
+        private Channel _selectedChannel;
 
-        public int SelectedChannelIndex
+        public Channel SelectedChannel
         {
-            get { return _selectedChannelIndex; }
+            get { return _selectedChannel; }
             set
             {
-                if (value != _selectedChannelIndex)
+                if (value != _selectedChannel)
                 {
-                    _selectedChannelIndex = value;
+                    _selectedChannel = value;
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -84,6 +87,7 @@ namespace ClientLourd.ViewModels
                     },
                 },
             };
+            SelectedChannel = Channels[0];
             Init();
             (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ChatOpen += OnChatOpen;
         }
@@ -110,7 +114,16 @@ namespace ClientLourd.ViewModels
         }
         
         
-        
+        RelayCommand<Channel> _changeChannelCommand;
+
+        public ICommand ChangeChannelCommand
+        {
+            get
+            {
+                return _changeChannelCommand ??
+                       (_changeChannelCommand = new RelayCommand<Channel>(channel => SelectedChannel = channel));
+            }
+        }
         
         RelayCommand<Channel> _joinChannelCommand;
 
@@ -119,7 +132,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _joinChannelCommand ??
-                       (_joinChannelCommand = new RelayCommand<Channel>(param => JoinChannel(param)));
+                       (_joinChannelCommand = new RelayCommand<Channel>(channel => JoinChannel(channel)));
             }
         }
 
@@ -137,7 +150,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _leaveChannelCommand ??
-                       (_leaveChannelCommand = new RelayCommand<Channel>(param => LeaveChannel(param)));
+                       (_leaveChannelCommand = new RelayCommand<Channel>(channel => LeaveChannel(channel)));
             }
         }
 
