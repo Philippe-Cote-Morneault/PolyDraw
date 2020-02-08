@@ -9,6 +9,34 @@ namespace ClientLourd.Models.Bindable
         {
         }
 
+        public ObservableCollection<User> Members
+        {
+            get { return _members; }
+            set
+            {
+                if (value != _members)
+                {
+                    _members = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private ObservableCollection<User> _members;
+        
+        public string ID
+        {
+            get { return _id; }
+            set
+            {
+                if (value != _id)
+                {
+                    _id = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private string _id;
         public string Name
         {
             get { return _name; }

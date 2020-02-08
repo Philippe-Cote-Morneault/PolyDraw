@@ -42,6 +42,10 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.2.920, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -151,6 +155,9 @@
     <Compile Include="Utilities\Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
     <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />
+    <Compile Include="Views\Controls\ChannelSection.xaml.cs">
+      <DependentUpon>ChannelSection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
@@ -184,6 +191,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Controls\ChannelSection.xaml" />
     <Page Include="Views\Controls\Chat.xaml" />
     <Page Include="Views\Controls\Conversation.xaml" />
     <Page Include="Views\Controls\Editor.xaml">

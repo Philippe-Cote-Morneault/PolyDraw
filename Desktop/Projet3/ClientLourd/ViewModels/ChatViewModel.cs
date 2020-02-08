@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -53,12 +54,25 @@ namespace ClientLourd.ViewModels
 
         public ChatViewModel()
         {
-            Channels = new ObservableCollection<Channel>()
+            Channels = new List<Channel>()
             {
                 new Channel()
                 {
                     Messages = new ObservableCollection<Message>(),
                     Name = "Global",
+                    Members = new ObservableCollection<User>(),
+                },
+                new Channel()
+                {
+                    Messages = new ObservableCollection<Message>(),
+                    Name = "test1",
+                    Members = new ObservableCollection<User>(),
+                },
+                new Channel()
+                {
+                    Messages = new ObservableCollection<Message>(),
+                    Name = "test2",
+                    Members = new ObservableCollection<User>(),
                 },
             };
             Init();
@@ -74,7 +88,7 @@ namespace ClientLourd.ViewModels
         public override void Init()
         {
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
-            Channels.ToList().ForEach(c => c.Messages.Clear());
+            Channels.ForEach(c => c.Messages.Clear());
             NewMessages = 0;
         }
 
@@ -85,6 +99,23 @@ namespace ClientLourd.ViewModels
             App.Current.Dispatcher.Invoke(() => { Channels[0].Messages.Add(m); });
             NewMessages++;
         }
+        
+        
+        
+        
+        RelayCommand<Channel> _joinChannelCommand;
+
+        public ICommand JoinChannelCommand
+        {
+            get
+            {
+                return _joinChannelCommand ??
+                       (_joinChannelCommand = new RelayCommand<Channel>(param => param.Members.Add(new User("test", "1")),
+                           param => AvailableChannels.Count > 0));
+            }
+        }
+        
+        
 
         RelayCommand<object> _clearNotificationCommand;
 
@@ -145,20 +176,43 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public ObservableCollection<Channel> Channels
+
+        public ObservableCollection<Channel> JoinedChannels
         {
-            get { return _channels; }
+            get
+            {
+                //TODO change name
+                return new ObservableCollection<Channel>(_channels.Where(c => c.Members.Select(m => m.Name).Contains("test")).ToList());
+            }
+        }
+        public ObservableCollection<Channel> AvailableChannels
+        {
+            get
+            {
+                //TODO change name
+                var test = new ObservableCollection<Channel>(_channels.Where(c => !c.Members.Select(m => m.Name).Contains("test")).ToList());
+                return test;
+            }
+        }
+        public List<Channel> Channels
+        {
+            get
+            {
+                return _channels;
+            }
             set
             {
                 if (value != _channels)
                 {
                     _channels = value;
                     NotifyPropertyChanged();
+                    NotifyPropertyChanged("JoinedChannels");
+                    NotifyPropertyChanged("AvailableChannels");
                 }
             }
         }
 
-        private ObservableCollection<Channel> _channels;
+        private List<Channel> _channels;
 
         public delegate void ChatOpenHandler(object source, EventArgs args);
 
