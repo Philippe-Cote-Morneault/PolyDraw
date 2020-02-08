@@ -81,9 +81,10 @@ class LoginActivity : AppCompatActivity() {
         if (!validLoginInfo)
             return
         changeLoadingView(true)
-
-        val authData = AuthenticationRequest(username)
-        val call = AuthenticationRestService.service.authenticate(authData)
+        
+        val authJson = JsonObject()
+        authJson.addProperty("Username", username)
+        val call = AuthenticationRestService.service.authenticate(authJson)
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 when(response.code()) {

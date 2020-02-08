@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface AuthenticationRestService {
     @POST("/auth")
-    fun authenticate(@Body data: AuthenticationRequest): Call<JsonObject>
+    fun authenticate(@Body data: JsonObject): Call<JsonObject>
 
     companion object {
         val service: AuthenticationRestService = Retrofit.retrofit.create(AuthenticationRestService::class.java)
