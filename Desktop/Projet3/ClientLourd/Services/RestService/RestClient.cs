@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Windows.Documents;
+using ClientLourd.Models.Bindable;
+using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Constants;
 using RestSharp;
 using RestSharp.Serialization.Json;
@@ -20,10 +24,19 @@ namespace ClientLourd.Services.RestService
                 Timeout = 10000,
             };
         }
-
+        
+        /// <summary>
+        /// Try to login using the username and password specified
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <exception cref="RestConflictException"></exception>
+        /// <exception cref="RestBadRequestException"></exception>
+        /// <exception cref="RestException"></exception>
         public async Task<string> Login(string username, string password)
         {
-            RestRequest request = new RestRequest("auth");
+            RestRequest request = new RestRequest("auth", Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username});
             var response = await Execute(request);
@@ -38,16 +51,53 @@ namespace ClientLourd.Services.RestService
                 case HttpStatusCode.BadRequest:
                     throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
-throw new RestException(response.ErrorMessage);
+                    throw new RestException(response.ErrorMessage);
             }
         }
-
+        
+        public async Task<List<Channel>> GetChannels()
+        {
+            RestRequest request = new RestRequest("chat/channels", Method.GET);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return deseralizer.Deserialize<List<Channel>>(response);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+        
+        public async Task<Channel> GetChannel(string channelId)
+        {
+            RestRequest request = new RestRequest("chat/channels", Method.GET);
+            //TODO mettre dans le bon format
+            request.AddParameter("channelID", channelId);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return deseralizer.Deserialize<Channel>(response);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+        
+        
         private Task<IRestResponse> Execute(RestRequest request)
         {
             Task<IRestResponse> task = new Task<IRestResponse>(() =>
             {
                 OnStartWaiting(this);
-                var response = _client.Post(request);
+                var response = _client.Execute(request);
                 OnStopWaiting(this);
                 return response;
             });

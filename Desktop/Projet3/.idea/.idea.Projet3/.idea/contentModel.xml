@@ -64,10 +64,14 @@
         </e>
         <e p="Services" t="Include">
           <e p="RestService" t="Include">
-            <e p="RestBadRequestException.cs" t="Include" />
+            <e p="Exceptions" t="Include">
+              <e p="RestBadRequestException.cs" t="Include" />
+              <e p="RestConflictException.cs" t="Include" />
+              <e p="RestException.cs" t="Include" />
+              <e p="RestNotFoundException.cs" t="Include" />
+              <e p="RestUnauthorizedException.cs" t="Include" />
+            </e>
             <e p="RestClient.cs" t="Include" />
-            <e p="RestConflictException.cs" t="Include" />
-            <e p="RestException.cs" t="Include" />
           </e>
           <e p="SocketService" t="Include">
             <e p="MessageReceivedEventArgs.cs" t="Include" />

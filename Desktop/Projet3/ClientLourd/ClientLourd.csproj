@@ -129,9 +129,11 @@
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\User.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
-    <Compile Include="Services\RestService\RestBadRequestException.cs" />
-    <Compile Include="Services\RestService\RestConflictException.cs" />
-    <Compile Include="Services\RestService\RestException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\Constants\Networks.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
