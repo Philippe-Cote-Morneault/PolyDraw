@@ -24,11 +24,17 @@ namespace ClientLourd.Views.Controls
         private void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             //TODO check if the channel is available or joined
-            var tree = (TreeView) sender;
-            var channel = (Channel)tree.SelectedItem;
-            if (channel != null)
+            try
             {
-                ((ChatViewModel)DataContext).ChangeChannelCommand.Execute(channel);
+                var tree = (TreeView) sender;
+                var channel = (Channel)tree.SelectedItem;
+                if (channel != null)
+                {
+                    ((ChatViewModel)DataContext).ChangeChannelCommand.Execute(channel);
+                }
+            }catch
+            {
+               //The treeViewItem is not a channel 
             }
         }
     }
