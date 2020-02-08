@@ -6,17 +6,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Callback
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
 import com.log3900.R
@@ -25,19 +28,70 @@ import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.socket.*
-import com.squareup.moshi.Json
-import okhttp3.ResponseBody
-import org.json.JSONObject
+import com.log3900.utils.ui.KeyboardHelper
 import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
+import kotlin.reflect.jvm.internal.ReflectProperties
 
 class LoginActivity : AppCompatActivity() {
+    // Services
+    private lateinit var loginService: LoginService
+    // UI Elements
+    private lateinit var loginButton: MaterialButton
+    private lateinit var usernameTextInput: TextInputEditText
+    private lateinit var usernameTextInputLayout: TextInputLayout
+    private lateinit var passwordTextInput: TextInputEditText
+    private lateinit var passwordTextInputLayout: TextInputLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        supportActionBar?.hide()
+
+        loginService = LoginService()
+
+        setupUIElements()
+
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+    private fun setupUIElements() {
+        loginButton = findViewById(R.id.activity_login_login_button)
+        loginButton.setOnClickListener {
+            onLoginButtonClick()
+        }
+
+        usernameTextInput = findViewById(R.id.activity_login_text_input_username)
+        usernameTextInput.doAfterTextChanged {
+            onUsernameChange()
+        }
+        passwordTextInput = findViewById(R.id.activity_login_text_input_password)
+        passwordTextInput.doAfterTextChanged {
+            onPasswordChange()
+        }
+
+        usernameTextInputLayout = findViewById(R.id.activity_login_text_input_layout_username)
+        passwordTextInputLayout = findViewById(R.id.activity_login_text_input_layout_password)
+
+        supportActionBar?.hide()
+    }
+
+    private fun onUsernameChange() {
+        if (!Validator.validateUsername(usernameTextInput.text.toString())) {
+            usernameTextInputLayout.error =
+                "Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)"
+        } else {
+            usernameTextInputLayout.error = null
+        }
+    }
+
+    private fun onPasswordChange() {
+        if (!Validator.validatePassword(passwordTextInput.text.toString())) {
+            passwordTextInputLayout.error =
+                "Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)"
+        } else {
+            passwordTextInputLayout.error = null
+        }
     }
 
     override fun onResume() {
@@ -74,12 +128,14 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun sendLoginInfo(view: View) {
-        val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
-        hideKeyboard(view)
-        val validLoginInfo: Boolean = validateLoginInfo()
-        if (!validLoginInfo)
+    private fun onLoginButtonClick() {
+        val username = usernameTextInput.text.toString().toLowerCase()
+        KeyboardHelper.hideKeyboard(this)
+
+        if (!Validator.validateUsername(usernameTextInput.text.toString()) || !Validator.validatePassword(passwordTextInput.text.toString())) {
+            // TODO: Add toast or popup letting user know he needs to fix credentials
             return
+        }
         changeLoadingView(true)
 
         val authJson = JsonObject()
@@ -112,12 +168,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleSuccessAuth(bearer: String, session: String) {
-        // TODO: Change the code to get a JSON response instead of a raw one
-        println("found sessionToken")
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             println("inside handler")
             if ((it.obj as Message).data[0].toInt() == 1) {
-                val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
+                val username = findViewById<TextInputEditText>(R.id.activity_login_text_input_username).text.toString().toLowerCase()
                 startMainActivity(username)
                 true
             } else {
@@ -135,7 +189,7 @@ class LoginActivity : AppCompatActivity() {
     private fun handleErrorAuth(error: String) {
         MaterialAlertDialogBuilder(this@LoginActivity)
             .setMessage("Error: $error")
-            .setPositiveButton("Retry", null) //{ _, _ -> sendLoginInfo() }
+            .setPositiveButton("Retry", null) //{ _, _ -> onLoginButtonClick() }
             .setNegativeButton("Cancel", null)
             .show()
         changeLoadingView(false)
@@ -155,36 +209,8 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    // TODO: Utility function?
-    private fun hideKeyboard(view: View) {
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-    private fun validateLoginInfo(): Boolean {
-        val username = findViewById<TextInputEditText>(R.id.username).text.toString()
-        val password = findViewById<TextInputEditText>(R.id.password).text.toString()
-        val usernameLayout: TextInputLayout = findViewById(R.id.login_username_layout)
-        val passwordLayout: TextInputLayout = findViewById(R.id.login_password_layout)
-
-        if (!Validator.validateUsername(username)) {
-            usernameLayout.error = "Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)"
-            passwordLayout.error = null
-            return false
-        } else if (!Validator.validatePassword(password)) {
-            usernameLayout.error = null
-            passwordLayout.error = "Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)"
-            return false
-        }
-
-        usernameLayout.error = null
-        passwordLayout.error = null
-
-        return true
-    }
-
     private fun changeLoadingView(isLoading: Boolean) {
-        val loginButton: Button = findViewById(R.id.login_btn)
-        val progressBar: ProgressBar = findViewById(R.id.login_progressbar)
+        val progressBar: ProgressBar = findViewById(R.id.activity_login_progressbar_login)
 
         if (isLoading) {
             loginButton.visibility = View.GONE
