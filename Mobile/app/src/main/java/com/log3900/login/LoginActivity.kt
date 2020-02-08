@@ -6,18 +6,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Callback
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.log3900.MainActivity
 import com.log3900.R
 import com.log3900.socket.Event
@@ -25,12 +25,12 @@ import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.socket.*
+import com.squareup.moshi.Json
+import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.net.SocketTimeoutException
-import java.util.*
-import kotlin.concurrent.timerTask
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,17 +83,22 @@ class LoginActivity : AppCompatActivity() {
         changeLoadingView(true)
 
         val authData = AuthenticationRequest(username)
-        val call = RestClient.authenticationService.authenticate(authData)
-        call.enqueue(object : Callback<AuthResponse> {
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                val res: AuthResponse = response.body() ?: parseError(response.errorBody().string())
+        val call = AuthenticationRestService.service.authenticate(authData)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 when(response.code()) {
-                    200 -> handleSuccessAuth(res.bearer!!, res.sessionToken!!)
-                    else -> handleErrorAuth(res.error ?: "Internal error")
+                    200 -> {
+                        val sessionToken = response.body()!!.get("SessionToken").asString
+                        val bearerToken = response.body()!!.get("Bearer").asString
+                        handleSuccessAuth(bearerToken, sessionToken)
+                    }
+                    else -> {
+                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
+                    }
                 }
             }
 
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                 val errMessage: String =
                     if (t is SocketTimeoutException)
                         "The connection took too long"

@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 
 // TODO: Password
 data class AuthenticationRequest(
-    val username: String
+    @Json(name = "Username") val username: String
 )
 
 data class AuthResponse(
