@@ -8,12 +8,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 object Retrofit {
-    val retrofit = Retrofit.Builder()
+    val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("http://log3900.fsae.polymtl.ca:5010/")
         .addConverterFactory(MoshiConverterFactory.create(createMoshi()))
         .build()
 
-    fun createMoshi(): Moshi {
+    private fun createMoshi(): Moshi {
         return Moshi.Builder()
             .add(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory())
             .add(UUIDAdapter())
