@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 
             var chatView = (supportFragmentManager.findFragmentById(R.id.fragment) as Fragment).view
             when(chatView!!.visibility){
-                View.INVISIBLE -> chatView!!.visibility = View.VISIBLE
-                View.VISIBLE -> chatView!!.visibility = View.INVISIBLE
+                View.INVISIBLE -> chatView.visibility = View.VISIBLE
+                View.VISIBLE -> chatView.visibility = View.INVISIBLE
             }
         }
 

@@ -11,7 +11,7 @@ import retrofit2.http.GET
 import java.util.concurrent.TimeUnit
 
 object RestClient {
-    private const val baseUrl = "http://log3900.fsae.polymtl.ca:5000/"
+    private const val baseUrl = "http://log3900.fsae.polymtl.ca:5010/"
     private val httpClient = OkHttpClient().newBuilder()
         .connectTimeout(20, TimeUnit.SECONDS)
         .readTimeout(20, TimeUnit.SECONDS)

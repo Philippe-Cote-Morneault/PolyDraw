@@ -53,7 +53,6 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onFinish() {
-                    Log.d("POTATO", "onFinish called")
                     socketConnectionDialog.dismiss()
                     AlertDialog.Builder(this@LoginActivity)
                         .setTitle("Connection Error")
@@ -82,9 +81,6 @@ class LoginActivity : AppCompatActivity() {
         if (!validLoginInfo)
             return
         changeLoadingView(true)
-
-        // TODO: Send login info
-        println("No errors")
 
         val authData = AuthenticationRequest(username)
         val call = RestClient.authenticationService.authenticate(authData)
@@ -119,13 +115,11 @@ class LoginActivity : AppCompatActivity() {
                 startMainActivity(username)
                 true
             } else {
-                println("connection refused")
                 handleErrorAuth("Connection refused.")
                 false
             }
         })
 
-        println("sending request to server")
         SocketService.instance?.sendMessage(
             Event.SOCKET_CONNECTION,
             session.toByteArray(Charsets.UTF_8))

@@ -139,9 +139,6 @@ class SocketService : Service() {
     }
 
     fun disconnectSocket(handler: Handler?) {
-        //val req = android.os.Message()
-        //req.what = Request.DISCONNECT.ordinal
-        //socketHandler.sendRequest(req)
         if (SocketHandler.state.get() == State.CONNECTED) {
             socketHandler.setDisconnectionListener(Handler {
                 handler?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
