@@ -81,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
         if (!validLoginInfo)
             return
         changeLoadingView(true)
-        
+
         val authJson = JsonObject()
         authJson.addProperty("Username", username)
         val call = AuthenticationRestService.service.authenticate(authJson)
@@ -139,11 +139,6 @@ class LoginActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
         changeLoadingView(false)
-    }
-
-    private fun parseError(errorBody: String): AuthResponse {
-        val json = JSONObject(errorBody)
-        return AuthResponse(null, null, error = json["Error"].toString())
     }
 
     fun startMainActivity(username: String) {
