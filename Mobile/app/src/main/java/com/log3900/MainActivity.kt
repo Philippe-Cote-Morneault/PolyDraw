@@ -76,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-
         SocketService.instance?.disconnectSocket(Handler {
             intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -86,10 +85,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("POTATO", "onDestroy")
-        SocketService.instance?.disconnectSocket(null)
+    override fun onBackPressed() {
+        super.onBackPressed()
+        logout()
     }
 
 }

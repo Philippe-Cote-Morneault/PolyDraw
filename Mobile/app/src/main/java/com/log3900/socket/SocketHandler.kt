@@ -93,9 +93,11 @@ object SocketHandler {
     }
 
     fun onDisconnect() {
-        state.set(State.DISCONNECTING)
-        socketHealthcheckTimer.cancel()
-        socket.close()
+        if (state.get() == State.CONNECTED) {
+            state.set(State.DISCONNECTING)
+            socketHealthcheckTimer.cancel()
+            socket.close()
+        }
     }
 
     private fun handleRequest(message: android.os.Message) {
