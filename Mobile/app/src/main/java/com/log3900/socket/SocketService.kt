@@ -42,6 +42,10 @@ class SocketService : Service() {
         sendMessage(event, moshi.packToByteArray(data))
     }
 
+    fun sendJsonMessage(event: Event, data: String) {
+        sendMessage(event, MoshiPack().jsonToMsgpack(data).readByteArray())
+    }
+
     fun subscribeToMessage(event: Event, handler: Handler) {
         if (!messageSubscribers.containsKey(event)) {
             messageSubscribers[event] = ArrayList()
