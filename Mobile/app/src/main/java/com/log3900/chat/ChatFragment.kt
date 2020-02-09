@@ -69,17 +69,15 @@ class ChatFragment : Fragment() {
                 messagesViewAdapter.scrollToBottom()
             }
         }
-
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        
     }
 
     private fun setupToolbar(rootView: View) {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
-        //toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
-        //toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
         toolbar.setTitle("General")
 
-        //toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
+        toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
     }
 
     private fun setupMessagesRecyclerView(rootView: View) {
