@@ -25,6 +25,14 @@ class ChatPresenter : Presenter {
         sendMessage(message)
     }
 
+    fun handleNavigationDrawerClick() {
+        if (chatView.isNavigationDrawerOpened()) {
+            chatView.closeNavigationDrawer()
+        } else {
+            chatView.openNavigationDrawer()
+        }
+    }
+
     private fun subscribeToEvents() {
         messageRepository.subscribe(MessageRepository.Event.MESSAGE_RECEIVED, Handler {
             handleNewMessage(it)

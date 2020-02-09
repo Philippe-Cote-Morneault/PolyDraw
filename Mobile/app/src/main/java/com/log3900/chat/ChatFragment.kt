@@ -75,7 +75,7 @@ class ChatFragment : Fragment(), ChatView {
         toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
         toolbar.setTitle("General")
 
-        toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
+        toolbar.setNavigationOnClickListener {chatPresenter.handleNavigationDrawerClick()}
     }
 
     private fun setupMessagesRecyclerView(rootView: View) {
@@ -85,18 +85,6 @@ class ChatFragment : Fragment(), ChatView {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = messagesViewAdapter
-        }
-    }
-
-    /**
-     * Handles click on the top toolbar navigation icon. Closes and opens the navigation drawer, which contains the channel list.
-     *
-     */
-    private fun onToolbarNavigationClick() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(Gravity.LEFT)
-        } else {
-            drawer.openDrawer(Gravity.LEFT)
         }
     }
 
@@ -129,5 +117,17 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun appendMessage(message: ReceivedMessage) {
         messagesViewAdapter.appendMessage(message)
+    }
+
+    override fun openNavigationDrawer() {
+        drawer.openDrawer(Gravity.LEFT)
+    }
+
+    override fun closeNavigationDrawer() {
+        drawer.closeDrawer(Gravity.LEFT)
+    }
+
+    override fun isNavigationDrawerOpened(): Boolean {
+        return drawer.isDrawerOpen(GravityCompat.START)
     }
 }
