@@ -85,6 +85,15 @@ func UnRegisterUser(userID uuid.UUID) {
 	}
 }
 
+//GetUserIDFromToken returns the userID based on the session token
+func GetUserIDFromToken(token string) (bool, uuid.UUID) {
+	userID, ok := tokenAvailable[token]
+	if ok {
+		return true, userID
+	}
+	return false, uuid.Nil
+}
+
 //IsTokenAvailable makes sure that the token does not already exist in the session table
 func IsTokenAvailable(token string) bool {
 	defer mutex.Unlock()
