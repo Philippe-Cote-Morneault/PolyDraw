@@ -1,5 +1,6 @@
 package com.log3900.chat
 
+import com.google.gson.JsonArray
 import com.log3900.shared.network.rest.Retrofit
 import com.squareup.moshi.Json
 import retrofit2.Call
@@ -9,7 +10,7 @@ import retrofit2.http.Path
 
 interface ChatRestService {
     @GET("chat/channels")
-    fun getChannels(@Header("SessionToken") sessionToken: String, @Header("Language") language: String): Call<Array<Channel>>
+    fun getChannels(@Header("SessionToken") sessionToken: String, @Header("Language") language: String): Call<JsonArray>
 
     @GET("chat/channels/{channelID}")
     fun getChannel(@Header("SessionToken") sessionToken: String, @Header("Language") language: String, @Path("channelID") channelID: String): Call<Channel>
