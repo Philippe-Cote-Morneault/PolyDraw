@@ -35,9 +35,29 @@ object ChannelRespository {
         return channels!!
     }
 
+    fun getChannel(sessionToken: String, channelID: String) {
+        var channel: Channel? = null
+        val call = ChatRestService.service.getChannel(sessionToken, "EN", channelID)
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                val moshi = Moshi.Builder()
+                    .add(UUIDAdapter())
+                    .build()
+
+                val adapter: JsonAdapter<Channel> = moshi.adapter(Channel::class.java)
+                channel = adapter.fromJson(response.body().toString())
+            }
+
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+            }
+        })
+    }
+
     fun createChannel(channelName: String) {
         val dataObject = JsonObject()
         dataObject.addProperty("ChannelName", channelName)
         SocketService.instance?.sendJsonMessage(Event.CREATE_CHANNEL, dataObject.toString())
     }
+
+
 }
