@@ -20,6 +20,8 @@ func (a *Server) setRouters() {
 	a.Post("/auth", a.handleRequest(api.PostAuth))
 	a.Get("/users", a.handleRequest(api.GetUsers))
 	a.Get("/chat/channels", a.handleRequest(api.GetChatChannel))
+	a.Get("/chat/channels/{id}", a.handleRequest(api.GetChatChannelID))
+
 }
 
 func defaultRoute(w http.ResponseWriter, r *http.Request) {
