@@ -14,8 +14,15 @@ import com.log3900.socket.SocketService
 import java.net.Socket
 
 class MainApplication : Application() {
+    companion object {
+        lateinit var instance: MainApplication
+    }
+
     override fun onCreate() {
         super.onCreate()
+
+        instance = this
+
         val serviceConnection1 = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             }
