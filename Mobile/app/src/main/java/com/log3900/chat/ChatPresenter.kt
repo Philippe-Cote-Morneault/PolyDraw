@@ -2,6 +2,10 @@ package com.log3900.chat
 
 import android.os.Handler
 import android.os.Message
+import com.log3900.chat.Channel.Channel
+import com.log3900.chat.Message.MessageRepository
+import com.log3900.chat.Message.ReceivedMessage
+import com.log3900.chat.Message.SentMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter

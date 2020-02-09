@@ -1,4 +1,4 @@
-package com.log3900.chat
+package com.log3900.chat.Message
 
 import com.squareup.moshi.Json
 import java.util.*

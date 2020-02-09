@@ -1,4 +1,4 @@
-package com.log3900.chat
+package com.log3900.chat.Channel
 
 import android.app.Service
 import android.content.Intent
@@ -6,13 +6,11 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.log3900.chat.ChatRestService
 import com.log3900.socket.Event
-import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi

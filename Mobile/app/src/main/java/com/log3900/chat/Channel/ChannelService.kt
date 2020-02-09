@@ -1,12 +1,23 @@
-package com.log3900.chat
+package com.log3900.chat.Channel
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.log3900.user.UserRepository
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ChannelService {
+    private var currentChannelID: UUID
+    private var channelRepository: ChannelRepository
+    private var channels: ArrayList<Channel> = arrayListOf()
+    private var joinedChannels: ArrayList<Channel> = arrayListOf()
 
+    constructor() {
+        channelRepository = ChannelRepository.instance!!
+        channels = channelRepository.getChannels(UserRepository.getUser().sessionToken)
+        currentChannelID = UUID.fromString("0000-0000-0000-0000")
+    }
+
+    /*
     fun getChannels(token: String): Array<Channel>? {
         var channels: Array<Channel>? = null
         val res = ChatRestService.service.getChannels(token, "EN")
@@ -25,6 +36,8 @@ class ChannelService {
 
         return channels
     }
+
+     */
 
 }
 

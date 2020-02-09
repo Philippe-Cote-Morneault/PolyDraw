@@ -5,8 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
-import com.log3900.chat.ReceivedMessage
-import java.lang.Exception
+import com.log3900.chat.Message.ReceivedMessage
 import java.util.*
 
 class MessageAdapter(var messages: LinkedList<ReceivedMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {

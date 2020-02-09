@@ -1,5 +1,6 @@
 package com.log3900.chat
 
+import com.log3900.chat.Message.ReceivedMessage
 import java.util.*
 
 interface ChatView {
