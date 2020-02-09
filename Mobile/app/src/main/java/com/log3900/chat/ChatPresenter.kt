@@ -3,6 +3,7 @@ package com.log3900.chat
 import android.os.Handler
 import android.os.Message
 import com.log3900.shared.architecture.Presenter
+import com.log3900.user.UserRepository
 import java.util.*
 
 class ChatPresenter : Presenter {
@@ -41,7 +42,11 @@ class ChatPresenter : Presenter {
     }
 
     private fun handleNewMessage(message: Message) {
-        chatView.appendMessage(message.obj as ReceivedMessage)
+        val receivedMessage = message.obj as ReceivedMessage
+        chatView.appendMessage(receivedMessage)
+        if (UserRepository.getUser().username != receivedMessage.senderName) {
+            chatView.notifyNewMessage()
+        }
     }
 
     override fun resume() {

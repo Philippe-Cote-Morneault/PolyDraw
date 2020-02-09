@@ -2,6 +2,7 @@ package com.log3900.chat
 
 import android.app.Activity
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.util.TypedValue
@@ -129,5 +130,10 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun isNavigationDrawerOpened(): Boolean {
         return drawer.isDrawerOpen(GravityCompat.START)
+    }
+
+    override fun notifyNewMessage() {
+        val musicPlayer = MediaPlayer.create(this.context, R.raw.audio_notification_new_message)
+        musicPlayer.start()
     }
 }

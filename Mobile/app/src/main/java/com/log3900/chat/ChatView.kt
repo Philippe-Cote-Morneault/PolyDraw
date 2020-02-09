@@ -6,4 +6,5 @@ interface ChatView {
     fun openNavigationDrawer()
     fun closeNavigationDrawer()
     fun isNavigationDrawerOpened(): Boolean
+    fun notifyNewMessage()
 }
