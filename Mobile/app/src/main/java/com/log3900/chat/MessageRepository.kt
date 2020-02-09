@@ -108,7 +108,7 @@ class MessageRepository : Service() {
 
     private fun receiveMessage(message: Message) {
         val tempMessage = android.os.Message()
-        tempMessage.what = MessageEvent.MESSAGE_RECEIVED.ordinal
+        tempMessage.what = Event.MESSAGE_RECEIVED.ordinal
         val moshi = MoshiPack({
             add(TimeStampAdapter())
             add(UUIDAdapter())
