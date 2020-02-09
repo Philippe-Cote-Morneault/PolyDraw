@@ -7,11 +7,13 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
+        string _containedView;
         string _username;
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
@@ -25,6 +27,7 @@ namespace ClientLourd.ViewModels
 
         public override void Init()
         {
+            ContainedView = Enums.Views.Editor.ToString();
             Username = "";
             RestClient = new RestClient();
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
@@ -85,6 +88,20 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public string ContainedView
+        {
+            get { return _containedView; }
+
+            set
+            {
+                if (value != _containedView)
+                {
+                    _containedView = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
 
         protected virtual void OnUserLogout(object source)
         {
@@ -123,6 +140,20 @@ namespace ClientLourd.ViewModels
             OnChatOpen(this);
         }
 
+        private RelayCommand<object> _myProfileCommand;
+
+        public ICommand MyProfileCommand
+        {
+            get
+            {
+                return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile()));
+            }
+        }
+
+        private void MyProfile()
+        {
+            ContainedView = Enums.Views.Profile.ToString();
+        }
 
     }
 }
