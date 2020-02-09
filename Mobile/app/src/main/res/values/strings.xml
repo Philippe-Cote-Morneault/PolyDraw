@@ -1,6 +1,14 @@
 <resources>
-    <!--login-->
+    <!-- general -->
     <string name="app_name">PolyDraw</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="avatar">Avatar</string>
+    <string name="email">Email</string>
+
+    <!--login-->
     <string name="login_welcome">Welcome!</string>
     <string name="login_username_hint">Username</string>
     <string name="login_username_error">The username cannot be empty</string>
@@ -9,6 +17,11 @@
     <string name="login_password_error">The password cannot be empty</string>
     <string name="login_button">Login</string>
     <string name="login_signup">Don\'t have an account? Sign up</string>
+
+    <!-- profile -->
+    <string name="profile_info_title">Profile Information</string>
+    <string name="profile_stats_title">Statistics</string>
+    <string name="password_asterisks">********</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
