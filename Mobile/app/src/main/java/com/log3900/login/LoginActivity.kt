@@ -1,202 +1,153 @@
 package com.log3900.login
 
 import android.app.AlertDialog
-import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.DialogFragment
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import retrofit2.Callback
+import com.google.android.material.picker.MaterialPickerOnPositiveButtonClickListener
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.log3900.MainActivity
 import com.log3900.R
-import com.log3900.socket.Event
-import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.socket.*
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Response
-import java.net.SocketTimeoutException
-import java.util.*
-import kotlin.concurrent.timerTask
+import com.log3900.utils.ui.KeyboardHelper
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginView {
+    // Services
+    private lateinit var loginPresenter: LoginPresenter
+    // UI Elements
+    private lateinit var loginButton: MaterialButton
+    private lateinit var usernameTextInput: TextInputEditText
+    private lateinit var usernameTextInputLayout: TextInputLayout
+    private lateinit var passwordTextInput: TextInputEditText
+    private lateinit var passwordTextInputLayout: TextInputLayout
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        supportActionBar?.hide()
+
+        loginPresenter = LoginPresenter(this)
+
+        setupUIElements()
+
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+    private fun setupUIElements() {
+        loginButton = findViewById(R.id.activity_login_login_button)
+        loginButton.setOnClickListener {
+            onLoginButtonClick()
+        }
+
+        usernameTextInput = findViewById(R.id.activity_login_text_input_username)
+        usernameTextInput.doAfterTextChanged {
+            onUsernameChange()
+        }
+        passwordTextInput = findViewById(R.id.activity_login_text_input_password)
+        passwordTextInput.doAfterTextChanged {
+            onPasswordChange()
+        }
+
+        usernameTextInputLayout = findViewById(R.id.activity_login_text_input_layout_username)
+        passwordTextInputLayout = findViewById(R.id.activity_login_text_input_layout_password)
+
+        progressBar = findViewById(R.id.activity_login_progressbar_login)
+
+        supportActionBar?.hide()
+    }
+
+    private fun onUsernameChange() {
+        loginPresenter.validateUsername(usernameTextInput.text.toString())
+    }
+
+    private fun onPasswordChange() {
+        loginPresenter.validatePassword(passwordTextInput.text.toString())
     }
 
     override fun onResume() {
         super.onResume()
-        if (SocketService.instance?.getSocketState() != State.CONNECTED) {
-            val socketConnectionDialog = ProgressDialog()
-            socketConnectionDialog.show(supportFragmentManager, "progressDialog")
-            val timer = object: CountDownTimer(60000, 15000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    if (SocketService.instance?.getSocketState() != State.CONNECTED) {
-                        SocketService.instance?.connectToSocket()
-                    }
-                }
-
-                override fun onFinish() {
-                    Log.d("POTATO", "onFinish called")
-                    socketConnectionDialog.dismiss()
-                    AlertDialog.Builder(this@LoginActivity)
-                        .setTitle("Connection Error")
-                        .setMessage("Could not establish connection to server after 4 attempts. The application will now close.")
-                        .setPositiveButton("Ok") { dialog, which ->
-                            finishAffinity()
-                        }
-                        .setCancelable(false)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show()
-                }
-            }
-            SocketService.instance?.subscribeToEvent(SocketEvent.CONNECTED, Handler{
-                socketConnectionDialog.dismiss()
-                timer.cancel()
-                true
-            })
-            timer.start()
-        }
+        loginPresenter.resume()
     }
 
-    fun sendLoginInfo(view: View) {
-        val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
-        hideKeyboard(view)
-        val validLoginInfo: Boolean = validateLoginInfo()
-        if (!validLoginInfo)
-            return
-        changeLoadingView(true)
+    private fun onLoginButtonClick() {
+        KeyboardHelper.hideKeyboard(this)
 
-        // TODO: Send login info
-        println("No errors")
-
-        val authData = AuthenticationRequest(username)
-        val call = RestClient.authenticationService.authenticate(authData)
-        call.enqueue(object : Callback<AuthResponse> {
-            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-                val res: AuthResponse = response.body() ?: parseError(response.errorBody().string())
-                when(response.code()) {
-                    200 -> handleSuccessAuth(res.bearer!!, res.sessionToken!!)
-                    else -> handleErrorAuth(res.error ?: "Internal error")
-                }
-            }
-
-            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                val errMessage: String =
-                    if (t is SocketTimeoutException)
-                        "The connection took too long"
-                    else
-                        "Couldn't authenticate ($t)"
-                println(errMessage)
-                handleErrorAuth(errMessage)
-            }
-        })
+        loginPresenter.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
     }
 
-    private fun handleSuccessAuth(bearer: String, session: String) {
-        // TODO: Change the code to get a JSON response instead of a raw one
-        println("found sessionToken")
-        SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
-            println("inside handler")
-            if ((it.obj as Message).data[0].toInt() == 1) {
-                val username = findViewById<TextInputEditText>(R.id.username).text.toString().toLowerCase()
-                startMainActivity(username)
-                true
-            } else {
-                println("connection refused")
-                handleErrorAuth("Connection refused.")
-                false
-            }
-        })
-
-        println("sending request to server")
-        SocketService.instance?.sendMessage(
-            Event.SOCKET_CONNECTION,
-            session.toByteArray(Charsets.UTF_8))
+    override fun showProgresBar() {
+        progressBar.visibility = View.VISIBLE
+        loginButton.visibility = View.INVISIBLE
     }
 
+    override fun hideProgressBar() {
+        progressBar.visibility = View.GONE
+        loginButton.visibility = View.VISIBLE
+    }
 
-    private fun handleErrorAuth(error: String) {
-        MaterialAlertDialogBuilder(this@LoginActivity)
-            .setMessage("Error: $error")
-            .setPositiveButton("Retry", null) //{ _, _ -> sendLoginInfo() }
-            .setNegativeButton("Cancel", null)
+    override fun setUsernameError(error: String) {
+        usernameTextInputLayout.error = error
+    }
+
+    override fun setPasswordError(error: String) {
+        passwordTextInputLayout.error = error
+    }
+
+    override fun clearPasswordError() {
+        passwordTextInputLayout.error = null
+    }
+
+    override fun clearUsernameError() {
+        usernameTextInputLayout.error = null
+    }
+
+    override fun showErrorDialog(title: String, message: String, positiveButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?,
+                                 negativeButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Retry", positiveButtonClickListener) //{ _, _ -> onLoginButtonClick() }
+            .setNegativeButton("Cancel", negativeButtonClickListener)
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
-        changeLoadingView(false)
     }
 
-    private fun parseError(errorBody: String): AuthResponse {
-        val json = JSONObject(errorBody)
-        return AuthResponse(null, null, error = json["Error"].toString())
+    override fun showProgressDialog(dialog: DialogFragment) {
+        dialog.show(supportFragmentManager, "progressDialog")
     }
 
-    fun startMainActivity(username: String) {
-        val preferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        if (preferences != null) {
-            with (preferences.edit()) {
-                putString(getString(R.string.preference_file_username_key), username)
-                commit()
-            }
+    override fun hideProgressDialog(dialog: DialogFragment) {
+        dialog.dismiss()
+    }
+
+    override fun closeView() {
+        finishAffinity()
+    }
+
+    override fun onDestroy() {
+        loginPresenter.destroy()
+        super.onDestroy()
+    }
+
+    override fun navigateTo(target: Class<*>, intentFlags: Int?) {
+        val intent = Intent(this, target)
+        if (intentFlags != null) {
+            intent.flags = intentFlags
         }
-        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         finish()
-    }
-
-    // TODO: Utility function?
-    private fun hideKeyboard(view: View) {
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-    private fun validateLoginInfo(): Boolean {
-        val username = findViewById<TextInputEditText>(R.id.username).text.toString()
-        val password = findViewById<TextInputEditText>(R.id.password).text.toString()
-        val usernameLayout: TextInputLayout = findViewById(R.id.login_username_layout)
-        val passwordLayout: TextInputLayout = findViewById(R.id.login_password_layout)
-
-        if (!Validator.validateUsername(username)) {
-            usernameLayout.error = "Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)"
-            passwordLayout.error = null
-            return false
-        } else if (!Validator.validatePassword(password)) {
-            usernameLayout.error = null
-            passwordLayout.error = "Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)"
-            return false
-        }
-
-        usernameLayout.error = null
-        passwordLayout.error = null
-
-        return true
-    }
-
-    private fun changeLoadingView(isLoading: Boolean) {
-        val loginButton: Button = findViewById(R.id.login_btn)
-        val progressBar: ProgressBar = findViewById(R.id.login_progressbar)
-
-        if (isLoading) {
-            loginButton.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
-        } else {
-            loginButton.visibility = View.VISIBLE
-            progressBar.visibility = View.GONE
-        }
     }
 }

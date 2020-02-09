@@ -33,16 +33,11 @@ class MonitoringService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        println("monitoring service onCreate")
         instance = this
         socketService = SocketService.instance
 
         Thread(Runnable {
-            println("creating monitoring starting")
             Looper.prepare()
-            if (socketService == null) {
-                println("socket service is not created")
-            }
             socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, Handler {
                 handleEvent(it)
                 true
@@ -62,7 +57,6 @@ class MonitoringService : Service() {
     }
 
     fun handleEvent(message: android.os.Message) {
-        Log.d("POTATO", "CONNECTIONEROR = " + message.toString())
         when (message.what) {
             SocketEvent.CONNECTED.ordinal -> {
                 onConnectionError()
