@@ -1,32 +1,19 @@
 package com.log3900.login
 
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.CountDownTimer
 import android.os.Handler
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
-import com.log3900.MainApplication
-import com.log3900.R
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
-import com.log3900.shared.ui.WarningDialog
 import com.log3900.socket.*
 import com.log3900.user.User
 import com.log3900.user.UserRepository
-import com.squareup.moshi.Moshi
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import java.lang.IllegalArgumentException
 import java.net.SocketTimeoutException
-import java.util.concurrent.TimeUnit
 
 class LoginPresenter(var loginView: LoginView) : Presenter {
 
@@ -66,7 +53,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     private fun handleSuccessAuth(bearer: String, session: String, username: String) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
-                storeUsername(username)
+                storeUser(username, session, bearer)
                 startMainActivity()
                 true
             } else {
@@ -80,8 +67,8 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             session.toByteArray(Charsets.UTF_8))
     }
 
-    private fun storeUsername(username: String) {
-        UserRepository.createUser(User(username.toLowerCase()))
+    private fun storeUser(username: String, sessionToken: String, bearerToken: String) {
+        UserRepository.createUser(User(username.toLowerCase(), sessionToken, bearerToken))
     }
 
     private fun handleErrorAuth(error: String) {

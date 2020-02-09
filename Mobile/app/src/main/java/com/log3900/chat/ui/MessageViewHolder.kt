@@ -1,7 +1,6 @@
 package com.log3900.chat.ui
 
 import android.graphics.Color
-import android.opengl.Visibility
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -10,9 +9,8 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.card.MaterialCardView
 import com.log3900.R
-import com.log3900.chat.ReceivedMessage
+import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.utils.format.DateFormatter
 
 class MessageViewHolder : RecyclerView.ViewHolder {

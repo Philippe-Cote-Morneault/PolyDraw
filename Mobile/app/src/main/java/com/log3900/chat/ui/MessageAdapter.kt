@@ -5,11 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
-import com.log3900.chat.ReceivedMessage
+import com.log3900.chat.Message.ReceivedMessage
 import java.util.*
 
-class MessageAdapter(val messages: LinkedList<ReceivedMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {
+class MessageAdapter(var messages: LinkedList<ReceivedMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {
     private lateinit var recyclerView: RecyclerView
+
+    fun setMessage(messages: LinkedList<ReceivedMessage>) {
+        this.messages = messages
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val textView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_message, parent, false) as View
@@ -45,10 +49,9 @@ class MessageAdapter(val messages: LinkedList<ReceivedMessage>, val username: St
      *
      * @param message the message to add
      */
-    fun appendMessage(message: ReceivedMessage) {
-        messages.addLast(message)
-        notifyItemInserted(messages.size - 1)
 
+    fun messageInserted() {
+        notifyItemInserted(messages.size - 1)
         if (!recyclerView.canScrollVertically(1)) {
             recyclerView.smoothScrollToPosition(messages.size - 1)
         }
