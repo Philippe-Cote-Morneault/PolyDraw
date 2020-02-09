@@ -1,6 +1,7 @@
 package com.log3900.login
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -10,8 +11,10 @@ import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.picker.MaterialPickerOnPositiveButtonClickListener
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
@@ -110,12 +113,28 @@ class LoginActivity : AppCompatActivity(), LoginView {
         usernameTextInputLayout.error = null
     }
 
-    override fun showErrorDialog(error: String) {
+    override fun showErrorDialog(title: String, message: String, positiveButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?,
+                                 negativeButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?) {
         MaterialAlertDialogBuilder(this)
-            .setMessage("Error: $error")
-            .setPositiveButton("Retry", null) //{ _, _ -> onLoginButtonClick() }
-            .setNegativeButton("Cancel", null)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Retry", positiveButtonClickListener) //{ _, _ -> onLoginButtonClick() }
+            .setNegativeButton("Cancel", negativeButtonClickListener)
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
+    }
+
+    override fun showProgressDialog(dialog: DialogFragment) {
+        dialog.show(supportFragmentManager, "progressDialog")
+    }
+
+    override fun hideProgressDialog(dialog: DialogFragment) {
+        dialog.dismiss()
+    }
+
+    override fun closeView() {
+        finishAffinity()
     }
 
     override fun onDestroy() {

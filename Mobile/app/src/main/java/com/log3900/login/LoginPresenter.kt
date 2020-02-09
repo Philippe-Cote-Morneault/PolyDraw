@@ -85,7 +85,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     }
 
     private fun handleErrorAuth(error: String) {
-        loginView.showErrorDialog(error)
+        loginView.showErrorDialog("Authentication error", error, null, null)
         loginView.hideProgressBar()
     }
 
@@ -114,10 +114,9 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     }
 
     override fun resume() {
-        /*
         if (SocketService.instance?.getSocketState() != State.CONNECTED) {
             val socketConnectionDialog = ProgressDialog()
-            socketConnectionDialog.show(supportFragmentManager, "progressDialog")
+            loginView.showProgressDialog(socketConnectionDialog)
             val timer = object: CountDownTimer(60000, 15000) {
                 override fun onTick(millisUntilFinished: Long) {
                     if (SocketService.instance?.getSocketState() != State.CONNECTED) {
@@ -126,16 +125,13 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                 }
 
                 override fun onFinish() {
-                    socketConnectionDialog.dismiss()
-                    AlertDialog.Builder(this@LoginActivity)
-                        .setTitle("Connection Error")
-                        .setMessage("Could not establish connection to server after 4 attempts. The application will now close.")
-                        .setPositiveButton("Ok") { dialog, which ->
-                            finishAffinity()
-                        }
-                        .setCancelable(false)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show()
+                    loginView.hideProgressDialog(socketConnectionDialog)
+                    loginView.showErrorDialog("Connection Error",
+                        "Could not establish connection to server after 4 attempts. The application will now close.",
+                        null,
+                        {_, _ ->
+                            loginView.closeView()
+                        })
                 }
             }
             SocketService.instance?.subscribeToEvent(SocketEvent.CONNECTED, Handler{
@@ -145,7 +141,6 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             })
             timer.start()
         }
-         */
     }
 
     override fun pause() {
