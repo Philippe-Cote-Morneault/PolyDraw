@@ -7,7 +7,9 @@ enum class Event(var eventType: Byte) {
     HEALTH_CHECK_SERVER(9),
     HEALTH_CHECK_CLIENT(10),
     MESSAGE_RECEIVED(21),
-    MESSAGE_SENT(20)
+    MESSAGE_SENT(20),
+    CREATE_CHANNEL(26),
+    CHANNEL_CREATED(27)
 }
 
 data class Message(var type: Event, var data: ByteArray)
