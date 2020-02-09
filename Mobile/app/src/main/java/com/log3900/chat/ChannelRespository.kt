@@ -2,6 +2,9 @@ package com.log3900.chat
 
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.log3900.socket.Event
+import com.log3900.socket.SocketService
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
@@ -30,5 +33,11 @@ object ChannelRespository {
         })
 
         return channels!!
+    }
+
+    fun createChannel(channelName: String) {
+        val dataObject = JsonObject()
+        dataObject.addProperty("ChannelName", channelName)
+        SocketService.instance?.sendJsonMessage(Event.CREATE_CHANNEL, dataObject.toString())
     }
 }
