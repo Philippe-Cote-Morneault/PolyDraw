@@ -14,7 +14,7 @@ class ChannelService {
             override fun onResponse(call: Call<Array<Channel>>, response: Response<Array<Channel>>) {
                 when(response.code()) {
                     200 -> channels = response.body()
-                    else -> println(response.errorBody().string())
+                    else -> println(response.errorBody()?.string())
                 }
             }
 
