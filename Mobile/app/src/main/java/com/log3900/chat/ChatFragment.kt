@@ -20,9 +20,9 @@ import com.log3900.utils.ui.KeyboardHelper
 import java.lang.Thread.sleep
 import java.util.*
 
-class ChatFragment : Fragment() {
+class ChatFragment : Fragment(), ChatView {
     // Services
-    private lateinit var messageService: MessageService
+    private lateinit var chatPresenter: ChatPresenter
     // UI elements
     private lateinit var messagesRecyclerView: RecyclerView
     private lateinit var messagesViewAdapter: MessageAdapter
@@ -34,11 +34,9 @@ class ChatFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_chat, container, false)
 
-        messageService = MessageService()
-
         setupUiElements(rootView)
 
-        subscribeToEvents()
+        chatPresenter = ChatPresenter(this)
 
         return rootView
     }
@@ -69,7 +67,7 @@ class ChatFragment : Fragment() {
                 messagesViewAdapter.scrollToBottom()
             }
         }
-        
+
     }
 
     private fun setupToolbar(rootView: View) {
@@ -91,17 +89,6 @@ class ChatFragment : Fragment() {
     }
 
     /**
-     * Subscribes to all events from services this fragment wants to handle.
-     *
-     */
-    private fun subscribeToEvents() {
-        messageService.subscribe(MessageEvent.MESSAGE_RECEIVED, Handler{ msg ->
-            onNewMessageReceived(msg)
-            true
-        })
-    }
-
-    /**
      * Handles click on the top toolbar navigation icon. Closes and opens the navigation drawer, which contains the channel list.
      *
      */
@@ -119,7 +106,7 @@ class ChatFragment : Fragment() {
         messageInput.text?.clear()
         if (messageText != "" && messageText.trim().length > 0)
         {
-            messageService.sendMessage(messageText.trim())
+            chatPresenter.sendMessage(messageText.trim())
         }
     }
 
@@ -134,5 +121,13 @@ class ChatFragment : Fragment() {
      */
     private fun onNewMessageReceived(message: android.os.Message) {
         messagesViewAdapter.appendMessage(message.obj as ReceivedMessage)
+    }
+
+    override fun prependMessage(message: ReceivedMessage) {
+        messagesViewAdapter.prependMessage(message)
+    }
+
+    override fun appendMessage(message: ReceivedMessage) {
+        messagesViewAdapter.appendMessage(message)
     }
 }
