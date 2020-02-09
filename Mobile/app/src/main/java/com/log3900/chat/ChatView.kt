@@ -1,10 +1,14 @@
 package com.log3900.chat
 
+import java.util.*
+
 interface ChatView {
-    fun prependMessage(message: ReceivedMessage)
-    fun appendMessage(message: ReceivedMessage)
     fun openNavigationDrawer()
     fun closeNavigationDrawer()
     fun isNavigationDrawerOpened(): Boolean
     fun notifyNewMessage()
+    fun setReceivedMessages(messages: LinkedList<ReceivedMessage>)
+    fun setCurrentChannnelName(name: String)
+    fun playNewMessageNotification()
+    fun scrollMessage()
 }
