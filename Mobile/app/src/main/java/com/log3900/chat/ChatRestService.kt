@@ -1,6 +1,7 @@
 package com.log3900.chat
 
 import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.log3900.shared.network.rest.Retrofit
 import com.squareup.moshi.Json
 import retrofit2.Call
@@ -13,11 +14,11 @@ interface ChatRestService {
     fun getChannels(@Header("SessionToken") sessionToken: String, @Header("Language") language: String): Call<JsonArray>
 
     @GET("chat/channels/{channelID}")
-    fun getChannel(@Header("SessionToken") sessionToken: String, @Header("Language") language: String, @Path("channelID") channelID: String): Call<Channel>
+    fun getChannel(@Header("SessionToken") sessionToken: String, @Header("Language") language: String, @Path("channelID") channelID: String): Call<JsonObject>
 
     @GET("chat/messages/{channelID}/?start={start}&end={end}")
     fun getChannelMessages(@Header("SessionToken") sessionToken: String, @Header("Language") language: String,
-                           @Path("channelID") channelID: String, @Path("start") start: Int, @Path("end") end: Int): Call<ChannelMessages>
+                           @Path("channelID") channelID: String, @Path("start") start: Int, @Path("end") end: Int): Call<JsonObject>
 
     companion object {
         val service = Retrofit.retrofit.create(ChatRestService::class.java)
