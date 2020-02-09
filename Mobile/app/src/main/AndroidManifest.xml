@@ -30,9 +30,8 @@
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
-        <activity
-            android:name=".login.LoginActivity"/>
-
+        <activity android:name=".login.LoginActivity"/>
+        <activity android:name=".profile.ProfileActivity"/>
         <activity android:name=".shared.ui.WarningDialog" />
 
         <service android:name=".socket.SocketService"/>
