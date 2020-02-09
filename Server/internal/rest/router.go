@@ -19,6 +19,7 @@ func (a *Server) setRouters() {
 	a.Head("/healthcheck", a.handleRequest(api.HeadHealthcheck))
 	a.Post("/auth", a.handleRequest(api.PostAuth))
 	a.Get("/users", a.handleRequest(api.GetUsers))
+	a.Get("/chat/channels", a.handleRequest(api.GetChatChannel))
 }
 
 func defaultRoute(w http.ResponseWriter, r *http.Request) {
