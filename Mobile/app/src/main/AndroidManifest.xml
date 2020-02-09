@@ -37,5 +37,6 @@
 
         <service android:name=".socket.SocketService"/>
         <service android:name=".session.MonitoringService"/>
+        <service android:name=".chat.MessageRepository"/>
     </application>
 </manifest>
