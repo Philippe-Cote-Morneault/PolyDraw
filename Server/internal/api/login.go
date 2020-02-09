@@ -18,6 +18,7 @@ type authRequest struct {
 type authResponse struct {
 	Bearer       string
 	SessionToken string
+	UserID       string
 }
 
 // PostAuth authenticate using password
@@ -59,7 +60,7 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 
 	if ok, sessionToken := auth.HasUserToken(user.ID); ok {
 		//The token is already registered
-		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken})
+		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken, UserID: user.ID.String()})
 	} else {
 		//Generate session token
 		sessionToken, _ := secureb.GenerateToken()
@@ -67,7 +68,7 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 			sessionToken, _ = secureb.GenerateToken()
 		}
 		auth.Register(sessionToken, user.ID)
-		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken})
+		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken, UserID: user.ID.String()})
 	}
 
 }
