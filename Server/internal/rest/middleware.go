@@ -39,7 +39,9 @@ func logMiddleware(next http.Handler) http.Handler {
 
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !stringInSlice(r.URL.Path, authExceptions) {
+		if val, ok := authExceptions[r.URL.Path]; ok && val {
+			next.ServeHTTP(w, r)
+		} else {
 			sessionToken := r.Header.Get("SessionToken")
 			if sessionToken != "" {
 				//There is a token, check if it's valid and return the userID
@@ -53,17 +55,6 @@ func authMiddleware(next http.Handler) http.Handler {
 			} else {
 				rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")
 			}
-		} else {
-			next.ServeHTTP(w, r)
 		}
 	})
-}
-
-func stringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
 }

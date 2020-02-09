@@ -7,14 +7,13 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
 
-var authExceptions []string
+var authExceptions map[string]bool
 
 // setRouters sets the all required routers
 func (a *Server) setRouters() {
-
-	authExceptions = []string{
-		"/healthcheck",
-		"/auth",
+	authExceptions = map[string]bool{
+		"/healthcheck": true,
+		"/auth":        true,
 	}
 
 	a.Head("/healthcheck", a.handleRequest(api.HeadHealthcheck))
