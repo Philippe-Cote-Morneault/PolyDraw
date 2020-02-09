@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import com.log3900.chat.MessageRepository
 import com.log3900.login.LoginActivity
 import com.log3900.session.MonitoringService
 import com.log3900.socket.SocketService
@@ -34,5 +35,7 @@ class MainApplication : Application() {
         bindService(Intent(this, SocketService::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
 
         bindService(Intent(this, MonitoringService::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
+
+        bindService(Intent(this, MessageRepository::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
     }
 }
