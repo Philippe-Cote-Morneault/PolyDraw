@@ -65,7 +65,10 @@ class ChatFragment : Fragment(), ChatView {
             val heightDiff = rootView.rootView.height - rootView.height
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200f, context?.resources?.displayMetrics)
             if (heightDiff > pixels) {
-                messagesViewAdapter.scrollToBottom()
+                chatPresenter.onKeyboardChange(true)
+            }
+            else {
+                chatPresenter.onKeyboardChange(false)
             }
         }
 
@@ -74,7 +77,6 @@ class ChatFragment : Fragment(), ChatView {
     private fun setupToolbar(rootView: View) {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
         toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
-        toolbar.setTitle("General")
 
         toolbar.setNavigationOnClickListener {chatPresenter.handleNavigationDrawerClick()}
     }
@@ -103,21 +105,9 @@ class ChatFragment : Fragment(), ChatView {
         messagesViewAdapter.scrollToBottom()
     }
 
-    /**
-     * Handles a new chat message received. Informs the recyclerView of its presence.
-     *
-     * @param message the chat message received
-     */
-    private fun onNewMessageReceived(message: android.os.Message) {
-        messagesViewAdapter.appendMessage(message.obj as ReceivedMessage)
-    }
-
-    override fun prependMessage(message: ReceivedMessage) {
-        messagesViewAdapter.prependMessage(message)
-    }
-
-    override fun appendMessage(message: ReceivedMessage) {
-        messagesViewAdapter.appendMessage(message)
+    override fun onResume() {
+        super.onResume()
+        chatPresenter.resume()
     }
 
     override fun openNavigationDrawer() {
@@ -133,7 +123,23 @@ class ChatFragment : Fragment(), ChatView {
     }
 
     override fun notifyNewMessage() {
+        messagesViewAdapter.messageInserted()
+    }
+
+    override fun setReceivedMessages(messages: LinkedList<ReceivedMessage>) {
+        messagesViewAdapter.setMessage(messages)
+    }
+
+    override fun setCurrentChannnelName(name: String) {
+        toolbar.setTitle(name)
+    }
+
+    override fun playNewMessageNotification() {
         val musicPlayer = MediaPlayer.create(this.context, R.raw.audio_notification_new_message)
         musicPlayer.start()
+    }
+
+    override fun scrollMessage() {
+        messagesViewAdapter.scrollToBottom()
     }
 }
