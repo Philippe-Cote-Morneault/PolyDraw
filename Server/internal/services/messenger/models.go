@@ -35,3 +35,11 @@ type ChannelCreateResponse struct {
 	UserID      string
 	Timestamp   int
 }
+
+//ChannelLeaveResponse represent a message response to quit a channel
+type ChannelLeaveResponse struct {
+	UserID    string
+	Username  string
+	ChannelID string
+	Timestamp int
+}
