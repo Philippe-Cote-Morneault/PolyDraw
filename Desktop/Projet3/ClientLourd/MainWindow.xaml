@@ -67,9 +67,7 @@
                                 Name="NotificationCounter"
                                 Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
                                 BadgeBackground="{StaticResource SecondaryAccentBrush}"
-                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}"
-                                
-                                >
+                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
 
                                 <ToggleButton
                                     Name="ChatToggleButton"
@@ -87,7 +85,7 @@
                                         Kind="Chat"
                                         Height="24"
                                         Width="24" />
-                                    
+
                                 </ToggleButton>
                             </materialDesign:Badged>
 
@@ -127,8 +125,11 @@
                         <DockPanel>
                             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" Padding="10">
                                 <StackPanel Orientation="Vertical">
-                                    <materialDesign:PackIcon Kind="Person" Height="40" Width="40" HorizontalAlignment="Center" ></materialDesign:PackIcon>
-                                    <TextBlock Text="{Binding SessionInformations.User.Name}" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                                    <materialDesign:PackIcon Kind="Person" Height="40" Width="40"
+                                                             HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding SessionInformations.User.Name}"
+                                               HorizontalAlignment="Center"
+                                               Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
                                 </StackPanel>
                             </materialDesign:ColorZone>
                             <ListView>
@@ -138,8 +139,9 @@
                                             Command="{Binding Path=LogoutCommand}"
                                             CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}">
                                         <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="Power" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="Logout"/>
+                                            <materialDesign:PackIcon Kind="Power" Height="15" Width="15"
+                                                                     VerticalAlignment="Center" />
+                                            <TextBlock Text="Logout" />
                                         </StackPanel>
                                     </Button>
                                 </ListViewItem>
@@ -155,7 +157,7 @@
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
                 <controls:Login x:Name="LoginScreen"
-                             IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
+                                IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </Grid>
 

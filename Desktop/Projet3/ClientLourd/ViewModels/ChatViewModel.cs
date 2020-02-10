@@ -19,7 +19,6 @@ namespace ClientLourd.ViewModels
 {
     public class ChatViewModel : ViewModelBase
     {
-
         private const string GLOBAL_CHANNEL_ID = "00000000-0000-0000-0000-000000000000";
         private int _newMessages;
 
@@ -41,12 +40,18 @@ namespace ClientLourd.ViewModels
 
         public SessionInformations SessionInformations
         {
-            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations; }
+            get
+            {
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    ?.SessionInformations;
+            }
         }
+
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
+
         public RestClient RestClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
@@ -79,14 +84,14 @@ namespace ClientLourd.ViewModels
 
         private async Task GetChannels()
         {
-             Channels = await RestClient.GetChannels();
-             SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+            Channels = await RestClient.GetChannels();
+            SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
         }
-        
+
         public override void AfterLogOut()
         {
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
-            SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel; 
+            SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel;
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
             SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
             Channels = new List<Channel>();
@@ -113,14 +118,11 @@ namespace ClientLourd.ViewModels
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
             Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                Channels.First(c => c.ID == args.ChannelId).Messages.Add(m);
-            });
+            App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NewMessages++;
         }
-        
-        
+
+
         RelayCommand<Channel> _changeChannelCommand;
 
         public ICommand ChangeChannelCommand
@@ -131,7 +133,7 @@ namespace ClientLourd.ViewModels
                        (_changeChannelCommand = new RelayCommand<Channel>(channel => SelectedChannel = channel));
             }
         }
-        
+
         RelayCommand<Channel> _joinChannelCommand;
 
         public ICommand JoinChannelCommand
@@ -149,8 +151,8 @@ namespace ClientLourd.ViewModels
             channel.Users.Add(SessionInformations.User);
             UpdateChannels();
         }
-        
-        
+
+
         RelayCommand<Channel> _leaveChannelCommand;
 
         public ICommand LeaveChannelCommand
@@ -173,11 +175,10 @@ namespace ClientLourd.ViewModels
             {
                 DialogHost.Show(new ClosableErrorDialog("You can't leave the Global channel"));
             }
+
             UpdateChannels();
         }
-        
-        
-        
+
 
         private void UpdateChannels()
         {
@@ -185,8 +186,7 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged("JoinedChannels");
             NotifyPropertyChanged("AvailableChannels");
         }
-        
-        
+
 
         RelayCommand<object> _clearNotificationCommand;
 
@@ -205,13 +205,14 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _openDrawerCommand ?? (_openDrawerCommand = new RelayCommand<object[]>(param => OpenChatDrawer(param), param => (bool) param[0]));
+                return _openDrawerCommand ?? (_openDrawerCommand =
+                           new RelayCommand<object[]>(param => OpenChatDrawer(param), param => (bool) param[0]));
             }
         }
 
         public void OpenChatDrawer(object[] param)
         {
-            ((DrawerHost)param[1]).IsRightDrawerOpen = !((DrawerHost)param[1]).IsRightDrawerOpen;
+            ((DrawerHost) param[1]).IsRightDrawerOpen = !((DrawerHost) param[1]).IsRightDrawerOpen;
         }
 
         RelayCommand<object[]> _sendMessageCommand;
@@ -240,7 +241,7 @@ namespace ClientLourd.ViewModels
                     //Clear the chat textbox
                     tBox.Text = "";
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     DialogHost.Show(new ClosableErrorDialog(e));
                 }
@@ -252,23 +253,26 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return new ObservableCollection<Channel>(_channels.Where(c => c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) ||
-                                                                              c.ID ==GLOBAL_CHANNEL_ID).ToList());
+                return new ObservableCollection<Channel>(_channels.Where(c =>
+                    c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) ||
+                    c.ID == GLOBAL_CHANNEL_ID).ToList());
             }
         }
+
         public ObservableCollection<Channel> AvailableChannels
         {
             get
             {
-                return new ObservableCollection<Channel>(_channels.Where(c => !c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) && c.Name != GLOBAL_CHANNEL_ID).ToList());
+                return new ObservableCollection<Channel>(_channels.Where(c =>
+                        !c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) &&
+                        c.Name != GLOBAL_CHANNEL_ID)
+                    .ToList());
             }
         }
+
         public List<Channel> Channels
         {
-            get
-            {
-                return _channels;
-            }
+            get { return _channels; }
             set
             {
                 if (value != _channels)

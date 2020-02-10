@@ -13,51 +13,32 @@ namespace ClientLourd.Services.SocketService
 
         public string ChannelId
         {
-            get
-            {
-                return _data["ChannelID"];
-            }
+            get { return _data["ChannelID"]; }
         }
 
         public string ChannelName
         {
-            get
-            {
-                return _data["ChannelName"];
-            }
+            get { return _data["ChannelName"]; }
         }
 
         public DateTime Date
         {
-            get
-            {
-                
-                return UnixTimeStampToDateTime(_data["Timestamp"]);
-            }
+            get { return UnixTimeStampToDateTime(_data["Timestamp"]); }
         }
 
         public string UserName
         {
-            get
-            {
-                 return _data["SenderName"];               
-            }
+            get { return _data["SenderName"]; }
         }
 
         public string Message
         {
-            get
-            {
-                return _data["Message"];
-            }
+            get { return _data["Message"]; }
         }
 
         public string UserId
         {
-            get
-            {
-               return _data["SenderID"]; 
-            }
+            get { return _data["SenderID"]; }
         }
 
 

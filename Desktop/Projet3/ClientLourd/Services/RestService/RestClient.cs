@@ -18,6 +18,7 @@ namespace ClientLourd.Services.RestService
     {
         private RestSharp.RestClient _client;
         private string _sessionToken;
+
         public RestClient()
         {
             // For local server usage
@@ -28,7 +29,7 @@ namespace ClientLourd.Services.RestService
                 Timeout = 10000,
             };
         }
-        
+
         /// <summary>
         /// Try to login using the username and password specified
         /// </summary>
@@ -59,7 +60,7 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
-        
+
         public async Task<List<Channel>> GetChannels()
         {
             RestRequest request = new RestRequest("chat/channels", Method.GET);
@@ -78,7 +79,7 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
-        
+
         public async Task<Channel> GetChannel(string channelId)
         {
             RestRequest request = new RestRequest("chat/channels", Method.GET);
@@ -98,8 +99,8 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
-        
-        
+
+
         private Task<IRestResponse> Execute(RestRequest request)
         {
             Task<IRestResponse> task = new Task<IRestResponse>(() =>

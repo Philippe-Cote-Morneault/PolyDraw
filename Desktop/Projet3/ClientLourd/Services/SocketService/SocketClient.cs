@@ -23,7 +23,7 @@ namespace ClientLourd.Services.SocketService
         //private const int PORT = 3001;
         //private const string HostName = "127.0.0.1";
 
-        
+
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
@@ -49,6 +49,7 @@ namespace ClientLourd.Services.SocketService
                 {
                     //If an error occured the health check Timer will handle it
                 }
+
                 //Restart the timer
                 _healthCheckTimer.Start();
             });
@@ -73,6 +74,7 @@ namespace ClientLourd.Services.SocketService
             {
                 //The connection will be close 
             }
+
             _healthCheckTimer.Close();
             _stream.Close();
             _socket.Close();
@@ -113,7 +115,6 @@ namespace ClientLourd.Services.SocketService
                     OnStopWaiting(this);
                     throw;
                 }
-                
             });
         }
 

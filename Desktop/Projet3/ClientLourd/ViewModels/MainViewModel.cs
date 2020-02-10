@@ -89,7 +89,6 @@ namespace ClientLourd.ViewModels
         public delegate void LogOutHandler(object source, EventArgs args);
 
         public event LogOutHandler UserLogout;
-        
 
 
         protected virtual void OnUserLogout(object source)

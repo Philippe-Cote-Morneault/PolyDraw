@@ -16,7 +16,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler ConnectionLost;
         public event SocketEventHandler StartWaiting;
         public event SocketEventHandler StopWaiting;
-        
+
         protected virtual void OnConnectionLost(object source)
         {
             ConnectionLost?.Invoke(source, EventArgs.Empty);

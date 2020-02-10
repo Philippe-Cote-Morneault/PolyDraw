@@ -15,15 +15,15 @@
         <viewModels:MainViewModel x:Key="MainViewModel" />
     </UserControl.Resources>
     <UserControl.DataContext>
-        <viewModels:ChatViewModel/>
+        <viewModels:ChatViewModel />
     </UserControl.DataContext>
     <DockPanel>
         <!-- ChannelSection -->
-        <local:ChannelSection DockPanel.Dock="Left"/>
+        <local:ChannelSection DockPanel.Dock="Left" />
         <!--Chat bottom section-->
         <DockPanel Background="White" DockPanel.Dock="Bottom"
                    FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
-            
+
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <!--send button-->
                 <Button Margin="5"
@@ -74,15 +74,17 @@
 
 
         </DockPanel>
-        
-        
+
+
         <!-- Message section-->
         <Border BorderBrush="Gray" BorderThickness="1">
             <DockPanel>
-                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" BorderBrush="Gray" BorderThickness="0 0 0 1">
+                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" BorderBrush="Gray"
+                                          BorderThickness="0 0 0 1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="UsersGroup" Height="24" Width="24" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding SelectedChannel.Name}" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                        <materialDesign:PackIcon Kind="UsersGroup" Height="24" Width="24" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding SelectedChannel.Name}"
+                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <controls:Conversation />

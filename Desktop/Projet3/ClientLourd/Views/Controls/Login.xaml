@@ -39,7 +39,8 @@
             <!--Logo-->
             <StackPanel Grid.Row="1">
                 <!-- Might change if we translate  ClientLourd in English-->
-                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../../Resources/blacklogo.png" />
+                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
+                       Source="../../Resources/blacklogo.png" />
             </StackPanel>
 
             <!--Username-->
@@ -51,7 +52,7 @@
                     materialDesign:HintAssist.Hint="Username"
                     materialDesign:HintAssist.HelperText="">
                     <TextBox.Text>
-                        <Binding Path="User.Name"> 
+                        <Binding Path="User.Name">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>

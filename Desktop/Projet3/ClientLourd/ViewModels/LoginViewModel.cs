@@ -20,8 +20,8 @@ namespace ClientLourd.ViewModels
         {
             AfterLogOut();
         }
-        
-        
+
+
         public override void AfterLogin()
         {
             IsLoggedIn = true;
@@ -59,8 +59,9 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
-        
+
         private User _user;
+
         public User User
         {
             get { return _user; }
@@ -74,8 +75,9 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
-        
-        private TokenPair _tokens ;
+
+        private TokenPair _tokens;
+
         public TokenPair Tokens
         {
             get { return _tokens; }
@@ -89,7 +91,7 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
-        
+
 
         public ICommand LoginCommand
         {
@@ -140,10 +142,12 @@ namespace ClientLourd.ViewModels
 
             LoginInputRules loginInputValidator = new LoginInputRules();
 
-            return (loginInputValidator.UsernameLengthIsOk(username) && loginInputValidator.PasswordLengthIsOk(password) &&
-                    !loginInputValidator.StringIsWhiteSpace(username) && !loginInputValidator.StringIsWhiteSpace(password));
+            return (loginInputValidator.UsernameLengthIsOk(username) &&
+                    loginInputValidator.PasswordLengthIsOk(password) &&
+                    !loginInputValidator.StringIsWhiteSpace(username) &&
+                    !loginInputValidator.StringIsWhiteSpace(password));
         }
-        
+
         public delegate void LoginEventHandler(object source, EventArgs args);
 
         public event LoginEventHandler LoggedIn;

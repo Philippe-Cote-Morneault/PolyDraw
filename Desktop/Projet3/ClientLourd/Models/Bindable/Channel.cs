@@ -21,8 +21,9 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
         private ObservableCollection<User> _users;
-        
+
         public string ID
         {
             get { return _id; }
@@ -37,6 +38,7 @@ namespace ClientLourd.Models.Bindable
         }
 
         private string _id;
+
         public string Name
         {
             get { return _name; }

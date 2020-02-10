@@ -13,6 +13,7 @@ namespace ClientLourd.Utilities.Converters
             {
                 return date.ToString("HH:mm:ss");
             }
+
             return date.ToString("dd/MM/yyyy");
         }
 

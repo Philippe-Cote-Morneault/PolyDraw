@@ -20,7 +20,6 @@ namespace ClientLourd.Views.Controls
         {
             PasswordBox.Clear();
             ((LoginViewModel) DataContext).AfterLogOut();
-
         }
 
         public void Load(object sender, RoutedEventArgs e)
@@ -40,7 +39,7 @@ namespace ClientLourd.Views.Controls
 
         public void AfterLogin()
         {
-            ((ViewModelBase)DataContext).AfterLogin();
+            ((ViewModelBase) DataContext).AfterLogin();
         }
     }
 }
