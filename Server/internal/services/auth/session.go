@@ -91,6 +91,8 @@ func UnRegisterUser(userID uuid.UUID) {
 
 //GetUserIDFromToken returns the userID based on the session token
 func GetUserIDFromToken(token string) (bool, uuid.UUID) {
+	defer mutex.Unlock()
+	mutex.Lock()
 	userID, ok := tokenAvailable[token]
 	if ok {
 		return true, userID
@@ -121,7 +123,7 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 
 		if userID, ok := tokenAvailable[token]; ok {
 
-			if HasUserSession(userID) {
+			if hasUserSession(userID) {
 				log.Printf("[Auth] -> Connection already exists dropping %s", messageReceived.SocketID)
 				sendAuthResponse(false, messageReceived.SocketID)
 				return false
@@ -193,6 +195,11 @@ func HasUserSession(userID uuid.UUID) bool {
 	defer mutex.Unlock()
 	mutex.Lock()
 
+	return hasUserSession(userID)
+}
+
+//hasUserSession without a deadlock
+func hasUserSession(userID uuid.UUID) bool {
 	_, ok := userCache[userID]
 	return ok
 }
