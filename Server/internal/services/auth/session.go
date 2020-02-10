@@ -155,6 +155,7 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 
 //GetUser returns the user associated with a session
 func GetUser(socketID uuid.UUID) (model.User, error) {
+	//TODO implement caching
 	var session model.Session
 	var user model.User
 	model.DB().Where("socket_id = ?", socketID).First(&session)
