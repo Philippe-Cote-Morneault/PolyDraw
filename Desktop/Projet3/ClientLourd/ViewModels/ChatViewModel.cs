@@ -100,12 +100,18 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnUserLeftChannel(object source, EventArgs args)
         {
-            //TODO
+            var e = (MessageReceivedEventArgs) args;
+            Message m = new Message(e.Date, new User("admin", "-1"), $"{e.UserName} left the channel");
+            App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == e.ChannelId).Messages.Add(m); });
+            NewMessages++;
         }
 
         private void SocketClientOnUserJoinedChannel(object source, EventArgs args)
         {
-            //TODO
+            var e = (MessageReceivedEventArgs) args;
+            Message m = new Message(e.Date, new User("admin", "-1"), $"{e.UserName} joined the channel");
+            App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == e.ChannelId).Messages.Add(m); });
+            NewMessages++;
         }
 
         private void SocketClientOnUserCreatedChannel(object source, EventArgs args)
@@ -120,8 +126,7 @@ namespace ClientLourd.ViewModels
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            //Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
-            Message m = new Message(args.Date, new User(args.UserName, "-1"), args.Message);
+            Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NewMessages++;
         }
