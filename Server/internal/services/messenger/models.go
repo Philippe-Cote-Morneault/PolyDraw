@@ -14,3 +14,11 @@ type MessageReceived struct {
 	SenderName string
 	Message    string
 }
+
+//ChannelJoin represent a message that was sent by the server to inform the client that a new user has join
+type ChannelJoin struct {
+	UserID    string
+	Username  string
+	ChannelID string
+	Timestamp int
+}
