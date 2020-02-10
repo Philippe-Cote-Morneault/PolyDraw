@@ -18,8 +18,9 @@ type Session struct {
 }
 
 var mutex sync.Mutex
-var tokenAvailable map[string]uuid.UUID
-var sessionCache map[uuid.UUID]bool
+var tokenAvailable map[string]uuid.UUID  //UserID
+var sessionCache map[uuid.UUID]uuid.UUID //UserID
+var userCache map[uuid.UUID]uuid.UUID    //SocketID
 
 //TODO move to the service and init once
 func initTokenAvailable() {
@@ -27,7 +28,8 @@ func initTokenAvailable() {
 		tokenAvailable = make(map[string]uuid.UUID)
 	}
 	if sessionCache == nil {
-		sessionCache = make(map[uuid.UUID]bool)
+		sessionCache = make(map[uuid.UUID]uuid.UUID)
+		userCache = make(map[uuid.UUID]uuid.UUID)
 	}
 }
 
@@ -59,6 +61,7 @@ func UnRegisterSocket(socketID uuid.UUID) {
 
 		delete(tokenAvailable, token)
 		delete(sessionCache, socketID)
+		delete(userCache, session.UserID)
 
 		model.DB().Delete(&session) //Remove the session
 	}
@@ -80,6 +83,7 @@ func UnRegisterUser(userID uuid.UUID) {
 
 		delete(tokenAvailable, token)
 		delete(sessionCache, session.SocketID)
+		delete(userCache, session.UserID)
 
 		model.DB().Delete(&session) //Remove the session
 	}
@@ -129,7 +133,8 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 				SocketID:     messageReceived.SocketID,
 			})
 
-			sessionCache[messageReceived.SocketID] = true //Set the value in the cache so pacquets are routed fast
+			sessionCache[messageReceived.SocketID] = userID //Set the value in the cache so pacquets are routed fast
+			userCache[userID] = messageReceived.SocketID
 			log.Printf("[Auth] -> Connection made %s", messageReceived.SocketID)
 			sendAuthResponse(true, messageReceived.SocketID)
 
@@ -148,8 +153,8 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 	return ok
 }
 
-//GetUserID returns the user associated with a session
-func GetUserID(socketID uuid.UUID) (model.User, error) {
+//GetUser returns the user associated with a session
+func GetUser(socketID uuid.UUID) (model.User, error) {
 	var session model.Session
 	var user model.User
 	model.DB().Where("socket_id = ?", socketID).First(&session)
@@ -157,16 +162,21 @@ func GetUserID(socketID uuid.UUID) (model.User, error) {
 	if user.ID != uuid.Nil {
 		return user, nil
 	}
-
 	return model.User{}, fmt.Errorf("No user is associated with this connection")
+}
+
+//GetUserID returns the user id associated with a session
+func GetUserID(socketID uuid.UUID) (uuid.UUID, error) {
+	if userID, ok := sessionCache[socketID]; ok {
+		return userID, nil
+	}
+	return uuid.Nil, fmt.Errorf("No user is associated with this connection")
 }
 
 //HasUserSession returns true if the user has a session
 func HasUserSession(userID uuid.UUID) bool {
-	var session model.Session
-	model.DB().Where("user_id = ?", userID).First(&session)
-
-	return session.ID != uuid.Nil
+	_, ok := userCache[userID]
+	return ok
 }
 
 //HasUserToken returns true if the user has already a token issued
