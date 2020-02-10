@@ -28,8 +28,8 @@
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
                                 <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
-                                    <Binding Path="User.Name" />
-                                    <Binding Path="DataContext.SessionInformations.User.Name"
+                                    <Binding Path="User.ID" />
+                                    <Binding Path="DataContext.SessionInformations.User.ID"
                                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                 </MultiBinding>
                             </DataTrigger.Binding>
@@ -64,8 +64,8 @@
                                                         <DataTrigger.Binding>
                                                             <MultiBinding
                                                                 Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                                <Binding Path="User.Name" />
-                                                                <Binding Path="DataContext.SessionInformations.User.Name"
+                                                                <Binding Path="User.ID" />
+                                                                <Binding Path="DataContext.SessionInformations.User.ID"
                                                                          RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                                             </MultiBinding>
                                                         </DataTrigger.Binding>
@@ -117,9 +117,9 @@
                                                             <DataTrigger.Binding>
                                                                 <MultiBinding
                                                                     Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                                    <Binding Path="User.Name" />
+                                                                    <Binding Path="User.ID" />
                                                                     <Binding
-                                                                        Path="DataContext.SessionInformations.User.Name"
+                                                                        Path="DataContext.SessionInformations.User.ID"
                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                                                 </MultiBinding>
                                                             </DataTrigger.Binding>
@@ -146,8 +146,8 @@
                                                 <DataTrigger.Binding>
                                                     <MultiBinding
                                                         Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                        <Binding Path="User.Name" />
-                                                        <Binding Path="DataContext.SessionInformations.User.Name"
+                                                        <Binding Path="User.ID" />
+                                                        <Binding Path="DataContext.SessionInformations.User.ID"
                                                                  RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                                     </MultiBinding>
                                                 </DataTrigger.Binding>

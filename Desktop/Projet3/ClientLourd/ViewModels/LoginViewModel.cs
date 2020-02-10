@@ -114,12 +114,7 @@ namespace ClientLourd.ViewModels
                     SessionToken = data["SessionToken"],
                     Bearer = data["Bearer"],
                 };
-                // TODO 
-                //User = new User(username, data["UserID"]);
-                User = new User()
-                {
-                    Name = username,
-                };
+                User = new User(username, data["UserID"]);
                 await SocketClient.InitializeConnection(Tokens.SessionToken);
                 OnLogin(this);
             }
