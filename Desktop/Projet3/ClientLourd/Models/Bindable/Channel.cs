@@ -9,19 +9,19 @@ namespace ClientLourd.Models.Bindable
         {
         }
 
-        public ObservableCollection<User> Members
+        public ObservableCollection<User> Users
         {
-            get { return _members; }
+            get { return _users; }
             set
             {
-                if (value != _members)
+                if (value != _users)
                 {
-                    _members = value;
+                    _users = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private ObservableCollection<User> _members;
+        private ObservableCollection<User> _users;
         
         public string ID
         {

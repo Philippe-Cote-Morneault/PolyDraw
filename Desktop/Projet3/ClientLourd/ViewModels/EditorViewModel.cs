@@ -111,8 +111,15 @@ namespace ClientLourd.ViewModels
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
 
-        public override void Init()
+        public override void AfterLogOut()
         {
+            //TODO 
         }
+        
+        public override void AfterLogin()
+        {
+            //TODO 
+        }
+        
     }
 }

@@ -10,7 +10,8 @@ namespace ClientLourd.ViewModels
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        public abstract void Init();
+        public abstract void AfterLogOut();
+        public abstract void AfterLogin();
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

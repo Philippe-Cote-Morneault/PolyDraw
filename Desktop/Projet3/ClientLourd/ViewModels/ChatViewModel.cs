@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.Services.RestService;
 
 namespace ClientLourd.ViewModels
 {
@@ -39,6 +41,10 @@ namespace ClientLourd.ViewModels
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
+        public RestClient RestClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
 
         private Channel _selectedChannel;
 
@@ -57,41 +63,22 @@ namespace ClientLourd.ViewModels
 
         public ChatViewModel()
         {
-            Channels = new List<Channel>()
-            {
-                new Channel()
-                {
-                    Messages = new ObservableCollection<Message>(),
-                    Name = "Global",
-                    Members = new ObservableCollection<User>()
-                    {
-                        new User("test","2323"),
-                    },
-                },
-                new Channel()
-                {
-                    Messages = new ObservableCollection<Message>(),
-                    Name = "test1",
-                    Members = new ObservableCollection<User>()
-                    {
-                        new User("test","2323"),
-                    },
-                },
-                new Channel()
-                {
-                    Messages = new ObservableCollection<Message>(),
-                    Name = "test2",
-                    Members = new ObservableCollection<User>()
-                    {
-                        new User("jow","2323"),
-                    },
-                },
-            };
-            SelectedChannel = Channels[0];
-            Init();
+            Channels = new List<Channel>();
+            AfterLogOut();
         }
 
-        public override void Init()
+        public override void AfterLogin()
+        {
+            //TODO
+            GetChannels();
+        }
+
+        private async Task GetChannels()
+        {
+             var json = await RestClient.GetChannels();
+        }
+        
+        public override void AfterLogOut()
         {
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
             Channels.ForEach(c => c.Messages.Clear());
@@ -131,7 +118,7 @@ namespace ClientLourd.ViewModels
 
         public void JoinChannel(Channel channel)
         {
-            channel.Members.Add(new User("test", "1"));
+            channel.Users.Add(new User("test", "1"));
             UpdateChannels();
         }
         
@@ -150,7 +137,7 @@ namespace ClientLourd.ViewModels
         public void LeaveChannel(Channel channel)
         {
             //TODO change the name
-            channel.Members.Remove(channel.Members.First(u => u.Name == "test"));
+            channel.Users.Remove(channel.Users.First(u => u.Name == "test"));
             UpdateChannels();
         }
         
@@ -230,7 +217,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 //TODO change name
-                return new ObservableCollection<Channel>(_channels.Where(c => c.Members.Select(m => m.Name).Contains("test")).ToList());
+                return new ObservableCollection<Channel>(_channels.Where(c => c.Users.Select(m => m.Name).Contains("test")).ToList());
             }
         }
         public ObservableCollection<Channel> AvailableChannels
@@ -238,7 +225,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 //TODO change name
-                var test = new ObservableCollection<Channel>(_channels.Where(c => !c.Members.Select(m => m.Name).Contains("test")).ToList());
+                var test = new ObservableCollection<Channel>(_channels.Where(c => !c.Users.Select(m => m.Name).Contains("test")).ToList());
                 return test;
             }
         }

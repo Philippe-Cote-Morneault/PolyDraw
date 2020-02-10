@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -14,6 +15,7 @@ namespace ClientLourd.Services.RestService
     public class RestClient
     {
         private RestSharp.RestClient _client;
+        private string _sessionToken;
         public RestClient()
         {
             // For local server usage
@@ -45,6 +47,7 @@ namespace ClientLourd.Services.RestService
             {
                 case HttpStatusCode.OK:
                     dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    _sessionToken = data["SessionToken"];
                     return data;
                 case HttpStatusCode.Conflict:
                     throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
@@ -55,15 +58,16 @@ namespace ClientLourd.Services.RestService
             }
         }
         
-        public async Task<List<Channel>> GetChannels()
+        public async Task<JsonArray> GetChannels()
         {
             RestRequest request = new RestRequest("chat/channels", Method.GET);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return deseralizer.Deserialize<List<Channel>>(response);
+                     return deseralizer.Deserialize<dynamic>(response);
                 case HttpStatusCode.Unauthorized:
                     throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
