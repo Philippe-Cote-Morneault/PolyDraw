@@ -60,6 +60,10 @@ dependencies {
     // For java StringUtils
     implementation 'org.apache.commons:commons-lang3:3.0'
 
+    // Expandable Recyclerview
+    compile 'com.thoughtbot:expandablerecyclerview:1.3'
+
+    // GSON
     implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'junit:junit:4.12'
