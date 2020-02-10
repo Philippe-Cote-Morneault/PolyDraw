@@ -63,7 +63,7 @@ namespace ClientLourd
             {
                 //Wait until the drawer is open
                 Thread.Sleep(100);
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     ChatBox.OnChatOpen();
                 });
