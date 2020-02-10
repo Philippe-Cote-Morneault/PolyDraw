@@ -120,7 +120,8 @@ namespace ClientLourd.ViewModels
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
+            //Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
+            Message m = new Message(args.Date, new User(args.UserName, "-1"), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NewMessages++;
         }
