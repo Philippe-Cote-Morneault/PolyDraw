@@ -19,9 +19,13 @@ func (h *handler) init() {
 	h.channelsConnections = map[uuid.UUID]map[uuid.UUID]bool{}
 	h.channelsConnections[uuid.Nil] = make(map[uuid.UUID]bool)
 
-	//TODO init all the channels rooms in memory
-}
+	var channels []model.ChatChannel
+	model.DB().Find(&channels)
 
+	for i := range channels {
+		h.channelsConnections[channels[i].ID] = make(map[uuid.UUID]bool)
+	}
+}
 func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 	var messageParsed MessageSent
 	timestamp := int(time.Now().Unix())
@@ -189,6 +193,49 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 		}
 	} else {
 		log.Printf("[Messenger] -> Quit: Invalid channel UUID")
+	}
+}
+
+func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
+	if message.Payload.Length == 16 {
+		channelID, err := uuid.FromBytes(message.Payload.Bytes)
+		if err != nil {
+			//Check if channel exists
+			channel := model.ChatChannel{}
+			model.DB().Model(&channel).Related(&model.User{}, "Users")
+			model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
+
+			if channel.ID != uuid.Nil {
+				user, _ := auth.GetUser(message.SocketID)
+
+				model.DB().Model(&channel).Delete(&channel)
+
+				//Create a destroy message
+				destroyMessage := ChannelDestroyResponse{
+					UserID:    user.ID.String(),
+					Username:  user.Username,
+					ChannelID: channel.ID.String(),
+					Timestamp: int(time.Now().Unix()),
+				}
+				rawMessage := socket.RawMessage{}
+				if rawMessage.ParseMessagePack(byte(socket.MessageType.UserDestroyedChannel), destroyMessage) != nil {
+					log.Printf("[Messenger] -> Destroy: Can't pack message. Dropping packet!")
+					return
+				}
+
+				//TODO make sure that we delete any message associated with the channel
+				for socketID := range h.channelsConnections[channel.ID] {
+					go socket.SendRawMessageToSocketID(rawMessage, socketID)
+				}
+				delete(h.channelsConnections, channel.ID)
+			} else {
+				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
+			}
+		} else {
+			log.Printf("[Messenger] -> Destroy: Invalid channel UUID")
+		}
+	} else {
+		log.Printf("[Messenger] -> Destroy: Invalid channel UUID")
 	}
 }
 
