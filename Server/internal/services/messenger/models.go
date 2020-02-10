@@ -22,3 +22,16 @@ type ChannelJoin struct {
 	ChannelID string
 	Timestamp int
 }
+
+//ChannelCreateRequest represent a message request that was sent to create a channel
+type ChannelCreateRequest struct {
+	ChannelName string
+}
+
+//ChannelCreateResponse represent a message response to create a channel
+type ChannelCreateResponse struct {
+	ChannelName string
+	Username    string
+	UserID      string
+	Timestamp   int
+}
