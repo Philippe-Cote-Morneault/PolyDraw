@@ -75,7 +75,7 @@ namespace ClientLourd.ViewModels
 
         private async Task GetChannels()
         {
-             var json = await RestClient.GetChannels();
+             Channels = await RestClient.GetChannels();
         }
         
         public override void AfterLogOut()

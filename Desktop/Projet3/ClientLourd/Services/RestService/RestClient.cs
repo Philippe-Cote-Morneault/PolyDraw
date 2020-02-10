@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Constants;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization.Json;
 
@@ -58,7 +59,7 @@ namespace ClientLourd.Services.RestService
             }
         }
         
-        public async Task<JsonArray> GetChannels()
+        public async Task<List<Channel>> GetChannels()
         {
             RestRequest request = new RestRequest("chat/channels", Method.GET);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
@@ -67,7 +68,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                     return deseralizer.Deserialize<dynamic>(response);
+                    return JsonConvert.DeserializeObject<List<Channel>>(response.Content);
                 case HttpStatusCode.Unauthorized:
                     throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
@@ -85,7 +86,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return deseralizer.Deserialize<Channel>(response);
+                    return JsonConvert.DeserializeObject<Channel>(response.Content);
                 case HttpStatusCode.Unauthorized:
                     throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.NotFound:
