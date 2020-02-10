@@ -12,7 +12,7 @@ class ChannelGroupViewHolder : GroupViewHolder {
         channelGroupNameTextView = itemView.findViewById(R.id.list_item_channel_group_name)
     }
 
-    fun onBind(channelGroup: ChannelGroup) {
+    fun bind(channelGroup: ChannelGroup) {
         channelGroupNameTextView.setText(channelGroup.name)
     }
 }

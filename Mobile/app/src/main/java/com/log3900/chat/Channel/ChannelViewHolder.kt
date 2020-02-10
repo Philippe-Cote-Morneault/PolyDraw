@@ -10,8 +10,8 @@ class ChannelViewHolder : ChildViewHolder {
     constructor(itemView: View) : super(itemView){
         channelName = itemView.findViewById(R.id.list_item_channel_name)
     }
-    
-    fun onBind(channel: Channel) {
+
+    fun bind(channel: Channel) {
         channelName.setText(channel.name)
     }
 }
