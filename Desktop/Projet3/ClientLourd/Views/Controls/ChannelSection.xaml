@@ -9,7 +9,21 @@
              xmlns:customCommands="clr-namespace:ClientLourd.Utilities.Commands"
              Name="ChannelsSection"
              mc:Ignorable="d">
-    <Grid>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
+            <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
+            <Button
+                Margin="10 0 0 0"
+                Command="{Binding CreateChannelCommand}"
+                Style="{StaticResource MaterialDesignIconForegroundButton}"
+                ToolTip="Create a new channel">
+                <materialDesign:PackIcon
+                    Kind="Plus"
+                    FontWeight="Medium"
+                    Height="20"
+                    Width="20" />
+            </Button>
+        </StackPanel>
         <TreeView Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
             <TreeViewItem ItemsSource="{Binding JoinedChannels}">
                 <TreeViewItem.Header>
@@ -62,5 +76,5 @@
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
         </TreeView>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -96,6 +96,7 @@
             <e p="EditorModeConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
+            <e p="StringEmptyToBooleanConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
@@ -134,6 +135,8 @@
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
+            <e p="InputDialog.xaml" t="Include" />
+            <e p="InputDialog.xaml.cs" t="Include" />
           </e>
           <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />

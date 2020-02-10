@@ -100,17 +100,20 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnUserLeftChannel(object source, EventArgs args)
         {
-            throw new NotImplementedException();
+            //TODO
         }
 
         private void SocketClientOnUserJoinedChannel(object source, EventArgs args)
         {
-            throw new NotImplementedException();
+            //TODO
         }
 
         private void SocketClientOnUserCreatedChannel(object source, EventArgs args)
         {
-            throw new NotImplementedException();
+            MessageReceivedEventArgs e = (MessageReceivedEventArgs) args;
+            var newChannel = new Channel(e.ChannelName, e.ChannelId);
+            Channels.Add(newChannel);
+            UpdateChannels();
         }
 
         private void SocketClientOnMessageReceived(object source, EventArgs e)
@@ -122,6 +125,27 @@ namespace ClientLourd.ViewModels
             NewMessages++;
         }
 
+        RelayCommand<object> _createChannelCommand;
+
+        public ICommand CreateChannelCommand
+        {
+            get
+            {
+                return _createChannelCommand ??
+                       (_createChannelCommand = new RelayCommand<object>(param => CreateChannel()));
+            }
+        }
+
+        private async Task CreateChannel()
+        {
+            var dialog = new InputDialog("Enter the name for the new channel");
+            var result = await DialogHost.Show(dialog);
+            if (bool.Parse(result.ToString()))
+            {
+                var data = new {ChannelName = dialog.Result};
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.CreateChannel, data));
+            }
+        }
 
         RelayCommand<Channel> _changeChannelCommand;
 

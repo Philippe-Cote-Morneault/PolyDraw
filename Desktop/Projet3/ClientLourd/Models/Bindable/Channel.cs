@@ -8,6 +8,13 @@ namespace ClientLourd.Models.Bindable
         public Channel()
         {
         }
+        public Channel(string name, string id)
+        {
+            Name = name;
+            ID = id;
+            Users = new ObservableCollection<User>();
+            Messages = new ObservableCollection<Message>();
+        }
 
         public ObservableCollection<User> Users
         {
