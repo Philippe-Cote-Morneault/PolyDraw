@@ -246,6 +246,7 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\avatar.jpg" />
     <Content Include="Resources\poly.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
