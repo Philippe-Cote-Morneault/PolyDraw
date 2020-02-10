@@ -36,24 +36,37 @@ namespace ClientLourd
 
         private void OnLoggedIn(object source, EventArgs args)
         {
+            
             var loginViewModel = (LoginViewModel) source;
-            ((MainViewModel) DataContext).SessionInformations.Tokens = loginViewModel.Tokens;
-            ((MainViewModel) DataContext).SessionInformations.User = loginViewModel.User;
+            Dispatcher.Invoke(() =>
+            {
+                AfterLogin(loginViewModel);
+                ChatBox.AfterLogin();
+                LoginScreen.AfterLogin();
+            });
+        }
+
+        private void AfterLogin(LoginViewModel loginViewModel)
+        {
+            var mainViewModel = (MainViewModel) DataContext;
+            mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
+            mainViewModel.SessionInformations.User = loginViewModel.User;
+            mainViewModel.AfterLogin();
         }
 
         private void OnUserLogout(object source, EventArgs args)
         {
             Dispatcher.Invoke(() =>
             {
-                Init();
-                ChatBox.Init();
-                LoginScreen.Init();
+                AfterLogout();
+                ChatBox.AfterLogout();
+                LoginScreen.AfterLogout();
             });
         }
 
-        private void Init()
+        private void AfterLogout()
         {
-            ((ViewModelBase) DataContext).Init();
+            ((ViewModelBase) DataContext).AfterLogOut();
             MenuToggleButton.IsChecked = false;
             ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();

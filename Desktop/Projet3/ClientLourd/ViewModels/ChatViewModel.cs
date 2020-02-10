@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -12,11 +13,14 @@ using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.Services.RestService;
 
 namespace ClientLourd.ViewModels
 {
     public class ChatViewModel : ViewModelBase
     {
+
+        private const string GLOBAL_CHANNEL_ID = "00000000-0000-0000-0000-000000000000";
         private int _newMessages;
 
         /// <summary>
@@ -35,9 +39,17 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public SessionInformations SessionInformations
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations; }
+        }
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+        public RestClient RestClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         private Channel _selectedChannel;
@@ -57,52 +69,36 @@ namespace ClientLourd.ViewModels
 
         public ChatViewModel()
         {
-            Channels = new List<Channel>()
-            {
-                new Channel()
-                {
-                    Messages = new ObservableCollection<Message>(),
-                    Name = "Global",
-                    Members = new ObservableCollection<User>()
-                    {
-                        new User("test","2323"),
-                    },
-                },
-                new Channel()
-                {
-                    Messages = new ObservableCollection<Message>(),
-                    Name = "test1",
-                    Members = new ObservableCollection<User>()
-                    {
-                        new User("test","2323"),
-                    },
-                },
-                new Channel()
-                {
-                    Messages = new ObservableCollection<Message>(),
-                    Name = "test2",
-                    Members = new ObservableCollection<User>()
-                    {
-                        new User("jow","2323"),
-                    },
-                },
-            };
-            SelectedChannel = Channels[0];
-            Init();
+            AfterLogOut();
         }
 
-        public override void Init()
+        public override void AfterLogin()
+        {
+            GetChannels();
+        }
+
+        private async Task GetChannels()
+        {
+             Channels = await RestClient.GetChannels();
+             SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+        }
+        
+        public override void AfterLogOut()
         {
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
-            Channels.ForEach(c => c.Messages.Clear());
+            Channels = new List<Channel>();
             NewMessages = 0;
         }
 
         private void SocketClientOnMessageReceived(object source, EventArgs e)
         {
             var args = (MessageReceivedEventArgs) e;
+            //TODO cache user 
             Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
-            App.Current.Dispatcher.Invoke(() => { Channels[0].Messages.Add(m); });
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                Channels.First(c => c.ID == args.ChannelId).Messages.Add(m);
+            });
             NewMessages++;
         }
         
@@ -131,7 +127,8 @@ namespace ClientLourd.ViewModels
 
         public void JoinChannel(Channel channel)
         {
-            channel.Members.Add(new User("test", "1"));
+            //TODO 
+            channel.Users.Add(SessionInformations.User);
             UpdateChannels();
         }
         
@@ -149,8 +146,15 @@ namespace ClientLourd.ViewModels
 
         public void LeaveChannel(Channel channel)
         {
-            //TODO change the name
-            channel.Members.Remove(channel.Members.First(u => u.Name == "test"));
+            //TODO change the name for id
+            if (channel.ID != GLOBAL_CHANNEL_ID)
+            {
+                channel.Users.Remove(channel.Users.First(u => u.ID == SessionInformations.User.Name));
+            }
+            else
+            {
+                DialogHost.Show(new ClosableErrorDialog("You can't leave the Global channel"));
+            }
             UpdateChannels();
         }
         
@@ -206,11 +210,12 @@ namespace ClientLourd.ViewModels
         private void SendMessage(object[] param)
         {
             TextBox tBox = param[0] as TextBox;
+            //TODO removed username
             string username = param[1] as string;
             string message = tBox.Text;
-            if (!string.IsNullOrWhiteSpace(message))
+            if (!string.IsNullOrWhiteSpace(message) && SelectedChannel != null)
             {
-                var data = new {Message = message, ChannelID = "0"};
+                var data = new {Message = message, ChannelID = SelectedChannel.ID};
                 try
                 {
                     SocketClient.SendMessage(new Tlv(SocketMessageTypes.MessageSent, data));
@@ -229,17 +234,15 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                //TODO change name
-                return new ObservableCollection<Channel>(_channels.Where(c => c.Members.Select(m => m.Name).Contains("test")).ToList());
+                return new ObservableCollection<Channel>(_channels.Where(c => c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) ||
+                                                                              c.ID ==GLOBAL_CHANNEL_ID).ToList());
             }
         }
         public ObservableCollection<Channel> AvailableChannels
         {
             get
             {
-                //TODO change name
-                var test = new ObservableCollection<Channel>(_channels.Where(c => !c.Members.Select(m => m.Name).Contains("test")).ToList());
-                return test;
+                return new ObservableCollection<Channel>(_channels.Where(c => !c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) && c.Name != GLOBAL_CHANNEL_ID).ToList());
             }
         }
         public List<Channel> Channels

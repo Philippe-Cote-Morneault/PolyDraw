@@ -116,7 +116,7 @@
 
                     <materialDesign:DrawerHost.RightDrawerContent>
                         <DockPanel
-                            Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=4}"
+                            Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=3}"
                             x:Name="RightDrawerContent">
                             <controls:Chat x:Name="ChatBox" />
                         </DockPanel>

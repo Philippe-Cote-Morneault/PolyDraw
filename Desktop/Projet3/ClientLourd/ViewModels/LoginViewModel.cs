@@ -18,10 +18,16 @@ namespace ClientLourd.ViewModels
     {
         public LoginViewModel()
         {
-            Init();
+            AfterLogOut();
+        }
+        
+        
+        public override void AfterLogin()
+        {
+            IsLoggedIn = true;
         }
 
-        public override void Init()
+        public override void AfterLogOut()
         {
             IsLoggedIn = false;
             User = new User();
@@ -145,8 +151,6 @@ namespace ClientLourd.ViewModels
 
         protected virtual void OnLogin(object source)
         {
-            IsLoggedIn = true;
-                
             LoggedIn?.Invoke(source, EventArgs.Empty);
         }
     }

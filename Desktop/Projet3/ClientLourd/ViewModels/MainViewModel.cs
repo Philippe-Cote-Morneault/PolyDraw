@@ -16,16 +16,33 @@ namespace ClientLourd.ViewModels
     {
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
-        public SessionInformations SessionInformations { get; set; }
+        private SessionInformations _sessionInformations;
+
+        public SessionInformations SessionInformations
+        {
+            get { return _sessionInformations; }
+            set
+            {
+                if (value != _sessionInformations)
+                {
+                    _sessionInformations = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
 
         public MainViewModel()
         {
-            Init();
+            AfterLogOut();
         }
 
+        public override void AfterLogin()
+        {
+            //TODO
+        }
 
-        public override void Init()
+        public override void AfterLogOut()
         {
             SessionInformations = new SessionInformations();
             RestClient = new RestClient();

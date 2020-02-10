@@ -18,10 +18,15 @@ namespace ClientLourd.Views.Controls
         }
 
 
-        public void Init()
+        public void AfterLogout()
         {
-            ((ChatViewModel) DataContext).Init();
+            ((ChatViewModel) DataContext).AfterLogOut();
             MessageTextBox.Clear();
+        }
+        
+        public void AfterLogin()
+        {
+            ((ChatViewModel)DataContext).AfterLogin();
         }
     }
 }
