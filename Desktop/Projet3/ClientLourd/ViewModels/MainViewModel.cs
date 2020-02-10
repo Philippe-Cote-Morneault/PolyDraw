@@ -9,11 +9,14 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
+        string _containedView;
+       // string _username;
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
         private SessionInformations _sessionInformations;
@@ -45,6 +48,8 @@ namespace ClientLourd.ViewModels
         public override void AfterLogOut()
         {
             SessionInformations = new SessionInformations();
+            ContainedView = Enums.Views.Editor.ToString();
+            //Username = "";
             RestClient = new RestClient();
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
@@ -91,6 +96,20 @@ namespace ClientLourd.ViewModels
         public event LogOutHandler UserLogout;
         
 
+        public string ContainedView
+        {
+            get { return _containedView; }
+
+            set
+            {
+                if (value != _containedView)
+                {
+                    _containedView = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
 
         protected virtual void OnUserLogout(object source)
         {
@@ -107,5 +126,58 @@ namespace ClientLourd.ViewModels
             });
             Logout();
         }
+
+        /*public delegate void ChatOpenHandler(object source, EventArgs args);
+
+        public event ChatOpenHandler ChatOpen;
+
+        protected virtual void OnChatOpen(object source)
+        {
+            ChatOpen?.Invoke(source, EventArgs.Empty);
+        }
+
+        private RelayCommand<object> _openChatCommand;
+
+        public ICommand OpenChatCommand
+        {
+            get { return _openChatCommand ?? (_openChatCommand = new RelayCommand<object>(lvm => OpenChat())); }
+        }
+
+        private void OpenChat()
+        {
+            OnChatOpen(this);
+        }*/
+
+        private RelayCommand<object> _myProfileCommand;
+
+        public ICommand MyProfileCommand
+        {
+            get
+            {
+                return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile()));
+            }
+        }
+
+        private void MyProfile()
+        {
+            ContainedView = Enums.Views.Profile.ToString();
+        }
+
+        private RelayCommand<object> _homeCommand;
+
+        public ICommand HomeCommand
+        {
+            get
+            {
+                return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home()));
+            }
+        }
+
+        private void Home()
+        {
+            // TODO: Change to home view
+            ContainedView = Enums.Views.Editor.ToString();
+        }
+
     }
 }

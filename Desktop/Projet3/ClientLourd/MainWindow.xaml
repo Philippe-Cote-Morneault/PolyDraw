@@ -20,6 +20,7 @@
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
+        <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="OemTilde"
@@ -107,13 +108,25 @@
                                Source="Resources/WhiteLogo.png" />
                     </DockPanel>
                 </materialDesign:ColorZone>
-
+                
+                <!--Drawers-->
                 <materialDesign:DrawerHost
                     x:Name="Drawer"
                     IsRightDrawerOpen="{Binding ElementName=ChatToggleButton, Path=IsChecked }"
                     IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-                    <controls:Editor />
 
+                    <DockPanel Name="ControlSelector">
+
+                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Editor'}">
+                            <controls:Editor/>
+                        </DockPanel>
+                        
+                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
+                            <controls:Profile/>
+                        </DockPanel>
+                    
+                    </DockPanel>
+                    <!--Chat Drawer-->
                     <materialDesign:DrawerHost.RightDrawerContent>
                         <DockPanel
                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=3}"
@@ -122,7 +135,7 @@
                         </DockPanel>
                     </materialDesign:DrawerHost.RightDrawerContent>
 
-                    <!--Hamburger menu-->
+                    <!--Hamburger Menu Drawer-->
                     <materialDesign:DrawerHost.LeftDrawerContent>
                         <DockPanel>
                             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" Padding="10">
@@ -132,6 +145,24 @@
                                 </StackPanel>
                             </materialDesign:ColorZone>
                             <ListView>
+                                <ListViewItem>
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding Path=HomeCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="House" Height="15" Width="15" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Home"/>
+                                        </StackPanel>
+                                    </Button>
+                                </ListViewItem>
+                                <ListViewItem>
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding Path=MyProfileCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15" VerticalAlignment="Center"/>
+                                            <TextBlock Text="My profile"/>
+                                        </StackPanel>
+                                    </Button>
+                                </ListViewItem>
                                 <ListViewItem>
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
                                             ToolTip="Disconnect and return to the login screen"
@@ -149,8 +180,9 @@
                     </materialDesign:DrawerHost.LeftDrawerContent>
 
                 </materialDesign:DrawerHost>
-
             </DockPanel>
+            
+            
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
