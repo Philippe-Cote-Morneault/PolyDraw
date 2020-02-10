@@ -167,14 +167,31 @@ func GetUser(socketID uuid.UUID) (model.User, error) {
 
 //GetUserID returns the user id associated with a session
 func GetUserID(socketID uuid.UUID) (uuid.UUID, error) {
+	defer mutex.Unlock()
+	mutex.Lock()
+
 	if userID, ok := sessionCache[socketID]; ok {
 		return userID, nil
 	}
 	return uuid.Nil, fmt.Errorf("No user is associated with this connection")
 }
 
+//GetSocketID returns the user id associated with a session
+func GetSocketID(userID uuid.UUID) (uuid.UUID, error) {
+	defer mutex.Unlock()
+	mutex.Lock()
+
+	if socketID, ok := userCache[userID]; ok {
+		return socketID, nil
+	}
+	return uuid.Nil, fmt.Errorf("No socketID is associated with this userID")
+}
+
 //HasUserSession returns true if the user has a session
 func HasUserSession(userID uuid.UUID) bool {
+	defer mutex.Unlock()
+	mutex.Lock()
+
 	_, ok := userCache[userID]
 	return ok
 }
