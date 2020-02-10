@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -68,7 +69,9 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return JsonConvert.DeserializeObject<List<Channel>>(response.Content);
+                    var channels = JsonConvert.DeserializeObject<List<Channel>>(response.Content);
+                    channels.ForEach(c => c.Messages = new ObservableCollection<Message>());
+                    return channels;
                 case HttpStatusCode.Unauthorized:
                     throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 default:
