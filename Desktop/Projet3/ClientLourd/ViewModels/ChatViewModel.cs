@@ -89,13 +89,6 @@ namespace ClientLourd.ViewModels
             };
             SelectedChannel = Channels[0];
             Init();
-            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ChatOpen += OnChatOpen;
-        }
-
-        private void OnChatOpen(object source, EventArgs args)
-        {
-            OnChatOpen(source);
-
         }
 
         public override void Init()
@@ -197,7 +190,6 @@ namespace ClientLourd.ViewModels
         public void OpenChatDrawer(object[] param)
         {
             ((DrawerHost)param[1]).IsRightDrawerOpen = !((DrawerHost)param[1]).IsRightDrawerOpen;
-            OnChatOpen(this);
         }
 
         RelayCommand<object[]> _sendMessageCommand;
@@ -269,15 +261,5 @@ namespace ClientLourd.ViewModels
         }
 
         private List<Channel> _channels;
-
-        public delegate void ChatOpenHandler(object source, EventArgs args);
-
-        public event ChatOpenHandler ChatOpen;
-
-        protected virtual void OnChatOpen(object source)
-        {
-            ChatOpen?.Invoke(source, EventArgs.Empty);
-        }
-
     }
 }

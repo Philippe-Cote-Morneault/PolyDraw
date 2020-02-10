@@ -10,11 +10,9 @@ namespace ClientLourd.Views.Controls
         public Chat()
         {
             InitializeComponent();
-            (DataContext as ChatViewModel).ChatOpen += OnChatOpen;
-
         }
 
-        private void OnChatOpen(object source, EventArgs args)
+        public void OnChatOpen()
         {
             MessageTextBox.Focus();
         }

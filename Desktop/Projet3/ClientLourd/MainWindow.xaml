@@ -76,8 +76,6 @@
                                     ToolTip="Open the chat"
                                     Checked="ChatToggleButton_OnChecked"
                                     Unchecked="ChatToggleButton_OnChecked"
-                                    Command="{Binding Path=OpenChatCommand}"
-                                    CommandParameter="{Binding Path=DataContext}"
                                     Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
                                     <ToggleButton.ContextMenu>
                                         <ContextMenu>

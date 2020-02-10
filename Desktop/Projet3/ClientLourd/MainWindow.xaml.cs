@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows;
@@ -58,6 +59,15 @@ namespace ClientLourd
         private void ChatToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             ClearChatNotification();
+            Task.Factory.StartNew(() =>
+            {
+                //Wait until the drawer is open
+                Thread.Sleep(100);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ChatBox.OnChatOpen();
+                });
+            });
         }
 
         public void ClearChatNotification()

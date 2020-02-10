@@ -101,28 +101,5 @@ namespace ClientLourd.ViewModels
             });
             Logout();
         }
-
-        public delegate void ChatOpenHandler(object source, EventArgs args);
-
-        public event ChatOpenHandler ChatOpen;
-
-        protected virtual void OnChatOpen(object source)
-        {
-            ChatOpen?.Invoke(source, EventArgs.Empty);
-        }
-
-        private RelayCommand<object> _openChatCommand;
-
-        public ICommand OpenChatCommand
-        {
-            get { return _openChatCommand ?? (_openChatCommand = new RelayCommand<object>(lvm => OpenChat())); }
-        }
-
-        private void OpenChat()
-        {
-            OnChatOpen(this);
-        }
-
-
     }
 }
