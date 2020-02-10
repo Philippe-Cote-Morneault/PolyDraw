@@ -63,9 +63,9 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 	timestamp := int(time.Now().Unix())
 	if message.Payload.DecodeMessagePack(&channelParsed) == nil {
 		name := channelParsed.ChannelName
-		if strings.TrimSpace(name) != "" {
+		if strings.TrimSpace(name) != "" && name != "General" {
 			user, err := auth.GetUser(message.SocketID)
-			if err != nil {
+			if err == nil {
 				//Check if channel already exists
 				var count int64
 				model.DB().Where("name = ?", name).Count(&count)
@@ -112,7 +112,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 	if message.Payload.Length == 16 {
 		channelID, err := uuid.FromBytes(message.Payload.Bytes)
-		if err != nil {
+		if err == nil {
 			channel := model.ChatChannel{}
 			model.DB().Model(&channel).Related(&model.User{}, "Users")
 			model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
@@ -154,7 +154,7 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 	if message.Payload.Length == 16 {
 		channelID, err := uuid.FromBytes(message.Payload.Bytes)
-		if err != nil {
+		if err == nil {
 			//Check if channel exists
 			channel := model.ChatChannel{}
 			model.DB().Model(&channel).Related(&model.User{}, "Users")
@@ -199,7 +199,7 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 	if message.Payload.Length == 16 {
 		channelID, err := uuid.FromBytes(message.Payload.Bytes)
-		if err != nil {
+		if err == nil {
 			//Check if channel exists
 			channel := model.ChatChannel{}
 			model.DB().Model(&channel).Related(&model.User{}, "Users")
