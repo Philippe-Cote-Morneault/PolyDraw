@@ -68,7 +68,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 			if err == nil {
 				//Check if channel already exists
 				var count int64
-				model.DB().Where("name = ?", name).Count(&count)
+				model.DB().Model(&model.ChatChannel{}).Where("name = ?", name).Count(&count)
 				if count == 0 {
 					channel := model.ChatChannel{
 						Name: name,
