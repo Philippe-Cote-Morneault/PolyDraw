@@ -155,5 +155,21 @@ namespace ClientLourd.ViewModels
             ContainedView = Enums.Views.Profile.ToString();
         }
 
+        private RelayCommand<object> _homeCommand;
+
+        public ICommand HomeCommand
+        {
+            get
+            {
+                return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home()));
+            }
+        }
+
+        private void Home()
+        {
+            // TODO: Change to home view
+            ContainedView = Enums.Views.Editor.ToString();
+        }
+
     }
 }

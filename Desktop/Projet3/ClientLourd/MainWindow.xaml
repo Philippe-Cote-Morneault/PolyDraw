@@ -149,6 +149,15 @@
                             <ListView>
                                 <ListViewItem>
                                     <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                            Command="{Binding Path=HomeCommand}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="House" Height="15" Width="15" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Home"/>
+                                        </StackPanel>
+                                    </Button>
+                                </ListViewItem>
+                                <ListViewItem>
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
                                             Command="{Binding Path=MyProfileCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15" VerticalAlignment="Center"/>
