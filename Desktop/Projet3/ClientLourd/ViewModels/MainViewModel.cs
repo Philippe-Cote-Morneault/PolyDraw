@@ -2,6 +2,8 @@
 using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Input;
+using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
@@ -12,9 +14,9 @@ namespace ClientLourd.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
-        string _username;
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
+        public SessionInformations SessionInformations { get; set; }
 
 
         public MainViewModel()
@@ -25,7 +27,7 @@ namespace ClientLourd.ViewModels
 
         public override void Init()
         {
-            Username = "";
+            SessionInformations = new SessionInformations();
             RestClient = new RestClient();
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
@@ -70,20 +72,7 @@ namespace ClientLourd.ViewModels
         public delegate void LogOutHandler(object source, EventArgs args);
 
         public event LogOutHandler UserLogout;
-
-        public string Username
-        {
-            get { return _username; }
-
-            set
-            {
-                if (value != _username)
-                {
-                    _username = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+        
 
 
         protected virtual void OnUserLogout(object source)

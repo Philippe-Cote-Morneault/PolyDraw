@@ -24,6 +24,7 @@ namespace ClientLourd.ViewModels
         public override void Init()
         {
             IsLoggedIn = false;
+            User = new User();
         }
 
         public RestClient RestClient
@@ -99,8 +100,19 @@ namespace ClientLourd.ViewModels
             string password = (param[1] as PasswordBox).Password;
             try
             {
-                var token = await RestClient.Login(username, password);
-                await SocketClient.InitializeConnection(token);
+                dynamic data = await RestClient.Login(username, password);
+                Tokens = new TokenPair()
+                {
+                    SessionToken = data["SessionToken"],
+                    Bearer = data["Bearer"],
+                };
+                // TODO 
+                //User = new User(username, data["UserID"]);
+                User = new User()
+                {
+                    Name = username,
+                };
+                await SocketClient.InitializeConnection(Tokens.SessionToken);
                 OnLogin(this);
             }
             catch (Exception e)

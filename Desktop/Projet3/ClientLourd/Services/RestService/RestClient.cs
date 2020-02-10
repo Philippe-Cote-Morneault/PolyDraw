@@ -34,7 +34,7 @@ namespace ClientLourd.Services.RestService
         /// <exception cref="RestConflictException"></exception>
         /// <exception cref="RestBadRequestException"></exception>
         /// <exception cref="RestException"></exception>
-        public async Task<string> Login(string username, string password)
+        public async Task<Dictionary<string, object>> Login(string username, string password)
         {
             RestRequest request = new RestRequest("auth", Method.POST);
             request.RequestFormat = DataFormat.Json;
@@ -44,8 +44,8 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    var tokens = deseralizer.Deserialize<dynamic>(response);
-                    return tokens["SessionToken"];
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    return data;
                 case HttpStatusCode.Conflict:
                     throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.BadRequest:

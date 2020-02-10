@@ -31,6 +31,14 @@ namespace ClientLourd
         {
             InitializeComponent();
             ((MainViewModel) DataContext).UserLogout += OnUserLogout;
+            ((LoginViewModel)LoginScreen.DataContext).LoggedIn += OnLoggedIn;
+        }
+
+        private void OnLoggedIn(object source, EventArgs args)
+        {
+            var loginViewModel = (LoginViewModel) source;
+            ((MainViewModel) DataContext).SessionInformations.Tokens = loginViewModel.Tokens;
+            ((MainViewModel) DataContext).SessionInformations.User = loginViewModel.User;
         }
 
         private void OnUserLogout(object source, EventArgs args)
