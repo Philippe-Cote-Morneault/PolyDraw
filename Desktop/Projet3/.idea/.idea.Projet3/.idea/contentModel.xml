@@ -96,6 +96,7 @@
             <e p="EditorModeConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
+            <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
