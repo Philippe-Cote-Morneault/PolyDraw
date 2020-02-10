@@ -6,18 +6,59 @@ namespace ClientLourd.Services.SocketService
     {
         public MessageReceivedEventArgs(dynamic data)
         {
-            ChannelId = data["ChannelID"];
-            Date = UnixTimeStampToDateTime(data["Timestamp"]);
-            Message = data["Message"];
-            UserName = data["SenderName"];
-            UserId = data["SenderID"];
+            _data = data;
         }
 
-        public string ChannelId { get; private set; }
-        public DateTime Date { get; private set; }
-        public string UserName { get; private set; }
-        public string Message { get; private set; }
-        public string UserId { get; private set; }
+        private dynamic _data;
+
+        public string ChannelId
+        {
+            get
+            {
+                return _data["ChannelID"];
+            }
+        }
+
+        public string ChannelName
+        {
+            get
+            {
+                return _data["ChannelName"];
+            }
+        }
+
+        public DateTime Date
+        {
+            get
+            {
+                
+                return UnixTimeStampToDateTime(_data["Timestamp"]);
+            }
+        }
+
+        public string UserName
+        {
+            get
+            {
+                 return _data["SenderName"];               
+            }
+        }
+
+        public string Message
+        {
+            get
+            {
+                return _data["Message"];
+            }
+        }
+
+        public string UserId
+        {
+            get
+            {
+               return _data["SenderID"]; 
+            }
+        }
 
 
         private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)

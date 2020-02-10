@@ -86,8 +86,26 @@ namespace ClientLourd.ViewModels
         public override void AfterLogOut()
         {
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
+            SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel; 
+            SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
+            SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
             Channels = new List<Channel>();
             NewMessages = 0;
+        }
+
+        private void SocketClientOnUserLeftChannel(object source, EventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SocketClientOnUserJoinedChannel(object source, EventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SocketClientOnUserCreatedChannel(object source, EventArgs args)
+        {
+            throw new NotImplementedException();
         }
 
         private void SocketClientOnMessageReceived(object source, EventArgs e)
