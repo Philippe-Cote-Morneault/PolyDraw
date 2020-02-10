@@ -2,6 +2,7 @@ package messenger
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -53,7 +54,7 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 	}
 }
 
-func (h *handler) handleJoin(message socket.RawMessageReceived) {
+func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 	if message.Payload.Length == 16 {
 		channelID, err := uuid.FromBytes(message.Payload.Bytes)
 		if err != nil {
@@ -113,6 +114,54 @@ func (h *handler) handleConnect(socketID uuid.UUID) {
 	}
 	for connectionSocketID := range h.channelsConnections[uuid.Nil] {
 		go socket.SendRawMessageToSocketID(rawMessage, connectionSocketID)
+	}
+}
+
+func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
+	var channelParsed ChannelCreateRequest
+	timestamp := int(time.Now().Unix())
+	if message.Payload.DecodeMessagePack(&channelParsed) == nil {
+		name := channelParsed.ChannelName
+		if strings.TrimSpace(name) != "" {
+			user, err := auth.GetUser(message.SocketID)
+			if err != nil {
+				//Check if channel already exists
+				var count int64
+				model.DB().Where("name = ?", name).Count(&count)
+				if count == 0 {
+					channel := model.ChatChannel{
+						Name: name,
+					}
+					model.DB().Create(&channel)
+
+					//Create request
+					response := ChannelCreateResponse{
+						ChannelName: name,
+						Username:    user.Username,
+						UserID:      user.ID.String(),
+						Timestamp:   timestamp,
+					}
+					rawMessage := socket.RawMessage{}
+					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserCreateChannel), response) != nil {
+						log.Printf("[Messenger] -> Create: Can't pack message. Dropping packet!")
+						return
+					}
+
+					for socketID := range h.channelsConnections[uuid.Nil] {
+						//Check if the user has a session
+						go socket.SendRawMessageToSocketID(rawMessage, socketID)
+					}
+				} else {
+					log.Printf("[Messenger] -> Create: Channel already exists. Dropping packet!")
+				}
+			} else {
+				log.Printf("[Messenger] -> Create: Can't find user. Dropping packet!")
+			}
+		} else {
+			log.Printf("[Messenger] -> Create: Invalid channel name. Dropping packet!")
+		}
+	} else {
+		log.Printf("[Messenger] -> Create: Invalid channel decoding. Dropping packet!")
 	}
 }
 
