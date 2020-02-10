@@ -43,3 +43,11 @@ type ChannelLeaveResponse struct {
 	ChannelID string
 	Timestamp int
 }
+
+//ChannelDestroyResponse represent a message response to a channel destroy
+type ChannelDestroyResponse struct {
+	UserID    string
+	Username  string
+	ChannelID string
+	Timestamp int
+}
