@@ -129,6 +129,7 @@
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\User.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
+    <Compile Include="Models\NonBindable\TokenPair.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestException.cs" />

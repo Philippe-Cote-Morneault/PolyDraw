@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
@@ -50,6 +52,37 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
+        
+        private User _user;
+        public User User
+        {
+            get { return _user; }
+
+            set
+            {
+                if (value != _user)
+                {
+                    _user = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        
+        private TokenPair _tokens ;
+        public TokenPair Tokens
+        {
+            get { return _tokens; }
+
+            set
+            {
+                if (value != _tokens)
+                {
+                    _tokens = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        
 
         public ICommand LoginCommand
         {
@@ -68,7 +101,7 @@ namespace ClientLourd.ViewModels
             {
                 var token = await RestClient.Login(username, password);
                 await SocketClient.InitializeConnection(token);
-                IsLoggedIn = true;
+                OnLogin(this);
             }
             catch (Exception e)
             {
@@ -91,6 +124,18 @@ namespace ClientLourd.ViewModels
 
             return (loginInputValidator.UsernameLengthIsOk(username) && loginInputValidator.PasswordLengthIsOk(password) &&
                     !loginInputValidator.StringIsWhiteSpace(username) && !loginInputValidator.StringIsWhiteSpace(password));
+        }
+        
+        public delegate void LoginEventHandler(object source, EventArgs args);
+
+        public event LoginEventHandler LoggedIn;
+
+
+        protected virtual void OnLogin(object source)
+        {
+            IsLoggedIn = true;
+                
+            LoggedIn?.Invoke(source, EventArgs.Empty);
         }
     }
 }
