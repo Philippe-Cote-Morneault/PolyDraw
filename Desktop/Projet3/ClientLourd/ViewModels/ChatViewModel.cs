@@ -224,7 +224,6 @@ namespace ClientLourd.ViewModels
         public void JoinChannel(Channel channel)
         {
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinChannel, new Guid(channel.ID)));
-            UpdateChannels();
         }
 
 
@@ -249,8 +248,6 @@ namespace ClientLourd.ViewModels
             {
                 DialogHost.Show(new ClosableErrorDialog("You can't leave the Global channel"));
             }
-
-            UpdateChannels();
         }
 
 
@@ -259,6 +256,10 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged("Channels");
             NotifyPropertyChanged("JoinedChannels");
             NotifyPropertyChanged("AvailableChannels");
+            if (SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
+            {
+                SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+            }
         }
 
 

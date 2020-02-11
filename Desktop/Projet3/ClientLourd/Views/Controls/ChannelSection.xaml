@@ -25,7 +25,7 @@
             </Button>
         </StackPanel>
         <TreeView Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
-            <TreeViewItem ItemsSource="{Binding JoinedChannels}">
+            <TreeViewItem IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
@@ -36,6 +36,10 @@
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
                             <Grid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Tag="{Binding}" Click="LeaveChannelClick" Header="Leave">
@@ -45,12 +49,13 @@
                                     </MenuItem>
                                 </ContextMenu>
                             </Grid.ContextMenu>
-                            <TextBlock Text="{Binding Name}" />
+                            <materialDesign:Badged Grid.Column="0" Badge="1" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Grid.Column="1" />
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
-            <TreeViewItem ItemsSource="{Binding AvailableChannels}">
+            <TreeViewItem IsExpanded="True" ItemsSource="{Binding AvailableChannels}">
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
@@ -60,18 +65,18 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
-                            <Grid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Tag="{Binding}" Click="JoinChannelClick" Header="Join">
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Foreground="Green" Kind="Plus" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </Grid.ContextMenu>
-                            <TextBlock Text="{Binding Name}" />
-                        </Grid>
+                            <Grid>
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Tag="{Binding}" Click="JoinChannelClick" Header="Join">
+                                            <MenuItem.Icon>
+                                                <materialDesign:PackIcon Foreground="Green" Kind="Plus" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                            </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
