@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +22,8 @@ namespace ClientLourd.ViewModels
     {
         private const string GLOBAL_CHANNEL_ID = "00000000-0000-0000-0000-000000000000";
         private int _newMessages;
+        private readonly Mutex _mutex = new Mutex();
+
 
         /// <summary>
         /// New message counter
@@ -86,6 +89,8 @@ namespace ClientLourd.ViewModels
         {
             Channels = await RestClient.GetChannels();
             SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+            //Release the lock to accept socket event
+            _mutex.ReleaseMutex();
         }
 
         public override void AfterLogOut()
@@ -96,48 +101,78 @@ namespace ClientLourd.ViewModels
             SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
             Channels = new List<Channel>();
             NewMessages = 0;
+            //We block all socket event until the channels are import
+            _mutex.WaitOne();
         }
 
         private void SocketClientOnUserLeftChannel(object source, EventArgs args)
         {
-            var e = (MessageReceivedEventArgs) args;
-            Channel channel = Channels.First(c => c.ID == e.ChannelId);
-            Message m = new Message(e.Date, new User("admin", "-1"), $"{e.UserName} left the channel");
-            App.Current.Dispatcher.Invoke(() =>
+            _mutex.WaitOne();
+            try
             {
-                channel.Users.Remove(channel.Users.First(u => u.ID == e.UserId));
-                Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
-            });
-            NewMessages++;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                        var e = (MessageReceivedEventArgs) args;
+                        Channel channel = Channels.First(c => c.ID == e.ChannelId);
+                        Message m = new Message(e.Date, new User("admin", "-1"), $"{e.Username} left the channel");
+                        channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
+                        Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
+                        UpdateChannels();
+                        NewMessages++;
+                });
+            }
+            finally{
+                _mutex.ReleaseMutex();
+            }
         }
 
         private void SocketClientOnUserJoinedChannel(object source, EventArgs args)
         {
-            var e = (MessageReceivedEventArgs) args;
-            Channel channel = Channels.First(c => c.ID == e.ChannelId);
-            Message m = new Message(e.Date, new User("admin", "-1"), $"{e.UserName} joined the channel");
-            App.Current.Dispatcher.Invoke(() =>
+            _mutex.WaitOne();
+            try
             {
-                // TODO Cache user
-                channel.Users.Add(new User(e.UserName, e.UserId));
-                Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
-            });
-            NewMessages++;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                        var e = (MessageReceivedEventArgs) args;
+                        Channel channel = Channels.First(c => c.ID == e.ChannelId);
+                        Message m = new Message(e.Date, new User("admin", "-1"), $"{e.Username} joined the channel");
+                        // TODO Cache user
+                        channel.Users.Add(new User(e.Username, e.UserID));
+                        Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
+                        UpdateChannels();
+                        NewMessages++;
+                });
+            }
+            finally
+            {
+                _mutex.ReleaseMutex();
+            }
         }
 
         private void SocketClientOnUserCreatedChannel(object source, EventArgs args)
         {
-            MessageReceivedEventArgs e = (MessageReceivedEventArgs) args;
-            var newChannel = new Channel(e.ChannelName, e.ChannelId);
-            Channels.Add(newChannel);
-            UpdateChannels();
+            _mutex.WaitOne();
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageReceivedEventArgs e = (MessageReceivedEventArgs) args;
+                    var newChannel = new Channel(e.ChannelName, e.ChannelId);
+                    Channels.Add(newChannel);
+                    UpdateChannels();
+                });
+            }
+            finally
+            {
+                _mutex.ReleaseMutex();
+            }
         }
 
         private void SocketClientOnMessageReceived(object source, EventArgs e)
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            Message m = new Message(args.Date, new User(args.UserName, args.UserId), args.Message);
+            Message m = new Message(args.Date, new User(args.SenderName, args.SenderID), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NewMessages++;
         }
@@ -188,7 +223,7 @@ namespace ClientLourd.ViewModels
 
         public void JoinChannel(Channel channel)
         {
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinChannel, channel.ID));
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinChannel, new Guid(channel.ID)));
             UpdateChannels();
         }
 
@@ -208,7 +243,7 @@ namespace ClientLourd.ViewModels
         {
             if (channel.ID != GLOBAL_CHANNEL_ID)
             {
-                SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveChannel, channel.ID));
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveChannel, new Guid(channel.ID)));
             }
             else
             {
@@ -293,8 +328,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return new ObservableCollection<Channel>(_channels.Where(c =>
-                    c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) ||
-                    c.ID == GLOBAL_CHANNEL_ID).ToList());
+                    c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)));
             }
         }
 
@@ -303,9 +337,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return new ObservableCollection<Channel>(_channels.Where(c =>
-                        !c.Users.Select(m => m.Name).Contains(SessionInformations.User.Name) &&
-                        c.Name != GLOBAL_CHANNEL_ID)
-                    .ToList());
+                    !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)));
             }
         }
 

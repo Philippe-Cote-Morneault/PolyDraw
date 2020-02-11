@@ -64,6 +64,7 @@ namespace ClientLourd.Services.SocketService
             _socket.Send(tlv.GetBytes());
         }
 
+
         public void Close()
         {
             try

@@ -26,7 +26,7 @@ namespace ClientLourd.Services.SocketService
             get { return UnixTimeStampToDateTime(_data["Timestamp"]); }
         }
 
-        public string UserName
+        public string SenderName
         {
             get { return _data["SenderName"]; }
         }
@@ -36,9 +36,18 @@ namespace ClientLourd.Services.SocketService
             get { return _data["Message"]; }
         }
 
-        public string UserId
+        public string SenderID
         {
             get { return _data["SenderID"]; }
+        }
+        
+        public string UserID
+        {
+            get { return _data["UserID"]; }
+        }
+        public string Username
+        {
+            get { return _data["Username"]; }
         }
 
 
