@@ -7,17 +7,29 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.Section
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 
 class ChannelSection : Section {
+    private var channelGroup: ChannelGroup
     private var channels: ArrayList<Channel>
-    constructor(channels: ArrayList<Channel>) : super(SectionParameters.builder()
+
+    private var listener: ClickListener
+
+    var expanded: Boolean = true
+
+    constructor(channelGroup: ChannelGroup, channels: ArrayList<Channel>, listener: ClickListener) : super(SectionParameters.builder()
                     .itemResourceId(R.layout.list_item_channel)
                     .headerResourceId(R.layout.list_item_channel_group)
                     .build())
     {
         this.channels = channels
+        this.channelGroup = channelGroup
+        this.listener = listener
     }
 
     override fun getContentItemsTotal(): Int {
-        return channels.size
+        if (expanded) {
+            return channels.size
+        } else {
+            return 0
+        }
     }
 
     override fun getItemViewHolder(view: View?): RecyclerView.ViewHolder {
@@ -34,6 +46,14 @@ class ChannelSection : Section {
     }
 
     override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder?) {
-        super.onBindHeaderViewHolder(holder)
+        val viewHolder = holder as ChannelGroupViewHolder
+        viewHolder.expandableIcon.setOnClickListener {
+            listener.onHeaderRootViewClick(viewHolder.channelGroup)
+        }
+        viewHolder.bind(channelGroup)
+    }
+
+    interface ClickListener {
+        fun onHeaderRootViewClick(group: ChannelGroup)
     }
 }

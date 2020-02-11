@@ -37,8 +37,27 @@ class ChannelListFragment : Fragment(), ChannelListView {
         layoutManager = LinearLayoutManager(this.context)
         channelsRecyclerView.layoutManager = layoutManager
         val channelAdapter = SectionedRecyclerViewAdapter()
-        channelAdapter.addSection(ChannelSection(channels1))
-        channelAdapter.addSection(ChannelSection(channels2))
+        channelAdapter.addSection(channelGroups.get(0).name, ChannelSection(channelGroups.get(0), channels1, object: ChannelSection.ClickListener {
+            override fun onHeaderRootViewClick(group: ChannelGroup) {
+                val sectionAdapter = channelAdapter.getAdapterForSection(group.name)
+                val section = channelAdapter.getSection(group.name) as ChannelSection
+                val count = section.contentItemsTotal
+
+                section.expanded = !section.expanded
+                sectionAdapter.notifyHeaderChanged()
+
+                if (!section.expanded) {
+                    sectionAdapter.notifyItemRangeRemoved(0, count)
+                } else {
+                    sectionAdapter.notifyAllItemsInserted()
+                }
+            }
+        }))
+        channelAdapter.addSection(channelGroups.get(1).name, ChannelSection(channelGroups.get(1),channels2, object: ChannelSection.ClickListener {
+            override fun onHeaderRootViewClick(group: ChannelGroup) {
+            }
+        }))
+
         channelListPresenter = ChannelListPresenter(this)
         channelsRecyclerView.adapter = channelAdapter
         return rootView
