@@ -101,16 +101,27 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnUserLeftChannel(object source, EventArgs args)
         {
             var e = (MessageReceivedEventArgs) args;
+            Channel channel = Channels.First(c => c.ID == e.ChannelId);
             Message m = new Message(e.Date, new User("admin", "-1"), $"{e.UserName} left the channel");
-            App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == e.ChannelId).Messages.Add(m); });
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                channel.Users.Remove(channel.Users.First(u => u.ID == e.UserId));
+                Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
+            });
             NewMessages++;
         }
 
         private void SocketClientOnUserJoinedChannel(object source, EventArgs args)
         {
             var e = (MessageReceivedEventArgs) args;
+            Channel channel = Channels.First(c => c.ID == e.ChannelId);
             Message m = new Message(e.Date, new User("admin", "-1"), $"{e.UserName} joined the channel");
-            App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == e.ChannelId).Messages.Add(m); });
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                // TODO Cache user
+                channel.Users.Add(new User(e.UserName, e.UserId));
+                Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
+            });
             NewMessages++;
         }
 
@@ -177,8 +188,7 @@ namespace ClientLourd.ViewModels
 
         public void JoinChannel(Channel channel)
         {
-            //TODO 
-            channel.Users.Add(SessionInformations.User);
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinChannel, channel.ID));
             UpdateChannels();
         }
 
@@ -196,10 +206,9 @@ namespace ClientLourd.ViewModels
 
         public void LeaveChannel(Channel channel)
         {
-            //TODO change the name for id
             if (channel.ID != GLOBAL_CHANNEL_ID)
             {
-                channel.Users.Remove(channel.Users.First(u => u.ID == SessionInformations.User.Name));
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveChannel, channel.ID));
             }
             else
             {

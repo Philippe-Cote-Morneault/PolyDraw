@@ -42,9 +42,8 @@ namespace ClientLourd.Services.SocketService
             UserJoinedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnMessageReceived(object source, dynamic data)
+        protected virtual void OnMessageReceived(object source, EventArgs e)
         {
-            var e = new MessageReceivedEventArgs(data);
             MessageReceived?.Invoke(source, e);
         }
 

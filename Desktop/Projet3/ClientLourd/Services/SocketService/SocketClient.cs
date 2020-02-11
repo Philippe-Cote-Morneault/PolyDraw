@@ -152,16 +152,16 @@ namespace ClientLourd.Services.SocketService
                             OnHealthCheck(this);
                             break;
                         case SocketMessageTypes.MessageReceived:
-                            OnMessageReceived(this, data);
+                            OnMessageReceived(this, new MessageReceivedEventArgs(data));
                             break;
                         case SocketMessageTypes.UserJoinedChannel:
-                            OnUserJoinedChannel(this, data);
+                            OnUserJoinedChannel(this, new MessageReceivedEventArgs(data));
                             break;
                         case SocketMessageTypes.UserLeftChannel:
-                            OnUserLeftChannel(this, data);
+                            OnUserLeftChannel(this, new MessageReceivedEventArgs(data));
                             break;
                         case SocketMessageTypes.UserCreatedChannel:
-                            OnUserCreatedChannel(this, data);
+                            OnUserCreatedChannel(this, new MessageReceivedEventArgs(data));
                             break;
                         default:
                             throw new InvalidDataException();
