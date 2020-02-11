@@ -9,6 +9,7 @@ import msgpack
 import uuid
 import importlib
 import commands
+import argparse
 from termcolor import colored
 
 
@@ -21,8 +22,11 @@ def randomString(stringLength=10):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
 
-def authREST():
-    body = {'username':'dummy-'+randomString(6)}
+def authREST(user):
+    if user is None:
+        body = {'username':'dummy-'+randomString(6)}
+    else:
+        body = {'username':user}
     myurl = "http://localhost:3000/auth"
     req = urllib.request.Request(myurl)
     req.add_header('Content-Type', 'application/json; charset=utf-8')
@@ -94,11 +98,16 @@ def handle(typeVal, valBytes):
         printType("-> Channel create")
         printMsgPack(msgpack.unpackb(valBytes))
     if typeVal == 29:
-        printType("-> Channel create")
+        printType("-> Channel destroy")
         printMsgPack(msgpack.unpackb(valBytes))
 
 def main():
-    sessionToken = str(authREST())
+
+    parser = argparse.ArgumentParser(prog='client', usage='python3 client.py [options]')
+    parser.add_argument('--user', help='The username to use for the client')
+    args = parser.parse_args()
+
+    sessionToken = str(authREST(args.user))
     client.connect(('127.0.0.1', 3001))
     client.setblocking(True)
     
