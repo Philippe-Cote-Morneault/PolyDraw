@@ -9,7 +9,7 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
-using ClientLourd.Utilities.Constants;
+using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.ViewModels
 {
@@ -49,7 +49,7 @@ namespace ClientLourd.ViewModels
         public override void AfterLogOut()
         {
             SessionInformations = new SessionInformations();
-            ContainedView = Enums.Views.Editor.ToString();
+            ContainedView = Utilities.Enums.Views.Editor.ToString();
             RestClient = new RestClient();
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
@@ -138,7 +138,7 @@ namespace ClientLourd.ViewModels
 
         private void MyProfile()
         {
-            ContainedView = Enums.Views.Profile.ToString();
+            ContainedView = Utilities.Enums.Views.Profile.ToString();
         }
 
         private RelayCommand<object> _homeCommand;
@@ -154,7 +154,7 @@ namespace ClientLourd.ViewModels
         private void Home()
         {
             // TODO: Change to home view
-            ContainedView = Enums.Views.Editor.ToString();
+            ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
 
     }

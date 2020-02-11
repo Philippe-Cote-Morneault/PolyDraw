@@ -47,7 +47,7 @@ namespace ClientLourd.ViewModels
 
         private void CloseProfile(object obj)
         {
-            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
 
         public RestClient RestClient
