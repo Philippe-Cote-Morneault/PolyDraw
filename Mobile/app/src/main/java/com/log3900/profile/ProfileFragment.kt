@@ -1,6 +1,7 @@
 package com.log3900.profile
 
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +24,14 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        infoBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_info, container, false)
-//        infoBinding.info = ProfileInfo("myusername", "mypassword123", "Myname", "My-Lastname", "my@email.com")
+        infoBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_info, container, false)
+        infoBinding.info = ProfileInfo("myusername", "mypassword123", "Myname", "My-Lastname", "my@email.com")
 //
+//        val contextThemeWrapper = ContextThemeWrapper(activity, R.style.MyTheme_DayNight)
+//        val localInflater = inflater.cloneInContext(contextThemeWrapper)
+//        val root = localInflater.inflate(R.layout.fragment_profile, container, false)
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
-        return root
-//        return infoBinding.root
+//        return root
+        return infoBinding.root
     }
 }

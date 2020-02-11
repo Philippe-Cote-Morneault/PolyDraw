@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:showDividers="middle"
-    >
+    tools:context=".MainActivity">
 
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:id="@+id/rv_game_history"-->
@@ -25,16 +25,23 @@
         android:layout_margin="20dp"
         android:showDividers="middle">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            app:cardElevation="4dp"
             >
-            <fragment
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/profile_info"
-                tools:layout="@layout/fragment_profile_info"/>
-        </com.google.android.material.card.MaterialCardView>
+                android:text="@string/email"/>
+
+<!--            <fragment-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:id="@+id/profile_info"-->
+<!--                tools:layout="@layout/fragment_profile_info"/>-->
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
