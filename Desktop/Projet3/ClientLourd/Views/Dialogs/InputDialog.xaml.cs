@@ -9,6 +9,7 @@ namespace ClientLourd.Views.Dialogs
             InitializeComponent();
             DataContext = this;
             MessageTextBlock.Text = message;
+            FieldTextBox.Focus();
         }
         
         public string Result { get; set; }
