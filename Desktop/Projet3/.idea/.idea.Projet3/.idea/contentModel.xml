@@ -149,6 +149,8 @@
             <e p="ErrorDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />
             <e p="InputDialog.xaml.cs" t="Include" />
+            <e p="MessageDialog.xaml" t="Include" />
+            <e p="MessageDialog.xaml.cs" t="Include" />
           </e>
           <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />

@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="ClientLourd.Views.Dialogs.MessageDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel Margin="10">
+        <Button Margin="10" Content="Ok" HorizontalAlignment="Center"
+                Width="{Binding ElementName=DockPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
+                Command="materialDesign:DialogHost.CloseDialogCommand" DockPanel.Dock="Bottom" />
+        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"  Style="{StaticResource MaterialDesignHeadline4TextBlock}"></TextBlock>
+        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" TextAlignment="Center"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
+    </DockPanel>
+</UserControl>

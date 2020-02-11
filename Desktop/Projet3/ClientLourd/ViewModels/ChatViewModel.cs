@@ -138,6 +138,8 @@ namespace ClientLourd.ViewModels
                         if (SelectedChannel == channel)
                         {
                             SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+                            DialogHost.Show(new MessageDialog("Oups",
+                                $"{e.Username} delete the channel '{channel.Name}' !"));
                         }
                         UpdateChannels();
                 });
