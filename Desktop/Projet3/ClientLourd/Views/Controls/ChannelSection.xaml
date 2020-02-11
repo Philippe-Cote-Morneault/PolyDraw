@@ -77,6 +77,11 @@
                                                 <materialDesign:PackIcon Foreground="Green" Kind="Plus" />
                                             </MenuItem.Icon>
                                         </MenuItem>
+                                        <MenuItem Tag="{Binding}" Click="DeleteChannelClick" Header="Delete">
+                                            <MenuItem.Icon>
+                                                <materialDesign:PackIcon Foreground="Black" Kind="TrashCan" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />

@@ -119,9 +119,32 @@ namespace ClientLourd.ViewModels
             SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel;
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
             SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
+            SocketClient.UserDeletedChannel += SocketClientOnUserDeletedChannel;
             Channels = new List<Channel>();
             //We block all socket event until the channels are import
             _mutex.WaitOne();
+        }
+
+        private void SocketClientOnUserDeletedChannel(object source, EventArgs args)
+        {
+            _mutex.WaitOne();
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                        var e = (MessageReceivedEventArgs) args;
+                        Channel channel = Channels.First(c => c.ID == e.ChannelId);
+                        Channels.Remove(channel);
+                        if (SelectedChannel == channel)
+                        {
+                            SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+                        }
+                        UpdateChannels();
+                });
+            }
+            finally{
+                _mutex.ReleaseMutex();
+            }
         }
 
         private void SocketClientOnUserLeftChannel(object source, EventArgs args)
@@ -193,6 +216,24 @@ namespace ClientLourd.ViewModels
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NotifyPropertyChanged("NewMessages");
         }
+        
+        
+        RelayCommand<Channel> _deleteChannelCommand;
+
+        public ICommand DeleteChannelCommand
+        {
+            get
+            {
+                return _deleteChannelCommand ??
+                       (_deleteChannelCommand = new RelayCommand<Channel>(channel => DeleteChannel(channel)));
+            }
+        }
+
+        private void DeleteChannel(Channel channel)
+        {
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.DeleteChannel, new Guid(channel.ID)));
+        }
+        
 
         RelayCommand<object> _createChannelCommand;
 

@@ -12,6 +12,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler UserJoinedChannel;
         public event SocketEventHandler UserLeftChannel;
         public event SocketEventHandler UserCreatedChannel;
+        public event SocketEventHandler UserDeletedChannel;
         public event SocketEventHandler HealthCheck;
         public event SocketEventHandler ConnectionLost;
         public event SocketEventHandler StartWaiting;
@@ -22,6 +23,10 @@ namespace ClientLourd.Services.SocketService
             ConnectionLost?.Invoke(source, EventArgs.Empty);
         }
 
+        protected virtual void OnUserDeletedChannel(object source, EventArgs e)
+        {
+            UserDeletedChannel?.Invoke(source, e);
+        }
         protected virtual void OnUserCreatedChannel(object source, EventArgs e)
         {
             UserCreatedChannel?.Invoke(source, e);

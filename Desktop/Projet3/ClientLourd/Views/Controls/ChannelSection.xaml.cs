@@ -39,5 +39,10 @@ namespace ClientLourd.Views.Controls
                 //The treeViewItem is not a channel 
             }
         }
+
+        private void DeleteChannelClick(object sender, RoutedEventArgs e)
+        {
+            ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(((MenuItem) sender).Tag);
+        }
     }
 }
