@@ -53,6 +53,40 @@
                         <materialDesign:PackIcon Kind="AccountEditOutline" />
                     </StackPanel>
                 </Button>
+
+
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Margin="0 0 5 0" Grid.Column="0" Command="{Binding CloseProfileCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>View connexion history</TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Margin="5 0 0 0" Grid.Column="1" Command="{Binding CloseProfileCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>View games played history</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    
+                </Grid>
+                <!--<DockPanel Margin="10">
+                    <Button DockPanel.Dock="Left" Command="{Binding CloseProfileCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>View connexion history</TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <Button  DockPanel.Dock="Right" Command="{Binding CloseProfileCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>View games played history</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </DockPanel>-->
+
             </StackPanel>
             
             <!-- Right side (stats and achievements)-->
