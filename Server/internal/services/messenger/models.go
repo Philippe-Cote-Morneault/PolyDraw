@@ -31,6 +31,7 @@ type ChannelCreateRequest struct {
 //ChannelCreateResponse represent a message response to create a channel
 type ChannelCreateResponse struct {
 	ChannelName string
+	ChannelID   string
 	Username    string
 	UserID      string
 	Timestamp   int

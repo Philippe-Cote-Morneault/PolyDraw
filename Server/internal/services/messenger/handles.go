@@ -81,6 +81,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 					//Create request
 					response := ChannelCreateResponse{
 						ChannelName: name,
+						ChannelID:   channel.ID.String(),
 						Username:    user.Username,
 						UserID:      user.ID.String(),
 						Timestamp:   timestamp,
