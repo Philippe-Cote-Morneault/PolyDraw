@@ -21,6 +21,7 @@
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
         <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter"/>
+        <converter:NotificationConverter x:Key="NotificationConverter"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="OemTilde"
@@ -68,7 +69,7 @@
                                 Name="NotificationCounter"
                                 Visibility="{Binding ElementName=ChatToggleButton, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
                                 BadgeBackground="{StaticResource SecondaryAccentBrush}"
-                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, UpdateSourceTrigger=PropertyChanged}">
+                                Badge="{Binding ElementName=ChatBox, Path=DataContext.NewMessages, Converter={StaticResource NotificationConverter},  UpdateSourceTrigger=PropertyChanged}">
 
                                 <ToggleButton
                                     Name="ChatToggleButton"

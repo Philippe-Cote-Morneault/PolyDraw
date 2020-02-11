@@ -73,26 +73,24 @@ namespace ClientLourd
         }
 
         /// <summary>
-        /// Clear the chat notification when the chat is open or close
+        /// Called when the chat is open or close
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ChatToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            ClearChatNotification();
             Task.Factory.StartNew(() =>
             {
                 //Wait until the drawer is open
                 Thread.Sleep(100);
-                Application.Current.Dispatcher.InvokeAsync(() => { ChatBox.OnChatOpen(); });
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    ChatBox.OnChatToggle(ChatToggleButton.IsChecked != null && (bool)ChatToggleButton.IsChecked);
+                });
             });
         }
 
-        public void ClearChatNotification()
-        {
-            //Clear the notification when chatToggleButton is checked or unchecked
-            ((ChatViewModel) ChatBox.DataContext).ClearNotificationCommand.Execute(null);
-        }
+
 
         private ChatWindow _chatWindow;
 
@@ -114,6 +112,7 @@ namespace ClientLourd
         private void ExportChat(object sender, RoutedEventArgs e)
         {
             Drawer.IsRightDrawerOpen = false;
+            ChatToggleButton.IsEnabled = false;
             RightDrawerContent.Children.Clear();
             _chatWindow = new ChatWindow(ChatBox)
             {
@@ -121,7 +120,6 @@ namespace ClientLourd
                 DataContext = DataContext,
                 Owner = this,
             };
-            ChatToggleButton.IsEnabled = false;
             _chatWindow.Show();
         }
     }

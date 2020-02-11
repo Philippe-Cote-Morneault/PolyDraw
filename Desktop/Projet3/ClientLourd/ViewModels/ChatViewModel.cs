@@ -30,15 +30,24 @@ namespace ClientLourd.ViewModels
         /// </summary>
         public int NewMessages
         {
-            get => _newMessages;
-            set
+            get
             {
-                if (value != _newMessages)
-                {
-                    _newMessages = value;
-                    NotifyPropertyChanged();
-                }
+                return Channels.Sum(c => c.Notification);
             }
+        }
+
+        public void OnChatToggle(bool isOpen)
+        {
+            NotifyPropertyChanged("NewMessages");
+            if (isOpen)
+            {
+                SelectedChannel.IsSelected = true;
+            }
+            else
+            {
+                SelectedChannel.IsSelected = false;
+            }
+            
         }
 
         public SessionInformations SessionInformations
@@ -69,8 +78,18 @@ namespace ClientLourd.ViewModels
             {
                 if (value != _selectedChannel)
                 {
+                    if (_selectedChannel != null)
+                    {
+                        //Remove the selection for the old channel
+                        _selectedChannel.IsSelected = false;
+                    }
                     _selectedChannel = value;
+                    if (_selectedChannel != null)
+                    {
+                        _selectedChannel.IsSelected = true;
+                    }
                     NotifyPropertyChanged();
+                    NotifyPropertyChanged("NewMessages");
                 }
             }
         }
@@ -89,6 +108,7 @@ namespace ClientLourd.ViewModels
         {
             Channels = await RestClient.GetChannels();
             SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+            SelectedChannel.IsSelected = false;
             //Release the lock to accept socket event
             _mutex.ReleaseMutex();
         }
@@ -100,7 +120,6 @@ namespace ClientLourd.ViewModels
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
             SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
             Channels = new List<Channel>();
-            NewMessages = 0;
             //We block all socket event until the channels are import
             _mutex.WaitOne();
         }
@@ -118,7 +137,6 @@ namespace ClientLourd.ViewModels
                         channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
                         Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
                         UpdateChannels();
-                        NewMessages++;
                 });
             }
             finally{
@@ -140,7 +158,6 @@ namespace ClientLourd.ViewModels
                         channel.Users.Add(new User(e.Username, e.UserID));
                         Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
                         UpdateChannels();
-                        NewMessages++;
                 });
             }
             finally
@@ -174,7 +191,7 @@ namespace ClientLourd.ViewModels
             //TODO cache user 
             Message m = new Message(args.Date, new User(args.SenderName, args.SenderID), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
-            NewMessages++;
+            NotifyPropertyChanged("NewMessages");
         }
 
         RelayCommand<object> _createChannelCommand;
@@ -256,21 +273,10 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged("Channels");
             NotifyPropertyChanged("JoinedChannels");
             NotifyPropertyChanged("AvailableChannels");
+            NotifyPropertyChanged("NewMessages");
             if (SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
             {
                 SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
-            }
-        }
-
-
-        RelayCommand<object> _clearNotificationCommand;
-
-        public ICommand ClearNotificationCommand
-        {
-            get
-            {
-                return _clearNotificationCommand ??
-                       (_clearNotificationCommand = new RelayCommand<object>(param => NewMessages = 0));
             }
         }
 

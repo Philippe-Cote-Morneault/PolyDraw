@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace ClientLourd.Models.Bindable
@@ -69,11 +70,66 @@ namespace ClientLourd.Models.Bindable
                 if (value != _messages)
                 {
                     _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
+                    _messages.CollectionChanged += MessagesOnCollectionChanged;
                     NotifyPropertyChanged();
                 }
             }
         }
-
         private ObservableCollection<Message> _messages;
+
+        private void MessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (!_isSelected)
+                {
+                    Notification ++ ;
+                }
+                Message tmp;
+                for(int i =_messages.Count-1; i > 0; i--)
+                {
+                    if (_messages[i-1].Date > _messages[i].Date)
+                    {
+                        tmp = _messages[i];
+                        _messages[i] = _messages[i - 1];
+                        _messages[i - 1] = tmp;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        public int Notification
+        {
+            get { return _notification; }
+            set
+            {
+                if (_notification != value)
+                {
+                    _notification = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private int _notification;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                if (value != _isSelected)
+                {
+                    _isSelected = value;
+                    Notification = 0;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private bool _isSelected;
+
     }
 }
