@@ -35,23 +35,31 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 		if err != nil {
 			log.Printf("[Messenger] -> %s", err)
 		}
-		log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", messageParsed.Message, user.Username, messageParsed.ChannelID)
-		messageToFoward := MessageReceived{
-			ChannelID:  messageParsed.ChannelID,
-			SenderID:   user.ID.String(),
-			SenderName: user.Username,
-			Message:    messageParsed.Message,
-			Timestamp:  timestamp,
-		}
-		rawMessage := socket.RawMessage{}
-		if rawMessage.ParseMessagePack(byte(socket.MessageType.MessageReceived), messageToFoward) != nil {
-			log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
-			return
-		}
-		channelID, _ := uuid.Parse(messageParsed.ChannelID)
-		for k := range h.channelsConnections[channelID] {
-			// Send message to the socket in async way
-			go socket.SendRawMessageToSocketID(rawMessage, k)
+		channelID, err := uuid.Parse(messageParsed.ChannelID)
+		if err == nil {
+			if _, ok := h.channelsConnections[channelID][message.SocketID]; ok {
+				messageToFoward := MessageReceived{
+					ChannelID:  messageParsed.ChannelID,
+					SenderID:   user.ID.String(),
+					SenderName: user.Username,
+					Message:    messageParsed.Message,
+					Timestamp:  timestamp,
+				}
+				rawMessage := socket.RawMessage{}
+				if rawMessage.ParseMessagePack(byte(socket.MessageType.MessageReceived), messageToFoward) != nil {
+					log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
+					return
+				}
+				for k := range h.channelsConnections[channelID] {
+					// Send message to the socket in async way
+					go socket.SendRawMessageToSocketID(rawMessage, k)
+				}
+				log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", messageParsed.Message, user.Username, messageParsed.ChannelID)
+			} else {
+				log.Printf("[Messenger] -> Receive: The user needs to join the channel first. Dropping packet!")
+			}
+		} else {
+			log.Printf("[Messenger] -> Receive: Invalid channel ID. Dropping packet!")
 		}
 	} else {
 		log.Printf("[Messenger] -> Receive: Wrong data format. Dropping packet!")
@@ -121,28 +129,31 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 
 			if channel.ID != uuid.Nil {
 				user, _ := auth.GetUser(message.SocketID)
+				if _, ok := h.channelsConnections[channel.ID][message.SocketID]; !ok {
+					joinServer := ChannelJoin{
+						UserID:    user.ID.String(),
+						Username:  user.Username,
+						ChannelID: channel.ID.String(),
+						Timestamp: int(time.Now().Unix()),
+					}
 
-				joinServer := ChannelJoin{
-					UserID:    user.ID.String(),
-					Username:  user.Username,
-					ChannelID: channel.ID.String(),
-					Timestamp: int(time.Now().Unix()),
+					rawMessage := socket.RawMessage{}
+					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserJoinedChannel), joinServer) != nil {
+						log.Printf("[Messenger] -> Join: Can't pack message. Dropping packet!")
+						return
+					}
+
+					//We can join the channel
+					model.DB().Model(&channel).Association("Users").Append(user)
+					h.channelsConnections[channel.ID][message.SocketID] = true
+
+					for socketID := range h.channelsConnections[channel.ID] {
+						go socket.SendRawMessageToSocketID(rawMessage, socketID)
+					}
+					log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
+				} else {
+					log.Printf("[Messenger] -> Join: User is already joined to the channel")
 				}
-
-				rawMessage := socket.RawMessage{}
-				if rawMessage.ParseMessagePack(byte(socket.MessageType.UserJoinedChannel), joinServer) != nil {
-					log.Printf("[Messenger] -> Join: Can't pack message. Dropping packet!")
-					return
-				}
-
-				//We can join the channel
-				model.DB().Model(&channel).Association("Users").Append(user)
-				h.channelsConnections[channel.ID][message.SocketID] = true
-
-				for socketID := range h.channelsConnections[channel.ID] {
-					go socket.SendRawMessageToSocketID(rawMessage, socketID)
-				}
-				log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
 			} else {
 				log.Printf("[Messenger] -> Join: Channel UUID not found")
 			}
@@ -164,30 +175,30 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 			model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
 			if channel.ID != uuid.Nil {
 				user, _ := auth.GetUser(message.SocketID)
+				if _, ok := h.channelsConnections[channel.ID][message.SocketID]; ok {
+					model.DB().Model(&channel).Association("Users").Delete(user)
 
-				//Remove the user from the hashmap
-				if _, ok := h.channelsConnections[channelID][user.ID]; ok {
-					delete(h.channelsConnections[channelID], user.ID)
-				}
-				model.DB().Model(&channel).Association("Users").Delete(user)
+					//Create a quit message
+					quitResponse := ChannelLeaveResponse{
+						UserID:    user.ID.String(),
+						Username:  user.Username,
+						ChannelID: channel.ID.String(),
+						Timestamp: int(time.Now().Unix()),
+					}
+					rawMessage := socket.RawMessage{}
+					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserLeftChannel), quitResponse) != nil {
+						log.Printf("[Messenger] -> Quit: Can't pack message. Dropping packet!")
+						return
+					}
 
-				//Create a quit message
-				quitResponse := ChannelLeaveResponse{
-					UserID:    user.ID.String(),
-					Username:  user.Username,
-					ChannelID: channel.ID.String(),
-					Timestamp: int(time.Now().Unix()),
+					for socketID := range h.channelsConnections[channel.ID] {
+						go socket.SendRawMessageToSocketID(rawMessage, socketID)
+					}
+					delete(h.channelsConnections[channelID], message.SocketID)
+					log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
+				} else {
+					log.Printf("[Messenger] -> Quit: User is not in the channel")
 				}
-				rawMessage := socket.RawMessage{}
-				if rawMessage.ParseMessagePack(byte(socket.MessageType.UserLeftChannel), quitResponse) != nil {
-					log.Printf("[Messenger] -> Quit: Can't pack message. Dropping packet!")
-					return
-				}
-
-				for socketID := range h.channelsConnections[channel.ID] {
-					go socket.SendRawMessageToSocketID(rawMessage, socketID)
-				}
-				log.Printf("[Messenger] -> Quit: User %s quitted %s", user.ID.String(), channelID)
 			} else {
 				log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
 			}
@@ -210,7 +221,7 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 
 			if channel.ID != uuid.Nil {
 				user, _ := auth.GetUser(message.SocketID)
-
+				delete(h.channelsConnections, channel.ID)
 				model.DB().Model(&channel).Delete(&channel)
 
 				//Create a destroy message
@@ -230,7 +241,6 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 				for socketID := range h.channelsConnections[uuid.Nil] {
 					go socket.SendRawMessageToSocketID(rawMessage, socketID)
 				}
-				delete(h.channelsConnections, channel.ID)
 				log.Printf("[Messenger] -> Destroy: Removed channel %s", channelID)
 			} else {
 				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
@@ -246,7 +256,11 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 func (h *handler) handleConnect(socketID uuid.UUID) {
 	h.channelsConnections[uuid.Nil][socketID] = true
 
-	user, _ := auth.GetUser(socketID)
+	userID, _ := auth.GetUserID(socketID)
+
+	var user model.User
+	model.DB().Model(&user).Related(&model.ChatChannel{}, "Channels")
+	model.DB().Preload("Channels").Where("id = ?", userID).First(&user)
 	joinServer := ChannelJoin{
 		UserID:    user.ID.String(),
 		Username:  user.Username,
@@ -262,12 +276,21 @@ func (h *handler) handleConnect(socketID uuid.UUID) {
 	for connectionSocketID := range h.channelsConnections[uuid.Nil] {
 		go socket.SendRawMessageToSocketID(rawMessage, connectionSocketID)
 	}
+
+	//Update the cache
+	for _, channel := range user.Channels {
+		h.channelsConnections[channel.ID][socketID] = true
+	}
 }
 
 func (h *handler) handleDisconnect(socketID uuid.UUID) {
 	delete(h.channelsConnections[uuid.Nil], socketID)
+	userID, _ := auth.GetUserID(socketID)
 
-	user, _ := auth.GetUser(socketID)
+	var user model.User
+	model.DB().Model(&user).Related(&model.ChatChannel{}, "Channels")
+	model.DB().Preload("Channels").Where("id = ?", userID).First(&user)
+
 	leaveServer := ChannelJoin{
 		UserID:    user.ID.String(),
 		Username:  user.Username,
@@ -282,5 +305,10 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 	}
 	for connectionSocketID := range h.channelsConnections[uuid.Nil] {
 		go socket.SendRawMessageToSocketID(rawMessage, connectionSocketID)
+	}
+
+	//Update the cache
+	for _, channel := range user.Channels {
+		delete(h.channelsConnections[channel.ID], socketID)
 	}
 }
