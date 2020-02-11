@@ -29,7 +29,7 @@
             </Button>
         </StackPanel>
         <TreeView  Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
-            <TreeViewItem IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
+            <TreeViewItem Name="JoindedTree" IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
@@ -59,7 +59,7 @@
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
-            <TreeViewItem IsExpanded="True" ItemsSource="{Binding AvailableChannels}">
+            <TreeViewItem IsExpanded="True" Name="AvailableTree" ItemsSource="{Binding AvailableChannels}">
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"

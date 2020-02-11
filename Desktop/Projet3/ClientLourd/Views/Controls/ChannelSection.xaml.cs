@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using ClientLourd.Models.Bindable;
 using ClientLourd.ViewModels;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Controls
 {
@@ -31,7 +33,14 @@ namespace ClientLourd.Views.Controls
                 var channel = (Channel) tree.SelectedItem;
                 if (channel != null)
                 {
-                    ((ChatViewModel) DataContext).ChangeChannelCommand.Execute(channel);
+                    if (AvailableTree.Items.Contains(channel))
+                    {
+                        DialogHost.Show(new MessageDialog("Warning", "You have to join the channel first !"));
+                    }
+                    else
+                    {
+                        ((ChatViewModel) DataContext).ChangeChannelCommand.Execute(channel);
+                    }
                 }
             }
             catch
