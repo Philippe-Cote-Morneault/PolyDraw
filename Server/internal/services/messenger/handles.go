@@ -95,6 +95,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 						//Check if the user has a session
 						go socket.SendRawMessageToSocketID(rawMessage, socketID)
 					}
+					log.Printf("[Messenger] -> Create: channel %s created", channelParsed.ChannelName)
 				} else {
 					log.Printf("[Messenger] -> Create: Channel already exists. Dropping packet!")
 				}
@@ -140,6 +141,7 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 				for socketID := range h.channelsConnections[channel.ID] {
 					go socket.SendRawMessageToSocketID(rawMessage, socketID)
 				}
+				log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
 			} else {
 				log.Printf("[Messenger] -> Join: Channel UUID not found")
 			}
@@ -184,7 +186,7 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 				for socketID := range h.channelsConnections[channel.ID] {
 					go socket.SendRawMessageToSocketID(rawMessage, socketID)
 				}
-
+				log.Printf("[Messenger] -> Quit: User %s quitted %s", user.ID.String(), channelID)
 			} else {
 				log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
 			}
@@ -228,6 +230,7 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 					go socket.SendRawMessageToSocketID(rawMessage, socketID)
 				}
 				delete(h.channelsConnections, channel.ID)
+				log.Printf("[Messenger] -> Destroy: Removed channel %s", channelID)
 			} else {
 				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
 			}
