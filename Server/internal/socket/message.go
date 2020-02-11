@@ -23,6 +23,9 @@ type messageType struct {
 	LeaveChannel             int
 	UserLeftChannel          int
 	CreateChannel            int
+	UserCreateChannel        int
+	DestroyChannel           int
+	UserDestroyedChannel     int
 }
 
 // MessageType represents the available message types to send to clients.
@@ -40,6 +43,9 @@ var MessageType = &messageType{
 	LeaveChannel:             24,
 	UserLeftChannel:          25,
 	CreateChannel:            26,
+	UserCreateChannel:        27,
+	DestroyChannel:           28,
+	UserDestroyedChannel:     29,
 }
 
 // SerializableMessage Represents a serializable message sent over socket

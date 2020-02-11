@@ -13,6 +13,10 @@ import (
 type Messenger struct {
 	shutdown        chan bool
 	messageSentChan cbroadcast.Channel
+	createChan      cbroadcast.Channel
+	destroyChan     cbroadcast.Channel
+	joinChan        cbroadcast.Channel
+	quitChan        cbroadcast.Channel
 	connectedChan   cbroadcast.Channel
 	disconnectChan  cbroadcast.Channel
 }
@@ -41,6 +45,10 @@ func (m *Messenger) subscribe() {
 	m.connectedChan, _, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
 	m.disconnectChan, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
 
+	m.createChan, _, _ = cbroadcast.Subscribe(BCreateChannel)
+	m.destroyChan, _, _ = cbroadcast.Subscribe(BDestroyChannel)
+	m.joinChan, _, _ = cbroadcast.Subscribe(BJoinChannel)
+	m.quitChan, _, _ = cbroadcast.Subscribe(BLeaveChannel)
 }
 
 func (m *Messenger) listen() {
@@ -56,6 +64,24 @@ func (m *Messenger) listen() {
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				h.handleMessgeSent(message)
 			}
+
+		case data := <-m.createChan:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				h.handleCreateChannel(message)
+			}
+		case data := <-m.destroyChan:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				h.handleDestroyChannel(message)
+			}
+		case data := <-m.joinChan:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				h.handleJoinChannel(message)
+			}
+		case data := <-m.quitChan:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				h.handleQuitChannel(message)
+			}
+
 		case data := <-m.connectedChan:
 			if socketID, ok := data.(uuid.UUID); ok {
 				h.handleConnect(socketID)
@@ -65,6 +91,5 @@ func (m *Messenger) listen() {
 				h.handleDisconnect(socketID)
 			}
 		}
-		//TODO add other handles here
 	}
 }
