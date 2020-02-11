@@ -20,12 +20,13 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
-            GetUserInfo(_sessionInformations.User.ID);
+            Task task = GetUserInfo(_sessionInformations.User.ID);
+            //GetUserInfo(_sessionInformations.User.ID);
         }
 
         private async Task GetUserInfo(string userID)
         {
-            _profileInfo = await RestClient.GetUserInfo(userID);
+            ProfileInfo = await RestClient.GetUserInfo(userID).ConfigureAwait(false);
         }
 
         public override void AfterLogOut()
@@ -58,6 +59,14 @@ namespace ClientLourd.ViewModels
         public PrivateProfileInfo ProfileInfo
         {
             get { return _profileInfo; }
+            set
+            {
+                if (value != _profileInfo)
+                {
+                    _profileInfo = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
     }
 }

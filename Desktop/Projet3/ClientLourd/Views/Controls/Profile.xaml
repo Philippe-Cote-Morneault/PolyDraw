@@ -36,9 +36,16 @@
             <!-- Left side -->
             <StackPanel Grid.Column="0" Grid.Row="1" Margin="0 0 20 0">
                 <Image  Stretch="None" Margin="4" Height="400"  Source="../../Resources/avatar.jpg" />
-                <TextBlock FontWeight="Bold" FontSize="30">User Name</TextBlock>
-                <TextBlock FontSize="18">Prénom Nom</TextBlock>
-                <TextBlock FontSize="13">adresse@couriel.com</TextBlock>
+                <TextBlock FontWeight="Bold" FontSize="30" Text="{Binding Path=ProfileInfo.Username, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                <TextBlock FontSize="18">
+                    <TextBlock.Text >
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="ProfileInfo.FirstName" UpdateSourceTrigger="PropertyChanged"></Binding>
+                            <Binding Path="ProfileInfo.LastName" UpdateSourceTrigger="PropertyChanged"></Binding>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock FontSize="13" Text="{Binding Path=ProfileInfo.Email, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 <Separator Margin="0 10 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
                 <Button Margin="10" Command="{Binding CloseProfileCommand}">
                     <StackPanel Orientation="Horizontal">
