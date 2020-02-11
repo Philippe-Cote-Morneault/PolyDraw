@@ -94,7 +94,6 @@ namespace ClientLourd.ViewModels
         public delegate void LogOutHandler(object source, EventArgs args);
 
         public event LogOutHandler UserLogout;
-        
 
         public string ContainedView
         {

@@ -2,7 +2,7 @@
 {
     public class TokenPair
     {
-       public string SessionToken { get; set; }
-       public string Bearer { get; set; }
+        public string SessionToken { get; set; }
+        public string Bearer { get; set; }
     }
 }

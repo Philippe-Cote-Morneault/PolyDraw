@@ -10,6 +10,9 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
+        <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibilityConverter" />
+        <converter:SingleCompartorToBooleanConverter x:Key="SingleCompartorToBooleanConverter" />
         <converter:DateConverter x:Key="DateConverter" />
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -26,121 +29,144 @@
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
                                 <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
-                                    <Binding Path="User.Name" />
-                                    <Binding Path="DataContext.SessionInformations.User.Name"
+                                    <Binding Path="User.ID" />
+                                    <Binding Path="DataContext.SessionInformations.User.ID"
                                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                 </MultiBinding>
                             </DataTrigger.Binding>
                             <Setter Property="HorizontalAlignment" Value="Right" />
                             <Setter Property="FlowDirection" Value="RightToLeft" />
                         </DataTrigger>
+                        <DataTrigger Value="true">
+                            <DataTrigger.Binding>
+                                    <Binding Path="User.ID" Converter="{StaticResource SingleCompartorToBooleanConverter}" ConverterParameter="-1"/>
+                            </DataTrigger.Binding>
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="Width"
+                                Value="{Binding ElementName=ConversationList, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=1}" />
+                        </DataTrigger>
                     </Style.Triggers>
+                    
                 </Style>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
 
                 <DataTemplate>
-                    <StackPanel FlowDirection="LeftToRight" Orientation="Vertical">
-                        <Border Padding="5 5 5 0">
+                    <Grid>
+                        <Grid Width="{Binding ElementName=ConversationList, Path=ActualWidth}" HorizontalAlignment="Center"   Name="ServerMessage" Visibility="{Binding Path=User.ID, Converter={StaticResource SingleComparatorToVisibilityConverter}, ConverterParameter=-1}" >
+                            <TextBlock Style="{StaticResource MaterialDesignOverlineTextBlock}" Text="{Binding Content}" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <!-- Message and date -->
+                        <StackPanel Visibility="{Binding ElementName=ServerMessage, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}" FlowDirection="LeftToRight" Orientation="Vertical">
+                            <Border Padding="5 5 5 0">
 
-                            <StackPanel Orientation="Vertical">
-                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                    <materialDesign:Chip.Style>
-                                        <Style TargetType="materialDesign:Chip">
-                                            <Setter Property="Background" Value="WhiteSmoke" />
-                                            <Style.Triggers>
-                                                <DataTrigger Value="true">
-                                                    <DataTrigger.Binding>
-                                                        <MultiBinding
-                                                            Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                            <Binding Path="User.Name" />
-                                                            <Binding Path="DataContext.SessionInformations.User.Name"
-                                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
-                                                        </MultiBinding>
-                                                    </DataTrigger.Binding>
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                    <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:Chip.Style>
-                                    <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
-                                               Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                               Text="{Binding User.Name}" />
-                                    <materialDesign:Chip.Icon>
-                                        <materialDesign:PackIcon Kind="Person" />
-                                    </materialDesign:Chip.Icon>
-                                </materialDesign:Chip>
-                                <materialDesign:Card
-                                    UniformCornerRadius="10"
-                                    Padding="10"
-                                    materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                    <materialDesign:Card.Style>
-                                        <Style TargetType="materialDesign:Card">
-                                            <Style.Triggers>
-                                                <DataTrigger Value="true">
-                                                    <DataTrigger.Binding>
-                                                        <MultiBinding
-                                                            Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                            <Binding Path="User.Name" />
-                                                            <Binding Path="DataContext.SessionInformations.User.Name"
-                                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
-                                                        </MultiBinding>
-                                                    </DataTrigger.Binding>
-                                                    <Setter  Property="Background"  Value="{StaticResource PrimaryHueMidBrush}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:Card.Style>
-                                    <TextBlock TextWrapping="Wrap"
-                                               FontSize="16"
-                                               Text="{Binding Content}">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="Foreground" Value="Black"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Value="true">
-                                                                        <DataTrigger.Binding>
-                                                                            <MultiBinding
-                                                                                Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                                                <Binding Path="User.Name" />
-                                                                                <Binding Path="DataContext.SessionInformations.User.Name"
-                                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
-                                                                            </MultiBinding>
-                                                                        </DataTrigger.Binding>
-                                                                <Setter Property="Foreground" Value="{StaticResource PrimaryHueMidForegroundBrush}"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
+                                <!-- Message -->
+                                <StackPanel Orientation="Vertical">
+                                    <!-- Message header -->
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                        <materialDesign:Chip.Style>
+                                            <Style TargetType="materialDesign:Chip">
+                                                <Setter Property="Background" Value="WhiteSmoke" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Value="true">
+                                                        <DataTrigger.Binding>
+                                                            <MultiBinding
+                                                                Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                                <Binding Path="User.ID" />
+                                                                <Binding Path="DataContext.SessionInformations.User.ID"
+                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                            </MultiBinding>
+                                                        </DataTrigger.Binding>
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Setter Property="Background"
+                                                                Value="{StaticResource PrimaryHueLightBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </materialDesign:Chip.Style>
+                                        <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
+                                                   Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                   Text="{Binding User.Name}" />
+                                        <materialDesign:Chip.Icon>
+                                            <materialDesign:PackIcon Kind="Person" />
+                                        </materialDesign:Chip.Icon>
+                                    </materialDesign:Chip>
+                                    <materialDesign:Card
+                                        UniformCornerRadius="10"
+                                        Padding="10"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                        <materialDesign:Card.Style>
+                                            <Style TargetType="materialDesign:Card">
+                                                <Style.Triggers>
+                                                    <DataTrigger Value="true">
+                                                        <DataTrigger.Binding>
+                                                            <MultiBinding
+                                                                Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                                <Binding Path="User.Name" />
+                                                                <Binding Path="DataContext.SessionInformations.User.Name"
+                                                                         RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                            </MultiBinding>
+                                                        </DataTrigger.Binding>
+                                                        <Setter Property="Background"
+                                                                Value="{StaticResource PrimaryHueMidBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </materialDesign:Card.Style>
+                                        <!-- Message content -->
+                                        <TextBlock TextWrapping="Wrap"
+                                                   FontSize="16"
+                                                   Text="{Binding Content}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="Black" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Value="true">
+                                                            <DataTrigger.Binding>
+                                                                <MultiBinding
+                                                                    Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                                    <Binding Path="User.ID" />
+                                                                    <Binding
+                                                                        Path="DataContext.SessionInformations.User.ID"
+                                                                        RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                                </MultiBinding>
+                                                            </DataTrigger.Binding>
+                                                            <Setter Property="Foreground"
+                                                                    Value="{StaticResource PrimaryHueMidForegroundBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
                                         </TextBlock>
-                                </materialDesign:Card>
-                            </StackPanel>
-                        </Border>
-                        <TextBlock Margin="5" TextWrapping="Wrap"
-                                   FontSize="10"
-                                    VerticalAlignment="Center"
-                                   Text="{Binding Date, Converter={StaticResource DateConverter}}">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Left"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Value="true">
-                                                    <DataTrigger.Binding>
-                                                        <MultiBinding
-                                                            Converter="{StaticResource ComparatorToBooleanConverter}">
-                                                            <Binding Path="User.Name" />
-                                                            <Binding Path="DataContext.SessionInformations.User.Name"
-                                                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
-                                                        </MultiBinding>
-                                                    </DataTrigger.Binding>
-                                            <Setter Property="HorizontalAlignment" Value="Right"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </StackPanel>
+                                    </materialDesign:Card>
+                                </StackPanel>
+                            </Border>
+                            <!-- date -->
+                            <TextBlock Margin="5" TextWrapping="Wrap"
+                                       FontSize="10"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding Date, Converter={StaticResource DateConverter}}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Left" />
+                                        <Style.Triggers>
+                                            <DataTrigger Value="true">
+                                                <DataTrigger.Binding>
+                                                    <MultiBinding
+                                                        Converter="{StaticResource ComparatorToBooleanConverter}">
+                                                        <Binding Path="User.ID" />
+                                                        <Binding Path="DataContext.SessionInformations.User.ID"
+                                                                 RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                                    </MultiBinding>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

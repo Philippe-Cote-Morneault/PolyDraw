@@ -14,11 +14,12 @@ namespace ClientLourd.Views.Controls
 
         private void JoinChannelClick(object sender, RoutedEventArgs e)
         {
-            ((ChatViewModel)DataContext).JoinChannelCommand.Execute(((MenuItem)sender).Tag);
+            ((ChatViewModel) DataContext).JoinChannelCommand.Execute(((MenuItem) sender).Tag);
         }
+
         private void LeaveChannelClick(object sender, RoutedEventArgs e)
         {
-            ((ChatViewModel)DataContext).LeaveChannelCommand.Execute(((MenuItem)sender).Tag);
+            ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(((MenuItem) sender).Tag);
         }
 
         private void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -27,14 +28,15 @@ namespace ClientLourd.Views.Controls
             try
             {
                 var tree = (TreeView) sender;
-                var channel = (Channel)tree.SelectedItem;
+                var channel = (Channel) tree.SelectedItem;
                 if (channel != null)
                 {
-                    ((ChatViewModel)DataContext).ChangeChannelCommand.Execute(channel);
+                    ((ChatViewModel) DataContext).ChangeChannelCommand.Execute(channel);
                 }
-            }catch
+            }
+            catch
             {
-               //The treeViewItem is not a channel 
+                //The treeViewItem is not a channel 
             }
         }
     }

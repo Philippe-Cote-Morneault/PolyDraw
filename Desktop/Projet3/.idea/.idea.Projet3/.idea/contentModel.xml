@@ -18,6 +18,7 @@
             <e p="Editor.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="ModelBase.cs" t="Include" />
+            <e p="PrivateProfileInfo.cs" t="Include" />
             <e p="SessionInformations.cs" t="Include" />
             <e p="User.cs" t="Include" />
           </e>
@@ -39,10 +40,12 @@
                 <e p="Conversation.g.cs" t="Include" />
                 <e p="Editor.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
+                <e p="Profile.g.cs" t="Include" />
               </e>
               <e p="Dialogs" t="Include">
                 <e p="ClosableErrorDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
+                <e p="InputDialog.g.cs" t="Include" />
               </e>
               <e p="Windows" t="Include">
                 <e p="ChatWindow.g.cs" t="Include" />
@@ -59,6 +62,7 @@
           <e p="Settings.settings" t="Include" />
         </e>
         <e p="Resources" t="Include">
+          <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
           <e p="LogoMakr_4YSBb4.png" t="Include" />
           <e p="poly.png" t="Include" />
@@ -86,16 +90,21 @@
             <e p="RelayCommand.cs" t="Include" />
           </e>
           <e p="Constants" t="Include">
+            <e p="Enums.cs" t="Include" />
             <e p="Networks.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
             <e p="BorderConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
+            <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
+            <e p="SingleComparatorToVisibility.cs" t="Include" />
+            <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
+            <e p="StringEmptyToBooleanConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
@@ -114,6 +123,7 @@
           <e p="EditorViewModel.cs" t="Include" />
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
+          <e p="ProfileViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>
         <e p="Views" t="Include">
@@ -128,12 +138,16 @@
             <e p="Editor.xaml.cs" t="Include" />
             <e p="Login.xaml" t="Include" />
             <e p="Login.xaml.cs" t="Include" />
+            <e p="Profile.xaml" t="Include" />
+            <e p="Profile.xaml.cs" t="Include" />
           </e>
           <e p="Dialogs" t="Include">
             <e p="ClosableErrorDialog.xaml" t="Include" />
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
+            <e p="InputDialog.xaml" t="Include" />
+            <e p="InputDialog.xaml.cs" t="Include" />
           </e>
           <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />

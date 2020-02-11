@@ -115,11 +115,10 @@ namespace ClientLourd.ViewModels
         {
             //TODO 
         }
-        
+
         public override void AfterLogin()
         {
             //TODO 
         }
-        
     }
 }

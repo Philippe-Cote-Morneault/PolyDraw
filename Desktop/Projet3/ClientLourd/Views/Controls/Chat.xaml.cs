@@ -23,10 +23,10 @@ namespace ClientLourd.Views.Controls
             ((ChatViewModel) DataContext).AfterLogOut();
             MessageTextBox.Clear();
         }
-        
+
         public void AfterLogin()
         {
-            ((ChatViewModel)DataContext).AfterLogin();
+            ((ChatViewModel) DataContext).AfterLogin();
         }
     }
 }

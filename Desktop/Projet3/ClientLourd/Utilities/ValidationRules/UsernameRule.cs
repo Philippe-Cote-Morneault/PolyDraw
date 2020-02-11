@@ -18,11 +18,12 @@ namespace ClientLourd.Utilities.ValidationRules
         {
             string username = (string) value;
             LoginInputRules loginInputValidator = new LoginInputRules();
-            
+
             if (loginInputValidator.StringIsEmpty(username))
             {
-                return new ValidationResult(true,"");
+                return new ValidationResult(true, "");
             }
+
             if (loginInputValidator.StringIsWhiteSpace(username))
             {
                 return new ValidationResult(false, "The username cannot be empty.");

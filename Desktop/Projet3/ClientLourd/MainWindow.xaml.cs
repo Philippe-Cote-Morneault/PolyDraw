@@ -31,12 +31,11 @@ namespace ClientLourd
         {
             InitializeComponent();
             ((MainViewModel) DataContext).UserLogout += OnUserLogout;
-            ((LoginViewModel)LoginScreen.DataContext).LoggedIn += OnLoggedIn;
+            ((LoginViewModel) LoginScreen.DataContext).LoggedIn += OnLoggedIn;
         }
 
         private void OnLoggedIn(object source, EventArgs args)
         {
-            
             var loginViewModel = (LoginViewModel) source;
             Dispatcher.Invoke(() =>
             {
@@ -85,10 +84,7 @@ namespace ClientLourd
             {
                 //Wait until the drawer is open
                 Thread.Sleep(100);
-                Application.Current.Dispatcher.InvokeAsync(() =>
-                {
-                    ChatBox.OnChatOpen();
-                });
+                Application.Current.Dispatcher.InvokeAsync(() => { ChatBox.OnChatOpen(); });
             });
         }
 

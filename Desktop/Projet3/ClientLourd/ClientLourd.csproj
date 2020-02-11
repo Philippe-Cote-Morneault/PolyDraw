@@ -145,6 +145,9 @@
     <Compile Include="Utilities\Constants\Networks.cs" />
     <Compile Include="Utilities\Constants\Enums.cs" />
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
+    <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
@@ -191,6 +194,9 @@
     <Compile Include="Views\Dialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\InputDialog.xaml.cs">
+      <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
@@ -223,6 +229,7 @@
     </Page>
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Windows\ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -2,7 +2,7 @@
 
 namespace ClientLourd.Services.RestService.Exceptions
 {
-    public class RestUnauthorizedException: RestException
+    public class RestUnauthorizedException : RestException
     {
         public RestUnauthorizedException()
         {

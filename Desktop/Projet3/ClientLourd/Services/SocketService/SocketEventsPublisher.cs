@@ -16,7 +16,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler ConnectionLost;
         public event SocketEventHandler StartWaiting;
         public event SocketEventHandler StopWaiting;
-        
+
         protected virtual void OnConnectionLost(object source)
         {
             ConnectionLost?.Invoke(source, EventArgs.Empty);
@@ -42,9 +42,8 @@ namespace ClientLourd.Services.SocketService
             UserJoinedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnMessageReceived(object source, dynamic data)
+        protected virtual void OnMessageReceived(object source, EventArgs e)
         {
-            var e = new MessageReceivedEventArgs(data);
             MessageReceived?.Invoke(source, e);
         }
 

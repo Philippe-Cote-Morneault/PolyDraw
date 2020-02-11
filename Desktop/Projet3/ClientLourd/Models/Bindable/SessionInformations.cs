@@ -2,9 +2,10 @@
 
 namespace ClientLourd.Models.Bindable
 {
-    public class SessionInformations: ModelBase
+    public class SessionInformations : ModelBase
     {
         private User _user;
+
         public User User
         {
             get { return _user; }
@@ -17,7 +18,7 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
-        
+
         public TokenPair Tokens { get; set; }
     }
 }
