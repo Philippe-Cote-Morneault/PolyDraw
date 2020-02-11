@@ -38,6 +38,9 @@ class ChannelSection : Section {
 
     override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val itemHolder = holder as ChannelViewHolder
+        itemHolder.itemView.setOnClickListener {
+            listener.onChannelClickListener(channels.get(position))
+        }
         itemHolder.bind(channels.get(position))
     }
 
@@ -55,5 +58,6 @@ class ChannelSection : Section {
 
     interface ClickListener {
         fun onHeaderRootViewClick(group: ChannelGroup)
+        fun onChannelClickListener(channel: Channel)
     }
 }
