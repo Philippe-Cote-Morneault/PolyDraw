@@ -31,7 +31,7 @@ class ProfileFragment : Fragment() {
 //        val localInflater = inflater.cloneInContext(contextThemeWrapper)
 //        val root = localInflater.inflate(R.layout.fragment_profile, container, false)
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
-//        return root
-        return infoBinding.root
+        return root
+//        return infoBinding.root
     }
 }
