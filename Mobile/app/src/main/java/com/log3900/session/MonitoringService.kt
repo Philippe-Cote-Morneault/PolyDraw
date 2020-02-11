@@ -14,8 +14,12 @@ import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.log3900.MainActivity
+import com.log3900.MainApplication
+import com.log3900.chat.ChatManager
 import com.log3900.shared.ui.WarningDialog
 import com.log3900.socket.*
+import com.log3900.user.User
+import com.log3900.user.UserRepository
 import java.util.*
 
 
@@ -35,7 +39,6 @@ class MonitoringService : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-
         Thread(Runnable {
             Looper.prepare()
             socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, Handler {
@@ -44,6 +47,11 @@ class MonitoringService : Service() {
             })
 
             socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, Handler {
+                handleMessage(it)
+                true
+            })
+
+            socketService?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
                 handleMessage(it)
                 true
             })
@@ -64,11 +72,18 @@ class MonitoringService : Service() {
             SocketEvent.CONNECTION_ERROR.ordinal -> {
                 onConnectionError()
             }
+
         }
     }
 
     fun handleMessage(message: Message) {
-
+        when (message.what) {
+            Event.SERVER_RESPONSE.ordinal -> {
+                if ((message.obj as com.log3900.socket.Message).data[0].toInt() == 1) {
+                    onAuthentication()
+                }
+            }
+        }
     }
 
     fun onConnectionError() {
@@ -82,6 +97,10 @@ class MonitoringService : Service() {
             intent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
+    }
+
+    fun onAuthentication() {
+        MainApplication.instance.startService(ChatManager::class.java)
     }
 
     fun displayErro() {
