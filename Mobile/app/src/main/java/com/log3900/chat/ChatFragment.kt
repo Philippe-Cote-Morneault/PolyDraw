@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -138,5 +139,13 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun scrollMessage() {
         messagesViewAdapter.scrollToBottom()
+    }
+
+    override fun showProgressDialog(dialog: DialogFragment) {
+        dialog.show(activity?.supportFragmentManager!!, "progressDialog")
+    }
+
+    override fun hideProgressDialog(dialog: DialogFragment) {
+        dialog.dismiss()
     }
 }
