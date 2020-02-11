@@ -16,18 +16,39 @@ from termcolor import colored
 
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+settings = {
+    "url":"localhost",
+    "rest":3000,
+    "socket":3001
+}
 
 def randomString(stringLength=10):
     """Generate a random string of fixed length """
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
 
+def setSettings(server):
+    global settings        
+    if server == "prod":
+        settings = {
+            "url":"log3900.fsae.polymtl.ca",
+            "rest":5000,
+            "socket":5001
+        }
+    elif server == "dev":
+        settings = {
+            "url":"log3900.fsae.polymtl.ca",
+            "rest":5010,
+            "socket":5011
+        }
+    print(settings)
+
 def authREST(user):
     if user is None:
         body = {'username':'dummy-'+randomString(6)}
     else:
         body = {'username':user}
-    myurl = "http://localhost:3000/auth"
+    myurl = "http://{}:{}/auth".format(settings["url"],settings["rest"])
     req = urllib.request.Request(myurl)
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     jsondata = json.dumps(body)
@@ -105,10 +126,12 @@ def main():
 
     parser = argparse.ArgumentParser(prog='client', usage='python3 client.py [options]')
     parser.add_argument('--user', help='The username to use for the client')
+    parser.add_argument('--server', choices=['prod','dev','local'], default='local', help="Which server should the client connect to")
     args = parser.parse_args()
-
+    
+    setSettings(args.server)
     sessionToken = str(authREST(args.user))
-    client.connect(('127.0.0.1', 3001))
+    client.connect((settings["url"], settings["socket"]))
     client.setblocking(True)
     
     commands.load(client)
