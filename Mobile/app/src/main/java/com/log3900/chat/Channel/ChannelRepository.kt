@@ -15,6 +15,8 @@ import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,24 +31,26 @@ class ChannelRepository : Service() {
         var instance: ChannelRepository? = null
     }
 
-    fun getChannels(sessionToken: String): ArrayList<Channel> {
-        val call = ChatRestService.service.getChannels(sessionToken, "EN")
-        var channels: ArrayList<Channel>? = null
-        call.enqueue(object : Callback<JsonArray> {
-            override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                val moshi = Moshi.Builder()
-                    .add(UUIDAdapter())
-                    .build()
+    fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
+        return Single.create {
+            val call = ChatRestService.service.getChannels(sessionToken, "EN")
+            call.enqueue(object : Callback<JsonArray> {
+                override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
+                    val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .add(UUIDAdapter())
+                        .build()
 
-                val adapter: JsonAdapter<ArrayList<Channel>> = moshi.adapter(Types.newParameterizedType(ArrayList::class.java, Channel::class.java))
-                channels = adapter.fromJson(response.body().toString())
-            }
+                    val adapter: JsonAdapter<List<Channel>> = moshi.adapter(Types.newParameterizedType(List::class.java, Channel::class.java))
+                    val res = adapter.fromJson(response.body().toString())
+                    it.onSuccess(res as ArrayList<Channel>)
+                }
 
-            override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-            }
-        })
-
-        return channels!!
+                override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+                    println("onFailure")
+                }
+            })
+        }
     }
 
     fun getChannel(sessionToken: String, channelID: String) {
