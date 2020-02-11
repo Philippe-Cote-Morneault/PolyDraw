@@ -16,6 +16,7 @@ type User struct {
 	Email          string
 	HashedPassword string
 	Bearer         string
+	Channels       []*ChatChannel `gorm:"many2many:chat_channel_membership"`
 }
 
 //Session represents a session in the database
