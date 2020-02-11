@@ -21,12 +21,11 @@ namespace ClientLourd.ViewModels
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
             Task task = GetUserInfo(_sessionInformations.User.ID);
-            //GetUserInfo(_sessionInformations.User.ID);
         }
 
         private async Task GetUserInfo(string userID)
         {
-            ProfileInfo = await RestClient.GetUserInfo(userID).ConfigureAwait(false);
+            ProfileInfo = await RestClient.GetUserInfo(userID);
         }
 
         public override void AfterLogOut()

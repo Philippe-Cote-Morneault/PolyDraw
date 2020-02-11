@@ -71,22 +71,8 @@
                             <TextBlock>View games played history</TextBlock>
                         </StackPanel>
                     </Button>
-                    
+
                 </Grid>
-                <!--<DockPanel Margin="10">
-                    <Button DockPanel.Dock="Left" Command="{Binding CloseProfileCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock>View connexion history</TextBlock>
-                        </StackPanel>
-                    </Button>
-
-                    <Button  DockPanel.Dock="Right" Command="{Binding CloseProfileCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock>View games played history</TextBlock>
-                        </StackPanel>
-                    </Button>
-                </DockPanel>-->
-
             </StackPanel>
             
             <!-- Right side (stats and achievements)-->
