@@ -79,27 +79,31 @@ namespace ClientLourd.Models.Bindable
 
         private void MessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            App.Current.Dispatcher.InvokeAsync(() =>
             {
-                if (!_isSelected)
+                if (e.Action == NotifyCollectionChangedAction.Add)
                 {
-                    Notification ++ ;
-                }
-                Message tmp;
-                for(int i =_messages.Count-1; i > 0; i--)
-                {
-                    if (_messages[i-1].Date > _messages[i].Date)
+                    if (!_isSelected)
                     {
-                        tmp = _messages[i];
-                        _messages[i] = _messages[i - 1];
-                        _messages[i - 1] = tmp;
+                        Notification++;
                     }
-                    else
+
+                    Message tmp;
+                    for (int i = Messages.Count - 1; i > 0; i--)
                     {
-                        return;
+                        if (Messages[i - 1].Date > Messages[i].Date)
+                        {
+                            tmp = Messages[i];
+                            Messages[i] = Messages[i - 1];
+                            Messages[i - 1] = tmp;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
-            }
+            });
         }
 
         public int Notification
