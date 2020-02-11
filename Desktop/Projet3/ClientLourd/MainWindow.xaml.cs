@@ -114,13 +114,24 @@ namespace ClientLourd
             Drawer.IsRightDrawerOpen = false;
             ChatToggleButton.IsEnabled = false;
             RightDrawerContent.Children.Clear();
-            _chatWindow = new ChatWindow(ChatBox)
+            Task.Factory.StartNew(() =>
             {
-                Title = "Chat",
-                DataContext = DataContext,
-                Owner = this,
-            };
-            _chatWindow.Show();
+                //Wait until the drawer is close
+                Thread.Sleep(100);
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    _chatWindow = new ChatWindow(ChatBox)
+                    {
+                        Title = "Chat",
+                        DataContext = DataContext,
+                        Owner = this,
+                    };
+                    _chatWindow.Show();
+                });
+            });
+
+
+
         }
     }
 }
