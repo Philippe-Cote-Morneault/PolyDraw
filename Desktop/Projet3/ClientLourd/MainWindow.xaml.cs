@@ -52,6 +52,7 @@ namespace ClientLourd
             mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
+            (Profile.DataContext as ProfileViewModel).AfterLogin();
         }
 
         private void OnUserLogout(object source, EventArgs args)

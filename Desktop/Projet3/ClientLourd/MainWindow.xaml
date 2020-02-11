@@ -122,7 +122,7 @@
                         </DockPanel>
                         
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
-                            <controls:Profile/>
+                            <controls:Profile x:Name="Profile"/>
                         </DockPanel>
                     
                     </DockPanel>
@@ -131,7 +131,7 @@
                         <DockPanel
                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=3}"
                             x:Name="RightDrawerContent">
-                            <controls:Chat x:Name="ChatBox" />
+                            <controls:Chat x:Name="ChatBox"/>
                         </DockPanel>
                     </materialDesign:DrawerHost.RightDrawerContent>
 

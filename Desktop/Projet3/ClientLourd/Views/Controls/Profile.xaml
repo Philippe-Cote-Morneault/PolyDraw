@@ -40,7 +40,7 @@
                 <TextBlock FontSize="18">Prénom Nom</TextBlock>
                 <TextBlock FontSize="13">adresse@couriel.com</TextBlock>
                 <Separator Margin="0 10 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
-                <Button Margin="10">
+                <Button Margin="10" Command="{Binding CloseProfileCommand}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="0 0 20 0">Edit my profile</TextBlock>
                         <materialDesign:PackIcon Kind="AccountEditOutline" />

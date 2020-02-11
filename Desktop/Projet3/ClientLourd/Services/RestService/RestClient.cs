@@ -21,7 +21,10 @@ namespace ClientLourd.Services.RestService
         public RestClient()
         {
             // For local server usage
-            //_client = new RestSharp.RestClient("http://127.0.0.1:3000")
+            /*_client = new RestSharp.RestClient("http://127.0.0.1:3000")
+            {
+                Timeout = 10000,
+            };*/
 
             _client = new RestSharp.RestClient($"http://{Networks.HOST_NAME}:{Networks.REST_PORT}")
             {
@@ -98,8 +101,30 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
-        
-        
+
+        public async Task<PrivateProfileInfo> GetUserInfo(string userID)
+        {
+            RestRequest request = new RestRequest($"users/{userID}", Method.GET);
+            //request.AddParameter("userid", userID);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return JsonConvert.DeserializeObject<PrivateProfileInfo>(response.Content);
+                case HttpStatusCode.BadRequest:
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+
+
         private Task<IRestResponse> Execute(RestRequest request)
         {
             Task<IRestResponse> task = new Task<IRestResponse>(() =>

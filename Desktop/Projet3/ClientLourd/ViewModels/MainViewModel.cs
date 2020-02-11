@@ -16,7 +16,7 @@ namespace ClientLourd.ViewModels
     class MainViewModel : ViewModelBase
     {
         string _containedView;
-       // string _username;
+       
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
         private SessionInformations _sessionInformations;
@@ -43,13 +43,13 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             //TODO
+
         }
 
         public override void AfterLogOut()
         {
             SessionInformations = new SessionInformations();
             ContainedView = Enums.Views.Editor.ToString();
-            //Username = "";
             RestClient = new RestClient();
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
@@ -126,27 +126,6 @@ namespace ClientLourd.ViewModels
             });
             Logout();
         }
-
-        /*public delegate void ChatOpenHandler(object source, EventArgs args);
-
-        public event ChatOpenHandler ChatOpen;
-
-        protected virtual void OnChatOpen(object source)
-        {
-            ChatOpen?.Invoke(source, EventArgs.Empty);
-        }
-
-        private RelayCommand<object> _openChatCommand;
-
-        public ICommand OpenChatCommand
-        {
-            get { return _openChatCommand ?? (_openChatCommand = new RelayCommand<object>(lvm => OpenChat())); }
-        }
-
-        private void OpenChat()
-        {
-            OnChatOpen(this);
-        }*/
 
         private RelayCommand<object> _myProfileCommand;
 

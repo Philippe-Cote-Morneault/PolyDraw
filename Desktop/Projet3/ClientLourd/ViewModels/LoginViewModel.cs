@@ -113,11 +113,11 @@ namespace ClientLourd.ViewModels
                     Bearer = data["Bearer"],
                 };
                 // TODO 
-                //User = new User(username, data["UserID"]);
-                User = new User()
+                User = new User(username, data["UserID"]);
+                /*User = new User()
                 {
                     Name = username,
-                };
+                };*/
                 await SocketClient.InitializeConnection(Tokens.SessionToken);
                 OnLogin(this);
             }

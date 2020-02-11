@@ -20,8 +20,8 @@ namespace ClientLourd.Services.SocketService
     public class SocketClient : SocketEventsPublisher
     {
         // For local server usage
-        //private const int PORT = 3001;
-        //private const string HostName = "127.0.0.1";
+        /*private const int PORT = 3001;
+        private const string HostName = "127.0.0.1";*/
 
         
         private Socket _socket;
