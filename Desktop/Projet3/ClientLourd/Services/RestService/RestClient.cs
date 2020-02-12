@@ -104,11 +104,10 @@ namespace ClientLourd.Services.RestService
             }
         }
 
-        public async Task<Message[]> GetChannelMessages(string channelID, int start, int end)
+        public async Task<List<Message>> GetChannelMessages(string channelID, int start, int end)
         {
-            RestRequest request = new RestRequest("chat/messsages");
+            RestRequest request = new RestRequest($"chat/messages/{channelID}");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
-            request.AddParameter("channelid", channelID, ParameterType.QueryString);
             request.AddParameter("start", start, ParameterType.QueryString);
             request.AddParameter("end", end, ParameterType.QueryString);
             var response = await Execute(request);
@@ -116,7 +115,15 @@ namespace ClientLourd.Services.RestService
             switch(response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return JsonConvert.DeserializeObject<Message[]>(response.Content);
+                    List<Message> messages = new List<Message>();
+                    var objects = deseralizer.Deserialize<List<dynamic>>(response);
+                    var messagesInformations = ((Dictionary<string, object>)objects[0])["Messages"];
+                    foreach (var message in (List<dynamic>)messagesInformations)
+                    {
+                        User user = new User(message["Username"], message["UserID"]);
+                        messages.Add(new Message((int)message["Timestamp"], user, message["Message"]));
+                    }
+                    return messages;
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:

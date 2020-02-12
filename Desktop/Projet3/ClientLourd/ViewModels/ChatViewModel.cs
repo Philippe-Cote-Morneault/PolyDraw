@@ -241,8 +241,10 @@ namespace ClientLourd.ViewModels
             {
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID, SelectedChannel.Messages.Count,
                     SelectedChannel.Messages.Count + numberOfMessages);
-                
-                
+                foreach (var message in messages)
+                {
+                    SelectedChannel.Messages.Add(message);
+                }
             }
         }
         
