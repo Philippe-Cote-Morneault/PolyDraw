@@ -11,6 +11,7 @@ import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.user.UserRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -29,7 +30,8 @@ class ChatPresenter : Presenter {
             chatView.showProgressDialog(progressDialog)
             ChatManager.instance?.subject?.filter {
                 it
-            }?.subscribe {
+            }?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
                 chatView.hideProgressDialog(progressDialog)
                 init()
             }
@@ -92,7 +94,14 @@ class ChatPresenter : Presenter {
     }
 
     private fun onChannelChanged(channel: Channel) {
-        chatView.setCurrentChannnelName(channel.name)
+        chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread()).subscribe(
+            { messages ->
+                chatView.setCurrentChannnelName(channel.name)
+                chatView.setReceivedMessages(messages)
+            },
+            { error ->
+            }
+        )
     }
 
     private fun handleNewMessage(message: Message) {
