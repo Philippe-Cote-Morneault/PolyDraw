@@ -125,7 +125,7 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.PictureID > 0 && request.PictureID > 15 {
+	if request.PictureID < 1 || request.PictureID > 16 {
 		rbody.JSONError(w, http.StatusBadRequest, "Invalid picture id, the number must be between 0 and 15.")
 		return
 	}
@@ -136,10 +136,14 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hash, _ := secureb.HashPassword(request.Password)
+	hash, err := secureb.HashPassword(request.Password)
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "The user could not be created.")
+		return
+	}
+
 	var user model.User
 	err = user.New(username, firstName, lastName, request.Email, hash, request.PictureID)
-
 	if err != nil {
 		rbody.JSONError(w, http.StatusBadRequest, "The user could not be created.")
 		return
