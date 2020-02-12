@@ -76,6 +76,10 @@ namespace ClientLourd.Services.RestService
                 case HttpStatusCode.OK:
                     dynamic data = deseralizer.Deserialize<dynamic>(response);
                     return data;
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Conflict:
                     throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.BadRequest:

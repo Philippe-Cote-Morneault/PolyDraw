@@ -20,6 +20,7 @@ using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.ViewModels;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -43,7 +44,7 @@ namespace ClientLourd.Views.Dialogs
 
 
             // Info before modif
-            PrivateProfileInfo = new PrivateProfileInfo(pvInfo);
+            PrivateProfileInfo = pvInfo;
 
             // Info after modif
             PrivateProfileInfoClone = new PrivateProfileInfo(pvInfo);
@@ -93,21 +94,54 @@ namespace ClientLourd.Views.Dialogs
             //TODO POST here
             try
             {
-                string isOk = await RestClient.PutProfile(GetModifiedObj());
+                await RestClient.PutProfile(GetModifiedObj());
+                // Update infos
+                PrivateProfileInfo.Username = PrivateProfileInfoClone.Username;
+                PrivateProfileInfo.FirstName = PrivateProfileInfoClone.FirstName;
+                PrivateProfileInfo.LastName = PrivateProfileInfoClone.LastName;
+                PrivateProfileInfo.Email = PrivateProfileInfoClone.Email;
+                PrivateProfileInfo = PrivateProfileInfoClone;
+                DialogHost.CloseDialogCommand.Execute(null, null);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show("Error");
+                await DialogHost.Show(new ClosableErrorDialog(e));
             }
-
-            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
+        /// <summary>
+        /// Returns an object with the modified profile parameters only
+        /// </summary>
+        /// <returns></returns>
         private object GetModifiedObj()
         {
             dynamic obj = new ExpandoObject();
-            obj.Username = "pipicaca1";
-            obj.Password = "Passsssssssss";
+
+            if (PrivateProfileInfo.Username != PrivateProfileInfoClone.Username)
+            {
+                obj.Username = PrivateProfileInfoClone.Username;
+            }
+
+            if (PrivateProfileInfo.Email != PrivateProfileInfoClone.Email)
+            {
+                obj.Email = PrivateProfileInfoClone.Email;
+            }
+
+            if (PrivateProfileInfo.LastName != PrivateProfileInfoClone.LastName)
+            {
+                obj.LastName = PrivateProfileInfoClone.LastName;
+            }
+
+            if (PrivateProfileInfo.FirstName != PrivateProfileInfoClone.FirstName)
+            {
+                obj.FirstName = PrivateProfileInfoClone.FirstName;
+            }
+
+            if (PasswordJunk != PasswordField.Password)
+            {
+                obj.Password = PasswordField.Password;
+            }            
 
             return obj;
         }
