@@ -31,7 +31,7 @@ class ChannelRepository : Service() {
         var instance: ChannelRepository? = null
     }
 
-    fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
+    fun getChannels(sessionToken: String): Single<HashSet<Channel>> {
         return Single.create {
             val call = ChatRestService.service.getChannels(sessionToken, "EN")
             call.enqueue(object : Callback<JsonArray> {
@@ -43,7 +43,7 @@ class ChannelRepository : Service() {
 
                     val adapter: JsonAdapter<List<Channel>> = moshi.adapter(Types.newParameterizedType(List::class.java, Channel::class.java))
                     val res = adapter.fromJson(response.body().toString())
-                    it.onSuccess(res as ArrayList<Channel>)
+                    it.onSuccess(res?.toHashSet()!!)
                 }
 
                 override fun onFailure(call: Call<JsonArray>, t: Throwable) {
@@ -59,6 +59,7 @@ class ChannelRepository : Service() {
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 val moshi = Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory())
                     .add(UUIDAdapter())
                     .build()
 

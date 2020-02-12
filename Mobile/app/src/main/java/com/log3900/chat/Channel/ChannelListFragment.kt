@@ -30,8 +30,8 @@ class ChannelListFragment : Fragment(), ChannelListView {
         channels2.add(Channel(UUID.randomUUID(), "channel4", arrayOf()))
         channels2.add(Channel(UUID.randomUUID(), "channel5", arrayOf()))
         channels2.add(Channel(UUID.randomUUID(), "channel6", arrayOf()))
-        channelGroups.add(ChannelGroup(GroupType.JOINED, channels1))
-        channelGroups.add(ChannelGroup(GroupType.AVAILABLE, channels2))
+        channelGroups.add(ChannelGroup(GroupType.JOINED, channels1.toHashSet()))
+        channelGroups.add(ChannelGroup(GroupType.AVAILABLE, channels2.toHashSet()))
 
         channelsRecyclerView = rootView.findViewById(R.id.fragment_channel_list_recycler_view_channels)
         layoutManager = LinearLayoutManager(this.context)
