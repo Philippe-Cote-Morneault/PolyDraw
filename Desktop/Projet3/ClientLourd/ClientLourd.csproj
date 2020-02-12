@@ -149,7 +149,6 @@
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
     <Compile Include="Utilities\ValidationRules\NameRule.cs" />
-    <Compile Include="Utilities\ValidationRules\RegisterRules.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -82,29 +83,35 @@ namespace ClientLourd.Views.Dialogs
             return HasUpdatedProfile() && new LoginInputRules().PasswordLengthIsOk(PasswordField.Password);
         }
 
-
-        
-        
-            
-        
-        
-
-
-
         private bool HasUpdatedProfile()
         {
             return (PrivateProfileInfo != PrivateProfileInfoClone || PasswordField.Password != PasswordJunk);
         }
 
-
-
-
         private async Task EditProfile(object obj)
         {
             //TODO POST here
-            
+            try
+            {
+                string isOk = await RestClient.PutProfile(GetModifiedObj());
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+
             //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
+
+        private object GetModifiedObj()
+        {
+            dynamic obj = new ExpandoObject();
+            obj.Username = "pipicaca1";
+            obj.Password = "Passsssssssss";
+
+            return obj;
+        }
+
 
         private RelayCommand<string> _revertToOriginalCommand;
 

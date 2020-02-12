@@ -62,6 +62,29 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
+
+        public async Task<string> PutProfile(object obj)
+        {
+            RestRequest request = new RestRequest("users", Method.PUT);
+            request.RequestFormat = DataFormat.Json;
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddJsonBody(obj);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    return data;
+                case HttpStatusCode.Conflict:
+                    throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.BadRequest:
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+
         
         public async Task<List<Channel>> GetChannels()
         {
