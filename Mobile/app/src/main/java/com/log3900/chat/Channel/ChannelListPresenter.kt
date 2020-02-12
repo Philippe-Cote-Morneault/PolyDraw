@@ -56,6 +56,12 @@ class ChannelListPresenter : Presenter {
             EventType.UNSUBSCRIBED_FROM_CHANNEL -> {
                 onChannelUnsubscribed(event.data as Channel)
             }
+            EventType.CHANNEL_CREATED -> {
+                onChannelCreated(event.data as Channel)
+            }
+            EventType.CHANNEL_DELETED -> {
+                onChannelDeleted(event.data as Channel)
+            }
         }
     }
 
@@ -74,6 +80,15 @@ class ChannelListPresenter : Presenter {
     private fun onChannelUnsubscribed(channel: Channel) {
         channelListView.notifyChannelUnsubscried(channel)
     }
+
+    private fun onChannelCreated(channel: Channel) {
+        channelListView.notifyChannelSubscribed(channel)
+    }
+
+    private fun onChannelDeleted(channel: Channel) {
+        channelListView.notifyChannelSubscribed(channel)
+    }
+
     override fun resume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
