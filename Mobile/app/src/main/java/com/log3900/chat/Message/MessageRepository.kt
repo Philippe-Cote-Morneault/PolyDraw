@@ -43,7 +43,10 @@ class MessageRepository : Service() {
     fun getChannelMessages(channelID: String, sessionToken: String, startIndex: Int, endIndex: Int): LinkedList<ReceivedMessage> {
         var messages: LinkedList<ReceivedMessage>? = null
         if (true) {
-            messages = cachedMessages[UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d")]
+            if (!cachedMessages.containsKey(UUID.fromString(channelID))) {
+                cachedMessages[UUID.fromString(channelID)] = LinkedList<ReceivedMessage>()
+            }
+            messages = cachedMessages[UUID.fromString(channelID)]
             println("repository messages = " + messages)
         } else {
             val call = ChatRestService.service.getChannelMessages(
@@ -108,7 +111,7 @@ class MessageRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-        cachedMessages[UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d")] = LinkedList()
+        cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")] = LinkedList()
 
         Thread(Runnable {
             Looper.prepare()
@@ -142,9 +145,10 @@ class MessageRepository : Service() {
         if (!cachedMessages.containsKey(message.channelID)) {
             cachedMessages[message.channelID] = LinkedList<ReceivedMessage>()
         }
-
-        cachedMessages[UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d")]?.addLast(message)
-        println("added message to cache, messages = " + cachedMessages[UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d")])
+        cachedMessages[message.channelID]?.addLast(message)
+        //cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")]?.addLast(message)
+        //println("cahced message array = " + cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")])
+        //println("added message to cache, messages = " + cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")])
     }
 
     private fun notifySubscribers(event: Event, message: android.os.Message) {
@@ -154,7 +158,7 @@ class MessageRepository : Service() {
                 val messageCopy = android.os.Message()
                 messageCopy.what = message.what
                 messageCopy.obj = message.obj
-                handler.sendMessage(message)
+                handler.sendMessage(messageCopy)
             }
         }
     }
