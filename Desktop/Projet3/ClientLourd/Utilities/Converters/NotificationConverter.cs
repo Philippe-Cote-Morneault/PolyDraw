@@ -13,7 +13,10 @@ namespace ClientLourd.Utilities.Converters
             {
                 return "";
             }
-
+            else if (notification > 99)
+            {
+                return "99+";
+            }
             return notification.ToString();
         }
 

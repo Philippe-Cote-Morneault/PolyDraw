@@ -391,7 +391,8 @@ namespace ClientLourd.ViewModels
                 {
                     SocketClient.SendMessage(new Tlv(SocketMessageTypes.MessageSent, data));
                     //Clear the chat textbox
-                    tBox.Text = "";
+                    tBox.Clear();
+                    tBox.Focus();
                 }
                 catch (Exception e)
                 {
