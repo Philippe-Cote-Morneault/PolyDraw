@@ -27,4 +27,24 @@ class ChannelCache {
             }
         }
     }
+
+    fun addJoinedChannel(channel: Channel) {
+        if (!joinedChannels.contains(channel)) {
+            joinedChannels.add(channel)
+        }
+    }
+
+    fun removeJoinedChannel(channel: Channel) {
+        joinedChannels.remove(channel)
+    }
+
+    fun addAvailableChannel(channel: Channel) {
+        if (!availableChannels.contains(channel)) {
+            availableChannels.add(channel)
+        }
+    }
+
+    fun removeAvailableChannel(channel: Channel) {
+        availableChannels.remove(channel)
+    }
 }
