@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils
 
 object Validator {
     const val minUsernameLength = 4
-    const val maxUsernameLength = 14
+    const val maxUsernameLength = 12
     const val minPasswordLength = 8
     const val maxPasswordLength = 64
 
