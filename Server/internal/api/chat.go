@@ -112,9 +112,9 @@ func GetChatMessages(w http.ResponseWriter, r *http.Request) {
 				end, endOk := r.URL.Query()["end"]
 				if endOk && len(end[0]) > 0 {
 					//Check if the number is valid
-					startNum, err := strconv.Atoi(start[0])
-					endNum, err := strconv.Atoi(end[0])
-					if err == nil {
+					startNum, errS := strconv.Atoi(start[0])
+					endNum, errE := strconv.Atoi(end[0])
+					if errS == nil && errE == nil {
 						if startNum < endNum {
 							offset = startNum
 							newLimit := endNum - startNum + 1
