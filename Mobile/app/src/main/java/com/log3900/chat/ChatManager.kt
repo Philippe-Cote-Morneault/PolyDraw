@@ -87,6 +87,10 @@ class ChatManager : Service() {
         channelManager?.changeSubscriptionStatus(channel)
     }
 
+    fun createChannel(channelName: String) {
+        channelManager?.createChannel(channelName)
+    }
+
     private fun setReadyState() {
         ready = true
         subject.onNext(true)
