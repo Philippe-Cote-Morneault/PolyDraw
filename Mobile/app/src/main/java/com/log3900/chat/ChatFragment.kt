@@ -126,6 +126,7 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun setReceivedMessages(messages: LinkedList<ReceivedMessage>) {
         messagesViewAdapter.setMessage(messages)
+        messagesViewAdapter.notifyDataSetChanged()
     }
 
     override fun setCurrentChannnelName(name: String) {
