@@ -16,6 +16,10 @@
             <TextBlock TextAlignment="Center" HorizontalAlignment="Center"
                        Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap"
                        Text="{Binding Path=Error, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock TextAlignment="Center" HorizontalAlignment="Center"
+                       Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap"
+                       Text="{Binding Path=Error, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </DockPanel>
 </UserControl>

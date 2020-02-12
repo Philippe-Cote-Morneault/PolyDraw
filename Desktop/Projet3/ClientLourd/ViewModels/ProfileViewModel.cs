@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Services.RestService;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ViewModels
 {
@@ -45,9 +47,23 @@ namespace ClientLourd.ViewModels
             get { return _closeProfileCommand ?? (_closeProfileCommand = new RelayCommand<object>(obj => CloseProfile(obj))); }
         }
 
-        private void CloseProfile(object obj)
+        private async Task CloseProfile(object obj)
         {
+            //await DialogHost.Show(new EditProfileDialog());
             (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+        }
+
+        private RelayCommand<object> _editProfileCommand;
+
+        public ICommand EditProfileCommand
+        {
+            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj))); }
+        }
+
+        private async Task EditProfile(object obj)
+        {
+            await DialogHost.Show(new EditProfileDialog(ProfileInfo));
+            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
         public RestClient RestClient
