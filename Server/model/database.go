@@ -63,5 +63,5 @@ func migrate() {
 	dbVariable.AutoMigrate(&Session{})
 	dbVariable.AutoMigrate(&ChatChannel{})
 	dbVariable.AutoMigrate(&ChatMessage{})
-
+	dbVariable.AutoMigrate(&UserStats{})
 }
