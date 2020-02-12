@@ -59,7 +59,6 @@ class ChatManager : Service() {
     }
 
     fun setActiveChannel(channel: Channel) {
-        println("changed channel")
         channelManager?.activeChannel = channel
         EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
     }
@@ -74,6 +73,14 @@ class ChatManager : Service() {
 
     fun sendMessage(message: String) {
         messageManager?.sendMessage(channelManager?.activeChannel?.ID!!, message)
+    }
+
+    fun getJoinedChannels() = Single.create<ArrayList<Channel>> {
+        it.onSuccess(channelManager?.joinedChannels!!)
+    }
+
+    fun getAvailableChannels() = Single.create<ArrayList<Channel>> {
+        it.onSuccess(channelManager?.availableChannels!!)
     }
 
     private fun setReadyState() {
