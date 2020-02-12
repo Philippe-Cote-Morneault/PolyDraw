@@ -9,10 +9,10 @@
 
     <TextView
         android:id="@+id/modify_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/modify_profile"
         android:textSize="30sp"
         android:textColor="@color/color_on_background"
@@ -42,7 +42,7 @@
         android:id="@+id/username_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:hint="@string/login_username_hint"
         app:errorEnabled="true"
         app:layout_constraintTop_toBottomOf="@+id/current_avatar"
@@ -61,7 +61,7 @@
         android:id="@+id/password_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/login_password_hint"
         app:errorEnabled="true"
         app:endIconMode="password_toggle"
@@ -80,8 +80,9 @@
         android:id="@+id/email_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/email_hint"
+
         app:errorEnabled="true"
         app:layout_constraintTop_toBottomOf="@+id/password_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +100,7 @@
         android:id="@+id/name_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/name_hint"
         app:errorEnabled="true"
         app:layout_constraintTop_toBottomOf="@+id/email_input_layout"
@@ -118,7 +119,7 @@
         android:id="@+id/surname_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:hint="@string/surname_hint"
         app:errorEnabled="true"
         app:layout_constraintTop_toBottomOf="@+id/name_input_layout"
@@ -142,6 +143,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancel_modify_button"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/cancel"
