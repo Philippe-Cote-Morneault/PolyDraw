@@ -11,6 +11,7 @@ import com.google.gson.JsonObject
 import com.log3900.chat.ChatRestService
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
+import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -107,6 +108,18 @@ class ChannelRepository : Service() {
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
             }
         })
+    }
+
+    fun subscribeToChannel(channel: Channel) {
+        channelCache.removeAvailableChannel(channel)
+        channelCache.addJoinedChannel(channel)
+        socketService?.sendMessage(Event.JOIN_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
+    }
+
+    fun unsubscribeFromChannel(channel: Channel) {
+        channelCache.removeJoinedChannel(channel)
+        channelCache.addAvailableChannel(channel)
+        socketService?.sendMessage(Event.LEAVE_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
     }
 
     fun createChannel(channelName: String) {
