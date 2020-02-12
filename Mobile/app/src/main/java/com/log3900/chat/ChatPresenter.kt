@@ -9,7 +9,9 @@ import com.log3900.chat.Message.SentMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
+import com.log3900.shared.ui.ProgressDialog
 import com.log3900.user.UserRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -17,15 +19,33 @@ import java.util.*
 
 class ChatPresenter : Presenter {
     private var chatView: ChatView
-    private var messageRepository: MessageRepository
-    private var chatManager: ChatManager
-    private var keyboardOpened: Boolean
+    private lateinit var messageRepository: MessageRepository
+    private lateinit var chatManager: ChatManager
+    private var keyboardOpened: Boolean = false
 
     constructor(chatView: ChatView) {
         this.chatView = chatView
-        chatManager = ChatManager()
+        if (!(ChatManager.instance?.ready!!)) {
+            val progressDialog = ProgressDialog()
+            chatView.showProgressDialog(progressDialog)
+            ChatManager.instance?.subject?.filter {
+                it
+            }?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
+                chatView.hideProgressDialog(progressDialog)
+                init()
+            }
+        } else {
+            init()
+        }
+
+    }
+
+    private fun init() {
+        chatManager = ChatManager.instance!!
+        chatView.setReceivedMessages(chatManager?.getCurrentChannelMessages().blockingGet())
+        chatView.setCurrentChannnelName(ChatManager.instance?.getActiveChannel()?.name!!)
         messageRepository = MessageRepository.instance!!
-        keyboardOpened = false
 
         subscribeToEvents()
     }
@@ -35,8 +55,7 @@ class ChatPresenter : Presenter {
     }
 
     fun sendMessage(messageText: String) {
-        val message = SentMessage(messageText, UUID.randomUUID())
-        sendMessage(message)
+        chatManager.sendMessage(messageText)
     }
 
     fun handleNavigationDrawerClick() {
@@ -68,14 +87,21 @@ class ChatPresenter : Presenter {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
-            EventType.CHANGED_CHANNEL -> {
+            EventType.ACTIVE_CHANNEL_CHANGED -> {
                 onChannelChanged(event.data as Channel)
             }
         }
     }
 
     private fun onChannelChanged(channel: Channel) {
-        chatView.setCurrentChannnelName(channel.name)
+        chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread()).subscribe(
+            { messages ->
+                chatView.setCurrentChannnelName(channel.name)
+                chatView.setReceivedMessages(messages)
+            },
+            { error ->
+            }
+        )
     }
 
     private fun handleNewMessage(message: Message) {
@@ -87,9 +113,7 @@ class ChatPresenter : Presenter {
     }
 
     override fun resume() {
-        chatManager.test().subscribe {
-            chatView.setReceivedMessages(it!!)
-        }
+        //chatView.setReceivedMessages(chatManager.getCurrentChannelMessages().blockingGet())
     }
 
     override fun pause() {

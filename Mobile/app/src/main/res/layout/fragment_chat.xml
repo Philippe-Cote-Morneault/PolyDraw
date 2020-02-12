@@ -80,10 +80,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="start">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <fragment
+                android:id="@+id/fragment_chat_fragment_channel_list"
+                android:name="com.log3900.chat.Channel.ChannelListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#AA2020" />
+                android:layout_height="match_parent"/>
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

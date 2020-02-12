@@ -53,7 +53,6 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     private fun handleSuccessAuth(bearer: String, session: String, username: String) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
-                storeUser(username, session, bearer)
                 startMainActivity()
                 true
             } else {
@@ -62,6 +61,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             }
         })
 
+        storeUser(username, session, bearer)
         SocketService.instance?.sendMessage(
             Event.SOCKET_CONNECTION,
             session.toByteArray(Charsets.UTF_8))

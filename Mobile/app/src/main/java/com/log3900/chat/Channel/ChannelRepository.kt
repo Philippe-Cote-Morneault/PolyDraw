@@ -11,10 +11,13 @@ import com.google.gson.JsonObject
 import com.log3900.chat.ChatRestService
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
+import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,29 +27,68 @@ class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
     private var socketService: SocketService? = null
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
+    private lateinit var channelCache: ChannelCache
 
     companion object {
         var instance: ChannelRepository? = null
     }
 
-    fun getChannels(sessionToken: String): ArrayList<Channel> {
-        val call = ChatRestService.service.getChannels(sessionToken, "EN")
-        var channels: ArrayList<Channel>? = null
-        call.enqueue(object : Callback<JsonArray> {
-            override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                val moshi = Moshi.Builder()
-                    .add(UUIDAdapter())
-                    .build()
+    fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
+        return Single.create {
+            val call = ChatRestService.service.getChannels(sessionToken, "EN")
+            call.enqueue(object : Callback<JsonArray> {
+                override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
+                    val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .add(UUIDAdapter())
+                        .build()
 
-                val adapter: JsonAdapter<ArrayList<Channel>> = moshi.adapter(Types.newParameterizedType(ArrayList::class.java, Channel::class.java))
-                channels = adapter.fromJson(response.body().toString())
+                    val adapter: JsonAdapter<List<Channel>> = moshi.adapter(Types.newParameterizedType(List::class.java, Channel::class.java))
+                    val res = adapter.fromJson(response.body().toString())
+                    it.onSuccess(res as ArrayList<Channel>)
+                }
+
+                override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+                    println("onFailure")
+                }
+            })
+        }
+    }
+
+    fun getJoinedChannels(sessionToken: String): Single<ArrayList<Channel>> {
+        return Single.create {
+            if (!channelCache.needsReload) {
+                it.onSuccess(channelCache.joinedChannels)
+            } else {
+                getChannels(sessionToken).subscribe(
+                    { channels ->
+                        channelCache.reloadChannels(channels)
+                        it.onSuccess(channelCache.joinedChannels)
+                    },
+                    { error ->
+
+                    }
+                )
             }
+        }
+    }
 
-            override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+    fun getAvailableChannels(sessionToken: String): Single<ArrayList<Channel>> {
+        return Single.create {
+            if (!channelCache.needsReload) {
+                it.onSuccess(channelCache.joinedChannels)
+            } else {
+                getChannels(sessionToken).subscribe(
+                    { channels ->
+                        channelCache.reloadChannels(channels)
+                        it.onSuccess(channelCache.availableChannels)
+                    },
+                    { error ->
+
+                    }
+                )
             }
-        })
-
-        return channels!!
+        }
     }
 
     fun getChannel(sessionToken: String, channelID: String) {
@@ -55,6 +97,7 @@ class ChannelRepository : Service() {
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 val moshi = Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory())
                     .add(UUIDAdapter())
                     .build()
 
@@ -65,6 +108,18 @@ class ChannelRepository : Service() {
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
             }
         })
+    }
+
+    fun subscribeToChannel(channel: Channel) {
+        channelCache.removeAvailableChannel(channel)
+        channelCache.addJoinedChannel(channel)
+        socketService?.sendMessage(Event.JOIN_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
+    }
+
+    fun unsubscribeFromChannel(channel: Channel) {
+        channelCache.removeJoinedChannel(channel)
+        channelCache.addAvailableChannel(channel)
+        socketService?.sendMessage(Event.LEAVE_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
     }
 
     fun createChannel(channelName: String) {
@@ -81,6 +136,7 @@ class ChannelRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
+        channelCache = ChannelCache()
 
         Thread(Runnable {
             Looper.prepare()

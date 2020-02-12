@@ -60,6 +60,10 @@ dependencies {
     // For java StringUtils
     implementation 'org.apache.commons:commons-lang3:3.0'
 
+    // Expandable Recyclerview
+    implementation 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:3.1.0'
+
+    // GSON
     implementation 'com.google.code.gson:gson:2.8.6'
 
     testImplementation 'junit:junit:4.12'
