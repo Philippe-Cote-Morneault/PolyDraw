@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.log3900.R
-import com.log3900.profile.models.ProfileInfo
 
 class ProfileFragment : Fragment() {
 

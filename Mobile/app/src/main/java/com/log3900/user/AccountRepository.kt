@@ -36,6 +36,9 @@ class AccountRepository {
             if (preferences != null) {
                 with (preferences.edit()) {
                     putString(context.getString(R.string.preference_file_username_key), account.username)
+                    putString(context.getString(R.string.preference_file_email_key), account.email)
+                    putString(context.getString(R.string.preference_file_firstname_key), account.firstname)
+                    putString(context.getString(R.string.preference_file_lastname_key), account.lastname)
                     putString(context.getString(R.string.preference_file_session_token_key), account.sessionToken)
                     putString(context.getString(R.string.preference_file_bearer_token_key), account.bearerToken)
                     commit()
