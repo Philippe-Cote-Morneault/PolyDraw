@@ -46,6 +46,7 @@
                 <e p="ClosableErrorDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
+                <e p="MessageDialog.g.cs" t="Include" />
               </e>
               <e p="Windows" t="Include">
                 <e p="ChatWindow.g.cs" t="Include" />
