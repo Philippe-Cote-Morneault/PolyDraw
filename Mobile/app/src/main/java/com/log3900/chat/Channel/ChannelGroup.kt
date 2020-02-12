@@ -1,3 +1,14 @@
 package com.log3900.chat.Channel
 
-data class ChannelGroup(var name: String, var channels: ArrayList<Channel>)
+enum class GroupType {
+    AVAILABLE,
+    JOINED
+}
+class ChannelGroup(var type: GroupType, var channels: ArrayList<Channel>) {
+    fun getName(): String {
+        when (type) {
+            GroupType.AVAILABLE -> return "Available"
+            GroupType.JOINED -> return "Joined"
+        }
+    }
+}

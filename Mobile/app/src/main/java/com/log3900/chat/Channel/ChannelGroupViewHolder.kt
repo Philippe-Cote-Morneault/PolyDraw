@@ -18,7 +18,7 @@ class ChannelGroupViewHolder : RecyclerView.ViewHolder {
     }
 
     fun bind(channelGroup: ChannelGroup) {
-        channelGroupNameTextView.setText(channelGroup.name)
+        channelGroupNameTextView.setText(channelGroup.getName())
         this.channelGroup = channelGroup
     }
 }
