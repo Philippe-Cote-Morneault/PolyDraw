@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
@@ -12,6 +13,11 @@ import (
 )
 
 type authRequest struct {
+	Username string
+}
+
+type authBearerRequest struct {
+	Bearer   string
 	Username string
 }
 
@@ -50,7 +56,31 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 		}
 		model.AddUser(&user)
 	}
+	registerSession(&user, w, r)
 
+}
+
+//PostAuthToken authenticate using the bearer token
+func PostAuthToken(w http.ResponseWriter, r *http.Request) {
+	var request authBearerRequest
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&request)
+
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	var user model.User
+	model.DB().Where("bearer = ? AND username = ?", request.Bearer, request.Username).First(&user)
+
+	if user.ID != uuid.Nil {
+		registerSession(&user, w, r)
+	} else {
+		rbody.JSONError(w, http.StatusUnauthorized, "The bearer token is invalid.")
+	}
+}
+
+func registerSession(user *model.User, w http.ResponseWriter, r *http.Request) {
 	//Check if there is already a session
 	if auth.HasUserSession(user.ID) {
 		//There is already a session we abort the creation of a new session
@@ -70,10 +100,4 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 		auth.Register(sessionToken, user.ID)
 		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken, UserID: user.ID.String()})
 	}
-
-}
-
-//PostAuthToken authenticate using the bearer token
-func PostAuthToken(w http.ResponseWriter, r *http.Request) {
-
 }

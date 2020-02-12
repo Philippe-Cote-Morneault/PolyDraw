@@ -14,10 +14,12 @@ func (a *Server) setRouters() {
 	authExceptions = map[string]bool{
 		"/healthcheck": true,
 		"/auth":        true,
+		"/auth/bearer": true,
 	}
 
 	a.Head("/healthcheck", a.handleRequest(api.HeadHealthcheck))
 	a.Post("/auth", a.handleRequest(api.PostAuth))
+	a.Post("/auth/bearer", a.handleRequest(api.PostAuthToken))
 	a.Get("/users", a.handleRequest(api.GetUsers))
 	a.Get("/users/{id}", a.handleRequest(api.GetUser))
 	a.Get("/chat/channels", a.handleRequest(api.GetChatChannel))
