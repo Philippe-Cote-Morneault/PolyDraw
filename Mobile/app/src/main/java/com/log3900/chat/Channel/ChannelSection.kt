@@ -43,6 +43,9 @@ class ChannelSection : Section {
         itemHolder.itemView.setOnClickListener {
             listener.onChannelClickListener(this.channelGroup.channels.get(position))
         }
+        itemHolder.buttonAction1.setOnClickListener {
+            listener.onChannelActionButton1Click(this.channelGroup.channels.get(position), channelGroup.type)
+        }
         itemHolder.bind(this.channelGroup.channels.get(position))
     }
 
@@ -61,5 +64,6 @@ class ChannelSection : Section {
     interface ClickListener {
         fun onHeaderRootViewClick(group: ChannelGroup)
         fun onChannelClickListener(channel: Channel)
+        fun onChannelActionButton1Click(channel: Channel, channelState: GroupType)
     }
 }
