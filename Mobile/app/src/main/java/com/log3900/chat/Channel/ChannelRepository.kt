@@ -26,12 +26,13 @@ class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
     private var socketService: SocketService? = null
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
+    private lateinit var channelCache: ChannelCache
 
     companion object {
         var instance: ChannelRepository? = null
     }
 
-    fun getChannels(sessionToken: String): Single<HashSet<Channel>> {
+    fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
         return Single.create {
             val call = ChatRestService.service.getChannels(sessionToken, "EN")
             call.enqueue(object : Callback<JsonArray> {
@@ -43,13 +44,49 @@ class ChannelRepository : Service() {
 
                     val adapter: JsonAdapter<List<Channel>> = moshi.adapter(Types.newParameterizedType(List::class.java, Channel::class.java))
                     val res = adapter.fromJson(response.body().toString())
-                    it.onSuccess(res?.toHashSet()!!)
+                    it.onSuccess(res as ArrayList<Channel>)
                 }
 
                 override fun onFailure(call: Call<JsonArray>, t: Throwable) {
                     println("onFailure")
                 }
             })
+        }
+    }
+
+    fun getJoinedChannels(sessionToken: String): Single<ArrayList<Channel>> {
+        return Single.create {
+            if (!channelCache.needsReload) {
+                it.onSuccess(channelCache.joinedChannels)
+            } else {
+                getChannels(sessionToken).subscribe(
+                    { channels ->
+                        channelCache.reloadChannels(channels)
+                        it.onSuccess(channelCache.joinedChannels)
+                    },
+                    { error ->
+
+                    }
+                )
+            }
+        }
+    }
+
+    fun getAvailableChannels(sessionToken: String): Single<ArrayList<Channel>> {
+        return Single.create {
+            if (!channelCache.needsReload) {
+                it.onSuccess(channelCache.joinedChannels)
+            } else {
+                getChannels(sessionToken).subscribe(
+                    { channels ->
+                        channelCache.reloadChannels(channels)
+                        it.onSuccess(channelCache.availableChannels)
+                    },
+                    { error ->
+
+                    }
+                )
+            }
         }
     }
 
@@ -86,6 +123,7 @@ class ChannelRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
+        channelCache = ChannelCache()
 
         Thread(Runnable {
             Looper.prepare()
