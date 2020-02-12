@@ -28,18 +28,16 @@ class ChannelManager {
     fun changeSubscriptionStatus(channel: Channel) {
         var changeToGeneral = false
         if (channel.ID.toString() == "00000000-0000-0000-0000-000000000000") {
-            ChannelRepository.instance?.createChannel("BLyat")
             return
-        }
-
-        if (activeChannel == channel) {
-            changeToGeneral = true
         }
 
         if (availableChannels.contains(channel)) {
             ChannelRepository.instance?.subscribeToChannel(channel)
             EventBus.getDefault().post(MessageEvent(EventType.SUBSCRIBED_TO_CHANNEL, channel))
         } else if (joinedChannels.contains(channel)){
+            if (activeChannel == channel) {
+                changeToGeneral = true
+            }
             ChannelRepository.instance?.unsubscribeFromChannel(channel)
             EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
         } else {
@@ -50,7 +48,7 @@ class ChannelManager {
             activeChannel = joinedChannels.find {
                 it.ID.toString() == "00000000-0000-0000-0000-000000000000"
             }!!
-            EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
+            EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, activeChannel))
         }
     }
 
