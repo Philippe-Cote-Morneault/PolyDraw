@@ -87,6 +87,10 @@ namespace ClientLourd.ViewModels
                     if (_selectedChannel != null)
                     {
                         _selectedChannel.IsSelected = true;
+                        if (_selectedChannel.Messages.Count < 10)
+                        {
+                            LoadHistory(100);
+                        }
                     }
                     NotifyPropertyChanged();
                     NotifyPropertyChanged("NewMessages");
@@ -219,6 +223,30 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged("NewMessages");
         }
         
+        
+        RelayCommand<int> _loadHistoryCommand;
+
+        public ICommand LoadHistoryCommand
+        {
+            get
+            {
+                return _loadHistoryCommand ??
+                       (_loadHistoryCommand = new RelayCommand<int>(numberOfMessages => LoadHistory(numberOfMessages)));
+            }
+        }
+
+        private async Task LoadHistory(int numberOfMessages)
+        {
+            if (SelectedChannel != null)
+            {
+                var messages = await RestClient.GetChannelMessages(SelectedChannel.ID, SelectedChannel.Messages.Count,
+                    SelectedChannel.Messages.Count + numberOfMessages);
+                foreach (var message in messages)
+                {
+                    SelectedChannel.Messages.Add(message);
+                }
+            }
+        }
         
         RelayCommand<Channel> _deleteChannelCommand;
 

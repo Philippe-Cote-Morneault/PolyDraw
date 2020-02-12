@@ -11,6 +11,7 @@ using ClientLourd.Utilities.Constants;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization.Json;
+using DataFormat = RestSharp.DataFormat;
 
 namespace ClientLourd.Services.RestService
 {
@@ -102,6 +103,39 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
+
+        public async Task<List<Message>> GetChannelMessages(string channelID, int start, int end)
+        {
+            RestRequest request = new RestRequest($"chat/messages/{channelID}");
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddParameter("start", start, ParameterType.QueryString);
+            request.AddParameter("end", end, ParameterType.QueryString);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch(response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    List<Message> messages = new List<Message>();
+                    var objects = deseralizer.Deserialize<List<dynamic>>(response);
+                    var messagesInformations = ((Dictionary<string, object>)objects[0])["Messages"];
+                    foreach (var message in (List<dynamic>)messagesInformations)
+                    {
+                        User user = new User(message["Username"], message["UserID"]);
+                        messages.Add(new Message((int)message["Timestamp"], user, message["Message"]));
+                    }
+                    return messages;
+                case HttpStatusCode.BadRequest:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default: 
+                    throw new RestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+            }
+        }
+        
+        
 
         public async Task<PrivateProfileInfo> GetUserInfo(string userID)
         {

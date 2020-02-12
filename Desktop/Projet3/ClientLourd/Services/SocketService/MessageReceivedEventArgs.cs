@@ -1,4 +1,5 @@
 ﻿using System;
+using ClientLourd.Services.DateService;
 
 namespace ClientLourd.Services.SocketService
 {
@@ -23,7 +24,7 @@ namespace ClientLourd.Services.SocketService
 
         public DateTime Date
         {
-            get { return UnixTimeStampToDateTime(_data["Timestamp"]); }
+            get { return Timestamp.UnixTimeStampToDateTime(_data["Timestamp"]); }
         }
 
         public string SenderName
@@ -50,12 +51,5 @@ namespace ClientLourd.Services.SocketService
             get { return _data["Username"]; }
         }
 
-
-        private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-        {
-            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
-        }
     }
 }

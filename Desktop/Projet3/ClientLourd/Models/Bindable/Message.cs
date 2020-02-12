@@ -1,12 +1,23 @@
 ﻿using System;
+using ClientLourd.Services.DateService;
 
 namespace ClientLourd.Models.Bindable
 {
     public class Message : ModelBase
     {
+        public Message()
+        {
+        }
+
         public Message(DateTime date, User user, string content)
         {
             Date = date;
+            User = user;
+            Content = content;
+        }
+        public Message(int timestamp, User user, string content)
+        {
+            Date = Timestamp.UnixTimeStampToDateTime(timestamp);
             User = user;
             Content = content;
         }

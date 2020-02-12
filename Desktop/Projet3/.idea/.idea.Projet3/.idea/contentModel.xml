@@ -70,6 +70,9 @@
           <e p="WhiteLogo.png" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="DateService" t="Include">
+            <e p="Timestamp.cs" t="Include" />
+          </e>
           <e p="RestService" t="Include">
             <e p="Exceptions" t="Include">
               <e p="RestBadRequestException.cs" t="Include" />

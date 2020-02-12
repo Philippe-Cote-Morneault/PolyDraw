@@ -15,7 +15,7 @@
         <converter:SingleCompartorToBooleanConverter x:Key="SingleCompartorToBooleanConverter" />
         <converter:DateConverter x:Key="DateConverter" />
     </UserControl.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+    <ScrollViewer ScrollChanged="ScrollViewer_OnScrollChanged" HorizontalScrollBarVisibility="Auto"
                   extensions:ScrollViewerExtensions.AlwaysScrollToEnd="True">
         <ListBox Name="ConversationList" ItemsSource="{Binding SelectedChannel.Messages}"
                  PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
