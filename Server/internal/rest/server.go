@@ -20,6 +20,7 @@ func (a *Server) Initialize() {
 	a.Router = mux.NewRouter()
 	a.Router.Use(logMiddleware)
 	a.Router.Use(authMiddleware)
+	a.Router.StrictSlash(true)
 	a.setRouters()
 
 	// Set 404 handle and call logMiddleware
