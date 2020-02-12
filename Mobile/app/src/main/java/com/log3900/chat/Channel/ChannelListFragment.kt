@@ -47,6 +47,10 @@ class ChannelListFragment : Fragment(), ChannelListView {
             override fun onChannelClickListener(channel: Channel) {
                 channelListPresenter.onChannelClicked(channel)
             }
+
+            override fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
+               channelListPresenter.onChannelActionButton1Click(channel, channelState)
+            }
         }))
 
         channelsAdapter.addSection(GroupType.AVAILABLE.name,ChannelSection(ChannelGroup(GroupType.AVAILABLE, arrayListOf()), object: ChannelSection.ClickListener {
@@ -68,6 +72,10 @@ class ChannelListFragment : Fragment(), ChannelListView {
             override fun onChannelClickListener(channel: Channel) {
                 channelListPresenter.onChannelClicked(channel)
             }
+
+            override fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
+                channelListPresenter.onChannelActionButton1Click(channel, channelState)
+            }
         }))
 
         channelListPresenter = ChannelListPresenter(this)
@@ -85,5 +93,15 @@ class ChannelListFragment : Fragment(), ChannelListView {
         (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).setChannels(channels)
         val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.JOINED.name)
         sectionAdapter.notifyAllItemsChanged()
+    }
+
+    override fun notifyChannelSubscribed(channel: Channel) {
+        channelsAdapter.getAdapterForSection(GroupType.AVAILABLE.name).notifyAllItemsChanged()
+        channelsAdapter.getAdapterForSection(GroupType.JOINED.name).notifyAllItemsChanged()
+    }
+
+    override fun notifyChannelUnsubscried(channel: Channel) {
+        channelsAdapter.getAdapterForSection(GroupType.AVAILABLE.name).notifyAllItemsChanged()
+        channelsAdapter.getAdapterForSection(GroupType.JOINED.name).notifyAllItemsChanged()
     }
 }
