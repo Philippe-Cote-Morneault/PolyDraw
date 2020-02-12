@@ -50,7 +50,7 @@
             android:layout_marginStart="32dp"
             android:text="@{info.username}"
             app:layout_constraintStart_toEndOf="@id/username"
-            app:layout_constraintTop_toBottomOf="@+id/info_title" />
+            app:layout_constraintTop_toBottomOf="@+id/avatar_info" />
 
         <TextView
             android:id="@+id/password"
