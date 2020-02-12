@@ -3,6 +3,7 @@ package com.log3900.chat.Channel
 import com.log3900.chat.ChatManager
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class ChannelListPresenter : Presenter {
     private var channelListView: ChannelListView
@@ -13,7 +14,8 @@ class ChannelListPresenter : Presenter {
         if (!(ChatManager.instance?.ready!!)) {
             ChatManager.instance?.subject?.filter {
                 it
-            }?.subscribe {
+            }?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
                 init()
             }
         } else {
@@ -23,6 +25,20 @@ class ChannelListPresenter : Presenter {
 
     private fun init() {
         this.chatManager = ChatManager.instance!!
+        chatManager.getJoinedChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
+            { channels ->
+                channelListView.setJoinedChannels(channels)
+            },
+            { error ->
+            }
+        )
+        chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
+            { channels ->
+                channelListView.setAvailableChannels(channels)
+            },
+            { error ->
+            }
+        )
     }
 
     fun onChannelClicked(channel: Channel) {
