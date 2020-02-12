@@ -16,6 +16,7 @@ type singleUserResponse struct {
 	LastName  string
 	Username  string
 	Email     string
+	PictureID int
 	CreatedAt int64
 	UpdatedAt int64
 }
@@ -39,6 +40,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 			LastName:  user.LastName,
 			Username:  user.Username,
 			Email:     user.Email,
+			PictureID: user.PictureID,
 			CreatedAt: user.CreatedAt.Unix(),
 			UpdatedAt: user.CreatedAt.Unix(),
 		})

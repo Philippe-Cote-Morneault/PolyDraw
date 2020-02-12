@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"gitlab.com/jigsawcorp/log3900/internal/api"
 )
 
 // Server represents a restserver
@@ -17,6 +18,8 @@ type Server struct {
 
 // Initialize method to call when creating a new rest server
 func (a *Server) Initialize() {
+	api.Init()
+
 	a.Router = mux.NewRouter()
 	a.Router.Use(logMiddleware)
 	a.Router.Use(authMiddleware)

@@ -142,10 +142,6 @@ def main():
     # Authentification
     sendMessage(0,sessionToken.encode("utf-8"))
 
-    sendMessage(20, msgpack.packb(
-        {"Message":"Hello script test", "ChannelID":str(uuid.uuid4())}
-    ))
-
     while True:
         input()
         importlib.reload(commands)
