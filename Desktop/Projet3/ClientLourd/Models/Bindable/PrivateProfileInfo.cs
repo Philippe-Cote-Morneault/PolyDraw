@@ -13,6 +13,16 @@ namespace ClientLourd.Models.Bindable
 
         }
 
+
+        public PrivateProfileInfo(PrivateProfileInfo clone)
+        {
+            ID = clone.ID;
+            FirstName = clone.FirstName;
+            LastName = clone.LastName;
+            Email = clone.Email;
+            Username = clone.Username;
+        }
+
         private string _id;
         public string ID
         {
@@ -112,6 +122,10 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
+
+        
+
     }
 
     

@@ -4,10 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
+             xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+            xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <UserControl.Resources>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+    </UserControl.Resources>
 
     <Grid>
         <StackPanel x:Name="StackPanel" Height="600" Width="500" Margin="10">
@@ -16,36 +22,78 @@
             <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Edit my profile </TextBlock>
 
             <StackPanel Margin="0 20 0 20">
-                <TextBlock FontWeight="Bold">Username</TextBlock>
-                <TextBox Text="{Binding Path=PrivateProfileInfo.Username, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Username</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Username" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <TextBox MaxLength="12">
+                    <TextBox.Text>
+                        <Binding Path="PrivateProfileInfoClone.Username" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:UsernameRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
 
             <StackPanel Margin="0 20 0 20">
-                <TextBlock FontWeight="Bold">Email</TextBlock>
-                <TextBox Text="{Binding Path=PrivateProfileInfo.Email, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Email</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Email" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <TextBox MaxLength="60">
+                    <TextBox.Text>
+                        <Binding Path="PrivateProfileInfoClone.Email" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
 
             <StackPanel Margin="0 20 0 20">
-                <TextBlock FontWeight="Bold">Password</TextBlock>
-                <TextBox Text="{Binding Path=PrivateProfileInfo.FirstName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Password</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Password" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+                <PasswordBox x:Name="PasswordField"
+                             materialDesign:HintAssist.HelperText="At least 8 characters"
+                             MaxLength="64">
+                             
+                </PasswordBox>
+                <!--<TextBox Text="{Binding Path=PrivateProfileInfoClone.FirstName, UpdateSourceTrigger=PropertyChanged}"></TextBox>-->
             </StackPanel>
 
 
             <StackPanel Margin="0 20 0 20">
-                <TextBlock FontWeight="Bold">First name</TextBlock>
-                <TextBox Text="{Binding Path=PrivateProfileInfo.FirstName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">First name</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="FirstName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <TextBox Text="{Binding Path=PrivateProfileInfoClone.FirstName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </StackPanel>
+
 
             <StackPanel Margin="0 20 0 20">
-                <TextBlock FontWeight="Bold">Last name</TextBlock>
-                <TextBox Text="{Binding Path=PrivateProfileInfo.LastName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Last name</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="LastName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <TextBox Text="{Binding Path=PrivateProfileInfoClone.LastName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </StackPanel>
-
-
-
-
-
-
 
         </StackPanel>
 

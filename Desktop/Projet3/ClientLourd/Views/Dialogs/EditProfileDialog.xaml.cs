@@ -27,17 +27,42 @@ namespace ClientLourd.Views.Dialogs
     public partial class EditProfileDialog : UserControl, INotifyPropertyChanged
     {
         PrivateProfileInfo _pvInfo;
+        PrivateProfileInfo _pvInfoClone;
+        string _passwordJunk;
 
         public EditProfileDialog(PrivateProfileInfo pvInfo)
         {
 
-            // DataContext = this;
             InitializeComponent();
             DataContext = this;
-            PrivateProfileInfo = pvInfo;
-        
 
+            // Password junk
+            PasswordJunk = "$#%@!&*)";
+
+
+            // Info before modif
+            PrivateProfileInfo = new PrivateProfileInfo(pvInfo);
+
+            // Info after modif
+            PrivateProfileInfoClone = new PrivateProfileInfo(pvInfo);
+
+            (PasswordField as PasswordBox).Password = PasswordJunk;
+            
         }
+
+        public string PasswordJunk
+        {
+            get { return _passwordJunk; }
+            set
+            {
+                if (value != _passwordJunk)
+                {
+                    _passwordJunk = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
 
         public RestClient RestClient
         {
@@ -58,6 +83,37 @@ namespace ClientLourd.Views.Dialogs
             //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
+        private RelayCommand<string> _revertToOriginalCommand;
+
+        public ICommand RevertToOriginalCommand
+        {
+            get { return _revertToOriginalCommand ?? (_revertToOriginalCommand = new RelayCommand<string>(obj => RevertToOriginalField(obj))); }
+        }
+
+        private void RevertToOriginalField(string fieldType)
+        {
+            switch (fieldType)
+            {
+                case "Username":
+                    PrivateProfileInfoClone.Username = PrivateProfileInfo.Username;
+                    break;
+                case "Email":
+                    PrivateProfileInfoClone.Email = PrivateProfileInfo.Email;
+                    break;
+                case "FirstName":
+                    PrivateProfileInfoClone.FirstName = PrivateProfileInfo.FirstName;
+                    break;
+                case "LastName":
+                    PrivateProfileInfoClone.LastName = PrivateProfileInfo.LastName;
+                    break;
+                case "Password":
+                    (PasswordField as PasswordBox).Password = PasswordJunk;
+                    break;
+                default:
+                    throw new Exception("Input field " + fieldType + " does not exist");
+
+            }            
+        }
 
         public PrivateProfileInfo PrivateProfileInfo
         {
@@ -68,6 +124,19 @@ namespace ClientLourd.Views.Dialogs
                     _pvInfo = value;
                     NotifyPropertyChanged();
                 
+            }
+        }
+
+
+        public PrivateProfileInfo PrivateProfileInfoClone
+        {
+            get { return _pvInfoClone; }
+            set
+            {
+
+                _pvInfoClone = value;
+                NotifyPropertyChanged();
+
             }
         }
 

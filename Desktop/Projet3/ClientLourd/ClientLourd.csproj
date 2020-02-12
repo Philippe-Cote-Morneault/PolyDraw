@@ -146,6 +146,7 @@
     <Compile Include="Utilities\Constants\Enums.cs" />
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
+    <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
