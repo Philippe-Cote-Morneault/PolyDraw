@@ -59,6 +59,11 @@ class ChannelSection : Section {
             listener.onHeaderRootViewClick(viewHolder.channelGroup)
         }
         viewHolder.bind(channelGroup)
+        if (expanded) {
+            viewHolder.expandableIcon.setImageResource(R.drawable.ic_expand_more_black_24dp)
+        } else {
+            viewHolder.expandableIcon.setImageResource(R.drawable.ic_chevron_right_black)
+        }
     }
 
     interface ClickListener {
