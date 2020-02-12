@@ -1,10 +1,11 @@
 package rest
 
 import (
+	"context"
 	"log"
 	"net/http"
 
-	"github.com/gorilla/context"
+	"gitlab.com/jigsawcorp/log3900/internal/api"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
@@ -49,8 +50,8 @@ func authMiddleware(next http.Handler) http.Handler {
 				if !ok {
 					rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")
 				} else {
-					context.Set(r, "user", userID)
-					next.ServeHTTP(w, r)
+					ctx := context.WithValue(r.Context(), api.CtxUserID, userID)
+					next.ServeHTTP(w, r.WithContext(ctx))
 				}
 			} else {
 				rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")

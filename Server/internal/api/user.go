@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
@@ -62,7 +61,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	userid := context.Get(r, "userid")
+	userid := r.Context().Value(CtxUserID)
 	var user model.User
 	model.DB().Where("id = ?", userid).First(&user)
 	if user.ID != uuid.Nil {
