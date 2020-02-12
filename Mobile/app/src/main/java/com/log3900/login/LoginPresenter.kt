@@ -68,7 +68,15 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     }
 
     private fun storeUser(username: String, sessionToken: String, bearerToken: String) {
-        AccountRepository.createAccount(Account(username.toLowerCase(), sessionToken, bearerToken))
+        // TODO: Get actual info
+        AccountRepository.createAccount(Account(
+            username.toLowerCase(),
+            "dummy@email.com",
+            "Firstname",
+            "Last-Name",
+            sessionToken,
+            bearerToken
+        ))
     }
 
     private fun handleErrorAuth(error: String) {
