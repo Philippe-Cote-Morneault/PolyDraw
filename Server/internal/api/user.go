@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
@@ -61,10 +62,9 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-
-	vars := mux.Vars(r)
+	userid := context.Get(r, "userid")
 	var user model.User
-	model.DB().Where("id = ?", vars["id"]).First(&user)
+	model.DB().Where("id = ?", userid).First(&user)
 	if user.ID != uuid.Nil {
 		updated := false
 		if request.Email != "" {
