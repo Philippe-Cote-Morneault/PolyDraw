@@ -131,6 +131,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 
 		if updated {
 			model.DB().Save(&user)
+			json.NewEncoder(w).Encode("ok")
 		} else {
 			rbody.JSONError(w, http.StatusBadRequest, "No modifications are found")
 		}
