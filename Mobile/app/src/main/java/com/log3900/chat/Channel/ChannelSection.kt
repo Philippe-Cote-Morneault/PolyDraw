@@ -8,25 +8,27 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 
 class ChannelSection : Section {
     private var channelGroup: ChannelGroup
-    private var channels: ArrayList<Channel>
 
     private var listener: ClickListener
 
     var expanded: Boolean = true
 
-    constructor(channelGroup: ChannelGroup, channels: ArrayList<Channel>, listener: ClickListener) : super(SectionParameters.builder()
+    constructor(channelGroup: ChannelGroup, listener: ClickListener) : super(SectionParameters.builder()
                     .itemResourceId(R.layout.list_item_channel)
                     .headerResourceId(R.layout.list_item_channel_group)
                     .build())
     {
-        this.channels = channels
         this.channelGroup = channelGroup
         this.listener = listener
     }
 
+    fun setChannels(channels: ArrayList<Channel>) {
+        this.channelGroup.channels = channels
+    }
+
     override fun getContentItemsTotal(): Int {
         if (expanded) {
-            return channels.size
+            return this.channelGroup.channels.size
         } else {
             return 0
         }
@@ -39,9 +41,9 @@ class ChannelSection : Section {
     override fun onBindItemViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val itemHolder = holder as ChannelViewHolder
         itemHolder.itemView.setOnClickListener {
-            listener.onChannelClickListener(channels.get(position))
+            listener.onChannelClickListener(this.channelGroup.channels.get(position))
         }
-        itemHolder.bind(channels.get(position))
+        itemHolder.bind(this.channelGroup.channels.get(position))
     }
 
     override fun getHeaderViewHolder(view: View?): RecyclerView.ViewHolder {
