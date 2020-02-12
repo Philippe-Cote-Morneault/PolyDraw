@@ -27,11 +27,14 @@ class ChannelManager {
 
     fun changeSubscriptionStatus(channel: Channel) {
         var changeToGeneral = false
+        if (channel.ID.toString() == "00000000-0000-0000-0000-000000000000") {
+            ChannelRepository.instance?.createChannel("BLyat")
+            return
+        }
+
         if (activeChannel == channel) {
             changeToGeneral = true
         }
-
-
 
         if (availableChannels.contains(channel)) {
             ChannelRepository.instance?.subscribeToChannel(channel)
@@ -49,6 +52,10 @@ class ChannelManager {
             }!!
             EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
         }
+    }
+
+    fun createChannel(channelName: String) {
+        ChannelRepository.instance?.createChannel(channelName)
     }
 
 
