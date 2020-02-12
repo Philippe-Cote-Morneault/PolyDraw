@@ -19,3 +19,13 @@ type ChatMessage struct {
 	Message   string
 	Timestamp int64
 }
+
+//AddMessage to a user and channel
+func AddMessage(message string, channelID uuid.UUID, userID uuid.UUID, timestamp int64) {
+	DB().Create(&ChatMessage{
+		ChannelID: channelID,
+		UserID:    userID,
+		Message:   message,
+		Timestamp: timestamp,
+	})
+}

@@ -55,6 +55,7 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 					go socket.SendRawMessageToSocketID(rawMessage, k)
 				}
 				log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", messageParsed.Message, user.Username, messageParsed.ChannelID)
+				model.AddMessage(messageParsed.Message, channelID, user.ID, timestamp)
 			} else {
 				log.Printf("[Messenger] -> Receive: The user needs to join the channel first. Dropping packet!")
 			}
