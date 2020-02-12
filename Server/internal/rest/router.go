@@ -12,14 +12,16 @@ var authExceptions map[string]bool
 // setRouters sets the all required routers
 func (a *Server) setRouters() {
 	authExceptions = map[string]bool{
-		"/healthcheck": true,
-		"/auth":        true,
-		"/auth/bearer": true,
+		"/healthcheck":   true,
+		"/auth":          true,
+		"/auth/bearer":   true,
+		"/auth/register": true,
 	}
 
 	a.Head("/healthcheck", a.handleRequest(api.HeadHealthcheck))
 	a.Post("/auth", a.handleRequest(api.PostAuth))
 	a.Post("/auth/bearer", a.handleRequest(api.PostAuthToken))
+	a.Post("/auth/register", a.handleRequest(api.PostAuthRegister))
 	a.Get("/users", a.handleRequest(api.GetUsers))
 	a.Get("/users/{id}", a.handleRequest(api.GetUser))
 	a.Get("/chat/channels", a.handleRequest(api.GetChatChannel))

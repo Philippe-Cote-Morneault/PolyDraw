@@ -13,6 +13,7 @@ type User struct {
 	FirstName      string
 	LastName       string
 	Username       string
+	PictureID      int
 	Email          string
 	HashedPassword string
 	Bearer         string
@@ -28,13 +29,35 @@ type Session struct {
 	SessionToken string
 }
 
-//New Generate a new user with a bearer token
-func (u *User) New(Username string) error {
+//NewFakeUser Generate a new user with a bearer token used to bypass auth. Will be removed
+//TODO remove this method
+func (u *User) NewFakeUser(Username string) error {
 	u.Username = Username
 	u.FirstName = "Serge"
 	u.LastName = "Paquette"
 	u.Email = "serge.paquette@veryrealemail.com"
 	u.HashedPassword = "random crap for now"
+	u.PictureID = 0
+
+	bearer, err := secureb.GenerateToken()
+	if err != nil {
+		log.Println("Cannot create user bearer")
+		log.Println(err)
+		return err
+	}
+	u.Bearer = bearer
+
+	return err
+}
+
+//New Generate a new user with a bearer token
+func (u *User) New(username string, firstName string, lastName string, email string, hash string, pictureID int) error {
+	u.Username = username
+	u.FirstName = firstName
+	u.LastName = lastName
+	u.Email = email
+	u.HashedPassword = hash
+	u.PictureID = pictureID
 
 	bearer, err := secureb.GenerateToken()
 	if err != nil {
