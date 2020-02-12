@@ -9,7 +9,7 @@ type MessageSent struct {
 //MessageReceived represent a message that was relayed by the server
 type MessageReceived struct {
 	ChannelID  string
-	Timestamp  int
+	Timestamp  int64
 	SenderID   string
 	SenderName string
 	Message    string
@@ -20,7 +20,7 @@ type ChannelJoin struct {
 	UserID    string
 	Username  string
 	ChannelID string
-	Timestamp int
+	Timestamp int64
 }
 
 //ChannelCreateRequest represent a message request that was sent to create a channel
@@ -34,7 +34,7 @@ type ChannelCreateResponse struct {
 	ChannelID   string
 	Username    string
 	UserID      string
-	Timestamp   int
+	Timestamp   int64
 }
 
 //ChannelLeaveResponse represent a message response to quit a channel
@@ -42,7 +42,7 @@ type ChannelLeaveResponse struct {
 	UserID    string
 	Username  string
 	ChannelID string
-	Timestamp int
+	Timestamp int64
 }
 
 //ChannelDestroyResponse represent a message response to a channel destroy
@@ -50,5 +50,5 @@ type ChannelDestroyResponse struct {
 	UserID    string
 	Username  string
 	ChannelID string
-	Timestamp int
+	Timestamp int64
 }

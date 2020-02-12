@@ -28,7 +28,7 @@ func (h *handler) init() {
 }
 func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 	var messageParsed MessageSent
-	timestamp := int(time.Now().Unix())
+	timestamp := time.Now().Unix()
 	if message.Payload.DecodeMessagePack(&messageParsed) == nil {
 		//Send to all other connected users
 		user, err := auth.GetUser(message.SocketID)
@@ -68,7 +68,7 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 
 func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 	var channelParsed ChannelCreateRequest
-	timestamp := int(time.Now().Unix())
+	timestamp := time.Now().Unix()
 	if message.Payload.DecodeMessagePack(&channelParsed) == nil {
 		name := channelParsed.ChannelName
 		if strings.TrimSpace(name) != "" && name != "General" {
@@ -134,7 +134,7 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 						UserID:    user.ID.String(),
 						Username:  user.Username,
 						ChannelID: channel.ID.String(),
-						Timestamp: int(time.Now().Unix()),
+						Timestamp: time.Now().Unix(),
 					}
 
 					rawMessage := socket.RawMessage{}
@@ -183,7 +183,7 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 						UserID:    user.ID.String(),
 						Username:  user.Username,
 						ChannelID: channel.ID.String(),
-						Timestamp: int(time.Now().Unix()),
+						Timestamp: time.Now().Unix(),
 					}
 					rawMessage := socket.RawMessage{}
 					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserLeftChannel), quitResponse) != nil {
@@ -229,7 +229,7 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 					UserID:    user.ID.String(),
 					Username:  user.Username,
 					ChannelID: channel.ID.String(),
-					Timestamp: int(time.Now().Unix()),
+					Timestamp: time.Now().Unix(),
 				}
 				rawMessage := socket.RawMessage{}
 				if rawMessage.ParseMessagePack(byte(socket.MessageType.UserDestroyedChannel), destroyMessage) != nil {
@@ -265,7 +265,7 @@ func (h *handler) handleConnect(socketID uuid.UUID) {
 		UserID:    user.ID.String(),
 		Username:  user.Username,
 		ChannelID: uuid.Nil.String(),
-		Timestamp: int(time.Now().Unix()),
+		Timestamp: time.Now().Unix(),
 	}
 
 	rawMessage := socket.RawMessage{}
@@ -295,7 +295,7 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 		UserID:    user.ID.String(),
 		Username:  user.Username,
 		ChannelID: uuid.Nil.String(),
-		Timestamp: int(time.Now().Unix()),
+		Timestamp: time.Now().Unix(),
 	}
 
 	rawMessage := socket.RawMessage{}
