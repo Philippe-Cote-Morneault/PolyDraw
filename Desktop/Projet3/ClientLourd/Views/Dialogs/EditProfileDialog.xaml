@@ -7,12 +7,13 @@
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-            xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <converter:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
     </UserControl.Resources>
 
     <Grid>
@@ -28,7 +29,7 @@
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Username" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <TextBox MaxLength="12">
+                <TextBox x:Name="UsernameField" MaxLength="12">
                     <TextBox.Text>
                         <Binding Path="PrivateProfileInfoClone.Username" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
@@ -46,7 +47,7 @@
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Email" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <TextBox MaxLength="60">
+                <TextBox x:Name="EmailField" MaxLength="60">
                     <TextBox.Text>
                         <Binding Path="PrivateProfileInfoClone.Email" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
@@ -81,9 +82,17 @@
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="FirstName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <TextBox Text="{Binding Path=PrivateProfileInfoClone.FirstName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="FirstNameField" MaxLength="64">
+                    <TextBox.Text>
+                        <Binding Path="PrivateProfileInfoClone.FirstName" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:NameRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
-
+            
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
@@ -92,7 +101,15 @@
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="LastName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <TextBox Text="{Binding Path=PrivateProfileInfoClone.LastName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                <TextBox x:Name="LastNameField" MaxLength="64">
+                    <TextBox.Text>
+                        <Binding Path="PrivateProfileInfoClone.LastName" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:NameRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
 
         </StackPanel>
@@ -104,11 +121,22 @@
             </Grid.ColumnDefinitions>
             <Button Margin="10" Grid.Column="0" Content="Update" HorizontalAlignment="Center"
                     Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
-                    Command="{Binding EditProfileCommand}" DockPanel.Dock="Bottom" />
+                    Command="{Binding EditProfileCommand}" DockPanel.Dock="Bottom">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
+                        <Binding ElementName="FirstNameField" Path="(Validation.HasError)" />
+                        <Binding ElementName="LastNameField" Path="(Validation.HasError)" />
+                        <Binding ElementName="EmailField" Path="(Validation.HasError)" />
+                        <Binding ElementName="UsernameField" Path="(Validation.HasError)" />
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>
 
             <Button Margin="10" Grid.Column="1" Content="Close" HorizontalAlignment="Center"
                     Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
-                    Command="materialDesign:DialogHost.CloseDialogCommand" DockPanel.Dock="Bottom" />
+                    Command="materialDesign:DialogHost.CloseDialogCommand" DockPanel.Dock="Bottom">
+
+            </Button>
         </Grid>
     </Grid>
 </UserControl>

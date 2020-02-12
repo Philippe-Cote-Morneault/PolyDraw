@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Dialogs
@@ -73,8 +74,30 @@ namespace ClientLourd.Views.Dialogs
 
         public ICommand EditProfileCommand
         {
-            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj))); }
+            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj), obj => CanUpdateProfile(obj))); }
         }
+
+        private bool CanUpdateProfile(object obj)
+        {
+            return HasUpdatedProfile() && new LoginInputRules().PasswordLengthIsOk(PasswordField.Password);
+        }
+
+
+        
+        
+            
+        
+        
+
+
+
+        private bool HasUpdatedProfile()
+        {
+            return (PrivateProfileInfo != PrivateProfileInfoClone || PasswordField.Password != PasswordJunk);
+        }
+
+
+
 
         private async Task EditProfile(object obj)
         {
