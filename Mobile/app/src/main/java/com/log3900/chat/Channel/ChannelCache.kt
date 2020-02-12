@@ -1,6 +1,6 @@
 package com.log3900.chat.Channel
 
-import com.log3900.user.UserRepository
+import com.log3900.user.AccountRepository
 
 class ChannelCache {
     var joinedChannels: ArrayList<Channel> = arrayListOf()
@@ -12,7 +12,7 @@ class ChannelCache {
     }
 
     fun reloadChannels(channels: ArrayList<Channel>) {
-        val username = UserRepository.getUser().username
+        val username = AccountRepository.getAccount().username
 
         joinedChannels.clear()
         availableChannels.clear()

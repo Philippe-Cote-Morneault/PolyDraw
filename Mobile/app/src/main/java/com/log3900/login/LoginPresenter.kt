@@ -8,8 +8,8 @@ import com.log3900.MainActivity
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.socket.*
-import com.log3900.user.User
-import com.log3900.user.UserRepository
+import com.log3900.user.Account
+import com.log3900.user.AccountRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,7 +68,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     }
 
     private fun storeUser(username: String, sessionToken: String, bearerToken: String) {
-        UserRepository.createUser(User(username.toLowerCase(), sessionToken, bearerToken))
+        AccountRepository.createAccount(Account(username.toLowerCase(), sessionToken, bearerToken))
     }
 
     private fun handleErrorAuth(error: String) {

@@ -1,7 +1,7 @@
 package com.log3900.chat.Message
 
 import com.log3900.chat.Channel.Channel
-import com.log3900.user.UserRepository
+import com.log3900.user.AccountRepository
 import java.util.*
 
 class MessageManager {
@@ -12,7 +12,7 @@ class MessageManager {
     }
 
     fun getMessages(channel: Channel): LinkedList<ReceivedMessage> {
-        return messageRepository.getChannelMessages(channel.ID.toString(), UserRepository.getUser().sessionToken, 0, 100)
+        return messageRepository.getChannelMessages(channel.ID.toString(), AccountRepository.getAccount().sessionToken, 0, 100)
     }
 
     fun sendMessage(channelID:UUID, message: String) {
