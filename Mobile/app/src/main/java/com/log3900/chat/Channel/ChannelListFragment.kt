@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ChannelListFragment : Fragment(), ChannelListView {
     // Services
@@ -17,30 +18,20 @@ class ChannelListFragment : Fragment(), ChannelListView {
     // UI elements
     private lateinit var channelsRecyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
+    private lateinit var channelsAdapter: SectionedRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_channel_list, container, false)
 
-        var channelGroups = arrayListOf<ChannelGroup>()
-        var channels1 = arrayListOf<Channel>()
-        channels1.add(Channel(UUID.randomUUID(), "channel1", arrayOf()))
-        channels1.add(Channel(UUID.randomUUID(), "channel2", arrayOf()))
-        channels1.add(Channel(UUID.randomUUID(), "channel3", arrayOf()))
-        var channels2 = arrayListOf<Channel>()
-        channels2.add(Channel(UUID.randomUUID(), "channel4", arrayOf()))
-        channels2.add(Channel(UUID.randomUUID(), "channel5", arrayOf()))
-        channels2.add(Channel(UUID.randomUUID(), "channel6", arrayOf()))
-        channelGroups.add(ChannelGroup(GroupType.JOINED, channels1.toHashSet()))
-        channelGroups.add(ChannelGroup(GroupType.AVAILABLE, channels2.toHashSet()))
-
         channelsRecyclerView = rootView.findViewById(R.id.fragment_channel_list_recycler_view_channels)
         layoutManager = LinearLayoutManager(this.context)
         channelsRecyclerView.layoutManager = layoutManager
-        val channelAdapter = SectionedRecyclerViewAdapter()
-        channelAdapter.addSection(channelGroups.get(0).getName(), ChannelSection(channelGroups.get(0), channels1, object: ChannelSection.ClickListener {
+        channelsAdapter = SectionedRecyclerViewAdapter()
+
+        channelsAdapter.addSection(GroupType.JOINED.name, ChannelSection(ChannelGroup(GroupType.JOINED, arrayListOf()), object: ChannelSection.ClickListener {
             override fun onHeaderRootViewClick(group: ChannelGroup) {
-                val sectionAdapter = channelAdapter.getAdapterForSection(group.getName())
-                val section = channelAdapter.getSection(group.getName()) as ChannelSection
+                val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.JOINED.name)
+                val section = channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection
                 val count = section.contentItemsTotal
 
                 section.expanded = !section.expanded
@@ -54,21 +45,45 @@ class ChannelListFragment : Fragment(), ChannelListView {
             }
 
             override fun onChannelClickListener(channel: Channel) {
-                println("CLICKED CHANNELD " + channel)
                 channelListPresenter.onChannelClicked(channel)
             }
         }))
-        channelAdapter.addSection(channelGroups.get(1).getName(), ChannelSection(channelGroups.get(1),channels2, object: ChannelSection.ClickListener {
+
+        channelsAdapter.addSection(GroupType.AVAILABLE.name,ChannelSection(ChannelGroup(GroupType.AVAILABLE, arrayListOf()), object: ChannelSection.ClickListener {
             override fun onHeaderRootViewClick(group: ChannelGroup) {
+                val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.AVAILABLE.name)
+                val section = channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection
+                val count = section.contentItemsTotal
+
+                section.expanded = !section.expanded
+                sectionAdapter.notifyHeaderChanged()
+
+                if (!section.expanded) {
+                    sectionAdapter.notifyItemRangeRemoved(0, count)
+                } else {
+                    sectionAdapter.notifyAllItemsInserted()
+                }
             }
 
             override fun onChannelClickListener(channel: Channel) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                channelListPresenter.onChannelClicked(channel)
             }
         }))
 
         channelListPresenter = ChannelListPresenter(this)
-        channelsRecyclerView.adapter = channelAdapter
+        channelsRecyclerView.adapter = channelsAdapter
         return rootView
+    }
+
+    override fun setAvailableChannels(channels: ArrayList<Channel>) {
+        (channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection).setChannels(channels)
+        val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.AVAILABLE.name)
+        sectionAdapter.notifyAllItemsChanged()
+    }
+
+    override fun setJoinedChannels(channels: ArrayList<Channel>) {
+        (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).setChannels(channels)
+        val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.JOINED.name)
+        sectionAdapter.notifyAllItemsChanged()
     }
 }
