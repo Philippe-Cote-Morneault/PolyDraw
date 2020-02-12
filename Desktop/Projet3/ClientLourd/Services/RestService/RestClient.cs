@@ -11,6 +11,7 @@ using ClientLourd.Utilities.Constants;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization.Json;
+using DataFormat = RestSharp.DataFormat;
 
 namespace ClientLourd.Services.RestService
 {
@@ -102,6 +103,32 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
+
+        public async Task<Message[]> GetChannelMessages(string channelID, int start, int end)
+        {
+            RestRequest request = new RestRequest("chat/messsages");
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddParameter("channelid", channelID, ParameterType.QueryString);
+            request.AddParameter("start", start, ParameterType.QueryString);
+            request.AddParameter("end", end, ParameterType.QueryString);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch(response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    return JsonConvert.DeserializeObject<Message[]>(response.Content);
+                case HttpStatusCode.BadRequest:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default: 
+                    throw new RestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+            }
+        }
+        
+        
 
         public async Task<PrivateProfileInfo> GetUserInfo(string userID)
         {

@@ -4,6 +4,10 @@ namespace ClientLourd.Models.Bindable
 {
     public class Message : ModelBase
     {
+        public Message()
+        {
+        }
+
         public Message(DateTime date, User user, string content)
         {
             Date = date;
