@@ -15,6 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Services.RestService;
+using ClientLourd.Utilities.Commands;
+using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -36,7 +39,25 @@ namespace ClientLourd.Views.Dialogs
 
         }
 
-        
+        public RestClient RestClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
+
+        private RelayCommand<object> _editProfileCommand;
+
+        public ICommand EditProfileCommand
+        {
+            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj))); }
+        }
+
+        private async Task EditProfile(object obj)
+        {
+            //TODO POST here
+            
+            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+        }
+
 
         public PrivateProfileInfo PrivateProfileInfo
         {
