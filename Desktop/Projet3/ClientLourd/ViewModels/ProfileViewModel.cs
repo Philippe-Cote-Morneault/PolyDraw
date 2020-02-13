@@ -51,7 +51,7 @@ namespace ClientLourd.ViewModels
         {
             //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
             //await DialogHost.Show(new EditProfileDialog());
-            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
         private RelayCommand<object> _editProfileCommand;

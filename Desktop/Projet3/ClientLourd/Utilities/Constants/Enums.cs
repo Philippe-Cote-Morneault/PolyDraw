@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Utilities.Constants
 {
-    class Enums
+    public static class Enums
     {
+        public enum Views
+        {
+            Editor,
+            Profile
+        }
     }
 }
