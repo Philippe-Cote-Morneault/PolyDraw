@@ -146,9 +146,6 @@ class MessageRepository : Service() {
             cachedMessages[message.channelID] = LinkedList<ReceivedMessage>()
         }
         cachedMessages[message.channelID]?.addLast(message)
-        //cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")]?.addLast(message)
-        //println("cahced message array = " + cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")])
-        //println("added message to cache, messages = " + cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")])
     }
 
     private fun notifySubscribers(event: Event, message: android.os.Message) {
