@@ -50,9 +50,17 @@ class ChannelSection : Section {
             listener.onChannelActionButton2Click(this.channelGroup.channels.get(position), channelGroup.type)
         }
         if (this.channelGroup.channels.get(position).ID.toString() == "00000000-0000-0000-0000-000000000000") {
+            itemHolder.buttonAction1.visibility = View.GONE
             itemHolder.buttonAction2.visibility = View.GONE
         } else {
+            itemHolder.buttonAction1.visibility = View.VISIBLE
             itemHolder.buttonAction2.visibility = View.VISIBLE
+        }
+
+        if (channelGroup.type == GroupType.JOINED) {
+            itemHolder.buttonAction1.setImageResource(R.drawable.ic_remove_black_24dp)
+        } else {
+            itemHolder.buttonAction1.setImageResource(R.drawable.ic_add_black_24dp)
         }
         itemHolder.bind(this.channelGroup.channels.get(position))
     }
