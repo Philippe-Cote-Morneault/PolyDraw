@@ -11,7 +11,8 @@
     <UserControl.DataContext>
         <viewModels:ProfileViewModel/>
     </UserControl.DataContext>
-    <Grid Margin="40 10 40 10">
+    <materialDesign:DialogHost x:Name="ProfileDialogHost" CloseOnClickAway="True">
+        <Grid Margin="40 10 40 10">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
@@ -56,13 +57,13 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Button Margin="0 0 5 0" Grid.Column="0" Command="{Binding CloseProfileCommand}">
+                    <Button Margin="0 0 5 0" Grid.Column="0" Command="{Binding OpenConnectionsCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>View connexion history</TextBlock>
                         </StackPanel>
                     </Button>
 
-                    <Button Margin="5 0 0 0" Grid.Column="1" Command="{Binding CloseProfileCommand}">
+                    <Button Margin="5 0 0 0" Grid.Column="1" Command="{Binding OpenGamesPlayedCommand}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>View games played history</TextBlock>
                         </StackPanel>
@@ -180,4 +181,5 @@
             </Grid>
         </Grid>
     </Grid>
+    </materialDesign:DialogHost>
 </UserControl>

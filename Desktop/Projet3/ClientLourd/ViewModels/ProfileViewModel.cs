@@ -19,6 +19,11 @@ namespace ClientLourd.ViewModels
         private SessionInformations _sessionInformations;
         private PrivateProfileInfo _profileInfo;
 
+        public override void AfterLogOut()
+        {
+        
+        }
+
         public override void AfterLogin()
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
@@ -30,14 +35,27 @@ namespace ClientLourd.ViewModels
             ProfileInfo = await RestClient.GetUserInfo(userID);
         }
 
-        public override void AfterLogOut()
+        public RestClient RestClient
         {
-        
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public SessionInformations SessionInformations
         {
             get { return _sessionInformations; }
+        }
+
+        public PrivateProfileInfo ProfileInfo
+        {
+            get { return _profileInfo; }
+            set
+            {
+                if (value != _profileInfo)
+                {
+                    _profileInfo = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
 
         private RelayCommand<object> _closeProfileCommand;
@@ -64,25 +82,36 @@ namespace ClientLourd.ViewModels
         private async Task EditProfile(object obj)
         {
             await DialogHost.Show(new EditProfileDialog(ProfileInfo));
-            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
-        public RestClient RestClient
+        private RelayCommand<object> _openConnectionsCommand;
+
+        public ICommand OpenConnectionsCommand
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return _openConnectionsCommand ?? (_openConnectionsCommand = new RelayCommand<object>(obj => OpenConnectionHistory(obj))); }
         }
 
-        public PrivateProfileInfo ProfileInfo
+        private async Task OpenConnectionHistory(object obj)
         {
-            get { return _profileInfo; }
-            set
-            {
-                if (value != _profileInfo)
-                {
-                    _profileInfo = value;
-                    NotifyPropertyChanged();
-                }
-            }
+            await DialogHost.Show(new ConnectionHistoryDialog());
         }
+
+
+        private RelayCommand<object> _openGamesPlayedCommand;
+
+        public ICommand OpenGamesPlayedCommand
+        {
+            get { return _openGamesPlayedCommand ?? (_openGamesPlayedCommand = new RelayCommand<object>(obj => OpenGamesPlayedHistory(obj))); }
+        }
+
+        private async Task OpenGamesPlayedHistory(object obj)
+        {
+
+            await DialogHost.Show(new GamesPlayedHistoryDialog());
+        }
+
+
+
+
     }
 }
