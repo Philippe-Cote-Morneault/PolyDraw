@@ -24,4 +24,17 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/list_item_channel_button_action_2"
+        android:layout_marginStart="24dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:icon="@drawable/ic_add_black_24dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"/>
+
 </LinearLayout>
