@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Services.RestService;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ViewModels
 {
@@ -20,12 +22,12 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
-            GetUserInfo(_sessionInformations.User.ID);
+            Task task = GetUserInfo(_sessionInformations.User.ID);
         }
 
         private async Task GetUserInfo(string userID)
         {
-            _profileInfo = await RestClient.GetUserInfo(userID);
+            ProfileInfo = await RestClient.GetUserInfo(userID);
         }
 
         public override void AfterLogOut()
@@ -45,9 +47,24 @@ namespace ClientLourd.ViewModels
             get { return _closeProfileCommand ?? (_closeProfileCommand = new RelayCommand<object>(obj => CloseProfile(obj))); }
         }
 
-        private void CloseProfile(object obj)
+        private async Task CloseProfile(object obj)
         {
-            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
+            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
+            //await DialogHost.Show(new EditProfileDialog());
+            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+        }
+
+        private RelayCommand<object> _editProfileCommand;
+
+        public ICommand EditProfileCommand
+        {
+            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj))); }
+        }
+
+        private async Task EditProfile(object obj)
+        {
+            await DialogHost.Show(new EditProfileDialog(ProfileInfo));
+            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
         public RestClient RestClient
@@ -58,6 +75,14 @@ namespace ClientLourd.ViewModels
         public PrivateProfileInfo ProfileInfo
         {
             get { return _profileInfo; }
+            set
+            {
+                if (value != _profileInfo)
+                {
+                    _profileInfo = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
     }
 }

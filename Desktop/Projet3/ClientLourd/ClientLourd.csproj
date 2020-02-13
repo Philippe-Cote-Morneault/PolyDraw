@@ -144,13 +144,19 @@
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\Constants\Networks.cs" />
-    <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
+    <Compile Include="Utilities\Constants\Enums.cs" />
+    <Compile Include="Utilities\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\ComparatorToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
+    <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
+    <Compile Include="Utilities\ValidationRules\NameRule.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -193,6 +199,9 @@
     <Compile Include="Views\Dialogs\ClosableErrorDialog.xaml.cs">
       <DependentUpon>ClosableErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\EditProfileDialog.xaml.cs">
+      <DependentUpon>EditProfileDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
@@ -233,6 +242,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\EditProfileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
     <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
