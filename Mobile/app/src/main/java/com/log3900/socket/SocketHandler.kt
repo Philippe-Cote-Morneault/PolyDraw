@@ -86,7 +86,7 @@ object SocketHandler {
             outputStream.writeByte(message.type.eventType.toInt())
             outputStream.writeShort(message.data.size)
             outputStream.write(message.data)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             handlerError()
         }
     }
