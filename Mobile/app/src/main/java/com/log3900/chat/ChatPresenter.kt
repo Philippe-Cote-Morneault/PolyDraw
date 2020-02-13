@@ -76,11 +76,6 @@ class ChatPresenter : Presenter {
     }
 
     private fun subscribeToEvents() {
-        messageRepository.subscribe(MessageRepository.Event.MESSAGE_RECEIVED, Handler {
-            handleNewMessage(it)
-            true
-        })
-
         EventBus.getDefault().register(this)
     }
 
@@ -89,6 +84,9 @@ class ChatPresenter : Presenter {
         when(event.type) {
             EventType.ACTIVE_CHANNEL_CHANGED -> {
                 onChannelChanged(event.data as Channel)
+            }
+            EventType.RECEIVED_MESSAGE -> {
+
             }
         }
     }
@@ -104,10 +102,9 @@ class ChatPresenter : Presenter {
         )
     }
 
-    private fun handleNewMessage(message: Message) {
-        val receivedMessage = message.obj as ReceivedMessage
+    private fun onNewMessage(message: ReceivedMessage) {
         chatView.notifyNewMessage()
-        if (UserRepository.getUser().username != receivedMessage.senderName) {
+        if (UserRepository.getUser().username != message.senderName) {
             chatView.playNewMessageNotification()
         }
     }
