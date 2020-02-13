@@ -6,5 +6,6 @@ enum class EventType {
     UNSUBSCRIBED_FROM_CHANNEL,
     CHANNEL_CREATED,
     CHANNEL_DELETED,
+    RECEIVED_MESSAGE
 }
 data class MessageEvent(var type: EventType, var data: Any)
