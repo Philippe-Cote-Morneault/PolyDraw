@@ -83,67 +83,61 @@
                     </Grid.ColumnDefinitions>
 
                     <materialDesign:Card Grid.Row="0">
-                        
-                        
-                        <StackPanel>
-                            <TextBlock Margin="25 10 0 0" FontSize="20" FontWeight="Bold">Stats</TextBlock>
-                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}"/>
-                            <ScrollViewer>
-                                <StackPanel ScrollViewer.CanContentScroll="True">
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    <TextBlock>caca</TextBlock>
-                                    
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="48"></RowDefinition>
+                                <RowDefinition Height="6*"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Margin="25 10 0 0" Grid.Row="0" FontSize="20" FontWeight="Bold">Stats</TextBlock>
+                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                            </StackPanel>
+
+                            <ScrollViewer Grid.Row="1">
+                                <StackPanel Margin="25 0 0 0" ScrollViewer.CanContentScroll="True" >
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
                                 </StackPanel>
                             </ScrollViewer>
-                        </StackPanel>
-                        
+
+                        </Grid>
                     </materialDesign:Card>
 
                     <materialDesign:Card Margin="0 10 0 10" Grid.Row="1">
-                        <StackPanel>
-                            <TextBlock Margin="25 10 0 0" FontSize="20" FontWeight="Bold">Achievements</TextBlock>
-                            <Separator Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="48"></RowDefinition>
+                                <RowDefinition Height="6*"></RowDefinition>
+                            </Grid.RowDefinitions>
 
-                        </StackPanel>
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Margin="25 10 0 0" Grid.Row="0" FontSize="20" FontWeight="Bold">Achievements</TextBlock>
+                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}"/>
+                            </StackPanel>
+
+                            <ScrollViewer Grid.Row="1">
+                                <StackPanel Margin="25 0 0 0" ScrollViewer.CanContentScroll="True" >
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                    <TextBlock FontSize="40">Placeholder</TextBlock>
+                                </StackPanel>
+                            </ScrollViewer>
+
+                        </Grid>
                     </materialDesign:Card>
                 </Grid>
             </Grid>
