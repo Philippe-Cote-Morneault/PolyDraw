@@ -13,7 +13,7 @@
     <DockPanel Margin="10">
         <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button Margin="5" IsEnabled="{Binding ElementName=FieldTextBox, Path=Text, Converter={StaticResource StringEmptyToBooleanConverter}}" CommandParameter="true" Command="materialDesign:DialogHost.CloseDialogCommand" IsDefault="True" Content="Confirm"/>
+            <Button Margin="5" IsEnabled="{Binding ElementName=FieldTextBox, Path=Text, Converter={StaticResource StringEmptyToBooleanConverter}}" CommandParameter="true" Command="materialDesign:DialogHost.CloseDialogCommand"  Content="Confirm"/>
             <Button Margin="5" CommandParameter="false" Command="materialDesign:DialogHost.CloseDialogCommand" Content="Cancel"/>
         </UniformGrid>
         <TextBox Text="{Binding Result, Mode=TwoWay}" Name="FieldTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>

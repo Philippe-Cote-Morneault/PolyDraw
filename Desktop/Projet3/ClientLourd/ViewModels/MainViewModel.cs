@@ -19,6 +19,7 @@ namespace ClientLourd.ViewModels
        
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
+        public NetworkInformations NetworkInformations { get; set; }
         private SessionInformations _sessionInformations;
 
         public SessionInformations SessionInformations
@@ -48,12 +49,13 @@ namespace ClientLourd.ViewModels
 
         public override void AfterLogOut()
         {
+            NetworkInformations = new NetworkInformations();
             SessionInformations = new SessionInformations();
             ContainedView = Utilities.Enums.Views.Editor.ToString();
-            RestClient = new RestClient();
+            RestClient = new RestClient(NetworkInformations);
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
-            SocketClient = new SocketClient();
+            SocketClient = new SocketClient(NetworkInformations);
             SocketClient.StartWaiting += (source, args) => { IsWaiting = true; };
             SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
@@ -73,6 +75,18 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        
+        private RelayCommand<string> _changeNetworkCommand;
+        public ICommand ChangeNetworkCommand
+        {
+            get
+            {
+                return _changeNetworkCommand ??
+                       (_changeNetworkCommand = new RelayCommand<string>(config => NetworkInformations.Config = int.Parse(config)));
+            }
+        }
+        
+        
 
         private RelayCommand<LoginViewModel> _logoutCommand;
 

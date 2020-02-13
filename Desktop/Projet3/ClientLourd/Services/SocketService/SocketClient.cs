@@ -28,9 +28,11 @@ namespace ClientLourd.Services.SocketService
         private NetworkStream _stream;
         private Task _receiver;
         private Timer _healthCheckTimer;
+        private NetworkInformations _networkInformations;
 
-        public SocketClient()
+        public SocketClient(NetworkInformations informations)
         {
+            _networkInformations = informations;
             HealthCheck += OnHealthCheck;
         }
 
@@ -88,16 +90,10 @@ namespace ClientLourd.Services.SocketService
                 OnStartWaiting(this);
                 try
                 {
-                    var ip = Dns.GetHostAddresses(Networks.HOST_NAME)[0];
-
-                    // If connected on a local server, use the line below
-                    //var ip = IPAddress.Parse(HostName);
-
                     //Create the socket
-                    _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
+                    _socket = new Socket(_networkInformations.IP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     //Connect the socket to the end point
-                    _socket.Connect(new IPEndPoint(ip, Networks.SOCKET_PORT));
+                    _socket.Connect(new IPEndPoint(_networkInformations.IP, Networks.SOCKET_PORT));
                     //_socket.Connect(new IPEndPoint(ip, 3001));
                     _stream = new NetworkStream(_socket);
 

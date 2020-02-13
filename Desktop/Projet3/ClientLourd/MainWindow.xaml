@@ -189,6 +189,11 @@
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="0" IsChecked="True" Content="Prod" />
+                    <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="1"  Content="Dev"/>
+                    <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="2"  Content="Local"/>
+                </StackPanel>
                 <controls:Login x:Name="LoginScreen"
                                 IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>

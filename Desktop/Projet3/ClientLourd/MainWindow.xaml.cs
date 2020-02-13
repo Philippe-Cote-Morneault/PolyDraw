@@ -129,9 +129,6 @@ namespace ClientLourd
                     _chatWindow.Show();
                 });
             });
-
-
-
         }
     }
 }

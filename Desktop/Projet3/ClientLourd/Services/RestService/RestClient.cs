@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Constants;
 using Newtonsoft.Json;
@@ -19,16 +20,12 @@ namespace ClientLourd.Services.RestService
     {
         private RestSharp.RestClient _client;
         private string _sessionToken;
+        private NetworkInformations _networkInformations;
 
-        public RestClient()
+        public RestClient(NetworkInformations informations)
         {
-            // For local server usage
-            /*_client = new RestSharp.RestClient("http://127.0.0.1:3000")
-            {
-                Timeout = 10000,
-            };*/
-
-            _client = new RestSharp.RestClient($"http://{Networks.HOST_NAME}:{Networks.REST_PORT}")
+            _networkInformations = informations;
+            _client = new RestSharp.RestClient()
             {
                 Timeout = 10000,
             };
@@ -45,6 +42,7 @@ namespace ClientLourd.Services.RestService
         /// <exception cref="RestException"></exception>
         public async Task<Dictionary<string, object>> Login(string username, string password)
         {
+            _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth", Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username});
