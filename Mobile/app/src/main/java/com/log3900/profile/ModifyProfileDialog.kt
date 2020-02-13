@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository
@@ -54,13 +54,36 @@ class ModifyProfileDialog : DialogFragment() {
         }
         val defaultBtn = root.findViewById<MaterialButton>(R.id.default_button)
         defaultBtn.setOnClickListener {
+            it.clearFocus()
             fillDefaultDialogFields(root)
         }
 
         updateBtn = root.findViewById(R.id.update_button)
+        updateBtn.setOnClickListener {
+            sendModifiedInfo()
+        }
 
         fillDefaultDialogFields(root)
     }
+
+    fun sendModifiedInfo() {
+        val password =
+            if (passwordInput.text.toString() != resources.getString(R.string.password_asterisks))
+                passwordInput.text.toString()
+            else
+                null
+
+        val updatedAccount = Account(
+            usernameInput.text.toString(),
+            emailInput.text.toString(),
+            firstnameInput.text.toString(),
+            lastnameInput.text.toString(),
+            originalAccount.sessionToken,
+            originalAccount.bearerToken
+        )
+        modifyProfilePresenter.updateAccountInfo(updatedAccount, password)
+    }
+
 
     /**
      * Fills the dialog with current account info
@@ -151,5 +174,27 @@ class ModifyProfileDialog : DialogFragment() {
     }
     fun setLastnameError(error: String?) {
         lastnameInput.error = error
+    }
+
+    fun onModifySuccess(updatedAccount: Account) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Info modified")
+            .setMessage("Account information modified with success!")
+            .setPositiveButton("OK", null)
+            .setCancelable(false)
+            .show()
+
+        originalAccount = updatedAccount
+        fillDefaultDialogFields(view!!)
+    }
+
+    fun onModifyError(error: String) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Error")
+            .setMessage("Error: $error")
+            .setPositiveButton("OK", null)
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show()
     }
 }
