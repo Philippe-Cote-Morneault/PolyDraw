@@ -93,7 +93,7 @@ namespace ClientLourd.Services.SocketService
                     //Create the socket
                     _socket = new Socket(_networkInformations.IP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     //Connect the socket to the end point
-                    _socket.Connect(new IPEndPoint(_networkInformations.IP, Networks.SOCKET_PORT));
+                    _socket.Connect(new IPEndPoint(_networkInformations.IP, _networkInformations.SocketPort));
                     //_socket.Connect(new IPEndPoint(ip, 3001));
                     _stream = new NetworkStream(_socket);
 
