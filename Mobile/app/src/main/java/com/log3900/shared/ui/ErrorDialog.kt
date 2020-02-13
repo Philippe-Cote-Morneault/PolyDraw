@@ -10,7 +10,7 @@ import android.app.Activity
 import android.content.Intent
 import com.log3900.login.LoginActivity
 
-class WarningDialog : Activity() {
+class ErrorDialog : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

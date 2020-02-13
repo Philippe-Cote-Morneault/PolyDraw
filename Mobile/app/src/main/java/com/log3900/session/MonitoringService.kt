@@ -1,26 +1,19 @@
 package com.log3900.session
 
-import android.app.AlertDialog
 import android.app.LauncherActivity
 import android.app.Service
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.Message
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.log3900.MainActivity
 import com.log3900.MainApplication
 import com.log3900.chat.ChatManager
-import com.log3900.shared.ui.WarningDialog
+import com.log3900.shared.ui.ErrorDialog
 import com.log3900.socket.*
-import com.log3900.user.User
-import com.log3900.user.UserRepository
-import java.util.*
 
 
 class MonitoringService : Service() {
@@ -88,7 +81,7 @@ class MonitoringService : Service() {
 
     fun onConnectionError() {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            val intent = Intent(this, WarningDialog::class.java)
+            val intent = Intent(this, ErrorDialog::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
