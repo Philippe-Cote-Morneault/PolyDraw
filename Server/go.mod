@@ -8,6 +8,7 @@ require (
 	github.com/gorilla/context v1.1.1
 	github.com/gorilla/mux v1.7.3
 	github.com/jinzhu/gorm v1.9.12
+	github.com/lib/pq v1.1.1
 	github.com/spf13/viper v1.6.2
 	github.com/tevino/abool v0.0.0-20170917061928-9b9efcf221b5
 	github.com/vmihailenco/msgpack/v4 v4.3.5
