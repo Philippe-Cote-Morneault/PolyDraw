@@ -161,8 +161,55 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
             }
         }
-        
-        
+
+        public async Task<object> GetStats()
+        {
+            RestRequest request = new RestRequest("stats");
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    return data;
+                case HttpStatusCode.BadRequest:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+            }
+        }
+
+
+        public async Task<object> GetStats(int start, int end)
+        {
+            RestRequest request = new RestRequest("stats");
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddParameter("start", start, ParameterType.QueryString);
+            request.AddParameter("end", end, ParameterType.QueryString);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data= deseralizer.Deserialize<dynamic>(response);
+                    return data;
+                case HttpStatusCode.BadRequest:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.Unauthorized:
+                    throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.NotFound:
+                    throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+            }
+        }
+
+
 
         public async Task<PrivateProfileInfo> GetUserInfo(string userID)
         {
