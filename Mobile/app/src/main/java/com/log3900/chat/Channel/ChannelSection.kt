@@ -46,6 +46,14 @@ class ChannelSection : Section {
         itemHolder.buttonAction1.setOnClickListener {
             listener.onChannelActionButton1Click(this.channelGroup.channels.get(position), channelGroup.type)
         }
+        itemHolder.buttonAction2.setOnClickListener {
+            listener.onChannelActionButton2Click(this.channelGroup.channels.get(position), channelGroup.type)
+        }
+        if (this.channelGroup.channels.get(position).ID.toString() == "00000000-0000-0000-0000-000000000000") {
+            itemHolder.buttonAction2.visibility = View.GONE
+        } else {
+            itemHolder.buttonAction2.visibility = View.VISIBLE
+        }
         itemHolder.bind(this.channelGroup.channels.get(position))
     }
 
@@ -70,5 +78,6 @@ class ChannelSection : Section {
         fun onHeaderRootViewClick(group: ChannelGroup)
         fun onChannelClickListener(channel: Channel)
         fun onChannelActionButton1Click(channel: Channel, channelState: GroupType)
+        fun onChannelActionButton2Click(channel: Channel, channelState: GroupType)
     }
 }
