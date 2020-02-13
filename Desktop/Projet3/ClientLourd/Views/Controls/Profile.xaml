@@ -12,10 +12,6 @@
         <viewModels:ProfileViewModel/>
     </UserControl.DataContext>
     <Grid Margin="40 10 40 10">
-        
-
-        
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>

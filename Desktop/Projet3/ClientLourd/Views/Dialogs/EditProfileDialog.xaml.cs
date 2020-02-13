@@ -101,12 +101,12 @@ namespace ClientLourd.Views.Dialogs
                 PrivateProfileInfo.LastName = PrivateProfileInfoClone.LastName;
                 PrivateProfileInfo.Email = PrivateProfileInfoClone.Email;
                 PrivateProfileInfo = PrivateProfileInfoClone;
+
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error");
-                await DialogHost.Show(new ClosableErrorDialog(e));
+                await EditProfileHost.ShowDialog(new ClosableErrorDialog(e));
             }
         }
 
