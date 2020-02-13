@@ -1,6 +1,8 @@
 package com.log3900.chat.Channel
 
 import com.log3900.user.UserRepository
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChannelCache {
     var joinedChannels: ArrayList<Channel> = arrayListOf()
@@ -46,5 +48,26 @@ class ChannelCache {
 
     fun removeAvailableChannel(channel: Channel) {
         availableChannels.remove(channel)
+    }
+
+    fun removeChannel(channelID: UUID) {
+        var channelToRemove: Channel? = null
+        channelToRemove = availableChannels.find {
+            it.ID == channelID
+        }
+
+        if (channelToRemove != null) {
+            removeAvailableChannel(channelToRemove)
+            return
+        }
+
+        channelToRemove = joinedChannels.find {
+            it.ID == channelID
+        }
+
+        if (channelToRemove != null) {
+            removeJoinedChannel(channelToRemove)
+            return
+        }
     }
 }
