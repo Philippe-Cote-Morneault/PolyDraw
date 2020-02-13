@@ -23,6 +23,7 @@ func (a *Server) setRouters() {
 	a.Post("/auth/bearer", a.handleRequest(api.PostAuthToken))
 	a.Post("/auth/register", a.handleRequest(api.PostAuthRegister))
 	a.Get("/users", a.handleRequest(api.GetUsers))
+	a.Put("/users", a.handleRequest(api.PutUser))
 	a.Get("/users/{id}", a.handleRequest(api.GetUser))
 	a.Get("/chat/channels", a.handleRequest(api.GetChatChannel))
 	a.Get("/chat/channels/{id}", a.handleRequest(api.GetChatChannelID))
