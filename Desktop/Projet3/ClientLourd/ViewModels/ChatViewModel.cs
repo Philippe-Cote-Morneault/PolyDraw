@@ -89,7 +89,7 @@ namespace ClientLourd.ViewModels
                         _selectedChannel.IsSelected = true;
                         if (_selectedChannel.Messages.Count < 10)
                         {
-                            LoadHistory(100);
+                            LoadHistory(50);
                         }
                     }
                     NotifyPropertyChanged();
@@ -241,9 +241,10 @@ namespace ClientLourd.ViewModels
             {
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID, SelectedChannel.Messages.Count,
                     SelectedChannel.Messages.Count + numberOfMessages);
-                foreach (var message in messages)
+                // TODO Change for a linkedList
+                for (int i = messages.Count-1; i >= 0; i--)
                 {
-                    SelectedChannel.Messages.Add(message);
+                    SelectedChannel.Messages.Add(messages[i]);
                 }
             }
         }

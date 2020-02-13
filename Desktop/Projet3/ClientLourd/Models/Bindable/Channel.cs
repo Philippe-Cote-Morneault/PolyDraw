@@ -70,7 +70,7 @@ namespace ClientLourd.Models.Bindable
                 if (value != _messages)
                 {
                     _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
-                    _messages.CollectionChanged += MessagesOnCollectionChanged;
+                    Messages.CollectionChanged += MessagesOnCollectionChanged;
                     NotifyPropertyChanged();
                 }
             }
@@ -79,32 +79,19 @@ namespace ClientLourd.Models.Bindable
 
         private void MessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            App.Current.Dispatcher.InvokeAsync(() =>
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                if (e.Action == NotifyCollectionChangedAction.Add)
+                if (!_isSelected)
                 {
-                    if (!_isSelected)
-                    {
-                        Notification++;
-                    }
-
-                    Message tmp;
-                    for (int i = Messages.Count - 1; i > 0; i--)
-                    {
-                        if (Messages[i - 1].Date > Messages[i].Date)
-                        {
-                            tmp = Messages[i];
-                            Messages[i] = Messages[i - 1];
-                            Messages[i - 1] = tmp;
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
+                    Notification++;
                 }
-            });
+                if (Messages.Count > 1 && Messages[Messages.Count - 1].Date < Messages[Messages.Count - 2].Date)
+                {
+                    Messages = new ObservableCollection<Message>(Messages.OrderBy(m => m.Date));
+                }
+            }
         }
+
 
         public int Notification
         {
