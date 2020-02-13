@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClientLourd.ViewModels;
+using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,7 @@ namespace ClientLourd.Views.Dialogs
         public GamesPlayedHistoryDialog()
         {
             InitializeComponent();
+            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
         }
     }
 }

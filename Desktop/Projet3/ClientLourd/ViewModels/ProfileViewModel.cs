@@ -19,10 +19,12 @@ namespace ClientLourd.ViewModels
         private SessionInformations _sessionInformations;
         private PrivateProfileInfo _profileInfo;
 
+
         public override void AfterLogOut()
         {
         
         }
+
 
         public override void AfterLogin()
         {
@@ -93,7 +95,10 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            await DialogHost.Show(new ConnectionHistoryDialog());
+            await DialogHost.Show(new ConnectionHistoryDialog(), (object o, DialogClosingEventArgs closingEventHandler) =>
+            {
+                (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+            });
         }
 
 
@@ -107,7 +112,11 @@ namespace ClientLourd.ViewModels
         private async Task OpenGamesPlayedHistory(object obj)
         {
 
-            await DialogHost.Show(new GamesPlayedHistoryDialog());
+            await DialogHost.Show(new GamesPlayedHistoryDialog(), (object o, DialogClosingEventArgs closingEventHandler) =>
+            {
+                            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+            });
+
         }
 
 
