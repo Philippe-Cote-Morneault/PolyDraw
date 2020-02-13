@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ClientLourd.Models.Exceptions.Rest;
+using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
@@ -17,12 +18,19 @@ namespace ClientLourd.ViewModels
     {
         public LoginViewModel()
         {
-            Init();
+            AfterLogOut();
         }
 
-        public override void Init()
+
+        public override void AfterLogin()
+        {
+            IsLoggedIn = true;
+        }
+
+        public override void AfterLogOut()
         {
             IsLoggedIn = false;
+            User = new User();
         }
 
         public RestClient RestClient
@@ -52,6 +60,39 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        private User _user;
+
+        public User User
+        {
+            get { return _user; }
+
+            set
+            {
+                if (value != _user)
+                {
+                    _user = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private TokenPair _tokens;
+
+        public TokenPair Tokens
+        {
+            get { return _tokens; }
+
+            set
+            {
+                if (value != _tokens)
+                {
+                    _tokens = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
         public ICommand LoginCommand
         {
             get
@@ -67,9 +108,15 @@ namespace ClientLourd.ViewModels
             string password = (param[1] as PasswordBox).Password;
             try
             {
-                var token = await RestClient.Login(username, password);
-                await SocketClient.InitializeConnection(token);
-                IsLoggedIn = true;
+                dynamic data = await RestClient.Login(username, password);
+                Tokens = new TokenPair()
+                {
+                    SessionToken = data["SessionToken"],
+                    Bearer = data["Bearer"],
+                };
+                User = new User(username, data["UserID"]);
+                await SocketClient.InitializeConnection(Tokens.SessionToken);
+                OnLogin(this);
             }
             catch (Exception e)
             {
@@ -90,8 +137,20 @@ namespace ClientLourd.ViewModels
 
             LoginInputRules loginInputValidator = new LoginInputRules();
 
-            return (loginInputValidator.UsernameLengthIsOk(username) && loginInputValidator.PasswordLengthIsOk(password) &&
-                    !loginInputValidator.StringIsWhiteSpace(username) && !loginInputValidator.StringIsWhiteSpace(password));
+            return (loginInputValidator.UsernameLengthIsOk(username) &&
+                    loginInputValidator.PasswordLengthIsOk(password) &&
+                    !loginInputValidator.StringIsWhiteSpace(username) &&
+                    !loginInputValidator.StringIsWhiteSpace(password));
+        }
+
+        public delegate void LoginEventHandler(object source, EventArgs args);
+
+        public event LoginEventHandler LoggedIn;
+
+
+        protected virtual void OnLogin(object source)
+        {
+            LoggedIn?.Invoke(source, EventArgs.Empty);
         }
     }
 }

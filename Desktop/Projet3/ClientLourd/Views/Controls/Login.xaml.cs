@@ -16,11 +16,10 @@ namespace ClientLourd.Views.Controls
             Loaded += Load;
         }
 
-        public void Init()
+        public void AfterLogout()
         {
             PasswordBox.Clear();
-            ((LoginViewModel) DataContext).Init();
-
+            ((LoginViewModel) DataContext).AfterLogOut();
         }
 
         public void Load(object sender, RoutedEventArgs e)
@@ -36,6 +35,11 @@ namespace ClientLourd.Views.Controls
         {
             get { return (bool) GetValue(IsWaitingProperty); }
             set { SetValue(IsWaitingProperty, value); }
+        }
+
+        public void AfterLogin()
+        {
+            ((ViewModelBase) DataContext).AfterLogin();
         }
     }
 }

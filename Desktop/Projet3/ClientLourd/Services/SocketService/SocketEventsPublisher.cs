@@ -1,5 +1,4 @@
 ﻿using System;
-using ClientLourd.Models.EventsArguments;
 
 namespace ClientLourd.Services.SocketService
 {
@@ -13,16 +12,21 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler UserJoinedChannel;
         public event SocketEventHandler UserLeftChannel;
         public event SocketEventHandler UserCreatedChannel;
+        public event SocketEventHandler UserDeletedChannel;
         public event SocketEventHandler HealthCheck;
         public event SocketEventHandler ConnectionLost;
         public event SocketEventHandler StartWaiting;
         public event SocketEventHandler StopWaiting;
-        
+
         protected virtual void OnConnectionLost(object source)
         {
             ConnectionLost?.Invoke(source, EventArgs.Empty);
         }
 
+        protected virtual void OnUserDeletedChannel(object source, EventArgs e)
+        {
+            UserDeletedChannel?.Invoke(source, e);
+        }
         protected virtual void OnUserCreatedChannel(object source, EventArgs e)
         {
             UserCreatedChannel?.Invoke(source, e);
@@ -43,9 +47,8 @@ namespace ClientLourd.Services.SocketService
             UserJoinedChannel?.Invoke(source, e);
         }
 
-        protected virtual void OnMessageReceived(object source, dynamic data)
+        protected virtual void OnMessageReceived(object source, EventArgs e)
         {
-            var e = new MessageReceivedEventArgs(data);
             MessageReceived?.Invoke(source, e);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ClientLourd.ViewModels;
@@ -10,21 +11,28 @@ namespace ClientLourd.Views.Controls
         public Chat()
         {
             InitializeComponent();
-            DataContext = new ChatViewModel();
-            (DataContext as ChatViewModel).ChatOpen += OnChatOpen;
-
         }
 
-        private void OnChatOpen(object source, EventArgs args)
+        public void OnChatToggle(bool isOpen)
         {
-            MessageTextBox.Focus();
+
+            ((ChatViewModel) DataContext).OnChatToggle(isOpen);
+            if (isOpen)
+            {
+                MessageTextBox.Focus();
+            }
         }
 
 
-        public void Init()
+        public void AfterLogout()
         {
-            ((ChatViewModel) DataContext).Init();
+            ((ChatViewModel) DataContext).AfterLogOut();
             MessageTextBox.Clear();
+        }
+
+        public void AfterLogin()
+        {
+            ((ChatViewModel) DataContext).AfterLogin();
         }
     }
 }

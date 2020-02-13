@@ -1,4 +1,4 @@
-﻿namespace ClientLourd.Models.Enums
+﻿namespace ClientLourd.Utilities.Enums
 {
     public enum SocketMessageTypes
     {
@@ -16,5 +16,7 @@
         UserLeftChannel = 25,
         CreateChannel = 26,
         UserCreatedChannel = 27,
+        DeleteChannel = 28,
+        UserDeletedChannel = 29,
     }
 }

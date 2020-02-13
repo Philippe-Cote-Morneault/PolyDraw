@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using ClientLourd.ViewModels;
 using ClientLourd.Views.Controls;
 
 namespace ClientLourd.Views.Windows
@@ -15,6 +16,7 @@ namespace ClientLourd.Views.Windows
             _chatBox = ChatBox;
             InitializeComponent();
             MainStackPanel.Children.Add(ChatBox);
+            ((ChatViewModel)ChatBox.DataContext).OnChatToggle(true);
             Closing += OnWindowClosing;
         }
 
@@ -23,7 +25,6 @@ namespace ClientLourd.Views.Windows
             MainStackPanel.Children.Clear();
             ((MainWindow) Owner).RightDrawerContent.Children.Add(_chatBox);
             ((MainWindow) Owner).ChatToggleButton.IsEnabled = true;
-            ((MainWindow) Owner).ClearChatNotification();
         }
     }
 }

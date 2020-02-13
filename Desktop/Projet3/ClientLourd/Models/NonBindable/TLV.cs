@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
-using ClientLourd.Models.Enums;
+using ClientLourd.Services.SocketService;
+using ClientLourd.Utilities.Enums;
 using MessagePack;
 using MessagePack.Resolvers;
 
@@ -34,6 +35,18 @@ namespace ClientLourd.Models.NonBindable
         {
             Type = (byte) ((int) type);
             Value = Encoding.ASCII.GetBytes(message);
+        }
+
+        public Tlv(SocketMessageTypes type, Guid guid)
+        {
+            Type = (byte) ((int) type);
+            byte[] bytes = guid.ToByteArray();
+            // We need to change the format since the server
+            // use uuid
+            Array.Reverse(bytes,0,4);
+            Array.Reverse(bytes,4,2);
+            Array.Reverse(bytes,6,2);
+            Value = bytes;
         }
 
         public byte[] GetBytes()
