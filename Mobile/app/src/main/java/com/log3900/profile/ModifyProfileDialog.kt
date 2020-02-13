@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -14,7 +15,15 @@ import com.log3900.user.Account
 import com.log3900.user.AccountRepository
 
 class ModifyProfileDialog : DialogFragment() {
+    lateinit var modifyProfilePresenter: ModifyProfilePresenter
+
     lateinit var originalAccount: Account
+    lateinit var usernameInput: TextInputEditText
+    lateinit var passwordInput: TextInputEditText
+    lateinit var emailInput: TextInputEditText
+    lateinit var firstnameInput: TextInputEditText
+    lateinit var lastnameInput: TextInputEditText
+    lateinit var updateBtn: MaterialButton
 
     override fun onStart() {
         super.onStart()
@@ -32,6 +41,7 @@ class ModifyProfileDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.dialog_modify_profile, container, false)
+        modifyProfilePresenter = ModifyProfilePresenter(this)
         originalAccount = AccountRepository.getAccount()
         setUpUi(rootView)
         return rootView
@@ -42,6 +52,12 @@ class ModifyProfileDialog : DialogFragment() {
         cancelBtn.setOnClickListener {
             dismiss()
         }
+        val defaultBtn = root.findViewById<MaterialButton>(R.id.default_button)
+        defaultBtn.setOnClickListener {
+            fillDefaultDialogFields(root)
+        }
+
+        updateBtn = root.findViewById(R.id.update_button)
 
         fillDefaultDialogFields(root)
     }
@@ -51,7 +67,89 @@ class ModifyProfileDialog : DialogFragment() {
      */
     private fun fillDefaultDialogFields(root: View) {
         // TODO: Avatar
-        val usernameInput = root.findViewById<TextInputEditText>(R.id.username_input)
-        usernameInput.setText(originalAccount.username)
+        usernameInput = root.findViewById<TextInputEditText>(R.id.username_input).apply {
+            setText(originalAccount.username)
+            doAfterTextChanged {
+                modifyProfilePresenter.validateUsername(text.toString())
+                enableUpdateIfAllValid()
+            }
+        }
+
+        passwordInput = root.findViewById<TextInputEditText>(R.id.password_input).apply {
+            setText(R.string.password_asterisks)
+            doAfterTextChanged {
+                modifyProfilePresenter.validatePassword(text.toString())
+                enableUpdateIfAllValid()
+            }
+            setOnFocusChangeListener { _, _ ->
+                if (text.toString() == resources.getString(R.string.password_asterisks))
+                    text?.clear()
+            }
+        }
+
+        emailInput = root.findViewById<TextInputEditText>(R.id.email_input).apply {
+            setText(originalAccount.email)
+            doAfterTextChanged {
+                modifyProfilePresenter.validateEmail(text.toString())
+                enableUpdateIfAllValid()
+            }
+        }
+
+        firstnameInput = root.findViewById<TextInputEditText>(R.id.firstname_input).apply {
+            setText(originalAccount.firstname)
+            doAfterTextChanged {
+                modifyProfilePresenter.validateFirstname(text.toString())
+                enableUpdateIfAllValid()
+            }
+        }
+
+        lastnameInput = root.findViewById<TextInputEditText>(R.id.lastname_input).apply {
+            setText(originalAccount.lastname)
+            doAfterTextChanged {
+                modifyProfilePresenter.validateLastname(text.toString())
+                enableUpdateIfAllValid()
+            }
+        }
+    }
+
+    /**
+     * Changes if the "Apply changes" button is enabled
+     */
+    private fun enableUpdateIfAllValid() {
+        val username    = usernameInput.text.toString()
+        val password    = passwordInput.text.toString()
+        val email       = emailInput.text.toString()
+        val firstname   = firstnameInput.text.toString()
+        val lastname    = lastnameInput.text.toString()
+
+        updateBtn.isEnabled =
+                // At least 1 field has changed
+            ((username != originalAccount.username)
+                    || (password != resources.getString(R.string.password_asterisks))
+                    || (email != originalAccount.email)
+                    || (firstname != originalAccount.firstname)
+                    || (lastname != originalAccount.lastname))
+                    // All fields are valid
+                    && modifyProfilePresenter.validateUsername(username)
+                    && modifyProfilePresenter.validatePassword(password)
+                    && modifyProfilePresenter.validateEmail(email)
+                    && modifyProfilePresenter.validateFirstname(firstname)
+                    && modifyProfilePresenter.validateLastname(lastname)
+    }
+
+    fun setUsernameError(error: String?) {
+        usernameInput.error = error
+    }
+    fun setPasswordError(error: String?) {
+        passwordInput.error = error
+    }
+    fun setEmailError(error: String?) {
+        emailInput.error = error
+    }
+    fun setFirstnameError(error: String?) {
+        firstnameInput.error = error
+    }
+    fun setLastnameError(error: String?) {
+        lastnameInput.error = error
     }
 }

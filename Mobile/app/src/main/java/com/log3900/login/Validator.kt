@@ -14,7 +14,7 @@ object Validator {
 
     fun validatePassword(password: String) = password.isNotEmpty() && password.isValidPasswordLen()
 
-    private fun String.isAlphanumeric(): Boolean = this.matches("^[a-z0-9_]{4,12}\$\n".toRegex())
+    private fun String.isAlphanumeric(): Boolean = this.matches("^[a-z0-9_]{4,12}\$".toRegex())
     private fun String.isValidUsernameLen(): Boolean = this.length in minUsernameLength..maxUsernameLength
     private fun String.isValidPasswordLen(): Boolean = this.length in minPasswordLength..maxPasswordLength
 

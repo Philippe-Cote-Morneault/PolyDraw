@@ -11,6 +11,7 @@
     <!--buttons-->
     <string name="cancel">Cancel</string>
     <string name="modify">Modify</string>
+    <string name="restore_default">Restore Default</string>
 
     <!--login-->
     <string name="login_welcome">Welcome!</string>

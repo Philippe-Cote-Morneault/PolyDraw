@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/color_background"
-            android:inputType="text"
+            android:inputType="text|textNoSuggestions"
             android:maxLength="12"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -72,6 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/color_background"
@@ -90,6 +91,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/email_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/color_background"
@@ -109,6 +111,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/firstname_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/color_background"
@@ -128,6 +131,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lastname_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/color_background"
@@ -156,7 +160,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/register_button"
+            android:id="@+id/default_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="@string/restore_default"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cancel_modify_button"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
@@ -171,9 +184,9 @@
             android:layout_height="wrap_content"
             android:text="@string/all_required"
 
-            app:layout_constraintEnd_toEndOf="@+id/register_button"
-            app:layout_constraintStart_toStartOf="@+id/register_button"
-            app:layout_constraintTop_toBottomOf="@id/register_button" />
+            app:layout_constraintEnd_toEndOf="@+id/update_button"
+            app:layout_constraintStart_toStartOf="@+id/update_button"
+            app:layout_constraintTop_toBottomOf="@id/update_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
