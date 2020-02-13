@@ -14,6 +14,8 @@
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed"/>
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
     </UserControl.Resources>
     
     <materialDesign:DialogHost x:Name="EditProfileHost" CloseOnClickAway="False">
@@ -28,6 +30,12 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Username</TextBlock>
                     <TextBlock Margin="10 0 0 0">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
+                                <Binding Path="PrivateProfileInfoClone.Username"></Binding>
+                                <Binding Path="PrivateProfileInfo.Username"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Username" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -46,6 +54,12 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Email</TextBlock>
                     <TextBlock Margin="10 0 0 0">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
+                                <Binding Path="PrivateProfileInfoClone.Email"></Binding>
+                                <Binding Path="PrivateProfileInfo.Email"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Email" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -64,6 +78,12 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Password</TextBlock>
                     <TextBlock Margin="10 0 0 0">
+                            <TextBlock.Visibility>
+                                <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" UpdateSourceTrigger="LostFocus">
+                                    <Binding Path="PasswordJunk"></Binding>
+                                    <Binding Path="PasswordJunk"></Binding>
+                                </MultiBinding>
+                            </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Password" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -75,11 +95,18 @@
                 </PasswordBox>
             </StackPanel>
 
+                <!--Visibility="{Binding ElementName=FirstNameField, Path=Text, Converter={StaticResource BoolToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}"-->
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">First name</TextBlock>
                     <TextBlock Margin="10 0 0 0">
+                            <TextBlock.Visibility>
+                                <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" UpdateSourceTrigger="LostFocus">
+                                    <Binding Path="PrivateProfileInfoClone.FirstName"></Binding>
+                                    <Binding Path="PrivateProfileInfo.FirstName"></Binding>
+                                </MultiBinding>
+                            </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="FirstName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>
@@ -99,6 +126,12 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Last name</TextBlock>
                     <TextBlock Margin="10 0 0 0">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
+                                <Binding Path="PrivateProfileInfoClone.LastName"></Binding>
+                                <Binding Path="PrivateProfileInfo.LastName"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="LastName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
                     </TextBlock>
                 </StackPanel>

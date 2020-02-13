@@ -39,8 +39,7 @@ namespace ClientLourd.Views.Dialogs
             InitializeComponent();
             DataContext = this;
 
-            // Password junk
-            PasswordJunk = "$#%@!&*)";
+        
 
 
             // Info before modif
@@ -48,6 +47,9 @@ namespace ClientLourd.Views.Dialogs
 
             // Info after modif
             PrivateProfileInfoClone = new PrivateProfileInfo(pvInfo);
+
+            // Password junk
+            PasswordJunk = "$#%@!&*)";
 
             (PasswordField as PasswordBox).Password = PasswordJunk;
             
@@ -58,13 +60,24 @@ namespace ClientLourd.Views.Dialogs
             get { return _passwordJunk; }
             set
             {
-                if (value != _passwordJunk)
-                {
-                    _passwordJunk = value;
-                    NotifyPropertyChanged();
-                }
+                
+                 _passwordJunk = value;
+                NotifyPropertyChanged();
+        
             }
         }
+
+        /*public PrivateProfileInfo PrivateProfileInfo
+        {
+            get { return _pvInfo; }
+            set
+            {
+
+                _pvInfo = value;
+                NotifyPropertyChanged();
+
+            }
+        }*/
 
 
         public RestClient RestClient
@@ -91,7 +104,6 @@ namespace ClientLourd.Views.Dialogs
 
         private async Task EditProfile(object obj)
         {
-            //TODO POST here
             try
             {
                 await RestClient.PutProfile(GetModifiedObj());
@@ -118,33 +130,34 @@ namespace ClientLourd.Views.Dialogs
         {
             dynamic obj = new ExpandoObject();
 
-            if (PrivateProfileInfo.Username != PrivateProfileInfoClone.Username)
+            if (UsernameHasChanged())
             {
                 obj.Username = PrivateProfileInfoClone.Username;
             }
 
-            if (PrivateProfileInfo.Email != PrivateProfileInfoClone.Email)
+            if (EmailHasChanged())
             {
                 obj.Email = PrivateProfileInfoClone.Email;
             }
 
-            if (PrivateProfileInfo.LastName != PrivateProfileInfoClone.LastName)
+            if (LastNameHasChanged())
             {
                 obj.LastName = PrivateProfileInfoClone.LastName;
             }
 
-            if (PrivateProfileInfo.FirstName != PrivateProfileInfoClone.FirstName)
+            if (FirstNameHasChanged())
             {
                 obj.FirstName = PrivateProfileInfoClone.FirstName;
             }
 
-            if (PasswordJunk != PasswordField.Password)
+            if (PasswordHasChanged())
             {
                 obj.Password = PasswordField.Password;
             }            
 
             return obj;
         }
+
 
 
         private RelayCommand<string> _revertToOriginalCommand;
@@ -202,6 +215,31 @@ namespace ClientLourd.Views.Dialogs
                 NotifyPropertyChanged();
 
             }
+        }
+
+        private bool UsernameHasChanged()
+        {
+            return PrivateProfileInfo.Username != PrivateProfileInfoClone.Username;
+        }
+
+        private bool EmailHasChanged()
+        {
+            return PrivateProfileInfo.Email != PrivateProfileInfoClone.Email;
+        }
+
+        private bool LastNameHasChanged()
+        {
+            return PrivateProfileInfo.LastName != PrivateProfileInfoClone.LastName;
+        }
+
+        private bool FirstNameHasChanged()
+        {
+            return PrivateProfileInfo.FirstName != PrivateProfileInfoClone.FirstName;
+        }
+
+        private bool PasswordHasChanged()
+        {
+            return PasswordJunk != PasswordField.Password;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

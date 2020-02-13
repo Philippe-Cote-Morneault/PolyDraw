@@ -144,6 +144,8 @@
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\Constants\Networks.cs" />
     <Compile Include="Utilities\Constants\Enums.cs" />
+    <Compile Include="Utilities\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\ComparatorToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
