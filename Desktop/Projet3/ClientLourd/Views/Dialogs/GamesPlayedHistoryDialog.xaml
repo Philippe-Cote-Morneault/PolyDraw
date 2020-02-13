@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Height="700" Width="600">
         <TextBlock FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center">Games Played History Works!</TextBlock>
     </Grid>
 </UserControl>

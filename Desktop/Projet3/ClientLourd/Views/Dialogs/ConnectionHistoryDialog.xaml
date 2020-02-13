@@ -5,8 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid Height="700" Width="600">
         <TextBlock FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center">Connection History Works!</TextBlock>
+        
+        <ListView ItemsSource="{Binding Path=MyList, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Age" Width="50" DisplayMemberBinding="{Binding Age}" />
+                    <GridViewColumn Header="Mail" Width="150" DisplayMemberBinding="{Binding Mail}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Add to list" Command="{Binding AddToList}"></Button>
     </Grid>
 </UserControl>

@@ -69,8 +69,6 @@ namespace ClientLourd.ViewModels
 
         private async Task CloseProfile(object obj)
         {
-            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
-            //await DialogHost.Show(new EditProfileDialog());
             (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
         }
 
