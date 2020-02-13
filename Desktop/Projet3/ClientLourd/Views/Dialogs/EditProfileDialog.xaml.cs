@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,18 +30,16 @@ namespace ClientLourd.Views.Dialogs
     /// </summary>
     public partial class EditProfileDialog : UserControl, INotifyPropertyChanged
     {
+        private const string JUNK = "$#%@!&*)";
+
         PrivateProfileInfo _pvInfo;
         PrivateProfileInfo _pvInfoClone;
         string _passwordJunk;
 
         public EditProfileDialog(PrivateProfileInfo pvInfo)
         {
-
-            InitializeComponent();
-            DataContext = this;
-
-        
-
+            PasswordJunk = JUNK;
+            NewPassword = JUNK;
 
             // Info before modif
             PrivateProfileInfo = pvInfo;
@@ -48,9 +47,10 @@ namespace ClientLourd.Views.Dialogs
             // Info after modif
             PrivateProfileInfoClone = new PrivateProfileInfo(pvInfo);
 
-            // Password junk
-            PasswordJunk = "$#%@!&*)";
+            InitializeComponent();
+            DataContext = this;
 
+            // Password junk
             (PasswordField as PasswordBox).Password = PasswordJunk;
             
         }
@@ -67,18 +67,6 @@ namespace ClientLourd.Views.Dialogs
             }
         }
 
-        /*public PrivateProfileInfo PrivateProfileInfo
-        {
-            get { return _pvInfo; }
-            set
-            {
-
-                _pvInfo = value;
-                NotifyPropertyChanged();
-
-            }
-        }*/
-
 
         public RestClient RestClient
         {
@@ -94,12 +82,12 @@ namespace ClientLourd.Views.Dialogs
 
         private bool CanUpdateProfile(object obj)
         {
-            return HasUpdatedProfile() && new LoginInputRules().PasswordLengthIsOk(PasswordField.Password);
+            return HasUpdatedProfile() && new LoginInputRules().PasswordLengthIsOk(NewPassword);
         }
 
         private bool HasUpdatedProfile()
         {
-            return (PrivateProfileInfo != PrivateProfileInfoClone || PasswordField.Password != PasswordJunk);
+            return (PrivateProfileInfo != PrivateProfileInfoClone || NewPassword != PasswordJunk);
         }
 
         private async Task EditProfile(object obj)
@@ -152,7 +140,7 @@ namespace ClientLourd.Views.Dialogs
 
             if (PasswordHasChanged())
             {
-                obj.Password = PasswordField.Password;
+                obj.Password = NewPassword;
             }            
 
             return obj;
@@ -197,9 +185,12 @@ namespace ClientLourd.Views.Dialogs
             get { return _pvInfo; }
             set
             {
-                
+                if (value != _pvInfo)
+                {
                     _pvInfo = value;
                     NotifyPropertyChanged();
+                }
+                    
                 
             }
         }
@@ -210,9 +201,11 @@ namespace ClientLourd.Views.Dialogs
             get { return _pvInfoClone; }
             set
             {
-
-                _pvInfoClone = value;
-                NotifyPropertyChanged();
+                if (value != _pvInfoClone) 
+                { 
+                    _pvInfoClone = value;
+                    NotifyPropertyChanged();
+                }
 
             }
         }
@@ -239,7 +232,27 @@ namespace ClientLourd.Views.Dialogs
 
         private bool PasswordHasChanged()
         {
-            return PasswordJunk != PasswordField.Password;
+            return PasswordJunk != NewPassword;
+        }
+
+        private string _newPassword;
+        public string NewPassword
+        {
+            get { return _newPassword; }
+            set
+            {
+                if (value != _newPassword) 
+                { 
+                    _newPassword = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+
+        private void OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            NewPassword = PasswordField.Password;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
