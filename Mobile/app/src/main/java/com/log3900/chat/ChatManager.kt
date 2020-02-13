@@ -12,10 +12,12 @@ import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
@@ -87,8 +89,17 @@ class ChatManager : Service() {
         channelManager?.changeSubscriptionStatus(channel)
     }
 
-    fun createChannel(channelName: String) {
-        channelManager?.createChannel(channelName)
+    fun createChannel(channelName: String) = Completable.create {
+        val res = channelManager?.createChannel(channelName)!!
+        if (res) {
+            it.onComplete()
+        } else {
+            it.onError(Exception("Channel already exists"))
+        }
+    }
+
+    fun deleteChannel(channel: Channel) {
+        channelManager?.deleteChannel(channel)
     }
 
     private fun setReadyState() {
