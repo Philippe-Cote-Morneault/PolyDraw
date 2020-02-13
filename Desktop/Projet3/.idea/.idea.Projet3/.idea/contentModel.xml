@@ -44,6 +44,7 @@
               </e>
               <e p="Dialogs" t="Include">
                 <e p="ClosableErrorDialog.g.cs" t="Include" />
+                <e p="EditProfileDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
@@ -94,15 +95,19 @@
             <e p="RelayCommand.cs" t="Include" />
           </e>
           <e p="Constants" t="Include">
+            <e p="Enums.cs" t="Include" />
             <e p="Networks.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
+            <e p="BoolToVisibilityConverter.cs" t="Include" />
             <e p="BorderConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
+            <e p="ComparatorToVisibilityConverter.cs" t="Include" />
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
             <e p="EditorModeConverter.cs" t="Include" />
+            <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
@@ -119,7 +124,9 @@
             <e p="ScrollViewerExtensions.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">
+            <e p="EmailRule.cs" t="Include" />
             <e p="LoginInputRules.cs" t="Include" />
+            <e p="NameRule.cs" t="Include" />
             <e p="UsernameRule.cs" t="Include" />
           </e>
         </e>
@@ -149,6 +156,8 @@
           <e p="Dialogs" t="Include">
             <e p="ClosableErrorDialog.xaml" t="Include" />
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
+            <e p="EditProfileDialog.xaml" t="Include" />
+            <e p="EditProfileDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />
