@@ -48,7 +48,7 @@
                     ToolTip="Export the chat as a new window"
                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ExportChatCommand}"
                     Style="{DynamicResource MaterialDesignToolForegroundButton}">
-                    <materialDesign:PackIcon Kind="CheckboxMultipleBlankOutline"
+                    <materialDesign:PackIcon Kind="ApplicationExport"
                                              Foreground="{StaticResource PrimaryHueMidBrush}" />
                 </Button>
             </StackPanel>
