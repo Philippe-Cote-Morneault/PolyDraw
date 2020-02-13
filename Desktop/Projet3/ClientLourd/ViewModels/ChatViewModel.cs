@@ -205,6 +205,10 @@ namespace ClientLourd.ViewModels
                     MessageReceivedEventArgs e = (MessageReceivedEventArgs) args;
                     var newChannel = new Channel(e.ChannelName, e.ChannelId);
                     Channels.Add(newChannel);
+                    if (e.UserID == SessionInformations.User.ID)
+                    {
+                        JoinChannel(newChannel);
+                    }
                     UpdateChannels();
                 });
             }
