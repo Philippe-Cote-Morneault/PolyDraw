@@ -13,6 +13,16 @@ namespace ClientLourd.Models.Bindable
 
         }
 
+
+        public PrivateProfileInfo(PrivateProfileInfo clone)
+        {
+            ID = clone.ID;
+            FirstName = clone.FirstName;
+            LastName = clone.LastName;
+            Email = clone.Email;
+            Username = clone.Username;
+        }
+
         private string _id;
         public string ID
         {
@@ -112,9 +122,55 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
+
+        public static bool operator ==(PrivateProfileInfo pvInfo1, PrivateProfileInfo pvInfo2)
+        {
+            if (ReferenceEquals(pvInfo1, pvInfo2))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(pvInfo1, null))
+            {
+                return false;
+            }
+            if (ReferenceEquals(pvInfo2, null))
+            {
+                return false;
+            }
+
+            return (pvInfo1.Username == pvInfo2.Username && pvInfo1.Email == pvInfo2.Email &&
+                    pvInfo1.FirstName == pvInfo2.FirstName && pvInfo1.LastName == pvInfo2.LastName &&
+                    pvInfo1.ID == pvInfo2.ID);
+            
+        }
+
+        public static bool operator !=(PrivateProfileInfo pvInfo1, PrivateProfileInfo pvInfo2)
+        {
+            if (ReferenceEquals(pvInfo1, pvInfo2))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(pvInfo1, null))
+            {
+                return true;
+            }
+            if (ReferenceEquals(pvInfo2, null))
+            {
+                return true;
+            }
+
+            return (pvInfo1.Username != pvInfo2.Username || pvInfo1.Email != pvInfo2.Email ||
+                    pvInfo1.FirstName != pvInfo2.FirstName || pvInfo1.LastName != pvInfo2.LastName ||
+                    pvInfo1.ID != pvInfo2.ID);
+        }
+
+
     }
 
-    
+
 
 
 
