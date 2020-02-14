@@ -291,7 +291,6 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 	var channels []model.ChatChannel
 	model.DB().Joins("left join chat_channel_membership on chat_channel_membership.chat_channel_id = chat_channels.id").Where("chat_channel_membership.user_id = ?", user.ID).Find(&channels)
 
-
 	leaveServer := ChannelJoin{
 		UserID:    user.ID.String(),
 		Username:  user.Username,
