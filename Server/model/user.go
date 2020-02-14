@@ -10,21 +10,18 @@ import (
 //User represented in the database
 type User struct {
 	Base
-	FirstName            string
-	LastName             string
-	Username             string
-	PictureID            int
-	Email                string
-	HashedPassword       string
-	Bearer               string
-	Channels             []*ChatChannel `gorm:"many2many:chat_channel_membership"`
-	GamesPlayed          int64          `gorm:"default:0"`
-	WinRatio             float64        `gorm:"default:0.0"`
-	AvgGameDuration      int64          `gorm:"default:0"`
-	TimePlayed           int64          `gorm:"default:0"`
-	ConnectionHistory    []Connection   `gorm:"foreignkey:userID"`
-	MatchesPlayedHistory []MatchPlayed  `gorm:"foreignkey:userID"`
-	Achievements         []Achievement  `gorm:"foreignkey:userID"`
+	FirstName       string
+	LastName        string
+	Username        string
+	PictureID       int
+	Email           string
+	HashedPassword  string
+	Bearer          string
+	Channels        []*ChatChannel `gorm:"many2many:chat_channel_membership"`
+	GamesPlayed     int64          `gorm:"default:0"`
+	WinRatio        float64        `gorm:"default:0.0"`
+	AvgGameDuration int64          `gorm:"default:0"`
+	TimePlayed      int64          `gorm:"default:0"`
 }
 
 //Session represents a session in the database

@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 )
 
 //Connection represents the information of a connection
@@ -17,9 +16,9 @@ type Connection struct {
 type MatchPlayed struct {
 	Base
 	UserID        uuid.UUID
-	PlayerNames   pq.StringArray `gorm:"type:varchar(20)[]"` // a voir si on laisse le tableau de nom ou si on met un tableau de joueur (moins couteux string)
 	MatchDuration int64
 	WinnerName    string
+	//PlayerNames   pq.StringArray `gorm:"type:varchar(20)[]"` a voir si pertinents car complique en Gorm et couteux en operation
 }
 
 // Achievement represent an achievement that can be obtained by a player

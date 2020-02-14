@@ -29,6 +29,7 @@ func (a *Server) setRouters() {
 	a.Get("/chat/channels/{id}", a.handleRequest(api.GetChatChannelID))
 	a.Get("/chat/messages/{channelID}", a.handleRequest(api.GetChatMessages))
 	a.Get("/stats/", a.handleRequest(api.GetStats))
+	a.Get("/stats/history", a.handleRequest(api.GetHistory))
 
 }
 
