@@ -1,25 +1,24 @@
 package com.log3900.chat.Channel
 
-import com.log3900.chat.ChatManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-import com.log3900.user.User
-import com.log3900.user.UserRepository
+import com.log3900.user.Account
+import com.log3900.user.AccountRepository
 import org.greenrobot.eventbus.EventBus
 
 class ChannelManager {
-    private var user: User
+    private var account: Account
     lateinit var activeChannel: Channel
     lateinit var availableChannels: ArrayList<Channel>
     lateinit var joinedChannels: ArrayList<Channel>
 
     constructor() {
-        user = UserRepository.getUser()
+        account = AccountRepository.getAccount()
     }
 
     fun init() {
-        joinedChannels = ChannelRepository.instance?.getJoinedChannels(user.sessionToken)?.blockingGet()!!
-        availableChannels = ChannelRepository.instance?.getAvailableChannels(user.sessionToken)?.blockingGet()!!
+        joinedChannels = ChannelRepository.instance?.getJoinedChannels(account.sessionToken)?.blockingGet()!!
+        availableChannels = ChannelRepository.instance?.getAvailableChannels(account.sessionToken)?.blockingGet()!!
         activeChannel = joinedChannels.find {
             it.ID.toString() == "00000000-0000-0000-0000-000000000000"
         }!!
@@ -27,11 +26,14 @@ class ChannelManager {
 
     fun changeSubscriptionStatus(channel: Channel) {
         var changeToGeneral = false
+        if (channel.ID.toString() == "00000000-0000-0000-0000-000000000000") {
+            ChannelRepository.instance?.createChannel("BLyat")
+            return
+        }
+
         if (activeChannel == channel) {
             changeToGeneral = true
         }
-
-
 
         if (availableChannels.contains(channel)) {
             ChannelRepository.instance?.subscribeToChannel(channel)
@@ -49,6 +51,10 @@ class ChannelManager {
             }!!
             EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
         }
+    }
+
+    fun createChannel(channelName: String) {
+        ChannelRepository.instance?.createChannel(channelName)
     }
 
 

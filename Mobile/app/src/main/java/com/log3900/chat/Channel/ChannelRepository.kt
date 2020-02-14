@@ -6,22 +6,32 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.log3900.chat.ChatRestService
+import com.log3900.chat.Message.MessageRepository
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
+import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.utils.format.UUIDUtils
+import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayList
 
 class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
@@ -128,6 +138,21 @@ class ChannelRepository : Service() {
         SocketService.instance?.sendJsonMessage(Event.CREATE_CHANNEL, dataObject.toString())
     }
 
+    private fun onChannelCreated(message: Message) {
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+        })
+        val channelCreated = moshi.unpack<ChannelCreatedMessage>(message.data)
+        val channel = Channel(channelCreated.channelID, channelCreated.name, arrayOf())
+        channelCache.addAvailableChannel(Channel(channelCreated.channelID, channelCreated.name, arrayOf()))
+        EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_CREATED, channel))
+    }
+
+    private fun onChannelDeleted(message: Message) {
+
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -140,7 +165,14 @@ class ChannelRepository : Service() {
 
         Thread(Runnable {
             Looper.prepare()
-
+            socketService?.subscribeToMessage(Event.CHANNEL_CREATED, Handler {
+                onChannelCreated(it.obj as Message)
+                true
+            })
+            socketService?.subscribeToMessage(Event.CHANNEL_DELETED, Handler {
+                onChannelDeleted(it.obj as Message)
+                true
+            })
             Looper.loop()
         }).start()
     }
@@ -156,3 +188,7 @@ class ChannelRepository : Service() {
         fun getService(): ChannelRepository = this@ChannelRepository
     }
 }
+
+class ChannelCreatedMessage(@Json(name = "ChannelName") var name: String, @Json(name = "ChannelID") var channelID: UUID,
+                                  @Json(name = "Username") var username: String, @Json(name = "UserID") var userID: UUID,
+                                  @Json(name = "Timestamp") var timestamp: Date) {}

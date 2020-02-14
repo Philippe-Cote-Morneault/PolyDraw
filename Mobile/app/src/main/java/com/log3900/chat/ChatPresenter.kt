@@ -10,12 +10,11 @@ import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
-import com.log3900.user.UserRepository
+import com.log3900.user.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 class ChatPresenter : Presenter {
     private var chatView: ChatView
@@ -107,7 +106,7 @@ class ChatPresenter : Presenter {
     private fun handleNewMessage(message: Message) {
         val receivedMessage = message.obj as ReceivedMessage
         chatView.notifyNewMessage()
-        if (UserRepository.getUser().username != receivedMessage.senderName) {
+        if (AccountRepository.getAccount().username != receivedMessage.senderName) {
             chatView.playNewMessageNotification()
         }
     }

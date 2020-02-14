@@ -7,6 +7,7 @@ import android.os.Message
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -20,13 +21,15 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.login.LoginActivity
+import com.log3900.profile.ProfileActivity
+import com.log3900.profile.ProfileFragment
 import com.log3900.socket.Event
 import com.log3900.socket.SocketEvent
 
 
 import com.log3900.socket.SocketService
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -65,6 +68,19 @@ class MainActivity : AppCompatActivity() {
                 R.id.logoutButton -> logout()
             }
             true
+        }
+
+        // Header
+        val header = navView.getHeaderView(0)
+        val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
+        avatar.setOnClickListener { view ->
+            val fragmentManager = supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val fragment = ProfileFragment()
+            fragmentTransaction.add(R.id.nav_host_fragment, fragment)
+            fragmentTransaction.commit()
+//            intent = Intent(this, ProfileActivity::class.java)
+//            startActivity(intent)
         }
 
     }
