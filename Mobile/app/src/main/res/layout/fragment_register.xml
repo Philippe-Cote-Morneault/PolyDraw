@@ -145,8 +145,8 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="@string/back"
-                app:icon="@drawable/ic_chevron_right_black"
-                app:iconGravity="end"
+                app:icon="@drawable/ic_chevron_left_black_24dp"
+                app:iconGravity="start"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
             />
