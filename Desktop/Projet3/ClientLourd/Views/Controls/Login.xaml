@@ -73,7 +73,9 @@
             </StackPanel>
 
             <!--Login button-->
-            <Button Grid.Row="4"
+            <StackPanel Grid.Row="4">
+                
+            <Button 
                     IsDefault="True"
                     Margin="40 0 40 0"
                     IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}"
@@ -87,6 +89,10 @@
                 </Button.CommandParameter>
                 Login
             </Button>
+                <TextBlock HorizontalAlignment="Center" >
+                    <Hyperlink Command="{Binding SignUpCommand}">Register now !</Hyperlink>
+                </TextBlock>
+            </StackPanel>
 
         </Grid>
     </materialDesign:Card>

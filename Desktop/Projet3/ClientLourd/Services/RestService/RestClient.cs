@@ -63,6 +63,29 @@ namespace ClientLourd.Services.RestService
             }
         }
 
+        public async Task<Dictionary<string, object>> Register(PrivateProfileInfo informations, string password)
+        {
+            _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
+            RestRequest request = new RestRequest("auth/register", Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(new {Username = informations.Username, FirstName=informations.FirstName, LastName= informations.LastName, Email=informations.Email, Password = password, PictureID=1});
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    _sessionToken = data["SessionToken"];
+                    return data;
+                case HttpStatusCode.Conflict:
+                    throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.BadRequest:
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+
         public async Task<string> PutProfile(object obj)
         {
             RestRequest request = new RestRequest("users", Method.PUT);

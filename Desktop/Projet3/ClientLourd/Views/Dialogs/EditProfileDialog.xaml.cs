@@ -38,7 +38,6 @@ namespace ClientLourd.Views.Dialogs
             PrivateProfileInfoClone = new PrivateProfileInfo(pvInfo);
 
             InitializeComponent();
-            DataContext = this;
 
             // Password junk
             (PasswordField as PasswordBox).Password = PasswordJunk;

@@ -92,6 +92,41 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        private RelayCommand<object> _signUpCommand;
+
+        public ICommand SignUpCommand
+        {
+            get
+            {
+                return _signUpCommand ?? (_signUpCommand =
+                           new RelayCommand<object>(param => SignUp()));
+            }
+        }
+
+        private async void SignUp(PrivateProfileInfo infos = null)
+        {
+            if (infos == null)
+            {
+                infos = new PrivateProfileInfo();
+            }
+            var dialog = new RegisterDialog(infos);
+            var result = await DialogHost.Show(dialog);
+            if (bool.Parse(result.ToString()))
+            {
+                try
+                {
+                    dynamic data = await RestClient.Register(infos, dialog.PasswordField1.Password);
+                    StartLogin(infos.Username, data);
+                }
+                catch(Exception e)
+                {
+                    await DialogHost.Show(new ClosableErrorDialog(e));
+                    IsLoggedIn = false;
+                    SignUp(infos);
+                }
+            }
+
+        }
 
         public ICommand LoginCommand
         {
@@ -102,6 +137,18 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        private async Task StartLogin(string username, dynamic data)
+        {
+            Tokens = new TokenPair()
+            {
+                SessionToken = data["SessionToken"],
+                Bearer = data["Bearer"],
+            };
+            User = new User(username, data["UserID"]);
+            await SocketClient.InitializeConnection(Tokens.SessionToken);
+            OnLogin(this);
+        }
+
         async Task Authentify(object[] param)
         {
             string username = (string) param[0];
@@ -109,14 +156,7 @@ namespace ClientLourd.ViewModels
             try
             {
                 dynamic data = await RestClient.Login(username, password);
-                Tokens = new TokenPair()
-                {
-                    SessionToken = data["SessionToken"],
-                    Bearer = data["Bearer"],
-                };
-                User = new User(username, data["UserID"]);
-                await SocketClient.InitializeConnection(Tokens.SessionToken);
-                OnLogin(this);
+                await StartLogin(username, data);
             }
             catch (Exception e)
             {

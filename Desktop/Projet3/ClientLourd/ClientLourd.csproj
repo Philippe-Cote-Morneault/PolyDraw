@@ -137,6 +137,7 @@
     <Compile Include="Models\NonBindable\NetworkInformations.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
     <Compile Include="Models\NonBindable\TokenPair.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DateService\Timestamp.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
@@ -211,6 +212,9 @@
     <Compile Include="Views\Dialogs\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\RegisterDialog.xaml.cs">
+      <DependentUpon>RegisterDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
@@ -249,6 +253,7 @@
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
     <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
+    <Page Include="Views\Dialogs\RegisterDialog.xaml" />
     <Page Include="Views\Windows\ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

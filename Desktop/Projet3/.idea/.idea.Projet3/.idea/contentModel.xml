@@ -58,6 +58,7 @@
         </e>
         <e p="packages.config" t="Include" />
         <e p="Properties" t="Include">
+          <e p="Annotations.cs" t="Include" />
           <e p="AssemblyInfo.cs" t="Include" />
           <e p="Resources.Designer.cs" t="Include" />
           <e p="Resources.resx" t="Include" />
@@ -164,6 +165,8 @@
             <e p="InputDialog.xaml.cs" t="Include" />
             <e p="MessageDialog.xaml" t="Include" />
             <e p="MessageDialog.xaml.cs" t="Include" />
+            <e p="RegisterDialog.xaml" t="Include" />
+            <e p="RegisterDialog.xaml.cs" t="Include" />
           </e>
           <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />

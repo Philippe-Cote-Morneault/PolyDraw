@@ -10,7 +10,13 @@ namespace ClientLourd.Models.Bindable
     {
         public PrivateProfileInfo()
         {
-
+            ID = "";
+            FirstName = "";
+            LastName = "";
+            Username = "";
+            CreatedAt = "";
+            Email = "";
+            UpdatedAt = "";
         }
 
 
