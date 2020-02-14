@@ -107,9 +107,13 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
                 enableUpdateIfAllValid()
             }
             setOnFocusChangeListener { _, _ ->
-                if (text.toString() == resources.getString(R.string.password_asterisks))
+                val allAsterisks = resources.getString(R.string.password_asterisks)
+                if (text.toString() == allAsterisks) {
                     text?.clear()
-            }
+                }
+                else if (text.toString().isEmpty()) {
+                    setText(allAsterisks)
+                }            }
         }
 
         emailInput = root.findViewById<TextInputEditText>(R.id.email_input).apply {
