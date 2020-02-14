@@ -23,7 +23,7 @@ class MessageManager {
     }
 
     fun getMessages(channel: Channel): LinkedList<ReceivedMessage> {
-        return messageRepository.getChannelMessages(channel.ID.toString(), UserRepository.getUser().sessionToken, 0, 100)
+        return messageRepository.getChannelMessages(channel.ID, UserRepository.getUser().sessionToken, 0, 100)
     }
 
     fun sendMessage(channelID:UUID, message: String) {

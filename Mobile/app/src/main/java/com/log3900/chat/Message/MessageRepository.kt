@@ -34,25 +34,22 @@ class MessageRepository : Service() {
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
 
     // Data
-    private val cachedMessages: ConcurrentHashMap<UUID, LinkedList<ReceivedMessage>> = ConcurrentHashMap()
+    private val messageCache: MessageCache = MessageCache()
 
     companion object {
         var instance: MessageRepository? = null
     }
 
-    fun getChannelMessages(channelID: String, sessionToken: String, startIndex: Int, endIndex: Int): LinkedList<ReceivedMessage> {
+    fun getChannelMessages(channelID: UUID, sessionToken: String, startIndex: Int, endIndex: Int): LinkedList<ReceivedMessage> {
         var messages: LinkedList<ReceivedMessage>? = null
         if (true) {
-            if (!cachedMessages.containsKey(UUID.fromString(channelID))) {
-                cachedMessages[UUID.fromString(channelID)] = LinkedList<ReceivedMessage>()
-            }
-            messages = cachedMessages[UUID.fromString(channelID)]
+            messages = messageCache.getMessages(channelID)
             println("repository messages = " + messages)
         } else {
             val call = ChatRestService.service.getChannelMessages(
                 sessionToken,
                 "EN",
-                channelID,
+                channelID.toString(),
                 startIndex,
                 endIndex
             )
@@ -111,7 +108,6 @@ class MessageRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-        cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")] = LinkedList()
 
         Thread(Runnable {
             Looper.prepare()
@@ -142,10 +138,7 @@ class MessageRepository : Service() {
     }
 
     private fun addMessageToCache(message: ReceivedMessage) {
-        if (!cachedMessages.containsKey(message.channelID)) {
-            cachedMessages[message.channelID] = LinkedList<ReceivedMessage>()
-        }
-        cachedMessages[message.channelID]?.addLast(message)
+        messageCache.appendMessage(message)
     }
 
     private fun notifySubscribers(event: Event, message: android.os.Message) {
