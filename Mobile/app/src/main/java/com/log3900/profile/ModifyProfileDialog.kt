@@ -11,10 +11,11 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
+import com.log3900.shared.ui.ProfileView
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository
 
-class ModifyProfileDialog : DialogFragment() {
+class ModifyProfileDialog : DialogFragment(), ProfileView {
     lateinit var modifyProfilePresenter: ModifyProfilePresenter
 
     lateinit var originalAccount: Account
@@ -160,19 +161,19 @@ class ModifyProfileDialog : DialogFragment() {
                     && modifyProfilePresenter.validateLastname(lastname)
     }
 
-    fun setUsernameError(error: String?) {
+    override fun setUsernameError(error: String?) {
         usernameInput.error = error
     }
-    fun setPasswordError(error: String?) {
+    override fun setPasswordError(error: String?) {
         passwordInput.error = error
     }
-    fun setEmailError(error: String?) {
+    override fun setEmailError(error: String?) {
         emailInput.error = error
     }
-    fun setFirstnameError(error: String?) {
+    override fun setFirstnameError(error: String?) {
         firstnameInput.error = error
     }
-    fun setLastnameError(error: String?) {
+    override fun setLastnameError(error: String?) {
         lastnameInput.error = error
     }
 
