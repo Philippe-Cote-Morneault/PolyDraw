@@ -49,6 +49,7 @@
                 <e p="ErrorDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
+                <e p="RegisterDialog.g.cs" t="Include" />
               </e>
               <e p="Windows" t="Include">
                 <e p="ChatWindow.g.cs" t="Include" />
@@ -73,6 +74,9 @@
           <e p="WhiteLogo.png" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="CredentialsService" t="Include">
+            <e p="CredentialManager.cs" t="Include" />
+          </e>
           <e p="DateService" t="Include">
             <e p="Timestamp.cs" t="Include" />
           </e>
@@ -97,6 +101,7 @@
             <e p="RelayCommand.cs" t="Include" />
           </e>
           <e p="Constants" t="Include">
+            <e p="ApplicationInformations.cs" t="Include" />
             <e p="Enums.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">

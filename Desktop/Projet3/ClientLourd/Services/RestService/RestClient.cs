@@ -62,6 +62,29 @@ namespace ClientLourd.Services.RestService
                     throw new RestException(response.ErrorMessage);
             }
         }
+        
+        public async Task<Dictionary<string, object>> Bearer(string username, string bearer)
+        {
+            _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
+            RestRequest request = new RestRequest("auth/bearer", Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(new {username = username, Bearer=bearer});
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    _sessionToken = data["SessionToken"];
+                    return data;
+                case HttpStatusCode.Conflict:
+                    throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.BadRequest:
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
 
         public async Task<Dictionary<string, object>> Register(PrivateProfileInfo informations, string password)
         {
