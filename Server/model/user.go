@@ -17,7 +17,6 @@ type User struct {
 	Email           string
 	HashedPassword  string
 	Bearer          string
-	Channels        []*ChatChannel `gorm:"many2many:chat_channel_membership"`
 	GamesPlayed     int64          `gorm:"default:0"`
 	WinRatio        float64        `gorm:"default:0.0"`
 	AvgGameDuration int64          `gorm:"default:0"`

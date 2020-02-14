@@ -156,7 +156,7 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Join: User is already joined to the channel")
 				}
 			} else {
-				log.Printf("[Messenger] -> Join: Channel UUID not found")
+				log.Printf("[Messenger] -> Join: Channel UUID not found, %s", channelID.String())
 			}
 		} else {
 			log.Printf("[Messenger] -> Join: Invalid channel UUID")
@@ -257,11 +257,11 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 func (h *handler) handleConnect(socketID uuid.UUID) {
 	h.channelsConnections[uuid.Nil][socketID] = true
 
-	userID, _ := auth.GetUserID(socketID)
+	user, _ := auth.GetUser(socketID)
 
-	var user model.User
-	model.DB().Model(&user).Related(&model.ChatChannel{}, "Channels")
-	model.DB().Preload("Channels").Where("id = ?", userID).First(&user)
+	var channels []model.ChatChannel
+
+	model.DB().Joins("left join chat_channel_membership on chat_channel_membership.chat_channel_id = chat_channels.id").Where("chat_channel_membership.user_id = ?", user.ID).Find(&channels)
 	joinServer := ChannelJoin{
 		UserID:    user.ID.String(),
 		Username:  user.Username,
@@ -279,18 +279,18 @@ func (h *handler) handleConnect(socketID uuid.UUID) {
 	}
 
 	//Update the cache
-	for _, channel := range user.Channels {
+	for _, channel := range channels {
 		h.channelsConnections[channel.ID][socketID] = true
 	}
 }
 
 func (h *handler) handleDisconnect(socketID uuid.UUID) {
 	delete(h.channelsConnections[uuid.Nil], socketID)
-	userID, _ := auth.GetUserID(socketID)
+	user, _ := auth.GetUser(socketID)
 
-	var user model.User
-	model.DB().Model(&user).Related(&model.ChatChannel{}, "Channels")
-	model.DB().Preload("Channels").Where("id = ?", userID).First(&user)
+	var channels []model.ChatChannel
+	model.DB().Joins("left join chat_channel_membership on chat_channel_membership.chat_channel_id = chat_channels.id").Where("chat_channel_membership.user_id = ?", user.ID).Find(&channels)
+
 
 	leaveServer := ChannelJoin{
 		UserID:    user.ID.String(),
@@ -309,7 +309,7 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 	}
 
 	//Update the cache
-	for _, channel := range user.Channels {
+	for _, channel := range channels {
 		delete(h.channelsConnections[channel.ID], socketID)
 	}
 }
