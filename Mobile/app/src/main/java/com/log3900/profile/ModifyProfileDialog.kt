@@ -76,6 +76,7 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
 
         val updatedAccount = Account(
             usernameInput.text.toString(),
+            0,  // TODO: Change
             emailInput.text.toString(),
             firstnameInput.text.toString(),
             lastnameInput.text.toString(),

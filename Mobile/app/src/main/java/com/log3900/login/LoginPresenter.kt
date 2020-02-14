@@ -71,6 +71,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
         // TODO: Get actual info
         AccountRepository.createAccount(Account(
             username.toLowerCase(),
+            0,
             "dummy@email.com",
             "Firstname",
             "Last-Name",
