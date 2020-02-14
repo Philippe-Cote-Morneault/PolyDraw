@@ -6,19 +6,39 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:extensions="clr-namespace:ClientLourd.Utilities.Extensions"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid Height="700" Width="600">
-        <TextBlock FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center">Connection History Works!</TextBlock>
-        
-        <ListView ItemsSource="{Binding Path=MyList, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" Width="120" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Age" Width="50" DisplayMemberBinding="{Binding Age}" />
-                    <GridViewColumn Header="Mail" Width="150" DisplayMemberBinding="{Binding Mail}" />
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button Content="Add to list" Command="{Binding AddToList}"></Button>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="80*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Name</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Age</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Email</TextBlock>
+        <Separator Grid.Row="1" Grid.ColumnSpan="3" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+
+
+
+
+        <ScrollViewer Grid.ColumnSpan="3" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
+            <ListView ItemsSource="{Binding Path=MyList, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding Age}" />
+                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding Mail}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
     </Grid>
 </UserControl>

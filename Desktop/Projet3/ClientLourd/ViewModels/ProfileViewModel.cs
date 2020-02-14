@@ -93,10 +93,15 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            await DialogHost.Show(new ConnectionHistoryDialog(), (object o, DialogClosingEventArgs closingEventHandler) =>
-            {
-                (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
-            });
+            dynamic data = await RestClient.GetStats(0, 100);
+            var x = 1;
+
+            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog();
+
+            await DialogHost.Show(connectionDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
+                {
+                    (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+                });
         }
 
 

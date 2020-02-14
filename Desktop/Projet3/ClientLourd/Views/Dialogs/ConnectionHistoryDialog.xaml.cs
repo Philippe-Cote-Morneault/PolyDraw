@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Timers;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -27,11 +28,13 @@ namespace ClientLourd.Views.Dialogs
     public partial class ConnectionHistoryDialog : UserControl, INotifyPropertyChanged
     {
         private LinkedList<Employee> _myList;
+        private Timer _scrollToBottomTimer;
 
         public ConnectionHistoryDialog()
         {
 
             (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
+
             MyList = new LinkedList<Employee>();
             MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
             MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
@@ -39,10 +42,64 @@ namespace ClientLourd.Views.Dialogs
             MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
 
             MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+
+            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
+            MyList = new LinkedList<Employee>(MyList);
 
             InitializeComponent();
-
+            _scrollToBottomTimer = new Timer(400);
+            _scrollToBottomTimer.Elapsed += ScrollToBottom;
+            _scrollToBottomTimer.Start();
         }
+
+        public void ScrollToBottom(object sender, ElapsedEventArgs e)
+        {
+            _scrollToBottomTimer.Stop();
+            Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                ScrollViewerElement.ScrollToBottom();
+            });
+            
+        }
+
 
         public LinkedList<Employee> MyList
         {
@@ -57,6 +114,27 @@ namespace ClientLourd.Views.Dialogs
             }
         }
 
+        private void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ScrollViewer scroll = sender as ScrollViewer;
+            if (scroll == null)
+            {
+                throw new InvalidOperationException(
+                    "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
+            }
+            if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
+            {
+                LinkedList<Employee> linkl = new LinkedList<Employee>();
+                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
+                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
+                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
+                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
+                AddLinkedList(linkl);
+                scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
+            }
+
+        }
+
         private RelayCommand<object> _addToList;
 
         public ICommand AddToList
@@ -66,7 +144,7 @@ namespace ClientLourd.Views.Dialogs
 
         private void AddToListCommand(object o)
         {
-
+            ScrollViewerElement.ScrollToBottom();
             LinkedList<Employee> secondList = new LinkedList<Employee>(MyList);
             
             foreach (Employee employee in secondList)
@@ -87,6 +165,18 @@ namespace ClientLourd.Views.Dialogs
             MyList = new LinkedList<Employee>(MyList);
         }
 
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer scrollviewer = sender as ScrollViewer;
+            
+            
+                if (e.Delta > 0)    
+                    scrollviewer.PageUp();
+                else
+                    scrollviewer.PageDown();
+                e.Handled = true;
+            
+        }
 
 
 
