@@ -17,7 +17,8 @@ namespace ClientLourd.Models.NonBindable
 
         public NetworkInformations()
         {
-            Config = 0;
+            //Dev as default
+            Config = 1;
         }
 
         public int Config { get; set; }

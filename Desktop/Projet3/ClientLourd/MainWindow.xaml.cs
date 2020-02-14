@@ -70,6 +70,7 @@ namespace ClientLourd
             MenuToggleButton.IsChecked = false;
             ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();
+            DevConfigButton.IsChecked = true;
         }
 
         /// <summary>
