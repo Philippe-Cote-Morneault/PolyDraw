@@ -22,6 +22,7 @@ class ChatPresenter : Presenter {
     private lateinit var messageRepository: MessageRepository
     private lateinit var chatManager: ChatManager
     private var keyboardOpened: Boolean = false
+    private var loadingMessages: Boolean = false
 
     constructor(chatView: ChatView) {
         this.chatView = chatView
@@ -71,6 +72,22 @@ class ChatPresenter : Presenter {
             keyboardOpened = opened
             if (keyboardOpened) {
                 chatView.scrollMessage()
+            }
+        }
+    }
+
+    fun scrolledToPositions(firstPosition: Int, lastPosition: Int, scrollDirection: Int) {
+        if (scrollDirection < 0) {
+            if (firstPosition < 25 && !loadingMessages) {
+                loadingMessages = true
+                chatManager.loadMoreMessages().subscribe(
+                    {
+                        loadingMessages = false
+                    },
+                    {
+                    }
+                )
+                loadingMessages = false
             }
         }
     }

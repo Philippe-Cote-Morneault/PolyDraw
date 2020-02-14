@@ -70,9 +70,7 @@ class ChatManager : Service() {
         return channelManager?.activeChannel!!
     }
 
-    fun getCurrentChannelMessages() = Single.create<LinkedList<ReceivedMessage>> {
-        it.onSuccess(messageManager?.getMessages(channelManager?.activeChannel!!)!!)
-    }
+    fun getCurrentChannelMessages(): Single<LinkedList<ReceivedMessage>> = messageManager?.getMessages(channelManager?.activeChannel!!)!!
 
     fun sendMessage(message: String) {
         messageManager?.sendMessage(channelManager?.activeChannel?.ID!!, message)
@@ -90,6 +88,10 @@ class ChatManager : Service() {
         channelManager?.changeSubscriptionStatus(channel)
     }
 
+    fun loadMoreMessages() = Completable.create {
+        messageManager?.loadMoreMessages()
+    }
+
     fun createChannel(channelName: String) = Completable.create {
         val res = channelManager?.createChannel(channelName)!!
         if (res) {
@@ -102,6 +104,7 @@ class ChatManager : Service() {
     fun deleteChannel(channel: Channel) {
         channelManager?.deleteChannel(channel)
     }
+
 
     private fun setReadyState() {
         ready = true

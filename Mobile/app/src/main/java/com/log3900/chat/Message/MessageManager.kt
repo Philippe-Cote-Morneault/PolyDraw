@@ -5,6 +5,7 @@ import com.log3900.chat.Channel.Channel
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.user.UserRepository
+import io.reactivex.Single
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -22,12 +23,16 @@ class MessageManager {
         })
     }
 
-    fun getMessages(channel: Channel): LinkedList<ReceivedMessage> {
-        return messageRepository.getChannelMessages(channel.ID, UserRepository.getUser().sessionToken, 0, 100)
+    fun getMessages(channel: Channel): Single<LinkedList<ReceivedMessage>> {
+        return messageRepository.getChannelMessages(channel.ID)
     }
 
     fun sendMessage(channelID:UUID, message: String) {
         messageRepository.sendMessage(SentMessage(message, channelID))
+    }
+
+    fun loadMoreMessages() {
+        messageRepository.loadMoreMessages(25)
     }
 
     private fun onMessageReceived(message: ReceivedMessage) {
