@@ -30,6 +30,7 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
             val modifiedUserJson = JsonObject().apply {
                 addProperty("Username", updatedAccount.username)
                 addProperty("Password", password)
+                addProperty("PictureID", updatedAccount.pictureID)
                 addProperty("Email", updatedAccount.email)
                 addProperty("FirstName", updatedAccount.firstname)
                 addProperty("LastName", updatedAccount.lastname)
@@ -37,6 +38,7 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
             val call = ProfileRestService.service.modifyProfile(updatedAccount.sessionToken, "EN", modifiedUserJson)
             call.enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
+                    println("${response.body()}")
                     if (response.isSuccessful) {
                         it.onSuccess(true)
                     } else {
