@@ -33,6 +33,8 @@ class RegisterFragment : Fragment(), ProfileView {
     }
 
     fun setUpUi(root: View) {
+        registerBtn = root.findViewById(R.id.register_button)
+
         usernameInput = root.findViewById<TextInputEditText>(R.id.username_input).apply {
             doAfterTextChanged {
                 registerPresenter.validateUsername(text.toString())
