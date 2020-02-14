@@ -86,7 +86,7 @@ class ChatPresenter : Presenter {
                 onChannelChanged(event.data as Channel)
             }
             EventType.RECEIVED_MESSAGE -> {
-
+                onNewMessage(event.data as ReceivedMessage)
             }
         }
     }
