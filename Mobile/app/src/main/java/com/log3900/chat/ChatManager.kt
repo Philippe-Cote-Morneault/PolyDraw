@@ -49,6 +49,7 @@ class ChatManager : Service() {
         Thread(Runnable {
             Looper.prepare()
             channelManager?.init()
+            messageManager?.init()
             setActiveChannel(channelManager?.activeChannel!!)
             setReadyState()
             Looper.loop()
