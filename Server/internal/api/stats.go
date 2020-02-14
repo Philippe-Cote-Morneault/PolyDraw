@@ -121,17 +121,17 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 // TODO: A supprimer
 func addJunk(userID uuid.UUID) {
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 100; i++ {
 		var co model.Connection = model.Connection{ConnectedAt: int64(i), DeconnectedAt: int64(i * i), UserID: userID}
 		model.DB().Create(&co)
 	}
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 100; i++ {
 		var ach model.Achievement = model.Achievement{TropheeName: "tropheeName", Description: "description", ObtainingDate: int64(i), UserID: userID}
 		model.DB().Create(&ach)
 	}
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 100; i++ {
 		var ach model.MatchPlayed = model.MatchPlayed{MatchDuration: int64(i), WinnerName: "allan", UserID: userID}
 		model.DB().Create(&ach)
 	}
