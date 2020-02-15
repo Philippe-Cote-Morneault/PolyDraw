@@ -9,9 +9,9 @@ import (
 //Connection represents the information of a connection
 type Connection struct {
 	Base
-	UserID        uuid.UUID
-	ConnectedAt   int64
-	DeconnectedAt int64
+	UserID         uuid.UUID
+	ConnectedAt    int64
+	DisconnectedAt int64
 }
 
 //MatchPlayed represents the summary of the game
@@ -57,6 +57,6 @@ func UpdateStats(userID uuid.UUID, matchPlayed *MatchPlayed) {
 func UpdateDeconnection(userID uuid.UUID) {
 	var c Connection
 	DB().Model(&Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
-	DB().Model(&Connection{}).Where("id = ?", c.ID).Update("deconnected_at", time.Now().Unix())
+	DB().Model(&Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
 
 }

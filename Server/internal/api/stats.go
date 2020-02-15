@@ -122,7 +122,7 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 func addJunk(userID uuid.UUID) {
 
 	for i := 0; i < 100; i++ {
-		var co model.Connection = model.Connection{ConnectedAt: int64(i), DeconnectedAt: int64(i * i), UserID: userID}
+		var co model.Connection = model.Connection{ConnectedAt: int64(i), DisconnectedAt: int64(i * i), UserID: userID}
 		model.DB().Create(&co)
 	}
 
