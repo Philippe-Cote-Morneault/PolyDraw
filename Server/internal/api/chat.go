@@ -23,11 +23,11 @@ type userResponse struct {
 }
 
 type messageResponse struct {
-	ChannelID string
-	UserID    string
-	Username  string
-	Timestamp int64
-	Message   string
+	ChannelID  string
+	SenderID   string
+	SenderName string
+	Timestamp  int64
+	Message    string
 }
 type messageTotalResponse struct {
 	Messages      *[]messageResponse
@@ -143,11 +143,11 @@ func GetChatMessages(w http.ResponseWriter, r *http.Request) {
 			messagesResponse := make([]messageResponse, len(messages))
 			for i := range messages {
 				messagesResponse[i] = messageResponse{
-					UserID:    messages[i].UserID.String(),
-					Username:  messages[i].User.Username,
-					ChannelID: messages[i].ChannelID.String(),
-					Timestamp: messages[i].Timestamp,
-					Message:   messages[i].Message,
+					SenderID:   messages[i].UserID.String(),
+					SenderName: messages[i].User.Username,
+					ChannelID:  messages[i].ChannelID.String(),
+					Timestamp:  messages[i].Timestamp,
+					Message:    messages[i].Message,
 				}
 			}
 			response := messageTotalResponse{
