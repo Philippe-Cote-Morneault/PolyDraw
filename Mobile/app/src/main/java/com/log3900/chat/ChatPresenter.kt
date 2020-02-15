@@ -10,6 +10,7 @@ import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.user.UserRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -19,10 +20,11 @@ class ChatPresenter : Presenter {
     private lateinit var messageRepository: MessageRepository
     private lateinit var chatManager: ChatManager
     private var keyboardOpened: Boolean = false
-    private var loadingMessages: Boolean = false
+    private var loadingMessages: Boolean
 
     constructor(chatView: ChatView) {
         this.chatView = chatView
+        loadingMessages = false
         if (!(ChatManager.instance?.ready!!)) {
             val progressDialog = ProgressDialog()
             chatView.showProgressDialog(progressDialog)
@@ -41,7 +43,18 @@ class ChatPresenter : Presenter {
 
     private fun init() {
         chatManager = ChatManager.instance!!
-        chatView.setReceivedMessages(chatManager?.getCurrentChannelMessages().blockingGet())
+        chatManager.getCurrentChannelMessages()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    chatView.setReceivedMessages(it)
+                    chatView.scrollMessage()
+                },
+                {
+
+                }
+            )
         chatView.setCurrentChannnelName(ChatManager.instance?.getActiveChannel()?.name!!)
         messageRepository = MessageRepository.instance!!
 
@@ -84,7 +97,6 @@ class ChatPresenter : Presenter {
                     {
                     }
                 )
-                loadingMessages = false
             }
         }
     }
