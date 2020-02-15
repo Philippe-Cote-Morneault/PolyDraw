@@ -203,6 +203,9 @@
     <Compile Include="Views\Controls\Profile.xaml.cs">
       <DependentUpon>Profile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\AvatarSelectionDialog.xaml.cs">
+      <DependentUpon>AvatarSelectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ClosableErrorDialog.xaml.cs">
       <DependentUpon>ClosableErrorDialog.xaml</DependentUpon>
     </Compile>
@@ -260,6 +263,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\AvatarSelectionDialog.xaml" />
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
     <Page Include="Views\Dialogs\ConfirmationDialog.xaml" />
     <Page Include="Views\Dialogs\ConnectionHistoryDialog.xaml">
@@ -319,8 +323,25 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\avatar.jpg" />
+    <Resource Include="Resources\Avatar\1.jpg" />
+    <Resource Include="Resources\Avatar\10.jpg" />
+    <Resource Include="Resources\Avatar\11.jpg" />
+    <Resource Include="Resources\Avatar\12.jpg" />
+    <Resource Include="Resources\Avatar\13.jpg" />
+    <Resource Include="Resources\Avatar\14.jpg" />
+    <Resource Include="Resources\Avatar\15.jpg" />
+    <Resource Include="Resources\Avatar\2.jpg" />
+    <Resource Include="Resources\Avatar\3.jpg" />
+    <Resource Include="Resources\Avatar\4.jpg" />
+    <Resource Include="Resources\Avatar\5.jpg" />
+    <Resource Include="Resources\Avatar\6.jpg" />
+    <Resource Include="Resources\Avatar\7.jpg" />
+    <Resource Include="Resources\Avatar\8.jpg" />
+    <Resource Include="Resources\Avatar\9.jpg" />
+    <Resource Include="Resources\Avatar\16.jpg" />
     <Content Include="Resources\poly.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

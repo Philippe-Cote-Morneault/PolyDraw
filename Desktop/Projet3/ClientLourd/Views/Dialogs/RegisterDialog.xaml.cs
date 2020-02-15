@@ -3,8 +3,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ClientLourd.Annotations;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Utilities.Commands;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -14,6 +17,7 @@ namespace ClientLourd.Views.Dialogs
         public RegisterDialog(PrivateProfileInfo infos)
         {
             PrivateProfileInfo = infos;
+            Avatar = "";
             InitializeComponent();
         }
 
@@ -21,6 +25,8 @@ namespace ClientLourd.Views.Dialogs
         {
             get { return CheckInvalidPassword(); }
         }
+
+        public string Avatar { get; set; }
 
         private bool CheckInvalidPassword()
         {
@@ -45,5 +51,22 @@ namespace ClientLourd.Views.Dialogs
         {
             OnPropertyChanged(nameof(IsPasswordInvalid));
         }
+
+        RelayCommand<Channel> _changeAvatarCommand;
+
+        public ICommand ChangeAvatarCommand
+        {
+            get
+            {
+                return _changeAvatarCommand ??
+                       (_changeAvatarCommand = new RelayCommand<Channel>(channel => ChangeAvatar()));
+            }
+        }
+
+        private async void ChangeAvatar()
+        {
+            await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
+        }
+
     }
 }

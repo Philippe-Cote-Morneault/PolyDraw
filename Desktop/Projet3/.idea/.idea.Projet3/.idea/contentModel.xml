@@ -20,6 +20,8 @@
             <e p="ModelBase.cs" t="Include" />
             <e p="PrivateProfileInfo.cs" t="Include" />
             <e p="SessionInformations.cs" t="Include" />
+            <e p="Stats.cs" t="Include" />
+            <e p="StatsHistory.cs" t="Include" />
             <e p="User.cs" t="Include" />
           </e>
           <e p="NonBindable" t="Include">
@@ -44,9 +46,13 @@
                 <e p="Profile.g.cs" t="Include" />
               </e>
               <e p="Dialogs" t="Include">
+                <e p="AvatarSelectionDialog.g.cs" t="Include" />
                 <e p="ClosableErrorDialog.g.cs" t="Include" />
+                <e p="ConfirmationDialog.g.cs" t="Include" />
+                <e p="ConnectionHistoryDialog.g.cs" t="Include" />
                 <e p="EditProfileDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
+                <e p="GamesPlayedHistoryDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
                 <e p="RegisterDialog.g.cs" t="Include" />
@@ -67,6 +73,24 @@
           <e p="Settings.settings" t="Include" />
         </e>
         <e p="Resources" t="Include">
+          <e p="Avatar" t="Include">
+            <e p="1.jpg" t="Include" />
+            <e p="10.jpg" t="Include" />
+            <e p="11.jpg" t="Include" />
+            <e p="12.jpg" t="Include" />
+            <e p="13.jpg" t="Include" />
+            <e p="14.jpg" t="Include" />
+            <e p="15.jpg" t="Include" />
+            <e p="16.jpg" t="Include" />
+            <e p="2.jpg" t="Include" />
+            <e p="3.jpg" t="Include" />
+            <e p="4.jpg" t="Include" />
+            <e p="5.jpg" t="Include" />
+            <e p="6.jpg" t="Include" />
+            <e p="7.jpg" t="Include" />
+            <e p="8.jpg" t="Include" />
+            <e p="9.jpg" t="Include" />
+          </e>
           <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
           <e p="LogoMakr_4YSBb4.png" t="Include" />
@@ -93,6 +117,7 @@
           <e p="SocketService" t="Include">
             <e p="MessageReceivedEventArgs.cs" t="Include" />
             <e p="SocketClient.cs" t="Include" />
+            <e p="SocketErrorEventArgs.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
           </e>
         </e>
@@ -102,7 +127,6 @@
           </e>
           <e p="Constants" t="Include">
             <e p="ApplicationInformations.cs" t="Include" />
-            <e p="Enums.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
@@ -115,11 +139,13 @@
             <e p="EditorModeConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
+            <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
+            <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
@@ -160,14 +186,20 @@
             <e p="Profile.xaml.cs" t="Include" />
           </e>
           <e p="Dialogs" t="Include">
+            <e p="AvatarSelectionDialog.xaml" t="Include" />
+            <e p="AvatarSelectionDialog.xaml.cs" t="Include" />
             <e p="ClosableErrorDialog.xaml" t="Include" />
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
             <e p="ConfirmationDialog.xaml" t="Include" />
             <e p="ConfirmationDialog.xaml.cs" t="Include" />
+            <e p="ConnectionHistoryDialog.xaml" t="Include" />
+            <e p="ConnectionHistoryDialog.xaml.cs" t="Include" />
             <e p="EditProfileDialog.xaml" t="Include" />
             <e p="EditProfileDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
+            <e p="GamesPlayedHistoryDialog.xaml" t="Include" />
+            <e p="GamesPlayedHistoryDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />
             <e p="InputDialog.xaml.cs" t="Include" />
             <e p="MessageDialog.xaml" t="Include" />
