@@ -110,6 +110,8 @@ namespace ClientLourd
             }
         }
 
+        public object MainDialogHost { get; internal set; }
+
         private void ExportChat(object sender, RoutedEventArgs e)
         {
             Drawer.IsRightDrawerOpen = false;
