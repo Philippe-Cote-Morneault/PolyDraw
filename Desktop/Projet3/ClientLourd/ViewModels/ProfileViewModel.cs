@@ -1,6 +1,6 @@
 ﻿using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
-using ClientLourd.Utilities.Constants;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +88,7 @@ namespace ClientLourd.ViewModels
 
         private async Task CloseProfile(object obj)
         {
-            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
 
         private RelayCommand<object> _editProfileCommand;
