@@ -6,11 +6,18 @@ import com.log3900.shared.network.rest.Retrofit
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthenticationRestService {
     @POST("/auth")
     fun authenticate(@Body data: JsonObject): Call<JsonObject>
+
+    @POST("/auth/register")
+    fun register(
+        @Header("Language") language: String,
+        @Body data: JsonObject
+    ): Call<JsonObject>
 
     companion object {
         val service: AuthenticationRestService = Retrofit.retrofit.create(AuthenticationRestService::class.java)

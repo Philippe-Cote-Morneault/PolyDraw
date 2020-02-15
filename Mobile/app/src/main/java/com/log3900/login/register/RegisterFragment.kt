@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.login.LoginFragment
 import com.log3900.shared.ui.ProfileView
+import com.log3900.user.Account
 
 class RegisterFragment : Fragment(), ProfileView {
     val registerPresenter = RegisterPresenter(this)
@@ -21,6 +23,7 @@ class RegisterFragment : Fragment(), ProfileView {
     lateinit var firstnameInput: TextInputEditText
     lateinit var lastnameInput: TextInputEditText
 
+    lateinit var backBtn:   MaterialButton
     lateinit var registerBtn:   MaterialButton
 
     override fun onCreateView(
@@ -36,6 +39,14 @@ class RegisterFragment : Fragment(), ProfileView {
 
     fun setUpUi(root: View) {
         registerBtn = root.findViewById(R.id.register_button)
+        registerBtn.setOnClickListener {
+            register()
+        }
+
+        backBtn = root.findViewById(R.id.back_button)
+        backBtn.setOnClickListener {
+            activity?.onBackPressed()
+        }
 
         usernameInput = root.findViewById<TextInputEditText>(R.id.username_input).apply {
             doAfterTextChanged {
@@ -71,6 +82,38 @@ class RegisterFragment : Fragment(), ProfileView {
                 enableRegisterIfAllValid()
             }
         }
+    }
+
+    private fun register() {
+        // TODO: Some kind of loading feedback
+        registerPresenter.register(
+            usernameInput.text.toString(),
+            passwordInput.text.toString(),
+            1,  // TODO: Change
+            emailInput.text.toString(),
+            firstnameInput.text.toString(),
+            lastnameInput.text.toString()
+        )
+    }
+
+    fun onRegisterSuccess() {
+        val username = usernameInput.text.toString()
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Registration completed")
+            .setMessage("Account successfully created! Welcome, $username!")
+            .setPositiveButton("OK", null)  // TODO: Actually log in
+            .setCancelable(false)
+            .show()
+    }
+
+    fun onRegisterError(error: String) {
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Error")
+            .setMessage("An error occurred: $error")
+            .setPositiveButton("OK", null)
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show()
     }
 
     /**
