@@ -148,7 +148,7 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, "The user could not be created.")
 		return
 	}
-	model.DB().Create(&user)
+	model.AddUser(&user)
 
 	registerSession(&user, w, r)
 

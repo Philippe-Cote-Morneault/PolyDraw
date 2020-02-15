@@ -49,7 +49,7 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(CtxUserID)))
 
 	addJunk(userID)
-	model.DB().Model(model.User{}).Where("id = ?", userID).Find(&stats)
+	model.DB().Model(model.Stats{}).Where("id = ?", userID).Find(&stats)
 
 	// TODO: A implementer une fois avoir implementer l'ajout des Connection
 	// if  {

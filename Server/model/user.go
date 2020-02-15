@@ -10,17 +10,13 @@ import (
 //User represented in the database
 type User struct {
 	Base
-	FirstName       string
-	LastName        string
-	Username        string
-	PictureID       int
-	Email           string
-	HashedPassword  string
-	Bearer          string
-	GamesPlayed     int64   `gorm:"default:0"`
-	WinRatio        float64 `gorm:"default:0.0"`
-	AvgGameDuration int64   `gorm:"default:0"`
-	TimePlayed      int64   `gorm:"default:0"`
+	FirstName      string
+	LastName       string
+	Username       string
+	PictureID      int
+	Email          string
+	HashedPassword string
+	Bearer         string
 }
 
 //Session represents a session in the database
@@ -82,4 +78,7 @@ func FindUserByName(username string, user *User) bool {
 // AddUser add user in DB
 func AddUser(user *User) {
 	DB().Create(&user)
+
+	var stats Stats = Stats{UserID: user.ID}
+	DB().Create(&stats)
 }

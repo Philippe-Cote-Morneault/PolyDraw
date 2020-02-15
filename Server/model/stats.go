@@ -6,9 +6,21 @@ import (
 	"github.com/google/uuid"
 )
 
+//Stats contains the stats of an User
+type Stats struct {
+	Base
+	User            User `gorm:"foreignkey:UserID"`
+	UserID          uuid.UUID
+	GamesPlayed     int64   `gorm:"default:0"`
+	WinRatio        float64 `gorm:"default:0.0"`
+	AvgGameDuration int64   `gorm:"default:0"`
+	TimePlayed      int64   `gorm:"default:0"`
+}
+
 //Connection represents the information of a connection
 type Connection struct {
 	Base
+	User           User `gorm:"foreignkey:UserID"`
 	UserID         uuid.UUID
 	ConnectedAt    int64
 	DisconnectedAt int64
@@ -17,6 +29,7 @@ type Connection struct {
 //MatchPlayed represents the summary of the game
 type MatchPlayed struct {
 	Base
+	User          User `gorm:"foreignkey:UserID"`
 	UserID        uuid.UUID
 	MatchDuration int64
 	WinnerName    string
@@ -26,6 +39,7 @@ type MatchPlayed struct {
 // Achievement represent an achievement that can be obtained by a player
 type Achievement struct {
 	Base
+	User          User `gorm:"foreignkey:UserID"`
 	UserID        uuid.UUID
 	TropheeName   string
 	Description   string
@@ -34,15 +48,18 @@ type Achievement struct {
 
 // UpdateStats updates user's stats each time a match/game is finished
 func UpdateStats(userID uuid.UUID, matchPlayed *MatchPlayed) {
+	var stats Stats
+	DB().Where("userID = ?", userID).First(&stats)
+
+	var gamesPlayed int64 = stats.GamesPlayed + 1
+	var timePlayed int64 = stats.TimePlayed + matchPlayed.MatchDuration
+	var winRatio float64 = stats.WinRatio
+
 	var user User
-	DB().Where("userID = ?", userID).First(&user)
+	DB().Model(&stats).Related(&user)
 
-	var gamesPlayed int64 = user.GamesPlayed + 1
-	var timePlayed int64 = user.TimePlayed + matchPlayed.MatchDuration
-
-	var winRatio float64 = user.WinRatio
 	if matchPlayed.WinnerName == user.Username {
-		winRatio = (user.WinRatio*float64(gamesPlayed) + 1) / float64(gamesPlayed)
+		winRatio = (stats.WinRatio*float64(gamesPlayed) + 1) / float64(gamesPlayed)
 	}
 
 	DB().Where("userID = ?", userID).Updates(map[string]interface{}{
