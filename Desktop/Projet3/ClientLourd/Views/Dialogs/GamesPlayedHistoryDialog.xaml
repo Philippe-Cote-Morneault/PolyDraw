@@ -16,7 +16,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <!--<ColumnDefinition Width="*"></ColumnDefinition>-->
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
@@ -27,7 +26,6 @@
 
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Winner name</TextBlock>
         <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match duration</TextBlock>
-        <!--<TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Time played</TextBlock>-->
 
         <Separator Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
 
