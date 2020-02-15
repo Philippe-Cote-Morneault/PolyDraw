@@ -126,11 +126,11 @@
                                     <TextBlock Margin="0 0 0 15" Grid.Row="4" HorizontalAlignment="Right" FontSize="16">Best solo mode score:</TextBlock>
 
 
-                                    <TextBlock Margin="15 15 0 15" Grid.Row="0" Grid.Column="1" FontSize="16">59</TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="1" Grid.Column="1"  FontSize="16">46.55%</TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="2"  Grid.Column="1" FontSize="16">00:05:32</TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="3" Grid.Column="1" FontSize="16">112:22:21</TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="4" Grid.Column="1" FontSize="16">4</TextBlock>
+                                    <TextBlock Margin="15 15 0 15" Grid.Row="0" Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.GamesPlayed}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="1" Grid.Column="1"  FontSize="16"  Text="{Binding Path=Stats.WinRatio}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="2"  Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.AvgGameDuration}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="3" Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.TimePlayed}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="4" Grid.Column="1" FontSize="16">4 TODO</TextBlock>
 
                                 </Grid>
                                 

@@ -162,7 +162,7 @@ namespace ClientLourd.Services.RestService
             }
         }
 
-        public async Task<object> GetStats()
+        public async Task<Stats> GetStats()
         {
             RestRequest request = new RestRequest("stats");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
@@ -171,7 +171,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    dynamic data = deseralizer.Deserialize<Stats>(response);
                     return data;
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
@@ -187,7 +187,7 @@ namespace ClientLourd.Services.RestService
 
         public async Task<object> GetStats(int start, int end)
         {
-            RestRequest request = new RestRequest("stats");
+            RestRequest request = new RestRequest("stats//history");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddParameter("start", start, ParameterType.QueryString);
             request.AddParameter("end", end, ParameterType.QueryString);

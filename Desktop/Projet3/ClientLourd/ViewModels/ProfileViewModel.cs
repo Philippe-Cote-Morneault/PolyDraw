@@ -18,7 +18,7 @@ namespace ClientLourd.ViewModels
     {
         private SessionInformations _sessionInformations;
         private PrivateProfileInfo _profileInfo;
-
+        private Stats _stats;
 
         public override void AfterLogOut()
         {
@@ -29,12 +29,18 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
-            Task task = GetUserInfo(_sessionInformations.User.ID);
+            Task task1 = GetUserInfo(_sessionInformations.User.ID);
+            Task task2 = GetUserStats();
         }
 
         private async Task GetUserInfo(string userID)
         {
             ProfileInfo = await RestClient.GetUserInfo(userID);
+        }
+
+        private async Task GetUserStats()
+        {
+            Stats = await RestClient.GetStats();
         }
 
         public RestClient RestClient
@@ -55,6 +61,19 @@ namespace ClientLourd.ViewModels
                 if (value != _profileInfo)
                 {
                     _profileInfo = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public Stats Stats
+        {
+            get { return _stats; }
+            set
+            {
+                if (value != _stats)
+                {
+                    _stats = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -93,7 +112,9 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            dynamic data = await RestClient.GetStats(0, 100);
+            dynamic data = await RestClient.GetStats(0, 20);
+            dynamic data2 = await RestClient.GetStats();
+
             var x = 1;
 
             ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog();

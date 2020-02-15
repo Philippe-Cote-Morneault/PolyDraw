@@ -91,6 +91,7 @@ namespace ClientLourd.Views.Dialogs
                 PrivateProfileInfo.LastName = PrivateProfileInfoClone.LastName;
                 PrivateProfileInfo.Email = PrivateProfileInfoClone.Email;
                 PrivateProfileInfo = PrivateProfileInfoClone;
+                (((MainWindow)Application.Current.MainWindow).DataContext as MainViewModel).SessionInformations.User.Name = PrivateProfileInfoClone.Username;
 
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
