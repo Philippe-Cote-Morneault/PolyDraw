@@ -18,33 +18,55 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <LinearLayout
-        android:id="@+id/info_layout"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:showDividers="middle"
-
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
+            android:id="@+id/info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
-            <fragment
-                android:id="@+id/profile_info"
-                android:name="com.log3900.profile.ProfileInfoFragment"
+            android:layout_margin="20dp"
+            android:showDividers="middle"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profile_info_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout="@layout/fragment_profile_info" />
-        </androidx.cardview.widget.CardView>
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+                <fragment
+                    android:id="@+id/profile_info"
+                    android:name="com.log3900.profile.ProfileInfoFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout="@layout/fragment_profile_info" />
+            </com.google.android.material.card.MaterialCardView>
 
-    </LinearLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profile_stats_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true"            >
+                <fragment
+                    android:id="@+id/profile_stats_container"
+                    android:name="com.log3900.profile.stats.ProfileStatsFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    tools:layout="@layout/fragment_profile_stats" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
+
 
     <View
         android:id="@+id/divider"
@@ -57,15 +79,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/game_history_layout"
-        android:layout_margin="20dp"
-        android:text="Game history TODO"
-
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/divider"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/game_history_layout"
+            android:layout_margin="20dp"
+            android:text="Game history TODO"/>
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
