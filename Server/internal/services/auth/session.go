@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -64,6 +65,11 @@ func UnRegisterSocket(socketID uuid.UUID) {
 		delete(userCache, session.UserID)
 
 		model.DB().Delete(&session) //Remove the session
+
+		var user model.User
+		model.DB().Model(&session).Related(&user)
+		model.UpdateDeconnection(user.ID)
+
 	}
 }
 
@@ -86,6 +92,7 @@ func UnRegisterUser(userID uuid.UUID) {
 		delete(userCache, session.UserID)
 
 		model.DB().Delete(&session) //Remove the session
+		model.UpdateDeconnection(userID)
 	}
 }
 
@@ -133,6 +140,11 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 				UserID:       userID,
 				SessionToken: token,
 				SocketID:     messageReceived.SocketID,
+			})
+
+			model.DB().Create(&model.Connection{
+				UserID:      userID,
+				ConnectedAt: time.Now().Unix(),
 			})
 
 			sessionCache[messageReceived.SocketID] = userID //Set the value in the cache so pacquets are routed fast
