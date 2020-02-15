@@ -163,6 +163,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.UserDeletedChannel:
                             OnUserDeletedChannel(this, new MessageReceivedEventArgs(data));
                             break;
+                        case SocketMessageTypes.ServerMessage:
+                            OnServerMessage(this, new SocketErrorEventArgs(data));
+                            break;
                         default:
                             throw new InvalidDataException();
                     }

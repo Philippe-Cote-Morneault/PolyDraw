@@ -146,6 +146,7 @@
     <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
+    <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />

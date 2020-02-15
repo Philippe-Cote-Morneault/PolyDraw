@@ -18,5 +18,6 @@
         UserCreatedChannel = 27,
         DeleteChannel = 28,
         UserDeletedChannel = 29,
+        ServerMessage = 255,
     }
 }

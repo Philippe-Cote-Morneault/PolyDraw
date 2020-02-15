@@ -7,6 +7,7 @@ namespace ClientLourd.Services.SocketService
         public delegate void SocketEventHandler(object source, EventArgs args);
 
         public event SocketEventHandler ConnectionResponse;
+        public event SocketEventHandler ServerMessage;
         public event SocketEventHandler ServerDisconnected;
         public event SocketEventHandler MessageReceived;
         public event SocketEventHandler UserJoinedChannel;
@@ -18,6 +19,10 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler StartWaiting;
         public event SocketEventHandler StopWaiting;
 
+        protected virtual void OnServerMessage(object source, EventArgs e)
+        {
+            ServerMessage?.Invoke(source, e);
+        }
         protected virtual void OnConnectionLost(object source)
         {
             ConnectionLost?.Invoke(source, EventArgs.Empty);

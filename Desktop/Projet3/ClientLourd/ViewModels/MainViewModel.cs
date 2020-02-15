@@ -59,6 +59,15 @@ namespace ClientLourd.ViewModels
             SocketClient.StartWaiting += (source, args) => { IsWaiting = true; };
             SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
+            SocketClient.ServerMessage += SocketClientOnServerMessage;
+        }
+
+        private void SocketClientOnServerMessage(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                DialogHost.Show(new ClosableErrorDialog(((SocketErrorEventArgs)args).Message));
+            });
         }
 
         private bool _isWaiting;
