@@ -20,9 +20,15 @@ namespace ClientLourd.Views.Controls
             ((ChatViewModel) DataContext).JoinChannelCommand.Execute(((MenuItem) sender).Tag);
         }
 
-        private void LeaveChannelClick(object sender, RoutedEventArgs e)
+        private async void LeaveChannelClick(object sender, RoutedEventArgs e)
         {
-            ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(((MenuItem) sender).Tag);
+
+            Channel channel = (Channel)((MenuItem) sender).Tag;
+            var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"Are you sure you want to leave {channel.Name}"));
+            if (bool.Parse(result.ToString()))
+            {
+                ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(channel);
+            }
         }
 
         private async void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -54,9 +60,14 @@ namespace ClientLourd.Views.Controls
             }
         }
 
-        private void DeleteChannelClick(object sender, RoutedEventArgs e)
+        private async void DeleteChannelClick(object sender, RoutedEventArgs e)
         {
-            ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(((MenuItem) sender).Tag);
+            Channel channel = (Channel)((MenuItem) sender).Tag;
+            var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"Are you sure you want to delete {channel.Name}"));
+            if (bool.Parse(result.ToString()))
+            {
+                ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(channel);
+            }
         }
     }
 }
