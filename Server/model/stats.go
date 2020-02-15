@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -49,4 +51,12 @@ func UpdateStats(userID uuid.UUID, matchPlayed *MatchPlayed) {
 		"timePlayed":      timePlayed,
 		"avgGameDuration": float64(timePlayed) / float64(gamesPlayed),
 	})
+}
+
+// UpdateDeconnection sets the deconnection time of user
+func UpdateDeconnection(userID uuid.UUID) {
+	var c Connection
+	DB().Model(&Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
+	DB().Model(&Connection{}).Where("id = ?", c.ID).Update("deconnected_at", time.Now().Unix())
+
 }
