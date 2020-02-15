@@ -67,6 +67,7 @@ func migrate() {
 
 	//Chat
 	dbVariable.AutoMigrate(&ChatChannel{})
+	dbVariable.Exec("INSERT INTO chat_channels (id,name) values('00000000-0000-0000-0000-000000000000', 'Général') ON CONFLICT DO NOTHING;")
 
 	dbVariable.AutoMigrate(&ChatMessage{})
 	dbVariable.Model(&ChatMessage{}).AddForeignKey("channel_id", "chat_channels(id)", "CASCADE", "RESTRICT")
