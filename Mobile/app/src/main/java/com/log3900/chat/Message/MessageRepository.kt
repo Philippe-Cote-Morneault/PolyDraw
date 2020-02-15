@@ -17,6 +17,7 @@ import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
 import retrofit2.Call
 import java.util.*
@@ -45,11 +46,10 @@ class MessageRepository : Service() {
 
     fun getChannelMessages(channelID: UUID): Single<LinkedList<ReceivedMessage>> {
         return Single.create {
-            if (false) {
-            //if (messageCache.getMessages(channelID).size == 0) {
+            if (messageCache.getMessages(channelID).size == 0) {
                 getChannelMessages(channelID, 0, 50).subscribe(
                     { messages ->
-                        messageCache.prependMessage(messages)
+                        messageCache.prependMessage(channelID, LinkedList(messages))
                         it.onSuccess(messageCache.getMessages(channelID))
                     },
                     {
@@ -65,7 +65,7 @@ class MessageRepository : Service() {
     fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ReceivedMessage>> {
         return Single.create {
                 val call = ChatRestService.service.getChannelMessages(
-                    sessionToken,
+                    UserRepository.getUser().sessionToken,
                     "EN",
                     channelID.toString(),
                     startIndex,
@@ -79,25 +79,27 @@ class MessageRepository : Service() {
                         when (response.code()) {
                             200 -> {
                                 val moshi = Moshi.Builder()
+                                    .add(KotlinJsonAdapterFactory())
                                     .add(UUIDAdapter())
+                                    .add(TimeStampAdapter())
                                     .build()
-                                val adapter: JsonAdapter<LinkedList<ReceivedMessage>> =
+                                val adapter: JsonAdapter<List<ReceivedMessage>> =
                                     moshi.adapter(
                                         Types.newParameterizedType(
-                                            ArrayList::class.java,
+                                            List::class.java,
                                             ReceivedMessage::class.java
                                         )
                                     )
                                 val messages = adapter.fromJson(response.body()!!.getAsJsonArray("Messages").toString())
-                                it.onSuccess(messages!!)
+                                it.onSuccess(LinkedList(messages))
                             }
                             else -> {
-
                             }
                         }
                     }
 
                     override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                        println("ONFAILURE")
                     }
                 })
             }
@@ -112,8 +114,8 @@ class MessageRepository : Service() {
         sendMessage(message)
     }
 
-    fun loadMoreMessages(count: Int) {
-
+    fun loadMoreMessages(count: Int, channelID: UUID) {
+        getChannelMessages(channelID, messageCache.getMessages(channelID).size, messageCache.getMessages(channelID).size + count)
     }
 
     fun subscribe(event: Event, handler: Handler) {
