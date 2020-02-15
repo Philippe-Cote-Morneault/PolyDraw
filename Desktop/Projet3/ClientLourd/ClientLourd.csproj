@@ -133,12 +133,14 @@
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\PrivateProfileInfo.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
+    <Compile Include="Models\Bindable\StatsHistory.cs" />
     <Compile Include="Models\Bindable\User.cs" />
     <Compile Include="Models\NonBindable\NetworkInformations.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
     <Compile Include="Models\NonBindable\TokenPair.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\CredentialsService\CredentialManager.cs" />
+    <Compile Include="Models\Bindable\Stats.cs" />
     <Compile Include="Services\DateService\Timestamp.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
@@ -148,13 +150,14 @@
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
+    <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
-    <Compile Include="Utilities\Constants\Enums.cs" />
     <Compile Include="Utilities\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
@@ -206,11 +209,17 @@
     <Compile Include="Views\Dialogs\ConfirmationDialog.xaml.cs">
       <DependentUpon>ConfirmationDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\ConnectionHistoryDialog.xaml.cs">
+      <DependentUpon>ConnectionHistoryDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\EditProfileDialog.xaml.cs">
       <DependentUpon>EditProfileDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml.cs">
+      <DependentUpon>GamesPlayedHistoryDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
@@ -253,11 +262,19 @@
     </Page>
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
     <Page Include="Views\Dialogs\ConfirmationDialog.xaml" />
+    <Page Include="Views\Dialogs\ConnectionHistoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\EditProfileDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
     <Page Include="Views\Dialogs\RegisterDialog.xaml" />
