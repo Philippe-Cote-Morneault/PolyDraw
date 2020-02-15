@@ -59,10 +59,20 @@ func DBClose() {
 //migrate run database migration for the database
 func migrate() {
 	log.Println("Migrating database")
+	//Users
 	dbVariable.AutoMigrate(&User{})
+
 	dbVariable.AutoMigrate(&Session{})
+	dbVariable.Model(&Session{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
+
+	//Chat
 	dbVariable.AutoMigrate(&ChatChannel{})
+
 	dbVariable.AutoMigrate(&ChatMessage{})
+	dbVariable.Model(&ChatMessage{}).AddForeignKey("channel_id", "chat_channel(id)", "CASCADE", "RESTRICT")
+	dbVariable.Model(&ChatMessage{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
+
+	//Messenger
 	dbVariable.AutoMigrate(&Connection{})
 	dbVariable.AutoMigrate(&MatchPlayed{})
 	dbVariable.AutoMigrate(&Achievement{})
