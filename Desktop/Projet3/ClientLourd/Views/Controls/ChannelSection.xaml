@@ -14,19 +14,43 @@
         <converters:NotificationConverter x:Key="NotificationConverter"/>
     </UserControl.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
-            <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
-            <Button
-                Margin="10 0 0 0"
-                Command="{Binding CreateChannelCommand}"
-                Style="{StaticResource MaterialDesignIconForegroundButton}"
-                ToolTip="Create a new channel">
-                <materialDesign:PackIcon
-                    Kind="Plus"
-                    FontWeight="Medium"
-                    Height="20"
-                    Width="20" />
-            </Button>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
+                <Button
+                    Margin="10 0 0 0"
+                    Command="{Binding CreateChannelCommand}"
+                    Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    ToolTip="Create a new channel">
+                    <materialDesign:PackIcon
+                        Kind="Plus"
+                        FontWeight="Medium"
+                        Height="20"
+                        Width="20" />
+                </Button>
+            </StackPanel>
+             <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                          Width="Auto" />
+                        <ColumnDefinition
+                          Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <Button
+                        Style="{DynamicResource MaterialDesignToolButton}">
+                        <materialDesign:PackIcon
+                          Kind="Magnify"
+                          Opacity=".56" />
+                      </Button>
+                      <TextBox
+                        Grid.Column="1"
+                        Margin="8 0 0 0"
+                        materialDesign:HintAssist.Hint="Search a channel"
+                        materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                        BorderThickness="0"
+                        MinWidth="200"
+                        VerticalAlignment="Center" />
+                    </Grid>
         </StackPanel>
         <TreeView  Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
             <TreeViewItem Name="JoindedTree" IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
