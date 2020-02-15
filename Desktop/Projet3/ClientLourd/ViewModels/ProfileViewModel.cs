@@ -112,12 +112,10 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            dynamic data = await RestClient.GetStats(0, 20);
-            dynamic data2 = await RestClient.GetStats();
-
-            var x = 1;
-
-            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog();
+            int lastMessageIndex = 20;
+            dynamic data = await RestClient.GetStats(0, lastMessageIndex);
+            
+            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(data, lastMessageIndex);
 
             await DialogHost.Show(connectionDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
                 {

@@ -146,10 +146,12 @@
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Utilities\Constants\Networks.cs" />
+    <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
     <Compile Include="Utilities\Constants\Enums.cs" />

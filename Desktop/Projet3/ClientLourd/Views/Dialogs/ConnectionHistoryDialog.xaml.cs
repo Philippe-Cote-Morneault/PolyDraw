@@ -19,6 +19,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Timers;
+using ClientLourd.Models.Bindable;
+using ClientLourd.ViewModels;
+using ClientLourd.Services.RestService;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -27,67 +30,27 @@ namespace ClientLourd.Views.Dialogs
     /// </summary>
     public partial class ConnectionHistoryDialog : UserControl, INotifyPropertyChanged
     {
-        private LinkedList<Employee> _myList;
         private Timer _scrollToBottomTimer;
+        private StatsHistory _statsHistory;
+        private int _lastMessageIndex;
 
-        public ConnectionHistoryDialog()
+        public ConnectionHistoryDialog(StatsHistory statsHistory, int lastMessageIndex)
         {
 
             (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
 
-            MyList = new LinkedList<Employee>();
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "John Doe", Age = 42, Mail = "john@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Jane Doe", Age = 39, Mail = "jane@doe-family.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-
-            MyList.AddLast(new Employee() { Name = "Sammy Doe", Age = 7, Mail = "sammy.doe@gmail.com" });
-            MyList = new LinkedList<Employee>(MyList);
+            StatsHistory = statsHistory;
+            _lastMessageIndex = lastMessageIndex;
 
             InitializeComponent();
-            _scrollToBottomTimer = new Timer(400);
+            _scrollToBottomTimer = new Timer(800);
             _scrollToBottomTimer.Elapsed += ScrollToBottom;
             _scrollToBottomTimer.Start();
+        }
+
+        public RestClient RestClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public void ScrollToBottom(object sender, ElapsedEventArgs e)
@@ -101,20 +64,20 @@ namespace ClientLourd.Views.Dialogs
         }
 
 
-        public LinkedList<Employee> MyList
+        public StatsHistory StatsHistory
         {
-            get { return _myList; }
+            get { return _statsHistory; }
             set
             {
-                if (value != _myList)
+                if (value != _statsHistory)
                 {
-                    _myList = value;
+                    _statsHistory = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        private void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        private async void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             ScrollViewer scroll = sender as ScrollViewer;
             if (scroll == null)
@@ -124,46 +87,28 @@ namespace ClientLourd.Views.Dialogs
             }
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
-                LinkedList<Employee> linkl = new LinkedList<Employee>();
-                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
-                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
-                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
-                linkl.AddLast(new Employee() { Name = "New", Age = 7, Mail = "New" });
-                AddLinkedList(linkl);
+                //TODO: Dont load messages if messageIndex is greater than the array length
+                
+                StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
+                _lastMessageIndex += 20;
+                AddStatsHistory(sh);
                 scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
             }
 
         }
 
-        private RelayCommand<object> _addToList;
 
-        public ICommand AddToList
-        {
-            get { return _addToList ?? (_addToList = new RelayCommand<object>(obj => AddToListCommand(obj))); }
-        }
 
-        private void AddToListCommand(object o)
+        private void AddStatsHistory(StatsHistory sh)
         {
-            ScrollViewerElement.ScrollToBottom();
-            LinkedList<Employee> secondList = new LinkedList<Employee>(MyList);
-            
-            foreach (Employee employee in secondList)
+            foreach (ConnectionDisconnection connectionDisconnection in sh.ConnectionHistory)
             {
-                MyList.AddFirst(employee);
+                StatsHistory.ConnectionHistory.AddFirst(connectionDisconnection);
             }
 
-            MyList = new LinkedList<Employee>(MyList);
+            StatsHistory.ConnectionHistory = new LinkedList<ConnectionDisconnection>(StatsHistory.ConnectionHistory);
         }
 
-        private void AddLinkedList( LinkedList<Employee> linkedList)
-        {
-            foreach (Employee employee in linkedList)
-            {
-                MyList.AddFirst(employee);
-            }
-
-            MyList = new LinkedList<Employee>(MyList);
-        }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {

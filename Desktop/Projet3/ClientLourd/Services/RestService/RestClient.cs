@@ -184,7 +184,7 @@ namespace ClientLourd.Services.RestService
         }
 
 
-        public async Task<object> GetStats(int start, int end)
+        public async Task<StatsHistory> GetStats(int start, int end)
         {
             RestRequest request = new RestRequest("stats//history");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
@@ -212,7 +212,6 @@ namespace ClientLourd.Services.RestService
         public async Task<PrivateProfileInfo> GetUserInfo(string userID)
         {
             RestRequest request = new RestRequest($"users/{userID}", Method.GET);
-            //request.AddParameter("userid", userID);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
