@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	"github.com/vmihailenco/msgpack/v4"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
@@ -79,31 +78,6 @@ func (server *Server) Shutdown() {
 		cbroadcast.Broadcast(BSocketClose, nil)
 	}
 	server.mutex.Unlock()
-}
-
-// SendMessageToSocketID sends a SerializableMessage to the socketID
-//TODO remove possibly
-func SendMessageToSocketID(message SerializableMessage, socketID uuid.UUID) error {
-	m := clientSocketManagerInstance
-
-	if m == nil {
-		return fmt.Errorf("The clientSocketManger was not instanced")
-	}
-
-	defer m.mutexMap.Unlock()
-	m.mutexMap.Lock()
-
-	if clientConnection, ok := m.clients[socketID]; ok {
-		serializedMessage, err := msgpack.Marshal(message)
-		if err != nil {
-			return err
-		}
-		_, err = clientConnection.socket.Write(serializedMessage)
-
-		return err
-	}
-
-	return nil
 }
 
 // SendRawMessageToSocketID sends a message to a socket with the specified id with raw bytes.
