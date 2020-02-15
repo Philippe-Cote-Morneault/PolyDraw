@@ -77,5 +77,7 @@ func migrate() {
 	dbVariable.AutoMigrate(&Stats{})
 	dbVariable.AutoMigrate(&Connection{})
 	dbVariable.AutoMigrate(&MatchPlayed{})
+	dbVariable.AutoMigrate(&PlayerName{})
 	dbVariable.AutoMigrate(&Achievement{})
+
 }

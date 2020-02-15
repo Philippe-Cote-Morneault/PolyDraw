@@ -33,7 +33,15 @@ type MatchPlayed struct {
 	UserID        uuid.UUID
 	MatchDuration int64
 	WinnerName    string
-	//PlayerNames   pq.StringArray `gorm:"type:varchar(20)[]"` a voir si pertinents car complique en Gorm et couteux en operation
+	MatchType     string
+}
+
+//PlayerName represents the name of player in MatchPlayed
+type PlayerName struct {
+	Base
+	MatchPlayed MatchPlayed `gorm:"foreignkey:MatchID"`
+	MatchID     uuid.UUID
+	PlayerName  string
 }
 
 // Achievement represent an achievement that can be obtained by a player

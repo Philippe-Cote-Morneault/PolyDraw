@@ -12,13 +12,17 @@ import (
 )
 
 type userStats struct {
-	GamesPlayed          int64
-	WinRatio             float64
-	AvgGameDuration      int64
-	TimePlayed           int64
+	Stats                stats
 	ConnectionHistory    []connection
 	MatchesPlayedHistory []matchPlayed
 	Achievements         []achievement
+}
+
+type stats struct {
+	GamesPlayed     int64
+	WinRatio        float64
+	AvgGameDuration int64
+	TimePlayed      int64
 }
 
 type connection struct {
@@ -29,6 +33,12 @@ type connection struct {
 type matchPlayed struct {
 	MatchDuration int64
 	WinnerName    string
+	MatchType     string
+	PlayersNames  []playerName
+}
+
+type playerName struct {
+	PlayerName string
 }
 
 type achievement struct {
@@ -45,11 +55,12 @@ type history struct {
 // GetStats returns userStats
 func GetStats(w http.ResponseWriter, r *http.Request) {
 
-	var stats userStats
 	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(CtxUserID)))
 
 	addJunk(userID)
-	model.DB().Model(model.Stats{}).Where("id = ?", userID).Find(&stats)
+	var statsDB stats
+	model.DB().Model(model.Stats{}).Where("id = ?", userID).Find(&statsDB)
+	var stats userStats = userStats{Stats: statsDB}
 
 	// TODO: A implementer une fois avoir implementer l'ajout des Connection
 	// if  {
@@ -61,9 +72,14 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 	model.DB().Where("user_id = ?", userID).Order("created_at desc").Find(&connectionHistory)
 	stats.ConnectionHistory = connectionHistory
 
-	var matchesPlayedHistory []matchPlayed
+	var matchesPlayedHistory []model.MatchPlayed
 	model.DB().Where("user_id = ?", userID).Order("created_at desc").Find(&matchesPlayedHistory)
-	stats.MatchesPlayedHistory = matchesPlayedHistory
+	for _, match := range matchesPlayedHistory {
+		var playersNames []playerName
+		model.DB().Model(&model.PlayerName{}).Where("match_id = ?", match.ID).Find(&playersNames)
+		stats.MatchesPlayedHistory = append(stats.MatchesPlayedHistory, matchPlayed{MatchDuration: match.MatchDuration,
+			WinnerName: match.WinnerName, MatchType: match.MatchType, PlayersNames: playersNames})
+	}
 
 	var achievements []achievement
 	model.DB().Where("user_id = ?", userID).Order("created_at desc").Find(&achievements)
@@ -121,18 +137,19 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 // TODO: A supprimer
 func addJunk(userID uuid.UUID) {
 
-	for i := 0; i < 100; i++ {
-		var co model.Connection = model.Connection{ConnectedAt: int64(i), DisconnectedAt: int64(i * i), UserID: userID}
-		model.DB().Create(&co)
+	for i := 0; i < 20; i++ {
+		model.DB().Create(&model.Connection{ConnectedAt: int64(i), DisconnectedAt: int64(i * i), UserID: userID})
 	}
 
-	for i := 0; i < 100; i++ {
-		var ach model.Achievement = model.Achievement{TropheeName: "tropheeName", Description: "description", ObtainingDate: int64(i), UserID: userID}
-		model.DB().Create(&ach)
+	for i := 0; i < 20; i++ {
+		model.DB().Create(&model.Achievement{TropheeName: "Geek", Description: "A depasse les 1000000000 heures de jeu", ObtainingDate: int64(i), UserID: userID})
 	}
 
-	for i := 0; i < 100; i++ {
-		var ach model.MatchPlayed = model.MatchPlayed{MatchDuration: int64(i), WinnerName: "allan", UserID: userID}
+	for i := 0; i < 20; i++ {
+		var ach model.MatchPlayed = model.MatchPlayed{MatchDuration: int64(i), WinnerName: "PascalWinner", UserID: userID, MatchType: "Solo"}
 		model.DB().Create(&ach)
+		for i := 0; i < 3; i++ {
+			model.DB().Create(&model.PlayerName{MatchID: ach.ID, PlayerName: "PascalPlayer"})
+		}
 	}
 }
