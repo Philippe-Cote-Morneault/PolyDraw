@@ -31,8 +31,8 @@ class MessageManager {
         messageRepository.sendMessage(SentMessage(message, channelID))
     }
 
-    fun loadMoreMessages() {
-        messageRepository.loadMoreMessages(25)
+    fun loadMoreMessages(channelID: UUID) {
+        messageRepository.loadMoreMessages(25, channelID)
     }
 
     private fun onMessageReceived(message: ReceivedMessage) {
