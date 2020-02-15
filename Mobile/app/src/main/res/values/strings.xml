@@ -25,11 +25,14 @@
     <string name="login_password_error">The password cannot be empty</string>
     <string name="login_button">Login</string>
     <string name="login_signup_question">Don\'t have an account?</string>
+    <string name="login_signup_now">Sign up now!</string>
     <string name="register">Register</string>
     <string name="email_hint">Email</string>
     <string name="name_hint">Name</string>
     <string name="surname_hint">Surname</string>
     <string name="all_required">(All fields are required)</string>
+    <string name="quit_app">Quit</string>
+    <string name="quit_app_confirm">You are about to exit the application. Do you wish to continue?</string>
 
     <!-- profile -->
     <string name="profile_info_title">Profile Information</string>

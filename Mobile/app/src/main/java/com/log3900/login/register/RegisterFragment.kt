@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
+import com.log3900.login.LoginFragment
 import com.log3900.shared.ui.ProfileView
 
 class RegisterFragment : Fragment(), ProfileView {
@@ -31,6 +32,7 @@ class RegisterFragment : Fragment(), ProfileView {
         setUpUi(root)
         return root
     }
+
 
     fun setUpUi(root: View) {
         registerBtn = root.findViewById(R.id.register_button)

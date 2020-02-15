@@ -11,7 +11,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="600dp"
         android:paddingStart="100dp"
         android:paddingTop="100dp"
         android:paddingEnd="100dp"
@@ -22,113 +22,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/card_content_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/activity_login_text_view_welcome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="48dp"
-                android:text="@string/login_welcome"
-                android:textColor="@color/color_on_background"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                app:layout_constraintBottom_toTopOf="@+id/activity_login_image_view_logo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/activity_login_image_view_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginBottom="48dp"
-                android:src="@drawable/polydraw_black"
-                app:layout_constraintBottom_toTopOf="@+id/activity_login_text_input_layout_username"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_login_text_input_layout_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="32dp"
-                android:hint="@string/login_username_hint"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@+id/activity_login_text_input_layout_password"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/activity_login_text_input_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/color_background"
-                    android:inputType="text"
-                    android:maxLength="12"
-                    android:maxLines="1" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/activity_login_text_input_layout_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="16dp"
-                android:hint="@string/login_password_hint"
-                app:endIconMode="password_toggle"
-                app:errorEnabled="true"
-
-                app:layout_constraintBottom_toTopOf="@+id/activity_login_login_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/activity_login_text_input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/color_background"
-                    android:inputType="textPassword" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/activity_login_login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-
-                android:layout_marginBottom="8dp"
-                android:text="@string/login_button"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ProgressBar
-                android:id="@+id/activity_login_progressbar_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/activity_login_login_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
