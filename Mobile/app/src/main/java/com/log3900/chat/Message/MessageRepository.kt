@@ -18,6 +18,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Call
 import java.util.*
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.collections.HashSet
 
 class MessageRepository : Service() {
     enum class Event {
@@ -39,6 +41,7 @@ class MessageRepository : Service() {
 
     // Data
     private val messageCache: MessageCache = MessageCache()
+    private val fullyLoadedHistory: HashSet<UUID> = HashSet()
 
     companion object {
         var instance: MessageRepository? = null
@@ -114,8 +117,31 @@ class MessageRepository : Service() {
         sendMessage(message)
     }
 
-    fun loadMoreMessages(count: Int, channelID: UUID) {
-        getChannelMessages(channelID, messageCache.getMessages(channelID).size, messageCache.getMessages(channelID).size + count)
+    fun loadMoreMessages(count: Int, channelID: UUID): Completable {
+        return Completable.create {
+            if (fullyLoadedHistory.contains(channelID)) {
+                it.onComplete()
+            } else {
+                getChannelMessages(
+                    channelID,
+                    messageCache.getMessages(channelID).size,
+                    messageCache.getMessages(channelID).size + count
+                ).subscribe(
+                    { messages ->
+                        if (messages.size == 0) {
+                            fullyLoadedHistory.add(channelID)
+                        } else {
+                            messageCache.prependMessage(channelID, messages)
+                        }
+
+                        it.onComplete()
+                    },
+                    {
+
+                    }
+                )
+            }
+        }
     }
 
     fun subscribe(event: Event, handler: Handler) {
