@@ -49,7 +49,6 @@
                         materialDesign:HintAssist.Hint="Search a channel"
                         materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                         BorderThickness="0"
-                        MinWidth="200"
                         VerticalAlignment="Center" />
                     </Grid>
         </StackPanel>
