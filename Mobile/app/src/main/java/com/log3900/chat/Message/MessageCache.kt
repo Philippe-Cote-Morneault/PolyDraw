@@ -26,4 +26,14 @@ class MessageCache {
         }
         messages[message.channelID]?.addLast(message)
     }
+
+    fun prependMessage(channelID: UUID, messages: LinkedList<ReceivedMessage>) {
+        if (!this.messages.containsKey(channelID)) {
+            createArrayForChannel(channelID)
+        }
+
+        for (message in messages) {
+            this.messages[channelID]?.addFirst(message)
+        }
+    }
 }
