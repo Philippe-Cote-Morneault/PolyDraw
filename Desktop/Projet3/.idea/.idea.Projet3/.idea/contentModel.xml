@@ -162,6 +162,8 @@
           <e p="Dialogs" t="Include">
             <e p="ClosableErrorDialog.xaml" t="Include" />
             <e p="ClosableErrorDialog.xaml.cs" t="Include" />
+            <e p="ConfirmationDialog.xaml" t="Include" />
+            <e p="ConfirmationDialog.xaml.cs" t="Include" />
             <e p="EditProfileDialog.xaml" t="Include" />
             <e p="EditProfileDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />

@@ -202,6 +202,9 @@
     <Compile Include="Views\Dialogs\ClosableErrorDialog.xaml.cs">
       <DependentUpon>ClosableErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\ConfirmationDialog.xaml.cs">
+      <DependentUpon>ConfirmationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\EditProfileDialog.xaml.cs">
       <DependentUpon>EditProfileDialog.xaml</DependentUpon>
     </Compile>
@@ -248,6 +251,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\ConfirmationDialog.xaml" />
     <Page Include="Views\Dialogs\EditProfileDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
