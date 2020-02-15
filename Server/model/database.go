@@ -69,7 +69,7 @@ func migrate() {
 	dbVariable.AutoMigrate(&ChatChannel{})
 
 	dbVariable.AutoMigrate(&ChatMessage{})
-	dbVariable.Model(&ChatMessage{}).AddForeignKey("channel_id", "chat_channel(id)", "CASCADE", "RESTRICT")
+	dbVariable.Model(&ChatMessage{}).AddForeignKey("channel_id", "chat_channels(id)", "CASCADE", "RESTRICT")
 	dbVariable.Model(&ChatMessage{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
 
 	//Messenger
