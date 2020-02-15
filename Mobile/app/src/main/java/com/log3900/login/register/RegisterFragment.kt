@@ -1,5 +1,6 @@
 package com.log3900.login.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,14 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.log3900.MainActivity
 import com.log3900.R
 import com.log3900.login.LoginFragment
+import com.log3900.shared.architecture.ViewNavigator
 import com.log3900.shared.ui.ProfileView
 import com.log3900.user.Account
 
-class RegisterFragment : Fragment(), ProfileView {
+class RegisterFragment : Fragment(), ProfileView, ViewNavigator {
     val registerPresenter = RegisterPresenter(this)
 
     lateinit var usernameInput: TextInputEditText
@@ -101,7 +104,9 @@ class RegisterFragment : Fragment(), ProfileView {
         MaterialAlertDialogBuilder(context)
             .setTitle("Registration completed")
             .setMessage("Account successfully created! Welcome, $username!")
-            .setPositiveButton("OK", null)  // TODO: Actually log in
+            .setPositiveButton("Thanks!") { _, _ ->
+                navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
             .setCancelable(false)
             .show()
     }
@@ -114,6 +119,18 @@ class RegisterFragment : Fragment(), ProfileView {
             .setCancelable(false)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
+    }
+
+    override fun navigateTo(target: Class<*>, intentFlags: Int?) {
+        if (activity == null)
+            return
+
+        val intent = Intent(activity, target)
+        if (intentFlags != null) {
+            intent.flags = intentFlags
+        }
+        startActivity(intent)
+        activity?.finish()
     }
 
     /**
