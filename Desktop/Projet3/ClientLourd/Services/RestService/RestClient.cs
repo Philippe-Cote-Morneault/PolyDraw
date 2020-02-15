@@ -171,8 +171,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    dynamic data = deseralizer.Deserialize<Stats>(response);
-                    return data;
+                    return JsonConvert.DeserializeObject<Stats>(response.Content); 
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:
@@ -196,8 +195,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    dynamic data= deseralizer.Deserialize<dynamic>(response);
-                    return data;
+                    return JsonConvert.DeserializeObject<StatsHistory>(response.Content);
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:
