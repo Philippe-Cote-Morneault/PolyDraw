@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using ClientLourd.Annotations;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
@@ -17,7 +18,6 @@ namespace ClientLourd.Views.Dialogs
         public RegisterDialog(PrivateProfileInfo infos)
         {
             PrivateProfileInfo = infos;
-            Avatar = "";
             InitializeComponent();
         }
 
@@ -26,7 +26,7 @@ namespace ClientLourd.Views.Dialogs
             get { return CheckInvalidPassword(); }
         }
 
-        public string Avatar { get; set; }
+
 
         private bool CheckInvalidPassword()
         {
@@ -65,7 +65,8 @@ namespace ClientLourd.Views.Dialogs
 
         private async void ChangeAvatar()
         {
-            await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
+            var result = await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
+            Avatar.Source = (BitmapImage) result;
         }
 
     }

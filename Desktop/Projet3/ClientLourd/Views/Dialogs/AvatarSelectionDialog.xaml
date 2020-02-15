@@ -19,98 +19,98 @@
     -->
     <DockPanel>
         <TextBlock DockPanel.Dock="Top" FontSize="24" Margin="10" HorizontalAlignment="Center" FontWeight="Bold" Text="Select your avatar" />
-        <Button Width="200" HorizontalAlignment="Center" Margin="10" DockPanel.Dock="Bottom" Command="materialDesign:DialogHost.CloseDialogCommand" Content="Confirm" />
+        <Button Click="QuitClick" Width="200" HorizontalAlignment="Center" Margin="10" DockPanel.Dock="Bottom"  Content="Confirm" />
         <WrapPanel Width="400">
-            <Button Style="{StaticResource MaterialDesignFlatButton}" Width="100" Height="100">
+            <Button x:Name="DefaultButton"  Click="ButtonBase_OnClick" Style="{StaticResource MaterialDesignFlatButton}" Width="100" Height="100">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image1" />
                 </materialDesign:Card>
             </Button>
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image2" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image3" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image4" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image5" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image6" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image7" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image8" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image9" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image10" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image11" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image12" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image13" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image14" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image15" />
                 </materialDesign:Card>
             </Button>
 
-            <Button Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
+            <Button Click="ButtonBase_OnClick" Width="100" Height="100" Style="{StaticResource MaterialDesignFlatButton}">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
                     <Image Name="image16" />
                 </materialDesign:Card>

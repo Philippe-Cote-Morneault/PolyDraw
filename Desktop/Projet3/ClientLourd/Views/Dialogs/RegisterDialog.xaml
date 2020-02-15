@@ -15,22 +15,18 @@
             <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
         </UserControl.Resources>
         
-        <materialDesign:DialogHost CloseOnClickAway="True" Identifier="RegisterDialogHost">
+        <materialDesign:DialogHost CloseOnClickAway="False" Identifier="RegisterDialogHost">
     <Grid>
-        <StackPanel x:Name="StackPanel" Height="750" Width="500" Margin="10">
+        <StackPanel x:Name="StackPanel" Height="800" Width="500" Margin="10">
             
             
             <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Sign up</TextBlock>
 
             <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Avatar</TextBlock>
-                </StackPanel>
-                
-                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Left" Width="60">
-                    <Image Source="../../Resources/Avatar/1.jpeg" Height="60" Width="60" HorizontalAlignment="Left"/>
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
+                    <Image Name="Avatar" Source="../../Resources/Avatar/1.jpg"  />
                 </materialDesign:Card>
-                <TextBlock >
+                <TextBlock HorizontalAlignment="Center">
                     <Hyperlink Command="{Binding ChangeAvatarCommand}">
                         Change avatar
                     </Hyperlink>

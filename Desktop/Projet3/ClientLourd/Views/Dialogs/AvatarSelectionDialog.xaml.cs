@@ -5,8 +5,10 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ClientLourd.Annotations;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -14,12 +16,11 @@ namespace ClientLourd.Views.Dialogs
     {
         public AvatarSelectionDialog()
         {
-            Avatars = new List<BitmapImage>();
             InitializeComponent();
             GetAllAvatars();
+            SelectedButton = DefaultButton;
 
         }
-        public List<BitmapImage> Avatars { get; set; }
 
         private void GetAllAvatars()
         {
@@ -47,6 +48,35 @@ namespace ClientLourd.Views.Dialogs
             image14.Source = new BitmapImage(new Uri($"/ClientLourd;component/Resources/Avatar/14.jpg", UriKind.Relative));
             image15.Source = new BitmapImage(new Uri($"/ClientLourd;component/Resources/Avatar/15.jpg", UriKind.Relative));
             image16.Source = new BitmapImage(new Uri($"/ClientLourd;component/Resources/Avatar/16.jpg", UriKind.Relative));
+        }
+
+        private Button _selectedButton;
+
+        public Button SelectedButton
+        {
+            get { return _selectedButton; }
+            set
+            {
+                if (SelectedButton != null)
+                {
+                    SelectedButton.Background = Brushes.Transparent;
+                }
+
+                _selectedButton = value;
+                _selectedButton.Background =(Brush)Application.Current.Resources["PrimaryHueLightBrush"];
+            }
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            SelectedButton = ((Button) sender);
+        }
+
+        private void QuitClick(object sender, RoutedEventArgs e)
+        {
+            Card card = (Card) SelectedButton.Content;
+            Image image = (Image) card.Content;
+            DialogHost.CloseDialogCommand.Execute(image.Source,this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
