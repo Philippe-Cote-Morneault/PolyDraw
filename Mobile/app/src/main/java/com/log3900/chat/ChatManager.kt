@@ -88,8 +88,8 @@ class ChatManager : Service() {
         channelManager?.changeSubscriptionStatus(channel)
     }
 
-    fun loadMoreMessages() = Completable.create {
-        messageManager?.loadMoreMessages()
+    fun loadMoreMessages(): Completable {
+        return messageManager?.loadMoreMessages(channelManager?.activeChannel?.ID!!)!!
     }
 
     fun createChannel(channelName: String) = Completable.create {

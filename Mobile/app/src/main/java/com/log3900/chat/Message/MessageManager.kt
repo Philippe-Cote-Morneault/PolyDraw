@@ -5,6 +5,7 @@ import com.log3900.chat.Channel.Channel
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.user.UserRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -31,8 +32,8 @@ class MessageManager {
         messageRepository.sendMessage(SentMessage(message, channelID))
     }
 
-    fun loadMoreMessages(channelID: UUID) {
-        messageRepository.loadMoreMessages(25, channelID)
+    fun loadMoreMessages(channelID: UUID): Completable {
+        return messageRepository.loadMoreMessages(25, channelID)
     }
 
     private fun onMessageReceived(message: ReceivedMessage) {
