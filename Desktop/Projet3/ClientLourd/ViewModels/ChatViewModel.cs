@@ -412,7 +412,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return new ObservableCollection<Channel>(_channels.Where(c =>
-                    c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)));
+                    c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
             }
         }
 
@@ -421,7 +421,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return new ObservableCollection<Channel>(_channels.Where(c =>
-                    !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)));
+                    !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
             }
         }
 
