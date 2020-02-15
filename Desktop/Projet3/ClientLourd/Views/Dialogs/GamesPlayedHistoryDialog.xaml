@@ -26,16 +26,16 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Winner name</TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Game duration</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match duration</TextBlock>
         <!--<TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Time played</TextBlock>-->
 
-        <Separator Grid.Row="1" Grid.ColumnSpan="3" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+        <Separator Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
 
 
 
 
-        <ScrollViewer Grid.ColumnSpan="3" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
-            <ListView ItemsSource="{Binding Path=StatsHistory.ConnectionHistory, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
+        <ScrollViewer Grid.ColumnSpan="2" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
+            <ListView ItemsSource="{Binding Path=StatsHistory.MatchesPlayedHistory, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
                 <ListView.Resources>
                     <Style TargetType="GridViewColumnHeader">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -43,8 +43,8 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding ConnectedAt, Converter={StaticResource LongToUnixTimeStampConverter}}" />
-                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding DeconnectedAt,  Converter={StaticResource LongToUnixTimeStampConverter}}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource LongToUnixTimeStampConverter}}" />
                     </GridView>
                 </ListView.View>
             </ListView>

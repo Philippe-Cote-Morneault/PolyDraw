@@ -82,7 +82,7 @@ namespace ClientLourd.Views.Dialogs
             }
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
-                //TODO: Dont load messages if messageIndex is greater than the array length
+                //TODO: Dont load messages if messageIndex is greater than the array length 
 
                 StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
                 _lastMessageIndex += 20;
@@ -96,12 +96,13 @@ namespace ClientLourd.Views.Dialogs
 
         private void AddStatsHistory(StatsHistory sh)
         {
-            foreach (ConnectionDisconnection connectionDisconnection in sh.ConnectionHistory)
+            foreach (MatchPlayed matchPlayedlayed in sh.MatchesPlayedHistory)
             {
-                StatsHistory.ConnectionHistory.AddFirst(connectionDisconnection);
+                StatsHistory.MatchesPlayedHistory.AddFirst(matchPlayedlayed);
             }
 
-            StatsHistory.ConnectionHistory = new LinkedList<ConnectionDisconnection>(StatsHistory.ConnectionHistory);
+            // Needed to trigger INotifyProperty
+            StatsHistory.MatchesPlayedHistory = new LinkedList<MatchPlayed>(StatsHistory.MatchesPlayedHistory);
         }
 
 
