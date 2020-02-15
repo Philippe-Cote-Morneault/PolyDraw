@@ -119,6 +119,7 @@ namespace ClientLourd.ViewModels
 
         public override void AfterLogOut()
         {
+            ChannelFilter = "";
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
             SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel;
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
@@ -346,11 +347,11 @@ namespace ClientLourd.ViewModels
 
         private void UpdateChannels()
         {
-            NotifyPropertyChanged("Channels");
-            NotifyPropertyChanged("JoinedChannels");
-            NotifyPropertyChanged("AvailableChannels");
-            NotifyPropertyChanged("NewMessages");
-            if (SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
+            NotifyPropertyChanged(nameof(Channels));
+            NotifyPropertyChanged(nameof(JoinedChannels));
+            NotifyPropertyChanged(nameof(AvailableChannels));
+            NotifyPropertyChanged(nameof(NewMessages));
+            if (SelectedChannel != null && SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
             {
                 SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
             }
@@ -406,13 +407,26 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        private string _channelFilter;
+        public string ChannelFilter
+        {
+            get { return _channelFilter.ToLower(); }
+            set
+            {
+                if (value != _channelFilter)
+                {
+                    _channelFilter = value;
+                    UpdateChannels();
+                }
+            }
+        }
 
         public ObservableCollection<Channel> JoinedChannels
         {
             get
             {
                 return new ObservableCollection<Channel>(_channels.Where(c =>
-                    c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                   c.Name.ToLower().Contains(ChannelFilter) && c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
             }
         }
 
@@ -421,7 +435,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return new ObservableCollection<Channel>(_channels.Where(c =>
-                    !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                   c.Name.ToLower().Contains(ChannelFilter) && !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
             }
         }
 
@@ -433,9 +447,7 @@ namespace ClientLourd.ViewModels
                 if (value != _channels)
                 {
                     _channels = value;
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged("JoinedChannels");
-                    NotifyPropertyChanged("AvailableChannels");
+                    UpdateChannels();
                 }
             }
         }

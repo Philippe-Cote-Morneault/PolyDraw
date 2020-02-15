@@ -45,6 +45,7 @@
                       <TextBox
                         Grid.Column="1"
                         Margin="8 0 0 0"
+                        Text="{Binding ChannelFilter, UpdateSourceTrigger=PropertyChanged}"
                         materialDesign:HintAssist.Hint="Search a channel"
                         materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
                         BorderThickness="0"
