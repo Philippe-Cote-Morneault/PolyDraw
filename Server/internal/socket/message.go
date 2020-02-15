@@ -26,6 +26,7 @@ type messageType struct {
 	UserCreateChannel        int
 	DestroyChannel           int
 	UserDestroyedChannel     int
+	ErrorResponse            int
 }
 
 // MessageType represents the available message types to send to clients.
@@ -46,6 +47,7 @@ var MessageType = &messageType{
 	UserCreateChannel:        27,
 	DestroyChannel:           28,
 	UserDestroyedChannel:     29,
+	ErrorResponse:            255,
 }
 
 // SerializableMessage Represents a serializable message sent over socket
@@ -65,6 +67,13 @@ type RawMessage struct {
 type RawMessageReceived struct {
 	Payload  RawMessage
 	SocketID uuid.UUID
+}
+
+//errorMessage used to send an error message to the client
+type errorMessage struct {
+	Type      int
+	ErrorCode int
+	Message   string
 }
 
 // ToBytesSlice converts the raw message into the TLV format

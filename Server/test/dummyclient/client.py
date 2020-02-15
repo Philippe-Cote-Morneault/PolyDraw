@@ -122,6 +122,10 @@ def handle(typeVal, valBytes):
         printType("-> Channel destroy")
         printMsgPack(msgpack.unpackb(valBytes))
 
+    if typeVal == 255:
+        printType("-> [[ERROR]]")
+        printMsgPack(msgpack.unpackb(valBytes))
+
 def main():
 
     parser = argparse.ArgumentParser(prog='client', usage='python3 client.py [options]')

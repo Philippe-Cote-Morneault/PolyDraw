@@ -58,12 +58,15 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 				model.AddMessage(messageParsed.Message, channelID, user.ID, timestamp)
 			} else {
 				log.Printf("[Messenger] -> Receive: The user needs to join the channel first. Dropping packet!")
+				socket.SendErrorToSocketID(socket.MessageType.MessageSent, 409, "The user needs to join the channel first.", message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Receive: Invalid channel ID. Dropping packet!")
+			socket.SendErrorToSocketID(socket.MessageType.MessageSent, 404, "Invalid channel ID", message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Receive: Wrong data format. Dropping packet!")
+		socket.SendErrorToSocketID(socket.MessageType.MessageSent, 404, "Wrong data format.", message.SocketID)
 	}
 }
 
@@ -108,15 +111,19 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Create: channel %s created", channelParsed.ChannelName)
 				} else {
 					log.Printf("[Messenger] -> Create: Channel already exists. Dropping packet!")
+					socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 409, "Channel already exists.", message.SocketID)
 				}
 			} else {
 				log.Printf("[Messenger] -> Create: Can't find user. Dropping packet!")
+				socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 404, "Can't find user.", message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Create: Invalid channel name. Dropping packet!")
+			socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 400, "Invalid channel UUID.", message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Create: Invalid channel decoding. Dropping packet!")
+		socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 400, "Invalid channel decoding.", message.SocketID)
 	}
 }
 
@@ -154,15 +161,19 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
 				} else {
 					log.Printf("[Messenger] -> Join: User is already joined to the channel")
+					socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 409, "User is already joined to the channel.", message.SocketID)
 				}
 			} else {
 				log.Printf("[Messenger] -> Join: Channel UUID not found, %s", channelID.String())
+				socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 404, "Channel UUID not found.", message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Join: Invalid channel UUID")
+			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, "Invalid channel UUID.", message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Join: Invalid channel UUID")
+		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, "Invalid channel UUID.", message.SocketID)
 	}
 }
 
@@ -199,15 +210,19 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
 				} else {
 					log.Printf("[Messenger] -> Quit: User is not in the channel")
+					socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "User is not in the channel.", message.SocketID)
 				}
 			} else {
 				log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
+				socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 404, "Invalid channel UUID, not found.", message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Quit: Invalid channel UUID")
+			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "Invalid channel UUID.", message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Quit: Invalid channel UUID")
+		socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "Invalid channel UUID.", message.SocketID)
 	}
 }
 
@@ -245,12 +260,15 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 				log.Printf("[Messenger] -> Destroy: Removed channel %s", channelID)
 			} else {
 				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
+				socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 404, "Invalid channel UUID, not found.", message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Destroy: Invalid channel UUID")
+			socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 400, "Invalid channel UUID", message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Destroy: Invalid channel UUID")
+		socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 400, "Invalid channel UUID", message.SocketID)
 	}
 }
 
