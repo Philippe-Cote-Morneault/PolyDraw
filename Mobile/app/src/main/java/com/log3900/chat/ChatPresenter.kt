@@ -1,7 +1,5 @@
 package com.log3900.chat
 
-import android.os.Handler
-import android.os.Message
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage
@@ -15,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 class ChatPresenter : Presenter {
     private var chatView: ChatView
@@ -121,7 +118,7 @@ class ChatPresenter : Presenter {
 
     private fun onNewMessage(message: ReceivedMessage) {
         chatView.notifyNewMessage()
-        if (UserRepository.getUser().username != message.senderName) {
+        if (UserRepository.getUser().username != message.username) {
             chatView.playNewMessageNotification()
         }
     }
