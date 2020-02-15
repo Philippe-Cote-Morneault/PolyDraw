@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,8 @@ namespace ClientLourd.Views.Dialogs
             PrivateProfileInfo = infos;
             InitializeComponent();
         }
+
+        public BitmapImage Avatar { get; set; }
 
         public bool IsPasswordInvalid
         {
@@ -64,7 +67,9 @@ namespace ClientLourd.Views.Dialogs
         private async void ChangeAvatar()
         {
             var result = await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
-            Avatar.Source = (BitmapImage) result;
+            Avatar = (BitmapImage) result;
+            OnPropertyChanged(nameof(Avatar));
+            PrivateProfileInfo.AvatarID = Regex.Match(Avatar.UriSource.ToString(), @"\d+").Value;
         }
 
     }

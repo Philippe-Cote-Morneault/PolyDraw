@@ -17,6 +17,7 @@ namespace ClientLourd.Models.Bindable
             CreatedAt = "";
             Email = "";
             UpdatedAt = "";
+            AvatarID = "";
         }
 
 
@@ -42,6 +43,21 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+        
+        private string _avatarID;
+        public string AvatarID
+        {
+            get { return _avatarID; }
+            set
+            {
+                if (value != _avatarID)
+                {
+                    _avatarID = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        
 
         private string _firstName;
         public string FirstName

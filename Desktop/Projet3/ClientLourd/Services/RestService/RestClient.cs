@@ -91,7 +91,7 @@ namespace ClientLourd.Services.RestService
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth/register", Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new {Username = informations.Username, FirstName=informations.FirstName, LastName= informations.LastName, Email=informations.Email, Password = password, PictureID=1});
+            request.AddJsonBody(new {Username = informations.Username, FirstName=informations.FirstName, LastName= informations.LastName, Email=informations.Email, Password = password, PictureID=informations.AvatarID});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
