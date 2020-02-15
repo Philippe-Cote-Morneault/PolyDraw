@@ -132,17 +132,4 @@ namespace ClientLourd.Views.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
-
-
-
-
-    public class Employee
-    {
-        public string Name { get; set; }
-
-        public int Age { get; set; }
-
-        public string Mail { get; set; }
-    }
 }
