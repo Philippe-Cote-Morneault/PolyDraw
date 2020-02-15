@@ -26,8 +26,6 @@ namespace ClientLourd.Views.Dialogs
             get { return CheckInvalidPassword(); }
         }
 
-
-
         private bool CheckInvalidPassword()
         {
             if (PasswordField1.Password != PasswordField2.Password)
