@@ -8,11 +8,11 @@ type MessageSent struct {
 
 //MessageReceived represent a message that was relayed by the server
 type MessageReceived struct {
-	ChannelID  string
-	Timestamp  int64
-	SenderID   string
-	SenderName string
-	Message    string
+	ChannelID string
+	Timestamp int64
+	UserID    string
+	Username  string
+	Message   string
 }
 
 //ChannelJoin represent a message that was sent by the server to inform the client that a new user has join

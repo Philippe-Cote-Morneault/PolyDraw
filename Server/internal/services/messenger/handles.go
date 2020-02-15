@@ -39,11 +39,11 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 		if err == nil {
 			if _, ok := h.channelsConnections[channelID][message.SocketID]; ok {
 				messageToFoward := MessageReceived{
-					ChannelID:  messageParsed.ChannelID,
-					SenderID:   user.ID.String(),
-					SenderName: user.Username,
-					Message:    messageParsed.Message,
-					Timestamp:  timestamp,
+					ChannelID: messageParsed.ChannelID,
+					UserID:    user.ID.String(),
+					Username:  user.Username,
+					Message:   messageParsed.Message,
+					Timestamp: timestamp,
 				}
 				rawMessage := socket.RawMessage{}
 				if rawMessage.ParseMessagePack(byte(socket.MessageType.MessageReceived), messageToFoward) != nil {
