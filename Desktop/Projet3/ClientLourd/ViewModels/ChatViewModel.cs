@@ -351,7 +351,9 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged(nameof(JoinedChannels));
             NotifyPropertyChanged(nameof(AvailableChannels));
             NotifyPropertyChanged(nameof(NewMessages));
-            if (SelectedChannel != null && SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
+
+            if (SelectedChannel == null || SessionInformations.User == null) return;
+            if(SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
             {
                 SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
             }
