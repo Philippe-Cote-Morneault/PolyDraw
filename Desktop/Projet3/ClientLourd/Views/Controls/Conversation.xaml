@@ -87,7 +87,7 @@
                                         </materialDesign:Chip.Style>
                                         <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
                                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                                   Text="{Binding User.Name}" />
+                                                   Text="{Binding User.Username}" />
                                         <materialDesign:Chip.Icon>
                                             <materialDesign:PackIcon Kind="Person" />
                                         </materialDesign:Chip.Icon>

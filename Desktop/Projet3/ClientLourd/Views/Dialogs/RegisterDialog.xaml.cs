@@ -15,10 +15,10 @@ namespace ClientLourd.Views.Dialogs
 {
     public partial class RegisterDialog : UserControl, INotifyPropertyChanged
     {
-        public PrivateProfileInfo PrivateProfileInfo { get; set; }
-        public RegisterDialog(PrivateProfileInfo infos)
+        public User User { get; set; }
+        public RegisterDialog(User user)
         {
-            PrivateProfileInfo = infos;
+            User = user;
             InitializeComponent();
         }
 
@@ -69,7 +69,7 @@ namespace ClientLourd.Views.Dialogs
             var result = await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
             Avatar = (BitmapImage) result;
             OnPropertyChanged(nameof(Avatar));
-            PrivateProfileInfo.AvatarID = Regex.Match(Avatar.UriSource.ToString(), @"\d+").Value;
+            User.PictureID = Regex.Match(Avatar.UriSource.ToString(), @"\d+").Value;
         }
 
     }

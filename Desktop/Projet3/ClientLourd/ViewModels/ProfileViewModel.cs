@@ -17,7 +17,7 @@ namespace ClientLourd.ViewModels
     class ProfileViewModel: ViewModelBase
     {
         private SessionInformations _sessionInformations;
-        private PrivateProfileInfo _profileInfo;
+        private User _user;
         private Stats _stats;
         private StatsHistory _statsHistory;
         private int _end;
@@ -43,7 +43,8 @@ namespace ClientLourd.ViewModels
 
         private async Task GetUserInfo(string userID)
         {
-            ProfileInfo = await RestClient.GetUserInfo(userID);
+            //TODO maybe it should be in mainviewmodel ?
+            User = await RestClient.GetUserInfo(userID);
         }
 
         private async Task GetUserStats()
@@ -66,17 +67,10 @@ namespace ClientLourd.ViewModels
             get { return _sessionInformations; }
         }
 
-        public PrivateProfileInfo ProfileInfo
+        public User User
         {
-            get { return _profileInfo; }
-            set
-            {
-                if (value != _profileInfo)
-                {
-                    _profileInfo = value;
-                    NotifyPropertyChanged();
-                }
-            }
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations.User; }
+            set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).SessionInformations.User = value; }
         }
 
         public Stats Stats
@@ -113,7 +107,7 @@ namespace ClientLourd.ViewModels
 
         private async Task EditProfile(object obj)
         {
-            await DialogHost.Show(new EditProfileDialog(ProfileInfo));
+            await DialogHost.Show(new EditProfileDialog());
         }
 
         private RelayCommand<object> _openConnectionsCommand;

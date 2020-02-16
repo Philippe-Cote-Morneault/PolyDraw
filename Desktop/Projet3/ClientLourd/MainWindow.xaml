@@ -140,7 +140,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <materialDesign:PackIcon Kind="Person" Height="40" Width="40"
                                                              HorizontalAlignment="Center" />
-                                    <TextBlock Text="{Binding SessionInformations.User.Name}"
+                                    <TextBlock Text="{Binding SessionInformations.User.Username}"
                                                HorizontalAlignment="Center"
                                                Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
                                 </StackPanel>

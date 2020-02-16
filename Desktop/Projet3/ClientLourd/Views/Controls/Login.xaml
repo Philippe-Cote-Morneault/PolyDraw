@@ -53,7 +53,7 @@
                     materialDesign:HintAssist.Hint="Username"
                     materialDesign:HintAssist.HelperText="">
                     <TextBox.Text>
-                        <Binding Path="User.Name">
+                        <Binding Path="User.Username">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>

@@ -4,6 +4,26 @@
     {
         public User()
         {
+            Username = "";
+            FirstName = "";
+            LastName = "";
+            Email = "";
+            ID = "";
+            PictureID = "";
+            CreatedAt = "";
+            UpdatedAt = "";
+        }
+
+        public User(User user)
+        {
+            Username = user.Username;
+            FirstName = user.FirstName;
+            LastName = user._lastName;
+            Email = user.Email;
+            ID = user.ID;
+            PictureID = user.PictureID;
+            CreatedAt = user.CreatedAt;
+            UpdatedAt = user.UpdatedAt;
         }
 
         public User(string username, string id)
