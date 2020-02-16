@@ -32,10 +32,6 @@ class MainApplication : Application() {
         bindService(Intent(this, SocketService::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
 
         bindService(Intent(this, MonitoringService::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
-
-        bindService(Intent(this, MessageRepository::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
-
-        bindService(Intent(this, ChannelRepository::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
     }
 
     fun startService(service: Class<*>) {
