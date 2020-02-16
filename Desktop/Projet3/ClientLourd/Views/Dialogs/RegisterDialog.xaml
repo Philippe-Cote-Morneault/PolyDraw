@@ -24,7 +24,7 @@
 
             <StackPanel Margin="0 20 0 20">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
-                    <Image Source="{Binding Avatar}"/>
+                    <Image Source="{Binding User.Avatar}"/>
                 </materialDesign:Card>
                 <TextBlock HorizontalAlignment="Center">
                     <Hyperlink Command="{Binding ChangeAvatarCommand}">

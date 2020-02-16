@@ -1,4 +1,8 @@
-﻿namespace ClientLourd.Models.Bindable
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Windows.Media.Imaging;
+
+namespace ClientLourd.Models.Bindable
 {
     public class User : ModelBase
     {
@@ -9,7 +13,7 @@
             LastName = "";
             Email = "";
             ID = "";
-            PictureID = "";
+            Avatar = null;
             CreatedAt = "";
             UpdatedAt = "";
         }
@@ -21,7 +25,7 @@
             LastName = user._lastName;
             Email = user.Email;
             ID = user.ID;
-            PictureID = user.PictureID;
+            Avatar = user.Avatar;
             CreatedAt = user.CreatedAt;
             UpdatedAt = user.UpdatedAt;
         }
@@ -45,17 +49,45 @@
                  }
              }
          }
-         
-         private string _pictureID;
-         public string PictureID
+
+         private BitmapImage _avatar;
+         public BitmapImage Avatar
+         {
+             get
+             {
+                 return _avatar;
+             }
+             set
+             {
+                 if (value != _avatar)
+                 {
+                     _avatar = value;
+                     try
+                     {
+                         _pictureID = int.Parse(Regex.Match(Avatar.UriSource.ToString(), @"\d+").Value);
+                     }
+                     catch
+                     {
+                         _pictureID = 0;
+                     }
+                     NotifyPropertyChanged();
+                     NotifyPropertyChanged(nameof(PictureID));
+                 }
+             }
+         }
+
+         private int _pictureID;
+         public int PictureID
          {
              get { return _pictureID; }
              set
              {
-                 if (value != _pictureID)
+                 if (_pictureID != value)
                  {
                      _pictureID = value;
+                     _avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/Avatar/{_pictureID}.jpg", UriKind.Relative));
                      NotifyPropertyChanged();
+                     NotifyPropertyChanged(nameof(Avatar));
                  }
              }
          }

@@ -123,7 +123,7 @@ namespace ClientLourd.ViewModels
                 }
                 catch(Exception e)
                 {
-                    await DialogHost.Show(new ClosableErrorDialog(e));
+                    await DialogHost.Show(new ClosableErrorDialog(e), "Default");
                     IsLoggedIn = false;
                     SignUp(user);
                 }

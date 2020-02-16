@@ -21,9 +21,6 @@ namespace ClientLourd.Views.Dialogs
             User = user;
             InitializeComponent();
         }
-
-        public BitmapImage Avatar { get; set; }
-
         public bool IsPasswordInvalid
         {
             get { return CheckInvalidPassword(); }
@@ -67,9 +64,7 @@ namespace ClientLourd.Views.Dialogs
         private async void ChangeAvatar()
         {
             var result = await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
-            Avatar = (BitmapImage) result;
-            OnPropertyChanged(nameof(Avatar));
-            User.PictureID = Regex.Match(Avatar.UriSource.ToString(), @"\d+").Value;
+            User.Avatar = (BitmapImage) result;
         }
 
     }
