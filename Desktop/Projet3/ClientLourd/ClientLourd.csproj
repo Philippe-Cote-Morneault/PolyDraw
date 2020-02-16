@@ -131,7 +131,6 @@
     <Compile Include="Models\Bindable\Editor.cs" />
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
-    <Compile Include="Models\Bindable\PrivateProfileInfo.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
     <Compile Include="Models\Bindable\StatsHistory.cs" />
     <Compile Include="Models\Bindable\User.cs" />
