@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ClientLourd.Annotations;
+using ClientLourd.Utilities.Commands;
 using GongSolutions.Wpf.DragDrop.Utilities;
 using MaterialDesignThemes.Wpf;
 
@@ -70,19 +72,22 @@ namespace ClientLourd.Views.Dialogs
         {
             SelectedButton = ((Button) sender);
         }
+        RelayCommand<object> _quitCommand;
 
-        private void QuitClick(object sender, RoutedEventArgs e)
+        public ICommand QuitCommand
         {
-            if (SelectedButton != null)
+            get
             {
-                Card card = (Card) SelectedButton.Content;
-                Image image = (Image) card.Content;
-                DialogHost.CloseDialogCommand.Execute(image.Source,this);
+                return _quitCommand ??
+                       (_quitCommand = new RelayCommand<object>(channel => Quit(), o => SelectedButton != null));
             }
-            else
-            {
-                //TODO
-            }
+        }
+
+        private void Quit()
+        {
+            Card card = (Card) SelectedButton.Content;
+            Image image = (Image) card.Content;
+            DialogHost.CloseDialogCommand.Execute(image.Source,this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
