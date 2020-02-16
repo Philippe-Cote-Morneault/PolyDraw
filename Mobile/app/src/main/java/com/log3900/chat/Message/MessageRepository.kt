@@ -117,10 +117,10 @@ class MessageRepository : Service() {
         sendMessage(message)
     }
 
-    fun loadMoreMessages(count: Int, channelID: UUID): Completable {
-        return Completable.create {
+    fun loadMoreMessages(count: Int, channelID: UUID): Single<Int> {
+        return Single.create {
             if (fullyLoadedHistory.contains(channelID)) {
-                it.onComplete()
+                it.onSuccess(0)
             } else {
                 getChannelMessages(
                     channelID,
@@ -134,7 +134,7 @@ class MessageRepository : Service() {
                             messageCache.prependMessage(channelID, messages)
                         }
 
-                        it.onComplete()
+                        it.onSuccess(messages.size)
                     },
                     {
 

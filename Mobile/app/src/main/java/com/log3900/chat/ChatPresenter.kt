@@ -85,10 +85,13 @@ class ChatPresenter : Presenter {
 
     fun scrolledToPositions(firstPosition: Int, lastPosition: Int, scrollDirection: Int) {
         if (scrollDirection < 0) {
-            if (firstPosition < 25 && !loadingMessages) {
+            if (firstPosition < 15 && !loadingMessages) {
                 loadingMessages = true
                 chatManager.loadMoreMessages().subscribe(
                     {
+                        if (it > 0) {
+                            chatView.notifyMessagesPrepended(it)
+                        }
                         loadingMessages = false
                     },
                     {

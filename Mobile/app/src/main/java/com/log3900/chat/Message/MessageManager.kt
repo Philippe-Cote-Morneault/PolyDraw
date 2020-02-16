@@ -32,8 +32,8 @@ class MessageManager {
         messageRepository.sendMessage(SentMessage(message, channelID))
     }
 
-    fun loadMoreMessages(channelID: UUID): Completable {
-        return messageRepository.loadMoreMessages(25, channelID)
+    fun loadMoreMessages(channelID: UUID): Single<Int> {
+        return messageRepository.loadMoreMessages(15, channelID)
     }
 
     private fun onMessageReceived(message: ReceivedMessage) {

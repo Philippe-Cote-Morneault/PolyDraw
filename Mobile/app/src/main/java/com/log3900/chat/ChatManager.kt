@@ -106,7 +106,7 @@ class ChatManager : Service() {
         channelManager?.changeSubscriptionStatus(channel)
     }
 
-    fun loadMoreMessages(): Completable {
+    fun loadMoreMessages(): Single<Int> {
         return messageManager?.loadMoreMessages(channelManager?.activeChannel?.ID!!)!!
     }
 

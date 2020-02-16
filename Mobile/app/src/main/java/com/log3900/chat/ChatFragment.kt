@@ -130,7 +130,6 @@ class ChatFragment : Fragment(), ChatView {
     }
 
     override fun notifyNewMessage() {
-        println("NOTIFY NEW MESSAGE")
         messagesViewAdapter.messageInserted()
     }
 
@@ -158,5 +157,9 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun hideProgressDialog(dialog: DialogFragment) {
         dialog.dismiss()
+    }
+
+    override fun notifyMessagesPrepended(count: Int) {
+        messagesViewAdapter.prependMessages(count)
     }
 }
