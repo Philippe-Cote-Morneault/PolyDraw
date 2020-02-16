@@ -15,15 +15,12 @@ namespace ClientLourd.Views.Dialogs
 {
     public partial class RegisterDialog : UserControl, INotifyPropertyChanged
     {
-        public PrivateProfileInfo PrivateProfileInfo { get; set; }
-        public RegisterDialog(PrivateProfileInfo infos)
+        public User User { get; set; }
+        public RegisterDialog(User user)
         {
-            PrivateProfileInfo = infos;
+            User = user;
             InitializeComponent();
         }
-
-        public BitmapImage Avatar { get; set; }
-
         public bool IsPasswordInvalid
         {
             get { return CheckInvalidPassword(); }
@@ -67,9 +64,7 @@ namespace ClientLourd.Views.Dialogs
         private async void ChangeAvatar()
         {
             var result = await DialogHost.Show(new AvatarSelectionDialog(), "RegisterDialogHost");
-            Avatar = (BitmapImage) result;
-            OnPropertyChanged(nameof(Avatar));
-            PrivateProfileInfo.AvatarID = Regex.Match(Avatar.UriSource.ToString(), @"\d+").Value;
+            User.Avatar = (BitmapImage) result;
         }
 
     }

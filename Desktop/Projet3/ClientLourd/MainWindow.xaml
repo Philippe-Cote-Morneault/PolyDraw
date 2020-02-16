@@ -35,7 +35,7 @@
         </KeyBinding>
     </Window.InputBindings>
 
-    <materialDesign:DialogHost x:Name="MainWindowDialogHost" CloseOnClickAway="False">
+    <materialDesign:DialogHost Identifier="Default" x:Name="MainWindowDialogHost" CloseOnClickAway="False">
         <Grid>
             <WrapPanel ZIndex="1"
                        Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -138,9 +138,10 @@
                         <DockPanel>
                             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" Padding="10">
                                 <StackPanel Orientation="Vertical">
-                                    <materialDesign:PackIcon Kind="Person" Height="40" Width="40"
-                                                             HorizontalAlignment="Center" />
-                                    <TextBlock Text="{Binding SessionInformations.User.Name}"
+                                    <materialDesign:Card Height="100" Padding="5" Width="100" materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center">
+                                        <Image Source="{Binding SessionInformations.User.Avatar}"/>
+                                    </materialDesign:Card>
+                                    <TextBlock Text="{Binding SessionInformations.User.Username}"
                                                HorizontalAlignment="Center"
                                                Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
                                 </StackPanel>

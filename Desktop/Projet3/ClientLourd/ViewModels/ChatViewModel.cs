@@ -21,24 +21,38 @@ namespace ClientLourd.ViewModels
     public class ChatViewModel : ViewModelBase
     {
         private const string GLOBAL_CHANNEL_ID = "00000000-0000-0000-0000-000000000000";
-        private int _newMessages;
         private readonly Mutex _mutex = new Mutex();
-
+        private List<User> _users;
+        private readonly User _admin = new User("Admin", "-1");
 
         /// <summary>
         /// New message counter
         /// </summary>
         public int NewMessages
         {
-            get
+            get { return Channels.Sum(c => c.Notification); }
+        }
+
+        private User GetUser(string username, string id)
+        {
+            User user = _users.FirstOrDefault(u => u.ID == id);
+            if (user == null)
             {
-                return Channels.Sum(c => c.Notification);
+                user = new User(username, id);
+                _users.Add(user);
+                Application.Current.Dispatcher.InvokeAsync(async() =>
+                {
+                    //Get the others informations
+                    user.Update(await RestClient.GetUserInfo(id));
+                });
+                return user;
             }
+            return user;
         }
 
         public void OnChatToggle(bool isOpen)
         {
-            NotifyPropertyChanged("NewMessages");
+            NotifyPropertyChanged(nameof(NewMessages));
             if (isOpen)
             {
                 SelectedChannel.IsSelected = true;
@@ -120,6 +134,7 @@ namespace ClientLourd.ViewModels
         public override void AfterLogOut()
         {
             ChannelFilter = "";
+            _users = new List<User>();
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
             SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel;
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
@@ -163,7 +178,7 @@ namespace ClientLourd.ViewModels
                 {
                         var e = (MessageReceivedEventArgs) args;
                         Channel channel = Channels.First(c => c.ID == e.ChannelId);
-                        Message m = new Message(e.Date, new User("admin", "-1"), $"{e.Username} left the channel");
+                        Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
                         channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
                         Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
                         UpdateChannels();
@@ -183,9 +198,8 @@ namespace ClientLourd.ViewModels
                 {
                         var e = (MessageReceivedEventArgs) args;
                         Channel channel = Channels.First(c => c.ID == e.ChannelId);
-                        Message m = new Message(e.Date, new User("admin", "-1"), $"{e.Username} joined the channel");
-                        // TODO Cache user
-                        channel.Users.Add(new User(e.Username, e.UserID));
+                        Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
+                        channel.Users.Add(GetUser(e.Username, e.UserID));
                         Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
                         UpdateChannels();
                 });
@@ -223,7 +237,7 @@ namespace ClientLourd.ViewModels
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            Message m = new Message(args.Date, new User(args.Username, args.UserID), args.Message);
+            Message m = new Message(args.Date, GetUser(args.Username, args.UserID), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NotifyPropertyChanged("NewMessages");
         }

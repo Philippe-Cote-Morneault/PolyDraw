@@ -20,7 +20,8 @@
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
     <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
-        <Grid>
+        <Grid
+            IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}">
             <Grid.RowDefinitions>
 
                 <RowDefinition Height="*" />
@@ -52,7 +53,7 @@
                     materialDesign:HintAssist.Hint="Username"
                     materialDesign:HintAssist.HelperText="">
                     <TextBox.Text>
-                        <Binding Path="User.Name">
+                        <Binding Path="User.Username">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -80,7 +81,6 @@
             <Button 
                     IsDefault="True"
                     Margin="40 0 40 0"
-                    IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding Path=LoginCommand}">
                 <Button.CommandParameter>

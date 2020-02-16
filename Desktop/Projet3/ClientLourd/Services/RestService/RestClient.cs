@@ -86,12 +86,12 @@ namespace ClientLourd.Services.RestService
             }
         }
 
-        public async Task<Dictionary<string, object>> Register(PrivateProfileInfo informations, string password)
+        public async Task<Dictionary<string, object>> Register(User user, string password)
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth/register", Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new {Username = informations.Username, FirstName=informations.FirstName, LastName= informations.LastName, Email=informations.Email, Password = password, PictureID=informations.AvatarID});
+            request.AddJsonBody(new {Username = user.Username, FirstName=user.FirstName, LastName= user.LastName, Email=user.Email, Password = password, PictureID=user.PictureID});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
@@ -253,7 +253,7 @@ namespace ClientLourd.Services.RestService
 
 
 
-        public async Task<PrivateProfileInfo> GetUserInfo(string userID)
+        public async Task<User> GetUserInfo(string userID)
         {
             RestRequest request = new RestRequest($"users/{userID}", Method.GET);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
@@ -262,7 +262,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return JsonConvert.DeserializeObject<PrivateProfileInfo>(response.Content);
+                    return JsonConvert.DeserializeObject<User>(response.Content);
                 case HttpStatusCode.BadRequest:
                     throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:

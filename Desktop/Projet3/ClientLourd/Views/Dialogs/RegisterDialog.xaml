@@ -24,7 +24,7 @@
 
             <StackPanel Margin="0 20 0 20">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
-                    <Image Source="{Binding Avatar}"/>
+                    <Image Source="{Binding User.Avatar}"/>
                 </materialDesign:Card>
                 <TextBlock HorizontalAlignment="Center">
                     <Hyperlink Command="{Binding ChangeAvatarCommand}">
@@ -39,7 +39,7 @@
                 </StackPanel>
                 <TextBox x:Name="UsernameField" MaxLength="12">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfo.Username" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -54,7 +54,7 @@
                 </StackPanel>
                 <TextBox x:Name="EmailField" MaxLength="60">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfo.Email" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="User.Email" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:EmailRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -91,7 +91,7 @@
                 </StackPanel>
                 <TextBox x:Name="FirstNameField" MaxLength="64">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfo.FirstName" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="User.FirstName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:NameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -107,7 +107,7 @@
                 </StackPanel>
                 <TextBox x:Name="LastNameField" MaxLength="64">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfo.LastName" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="User.LastName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:NameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>

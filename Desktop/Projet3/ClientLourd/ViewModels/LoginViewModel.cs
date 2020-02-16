@@ -106,26 +106,26 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private async void SignUp(PrivateProfileInfo infos = null)
+        private async void SignUp(User user = null)
         {
-            if (infos == null)
+            if (user == null)
             {
-                infos = new PrivateProfileInfo();
+                user = new User();
             }
-            var dialog = new RegisterDialog(infos);
+            var dialog = new RegisterDialog(user);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
             {
                 try
                 {
-                    dynamic data = await RestClient.Register(infos, dialog.PasswordField1.Password);
-                    StartLogin(infos.Username, data, false);
+                    dynamic data = await RestClient.Register(user, dialog.PasswordField1.Password);
+                    StartLogin(user.Username, data, false);
                 }
                 catch(Exception e)
                 {
-                    await DialogHost.Show(new ClosableErrorDialog(e));
+                    await DialogHost.Show(new ClosableErrorDialog(e), "Default");
                     IsLoggedIn = false;
-                    SignUp(infos);
+                    SignUp(user);
                 }
             }
 
