@@ -25,24 +25,21 @@ class ChatPresenter : Presenter {
     constructor(chatView: ChatView) {
         this.chatView = chatView
         loadingMessages = false
-        if (!(ChatManager.instance?.ready!!)) {
-            val progressDialog = ProgressDialog()
-            chatView.showProgressDialog(progressDialog)
-            ChatManager.instance?.subject?.filter {
-                it
-            }?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe {
-                chatView.hideProgressDialog(progressDialog)
+        ChatManager.getInstance()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+            {
+                chatManager = it
                 init()
+            },
+            {
+
             }
-        } else {
-            init()
-        }
+        )
 
     }
 
     private fun init() {
-        chatManager = ChatManager.instance!!
         chatManager.getCurrentChannelMessages()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -55,7 +52,7 @@ class ChatPresenter : Presenter {
 
                 }
             )
-        chatView.setCurrentChannnelName(ChatManager.instance?.getActiveChannel()?.name!!)
+        chatView.setCurrentChannnelName(chatManager.getActiveChannel().name)
         messageRepository = MessageRepository.instance!!
 
         subscribeToEvents()

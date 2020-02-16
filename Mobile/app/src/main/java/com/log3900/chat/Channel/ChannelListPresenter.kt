@@ -17,20 +17,20 @@ class ChannelListPresenter : Presenter {
 
     constructor(channelListView: ChannelListView) {
         this.channelListView = channelListView
-        if (!(ChatManager.instance?.ready!!)) {
-            ChatManager.instance?.subject?.filter {
-                it
-            }?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe {
+        ChatManager.getInstance()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+            {
+                chatManager = it
                 init()
+            },
+            {
+
             }
-        } else {
-            init()
-        }
+        )
     }
 
     private fun init() {
-        this.chatManager = ChatManager.instance!!
         chatManager.getJoinedChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { channels ->
                 channelListView.setJoinedChannels(channels)
