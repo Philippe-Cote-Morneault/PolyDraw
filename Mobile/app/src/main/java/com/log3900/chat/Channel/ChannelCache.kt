@@ -7,11 +7,6 @@ import kotlin.collections.ArrayList
 class ChannelCache {
     var joinedChannels: ArrayList<Channel> = arrayListOf()
     var availableChannels: ArrayList<Channel> = arrayListOf()
-    var needsReload: Boolean = true
-
-    constructor() {
-
-    }
 
     fun reloadChannels(channels: ArrayList<Channel>) {
         val username = UserRepository.getUser().username
