@@ -25,13 +25,31 @@ import kotlin.collections.ArrayList
 class ChatManager : Service() {
     private var channelManager: ChannelManager? = null
     private var messageManager: MessageManager? = null
-    var ready: Boolean = false
-    var subject: PublishSubject<Boolean> = PublishSubject.create()
 
     private val binder = ChatManagerBinder()
 
     companion object {
-        var instance: ChatManager? = null
+        private var isReady = false
+        private var isReadySignal:PublishSubject<Boolean> = PublishSubject.create()
+        private var instance: ChatManager? = null
+
+        fun getInstance(): Single<ChatManager> {
+            return Single.create {
+                val readySignal = isReadySignal.subscribe(
+                    { ready ->
+                        it.onSuccess(instance!!)
+                    },
+                    {
+
+                    }
+                )
+                if (isReady) {
+                    readySignal.dispose()
+                    it.onSuccess(instance!!)
+                }
+            }
+        }
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -107,8 +125,8 @@ class ChatManager : Service() {
 
 
     private fun setReadyState() {
-        ready = true
-        subject.onNext(true)
+        isReady = true
+        isReadySignal.onNext(true)
     }
 
 
