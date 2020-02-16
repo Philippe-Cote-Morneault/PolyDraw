@@ -90,7 +90,7 @@ class ChannelRepository : Service() {
                     channelCache.reloadChannels(channels)
                     it.onSuccess(channelCache.joinedChannels)
                 },
-                { error ->
+                {
 
                 }
             )
@@ -104,7 +104,7 @@ class ChannelRepository : Service() {
                     channelCache.reloadChannels(channels)
                     it.onSuccess(channelCache.availableChannels)
                 },
-                { error ->
+                {
 
                 }
             )

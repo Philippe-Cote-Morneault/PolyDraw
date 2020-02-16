@@ -35,14 +35,14 @@ class ChannelListPresenter : Presenter {
             { channels ->
                 channelListView.setJoinedChannels(channels)
             },
-            { error ->
+            { _ ->
             }
         )
         chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { channels ->
                 channelListView.setAvailableChannels(channels)
             },
-            { error ->
+            { _ ->
             }
         )
         EventBus.getDefault().register(this)

@@ -46,8 +46,7 @@ class ChannelCache {
     }
 
     fun removeChannel(channelID: UUID) {
-        var channelToRemove: Channel? = null
-        channelToRemove = availableChannels.find {
+        var channelToRemove = availableChannels.find {
             it.ID == channelID
         }
 

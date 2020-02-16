@@ -36,7 +36,7 @@ class ChatManager : Service() {
         fun getInstance(): Single<ChatManager> {
             return Single.create {
                 val readySignal = isReadySignal.subscribe(
-                    { ready ->
+                    { _ ->
                         it.onSuccess(instance!!)
                     },
                     {
