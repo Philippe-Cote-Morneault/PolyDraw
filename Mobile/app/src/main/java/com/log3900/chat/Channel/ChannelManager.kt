@@ -4,8 +4,8 @@ import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-import com.log3900.user.User
-import com.log3900.user.UserRepository
+import com.log3900.user.Account
+import com.log3900.user.AccountRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ChannelManager {
-    private var user: User
+    private var account: Account
     lateinit var activeChannel: Channel
     lateinit var availableChannels: ArrayList<Channel>
     lateinit var joinedChannels: ArrayList<Channel>
@@ -22,12 +22,12 @@ class ChannelManager {
     var unreadMessagesTotal: Int = 0
 
     constructor() {
-        user = UserRepository.getUser()
+        account = AccountRepository.getAccount()
     }
 
     fun init() {
-        joinedChannels = ChannelRepository.instance?.getJoinedChannels(user.sessionToken)?.blockingGet()!!
-        availableChannels = ChannelRepository.instance?.getAvailableChannels(user.sessionToken)?.blockingGet()!!
+        joinedChannels = ChannelRepository.instance?.getJoinedChannels(account.sessionToken)?.blockingGet()!!
+        availableChannels = ChannelRepository.instance?.getAvailableChannels(account.sessionToken)?.blockingGet()!!
         activeChannel = joinedChannels.find {
             it.ID.toString() == "00000000-0000-0000-0000-000000000000"
         }!!
