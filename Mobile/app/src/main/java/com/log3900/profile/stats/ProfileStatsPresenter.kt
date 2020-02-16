@@ -49,6 +49,7 @@ class ProfileStatsPresenter(val statsView: ProfileStatsFragment) {
     private fun onStatsFetchSuccess(userStats: UserStats) {
         println(userStats)
         println(userStats.achievements)
+        statsView.showStats(userStats.generalStats)
     }
 
     private fun onStatsFetchError(error: String?) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -40,5 +41,21 @@ class ProfileStatsFragment : Fragment() {
     private fun fetchStats() {
         println("Fetching stats!")
         profileStatsPresenter.fetchStats()
+    }
+
+    fun showStats(generalStats: GeneralStats) {
+        view?.let {
+            val gamesPlayed: TextView =     it.findViewById(R.id.games_played_stat)
+            val winRatio: TextView =        it.findViewById(R.id.win_ratio_stat)
+            val avgGameDuration: TextView = it.findViewById(R.id.avg_game_duration_stat)
+            val timePlayed: TextView =      it.findViewById(R.id.time_played_stat)
+
+            gamesPlayed.text = generalStats.gamesPlayed.toString()
+            winRatio.text = generalStats.winRation.toString()
+            avgGameDuration.text = generalStats.averageGameDuration.toString()
+            timePlayed.text = generalStats.timePlayed.toString()
+        }
+
+
     }
 }
