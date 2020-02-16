@@ -17,7 +17,7 @@ import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.OnlineUser
-import com.log3900.user.UserRepository
+import com.log3900.user.AccountRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -50,7 +50,7 @@ class ChannelRepository : Service() {
         instance = this
         socketService = SocketService.instance
         channelCache = ChannelCache()
-        getChannels(UserRepository.getUser().sessionToken).subscribe(
+        getChannels(AccountRepository.getAccount().sessionToken).subscribe(
             {
                 channelCache.reloadChannels(it)
                 isReady = true

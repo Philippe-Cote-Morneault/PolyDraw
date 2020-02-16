@@ -11,7 +11,7 @@ import com.google.gson.JsonObject
 import com.log3900.chat.ChatRestService
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.UserRepository
+import com.log3900.user.AccountRepository
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
@@ -68,7 +68,7 @@ class MessageRepository : Service() {
     fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ReceivedMessage>> {
         return Single.create {
                 val call = ChatRestService.service.getChannelMessages(
-                    UserRepository.getUser().sessionToken,
+                    AccountRepository.getAccount().sessionToken,
                     "EN",
                     channelID.toString(),
                     startIndex,
@@ -160,7 +160,7 @@ class MessageRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-        sessionToken = UserRepository.getUser().sessionToken
+        sessionToken = AccountRepository.getAccount().sessionToken
 
         Thread(Runnable {
             Looper.prepare()

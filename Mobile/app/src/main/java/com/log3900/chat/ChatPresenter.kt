@@ -130,7 +130,7 @@ class ChatPresenter : Presenter {
 
     private fun onNewMessage(message: ReceivedMessage) {
         chatView.notifyNewMessage()
-        if (AccountRepository.getAccount().username != receivedMessage.senderName) {
+        if (AccountRepository.getAccount().username != message.username) {
             chatView.playNewMessageNotification()
         }
     }
