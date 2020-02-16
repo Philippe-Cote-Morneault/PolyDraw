@@ -38,6 +38,7 @@ class ProfileStatsFragment : Fragment() {
     }
 
     private fun fetchStats() {
+        println("Fetching stats!")
         profileStatsPresenter.fetchStats()
     }
 }
