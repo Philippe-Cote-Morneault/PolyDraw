@@ -11,7 +11,9 @@ import android.os.Message
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.log3900.MainApplication
+import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
+import com.log3900.chat.Message.MessageRepository
 import com.log3900.shared.ui.ErrorDialog
 import com.log3900.socket.*
 
@@ -93,6 +95,8 @@ class MonitoringService : Service() {
     }
 
     fun onAuthentication() {
+        MainApplication.instance.startService(MessageRepository::class.java)
+        MainApplication.instance.startService(ChannelRepository::class.java)
         MainApplication.instance.startService(ChatManager::class.java)
     }
 
