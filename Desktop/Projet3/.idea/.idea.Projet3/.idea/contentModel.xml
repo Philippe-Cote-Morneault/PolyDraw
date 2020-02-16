@@ -205,6 +205,8 @@
             <e p="MessageDialog.xaml.cs" t="Include" />
             <e p="RegisterDialog.xaml" t="Include" />
             <e p="RegisterDialog.xaml.cs" t="Include" />
+            <e p="Tutorial.xaml" t="Include" />
+            <e p="Tutorial.xaml.cs" t="Include" />
           </e>
           <e p="Windows" t="Include">
             <e p="ChatWindow.xaml" t="Include" />

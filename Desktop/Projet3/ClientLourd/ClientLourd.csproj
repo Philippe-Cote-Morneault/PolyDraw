@@ -232,6 +232,9 @@
     <Compile Include="Views\Dialogs\RegisterDialog.xaml.cs">
       <DependentUpon>RegisterDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\Tutorial.xaml.cs">
+      <DependentUpon>Tutorial.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Windows\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
     </Compile>
@@ -281,6 +284,7 @@
     <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
     <Page Include="Views\Dialogs\RegisterDialog.xaml" />
+    <Page Include="Views\Dialogs\Tutorial.xaml" />
     <Page Include="Views\Windows\ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
