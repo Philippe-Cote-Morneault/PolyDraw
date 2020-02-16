@@ -29,6 +29,7 @@ class AccountRepository {
         }
 
         fun createAccount(account: Account) {
+            println("Session Token: ${account.sessionToken}")
             updateAccount(account)
         }
 

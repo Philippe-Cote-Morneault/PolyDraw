@@ -1,11 +1,11 @@
 package com.log3900.profile.stats
 
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.log3900.profile.ProfileRestService
 import com.log3900.user.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
@@ -48,6 +48,7 @@ class ProfileStatsPresenter(val statsView: ProfileStatsFragment) {
 
     private fun onStatsFetchSuccess(userStats: UserStats) {
         println(userStats)
+        println(userStats.achievements)
     }
 
     private fun onStatsFetchError(error: String?) {
@@ -55,8 +56,10 @@ class ProfileStatsPresenter(val statsView: ProfileStatsFragment) {
     }
 
     private fun parseJsonToStats(json: JsonObject): UserStats {
-        println(json.get("Stats").toString())
-        val moshi = Moshi.Builder().build()
+        println(json.toString())
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
         val adapter: JsonAdapter<UserStats> = moshi.adapter(UserStats::class.java)
 
         return adapter.fromJson(json.toString())!!
