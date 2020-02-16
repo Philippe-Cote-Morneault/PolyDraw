@@ -33,19 +33,13 @@ namespace ClientLourd.ViewModels
             get { return Channels.Sum(c => c.Notification); }
         }
 
-        private User GetUser(string username, string id)
+        private async Task<User> GetUser(string username, string id)
         {
             User user = _users.FirstOrDefault(u => u.ID == id);
             if (user == null)
             {
-                user = new User(username, id);
+                user = (await RestClient.GetUserInfo(id));
                 _users.Add(user);
-                Application.Current.Dispatcher.InvokeAsync(async() =>
-                {
-                    //Get the others informations
-                    user.Update(await RestClient.GetUserInfo(id));
-                });
-                return user;
             }
             return user;
         }
@@ -103,7 +97,7 @@ namespace ClientLourd.ViewModels
                         _selectedChannel.IsSelected = true;
                         if (_selectedChannel.Messages.Count < 10)
                         {
-                            LoadHistory(50);
+                            LoadHistory(25);
                         }
                     }
                     NotifyPropertyChanged();
@@ -194,12 +188,12 @@ namespace ClientLourd.ViewModels
             _mutex.WaitOne();
             try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(async () =>
                 {
                         var e = (MessageReceivedEventArgs) args;
                         Channel channel = Channels.First(c => c.ID == e.ChannelId);
                         Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
-                        channel.Users.Add(GetUser(e.Username, e.UserID));
+                        channel.Users.Add(await GetUser(e.Username, e.UserID));
                         Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
                         UpdateChannels();
                 });
@@ -233,11 +227,11 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private void SocketClientOnMessageReceived(object source, EventArgs e)
+        private async void SocketClientOnMessageReceived(object source, EventArgs e)
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            Message m = new Message(args.Date, GetUser(args.Username, args.UserID), args.Message);
+            Message m = new Message(args.Date,await GetUser(args.Username, args.UserID), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NotifyPropertyChanged("NewMessages");
         }
@@ -258,11 +252,14 @@ namespace ClientLourd.ViewModels
         {
             if (SelectedChannel != null)
             {
-                var messages = await RestClient.GetChannelMessages(SelectedChannel.ID, SelectedChannel.Messages.Count,
+                var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
+                    SelectedChannel.Messages.Count,
                     SelectedChannel.Messages.Count + numberOfMessages);
                 // TODO Change for a linkedList
                 for (int i = messages.Count-1; i >= 0; i--)
                 {
+                    User u = messages[i].User;
+                    messages[i].User = (await GetUser(u.Username, u.ID));
                     SelectedChannel.Messages.Add(messages[i]);
                 }
             }

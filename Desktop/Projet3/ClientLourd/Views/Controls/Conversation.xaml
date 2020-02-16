@@ -89,7 +89,7 @@
                                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
                                                    Text="{Binding User.Username}" />
                                         <materialDesign:Chip.Icon>
-                                            <Image Source="{Binding User.Avatar}"></Image>                                            
+                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>                                            
                                         </materialDesign:Chip.Icon>
                                     </materialDesign:Chip>
                                     <materialDesign:Card
