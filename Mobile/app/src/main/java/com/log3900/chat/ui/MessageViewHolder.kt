@@ -35,13 +35,13 @@ class MessageViewHolder : RecyclerView.ViewHolder {
     fun bind(message: ReceivedMessage) {
         this.message = message
         messageTextView.text = message.message
-        usernameTextView.text = message.senderName
+        usernameTextView.text = message.username
         dateTextView.text = DateFormatter.formatDate(message.timestamp)
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(view)
 
-        if (message.senderName == username) {
+        if (message.username == username) {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.START)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
             messageTextView.setBackgroundColor(Color.parseColor("#3F51B5"))

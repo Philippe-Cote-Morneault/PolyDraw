@@ -16,6 +16,8 @@ import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
+import com.log3900.user.OnlineUser
+import com.log3900.user.AccountRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -36,11 +38,27 @@ import kotlin.collections.ArrayList
 class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
     private var socketService: SocketService? = null
-    private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
     private lateinit var channelCache: ChannelCache
+
+    var isReady = false
 
     companion object {
         var instance: ChannelRepository? = null
+    }
+
+    fun initializeRepository() {
+        instance = this
+        socketService = SocketService.instance
+        channelCache = ChannelCache()
+        getChannels(AccountRepository.getAccount().sessionToken).subscribe(
+            {
+                channelCache.reloadChannels(it)
+                isReady = true
+            },
+            {
+
+            }
+        )
     }
 
     fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
@@ -67,37 +85,29 @@ class ChannelRepository : Service() {
 
     fun getJoinedChannels(sessionToken: String): Single<ArrayList<Channel>> {
         return Single.create {
-            if (!channelCache.needsReload) {
-                it.onSuccess(channelCache.joinedChannels)
-            } else {
-                getChannels(sessionToken).subscribe(
-                    { channels ->
-                        channelCache.reloadChannels(channels)
-                        it.onSuccess(channelCache.joinedChannels)
-                    },
-                    { error ->
+            getChannels(sessionToken).subscribe(
+                { channels ->
+                    channelCache.reloadChannels(channels)
+                    it.onSuccess(channelCache.joinedChannels)
+                },
+                { error ->
 
-                    }
-                )
-            }
+                }
+            )
         }
     }
 
     fun getAvailableChannels(sessionToken: String): Single<ArrayList<Channel>> {
         return Single.create {
-            if (!channelCache.needsReload) {
-                it.onSuccess(channelCache.joinedChannels)
-            } else {
-                getChannels(sessionToken).subscribe(
-                    { channels ->
-                        channelCache.reloadChannels(channels)
-                        it.onSuccess(channelCache.availableChannels)
-                    },
-                    { error ->
+            getChannels(sessionToken).subscribe(
+                { channels ->
+                    channelCache.reloadChannels(channels)
+                    it.onSuccess(channelCache.availableChannels)
+                },
+                { error ->
 
-                    }
-                )
-            }
+                }
+            )
         }
     }
 
@@ -138,19 +148,29 @@ class ChannelRepository : Service() {
         SocketService.instance?.sendJsonMessage(Event.CREATE_CHANNEL, dataObject.toString())
     }
 
+    fun deleteChannel(channel: Channel) {
+        socketService?.sendMessage(Event.DELETE_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
+    }
+
     private fun onChannelCreated(message: Message) {
         val moshi = MoshiPack({
             add(TimeStampAdapter())
             add(UUIDAdapter())
         })
         val channelCreated = moshi.unpack<ChannelCreatedMessage>(message.data)
-        val channel = Channel(channelCreated.channelID, channelCreated.name, arrayOf())
-        channelCache.addAvailableChannel(Channel(channelCreated.channelID, channelCreated.name, arrayOf()))
+        val channel = Channel(channelCreated.channelID, channelCreated.name, arrayOf(OnlineUser(channelCreated.username, channelCreated.userID)))
+        channelCache.addAvailableChannel(channel)
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_CREATED, channel))
     }
 
     private fun onChannelDeleted(message: Message) {
-
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+        })
+        val channelCreated = moshi.unpack<ChannelDeletedMessage>(message.data)
+        channelCache.removeChannel(channelCreated.channelID)
+        EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_DELETED, channelCreated.channelID))
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -159,9 +179,8 @@ class ChannelRepository : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        socketService = SocketService.instance
-        channelCache = ChannelCache()
+
+        initializeRepository()
 
         Thread(Runnable {
             Looper.prepare()
@@ -192,3 +211,7 @@ class ChannelRepository : Service() {
 class ChannelCreatedMessage(@Json(name = "ChannelName") var name: String, @Json(name = "ChannelID") var channelID: UUID,
                                   @Json(name = "Username") var username: String, @Json(name = "UserID") var userID: UUID,
                                   @Json(name = "Timestamp") var timestamp: Date) {}
+
+class ChannelDeletedMessage(@Json(name = "ChannelID") var channelID: UUID,
+                            @Json(name = "Username") var username: String, @Json(name = "UserID") var userID: UUID,
+                            @Json(name = "Timestamp") var timestamp: Date) {}

@@ -11,17 +11,22 @@ import com.google.gson.JsonObject
 import com.log3900.chat.ChatRestService
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
+import com.log3900.user.AccountRepository
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.Completable
+import io.reactivex.Single
 import retrofit2.Call
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.collections.HashSet
 
 class MessageRepository : Service() {
     enum class Event {
@@ -32,58 +37,75 @@ class MessageRepository : Service() {
     private val binder = MessageRepositoryBinder()
     private var socketService: SocketService? = null
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
+    private lateinit var sessionToken: String
 
     // Data
-    private val cachedMessages: ConcurrentHashMap<UUID, LinkedList<ReceivedMessage>> = ConcurrentHashMap()
+    private val messageCache: MessageCache = MessageCache()
+    private val fullyLoadedHistory: HashSet<UUID> = HashSet()
 
     companion object {
         var instance: MessageRepository? = null
     }
 
-    fun getChannelMessages(channelID: String, sessionToken: String, startIndex: Int, endIndex: Int): LinkedList<ReceivedMessage> {
-        var messages: LinkedList<ReceivedMessage>? = null
-        if (true) {
-            if (!cachedMessages.containsKey(UUID.fromString(channelID))) {
-                cachedMessages[UUID.fromString(channelID)] = LinkedList<ReceivedMessage>()
-            }
-            messages = cachedMessages[UUID.fromString(channelID)]
-            println("repository messages = " + messages)
-        } else {
-            val call = ChatRestService.service.getChannelMessages(
-                sessionToken,
-                "EN",
-                channelID,
-                startIndex,
-                endIndex
-            )
-            call.enqueue(object : Callback<JsonObject> {
-                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                    when (response.code()) {
-                        200 -> {
-                            val moshi = Moshi.Builder()
-                                .add(UUIDAdapter())
-                                .build()
-                            val adapter: JsonAdapter<LinkedList<ReceivedMessage>> = moshi.adapter(
-                                Types.newParameterizedType(
-                                    ArrayList::class.java,
-                                    ReceivedMessage::class.java
-                                )
-                            )
-                            messages =
-                                adapter.fromJson(response.body()!!.getAsJsonArray("Messages").toString())
-                        }
-                        else -> {
+    fun getChannelMessages(channelID: UUID): Single<LinkedList<ReceivedMessage>> {
+        return Single.create {
+            if (messageCache.getMessages(channelID).size == 0) {
+                getChannelMessages(channelID, 0, 50).subscribe(
+                    { messages ->
+                        messageCache.prependMessage(channelID, LinkedList(messages))
+                        it.onSuccess(messageCache.getMessages(channelID))
+                    },
+                    {
 
+                    }
+                )
+            } else {
+                it.onSuccess(messageCache.getMessages(channelID))
+            }
+        }
+    }
+
+    fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ReceivedMessage>> {
+        return Single.create {
+                val call = ChatRestService.service.getChannelMessages(
+                    AccountRepository.getAccount().sessionToken,
+                    "EN",
+                    channelID.toString(),
+                    startIndex,
+                    endIndex
+                )
+                call.enqueue(object : Callback<JsonObject> {
+                    override fun onResponse(
+                        call: Call<JsonObject>,
+                        response: Response<JsonObject>
+                    ) {
+                        when (response.code()) {
+                            200 -> {
+                                val moshi = Moshi.Builder()
+                                    .add(KotlinJsonAdapterFactory())
+                                    .add(UUIDAdapter())
+                                    .add(TimeStampAdapter())
+                                    .build()
+                                val adapter: JsonAdapter<List<ReceivedMessage>> =
+                                    moshi.adapter(
+                                        Types.newParameterizedType(
+                                            List::class.java,
+                                            ReceivedMessage::class.java
+                                        )
+                                    )
+                                val messages = adapter.fromJson(response.body()!!.getAsJsonArray("Messages").toString())
+                                it.onSuccess(LinkedList(messages))
+                            }
+                            else -> {
+                            }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                }
-            })
-        }
-
-        return messages!!
+                    override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                        println("ONFAILURE")
+                    }
+                })
+            }
     }
 
     fun sendMessage(message: SentMessage) {
@@ -93,6 +115,33 @@ class MessageRepository : Service() {
     fun sendMessage(messageText: String) {
         val message = SentMessage(messageText, UUID.randomUUID())
         sendMessage(message)
+    }
+
+    fun loadMoreMessages(count: Int, channelID: UUID): Single<Int> {
+        return Single.create {
+            if (fullyLoadedHistory.contains(channelID)) {
+                it.onSuccess(0)
+            } else {
+                getChannelMessages(
+                    channelID,
+                    messageCache.getMessages(channelID).size,
+                    messageCache.getMessages(channelID).size + count
+                ).subscribe(
+                    { messages ->
+                        if (messages.size == 0) {
+                            fullyLoadedHistory.add(channelID)
+                        } else {
+                            messageCache.prependMessage(channelID, messages)
+                        }
+
+                        it.onSuccess(messages.size)
+                    },
+                    {
+
+                    }
+                )
+            }
+        }
     }
 
     fun subscribe(event: Event, handler: Handler) {
@@ -111,7 +160,7 @@ class MessageRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-        cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")] = LinkedList()
+        sessionToken = AccountRepository.getAccount().sessionToken
 
         Thread(Runnable {
             Looper.prepare()
@@ -142,13 +191,7 @@ class MessageRepository : Service() {
     }
 
     private fun addMessageToCache(message: ReceivedMessage) {
-        if (!cachedMessages.containsKey(message.channelID)) {
-            cachedMessages[message.channelID] = LinkedList<ReceivedMessage>()
-        }
-        cachedMessages[message.channelID]?.addLast(message)
-        //cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")]?.addLast(message)
-        //println("cahced message array = " + cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")])
-        //println("added message to cache, messages = " + cachedMessages[UUID.fromString("00000000-0000-0000-0000-000000000000")])
+        messageCache.appendMessage(message)
     }
 
     private fun notifySubscribers(event: Event, message: android.os.Message) {

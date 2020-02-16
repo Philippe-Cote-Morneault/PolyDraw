@@ -39,9 +39,8 @@ class MessageAdapter(var messages: LinkedList<ReceivedMessage>, val username: St
      *
      * @param message the message to add
      */
-    fun prependMessage(message: ReceivedMessage) {
-        messages.addFirst(message)
-        notifyItemInserted(0)
+    fun prependMessages(count: Int) {
+        notifyItemRangeInserted(0, count)
     }
 
     /**

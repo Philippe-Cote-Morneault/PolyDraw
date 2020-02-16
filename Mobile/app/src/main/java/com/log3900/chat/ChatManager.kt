@@ -12,10 +12,12 @@ import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
@@ -23,13 +25,31 @@ import kotlin.collections.ArrayList
 class ChatManager : Service() {
     private var channelManager: ChannelManager? = null
     private var messageManager: MessageManager? = null
-    var ready: Boolean = false
-    var subject: PublishSubject<Boolean> = PublishSubject.create()
 
     private val binder = ChatManagerBinder()
 
     companion object {
-        var instance: ChatManager? = null
+        private var isReady = false
+        private var isReadySignal:PublishSubject<Boolean> = PublishSubject.create()
+        private var instance: ChatManager? = null
+
+        fun getInstance(): Single<ChatManager> {
+            return Single.create {
+                val readySignal = isReadySignal.subscribe(
+                    { ready ->
+                        it.onSuccess(instance!!)
+                    },
+                    {
+
+                    }
+                )
+                if (isReady) {
+                    readySignal.dispose()
+                    it.onSuccess(instance!!)
+                }
+            }
+        }
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -47,6 +67,7 @@ class ChatManager : Service() {
         Thread(Runnable {
             Looper.prepare()
             channelManager?.init()
+            messageManager?.init()
             setActiveChannel(channelManager?.activeChannel!!)
             setReadyState()
             Looper.loop()
@@ -67,9 +88,7 @@ class ChatManager : Service() {
         return channelManager?.activeChannel!!
     }
 
-    fun getCurrentChannelMessages() = Single.create<LinkedList<ReceivedMessage>> {
-        it.onSuccess(messageManager?.getMessages(channelManager?.activeChannel!!)!!)
-    }
+    fun getCurrentChannelMessages(): Single<LinkedList<ReceivedMessage>> = messageManager?.getMessages(channelManager?.activeChannel!!)!!
 
     fun sendMessage(message: String) {
         messageManager?.sendMessage(channelManager?.activeChannel?.ID!!, message)
@@ -87,13 +106,27 @@ class ChatManager : Service() {
         channelManager?.changeSubscriptionStatus(channel)
     }
 
-    fun createChannel(channelName: String) {
-        channelManager?.createChannel(channelName)
+    fun loadMoreMessages(): Single<Int> {
+        return messageManager?.loadMoreMessages(channelManager?.activeChannel?.ID!!)!!
     }
 
+    fun createChannel(channelName: String) = Completable.create {
+        val res = channelManager?.createChannel(channelName)!!
+        if (res) {
+            it.onComplete()
+        } else {
+            it.onError(Exception("Channel already exists"))
+        }
+    }
+
+    fun deleteChannel(channel: Channel) {
+        channelManager?.deleteChannel(channel)
+    }
+
+
     private fun setReadyState() {
-        ready = true
-        subject.onNext(true)
+        isReady = true
+        isReadySignal.onNext(true)
     }
 
 

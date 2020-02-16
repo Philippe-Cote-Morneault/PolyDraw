@@ -25,7 +25,7 @@ class ChatFragment : Fragment(), ChatView {
     // UI elements
     private lateinit var messagesRecyclerView: RecyclerView
     private lateinit var messagesViewAdapter: MessageAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var viewManager: LinearLayoutManager
     private lateinit var sendMessageButton: Button
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
@@ -51,7 +51,7 @@ class ChatFragment : Fragment(), ChatView {
         setupMessagesRecyclerView(rootView)
 
         sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
-        sendMessageButton.setOnClickListener { v -> onSendMessageButtonClick(v)}
+        sendMessageButton.setOnClickListener { v -> onSendMessageButtonClick(v) }
 
         setupToolbar(rootView)
 
@@ -87,6 +87,15 @@ class ChatFragment : Fragment(), ChatView {
             layoutManager = viewManager
             adapter = messagesViewAdapter
         }
+
+        val scrollListener = object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                chatPresenter.scrolledToPositions(viewManager.findFirstVisibleItemPosition(), viewManager.findLastVisibleItemPosition(), dy)
+            }
+        }
+
+        messagesRecyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun onSendMessageButtonClick(v: View) {
@@ -148,5 +157,9 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun hideProgressDialog(dialog: DialogFragment) {
         dialog.dismiss()
+    }
+
+    override fun notifyMessagesPrepended(count: Int) {
+        messagesViewAdapter.prependMessages(count)
     }
 }

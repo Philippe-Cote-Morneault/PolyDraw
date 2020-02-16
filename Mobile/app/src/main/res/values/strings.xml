@@ -1,6 +1,22 @@
 <resources>
+    <!--General-->
+
     <!--login-->
     <string name="app_name">PolyDraw</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="firstname">First name</string>
+    <string name="lastname">Last name</string>
+    <string name="avatar">Avatar</string>
+    <string name="email">Email</string>
+
+    <!--buttons-->
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="modify">Modify</string>
+    <string name="restore_default">Restore Default</string>
+
+    <!--login-->
     <string name="login_welcome">Welcome!</string>
     <string name="login_username_hint">Username</string>
     <string name="login_username_error">The username cannot be empty</string>
@@ -8,7 +24,22 @@
     <string name="login_password_help">At least 8 characters</string>
     <string name="login_password_error">The password cannot be empty</string>
     <string name="login_button">Login</string>
-    <string name="login_signup">Don\'t have an account? Sign up</string>
+    <string name="login_signup_question">Don\'t have an account?</string>
+    <string name="login_signup_now">Sign up now!</string>
+    <string name="register">Register</string>
+    <string name="email_hint">Email</string>
+    <string name="name_hint">Name</string>
+    <string name="surname_hint">Surname</string>
+    <string name="all_required">(All fields are required)</string>
+    <string name="quit_app">Quit</string>
+    <string name="quit_app_confirm">You are about to exit the application. Do you wish to continue?</string>
+
+    <!-- profile -->
+    <string name="profile_info_title">Profile Information</string>
+    <string name="profile_stats_title">Statistics</string>
+    <string name="password_asterisks">********</string>
+    <string name="modify_profile">Modify Your Profile</string>
+    <string name="apply_changes">Apply changes</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
@@ -16,6 +47,10 @@
     <!--misc-->
     <string name="preference_file_key">com.log3900.mobile.PREFERENCE_FILE_KEY</string>
     <string name="preference_file_username_key">com.log3900.mobile.PREFERENCE_FILE_USERNAME_KEY</string>
+    <string name="preference_file_pictureid_key">com.log3900.mobile.PREFERENCE_FILE_PICTUREID_KEY</string>
+    <string name="preference_file_email_key">com.log3900.mobile.PREFERENCE_FILE_EMAIL_KEY</string>
+    <string name="preference_file_firstname_key">com.log3900.mobile.PREFERENCE_FILE_FIRSTNAME_KEY</string>
+    <string name="preference_file_lastname_key">com.log3900.mobile.PREFERENCE_FILE_LASTNAME_KEY</string>
     <string name="preference_file_session_token_key">com.log3900.mobile.PREFERENCE_FILE_SESSION_TOKEN_KEY</string>
     <string name="preference_file_bearer_token_key">com.log3900.mobile.PREFERENCE_FILE_BEARER_TOKEN_KEY</string>
     <string name="title_activity_navigation_drawer">NavigationDrawer</string>

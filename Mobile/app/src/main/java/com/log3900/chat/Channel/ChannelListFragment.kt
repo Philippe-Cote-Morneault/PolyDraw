@@ -1,15 +1,19 @@
 package com.log3900.chat.Channel
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
-import java.util.*
+import kotlinx.android.synthetic.main.dialog_fragment_progress_dialog.*
 import kotlin.collections.ArrayList
 
 class ChannelListFragment : Fragment(), ChannelListView {
@@ -19,6 +23,8 @@ class ChannelListFragment : Fragment(), ChannelListView {
     private lateinit var channelsRecyclerView: RecyclerView
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var channelsAdapter: SectionedRecyclerViewAdapter
+    private lateinit var createChannelButton: ImageView
+    private var channelCreationDialog: Dialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_channel_list, container, false)
@@ -27,6 +33,11 @@ class ChannelListFragment : Fragment(), ChannelListView {
         layoutManager = LinearLayoutManager(this.context)
         channelsRecyclerView.layoutManager = layoutManager
         channelsAdapter = SectionedRecyclerViewAdapter()
+
+        createChannelButton = rootView.findViewById(R.id.fragment_channel_list_button_create_channel)
+        createChannelButton.setOnClickListener {
+            channelListPresenter.onCreateChannelButtonClick()
+        }
 
         channelsAdapter.addSection(GroupType.JOINED.name, ChannelSection(ChannelGroup(GroupType.JOINED, arrayListOf()), object: ChannelSection.ClickListener {
             override fun onHeaderRootViewClick(group: ChannelGroup) {
@@ -50,6 +61,10 @@ class ChannelListFragment : Fragment(), ChannelListView {
 
             override fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
                channelListPresenter.onChannelActionButton1Click(channel, channelState)
+            }
+
+            override fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
+                channelListPresenter.onChannelActionButton2Click(channel, channelState)
             }
         }))
 
@@ -75,6 +90,10 @@ class ChannelListFragment : Fragment(), ChannelListView {
 
             override fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
                 channelListPresenter.onChannelActionButton1Click(channel, channelState)
+            }
+
+            override fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
+                channelListPresenter.onChannelActionButton2Click(channel, channelState)
             }
         }))
 
@@ -104,4 +123,32 @@ class ChannelListFragment : Fragment(), ChannelListView {
         channelsAdapter.getAdapterForSection(GroupType.AVAILABLE.name).notifyAllItemsChanged()
         channelsAdapter.getAdapterForSection(GroupType.JOINED.name).notifyAllItemsChanged()
     }
+
+    override fun showChannelCreationDialog(positiveCallback: (channelName: String) -> Unit) {
+        val editText = EditText(this.context)
+        editText.setHint("Channel Name")
+        channelCreationDialog = AlertDialog.Builder(this.context)
+            .setTitle("Create Channel")
+            .setView(editText)
+            .setPositiveButton("Create") { _, _ ->
+                positiveCallback(editText.text.toString())
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+
+    }
+
+    override fun hideChannelCreationDialog() {
+        if (channelCreationDialog != null) {
+            channelCreationDialog?.dismiss()
+            channelCreationDialog = null
+        }
+    }
+
+    override fun notifyChannelsChange() {
+        channelsAdapter.notifyDataSetChanged()
+    }
+
 }

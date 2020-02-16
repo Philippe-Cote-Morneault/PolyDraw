@@ -6,4 +6,7 @@ interface ChannelListView {
     fun setAvailableChannels(channels: ArrayList<Channel>)
     fun notifyChannelSubscribed(channel: Channel)
     fun notifyChannelUnsubscried(channel: Channel)
+    fun showChannelCreationDialog(positiveCallback: (channelName: String) -> Unit)
+    fun hideChannelCreationDialog()
+    fun notifyChannelsChange()
 }

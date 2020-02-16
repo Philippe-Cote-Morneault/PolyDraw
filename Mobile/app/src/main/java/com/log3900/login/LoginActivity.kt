@@ -1,153 +1,68 @@
 package com.log3900.login
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
 import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.picker.MaterialPickerOnPositiveButtonClickListener
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
-import com.log3900.socket.SocketService
-import com.log3900.shared.ui.ProgressDialog
-import com.log3900.socket.*
+import com.log3900.login.register.RegisterFragment
 import com.log3900.utils.ui.KeyboardHelper
 
-class LoginActivity : AppCompatActivity(), LoginView {
-    // Services
-    private lateinit var loginPresenter: LoginPresenter
-    // UI Elements
-    private lateinit var loginButton: MaterialButton
-    private lateinit var usernameTextInput: TextInputEditText
-    private lateinit var usernameTextInputLayout: TextInputLayout
-    private lateinit var passwordTextInput: TextInputEditText
-    private lateinit var passwordTextInputLayout: TextInputLayout
-    private lateinit var progressBar: ProgressBar
+
+class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        loginPresenter = LoginPresenter(this)
-
-        setupUIElements()
-
+        createLoginFragment()
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
-    private fun setupUIElements() {
-        loginButton = findViewById(R.id.activity_login_login_button)
-        loginButton.setOnClickListener {
-            onLoginButtonClick()
+    override fun onBackPressed() {
+        var current: Fragment? = supportFragmentManager.findFragmentByTag("REGISTER_FRAGMENT")
+        if (current != null && current.isVisible) {
+            println("OK! REGISTER")
+            createLoginFragment()
+        } else {
+            current = supportFragmentManager.findFragmentByTag("LOGIN_FRAGMENT")
+            if (current != null && current.isVisible) {
+                println("OK! LOGIN")
+            } else {
+                // We're at the 'root', so we offer to exit
+                createExitDialog()
+            }
         }
+    }
 
-        usernameTextInput = findViewById(R.id.activity_login_text_input_username)
-        usernameTextInput.doAfterTextChanged {
-            onUsernameChange()
+    private fun createLoginFragment() {
+        val loginFragment = LoginFragment()
+        val transaction = supportFragmentManager.beginTransaction().apply {
+            setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_left)
+            replace(R.id.card_view, loginFragment)
+            addToBackStack(null)
+            commit()
         }
-        passwordTextInput = findViewById(R.id.activity_login_text_input_password)
-        passwordTextInput.doAfterTextChanged {
-            onPasswordChange()
-        }
-
-        usernameTextInputLayout = findViewById(R.id.activity_login_text_input_layout_username)
-        passwordTextInputLayout = findViewById(R.id.activity_login_text_input_layout_password)
-
-        progressBar = findViewById(R.id.activity_login_progressbar_login)
-
-        supportActionBar?.hide()
     }
 
-    private fun onUsernameChange() {
-        loginPresenter.validateUsername(usernameTextInput.text.toString())
-    }
-
-    private fun onPasswordChange() {
-        loginPresenter.validatePassword(passwordTextInput.text.toString())
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loginPresenter.resume()
-    }
-
-    private fun onLoginButtonClick() {
-        KeyboardHelper.hideKeyboard(this)
-
-        loginPresenter.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
-    }
-
-    override fun showProgresBar() {
-        progressBar.visibility = View.VISIBLE
-        loginButton.visibility = View.INVISIBLE
-    }
-
-    override fun hideProgressBar() {
-        progressBar.visibility = View.GONE
-        loginButton.visibility = View.VISIBLE
-    }
-
-    override fun setUsernameError(error: String) {
-        usernameTextInputLayout.error = error
-    }
-
-    override fun setPasswordError(error: String) {
-        passwordTextInputLayout.error = error
-    }
-
-    override fun clearPasswordError() {
-        passwordTextInputLayout.error = null
-    }
-
-    override fun clearUsernameError() {
-        usernameTextInputLayout.error = null
-    }
-
-    override fun showErrorDialog(title: String, message: String, positiveButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?,
-                                 negativeButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?) {
+    private fun createExitDialog() {
         MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Retry", positiveButtonClickListener) //{ _, _ -> onLoginButtonClick() }
-            .setNegativeButton("Cancel", negativeButtonClickListener)
+            .setTitle(R.string.quit_app)
+            .setMessage(R.string.quit_app_confirm)
+            .setPositiveButton("Exit") { _, _ -> finish() }
+            .setNegativeButton("Cancel", null)
             .setCancelable(false)
-            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setIcon(R.drawable.ic_exit_to_app_black_24dp)
             .show()
-    }
-
-    override fun showProgressDialog(dialog: DialogFragment) {
-        dialog.show(supportFragmentManager, "progressDialog")
-    }
-
-    override fun hideProgressDialog(dialog: DialogFragment) {
-        dialog.dismiss()
-    }
-
-    override fun closeView() {
-        finishAffinity()
-    }
-
-    override fun onDestroy() {
-        loginPresenter.destroy()
-        super.onDestroy()
-    }
-
-    override fun navigateTo(target: Class<*>, intentFlags: Int?) {
-        val intent = Intent(this, target)
-        if (intentFlags != null) {
-            intent.flags = intentFlags
-        }
-        startActivity(intent)
-        finish()
     }
 }
