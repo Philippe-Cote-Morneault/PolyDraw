@@ -17,6 +17,7 @@ import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.OnlineUser
+import com.log3900.user.UserRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -37,11 +38,27 @@ import kotlin.collections.ArrayList
 class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
     private var socketService: SocketService? = null
-    private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
     private lateinit var channelCache: ChannelCache
+
+    var isReady = false
 
     companion object {
         var instance: ChannelRepository? = null
+    }
+
+    fun initializeRepository() {
+        instance = this
+        socketService = SocketService.instance
+        channelCache = ChannelCache()
+        getChannels(UserRepository.getUser().sessionToken).subscribe(
+            {
+                channelCache.reloadChannels(it)
+                isReady = true
+            },
+            {
+
+            }
+        )
     }
 
     fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
@@ -68,37 +85,29 @@ class ChannelRepository : Service() {
 
     fun getJoinedChannels(sessionToken: String): Single<ArrayList<Channel>> {
         return Single.create {
-            if (!channelCache.needsReload) {
-                it.onSuccess(channelCache.joinedChannels)
-            } else {
-                getChannels(sessionToken).subscribe(
-                    { channels ->
-                        channelCache.reloadChannels(channels)
-                        it.onSuccess(channelCache.joinedChannels)
-                    },
-                    { error ->
+            getChannels(sessionToken).subscribe(
+                { channels ->
+                    channelCache.reloadChannels(channels)
+                    it.onSuccess(channelCache.joinedChannels)
+                },
+                { error ->
 
-                    }
-                )
-            }
+                }
+            )
         }
     }
 
     fun getAvailableChannels(sessionToken: String): Single<ArrayList<Channel>> {
         return Single.create {
-            if (!channelCache.needsReload) {
-                it.onSuccess(channelCache.joinedChannels)
-            } else {
-                getChannels(sessionToken).subscribe(
-                    { channels ->
-                        channelCache.reloadChannels(channels)
-                        it.onSuccess(channelCache.availableChannels)
-                    },
-                    { error ->
+            getChannels(sessionToken).subscribe(
+                { channels ->
+                    channelCache.reloadChannels(channels)
+                    it.onSuccess(channelCache.availableChannels)
+                },
+                { error ->
 
-                    }
-                )
-            }
+                }
+            )
         }
     }
 
@@ -170,9 +179,8 @@ class ChannelRepository : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        socketService = SocketService.instance
-        channelCache = ChannelCache()
+
+        initializeRepository()
 
         Thread(Runnable {
             Looper.prepare()
