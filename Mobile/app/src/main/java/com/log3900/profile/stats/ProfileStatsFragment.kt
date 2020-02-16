@@ -55,7 +55,5 @@ class ProfileStatsFragment : Fragment() {
             avgGameDuration.text = generalStats.averageGameDuration.toString()
             timePlayed.text = generalStats.timePlayed.toString()
         }
-
-
     }
 }

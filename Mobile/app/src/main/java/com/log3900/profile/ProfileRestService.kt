@@ -4,6 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.log3900.shared.network.rest.Retrofit
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ProfileRestService {
@@ -17,10 +18,10 @@ interface ProfileRestService {
 
     // Statistics
     @GET("stats/{userid}")
-    fun getStats(
+    suspend fun getStats(
         @Header("SessionToken") sessionToken: String, @Header("Language") language: String,
         @Path("userid") userId: String
-    ): Call<JsonObject>
+    ): Response<JsonObject>
 
     companion object {
         val service = Retrofit.retrofit.create(ProfileRestService::class.java)
