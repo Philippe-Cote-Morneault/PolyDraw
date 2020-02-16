@@ -211,7 +211,7 @@ namespace ClientLourd.Models.Bindable
  
              return (user1.Username == user2.Username && user1.Email == user2.Email &&
                      user1.FirstName == user2.FirstName && user1.LastName == user2.LastName &&
-                     user1.ID == user2.ID);
+                     user1.ID == user2.ID && user1.PictureID == user2.PictureID);
              
          }
  
@@ -233,7 +233,7 @@ namespace ClientLourd.Models.Bindable
  
              return (user1.Username != user2.Username || user1.Email != user2.Email ||
                      user1.FirstName != user2.FirstName || user1.LastName != user2.LastName ||
-                     user1.ID != user2.ID);
+                     user1.ID != user2.ID || user1.PictureID != user2.PictureID);
          }
     }
 }

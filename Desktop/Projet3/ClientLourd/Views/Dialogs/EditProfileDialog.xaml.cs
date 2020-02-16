@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
@@ -65,6 +66,25 @@ namespace ClientLourd.Views.Dialogs
         {
             get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj), obj => CanUpdateProfile(obj))); }
         }
+        
+        RelayCommand<Channel> _changeAvatarCommand;
+
+        public ICommand ChangeAvatarCommand
+        {
+            get
+            {
+                return _changeAvatarCommand ??
+                       (_changeAvatarCommand = new RelayCommand<Channel>(channel => ChangeAvatar()));
+            }
+        }
+
+        private async void ChangeAvatar()
+        {
+            var result = await DialogHost.Show(new AvatarSelectionDialog(), "EditProfileHost");
+            UserClone.Avatar = (BitmapImage) result;
+        }
+        
+        
 
         private bool CanUpdateProfile(object obj)
         {
@@ -83,6 +103,7 @@ namespace ClientLourd.Views.Dialogs
                 await RestClient.PutProfile(GetModifiedObj());
                 // Update infos
                 User.Username = UserClone.Username;
+                User.Avatar = UserClone.Avatar;
                 User.FirstName = UserClone.FirstName;
                 User.LastName = UserClone.LastName;
                 User.Email = UserClone.Email;
@@ -126,7 +147,12 @@ namespace ClientLourd.Views.Dialogs
             if (PasswordHasChanged())
             {
                 obj.Password = NewPassword;
-            }            
+            }
+
+            if (AvatarHasChanged())
+            {
+                obj.PictureID = UserClone.PictureID;
+            }
 
             return obj;
         }
@@ -212,6 +238,11 @@ namespace ClientLourd.Views.Dialogs
         private bool FirstNameHasChanged()
         {
             return User.FirstName != UserClone.FirstName;
+        }
+        
+        private bool AvatarHasChanged()
+        {
+            return User.Avatar != UserClone.Avatar;
         }
 
         private bool PasswordHasChanged()

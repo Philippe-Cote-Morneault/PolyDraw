@@ -17,14 +17,26 @@
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
     </UserControl.Resources>
     
-    <materialDesign:DialogHost x:Name="EditProfileHost" CloseOnClickAway="False">
+    <materialDesign:DialogHost Identifier="EditProfileHost" x:Name="EditProfileHost" CloseOnClickAway="False">
         <Grid>
         
-        <StackPanel x:Name="StackPanel" Height="600" Width="500" Margin="10">
+        <StackPanel x:Name="StackPanel" Height="700" Width="500" Margin="10">
             
             
             <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Edit my profile </TextBlock>
-
+            
+            <StackPanel Margin="0 20 0 20">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
+                    <Image Source="{Binding UserClone.Avatar}"/>
+                </materialDesign:Card>
+                <TextBlock HorizontalAlignment="Center">
+                    <Hyperlink Command="{Binding ChangeAvatarCommand}">
+                        Change avatar
+                    </Hyperlink>
+                </TextBlock>                
+            </StackPanel>
+            
+            
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Username</TextBlock>
