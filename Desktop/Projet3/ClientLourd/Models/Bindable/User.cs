@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 
@@ -34,6 +35,18 @@ namespace ClientLourd.Models.Bindable
         {
             Username = username;
             ID = id;
+        }
+
+        public void Update(User user)
+        {
+            Username = user.Username;
+            FirstName = user.FirstName;
+            LastName = user._lastName;
+            Email = user.Email;
+            ID = user.ID;
+            Avatar = user.Avatar;
+            CreatedAt = user.CreatedAt;
+            UpdatedAt = user.UpdatedAt;
         }
 
         private string _id;
