@@ -91,10 +91,10 @@ namespace ClientLourd.Models.Bindable
         // TODO: Add other attributes
         private long _matchDuration;
         private string _winnerName;
-
+        private string _matchType;
+        //private string[] _playersName;
         public MatchPlayed()
         {
-
         }
 
         public long MatchDuration

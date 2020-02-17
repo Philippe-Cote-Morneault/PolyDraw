@@ -33,6 +33,7 @@ namespace ClientLourd.Views.Dialogs
         private Timer _scrollToBottomTimer;
         private StatsHistory _statsHistory;
         private int _lastMessageIndex;
+        private int _nReturned;
 
         public ConnectionHistoryDialog(StatsHistory statsHistory, int lastMessageIndex)
         {
@@ -46,6 +47,7 @@ namespace ClientLourd.Views.Dialogs
             _scrollToBottomTimer = new Timer(800);
             _scrollToBottomTimer.Elapsed += ScrollToBottom;
             _scrollToBottomTimer.Start();
+            _nReturned = 0;
         }
 
         public RestClient RestClient
@@ -59,6 +61,7 @@ namespace ClientLourd.Views.Dialogs
             Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 ScrollViewerElement.ScrollToBottom();
+                ScrollViewerElement.ScrollChanged += ScrollViewer_OnScrollChanged;
             });
             
         }
@@ -88,11 +91,16 @@ namespace ClientLourd.Views.Dialogs
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
                 //TODO: Dont load messages if messageIndex is greater than the array length
+               
+                StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 100);
+                _nReturned += 100;
+                if (sh.ConnectionHistory.Count > 0)
+                {
+                    _lastMessageIndex += 100;
+                    AddStatsHistory(sh);
+                    scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
+                }
                 
-                StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
-                _lastMessageIndex += 20;
-                AddStatsHistory(sh);
-                scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
             }
 
         }

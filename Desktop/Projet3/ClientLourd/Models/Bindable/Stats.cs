@@ -14,8 +14,6 @@ namespace ClientLourd.Models.Bindable
         private long _timePlayed;
         private StatsHistory _statsHistory;
 
-        private LinkedList<object> test1;
-        private LinkedList<object> test2;
 
 
         public Stats()
@@ -62,31 +60,6 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-        /*public LinkedList<object> ConnectionHistory
-        {
-            get { return test1; }
-            set
-            {
-                if (value != test1)
-                {
-                    test1 = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
-        public LinkedList<object> MatchesPlayedHistory
-        {
-            get { return test2; }
-            set
-            {
-                if (value != test2)
-                {
-                    test2 = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }*/
 
         public LinkedList<ConnectionDisconnection> ConnectionHistory
         {
