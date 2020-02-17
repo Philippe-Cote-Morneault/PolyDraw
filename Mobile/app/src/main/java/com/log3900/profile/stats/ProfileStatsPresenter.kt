@@ -38,14 +38,4 @@ class ProfileStatsPresenter(val statsView: ProfileStatsFragment) {
     private fun onStatsFetchError(error: String?) {
         println("Error: $error")
     }
-
-    private fun parseJsonToStats(json: JsonObject): UserStats {
-        println(json.toString())
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-        val adapter: JsonAdapter<UserStats> = moshi.adapter(UserStats::class.java)
-
-        return adapter.fromJson(json.toString())!!
-    }
 }

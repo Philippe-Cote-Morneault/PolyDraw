@@ -56,4 +56,8 @@ class ProfileStatsFragment : Fragment() {
             timePlayed.text = generalStats.timePlayed.toString()
         }
     }
+
+    fun showConnectionHistory() {
+
+    }
 }

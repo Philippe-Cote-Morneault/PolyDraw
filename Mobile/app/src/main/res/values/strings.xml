@@ -46,7 +46,10 @@
     <string name="win_ratio_title">Win ratio:</string>
     <string name="avg_game_duration_title">Average game duration:</string>
     <string name="time_played_title">Time played:</string>
-    <string name="connection_history">Connection history:</string>
+    <string name="connection_history_title">Connection history:</string>
+    <string name="connection_history">Connection history</string>
+    <string name="connected_at">Connected at </string>
+    <string name="disconnected_at">Disconnected at </string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>

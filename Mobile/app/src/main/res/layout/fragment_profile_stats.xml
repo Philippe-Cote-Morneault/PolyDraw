@@ -109,7 +109,7 @@
         android:id="@+id/connection_history_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/connection_history"
+        android:text="@string/connection_history_title"
         style="@style/MyTheme.DayNight"
         android:layout_marginTop="16dp"
         android:textStyle="italic"
