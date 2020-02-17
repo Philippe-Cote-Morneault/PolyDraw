@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import kotlinx.coroutines.*
 
 class ConnectionHistoryDialog : DialogFragment() {
     override fun onStart() {
@@ -35,5 +38,31 @@ class ConnectionHistoryDialog : DialogFragment() {
         closeButton.setOnClickListener {
             dismiss()
         }
+
+        setUpMessagesRV(root)
+    }
+
+    private fun setUpMessagesRV(root: View) {
+        println("Before coroutine: $root")
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                println("In coroutine (1)!")
+
+                val rvConnections: RecyclerView = root.findViewById(R.id.rv_connections)
+//                    val connections = StatsRepository.getConnectionHistory()
+                val connections = getConnectionHistory()
+                val connectionAdapter = ConnectionAdapter(connections)
+                println("In coroutine (2)!")
+                rvConnections.apply {
+                    adapter = connectionAdapter
+                    layoutManager = LinearLayoutManager(activity)
+                }
+            }
+        }
+    }
+
+    private suspend fun getConnectionHistory(): List<Connection> {
+        val mockConnection = Connection(0, 10)
+        return MutableList(100) { mockConnection.copy() }
     }
 }

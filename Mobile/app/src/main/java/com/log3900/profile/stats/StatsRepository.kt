@@ -36,6 +36,7 @@ object StatsRepository {
 
     suspend fun getAllStats(): UserStats = getUserStats()
     suspend fun getGeneralStats(): GeneralStats = getUserStats().generalStats
+    suspend fun getConnectionHistory(): List<Connection> = getUserStats().connectionHistory
 
     private suspend fun fetchAllStats() {
         userStats = sendStatsRequest()

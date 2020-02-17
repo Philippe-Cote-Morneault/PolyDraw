@@ -22,7 +22,7 @@ data class GeneralStats(
 
 data class Connection(
     @Json(name = "ConnectedAt")     val connectedAt:    Int,
-    @Json(name = "DeconnectedAt")   val deconnectedAt:  Int
+    @Json(name = "DeconnectedAt")   val disconnectedAt:  Int
 )
 
 data class GamePlayed(
