@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.button.MaterialButton
 import com.log3900.R
 
 class ConnectionHistoryDialog : DialogFragment() {
@@ -30,6 +31,9 @@ class ConnectionHistoryDialog : DialogFragment() {
     }
 
     private fun setUpUi(root: View) {
-
+        val closeButton: MaterialButton = root.findViewById(R.id.close_dialog_button)
+        closeButton.setOnClickListener {
+            dismiss()
+        }
     }
 }

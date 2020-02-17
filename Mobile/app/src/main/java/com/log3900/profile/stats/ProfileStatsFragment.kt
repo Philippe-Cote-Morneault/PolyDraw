@@ -12,7 +12,7 @@ import com.log3900.R
 
 class ProfileStatsFragment : Fragment() {
 
-    val profileStatsPresenter = ProfileStatsPresenter(this)
+    private val profileStatsPresenter = ProfileStatsPresenter(this)
     lateinit var connectionHistoryButton: MaterialButton
 
     override fun onCreateView(
@@ -23,6 +23,7 @@ class ProfileStatsFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_profile_stats, container, false)
 
         setUpUI(root)
+        fetchStats()
 
         return root
     }
@@ -30,12 +31,8 @@ class ProfileStatsFragment : Fragment() {
     private fun setUpUI(root: View) {
         connectionHistoryButton = root.findViewById(R.id.connection_history_button)
         connectionHistoryButton.setOnClickListener {
-            MaterialAlertDialogBuilder(activity)
-                .setMessage("clicked")
-                .show()
+            showConnectionHistoryDialog()
         }
-
-        fetchStats()
     }
 
     private fun fetchStats() {
@@ -57,7 +54,15 @@ class ProfileStatsFragment : Fragment() {
         }
     }
 
-    fun showConnectionHistory() {
+    fun showConnectionHistoryDialog() {
+        val fragmentManager = activity?.supportFragmentManager!!
+        val ft = fragmentManager.beginTransaction()
+        fragmentManager.findFragmentByTag("dialog")?.let {
+            ft.remove(it)
+        }
+        ft.addToBackStack(null)
 
+        val connectionHistDialog = ConnectionHistoryDialog()
+        connectionHistDialog.show(ft, "dialog")
     }
 }

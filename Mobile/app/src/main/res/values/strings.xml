@@ -13,6 +13,7 @@
     <!--buttons-->
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="modify">Modify</string>
     <string name="restore_default">Restore Default</string>
     <string name="view_all">View all</string>
