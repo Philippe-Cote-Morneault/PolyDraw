@@ -85,3 +85,24 @@ func UpdateDeconnection(userID uuid.UUID) {
 	DB().Model(&Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
 
 }
+
+//AddJunk add junk for Connection, Achievement et Matchplayed
+// TODO: A supprimer
+func AddJunk(userID uuid.UUID) {
+
+	for i := 0; i < 120; i++ {
+		DB().Create(&Connection{ConnectedAt: int64(i), DisconnectedAt: int64(i * i), UserID: userID})
+	}
+
+	for i := 0; i < 120; i++ {
+		DB().Create(&Achievement{TropheeName: "Geek", Description: "A depasse les 1000000000 heures de jeu", ObtainingDate: int64(i), UserID: userID})
+	}
+
+	for i := 0; i < 120; i++ {
+		var ach MatchPlayed = MatchPlayed{MatchDuration: int64(i), WinnerName: "PascalWinner", UserID: userID, MatchType: "Solo"}
+		DB().Create(&ach)
+		for i := 0; i < 3; i++ {
+			DB().Create(&PlayerName{MatchID: ach.ID, PlayerName: "PascalPlayer"})
+		}
+	}
+}
