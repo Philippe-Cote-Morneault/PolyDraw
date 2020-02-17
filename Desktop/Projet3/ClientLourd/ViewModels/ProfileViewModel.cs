@@ -70,7 +70,11 @@ namespace ClientLourd.ViewModels
         public User User
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations.User; }
-            set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).SessionInformations.User = value; }
+            set 
+            { 
+                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).SessionInformations.User = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public Stats Stats
