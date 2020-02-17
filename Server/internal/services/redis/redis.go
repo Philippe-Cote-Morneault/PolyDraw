@@ -2,9 +2,9 @@ package redisservice
 
 import (
 	"github.com/go-redis/redis/v7"
-	"github.com/spf13/viper"
 	"github.com/tevino/abool"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
+	word_validator "gitlab.com/jigsawcorp/log3900/internal/word-validator"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"log"
 	"syscall"
@@ -27,12 +27,10 @@ func (r *RedisService) Init() {
 //Start the messenger service
 func (r *RedisService) Start() {
 	log.Println("[Redis] -> Starting service")
+	model.RedisInit()
 	r.client = model.Redis()
-	r.client = redis.NewClient(&redis.Options{
-		Addr:     viper.GetString("redis.address"),
-		Password: viper.GetString("redis.password"),
-		DB:       viper.GetInt("redis.database"),
-	})
+
+	go word_validator.LoadList()
 	go r.run()
 }
 
