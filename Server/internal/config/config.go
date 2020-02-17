@@ -23,7 +23,7 @@ func setupFile() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			log.Println("WARNING: The config file was not found, using default")
+			panic("Error: The config file was not found. Make sure that a config file is available")
 		} else {
 			// Config file was found but another error was produced
 			panic(err)
@@ -32,7 +32,8 @@ func setupFile() {
 }
 
 func setupDefault() {
-
+	viper.SetDefault("database.connection", "nil")
+	viper.SetDefault("database.engine", "nil")
 	viper.SetDefault("datastore", "/tmp/images")
 	viper.SetDefault("rest.port", "3000")
 	viper.SetDefault("rest.address", "127.0.0.1")
