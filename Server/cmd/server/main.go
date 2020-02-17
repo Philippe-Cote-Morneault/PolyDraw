@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
 	"log"
 
 	"github.com/spf13/viper"
@@ -63,4 +64,5 @@ func registerServices() {
 	service.Add(&logger.Logger{})
 	service.Add(&auth.Auth{})
 	service.Add(&healthcheck.HealthCheck{})
+	service.Add(&redisservice.RedisService{})
 }
