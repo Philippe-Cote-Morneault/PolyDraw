@@ -6,8 +6,6 @@ import com.log3900.user.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.*
 import java.lang.Exception
 
 // Service?
@@ -24,25 +22,39 @@ object StatsRepository {
     }
 
 //    private var subscribers
-
     private lateinit var userStats: UserStats
+    private lateinit var historyStats: HistoryStats
 
+    /**
+     * Custom getters for the stats.
+     * Does a Rest call if not initialized.
+     */
     private suspend fun getUserStats(): UserStats {
         if (!StatsRepository::userStats.isInitialized) {
-            fetchAllStats()
+            fetchUserStats()
         }
         return userStats
     }
 
-    suspend fun getAllStats(): UserStats = getUserStats()
-    suspend fun getGeneralStats(): GeneralStats = getUserStats().generalStats
-    suspend fun getConnectionHistory(): List<Connection> = getUserStats().connectionHistory
-
-    private suspend fun fetchAllStats() {
-        userStats = sendStatsRequest()
+    private suspend fun getHistoryStats(): HistoryStats {
+        if (!StatsRepository::userStats.isInitialized) {
+            fetchHistoryStats()
+        }
+        return historyStats
     }
 
-    private suspend fun sendStatsRequest(): UserStats {
+    suspend fun getAllUserStats(): UserStats = getUserStats()
+    suspend fun getConnectionHistory(): List<Connection> = getConnectionHistory()
+
+    private suspend fun fetchUserStats() {
+        userStats = sendUserStatsRequest()
+    }
+
+    private suspend fun fetchHistoryStats() {
+        historyStats = sendHistoryStatsRequest()
+    }
+
+    private suspend fun sendUserStatsRequest(): UserStats {
         val userID = "" // TODO: get acutal userID
         val session = AccountRepository.getAccount().sessionToken
         val responseJson = ProfileRestService.service.getStats(session, "EN", userID)   //TODO: get language
@@ -55,12 +67,25 @@ object StatsRepository {
         }
     }
 
-    private fun parseJsonToStats(json: JsonObject): UserStats {
+    private suspend fun sendHistoryStatsRequest(): HistoryStats {
+        return parseJsonToStats(JsonObject())
+        val session = AccountRepository.getAccount().sessionToken
+        val responseJson = ProfileRestService.service.getStats(session, "EN", "")   //TODO: get language
+
+        if (responseJson.isSuccessful && responseJson.body() != null) {
+            val json = responseJson.body()!!
+            return parseJsonToStats(json)
+        } else {
+            throw Exception("${responseJson.code()} : ${responseJson.errorBody()?.string()}")
+        }
+    }
+
+    private inline fun <reified StatsType> parseJsonToStats(json: JsonObject): StatsType {
         println(json.toString())
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
-        val adapter: JsonAdapter<UserStats> = moshi.adapter(UserStats::class.java)
+        val adapter: JsonAdapter<StatsType> = moshi.adapter(StatsType::class.java)
 
         return adapter.fromJson(json.toString())!!
     }

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.log3900.R
 
 class ProfileStatsFragment : Fragment() {
@@ -40,17 +39,17 @@ class ProfileStatsFragment : Fragment() {
         profileStatsPresenter.fetchStats()
     }
 
-    fun showStats(generalStats: GeneralStats) {
+    fun showStats(userStats: UserStats) {
         view?.let {
             val gamesPlayed: TextView =     it.findViewById(R.id.games_played_stat)
             val winRatio: TextView =        it.findViewById(R.id.win_ratio_stat)
             val avgGameDuration: TextView = it.findViewById(R.id.avg_game_duration_stat)
             val timePlayed: TextView =      it.findViewById(R.id.time_played_stat)
 
-            gamesPlayed.text = generalStats.gamesPlayed.toString()
-            winRatio.text = generalStats.winRation.toString()
-            avgGameDuration.text = generalStats.averageGameDuration.toString()
-            timePlayed.text = generalStats.timePlayed.toString()
+            gamesPlayed.text = userStats.gamesPlayed.toString()
+            winRatio.text = userStats.winRation.toString()
+            avgGameDuration.text = userStats.averageGameDuration.toString()
+            timePlayed.text = userStats.timePlayed.toString()
         }
     }
 
