@@ -18,9 +18,15 @@ interface ProfileRestService {
 
     // Statistics
     @GET("stats/{userid}")
-    suspend fun getStats(
+    suspend fun getUserStats(
         @Header("SessionToken") sessionToken: String, @Header("Language") language: String,
         @Path("userid") userId: String
+    ): Response<JsonObject>
+
+    // TODO: userid
+    @GET("stats/history/?start=0&end=100")
+    suspend fun getHistory(
+        @Header("SessionToken") sessionToken: String, @Header("Language") language: String
     ): Response<JsonObject>
 
     companion object {

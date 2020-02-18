@@ -37,14 +37,14 @@ object StatsRepository {
     }
 
     private suspend fun getHistoryStats(): HistoryStats {
-        if (!StatsRepository::userStats.isInitialized) {
+        if (!StatsRepository::historyStats.isInitialized) {
             fetchHistoryStats()
         }
         return historyStats
     }
 
     suspend fun getAllUserStats(): UserStats = getUserStats()
-    suspend fun getConnectionHistory(): List<Connection> = getConnectionHistory()
+    suspend fun getConnectionHistory(): List<Connection> = getHistoryStats().connectionHistory
 
     private suspend fun fetchUserStats() {
         userStats = sendUserStatsRequest()
@@ -57,7 +57,7 @@ object StatsRepository {
     private suspend fun sendUserStatsRequest(): UserStats {
         val userID = "" // TODO: get acutal userID
         val session = AccountRepository.getAccount().sessionToken
-        val responseJson = ProfileRestService.service.getStats(session, "EN", userID)   //TODO: get language
+        val responseJson = ProfileRestService.service.getUserStats(session, "EN", userID)   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
             val json = responseJson.body()!!
@@ -68,9 +68,8 @@ object StatsRepository {
     }
 
     private suspend fun sendHistoryStatsRequest(): HistoryStats {
-        return parseJsonToStats(JsonObject())
         val session = AccountRepository.getAccount().sessionToken
-        val responseJson = ProfileRestService.service.getStats(session, "EN", "")   //TODO: get language
+        val responseJson = ProfileRestService.service.getHistory(session, "EN")   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
             val json = responseJson.body()!!

@@ -62,7 +62,7 @@ class ConnectionHistoryDialog : DialogFragment() {
     }
 
     private suspend fun getConnectionHistory(): List<Connection> {
-        val mockConnection = Connection(0, 10)
-        return MutableList(100) { mockConnection.copy() }
+        // TODO: Error handling
+        return StatsRepository.getConnectionHistory()
     }
 }
