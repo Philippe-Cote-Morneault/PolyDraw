@@ -7,6 +7,7 @@ import (
 
 var redisClient *redis.Client
 
+//RedisInit starts the redis client
 func RedisInit() {
 	redisClient = redis.NewClient(&redis.Options{
 		Addr:     viper.GetString("redis.address"),
@@ -15,6 +16,7 @@ func RedisInit() {
 	})
 }
 
+//Redis returns the Redis client object
 func Redis() *redis.Client {
 	return redisClient
 }
