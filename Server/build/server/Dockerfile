@@ -19,5 +19,6 @@ HEALTHCHECK --interval=30s --timeout=3s CMD wget --quiet --tries=1 --spider http
 
 EXPOSE 3000/tcp
 EXPOSE 3001/tcp
+WORKDIR /app/
 
-CMD ["/app/server"]
+CMD ["./server"]
