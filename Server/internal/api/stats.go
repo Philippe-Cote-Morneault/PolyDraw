@@ -16,6 +16,7 @@ type stats struct {
 	WinRatio        float64
 	AvgGameDuration int64
 	TimePlayed      int64
+	BestScoreSolo   int64
 }
 
 type connection struct {

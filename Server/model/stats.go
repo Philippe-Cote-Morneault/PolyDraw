@@ -15,6 +15,7 @@ type Stats struct {
 	WinRatio        float64 `gorm:"default:0.0"`
 	AvgGameDuration int64   `gorm:"default:0"`
 	TimePlayed      int64   `gorm:"default:0"`
+	BestScoreSolo   int64   `gorm:"default:0"`
 }
 
 //Connection represents the information of a connection
