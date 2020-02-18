@@ -1,17 +1,18 @@
 package redisservice
 
 import (
+	"log"
+	"syscall"
+	"time"
+
 	"github.com/go-redis/redis/v7"
 	"github.com/tevino/abool"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	word_validator "gitlab.com/jigsawcorp/log3900/internal/word-validator"
 	"gitlab.com/jigsawcorp/log3900/model"
-	"log"
-	"syscall"
-	"time"
 )
 
-//Logger service used to debug the message received by the server
+//RedisService service used to monitor the connection to the redis database
 type RedisService struct {
 	shutdown abool.AtomicBool
 	wait     chan bool
@@ -75,7 +76,7 @@ func (r *RedisService) run() {
 			r.wait <- true
 			return
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(15 * time.Second)
 	}
 
 }
