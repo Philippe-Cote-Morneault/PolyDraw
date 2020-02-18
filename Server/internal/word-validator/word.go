@@ -2,14 +2,16 @@ package word_validator
 
 import (
 	"bufio"
-	"gitlab.com/jigsawcorp/log3900/internal/language"
-	"gitlab.com/jigsawcorp/log3900/model"
 	"log"
 	"os"
+
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+	"gitlab.com/jigsawcorp/log3900/model"
 )
 
 var notLoaded bool
 
+//LoadList loads all the word list in memory.
 func LoadList() {
 	notLoaded = false
 	result, err := model.Redis().Get("dict_loaded").Result()
@@ -20,10 +22,14 @@ func LoadList() {
 
 		loadFile("dict/fr_QC_bad.txt", "dict_bad_fr")
 		loadFile("dict/en_US_bad.txt", "dict_bad_en")
+
+		if !notLoaded {
+			model.Redis().Set("dict_loaded", "true", 0)
+		} else {
+			log.Printf("[Word] -> All or some files could not be loaded as words. Validation may not work!")
+		}
 	}
-	if !notLoaded {
-		model.Redis().Set("dict_loaded", "true", 0)
-	}
+
 }
 
 func loadFile(filename string, key string) {
@@ -49,6 +55,7 @@ func loadFile(filename string, key string) {
 	log.Printf("[Word] -> Done loading the list %s in Redis!", filename)
 }
 
+//IsWord check if the string is a word
 func IsWord(word string, lang int) bool {
 	var key string
 	if lang == language.EN {
@@ -64,6 +71,7 @@ func IsWord(word string, lang int) bool {
 	return response
 }
 
+//IsBlacklist checks if the word is present in a blacklist
 func IsBlacklist(word string, lang int) bool {
 	var key string
 	if lang == language.EN {
