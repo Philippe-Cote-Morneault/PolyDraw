@@ -20,7 +20,7 @@ else
 DOCKERNAME = $(DOCKERREGISTRY)/server-dev
 endif
 
-build:
+build: dist/dict/en_US.txt dist/dict/en_US_bad.txt dist/dict/fr_QC.txt dist/dict/fr_QC_bad.txt
 	$(GO) build -i -o $(DIST_ROOT)/server ./cmd/server
 	
 build-linux:
@@ -45,7 +45,8 @@ clean:
 	rm -rf $(DIST_ROOT)/
 
 run: build
-	./$(DIST_ROOT)/server
+	@cp config.yaml $(DIST_ROOT)/
+	cd $(DIST_ROOT) && ./server
 
 race:
 	$(GO) run -race ./cmd/server
@@ -86,3 +87,20 @@ ci-package: build/ci/Dockerfile
 
 ci-deploy: ci-package
 	docker push $(DOCKERREGISTRY)/server-ci
+
+
+dist/dict/en_US.txt:
+	mkdir -p dist/dict/
+	curl https://log3900.blob.core.windows.net/polydraw/dict/en_US.txt -o $@
+
+dist/dict/en_US_bad.txt:
+	mkdir -p dist/dict/
+	curl https://log3900.blob.core.windows.net/polydraw/badwords/en_US.txt -o $@
+
+dist/dict/fr_QC.txt:
+	mkdir -p dist/dict/
+	curl https://log3900.blob.core.windows.net/polydraw/dict/fr_QC.txt -o $@
+
+dist/dict/fr_QC_bad.txt:
+	mkdir -p dist/dict/
+	curl https://log3900.blob.core.windows.net/polydraw/badwords/fr_QC.txt -o $@
