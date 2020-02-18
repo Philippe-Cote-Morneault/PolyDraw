@@ -74,6 +74,7 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 		Word:       request.Word,
 		Difficulty: request.Difficulty,
 		Hints:      hints,
+		File:       "None",
 	}
 	model.DB().Save(&game)
 	rbody.JSON(w, http.StatusOK, &gameResponseCreation{GameID: game.ID.String()})
