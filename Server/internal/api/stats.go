@@ -111,7 +111,7 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var achievements []achievement
-	model.DB().Where("user_id = ?", userID).Order("created_at desc").Find(&achievements)
+	model.DB().Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&achievements)
 	h.Achievements = achievements
 
 	json.NewEncoder(w).Encode(h)
