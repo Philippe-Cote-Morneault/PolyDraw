@@ -2,6 +2,8 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 
@@ -79,4 +81,23 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	model.DB().Save(&game)
 	rbody.JSON(w, http.StatusOK, &gameResponseCreation{GameID: game.ID.String()})
 
+}
+
+func PostGameImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	gameID, err := uuid.Parse(vars["id"])
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		return
+	}
+
+	//Check if the game exists
+	game := model.Game{}
+	model.DB().Where("id = ?", gameID).First(&game)
+
+	if game.ID == uuid.Nil {
+		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+	}
+
+	//Check for the fields
 }
