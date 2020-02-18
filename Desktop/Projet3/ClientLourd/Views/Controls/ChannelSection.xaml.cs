@@ -42,7 +42,7 @@ namespace ClientLourd.Views.Controls
                 {
                     if (AvailableTree.Items.Contains(channel))
                     {
-                        var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"You have to join the {channel.Name} first ! ?"));
+                        var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"You have to join the {channel.Name} first !"));
                         if (bool.Parse(result.ToString()))
                         {
                             ((ChatViewModel) DataContext).JoinChannelCommand.Execute(channel);

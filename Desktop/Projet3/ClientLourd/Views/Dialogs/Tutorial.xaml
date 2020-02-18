@@ -6,7 +6,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              mc:Ignorable="d">
-    <DockPanel>
+    <DockPanel MaxHeight="500">
      <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
          <materialDesign:PackIcon Kind="Close"/>
      </Button>   
@@ -19,9 +19,31 @@
                   Key="Right"
                   Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
               </materialDesign:Transitioner.InputBindings>
+                        <!-- Introduction -->
                         <materialDesign:TransitionerSlide>
+                            <ScrollViewer>
+                                <DockPanel Width="300">
+                                    <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
+                                    <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
+                                        <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
+                                            <materialDesign:PackIcon Kind="NavigateBefore"/>
+                                        </Button>
+                                        <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                                            <materialDesign:PackIcon Kind="NavigateNext"/>
+                                        </Button>
+                                    </StackPanel>
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
+                                </DockPanel>
+                            </ScrollViewer>
+                        </materialDesign:TransitionerSlide>
+                        
+                                
+                        <!-- Chat -->
+                        <materialDesign:TransitionerSlide>
+                            <ScrollViewer>
+                                
                             <DockPanel Width="300">
-                                <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
+                                <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Chat"/>
                                 <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
                                     <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
                                         <materialDesign:PackIcon Kind="NavigateBefore"/>
@@ -30,8 +52,90 @@
                                         <materialDesign:PackIcon Kind="NavigateNext"/>
                                     </Button>
                                 </StackPanel>
-                                <TextBlock TextAlignment="Center" TextWrapping="Wrap" FontSize="16" Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
+                                <StackPanel Orientation="Vertical">
+                                    <!-- Chat button -->
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The chat can be access by clicking on the button locate at the top-right corner"/>
+                                    <materialDesign:ColorZone  Margin="5" Mode="PrimaryMid" HorizontalAlignment="Center">
+                                            <Button
+                                                Style="{StaticResource MaterialDesignIconButton}">
+                                                <materialDesign:PackIcon
+                                                    Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                                    Kind="Chat"
+                                                    Height="24"
+                                                    Width="24" />
+                                            </Button>
+                                    </materialDesign:ColorZone>
+                                    <!-- Notifications -->
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The small number indicates the number of unseen messages"/>
+                                    <Grid Margin="5">
+                                        <materialDesign:Badged Padding="10 5 10 10" BadgePlacementMode="Top" BadgeBackground="{StaticResource SecondaryAccentBrush}" Badge="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                    
+                                    <!-- Channel -->
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="When the chat is open, you have a list of all the existing channel. You can join any of the availible channel in the list by clicking on one of them. Joined channel can be leave."/>
+                                    
+                                    <TreeView  Cursor="Hand">
+                                        <TreeViewItem IsExpanded="True">
+                                            <TreeViewItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
+                                                                             Kind="AccountMultipleCheckOutline" />
+                                                    <TextBlock Text="Joined" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </TreeViewItem.Header>
+                                            <TreeViewItem.Items>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem  Header="Leave">
+                                                                    <MenuItem.Icon>
+                                                                        <materialDesign:PackIcon Foreground="Red" Kind="Minus" />
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </Grid.ContextMenu>
+                                                        <materialDesign:Badged Grid.Column="0" Badge="3" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
+                                                        <TextBlock VerticalAlignment="Center" Text="Channel1" Grid.Column="1" />
+                                                    </Grid>
+                                            </TreeViewItem.Items>
+                                        </TreeViewItem>
+                                        <TreeViewItem IsExpanded="True">
+                                            <TreeViewItem.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
+                                                                             Kind="AccountMultipleRemoveOutline" />
+                                                    <TextBlock Text="available" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </TreeViewItem.Header>
+                                                <TreeViewItem.Items>
+                                                <Grid>
+                                                    <Grid.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem  Header="Join">
+                                                                <MenuItem.Icon>
+                                                                    <materialDesign:PackIcon Foreground="Green" Kind="Plus" />
+                                                                </MenuItem.Icon>
+                                                            </MenuItem>
+                                                            <MenuItem Tag="{Binding}" Header="Delete">
+                                                                <MenuItem.Icon>
+                                                                    <materialDesign:PackIcon Foreground="Black" Kind="TrashCan" />
+                                                                </MenuItem.Icon>
+                                                            </MenuItem>
+                                                        </ContextMenu>
+                                                    </Grid.ContextMenu>
+                                                    <TextBlock VerticalAlignment="Center" Text="Channel2" />
+                                                    </Grid>
+                                                </TreeViewItem.Items>
+                                        </TreeViewItem>
+                                    </TreeView>
+                                </StackPanel>
                             </DockPanel>
+                            
+                            </ScrollViewer>
                         </materialDesign:TransitionerSlide>
                         <materialDesign:TransitionerSlide>
                             <Image Source="../../Resources/Avatar/16.jpg"/>
