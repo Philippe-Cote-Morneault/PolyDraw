@@ -8,7 +8,7 @@ import (
 	"github.com/go-redis/redis/v7"
 	"github.com/tevino/abool"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
-	word_validator "gitlab.com/jigsawcorp/log3900/internal/word-validator"
+	wordvalidator "gitlab.com/jigsawcorp/log3900/internal/wordvalidator"
 	"gitlab.com/jigsawcorp/log3900/model"
 )
 
@@ -31,7 +31,7 @@ func (r *RedisService) Start() {
 	model.RedisInit()
 	r.client = model.Redis()
 
-	go word_validator.LoadList()
+	go wordvalidator.LoadList()
 	go r.run()
 }
 
@@ -66,7 +66,6 @@ func (r *RedisService) run() {
 			count++
 		} else {
 			count = 0
-			log.Println("[Redis] -> PONG")
 		}
 
 		if count > 3 {
