@@ -10,6 +10,7 @@ using System.Windows;
 using ClientLourd.Models;
 using MessagePack;
 using System.Timers;
+using System.Windows.Threading;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.Enums;
@@ -54,7 +55,7 @@ namespace ClientLourd.Services.SocketService
 
                 //Restart the timer
                 _healthCheckTimer.Start();
-            });
+            }, DispatcherPriority.Send);
         }
 
         /// <summary>
