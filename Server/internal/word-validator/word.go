@@ -26,7 +26,7 @@ func LoadList() {
 		if !notLoaded {
 			model.Redis().Set("dict_loaded", "true", 0)
 		} else {
-			log.Printf("[Word] -> All or some files could not be loaded as words. Validation may not work!")
+			log.Printf("[Word] -> All or some files could not be loaded as words perhaps you need to download the files. Validation may not work!")
 		}
 	}
 
