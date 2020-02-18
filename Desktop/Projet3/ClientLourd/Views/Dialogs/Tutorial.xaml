@@ -74,7 +74,7 @@
                                     <!-- Channel -->
                                     <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="When the chat is open, you have a list of all the existing channel. You can join any of the availible channel in the list by clicking on one of them. Joined channel can be leave."/>
                                     
-                                    <TreeView  Cursor="Hand">
+                                    <TreeView HorizontalAlignment="Center" Cursor="Hand">
                                         <TreeViewItem IsExpanded="True">
                                             <TreeViewItem.Header>
                                                 <StackPanel Orientation="Horizontal">
@@ -132,6 +132,59 @@
                                                 </TreeViewItem.Items>
                                         </TreeViewItem>
                                     </TreeView>
+                                    
+                                    <!-- Add a channel -->
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="You can create a new channel using the add button"/>
+                                        <StackPanel Margin="10" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
+                                            <Button
+                                                Margin="10 0 0 0"
+                                                Style="{StaticResource MaterialDesignIconForegroundButton}"
+                                                ToolTip="Create a new channel">
+                                                <materialDesign:PackIcon
+                                                    Kind="Plus"
+                                                    FontWeight="Medium"
+                                                    Height="20"
+                                                    Width="20" />
+                                            </Button>
+                                        </StackPanel>
+                                    
+                                        <!-- Search a channel -->
+                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="It is possible to search for a specific channel in the list with the search bar"/>
+                                         <Grid Margin="10" HorizontalAlignment="Center">
+                                                  <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition
+                                                      Width="Auto" />
+                                                    <ColumnDefinition
+                                                      Width="*" />
+                                                  </Grid.ColumnDefinitions>
+                                                  <Button
+                                                    Style="{DynamicResource MaterialDesignToolButton}">
+                                                    <materialDesign:PackIcon
+                                                      Kind="Magnify"
+                                                      Opacity=".56" />
+                                                  </Button>
+                                                  <TextBox
+                                                    Grid.Column="1"
+                                                    Margin="8 0 0 0"
+                                                    materialDesign:HintAssist.Hint="Search a channel"
+                                                    materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                                                    BorderThickness="0"
+                                                    VerticalAlignment="Center" />
+                                                </Grid>
+                                        <!-- Export the chat -->
+                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The chat can be export as an external window, ideal for multiple monitor setup. The export button can be found in the bottom right corner of the chat."/>
+                                    
+                                        <Button
+                                            Margin="10"
+                                            Name="ExportButton"
+                                            ToolTip="Export the chat as a new window"
+                                            Style="{DynamicResource MaterialDesignToolForegroundButton}">
+                                            <materialDesign:PackIcon Kind="ApplicationExport"
+                                                Height="24"
+                                                Width="24"
+                                                 Foreground="{StaticResource PrimaryHueMidBrush}" />
+                                        </Button>
                                 </StackPanel>
                             </DockPanel>
                             
