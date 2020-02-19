@@ -443,8 +443,14 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return new ObservableCollection<Channel>(_channels.Where(c =>
+                var channels =  new ObservableCollection<Channel>(_channels.Where(c =>
                    c.Name.ToLower().Contains(ChannelFilter) && c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                var globalChannel = channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
+                if (globalChannel != null)
+                {
+                    channels.Move(channels.IndexOf(globalChannel), 0);
+                }
+                return channels;
             }
         }
 
@@ -452,8 +458,14 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return new ObservableCollection<Channel>(_channels.Where(c =>
+                var channels =  new ObservableCollection<Channel>(_channels.Where(c =>
                    c.Name.ToLower().Contains(ChannelFilter) && !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                var globalChannel = channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
+                if (globalChannel != null)
+                {
+                    channels.Move(channels.IndexOf(globalChannel), 0);
+                }
+                return channels;
             }
         }
 
