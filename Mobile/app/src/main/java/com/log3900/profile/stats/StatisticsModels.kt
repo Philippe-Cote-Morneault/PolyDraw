@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 import java.util.*
 
 // TODO: use Dates?
-
+// TODO: Best score solo
 data class UserStats(
     @Json(name = "GamesPlayed")             val gamesPlayed:            Int,
     @Json(name = "WinRatio")                val winRation:              Double,
