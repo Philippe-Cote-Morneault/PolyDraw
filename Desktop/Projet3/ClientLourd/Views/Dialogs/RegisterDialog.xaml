@@ -48,20 +48,6 @@
                 </TextBox>
             </StackPanel>
 
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Email</TextBlock>
-                </StackPanel>
-                <TextBox x:Name="EmailField" MaxLength="60">
-                    <TextBox.Text>
-                        <Binding Path="User.Email" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
@@ -84,6 +70,23 @@
                              
                 </PasswordBox>
             </StackPanel>
+            
+            
+            <StackPanel Margin="0 20 0 20">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Email</TextBlock>
+                </StackPanel>
+                <TextBox x:Name="EmailField" MaxLength="60">
+                    <TextBox.Text>
+                        <Binding Path="User.Email" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
+            
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
