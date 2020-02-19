@@ -184,6 +184,10 @@
             <e p="Login.xaml.cs" t="Include" />
             <e p="Profile.xaml" t="Include" />
             <e p="Profile.xaml.cs" t="Include" />
+            <e p="Tutorial" t="Include">
+              <e p="ChatTutorial.xaml" t="Include" />
+              <e p="ChatTutorial.xaml.cs" t="Include" />
+            </e>
           </e>
           <e p="Dialogs" t="Include">
             <e p="AvatarSelectionDialog.xaml" t="Include" />

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -8,5 +9,7 @@ namespace ClientLourd.Views.Dialogs
         {
             InitializeComponent();
         }
+        
+        
     }
 }
