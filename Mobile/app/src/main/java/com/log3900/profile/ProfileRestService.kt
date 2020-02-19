@@ -17,10 +17,9 @@ interface ProfileRestService {
     ): Call<JsonArray>
 
     // Statistics
-    @GET("stats/{userid}")
+    @GET("stats/")
     suspend fun getUserStats(
-        @Header("SessionToken") sessionToken: String, @Header("Language") language: String,
-        @Path("userid") userId: String
+        @Header("SessionToken") sessionToken: String, @Header("Language") language: String
     ): Response<JsonObject>
 
     // TODO: userid
