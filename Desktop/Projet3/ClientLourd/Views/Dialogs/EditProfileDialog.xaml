@@ -99,7 +99,7 @@
                     </TextBlock>
                 </StackPanel>
 
-                <PasswordBox x:Name="PasswordField"
+                <PasswordBox GotFocus="PasswordField_OnGotFocus" LostFocus="PasswordField_OnLostFocus" x:Name="PasswordField"
                              materialDesign:HintAssist.HelperText="At least 8 characters"
                              MaxLength="64" PasswordChanged="OnPasswordChanged">
                              

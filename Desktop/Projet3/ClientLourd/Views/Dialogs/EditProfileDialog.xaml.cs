@@ -284,5 +284,17 @@ namespace ClientLourd.Views.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void PasswordField_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordField.Password = "";
+        }
+
+        private void PasswordField_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (PasswordField.Password == "")
+            {
+                PasswordField.Password = JUNK;
+            }
+        }
     }
 }
