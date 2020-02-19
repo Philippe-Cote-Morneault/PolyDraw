@@ -63,8 +63,9 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Name="ParentGrid">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
@@ -79,6 +80,9 @@
                             </Grid.ContextMenu>
                             <materialDesign:Badged Grid.Column="0" Badge="{Binding Notification, Converter={StaticResource NotificationConverter}}" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
                             <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Grid.Column="1" />
+                            <Button Grid.Column="2"     Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
+                                <materialDesign:PackIcon Kind="MoreHoriz"/>
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
@@ -93,7 +97,11 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                            <Grid>
+                            <Grid Name="ParentGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
                                 <Grid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Tag="{Binding}" Click="JoinChannelClick" Header="Join">
@@ -108,7 +116,10 @@
                                         </MenuItem>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Name}" />
+                                <Button Grid.Column="1"     Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
+                                    <materialDesign:PackIcon Kind="MoreHoriz"/>
+                                </Button>
                             </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
