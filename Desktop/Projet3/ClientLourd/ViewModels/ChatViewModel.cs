@@ -194,7 +194,12 @@ namespace ClientLourd.ViewModels
                         Channel channel = Channels.First(c => c.ID == e.ChannelId);
                         Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
                         channel.Users.Add(await GetUser(e.Username, e.UserID));
-                        Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
+                        channel.Messages.Add(m);
+                        // Select this channel if I am the user concern
+                        if (e.UserID == SessionInformations.User.ID)
+                        {
+                            SelectedChannel = channel;
+                        }
                         UpdateChannels();
                 });
             }
