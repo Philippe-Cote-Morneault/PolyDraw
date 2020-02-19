@@ -60,6 +60,28 @@
                     </TextBox.Text>
                 </TextBox>
             </StackPanel>
+            
+            
+            <StackPanel Margin="0 20 0 20">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Password</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                            <TextBlock.Visibility>
+                                <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" UpdateSourceTrigger="LostFocus">
+                                    <Binding Path="PasswordJunk"></Binding>
+                                    <Binding Path="NewPassword"></Binding>
+                                </MultiBinding>
+                            </TextBlock.Visibility>
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Password" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+                <PasswordBox GotFocus="PasswordField_OnGotFocus" LostFocus="PasswordField_OnLostFocus" x:Name="PasswordField"
+                             materialDesign:HintAssist.HelperText="At least 8 characters"
+                             MaxLength="64" PasswordChanged="OnPasswordChanged">
+                             
+                </PasswordBox>
+            </StackPanel>
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
@@ -85,26 +107,6 @@
                 </TextBox>
             </StackPanel>
 
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Password</TextBlock>
-                    <TextBlock Margin="10 0 0 0">
-                            <TextBlock.Visibility>
-                                <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" UpdateSourceTrigger="LostFocus">
-                                    <Binding Path="PasswordJunk"></Binding>
-                                    <Binding Path="NewPassword"></Binding>
-                                </MultiBinding>
-                            </TextBlock.Visibility>
-                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Password" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-
-                <PasswordBox x:Name="PasswordField"
-                             materialDesign:HintAssist.HelperText="At least 8 characters"
-                             MaxLength="64" PasswordChanged="OnPasswordChanged">
-                             
-                </PasswordBox>
-            </StackPanel>
 
 
             <StackPanel Margin="0 20 0 20">

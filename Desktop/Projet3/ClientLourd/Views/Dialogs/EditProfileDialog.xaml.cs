@@ -8,8 +8,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Services.CredentialsService;
 using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.ViewModels;
 using MaterialDesignThemes.Wpf;
@@ -108,6 +110,11 @@ namespace ClientLourd.Views.Dialogs
                 User.LastName = UserClone.LastName;
                 User.Email = UserClone.Email;
                 User = UserClone;
+                // Update de credentials store
+                if (CredentialManager.ReadCredential(ApplicationInformations.Name) != null)
+                {
+                    CredentialManager.WriteCredential(ApplicationInformations.Name, User.Username, NewPassword);
+                }
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
@@ -277,5 +284,17 @@ namespace ClientLourd.Views.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void PasswordField_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordField.Password = "";
+        }
+
+        private void PasswordField_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (PasswordField.Password == "")
+            {
+                PasswordField.Password = JUNK;
+            }
+        }
     }
 }
