@@ -30,7 +30,8 @@
 
             <!-- Left side -->
             <StackPanel Grid.Column="0" Grid.Row="1" Margin="0 0 20 0">
-                <Image  Stretch="None" Margin="4" Height="400"  Source="../../Resources/avatar.jpg" />
+                <Image  Stretch="None" Margin="4" Height="400"  Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
+
                 <TextBlock FontWeight="Bold" FontSize="30" Text="{Binding Path=User.Username, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 <TextBlock FontSize="18">
                     <TextBlock.Text >
