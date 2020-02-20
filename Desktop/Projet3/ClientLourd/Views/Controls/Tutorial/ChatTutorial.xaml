@@ -21,7 +21,7 @@
                                     <!-- Chat button -->
                                     <TextBlock HorizontalAlignment="Center" Margin="0 10 0 0" FontWeight="Bold" FontSize="24" Text="Access the chat"/>
                                     <Separator/>
-                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The chat can be access by clicking on the button locate at the top-right corner"/>
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The chat can be accessed by clicking on the button located at the top-right corner."/>
                                     <materialDesign:ColorZone  Margin="5" Mode="PrimaryMid" HorizontalAlignment="Center">
                                             <Button
                                                 Style="{StaticResource MaterialDesignIconButton}">
@@ -35,7 +35,7 @@
                                     <!-- Notifications -->
                                     <TextBlock HorizontalAlignment="Center" Margin="0 10 0 0"  FontWeight="Bold" FontSize="24" Text="Notifications"/>
                                     <Separator/>
-                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The small number indicates the number of unseen messages"/>
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="This number indicates the number of unseen messages."/>
                                     <Grid Margin="5">
                                         <materialDesign:Badged Padding="10 5 10 10" BadgePlacementMode="Top" BadgeBackground="{StaticResource SecondaryAccentBrush}" Badge="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                     </Grid>
@@ -43,7 +43,7 @@
                                     <!-- Channel -->
                                     <TextBlock HorizontalAlignment="Center" Margin="0 10 0 0" FontWeight="Bold" FontSize="24" Text="Manage channels"/>
                                     <Separator/>
-                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="When the chat is open, you have a list of all the existing channel. You can join any of the availible channel in the list by clicking on one of them. Joined channel can be leave."/>
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="When the chat is opened, a list of existing channels is shown. You can join any of the available channels in the list by clicking on it. You can also leave a joined channel."/>
                                     
                                     <TreeView HorizontalAlignment="Center" Cursor="Hand">
                                         <TreeViewItem IsExpanded="True">
@@ -116,7 +116,7 @@
                                     </TreeView>
                                     
                                     <!-- Add a channel -->
-                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="You can create a new channel using the add button"/>
+                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="You can create a new channel by using the add button."/>
                                         <StackPanel Margin="10" HorizontalAlignment="Center" Orientation="Horizontal">
                                             <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
                                             <Button
@@ -132,7 +132,7 @@
                                         </StackPanel>
                                     
                                         <!-- Search a channel -->
-                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="It is possible to search for a specific channel in the list with the search bar"/>
+                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="It is possible to search for a specific channel in the list by using the search bar."/>
                                          <Grid Margin="10" HorizontalAlignment="Center">
                                                   <Grid.ColumnDefinitions>
                                                     <ColumnDefinition
@@ -157,7 +157,7 @@
                                         <!-- Export the chat -->
                                         <TextBlock Margin="0 10 0 0" HorizontalAlignment="Center"  FontWeight="Bold" FontSize="24" Text="Export the chat"/>
                                         <Separator/>
-                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The chat can be export as an external window, ideal for multiple monitor setup. The export button can be found in the bottom right corner of the chat."/>
+                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="The chat can be exported as an external window, ideal for multiple monitor setup. The export button can be found in the bottom right corner of the chat."/>
                                     
                                         <Button
                                             Margin="10"
@@ -171,7 +171,7 @@
                                         <!-- Send message -->
                                         <TextBlock Margin="0 10 0 0" HorizontalAlignment="Center"  FontWeight="Bold" FontSize="24" Text="Send messages"/>
                                         <Separator/>
-                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="It is possible to send message in any joined channel by using the send button"/>
+                                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="It is possible to send a message in any joined channel by using the send button, or by simply pressing Enter."/>
                                         <Button Margin="5" 
                                                 ToolTip="Send the message"
                                                 Style="{DynamicResource MaterialDesignToolForegroundButton}">
