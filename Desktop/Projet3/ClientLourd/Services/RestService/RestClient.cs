@@ -238,7 +238,7 @@ namespace ClientLourd.Services.RestService
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
             {
-                case HttpStatusCode.OK:
+                case HttpStatusCode.OK:                 
                     return JsonConvert.DeserializeObject<StatsHistory>(response.Content);
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);

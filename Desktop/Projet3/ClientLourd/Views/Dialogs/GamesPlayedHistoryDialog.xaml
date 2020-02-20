@@ -12,8 +12,10 @@
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
     </UserControl.Resources>
 
-    <Grid Height="700" Width="600">
+    <Grid Height="700" Width="1200">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -24,15 +26,17 @@
             <RowDefinition Height="80*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Winner name</TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match duration</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match Type</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Winner's name</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Players</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="3" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match duration</TextBlock>
 
-        <Separator Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+        <Separator Grid.Row="1" Grid.ColumnSpan="4" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
 
 
 
 
-        <ScrollViewer Grid.ColumnSpan="2" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
+        <ScrollViewer Grid.ColumnSpan="4" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
             <ListView ItemsSource="{Binding Path=StatsHistory.MatchesPlayedHistory, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
                 <ListView.Resources>
                     <Style TargetType="GridViewColumnHeader">
@@ -41,8 +45,11 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchType}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding PlayersName}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource LongToUnixTimeStampConverter}}" />
+                        
                     </GridView>
                 </ListView.View>
             </ListView>

@@ -92,9 +92,10 @@ namespace ClientLourd.Models.Bindable
         private long _matchDuration;
         private string _winnerName;
         private string _matchType;
-        //private string[] _playersName;
+        private string[] _playersName;
         public MatchPlayed()
         {
+
         }
 
         public long MatchDuration
@@ -124,7 +125,30 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
+        public string MatchType
+        {
+            get { return _matchType; }
+            set
+            {
+                if (value != _matchType)
+                {
+                    _matchType = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
-
+        public string[] PlayersName
+        {
+            get { return _playersName; }
+            set
+            {
+                if (value != _playersName)
+                {
+                    _playersName = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
     }
 }
