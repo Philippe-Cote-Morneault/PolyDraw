@@ -84,5 +84,7 @@ func migrate() {
 	dbVar.AutoMigrate(&Game{})
 	dbVar.AutoMigrate(&GameHint{})
 	dbVar.Model(&GameHint{}).AddForeignKey("game_id", "games(id)", "CASCADE", "RESTRICT")
+	dbVar.AutoMigrate(&GameImage{})
+	dbVar.Model(&GameImage{}).AddForeignKey("game_id", "games(id)", "CASCADE", "RESTRICT")
 
 }

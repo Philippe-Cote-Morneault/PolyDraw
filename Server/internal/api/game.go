@@ -2,15 +2,23 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 	"strings"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+
+	"gitlab.com/jigsawcorp/log3900/internal/datastore"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/wordvalidator"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
+)
+
+const (
+	//MB represents the value of a megabyte
+	MB = 1 << 20
 )
 
 type gameRequestCreation struct {
@@ -76,14 +84,16 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 		Word:       request.Word,
 		Difficulty: request.Difficulty,
 		Hints:      hints,
-		File:       "None",
 	}
 	model.DB().Save(&game)
 	rbody.JSON(w, http.StatusOK, &gameResponseCreation{GameID: game.ID.String()})
 
 }
 
+//PostGameImage used to create the images
 func PostGameImage(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, 5*MB)
+
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
 	if err != nil {
@@ -97,7 +107,72 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 	if game.ID == uuid.Nil {
 		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		return
+	}
+	//Check for the fields
+	mode := r.FormValue("mode")
+	if mode == "" {
+		rbody.JSONError(w, http.StatusBadRequest, "The mode is not please set the number of the mode between 0-3.")
+		return
 	}
 
-	//Check for the fields
+	modeInt, err := strconv.Atoi(mode)
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "The mode is not a number. The mode must be between 0-3.")
+		return
+	}
+
+	if modeInt > 3 || modeInt < 0 {
+		rbody.JSONError(w, http.StatusBadRequest, "The mode must be between 0-3.")
+		return
+	}
+
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "The file is not valid")
+		return
+	}
+
+	fileHeader := make([]byte, 512)
+
+	if _, err := file.Read(fileHeader); err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "The file cannot be read.")
+		return
+	}
+
+	if _, err := file.Seek(0, 0); err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "The file cannot be read.")
+		return
+	}
+
+	mime := http.DetectContentType(fileHeader)
+	switch mime {
+	case "text/xml", "image/png", "image/jpeg", "image/bmp":
+		var keyFile string
+		keyFile, err = datastore.PostFile(file)
+
+		defer file.Close()
+
+		if err != nil {
+			rbody.JSONError(w, http.StatusInternalServerError, "The file cannot be saved.")
+			return
+		}
+
+		image := model.GameImage{}
+		if mime == "text/xml" {
+			//Load svg
+			image.SVGFile = keyFile
+			//TODO validate the SVG
+		} else {
+			//Load jpg
+			image.ImageFile = keyFile
+			//TODO include potrace
+		}
+		game.Image = &image
+		model.DB().Update(game)
+	default:
+		rbody.JSONError(w, http.StatusBadRequest, "The file is not a valid type")
+		return
+	}
+
 }
