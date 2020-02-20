@@ -147,19 +147,19 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 	mime := http.DetectContentType(fileHeader)
 	switch mime {
-	case "text/xml", "image/png", "image/jpeg", "image/bmp":
+	case "text/xml; charset=utf-8", "image/png", "image/jpeg", "image/bmp":
 		var keyFile string
 		keyFile, err = datastore.PostFile(file)
 
-		defer file.Close()
-
 		if err != nil {
-			rbody.JSONError(w, http.StatusInternalServerError, "The file cannot be saved.")
+			rbody.JSONError(w, http.StatusInternalServerError, "The file cannot be saved. "+err.Error())
 			return
 		}
+		defer file.Close()
 
 		image := model.GameImage{}
-		if mime == "text/xml" {
+		image.Mode = modeInt
+		if mime == "text/xml; charset=utf-8" {
 			//Load svg
 			image.SVGFile = keyFile
 			//TODO validate the SVG
@@ -169,7 +169,8 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 			//TODO include potrace
 		}
 		game.Image = &image
-		model.DB().Update(game)
+		model.DB().Save(&game)
+		rbody.JSON(w, http.StatusOK, "OK")
 	default:
 		rbody.JSONError(w, http.StatusBadRequest, "The file is not a valid type")
 		return

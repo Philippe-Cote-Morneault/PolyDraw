@@ -24,6 +24,7 @@ type GameImage struct {
 	Base
 	Game      Game `gorm:"foreignkey:GameID"`
 	GameID    uuid.UUID
+	Mode      int
 	SVGFile   string
 	ImageFile string
 }
