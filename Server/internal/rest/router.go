@@ -30,6 +30,8 @@ func (a *Server) setRouters() {
 	a.Get("/chat/messages/{channelID}", a.handleRequest(api.GetChatMessages))
 	a.Get("/stats/", a.handleRequest(api.GetStats))
 	a.Get("/stats/history", a.handleRequest(api.GetHistory))
+	a.Post("/games", a.handleRequest(api.PostGame))
+	a.Post("/games/{id}/image", a.handleRequest(api.PostGameImage))
 
 }
 
