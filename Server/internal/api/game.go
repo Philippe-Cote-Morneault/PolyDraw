@@ -21,6 +21,14 @@ const (
 	MB = 1 << 20
 )
 
+type gameResponse struct {
+	ID         string
+	Word       string
+	Difficulty int
+	Hints      []string
+	ImageMode  int
+}
+
 type gameRequestCreation struct {
 	Word       string
 	Hints      []string
@@ -176,4 +184,35 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+//GetGame returns a game
+func GetGame(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	gameID, err := uuid.Parse(vars["id"])
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		return
+	}
+
+	//Check if the game exists
+	game := model.Game{}
+	model.DB().Preload("Hints").Preload("Image").Where("id = ?", gameID).First(&game)
+
+	if game.ID == uuid.Nil {
+		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		return
+	}
+	var hints []string
+	for i := range game.Hints {
+		hints = append(hints, game.Hints[i].Hint)
+	}
+	response := gameResponse{
+		ID:         game.ID.String(),
+		Word:       game.Word,
+		Difficulty: game.Difficulty,
+		ImageMode:  game.Image.Mode,
+		Hints:      hints,
+	}
+	rbody.JSON(w, http.StatusOK, &response)
 }
