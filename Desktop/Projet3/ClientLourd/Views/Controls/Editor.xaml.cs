@@ -19,21 +19,6 @@ namespace ClientLourd.Views.Controls
             DataContext = new EditorViewModel();
         }
 
-        private void GlisserCommence(object sender, DragStartedEventArgs e) =>
-            (sender as Thumb).Background = Brushes.Black;
-
-        private void GlisserTermine(object sender, DragCompletedEventArgs e) =>
-            (sender as Thumb).Background = Brushes.Red;
-
-        private void GlisserMouvementRecu(object sender, DragDeltaEventArgs e)
-        {
-            String nom = (sender as Thumb).Name;
-            if (nom == "horizontal" || nom == "diagonal")
-                colonne.Width = new GridLength(Math.Max(32, colonne.Width.Value + e.HorizontalChange));
-            if (nom == "vertical" || nom == "diagonal")
-                ligne.Height = new GridLength(Math.Max(32, ligne.Height.Value + e.VerticalChange));
-        }
-
         // Pour la gToolsList_OnSelectionChangedition du pointeur.
         private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
 
