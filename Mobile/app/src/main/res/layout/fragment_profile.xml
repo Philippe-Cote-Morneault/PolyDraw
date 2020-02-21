@@ -64,6 +64,14 @@
                     android:layout_margin="16dp"
                     tools:layout="@layout/fragment_profile_stats" />
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </ScrollView>
 
