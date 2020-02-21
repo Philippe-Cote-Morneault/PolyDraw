@@ -65,20 +65,40 @@
                         </ListBoxItem>
                     </ListBox>
                     <Separator />
-
-                    <xctk:ColorPicker x:Name="selecteurCouleur"
-                                      VerticalContentAlignment="Stretch"
-                                      ToolTip="Color"
-                                      Background="#00000000"
-                                      ShowDropDownButton="False"
-                                      ShowRecentColors="True"
-                                      BorderBrush="#80000000"
-                                      Margin="5,0,0,0"
-                                      SelectedColor="{Binding Path=CouleurSelectionnee, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      AvailableColorsHeader="Palette"
-                                      StandardColorsHeader="Couleurs de base"
-                                      RecentColorsHeader="Récemment utilisées"
-                                      UsingAlphaChannel="True" />
+                        <ItemsControl>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Width="80" Height="40" Background="LightGray"/>
+                                    
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Items>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Black"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="White"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Red"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Green"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Blue"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Yellow"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Cyan"/>
+                                </Button>
+                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Magenta"/>
+                                </Button>
+                            </ItemsControl.Items>
+                        </ItemsControl>
                     <Separator />
                     <Slider Width="100" Minimum="1" Maximum="50"
                             ToolTip="Tip size"
