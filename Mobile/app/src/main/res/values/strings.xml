@@ -51,6 +51,11 @@
     <string name="connection_history">Connection history</string>
     <string name="connected_at">Connected at </string>
     <string name="disconnected_at">Disconnected at </string>
+    <string name="achievements">Achievements</string>
+    <string name="achievements_lower">achievements</string>
+    <string name="unlocked_message">You have unlocked</string>
+    <string name="so_far_message">achievements so far</string>
+
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
