@@ -45,6 +45,7 @@ object StatsRepository {
 
     suspend fun getAllUserStats(): UserStats = getUserStats()
     suspend fun getConnectionHistory(): List<Connection> = getHistoryStats().connectionHistory
+//    suspend fun getAchievements(): List<Achievement> = getUserStats().
 
     private suspend fun fetchUserStats() {
         userStats = sendUserStatsRequest()
