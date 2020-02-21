@@ -73,28 +73,28 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Items>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Black"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="White"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Red"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Green"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Blue"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Yellow"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Cyan"/>
                                 </Button>
-                                <Button Padding="0" Margin="0"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
                                         <Ellipse Width="15" Height="15" Fill="Magenta"/>
                                 </Button>
                             </ItemsControl.Items>

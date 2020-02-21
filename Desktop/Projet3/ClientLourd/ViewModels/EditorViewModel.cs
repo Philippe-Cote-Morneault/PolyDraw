@@ -39,12 +39,8 @@ namespace ClientLourd.ViewModels
 
         public StrokeCollection Traits { get; set; }
 
-        // Commandes sur lesquels la vue pourra se connecter.
-        public RelayCommand<object> Empiler { get; set; }
-        public RelayCommand<object> Depiler { get; set; }
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
-        public RelayCommand<object> Reinitialiser { get; set; }
 
         /// <summary>
         /// Constructeur de VueModele
