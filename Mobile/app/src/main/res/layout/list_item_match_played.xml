@@ -3,6 +3,8 @@
     android:id="@+id/match_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rounded_shape"
+    android:padding="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
