@@ -12,7 +12,7 @@ import (
 
 //GetFile used to get the file name don't forget to close the file
 func GetFile(key string) (*bufio.Reader, error) {
-	file, err := os.Open(getPath(key))
+	file, err := os.Open(GetPath(key))
 	if err != nil {
 		return nil, err
 	}
@@ -21,8 +21,8 @@ func GetFile(key string) (*bufio.Reader, error) {
 
 //PostFile used to post the file name
 func PostFile(reader io.Reader) (string, error) {
-	fileName := generateFileName()
-	file, err := os.OpenFile(getPath(fileName), os.O_WRONLY|os.O_CREATE, 0666)
+	fileName := GenerateFileKey()
+	file, err := os.OpenFile(GetPath(fileName), os.O_WRONLY|os.O_CREATE, 0666)
 	defer file.Close()
 	if err != nil {
 		return "", err
@@ -37,7 +37,8 @@ func PostFile(reader io.Reader) (string, error) {
 
 }
 
-func generateFileName() string {
+//GenerateFileKey is used to generate a unique filename
+func GenerateFileKey() string {
 	//Generate a unique file name
 	uniqueID := uuid.New()
 	bytes, err := uniqueID.MarshalBinary()
@@ -50,6 +51,7 @@ func generateFileName() string {
 	return fileName
 }
 
-func getPath(key string) string {
+//GetPath is used to return the global path of a key
+func GetPath(key string) string {
 	return viper.GetString("datastore") + key
 }
