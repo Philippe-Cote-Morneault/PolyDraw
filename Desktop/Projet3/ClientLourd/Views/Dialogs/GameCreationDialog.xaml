@@ -168,11 +168,20 @@
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
                                 <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Confirm" />
                         </Grid>
-                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Vertical">
+                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                       Text="Set the black level threshold"/>
+                            <Slider
+                              Minimum="0"
+                              Maximum="100"
+                              Style="{StaticResource MaterialDesignDiscreteSlider}"
+                              ToolTip="MaterialDesignDiscreteSlider"
+                              Value="{Binding BlackLevelThreshold}"/>
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                        Text="Select the way the draw will be display"/>
+                            <ComboBox SelectedItem="{Binding Path=SelectedMode}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
+                            <Button Content="{materialDesign:PackIcon Kind=Play}" HorizontalAlignment="Center" />
                         </StackPanel>
-                        <ComboBox SelectedItem="{Binding Path=SelectedMode}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" DockPanel.Dock="Top"/>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
                             <InkCanvas Width="800" Height="450" IsEnabled="False" />
                         </materialDesign:Card>

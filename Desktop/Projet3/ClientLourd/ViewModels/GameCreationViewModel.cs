@@ -86,6 +86,8 @@ namespace ClientLourd.ViewModels
             get { return !string.IsNullOrWhiteSpace(_image); }
         }
         
+        public int BlackLevelThreshold { get; set; }
+        
         RelayCommand<string> _uploadImageCommand;
 
         public ICommand UploadImageCommand
@@ -112,6 +114,7 @@ namespace ClientLourd.ViewModels
             //TODO validate the file
             Image = image;
         }
+        
         
     }
 }
