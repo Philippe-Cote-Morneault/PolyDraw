@@ -11,6 +11,7 @@ import android.widget.ImageView
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -74,6 +75,7 @@ open class MainActivity : AppCompatActivity() {
         val header = navView.getHeaderView(0)
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
             startProfileFragment()
         }
 
@@ -93,7 +95,7 @@ open class MainActivity : AppCompatActivity() {
 
         val fragment = ProfileFragment()
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.nav_host_fragment, fragment, "PROFILE_VIEW_FRAGMENT_TAG")
+        fragmentTransaction.add(R.id.nav_host_fragment, fragment, PROFILE_TAG)
         fragmentTransaction.commit()
     }
 
