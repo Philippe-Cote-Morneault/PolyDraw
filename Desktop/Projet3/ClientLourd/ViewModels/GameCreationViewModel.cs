@@ -66,6 +66,19 @@ namespace ClientLourd.ViewModels
             get { return EnumManager.GetAllDescriptions<PotraceMode>(); }
         }
 
+        private DifficultyLevel _selectedDifficulty;
+
+        public string SelectedDifficulty
+        {
+            get { return _selectedDifficulty.GetDescription(); }
+            set { _selectedDifficulty = value.GetEnumFromDescription<DifficultyLevel>(); } 
+        }
+        
+        public List<string> DifficultyLevels
+        {
+            get { return EnumManager.GetAllDescriptions<DifficultyLevel>(); }
+        }
+
         public string Image
         {
             get { return _image; }
