@@ -1,7 +1,5 @@
 package com.log3900.chat
 
-import android.os.Handler
-import android.os.Message
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage
@@ -12,6 +10,7 @@ import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.ui.ProgressDialog
 import com.log3900.user.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -21,29 +20,39 @@ class ChatPresenter : Presenter {
     private lateinit var messageRepository: MessageRepository
     private lateinit var chatManager: ChatManager
     private var keyboardOpened: Boolean = false
+    private var loadingMessages: Boolean
 
     constructor(chatView: ChatView) {
         this.chatView = chatView
-        if (!(ChatManager.instance?.ready!!)) {
-            val progressDialog = ProgressDialog()
-            chatView.showProgressDialog(progressDialog)
-            ChatManager.instance?.subject?.filter {
-                it
-            }?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe {
-                chatView.hideProgressDialog(progressDialog)
+        loadingMessages = false
+        ChatManager.getInstance()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+            {
+                chatManager = it
                 init()
+            },
+            {
+
             }
-        } else {
-            init()
-        }
+        )
 
     }
 
     private fun init() {
-        chatManager = ChatManager.instance!!
-        chatView.setReceivedMessages(chatManager?.getCurrentChannelMessages().blockingGet())
-        chatView.setCurrentChannnelName(ChatManager.instance?.getActiveChannel()?.name!!)
+        chatManager.getCurrentChannelMessages()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    chatView.setReceivedMessages(it)
+                    chatView.scrollMessage()
+                },
+                {
+
+                }
+            )
+        chatView.setCurrentChannnelName(chatManager.getActiveChannel().name)
         messageRepository = MessageRepository.instance!!
 
         subscribeToEvents()
@@ -74,12 +83,25 @@ class ChatPresenter : Presenter {
         }
     }
 
-    private fun subscribeToEvents() {
-        messageRepository.subscribe(MessageRepository.Event.MESSAGE_RECEIVED, Handler {
-            handleNewMessage(it)
-            true
-        })
+    fun scrolledToPositions(firstPosition: Int, lastPosition: Int, scrollDirection: Int) {
+        if (scrollDirection < 0) {
+            if (firstPosition < 15 && !loadingMessages) {
+                loadingMessages = true
+                chatManager.loadMoreMessages().subscribe(
+                    {
+                        if (it > 0) {
+                            chatView.notifyMessagesPrepended(it)
+                        }
+                        loadingMessages = false
+                    },
+                    {
+                    }
+                )
+            }
+        }
+    }
 
+    private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
 
@@ -88,6 +110,9 @@ class ChatPresenter : Presenter {
         when(event.type) {
             EventType.ACTIVE_CHANNEL_CHANGED -> {
                 onChannelChanged(event.data as Channel)
+            }
+            EventType.RECEIVED_MESSAGE -> {
+                onNewMessage(event.data as ReceivedMessage)
             }
         }
     }
@@ -103,10 +128,9 @@ class ChatPresenter : Presenter {
         )
     }
 
-    private fun handleNewMessage(message: Message) {
-        val receivedMessage = message.obj as ReceivedMessage
+    private fun onNewMessage(message: ReceivedMessage) {
         chatView.notifyNewMessage()
-        if (AccountRepository.getAccount().username != receivedMessage.senderName) {
+        if (AccountRepository.getAccount().username != message.username) {
             chatView.playNewMessageNotification()
         }
     }

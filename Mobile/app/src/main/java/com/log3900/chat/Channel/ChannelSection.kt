@@ -46,6 +46,22 @@ class ChannelSection : Section {
         itemHolder.buttonAction1.setOnClickListener {
             listener.onChannelActionButton1Click(this.channelGroup.channels.get(position), channelGroup.type)
         }
+        itemHolder.buttonAction2.setOnClickListener {
+            listener.onChannelActionButton2Click(this.channelGroup.channels.get(position), channelGroup.type)
+        }
+        if (this.channelGroup.channels.get(position).ID.toString() == "00000000-0000-0000-0000-000000000000") {
+            itemHolder.buttonAction1.visibility = View.GONE
+            itemHolder.buttonAction2.visibility = View.GONE
+        } else {
+            itemHolder.buttonAction1.visibility = View.VISIBLE
+            itemHolder.buttonAction2.visibility = View.VISIBLE
+        }
+
+        if (channelGroup.type == GroupType.JOINED) {
+            itemHolder.buttonAction1.setImageResource(R.drawable.ic_remove_black_24dp)
+        } else {
+            itemHolder.buttonAction1.setImageResource(R.drawable.ic_add_black_24dp)
+        }
         itemHolder.bind(this.channelGroup.channels.get(position))
     }
 
@@ -59,11 +75,17 @@ class ChannelSection : Section {
             listener.onHeaderRootViewClick(viewHolder.channelGroup)
         }
         viewHolder.bind(channelGroup)
+        if (expanded) {
+            viewHolder.expandableIcon.setImageResource(R.drawable.ic_expand_more_black_24dp)
+        } else {
+            viewHolder.expandableIcon.setImageResource(R.drawable.ic_chevron_right_black)
+        }
     }
 
     interface ClickListener {
         fun onHeaderRootViewClick(group: ChannelGroup)
         fun onChannelClickListener(channel: Channel)
         fun onChannelActionButton1Click(channel: Channel, channelState: GroupType)
+        fun onChannelActionButton2Click(channel: Channel, channelState: GroupType)
     }
 }

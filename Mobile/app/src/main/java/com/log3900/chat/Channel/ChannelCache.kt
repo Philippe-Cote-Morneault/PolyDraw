@@ -1,15 +1,12 @@
 package com.log3900.chat.Channel
 
 import com.log3900.user.AccountRepository
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChannelCache {
     var joinedChannels: ArrayList<Channel> = arrayListOf()
     var availableChannels: ArrayList<Channel> = arrayListOf()
-    var needsReload: Boolean = true
-
-    constructor() {
-
-    }
 
     fun reloadChannels(channels: ArrayList<Channel>) {
         val username = AccountRepository.getAccount().username
@@ -46,5 +43,25 @@ class ChannelCache {
 
     fun removeAvailableChannel(channel: Channel) {
         availableChannels.remove(channel)
+    }
+
+    fun removeChannel(channelID: UUID) {
+        var channelToRemove = availableChannels.find {
+            it.ID == channelID
+        }
+
+        if (channelToRemove != null) {
+            removeAvailableChannel(channelToRemove)
+            return
+        }
+
+        channelToRemove = joinedChannels.find {
+            it.ID == channelID
+        }
+
+        if (channelToRemove != null) {
+            removeJoinedChannel(channelToRemove)
+            return
+        }
     }
 }

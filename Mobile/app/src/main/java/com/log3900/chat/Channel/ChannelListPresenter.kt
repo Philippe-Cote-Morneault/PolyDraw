@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class ChannelListPresenter : Presenter {
     private var channelListView: ChannelListView
@@ -16,32 +17,32 @@ class ChannelListPresenter : Presenter {
 
     constructor(channelListView: ChannelListView) {
         this.channelListView = channelListView
-        if (!(ChatManager.instance?.ready!!)) {
-            ChatManager.instance?.subject?.filter {
-                it
-            }?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe {
+        ChatManager.getInstance()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+            {
+                chatManager = it
                 init()
+            },
+            {
+
             }
-        } else {
-            init()
-        }
+        )
     }
 
     private fun init() {
-        this.chatManager = ChatManager.instance!!
         chatManager.getJoinedChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { channels ->
                 channelListView.setJoinedChannels(channels)
             },
-            { error ->
+            { _ ->
             }
         )
         chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { channels ->
                 channelListView.setAvailableChannels(channels)
             },
-            { error ->
+            { _ ->
             }
         )
         EventBus.getDefault().register(this)
@@ -60,7 +61,7 @@ class ChannelListPresenter : Presenter {
                 onChannelCreated(event.data as Channel)
             }
             EventType.CHANNEL_DELETED -> {
-                onChannelDeleted(event.data as Channel)
+                onChannelDeleted(event.data as UUID)
             }
         }
     }
@@ -71,6 +72,23 @@ class ChannelListPresenter : Presenter {
 
     fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
         chatManager.changeSubscriptionStatus(channel)
+    }
+
+    fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
+        chatManager.deleteChannel(channel)
+    }
+
+    fun onCreateChannelButtonClick() {
+        channelListView.showChannelCreationDialog {
+            chatManager.createChannel(it).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                {
+
+                },
+                {
+
+                }
+            )
+        }
     }
 
     private fun onChannelSubscribed(channel: Channel) {
@@ -85,8 +103,8 @@ class ChannelListPresenter : Presenter {
         channelListView.notifyChannelSubscribed(channel)
     }
 
-    private fun onChannelDeleted(channel: Channel) {
-        channelListView.notifyChannelSubscribed(channel)
+    private fun onChannelDeleted(channel: UUID) {
+        channelListView.notifyChannelsChange()
     }
 
     override fun resume() {

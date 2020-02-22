@@ -11,8 +11,10 @@ import android.os.Message
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.log3900.MainApplication
+import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
-import com.log3900.shared.ui.WarningDialog
+import com.log3900.chat.Message.MessageRepository
+import com.log3900.shared.ui.ErrorDialog
 import com.log3900.socket.*
 
 
@@ -81,7 +83,7 @@ class MonitoringService : Service() {
 
     fun onConnectionError() {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            val intent = Intent(this, WarningDialog::class.java)
+            val intent = Intent(this, ErrorDialog::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
@@ -93,6 +95,8 @@ class MonitoringService : Service() {
     }
 
     fun onAuthentication() {
+        MainApplication.instance.startService(MessageRepository::class.java)
+        MainApplication.instance.startService(ChannelRepository::class.java)
         MainApplication.instance.startService(ChatManager::class.java)
     }
 

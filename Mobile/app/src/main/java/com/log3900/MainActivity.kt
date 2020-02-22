@@ -73,7 +73,7 @@ open class MainActivity : AppCompatActivity() {
         // Header
         val header = navView.getHeaderView(0)
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
-        avatar.setOnClickListener { view ->
+        avatar.setOnClickListener {
             val fragmentManager = supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val fragment = ProfileFragment()
