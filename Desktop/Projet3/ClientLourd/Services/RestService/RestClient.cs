@@ -9,6 +9,7 @@ using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Constants;
+using ClientLourd.Utilities.Enums;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization.Json;
@@ -157,6 +158,16 @@ namespace ClientLourd.Services.RestService
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             return JsonConvert.DeserializeObject<User>(response.Content);
+        }
+
+        public async Task<string> PostGameInformations(string word, string[] hints, DifficultyLevel difficultyLevel)
+        {
+            
+            RestRequest request = new RestRequest($"/games", Method.POST);
+            request.AddJsonBody(new {Hints =hints, Word=word, Difficulty=(int)difficultyLevel});
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            return deseralizer.Deserialize<dynamic>(response)["GameID"];
         }
 
 
