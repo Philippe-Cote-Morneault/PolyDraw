@@ -18,6 +18,8 @@
         <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
+    <materialDesign:DialogHost Identifier="Dialog">
+        
     <DockPanel>
         <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
@@ -200,4 +202,5 @@
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
     </DockPanel>
+    </materialDesign:DialogHost>
 </UserControl>

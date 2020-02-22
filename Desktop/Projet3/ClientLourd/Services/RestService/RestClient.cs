@@ -164,6 +164,7 @@ namespace ClientLourd.Services.RestService
         {
             
             RestRequest request = new RestRequest($"/games", Method.POST);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new {Hints =hints, Word=word, Difficulty=(int)difficultyLevel});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();

@@ -40,7 +40,7 @@ namespace ClientLourd.Views.Dialogs
 
         private void ValidateTheGame(object sender, RoutedEventArgs e)
         {
-            ViewModel.ValidateGameCommand.Execute("");
+            ViewModel.ValidateGameCommand.Execute(null);
         }
     }
 }

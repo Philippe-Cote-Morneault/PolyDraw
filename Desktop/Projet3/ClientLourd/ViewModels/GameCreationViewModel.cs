@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -9,6 +10,8 @@ using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
 
 namespace ClientLourd.ViewModels
@@ -110,21 +113,28 @@ namespace ClientLourd.ViewModels
         
         public int BlackLevelThreshold { get; set; }
         
-        RelayCommand<string> _validateGameCommand;
+        RelayCommand<object> _validateGameCommand;
 
         public ICommand ValidateGameCommand
         {
             get
             {
                 return _validateGameCommand??
-                       (_validateGameCommand = new RelayCommand<string>(image => ValidateGame()));
+                       (_validateGameCommand = new RelayCommand<object>(param => ValidateGame()));
             }
         }
-        private void ValidateGame()
+        private async Task ValidateGame()
         {
-            
-            //If the game is valid move to the next slide
-            Transitioner.MoveNextCommand.Execute(null,null);
+            try
+            {
+                string gameID = await RestClient.PostGameInformations(Word, Hints.ToArray(), _selectedDifficulty);
+                //If the game is valid move to the next slide
+                Transitioner.MoveNextCommand.Execute(null,null);
+            }
+            catch(Exception e)
+            {
+                await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
+            }
         }
         RelayCommand<string> _uploadImageCommand;
 
