@@ -43,6 +43,9 @@
                 <e p="Editor.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
+                <e p="Tutorial" t="Include">
+                  <e p="ChatTutorial.g.cs" t="Include" />
+                </e>
               </e>
               <e p="Dialogs" t="Include">
                 <e p="AvatarSelectionDialog.g.cs" t="Include" />
@@ -202,6 +205,8 @@
             <e p="EditProfileDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
+            <e p="GameCreationDialog.xaml" t="Include" />
+            <e p="GameCreationDialog.xaml.cs" t="Include" />
             <e p="GamesPlayedHistoryDialog.xaml" t="Include" />
             <e p="GamesPlayedHistoryDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />

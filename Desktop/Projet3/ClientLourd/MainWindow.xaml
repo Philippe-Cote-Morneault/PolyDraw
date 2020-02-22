@@ -117,6 +117,7 @@
 
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Editor'}">
                             <controls:Editor/>
+                            <Button Click="CreateGame"> Add game</Button>
                         </DockPanel>
                         
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
