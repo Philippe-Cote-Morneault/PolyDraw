@@ -29,6 +29,7 @@
     <color name="color_on_primary">#FFFFFF</color>
     <color name="color_on_secondary">#000000</color>
     <color name="color_on_background">#000000</color>
+    <color name="color_on_background_light">#B2000000</color>
     <color name="color_on_surface">#000000</color>
     <color name="color_on_error">#ffffff</color>
 </resources>

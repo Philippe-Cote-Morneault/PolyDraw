@@ -56,6 +56,7 @@
     <string name="unlocked_message">You have unlocked</string>
     <string name="so_far_message">achievements so far</string>
     <string name="so_far_message_singular">achievement so far</string>
+    <string name="obtained_title">Obtained:</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
