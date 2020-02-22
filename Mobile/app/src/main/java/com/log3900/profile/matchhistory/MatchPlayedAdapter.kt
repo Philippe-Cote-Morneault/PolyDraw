@@ -40,18 +40,29 @@ class MatchPlayedAdapter(val matchesPlayed: List<GamePlayed>, val username: Stri
         holder.matchType.text = match.matchType.toUpperCase()
 
         val matchWon = (username == match.winner)
+        val matchResultColorBackground = ContextCompat.getColor(context,
+            if (matchWon)
+                R.color.color_win_background
+            else
+                R.color.color_loss_background
+        )
+        val matchResultColorText = ContextCompat.getColor(context,
+            if (matchWon)
+                R.color.color_win_text
+            else
+                R.color.color_loss_text
+        )
+
         holder.matchResult.text =
             if (matchWon)
                 "WIN"
             else
                 "LOSS"
-        holder.setBackgroundColor(ContextCompat.getColor(context,
-            if (matchWon)
-                R.color.color_win
-            else
-                R.color.color_loss
-        ))
+        holder.matchResult.setTextColor(matchResultColorText)
+
         holder.matchDuration.text = formatDuration(match.duration)
+
+        holder.setBackgroundColor(matchResultColorBackground)
     }
 
     override fun getItemCount(): Int = matchesPlayed.size
