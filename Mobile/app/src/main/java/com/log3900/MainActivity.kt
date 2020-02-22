@@ -74,13 +74,7 @@ open class MainActivity : AppCompatActivity() {
         val header = navView.getHeaderView(0)
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
-            val fragmentManager = supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            val fragment = ProfileFragment()
-            fragmentTransaction.add(R.id.nav_host_fragment, fragment)
-            fragmentTransaction.commit()
-//            intent = Intent(this, ProfileActivity::class.java)
-//            startActivity(intent)
+            startProfileFragment()
         }
 
     }
@@ -89,6 +83,18 @@ open class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
 
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun startProfileFragment() {
+        val PROFILE_TAG = "PROFILE_VIEW_FRAGMENT_TAG"
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.findFragmentByTag(PROFILE_TAG) != null)
+            return
+
+        val fragment = ProfileFragment()
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.nav_host_fragment, fragment, "PROFILE_VIEW_FRAGMENT_TAG")
+        fragmentTransaction.commit()
     }
 
     private fun logout() {
