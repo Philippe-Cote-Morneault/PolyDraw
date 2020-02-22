@@ -10,7 +10,8 @@ data class UserStats(
     @Json(name = "GamesPlayed")             val gamesPlayed:            Int,
     @Json(name = "WinRatio")                val winRation:              Double,
     @Json(name = "AvgGameDuration")         val averageGameDuration:    Int,
-    @Json(name = "TimePlayed")              val timePlayed:             Int
+    @Json(name = "TimePlayed")              val timePlayed:             Int,
+    @Json(name = "BestScoreSolo")           val bestScoreSolo:          Int
 )
 
 data class HistoryStats(

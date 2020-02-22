@@ -41,15 +41,17 @@ class ProfileStatsFragment : Fragment() {
 
     fun showStats(userStats: UserStats) {
         view?.let {
-            val gamesPlayed: TextView =     it.findViewById(R.id.games_played_stat)
-            val winRatio: TextView =        it.findViewById(R.id.win_ratio_stat)
-            val avgGameDuration: TextView = it.findViewById(R.id.avg_game_duration_stat)
-            val timePlayed: TextView =      it.findViewById(R.id.time_played_stat)
+            val gamesPlayed: TextView       = it.findViewById(R.id.games_played_stat)
+            val winRatio: TextView          = it.findViewById(R.id.win_ratio_stat)
+            val avgGameDuration: TextView   = it.findViewById(R.id.avg_game_duration_stat)
+            val timePlayed: TextView        = it.findViewById(R.id.time_played_stat)
+            val bestSoloScore: TextView     = it.findViewById(R.id.best_solo_score_stat)
 
             gamesPlayed.text = userStats.gamesPlayed.toString()
             winRatio.text = userStats.winRation.toString()
             avgGameDuration.text = userStats.averageGameDuration.toString()
             timePlayed.text = userStats.timePlayed.toString()
+            bestSoloScore.text = userStats.bestScoreSolo.toString()
         }
     }
 
