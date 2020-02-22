@@ -1,4 +1,4 @@
-package com.log3900.profile.stats
+package com.log3900.profile.achievements
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,13 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
-import kotlinx.coroutines.*
 
-class ConnectionHistoryDialog : DialogFragment() {
+class AchievementsDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -39,26 +36,10 @@ class ConnectionHistoryDialog : DialogFragment() {
             dismiss()
         }
 
-        setUpMessagesRV(root)
+        setUpAchievementsRecyclerView(root)
     }
 
-    private fun setUpMessagesRV(root: View) {
-        GlobalScope.launch {
-            withContext(Dispatchers.Main) {
-                val rvConnections: RecyclerView = root.findViewById(R.id.rv_connections)
-//                    val connections = StatsRepository.getConnectionHistory()
-                val connections = getConnectionHistory()
-                val connectionAdapter = ConnectionAdapter(connections)
-                rvConnections.apply {
-                    adapter = connectionAdapter
-                    layoutManager = LinearLayoutManager(activity)
-                }
-            }
-        }
-    }
-
-    private suspend fun getConnectionHistory(): List<Connection> {
-        // TODO: Error handling
-        return StatsRepository.getConnectionHistory()
+    private fun setUpAchievementsRecyclerView(root: View) {
+        // TODO: Populate recycler view
     }
 }
