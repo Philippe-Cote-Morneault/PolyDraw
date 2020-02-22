@@ -85,12 +85,19 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 			rbody.JSONError(w, http.StatusBadRequest, "The hints cannot be empty.")
 			return
 		}
+		//Check if the word is not in the string
+		hintLower := strings.ToLower(request.Hints[i])
+		if strings.Contains(hintLower, wordLower) {
+			rbody.JSONError(w, http.StatusBadRequest, "The hint cannot contain the word.")
+			return
+		}
+
 		hints = append(hints, &model.GameHint{
 			Hint: request.Hints[i],
 		})
 	}
 	game := model.Game{
-		Word:       request.Word,
+		Word:       wordLower,
 		Difficulty: request.Difficulty,
 		Hints:      hints,
 	}
