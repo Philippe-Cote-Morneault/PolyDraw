@@ -16,7 +16,7 @@ namespace ClientLourd.Views.Dialogs
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             //TODO update the filter
-            openFileDialog.Filter =  "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png *.bmp) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png *.bmp";
+            openFileDialog.Filter =  "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png *.bmp) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png; *.bmp";
             if (openFileDialog.ShowDialog() == true)
             { 
                 ((GameCreationViewModel) DataContext).UploadImageCommand.Execute(openFileDialog.FileName);
