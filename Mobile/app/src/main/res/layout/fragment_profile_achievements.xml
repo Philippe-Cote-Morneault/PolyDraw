@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@id/achievements_title" />
 
     <TextView
-        android:id="@+id/games_played_stat"
+        android:id="@+id/achievements_count"
         style="@style/MyTheme.DayNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,6 +43,7 @@
         app:layout_constraintTop_toTopOf="@+id/unlocked_text" />
 
     <TextView
+        android:id="@+id/achievements_so_far"
         style="@style/MyTheme.DayNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
         android:text="@string/so_far_message"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@+id/unlocked_text"
-        app:layout_constraintStart_toEndOf="@id/games_played_stat"
+        app:layout_constraintStart_toEndOf="@id/achievements_count"
         app:layout_constraintTop_toTopOf="@+id/unlocked_text" />
 
 
