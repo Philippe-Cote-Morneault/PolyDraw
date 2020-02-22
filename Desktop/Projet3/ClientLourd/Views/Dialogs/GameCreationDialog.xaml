@@ -107,7 +107,7 @@
                         </StackPanel>
                         <StackPanel Margin="0 20 0 20">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="HelpCircle" Width="24" Height="24" Margin="5" />
+                                <materialDesign:PackIcon Kind="Skull" Width="24" Height="24" Margin="5" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                            Text="Select the level of difficulty of the word " />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
