@@ -13,6 +13,7 @@
             <materialDesign:PackIcon Kind="Close" />
         </Button>
         <materialDesign:Transitioner SelectedIndex="0">
+            <!-- Word slide-->
             <materialDesign:TransitionerSlide>
                 <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
@@ -51,6 +52,7 @@
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>
+                <!-- Drawing or upload slide-->
             </materialDesign:TransitionerSlide>
             <materialDesign:TransitionerSlide>
                 <materialDesign:TransitionerSlide.BackwardWipe>
@@ -68,18 +70,29 @@
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
                             <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next" />
                         </Grid>
-                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
-                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                       Text="Draw a representation of the word " />
-                            <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
-                                       FontWeight="Bold"
-                                       Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
+                        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                            
+                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                                <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Text="Upload an image " />
+                                <Button Content="Upload"></Button>
+                            </StackPanel>
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold" Text="Or" />
+                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                                <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Text="Draw a representation of the word " />
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
+                                           FontWeight="Bold"
+                                           Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
                         </StackPanel>
                         <controls:Editor Width="800" Height="450" />
                     </DockPanel>
             </materialDesign:TransitionerSlide>
             
+            <!-- preview slide-->
             <materialDesign:TransitionerSlide>
                 <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
@@ -98,10 +111,12 @@
                         </Grid>
                         <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal">
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                       Text="Select the way your draw will be display"/>
+                                       Text="Select the way the draw will be display"/>
                         </StackPanel>
-                        <ComboBox Margin="10" DockPanel.Dock="Top"/>
-                        <controls:Editor Width="800" Height="450" />
+                        <ComboBox Margin="10" materialDesign:HintAssist.Hint="Preview effect" DockPanel.Dock="Top"/>
+                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
+                            <InkCanvas Width="800" Height="450" IsEnabled="False" />
+                        </materialDesign:Card>
                     </DockPanel>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
