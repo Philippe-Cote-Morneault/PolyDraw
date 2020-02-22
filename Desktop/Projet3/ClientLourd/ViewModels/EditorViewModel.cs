@@ -98,6 +98,9 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        
+
+
         /// <summary>
         /// C'est ici qu'est défini la forme de la pointe, mais aussi sa taille (TailleTrait).
         /// Pourquoi deux caractéristiques se retrouvent définies dans une même méthode? Parce que pour créer une pointe 

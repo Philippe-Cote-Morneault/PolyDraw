@@ -1,10 +1,15 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
+using System.Xml;
+using System.Xml.Linq;
 using ClientLourd.ViewModels;
+using Svg;
 
 namespace ClientLourd.Views.Controls
 {
@@ -36,6 +41,70 @@ namespace ClientLourd.Views.Controls
 
         // Pour la gToolsList_OnSelectionChangedition du pointeur.
         private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
+
+        public void Test(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {            
+
+            var svg = new SvgDocument();
+            var colorServer = new SvgColourServer(System.Drawing.Color.Black);
+
+            var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
+            svg.Children.Add(group);
+
+            var geometry = e.Stroke.GetGeometry(e.Stroke.DrawingAttributes).GetOutlinedPathGeometry();
+            string s = XamlWriter.Save(geometry);
+            if (!String.IsNullOrEmpty(s))
+            {
+                var element = XElement.Parse(s);
+                var data = element.Attribute("Figures")?.Value;
+                if (!String.IsNullOrEmpty(data))
+                {
+                    group.Children.Add(new SvgPath
+                    {
+                        PathData = SvgPathBuilder.Parse(data),
+                        Fill = colorServer,
+                        Stroke = colorServer,
+                        ID = "1",
+                    }) ;
+                }
+
+                var memoryStream = new MemoryStream();
+                svg.Write(memoryStream);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(memoryStream);
+                var x = 1;
+                //SvgVisualElement sview = new SvgVisualElement();
+            }
+
+            /*foreach (var stroke in InkCanvas.Strokes)
+            {
+                var geometry = stroke.GetGeometry(stroke.DrawingAttributes).GetOutlinedPath‌​Geometry();
+
+                var s = XamlWriter.Save(geometry);
+
+                if (s.IsNotNullOrEmpty())
+                {
+                    var element = XElement.Parse(s);
+
+                    var data = element.Attribute("Figures")?.Value;
+
+                    if (data.IsNotNullOrEmpty())
+                    {
+                        group.Children.Add(new SvgPath
+                        {
+                            PathData = SvgPathBuilder.Parse(data),
+                            Fill = colorServer,
+                            Stroke = colorServer
+                        });
+                    }
+                }
+            }*/
+
+
+        }
 
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {

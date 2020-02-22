@@ -120,6 +120,7 @@
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                            MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
                            Strokes="{Binding Path=Traits, Mode=OneTime}"
+                           StrokeCollected="Test"
                            EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource converterMode}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                            DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" />
                 <Border.Effect>

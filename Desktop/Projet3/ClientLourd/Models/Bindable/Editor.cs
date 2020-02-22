@@ -63,6 +63,8 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
+     
+
         // On assigne une nouvelle forme de pointe passée en paramètre.
         public void ChoisirPointe(string pointe) => PointeSelectionnee = pointe;
 
