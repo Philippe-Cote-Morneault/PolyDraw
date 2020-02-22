@@ -2,6 +2,8 @@
 <resources>
 
     <!-- GENERAL -->
+    <color name="color_win">#804CAF50</color>
+    <color name="color_loss">#80E91E63</color>
 
     <!-- MATERIAL COLORS -->
 

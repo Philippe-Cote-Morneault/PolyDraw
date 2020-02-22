@@ -7,7 +7,7 @@ package com.log3900.utils.format
  * @param duration the duration in seconds
  * @return the formatted duration
  */
-fun durationToString(duration: Int): String {
+fun formatDuration(duration: Int): String {
     val hours = duration / 3600
     var remDuration = duration % 3600
     val hoursStr =
