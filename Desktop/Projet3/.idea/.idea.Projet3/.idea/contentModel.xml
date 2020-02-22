@@ -108,6 +108,9 @@
           <e p="DateService" t="Include">
             <e p="Timestamp.cs" t="Include" />
           </e>
+          <e p="EnumService" t="Include">
+            <e p="EnumManager.cs" t="Include" />
+          </e>
           <e p="RestService" t="Include">
             <e p="Exceptions" t="Include">
               <e p="RestBadRequestException.cs" t="Include" />
@@ -154,6 +157,7 @@
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
+            <e p="PotraceMode.cs" t="Include" />
             <e p="SocketMessageTypes.cs" t="Include" />
             <e p="Views.cs" t="Include" />
           </e>

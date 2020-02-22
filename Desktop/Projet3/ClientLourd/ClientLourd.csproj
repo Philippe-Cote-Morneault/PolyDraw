@@ -141,6 +141,7 @@
     <Compile Include="Services\CredentialsService\CredentialManager.cs" />
     <Compile Include="Models\Bindable\Stats.cs" />
     <Compile Include="Services\DateService\Timestamp.cs" />
+    <Compile Include="Services\EnumService\EnumManager.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestException.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
+    <Compile Include="Utilities\Enums\PotraceMode.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
     <Compile Include="Utilities\Converters\BoolToVisibilityConverter.cs" />

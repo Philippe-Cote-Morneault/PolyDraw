@@ -1,5 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Documents;
+using ClientLourd.Services.EnumService;
+using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.ViewModels
 {
@@ -8,17 +13,12 @@ namespace ClientLourd.ViewModels
         public GameCreationViewModel()
         {
             Hints = new ObservableCollection<string>(new string[3]);
-            Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
+            Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); }; 
+            NotifyPropertyChanged(nameof(SelectedMode));
         }
-        public override void AfterLogOut()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void AfterLogin()
-        {
-            throw new System.NotImplementedException();
-        }
+        
+        public override void AfterLogOut() { throw new System.NotImplementedException(); }
+        public override void AfterLogin() { throw new System.NotImplementedException(); }
 
         private ObservableCollection<string> _hints;
         public ObservableCollection<string> Hints 
@@ -52,7 +52,17 @@ namespace ClientLourd.ViewModels
             }
         }
         private string _word;
-        
-        
+
+        public string SelectedMode 
+        {
+            get { return _selectedMode.GetDescription(); }
+            set { _selectedMode = value.GetEnumFromDescription<PotraceMode>(); } 
+        }
+        private PotraceMode _selectedMode;
+
+        public List<string> PotraceModes
+        {
+            get { return EnumManager.GetAllDescriptions<PotraceMode>(); }
+        }  
     }
 }
