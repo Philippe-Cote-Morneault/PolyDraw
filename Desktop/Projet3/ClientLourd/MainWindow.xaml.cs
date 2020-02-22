@@ -148,5 +148,10 @@ namespace ClientLourd
                 NetworkConfig.Visibility = Visibility.Hidden;
             }
         }
+
+        private void CreateGame(object sender, RoutedEventArgs e)
+        {
+            DialogHost.Show(new GameCreationDialog(), "Default");
+        }
     }
 }
