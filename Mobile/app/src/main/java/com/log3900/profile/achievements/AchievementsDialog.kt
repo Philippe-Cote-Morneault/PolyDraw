@@ -56,7 +56,7 @@ class AchievementsDialog : DialogFragment() {
 
                 rvAchievements.apply {
                     adapter = achievementAdapter
-                    layoutManager = GridLayoutManager(activity, 3) // TODO: Maybe StaggeredLayoutManager?
+                    layoutManager = GridLayoutManager(activity, 4) // TODO: Maybe StaggeredLayoutManager?
                 }
             }
         }
