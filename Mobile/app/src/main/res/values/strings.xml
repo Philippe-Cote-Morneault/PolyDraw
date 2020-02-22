@@ -59,6 +59,14 @@
     <string name="so_far_message_singular">achievement so far</string>
     <string name="obtained_title">Obtained:</string>
     <string name="match_history">Match History</string>
+    <string name="match_details">Match Details</string>
+    <string name="match_type_title">Match Type:</string>
+    <string name="match_result_title">Result:</string>
+    <string name="match_winner_title">Winner:</string>
+    <string name="match_duration_title">Duration:</string>
+    <string name="match_players_title">Players:</string>
+    <string name="match_win">Win</string>
+    <string name="match_loss">Loss</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
