@@ -175,9 +175,9 @@ namespace ClientLourd.Services.RestService
         {
             RestRequest request = new RestRequest($"games/{gameID}/image", Method.POST);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
-            request.AddParameter("mode", (int) mode, ParameterType.RequestBody);
-            request.AddParameter("blacklevel", blackLevel, ParameterType.RequestBody);
             request.AddFile("file", image, "");
+            request.AddParameter("blacklevel", blackLevel, ParameterType.GetOrPost);
+            request.AddParameter("mode", (int) mode, ParameterType.GetOrPost);
             var response = await Execute(request);
         }
 
