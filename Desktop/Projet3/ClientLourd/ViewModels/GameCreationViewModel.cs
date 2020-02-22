@@ -110,6 +110,8 @@ namespace ClientLourd.ViewModels
         {
             get { return !string.IsNullOrWhiteSpace(_image); }
         }
+
+        private string _gameID;
         
         public int BlackLevelThreshold { get; set; }
         
@@ -127,7 +129,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                string gameID = await RestClient.PostGameInformations(Word, Hints.ToArray(), _selectedDifficulty);
+                _gameID = await RestClient.PostGameInformations(Word, Hints.ToArray(), _selectedDifficulty);
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
             }
@@ -136,14 +138,41 @@ namespace ClientLourd.ViewModels
                 await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
             }
         }
-        RelayCommand<string> _uploadImageCommand;
+        
+        
+        RelayCommand<object> _uploadImageCommand;
 
         public ICommand UploadImageCommand
         {
             get
             {
-                return _uploadImageCommand ??
-                       (_uploadImageCommand = new RelayCommand<string>(image => UploadImage(image)));
+                return _uploadImageCommand??
+                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(), o => !string.IsNullOrWhiteSpace(_image)));
+            }
+        }
+
+        private async  Task UploadImage()
+        {
+            try
+            {
+                await RestClient.PostGameImage(_gameID, _image, PotraceMode.Center);
+                //If the game is valid move to the next slide
+                Transitioner.MoveNextCommand.Execute(null,null);
+            }
+            catch(Exception e)
+            {
+                await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
+            }
+        }
+        
+        RelayCommand<string> _addImageCommand;
+
+        public ICommand AddImageCommand
+        {
+            get
+            {
+                return _addImageCommand ??
+                       (_addImageCommand = new RelayCommand<string>(image => AddImage(image)));
             }
         }
         
@@ -157,7 +186,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private void UploadImage(string image)
+        private void AddImage(string image)
         {
             //TODO validate the file
             Image = image;

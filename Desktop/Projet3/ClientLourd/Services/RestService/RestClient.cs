@@ -163,12 +163,21 @@ namespace ClientLourd.Services.RestService
         public async Task<string> PostGameInformations(string word, string[] hints, DifficultyLevel difficultyLevel)
         {
             
-            RestRequest request = new RestRequest($"/games", Method.POST);
+            RestRequest request = new RestRequest($"games", Method.POST);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new {Hints =hints, Word=word, Difficulty=(int)difficultyLevel});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             return deseralizer.Deserialize<dynamic>(response)["GameID"];
+        }
+
+        public async Task PostGameImage(string gameID, string image, PotraceMode mode)
+        {
+            RestRequest request = new RestRequest($"games/{gameID}/image", Method.POST);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddParameter("mode", (int) mode, ParameterType.RequestBody);
+            request.AddFile("file", image, "");
+            var response = await Execute(request);
         }
 
 

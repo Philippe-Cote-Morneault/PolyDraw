@@ -120,7 +120,7 @@
                 </DockPanel>
                 <!-- Drawing or upload slide-->
             </materialDesign:TransitionerSlide>
-            <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropUpload">
+            <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropFile">
                 <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
                     </materialDesign:TransitionerSlide.BackwardWipe>
@@ -134,7 +134,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
-                            <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next" />
+                            <Button Grid.Column="1" Margin="5" Click="UploadImageClick" Content="Next" />
                         </Grid>
                         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                             
@@ -142,7 +142,7 @@
                                 <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                            Text="Upload an image " />
-                                <Button Click="UploadImageClick" Content="Upload"></Button>
+                                <Button Click="AddImageClick" Content="Upload"></Button>
                             </StackPanel>
                             <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center"   Visibility="{Binding ElementName=EditorGrid, Path=IsEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
                                 <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
