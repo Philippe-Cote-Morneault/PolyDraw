@@ -13,17 +13,15 @@ type Game struct {
 
 //GameHint represents a game hint
 type GameHint struct {
-	Base
-	Game   Game `gorm:"foreignkey:GameID"`
-	GameID uuid.UUID
+	Game   Game      `gorm:"foreignkey:GameID"`
+	GameID uuid.UUID `gorm:"primary_key"`
 	Hint   string
 }
 
 //GameImage represents the game image
 type GameImage struct {
-	Base
-	Game      Game `gorm:"foreignkey:GameID"`
-	GameID    uuid.UUID
+	Game      Game      `gorm:"foreignkey:GameID"`
+	GameID    uuid.UUID `gorm:"primary_key"`
 	Mode      int
 	SVGFile   string
 	ImageFile string
