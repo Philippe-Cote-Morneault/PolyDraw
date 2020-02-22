@@ -32,7 +32,7 @@
                       <materialDesign:SlideWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
                 <DockPanel>
-                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next">
+                    <Button Margin="5" DockPanel.Dock="Bottom" Click="ValidateTheGame"  Content="Next">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
                                 <Binding ElementName="WordBox" Path="(Validation.HasError)" />

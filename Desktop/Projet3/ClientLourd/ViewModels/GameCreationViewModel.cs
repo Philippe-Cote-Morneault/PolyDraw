@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using ClientLourd.Services.EnumService;
+using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
+using MaterialDesignThemes.Wpf.Transitions;
 
 namespace ClientLourd.ViewModels
 {
@@ -35,6 +38,12 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
+        
+        public RestClient RestClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
+        
         public bool AreFieldsEmpty
         {
             get { return string.IsNullOrEmpty(_word) || _hints.Any(string.IsNullOrEmpty); }
@@ -101,6 +110,22 @@ namespace ClientLourd.ViewModels
         
         public int BlackLevelThreshold { get; set; }
         
+        RelayCommand<string> _validateGameCommand;
+
+        public ICommand ValidateGameCommand
+        {
+            get
+            {
+                return _validateGameCommand??
+                       (_validateGameCommand = new RelayCommand<string>(image => ValidateGame()));
+            }
+        }
+        private void ValidateGame()
+        {
+            
+            //If the game is valid move to the next slide
+            Transitioner.MoveNextCommand.Execute(null,null);
+        }
         RelayCommand<string> _uploadImageCommand;
 
         public ICommand UploadImageCommand
