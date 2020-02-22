@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
 	"log"
 
@@ -65,4 +66,5 @@ func registerServices() {
 	service.Add(&auth.Auth{})
 	service.Add(&healthcheck.HealthCheck{})
 	service.Add(&redisservice.RedisService{})
+	service.Add(&potrace.Potrace{})
 }
