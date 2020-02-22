@@ -6,8 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.profile.stats.Achievement
+import com.log3900.profile.stats.StatsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AchievementsDialog : DialogFragment() {
     override fun onStart() {
@@ -25,7 +33,7 @@ class AchievementsDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.dialog_connection_history, container, false)
+        val rootView = inflater.inflate(R.layout.dialog_achievements, container, false)
         setUpUi(rootView)
         return rootView
     }
@@ -40,6 +48,22 @@ class AchievementsDialog : DialogFragment() {
     }
 
     private fun setUpAchievementsRecyclerView(root: View) {
-        // TODO: Populate recycler view
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                val rvAchievements: RecyclerView = root.findViewById(R.id.rv_achievements)
+                val achievements = getAchievements()
+                val achievementAdapter = AchievementAdapter(achievements)
+
+                rvAchievements.apply {
+                    adapter = achievementAdapter
+                    layoutManager = GridLayoutManager(activity, 3) // TODO: Maybe StaggeredLayoutManager?
+                }
+            }
+        }
+    }
+
+    private suspend fun getAchievements(): List<Achievement> {
+        // TODO: Error handling
+        return StatsRepository.getAchievements()
     }
 }

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_trophy_24dp"
         android:drawablePadding="8dp"
-        android:text="Name"
+        android:text="Title"
         android:textStyle="bold"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"

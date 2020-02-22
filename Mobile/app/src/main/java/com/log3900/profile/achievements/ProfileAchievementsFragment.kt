@@ -33,7 +33,7 @@ class ProfileAchievementsFragment : Fragment() {
         achievementsSoFarText = root.findViewById(R.id.achievements_so_far)
         viewAllButton = root.findViewById(R.id.view_all_achievements_button)
         viewAllButton.setOnClickListener {
-            // Start dialog
+            startAchievementsDialog()
         }
         presenter.fetchAchievements()
     }
@@ -48,5 +48,17 @@ class ProfileAchievementsFragment : Fragment() {
             else
                 R.string.so_far_message
         )
+    }
+
+    private fun startAchievementsDialog() {
+        val fragmentManager = activity?.supportFragmentManager!!
+        val ft = fragmentManager.beginTransaction()
+        fragmentManager.findFragmentByTag("dialog")?.let {
+            ft.remove(it)
+        }
+        ft.addToBackStack(null)
+
+        val achievementsDialog = AchievementsDialog()
+        achievementsDialog.show(ft, "dialog")
     }
 }
