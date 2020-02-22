@@ -12,13 +12,12 @@ namespace ClientLourd.Models.Bindable
         private double _winRatio;
         private long _avgGameDuration;
         private long _timePlayed;
-        private StatsHistory _statsHistory;
+        private long _bestScoreSolo;
 
 
 
         public Stats()
         {
-            _statsHistory = new StatsHistory();
         }
 
         public int GamesPlayed
@@ -60,32 +59,17 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-
-        public LinkedList<ConnectionDisconnection> ConnectionHistory
+        public long BestScoreSolo
         {
-            get { return _statsHistory.ConnectionHistory; }
+            get { return _bestScoreSolo; }
             set
             {
-                if (value != _statsHistory.ConnectionHistory)
-                {
-                    _statsHistory.ConnectionHistory = value;
-                    NotifyPropertyChanged();
-                }
+                _bestScoreSolo = value;
+                NotifyPropertyChanged();
             }
         }
 
-        public LinkedList<MatchPlayed> MatchesPlayedHistory
-        {
-            get { return _statsHistory.MatchesPlayedHistory; }
-            set
-            {
-                if (value != _statsHistory.MatchesPlayedHistory)
-                {
-                    _statsHistory.MatchesPlayedHistory = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
+
 
     }
 }

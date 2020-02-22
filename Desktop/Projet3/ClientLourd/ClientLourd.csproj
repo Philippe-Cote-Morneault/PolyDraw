@@ -151,6 +151,7 @@
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
+    <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
