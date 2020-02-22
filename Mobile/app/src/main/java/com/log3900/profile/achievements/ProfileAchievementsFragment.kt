@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.button.MaterialButton
 import com.log3900.R
 
 class ProfileAchievementsFragment : Fragment() {
@@ -13,6 +14,7 @@ class ProfileAchievementsFragment : Fragment() {
 
     lateinit var achievementsCount: TextView
     lateinit var achievementsSoFarText: TextView
+    lateinit var viewAllButton: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,13 +31,17 @@ class ProfileAchievementsFragment : Fragment() {
     fun setUpUI(root: View) {
         achievementsCount = root.findViewById(R.id.achievements_count)
         achievementsSoFarText = root.findViewById(R.id.achievements_so_far)
+        viewAllButton = root.findViewById(R.id.view_all_achievements_button)
+        viewAllButton.setOnClickListener {
+            // Start dialog
+        }
         presenter.fetchAchievements()
     }
 
     fun updateAchievementsCount(count: Int) {
         achievementsCount.text = count.toString()
 
-        // 'achievement' to plural or singular
+        // 'achievement(s)' to plural or singular
         achievementsSoFarText.text = resources.getString(
             if (count == 1)
                 R.string.so_far_message_singular
