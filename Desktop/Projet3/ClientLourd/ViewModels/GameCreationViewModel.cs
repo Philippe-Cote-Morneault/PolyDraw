@@ -22,6 +22,7 @@ namespace ClientLourd.ViewModels
         {
             Hints = new ObservableCollection<string>(new string[3]);
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
+            BlackLevelThreshold = 50;
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
@@ -155,7 +156,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGameImage(_gameID, _image, PotraceMode.Center);
+                await RestClient.PostGameImage(_gameID, _image, PotraceMode.Center, BlackLevelThreshold/100.0);
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
             }

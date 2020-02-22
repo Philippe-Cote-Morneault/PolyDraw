@@ -183,7 +183,7 @@
                         </Grid>
                         <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Vertical">
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                       Text="Set the black level threshold"/>
+                                       Text="Set the black level threshold (%)"/>
                             <Slider
                               Minimum="0"
                               Maximum="100"
