@@ -44,6 +44,7 @@ object StatsRepository {
     }
 
     suspend fun getAllUserStats(): UserStats = getUserStats()
+    suspend fun getGamesPlayedHistory(): List<GamePlayed> = getHistoryStats().gamesPlayedHistory
     suspend fun getConnectionHistory(): List<Connection> = getHistoryStats().connectionHistory
     suspend fun getAchievements(): List<Achievement> = getHistoryStats().achievements
 
