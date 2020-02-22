@@ -54,6 +54,7 @@
                 <e p="ConnectionHistoryDialog.g.cs" t="Include" />
                 <e p="EditProfileDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
+                <e p="GameCreationDialog.g.cs" t="Include" />
                 <e p="GamesPlayedHistoryDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
@@ -107,6 +108,9 @@
           <e p="DateService" t="Include">
             <e p="Timestamp.cs" t="Include" />
           </e>
+          <e p="EnumService" t="Include">
+            <e p="EnumManager.cs" t="Include" />
+          </e>
           <e p="RestService" t="Include">
             <e p="Exceptions" t="Include">
               <e p="RestBadRequestException.cs" t="Include" />
@@ -145,6 +149,7 @@
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
+            <e p="SecondsToTimeSpanConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
@@ -152,6 +157,7 @@
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
+            <e p="PotraceMode.cs" t="Include" />
             <e p="SocketMessageTypes.cs" t="Include" />
             <e p="Views.cs" t="Include" />
           </e>
@@ -160,14 +166,17 @@
           </e>
           <e p="ValidationRules" t="Include">
             <e p="EmailRule.cs" t="Include" />
+            <e p="HintRules.cs" t="Include" />
             <e p="LoginInputRules.cs" t="Include" />
             <e p="NameRule.cs" t="Include" />
             <e p="UsernameRule.cs" t="Include" />
+            <e p="WordRules.cs" t="Include" />
           </e>
         </e>
         <e p="ViewModels" t="Include">
           <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
+          <e p="GameCreationViewModel.cs" t="Include" />
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ProfileViewModel.cs" t="Include" />

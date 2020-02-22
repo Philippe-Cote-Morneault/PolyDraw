@@ -5,9 +5,19 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
+             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d"
              >
+    <UserControl.DataContext>
+        <viewModels:GameCreationViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
     <DockPanel>
         <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
@@ -22,7 +32,18 @@
                       <materialDesign:SlideWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
                 <DockPanel>
-                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next" />
+                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
+                                <Binding ElementName="WordBox" Path="(Validation.HasError)" />
+                                <Binding ElementName="Hint1Box" Path="(Validation.HasError)" />
+                                <Binding ElementName="Hint2Box" Path="(Validation.HasError)" />
+                                <Binding ElementName="Hint3Box" Path="(Validation.HasError)" />
+                                <Binding Path="AreFieldsEmpty"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    
                     <StackPanel>
                         <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Create a new game</TextBlock>
 
@@ -32,7 +53,15 @@
                                 <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold">Type a word</TextBlock>
                             </StackPanel>
                             <TextBox MaxLength="20" HorizontalAlignment="Center" Width="300"
-                                     materialDesign:HintAssist.Hint="Word" Name="WordBox" />
+                                     materialDesign:HintAssist.Hint="Word" Name="WordBox">
+                                <TextBox.Text>
+                                    <Binding Path="Word" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:WordRules />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Margin="0 20 0 20">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -44,17 +73,41 @@
                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                             <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="hint 1" />
+                                     materialDesign:HintAssist.Hint="hint 1" Name="Hint1Box" >
+                                <TextBox.Text>
+                                    <Binding Path="Hints[0]" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:HintRules/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="hint 2" />
+                                     materialDesign:HintAssist.Hint="hint 2" Name="Hint2Box" >
+                               <TextBox.Text>
+                                    <Binding Path="Hints[1]" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:HintRules/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                               </TextBox.Text> 
+                            </TextBox>
                             <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="hint 3" />
+                                     materialDesign:HintAssist.Hint="hint 3" Name="Hint3Box">
+                                <TextBox.Text>
+                                    <Binding Path="Hints[2]" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:HintRules/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>
                 <!-- Drawing or upload slide-->
             </materialDesign:TransitionerSlide>
-            <materialDesign:TransitionerSlide>
+            <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropUpload">
                 <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
                     </materialDesign:TransitionerSlide.BackwardWipe>
@@ -76,9 +129,13 @@
                                 <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                            Text="Upload an image " />
-                                <Button Content="Upload"></Button>
+                                <Button Click="UploadImageClick" Content="Upload"></Button>
                             </StackPanel>
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold" Text="Or" />
+                            <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center"   Visibility="{Binding ElementName=EditorGrid, Path=IsEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
+                                <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
+                                <Button Command="{Binding RemoveImageCommand}"   Style="{StaticResource MaterialDesignFlatButton}" Content="{materialDesign:PackIcon Kind=Delete}" />
+                            </StackPanel>
+                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold" Text="Or" />
                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
                                 <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
@@ -88,7 +145,9 @@
                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </StackPanel>
-                        <controls:Editor Width="800" Height="450" />
+                        <Grid Name="EditorGrid" IsEnabled="{Binding Path=IsImageUpload, Converter={StaticResource InverseBooleanConverter}}">
+                            <controls:Editor Width="800" Height="450"/>
+                        </Grid>
                     </DockPanel>
             </materialDesign:TransitionerSlide>
             
@@ -109,11 +168,20 @@
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
                                 <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Confirm" />
                         </Grid>
-                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Vertical">
+                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                       Text="Set the black level threshold"/>
+                            <Slider
+                              Minimum="0"
+                              Maximum="100"
+                              Style="{StaticResource MaterialDesignDiscreteSlider}"
+                              ToolTip="MaterialDesignDiscreteSlider"
+                              Value="{Binding BlackLevelThreshold}"/>
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                        Text="Select the way the draw will be display"/>
+                            <ComboBox SelectedItem="{Binding Path=SelectedMode}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
+                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview" HorizontalAlignment="Center" />
                         </StackPanel>
-                        <ComboBox Margin="10" materialDesign:HintAssist.Hint="Preview effect" DockPanel.Dock="Top"/>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
                             <InkCanvas Width="800" Height="450" IsEnabled="False" />
                         </materialDesign:Card>
