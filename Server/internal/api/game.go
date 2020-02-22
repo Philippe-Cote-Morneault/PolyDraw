@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	"net/http"
 	"strconv"
 	"strings"
@@ -120,7 +121,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 	//Check for the fields
 	mode := r.FormValue("mode")
 	if mode == "" {
-		rbody.JSONError(w, http.StatusBadRequest, "The mode is not please set the number of the mode between 0-3.")
+		rbody.JSONError(w, http.StatusBadRequest, "The mode is not set. Please set the number of the mode between 0-3.")
 		return
 	}
 
@@ -174,7 +175,28 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 		} else {
 			//Load jpg
 			image.ImageFile = keyFile
-			//TODO include potrace
+
+			//Check if the blackness level is set
+			blackLevelStr := r.FormValue("blacklevel")
+			blackLevel, err := strconv.ParseFloat(blackLevelStr, 32)
+			if blackLevelStr == "" {
+				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be set when uploading a non vector image.")
+				return
+			}
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be a decimal number.")
+				return
+			}
+			if blackLevel > 1 || blackLevel < 0 {
+				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be between 0 and 1.")
+				return
+			}
+			svgKey, err := potrace.Trace(keyFile, blackLevel)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			image.SVGFile = svgKey
 		}
 		game.Image = &image
 		model.DB().Save(&game)
@@ -207,11 +229,15 @@ func GetGame(w http.ResponseWriter, r *http.Request) {
 	for i := range game.Hints {
 		hints = append(hints, game.Hints[i].Hint)
 	}
+	imageMode := 0
+	if game.Image != nil {
+		imageMode = game.Image.Mode
+	}
 	response := gameResponse{
 		ID:         game.ID.String(),
 		Word:       game.Word,
 		Difficulty: game.Difficulty,
-		ImageMode:  game.Image.Mode,
+		ImageMode:  imageMode,
 		Hints:      hints,
 	}
 	rbody.JSON(w, http.StatusOK, &response)
