@@ -76,7 +76,16 @@ namespace ClientLourd.ViewModels
 
         public List<string> PotraceModes
         {
-            get { return EnumManager.GetAllDescriptions<PotraceMode>(); }
+            get
+            {
+                
+                var list = EnumManager.GetAllDescriptions<PotraceMode>();
+                if (IsImageUpload)
+                {
+                    list.Remove(PotraceMode.Classic.GetDescription());
+                }
+                return list;
+            }
         }
 
         private DifficultyLevel _selectedDifficulty;
@@ -157,6 +166,8 @@ namespace ClientLourd.ViewModels
             try
             {
                 await RestClient.PostGameImage(_gameID, _image, PotraceMode.Center, BlackLevelThreshold/100.0);
+                NotifyPropertyChanged(nameof(PotraceModes));
+                NotifyPropertyChanged(nameof(BlackLevelThreshold));
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
             }
