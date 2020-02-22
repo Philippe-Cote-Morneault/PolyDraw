@@ -157,6 +157,7 @@
             <e p="ToggleVisibilityConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
+            <e p="DifficultyLevel.cs" t="Include" />
             <e p="PotraceMode.cs" t="Include" />
             <e p="SocketMessageTypes.cs" t="Include" />
             <e p="Views.cs" t="Include" />

@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using ClientLourd.Services.EnumService;
+using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
+using MaterialDesignThemes.Wpf.Transitions;
 
 namespace ClientLourd.ViewModels
 {
@@ -35,6 +41,12 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
+        
+        public RestClient RestClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
+        
         public bool AreFieldsEmpty
         {
             get { return string.IsNullOrEmpty(_word) || _hints.Any(string.IsNullOrEmpty); }
@@ -66,6 +78,19 @@ namespace ClientLourd.ViewModels
             get { return EnumManager.GetAllDescriptions<PotraceMode>(); }
         }
 
+        private DifficultyLevel _selectedDifficulty;
+
+        public string SelectedDifficulty
+        {
+            get { return _selectedDifficulty.GetDescription(); }
+            set { _selectedDifficulty = value.GetEnumFromDescription<DifficultyLevel>(); } 
+        }
+        
+        public List<string> DifficultyLevels
+        {
+            get { return EnumManager.GetAllDescriptions<DifficultyLevel>(); }
+        }
+
         public string Image
         {
             get { return _image; }
@@ -85,17 +110,69 @@ namespace ClientLourd.ViewModels
         {
             get { return !string.IsNullOrWhiteSpace(_image); }
         }
+
+        private string _gameID;
         
         public int BlackLevelThreshold { get; set; }
         
-        RelayCommand<string> _uploadImageCommand;
+        RelayCommand<object> _validateGameCommand;
+
+        public ICommand ValidateGameCommand
+        {
+            get
+            {
+                return _validateGameCommand??
+                       (_validateGameCommand = new RelayCommand<object>(param => ValidateGame()));
+            }
+        }
+        private async Task ValidateGame()
+        {
+            try
+            {
+                _gameID = await RestClient.PostGameInformations(Word, Hints.ToArray(), _selectedDifficulty);
+                //If the game is valid move to the next slide
+                Transitioner.MoveNextCommand.Execute(null,null);
+            }
+            catch(Exception e)
+            {
+                await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
+            }
+        }
+        
+        
+        RelayCommand<object> _uploadImageCommand;
 
         public ICommand UploadImageCommand
         {
             get
             {
-                return _uploadImageCommand ??
-                       (_uploadImageCommand = new RelayCommand<string>(image => UploadImage(image)));
+                return _uploadImageCommand??
+                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(), o => !string.IsNullOrWhiteSpace(_image)));
+            }
+        }
+
+        private async  Task UploadImage()
+        {
+            try
+            {
+                await RestClient.PostGameImage(_gameID, _image, PotraceMode.Center);
+                //If the game is valid move to the next slide
+                Transitioner.MoveNextCommand.Execute(null,null);
+            }
+            catch(Exception e)
+            {
+                await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
+            }
+        }
+        
+        RelayCommand<string> _addImageCommand;
+
+        public ICommand AddImageCommand
+        {
+            get
+            {
+                return _addImageCommand ??
+                       (_addImageCommand = new RelayCommand<string>(image => AddImage(image)));
             }
         }
         
@@ -109,7 +186,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private void UploadImage(string image)
+        private void AddImage(string image)
         {
             //TODO validate the file
             Image = image;
