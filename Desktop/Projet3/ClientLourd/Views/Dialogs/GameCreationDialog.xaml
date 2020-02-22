@@ -5,9 +5,18 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
+             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d"
              >
+    <UserControl.DataContext>
+        <viewModels:GameCreationViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter"/>
+    </UserControl.Resources>
     <DockPanel>
         <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
@@ -22,7 +31,18 @@
                       <materialDesign:SlideWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
                 <DockPanel>
-                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next" />
+                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
+                                <Binding ElementName="WordBox" Path="(Validation.HasError)" />
+                                <Binding ElementName="Hint1Box" Path="(Validation.HasError)" />
+                                <Binding ElementName="Hint2Box" Path="(Validation.HasError)" />
+                                <Binding ElementName="Hint3Box" Path="(Validation.HasError)" />
+                                <Binding Path="AreFieldsEmpty"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    
                     <StackPanel>
                         <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Create a new game</TextBlock>
 
@@ -32,7 +52,15 @@
                                 <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold">Type a word</TextBlock>
                             </StackPanel>
                             <TextBox MaxLength="20" HorizontalAlignment="Center" Width="300"
-                                     materialDesign:HintAssist.Hint="Word" Name="WordBox" />
+                                     materialDesign:HintAssist.Hint="Word" Name="WordBox">
+                                <TextBox.Text>
+                                    <Binding Path="Word" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:WordRules />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Margin="0 20 0 20">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
@@ -44,11 +72,35 @@
                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                             <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="hint 1" />
+                                     materialDesign:HintAssist.Hint="hint 1" Name="Hint1Box" >
+                                <TextBox.Text>
+                                    <Binding Path="Hints[0]" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:HintRules/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                             <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="hint 2" />
+                                     materialDesign:HintAssist.Hint="hint 2" Name="Hint2Box" >
+                               <TextBox.Text>
+                                    <Binding Path="Hints[1]" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:HintRules/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                               </TextBox.Text> 
+                            </TextBox>
                             <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="hint 3" />
+                                     materialDesign:HintAssist.Hint="hint 3" Name="Hint3Box">
+                                <TextBox.Text>
+                                    <Binding Path="Hints[2]" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <rules:HintRules/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>

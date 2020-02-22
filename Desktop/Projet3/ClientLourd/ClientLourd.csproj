@@ -163,9 +163,12 @@
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
     <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
+    <Compile Include="Utilities\ValidationRules\HintRules.cs" />
     <Compile Include="Utilities\ValidationRules\NameRule.cs" />
+    <Compile Include="Utilities\ValidationRules\WordRules.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
+    <Compile Include="ViewModels\GameCreationViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Services\RestService\RestClient.cs" />
