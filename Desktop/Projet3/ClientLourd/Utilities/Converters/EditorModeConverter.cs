@@ -18,9 +18,6 @@ namespace ClientLourd.Utilities.Converters
         {
             switch (value)
             {
-                /*case "efface_segment":
-                    //return InkCanvasEditingMode.EraseByPoint;
-                    return InkCanvasEditingMode.Ink;*/
                 case "efface_trait":
                     return InkCanvasEditingMode.EraseByStroke;
                 default:

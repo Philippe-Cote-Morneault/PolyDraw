@@ -71,7 +71,15 @@ namespace ClientLourd.Views.Controls
             e.Stroke.AddPropertyData(time, millisecondsTakenToDraw);
             e.Stroke.AddPropertyData(brushSize, editorVM.TailleTrait);
             e.Stroke.AddPropertyData(brushType, editorVM.PointeSelectionnee);
+            e.Stroke.AddPropertyData(eraser, (editorVM.OutilSelectionne == "efface_segment").ToString());
+        }
 
+        public void Test2(object sender, InkCanvasStrokeErasingEventArgs e)
+        {
+            if (e.Stroke.GetPropertyData(eraser) as string == "True")
+            {
+                e.Cancel = true;
+            }
         }
 
 

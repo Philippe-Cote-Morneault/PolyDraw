@@ -154,6 +154,7 @@
                        Strokes="{Binding Path=Traits, Mode=OneTime}"
                        MouseDown="StartTimer"
                        StrokeCollected="Test"
+                       StrokeErasing="Test2"
                        EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource converterMode}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                        DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" />
     </DockPanel>
