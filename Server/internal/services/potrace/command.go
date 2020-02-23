@@ -1,9 +1,14 @@
 package potrace
 
 import (
+	"encoding/xml"
 	"fmt"
+	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/datastore"
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
+	"io/ioutil"
 	"os/exec"
+	"strings"
 )
 
 func checkCommand(command string) bool {
@@ -27,4 +32,40 @@ func Trace(imageKey string, blacklevel float64) (string, error) {
 	}
 
 	return svgKey, nil
+}
+
+//Translate changes the potrace svg to be compatible with our custom svg format
+func Translate(svgKey string) error {
+	file, err := datastore.GetFile(svgKey)
+	if err != nil {
+		return err
+	}
+	byteValue, _ := ioutil.ReadAll(file)
+	var xmlSvg model.XMLSvg
+
+	err = xml.Unmarshal(byteValue, &xmlSvg)
+	if err != nil {
+		return err
+	}
+
+	//Check all the paths
+	for i := range xmlSvg.G.XMLPaths {
+		var path *model.XMLPath
+		path = &xmlSvg.G.XMLPaths[i]
+		if path.ID == uuid.Nil {
+			path.ID = uuid.New()
+			path.Brush = "circle"
+			//TODO change the brush size based on a parameter
+			path.BrushSize = 4
+		}
+		path.D = strings.Replace(path.D, "\n", " ", -1)
+	}
+	xmlSvg.XmlnsPolydraw = "http://polydraw"
+	data, err := xml.Marshal(&xmlSvg)
+	err = datastore.PutFile(&data, svgKey)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
