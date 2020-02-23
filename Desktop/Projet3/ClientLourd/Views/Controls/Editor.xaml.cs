@@ -13,16 +13,23 @@ using ClientLourd.ViewModels;
 using Svg;
 using System.Text;
 using System.Windows.Ink;
+using ClientLourd.Utilities.Extensions;
 
 namespace ClientLourd.Views.Controls
 {
+    
+    
+
+
+
     /// <summary>
     /// Interaction logic for Editor.xaml
     /// </summary>
     public partial class Editor : UserControl
     {
         DateTime _strokeStart;
-        
+        private Cursor _pointEraser = CursorHelper.FromByteArray(Properties.Resources.PointEraser);
+
         // Stroke Custom Attributes
         public static readonly Guid time = new Guid("12345678-9012-3456-7890-123456789012");
         public static readonly Guid brushSize = new Guid("12345678-9012-3456-7890-123456789333");
@@ -85,7 +92,7 @@ namespace ClientLourd.Views.Controls
                 if (tool == "efface_segment")
                 {
                     surfaceDessin.UseCustomCursor = true;
-                    //surfaceDessin.Cursor = Cursors.;
+                    surfaceDessin.Cursor = _pointEraser;
                     (DataContext as EditorViewModel).CouleurSelectionnee = "#FFFFFFFF";
 
                 }
