@@ -203,6 +203,12 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
+
+			err = potrace.Translate(svgKey)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
 			image.SVGFile = svgKey
 		}
 		game.Image = &image
