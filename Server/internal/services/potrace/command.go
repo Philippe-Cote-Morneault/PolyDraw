@@ -35,7 +35,7 @@ func Trace(imageKey string, blacklevel float64) (string, error) {
 }
 
 //Translate changes the potrace svg to be compatible with our custom svg format
-func Translate(svgKey string, brushSize int) error {
+func Translate(svgKey string, brushSize int, mode int) error {
 	file, err := datastore.GetFile(svgKey)
 	if err != nil {
 		return err
@@ -60,6 +60,7 @@ func Translate(svgKey string, brushSize int) error {
 		path.D = strings.Replace(path.D, "\n", " ", -1)
 	}
 	xmlSvg.XmlnsPolydraw = "http://polydraw"
+	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
 	data, err := xml.Marshal(&xmlSvg)
 	err = datastore.PutFile(&data, svgKey)
 	if err != nil {
