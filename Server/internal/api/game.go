@@ -222,7 +222,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			err = potrace.Translate(svgKey)
+			err = potrace.Translate(svgKey, brushsize)
 			if err != nil {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
