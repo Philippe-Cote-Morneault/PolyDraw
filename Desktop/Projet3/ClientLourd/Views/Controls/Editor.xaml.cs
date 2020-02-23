@@ -71,17 +71,12 @@ namespace ClientLourd.Views.Controls
             stroke.AddPropertyData(GUIDs.brushSize, editorVM.TailleTrait);
             stroke.AddPropertyData(GUIDs.brushType, editorVM.PointeSelectionnee);
             stroke.AddPropertyData(GUIDs.eraser, (editorVM.OutilSelectionne == "efface_segment").ToString());
-            // TODO: Add color property
-        }
-
-        private int ColorToNumber()
-        {
-            // TODO
-            return 0;
+            stroke.AddPropertyData(GUIDs.color, ColorToNumber(stroke.DrawingAttributes.Color.ToString()).ToString());
         }
 
         public void OnStrokeErase(object sender, InkCanvasStrokeErasingEventArgs e)
         {
+            // Dont erase white eraser strokes
             if (e.Stroke.GetPropertyData(GUIDs.eraser) as string == "True")
             {
                 e.Cancel = true;
@@ -135,6 +130,27 @@ namespace ClientLourd.Views.Controls
             _selectedColor = button;
             _selectedColor.Background = Brushes.Gray;
             ((EditorViewModel) DataContext).CouleurSelectionnee = ((Ellipse) _selectedColor.Content).Fill.ToString();
+        }
+
+        private int ColorToNumber(string colorHex)
+        {
+            if (Colors.Black.ToString() == colorHex) return 0;
+
+            if (Colors.White.ToString() == colorHex) return 1;
+
+            if (Colors.Red.ToString() == colorHex) return 2;
+
+            if (Colors.Green.ToString() == colorHex) return 3;
+
+            if (Colors.Blue.ToString() == colorHex) return 4;
+
+            if (Colors.Yellow.ToString() == colorHex) return 5;
+
+            if (Colors.Cyan.ToString() == colorHex) return 6;
+
+            if (Colors.Magenta.ToString() == colorHex) return 7;
+
+            return -1;
         }
     }
 }

@@ -121,7 +121,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
-                            <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Click="GenerateSVG"  Content="Next" />
+                            <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Click="GenerateXMLDoc"  Content="Next" />
                             
                     </Grid>
                         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
