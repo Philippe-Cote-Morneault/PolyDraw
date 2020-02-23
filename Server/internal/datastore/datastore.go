@@ -37,6 +37,7 @@ func PostFile(reader io.Reader) (string, error) {
 	return fileName, nil
 }
 
+//PutFile update the file
 func PutFile(data *[]byte, key string) error {
 	filePath := GetPath(key)
 	return ioutil.WriteFile(filePath, *data, 0644)

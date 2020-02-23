@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//XMLSvg model XML
 type XMLSvg struct {
 	XMLName       xml.Name `xml:"svg"`
 	G             XMLG     `xml:"g"`
@@ -16,11 +17,13 @@ type XMLSvg struct {
 	XmlnsPolydraw string   `xml:"xmlns:polydraw,attr"`
 }
 
+//XMLG model G
 type XMLG struct {
 	Transform string    `xml:"transform,attr"`
 	XMLPaths  []XMLPath `xml:"path"`
 }
 
+//XMLPath model path
 type XMLPath struct {
 	D         string    `xml:"d,attr"`
 	Time      int       `xml:"polydraw:time,attr"`
