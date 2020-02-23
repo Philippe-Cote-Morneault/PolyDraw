@@ -12,6 +12,7 @@ using Microsoft.Win32;
 using Svg;
 using ClientLourd.Utilities.Constants;
 using System.Windows.Ink;
+using System.Text;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -54,12 +55,33 @@ namespace ClientLourd.Views.Dialogs
 
         private void UploadImageClick(object sender, RoutedEventArgs e)
         {
+            // Bug here: if we use the erase by point eraser, there will be white strokes in the canvas.
+            if (EditorView.surfaceDessin.Strokes.Count > 0)
+            {
+                CreateSVGFile(GenerateXMLDoc());
+            }
             
-
             ViewModel.UploadImageCommand.Execute(null);
 
         }
-        public void GenerateXMLDoc(object sender, EventArgs e)
+
+        /// <summary>
+        /// Creates an SVG file from an XMLDocument in AppDomain.CurrentDomain.BaseDirectory (ClientLourd\Bin\Debug)
+        /// TODO: Check if this causes a problem while running from exe
+        /// </summary>
+        private void CreateSVGFile(XmlDocument xmlDoc)
+        {
+            
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
+            using (XmlWriter w = XmlWriter.Create("tmp.svg", settings))
+            {
+                xmlDoc.Save(w);
+            }
+
+        }
+
+        private XmlDocument GenerateXMLDoc()
         {
             var svg = new SvgDocument();
             
@@ -104,8 +126,9 @@ namespace ClientLourd.Views.Dialogs
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             var xmlDocument = new XmlDocument();
-            
             xmlDocument.Load(memoryStream);
+          
+            return xmlDocument;
         }
 
         /// <summary>

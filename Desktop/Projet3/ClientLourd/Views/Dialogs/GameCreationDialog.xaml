@@ -19,10 +19,9 @@
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
     <materialDesign:DialogHost Identifier="Dialog">
-        
-    <DockPanel>
-    <!--<DockPanel x:Name="Container">-->
-        <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
+
+        <DockPanel>
+            <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
         </Button>
         <materialDesign:Transitioner SelectedIndex="0">

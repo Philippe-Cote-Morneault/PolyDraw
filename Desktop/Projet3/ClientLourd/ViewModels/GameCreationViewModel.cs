@@ -159,15 +159,23 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _uploadImageCommand??
-                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(), o => !string.IsNullOrWhiteSpace(_image)));
+                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(param), o => !string.IsNullOrWhiteSpace(_image)));
             }
         }
 
-        private async  Task UploadImage()
+        private async  Task UploadImage(object param)
         {
             try
             {
-                await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold/100.0, BrushSize);
+                if (IsImageUpload)
+                {
+                    await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
+                }
+                else
+                {
+                    await RestClient.PostGameImage(_gameID, AppDomain.CurrentDomain.BaseDirectory + "tmp.svg", PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
+
+                }
                 NotifyPropertyChanged(nameof(PotraceModes));
                 NotifyPropertyChanged(nameof(BlackLevelThreshold));
                 NotifyPropertyChanged(nameof(BrushSize));
