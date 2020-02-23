@@ -195,14 +195,26 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be set when uploading a non vector image.")
 				return
 			}
-			if err != nil {
-				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be a decimal number.")
-				return
-			}
 			if blackLevel > 1 || blackLevel < 0 {
 				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be between 0 and 1.")
 				return
 			}
+
+			brushsizeStr := r.FormValue("brushsize")
+			brushsize, err := strconv.Atoi(brushsizeStr)
+			if brushsizeStr == "" {
+				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be set when uploading a non vector image.")
+				return
+			}
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be a integer number.")
+			}
+
+			if brushsize > 100 || brushsize < 1 {
+				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be between 1 and 100.")
+				return
+			}
+			image.BrushSize = brushsize
 
 			svgKey, err := potrace.Trace(keyFile, blackLevel)
 			if err != nil {
@@ -216,6 +228,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			image.SVGFile = svgKey
+
 		}
 		game.Image = &image
 		model.DB().Save(&game)

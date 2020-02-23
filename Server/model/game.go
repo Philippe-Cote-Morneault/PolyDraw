@@ -23,6 +23,7 @@ type GameImage struct {
 	Game      Game      `gorm:"foreignkey:GameID"`
 	GameID    uuid.UUID `gorm:"primary_key"`
 	Mode      int
+	BrushSize int
 	SVGFile   string
 	ImageFile string
 }
