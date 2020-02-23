@@ -21,7 +21,7 @@ namespace ClientLourd.Models.Bindable
         }
 
         // Forme de la pointe du crayon
-        private string pointeSelectionnee = "ronde";
+        private string pointeSelectionnee = "circle";
 
         public string PointeSelectionnee
         {
@@ -63,14 +63,19 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-     
+
 
         // On assigne une nouvelle forme de pointe passée en paramètre.
         public void ChoisirPointe(string pointe) => PointeSelectionnee = pointe;
 
         // L'outil actif devient celui passé en paramètre.
-        public void ChoisirOutil(string outil) => OutilSelectionne = outil;
+        public void ChoisirOutil(string outil) 
+        {
 
-        // On vide la surface de dessin de tous ses traits.
+            OutilSelectionne = outil;
+        
+        }
+
+        
     }
 }

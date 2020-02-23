@@ -8,8 +8,11 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.Linq;
+using System.Windows.Shapes;
 using ClientLourd.ViewModels;
 using Svg;
+using System.Text;
+using System.Windows.Ink;
 
 namespace ClientLourd.Views.Controls
 {
@@ -18,93 +21,52 @@ namespace ClientLourd.Views.Controls
     /// </summary>
     public partial class Editor : UserControl
     {
+        DateTime _strokeStart;
+        
+        // Stroke Custom Attributes
+        public static readonly Guid time = new Guid("12345678-9012-3456-7890-123456789012");
+        public static readonly Guid brushSize = new Guid("12345678-9012-3456-7890-123456789333");
+        public static readonly Guid brushType = new Guid("12345678-9012-3456-7890-123456789444");
+        public static readonly Guid brushColor = new Guid("12345678-9012-3456-7890-123456789555");
+        public static readonly Guid eraser = new Guid("12345678-9012-3456-7890-123456789666");
+
         public Editor()
         {
             InitializeComponent();
             DataContext = new EditorViewModel();
+            Loaded += OnLoad;
         }
 
-        private void GlisserCommence(object sender, DragStartedEventArgs e) =>
-            (sender as Thumb).Background = Brushes.Black;
-
-        private void GlisserTermine(object sender, DragCompletedEventArgs e) =>
-            (sender as Thumb).Background = Brushes.Red;
-
-        private void GlisserMouvementRecu(object sender, DragDeltaEventArgs e)
+        private void OnLoad(object sender, RoutedEventArgs e)
         {
-            String nom = (sender as Thumb).Name;
-            if (nom == "horizontal" || nom == "diagonal")
-                colonne.Width = new GridLength(Math.Max(32, colonne.Width.Value + e.HorizontalChange));
-            if (nom == "vertical" || nom == "diagonal")
-                ligne.Height = new GridLength(Math.Max(32, ligne.Height.Value + e.VerticalChange));
+            // Bubble inkCanvas event so we can capture it
+            surfaceDessin.AddHandler(InkCanvas.MouseDownEvent, new MouseButtonEventHandler(StartTimer), true);
         }
+
+        private Button _selectedColor;
 
         // Pour la gToolsList_OnSelectionChangedition du pointeur.
         private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
 
+        public void StartTimer(object sender, MouseEventArgs e)
+        {
+            _strokeStart = DateTime.Now;
+        }
+
         public void Test(object sender, InkCanvasStrokeCollectedEventArgs e)
-        {            
-
-            var svg = new SvgDocument();
-            var colorServer = new SvgColourServer(System.Drawing.Color.Black);
-
-            var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
-            svg.Children.Add(group);
-
-            var geometry = e.Stroke.GetGeometry(e.Stroke.DrawingAttributes).GetOutlinedPathGeometry();
-            string s = XamlWriter.Save(geometry);
-            if (!String.IsNullOrEmpty(s))
-            {
-                var element = XElement.Parse(s);
-                var data = element.Attribute("Figures")?.Value;
-                if (!String.IsNullOrEmpty(data))
-                {
-                    group.Children.Add(new SvgPath
-                    {
-                        PathData = SvgPathBuilder.Parse(data),
-                        Fill = colorServer,
-                        Stroke = colorServer,
-                        ID = "1",
-                    }) ;
-                }
-
-                var memoryStream = new MemoryStream();
-                svg.Write(memoryStream);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var xmlDocument = new XmlDocument();
-                xmlDocument.Load(memoryStream);
-                var x = 1;
-                //SvgVisualElement sview = new SvgVisualElement();
-            }
-
-            /*foreach (var stroke in InkCanvas.Strokes)
-            {
-                var geometry = stroke.GetGeometry(stroke.DrawingAttributes).GetOutlinedPath‌​Geometry();
-
-                var s = XamlWriter.Save(geometry);
-
-                if (s.IsNotNullOrEmpty())
-                {
-                    var element = XElement.Parse(s);
-
-                    var data = element.Attribute("Figures")?.Value;
-
-                    if (data.IsNotNullOrEmpty())
-                    {
-                        group.Children.Add(new SvgPath
-                        {
-                            PathData = SvgPathBuilder.Parse(data),
-                            Fill = colorServer,
-                            Stroke = colorServer
-                        });
-                    }
-                }
-            }*/
-
+        {
+            DateTime strokeEnd = DateTime.Now;
+            var editorVM = DataContext as EditorViewModel;
+            double millisecondsTakenToDraw = (strokeEnd - _strokeStart).TotalMilliseconds;
+            if (millisecondsTakenToDraw > 5000)
+                millisecondsTakenToDraw = 5000;
+                
+            e.Stroke.AddPropertyData(time, millisecondsTakenToDraw);
+            e.Stroke.AddPropertyData(brushSize, editorVM.TailleTrait);
+            e.Stroke.AddPropertyData(brushType, editorVM.PointeSelectionnee);
 
         }
+
 
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
@@ -116,6 +78,12 @@ namespace ClientLourd.Views.Controls
         private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string tool = (ToolsList.SelectedItem as ListBoxItem)?.Tag as string;
+            if(tool== "efface_segment")
+            {
+ //               ((EditorViewModel)DataContext).CouleurSelectionnee = "#FFFFFFFF";
+
+                surfaceDessin.EraserShape = new EllipseStylusShape(5, 5, 0);
+            }
             (DataContext as EditorViewModel)?.ChoisirOutil.Execute(tool);
         }
 
@@ -123,6 +91,18 @@ namespace ClientLourd.Views.Controls
         {
             string tip = (TipsList.SelectedItem as ListBoxItem)?.Tag as string;
             (DataContext as EditorViewModel)?.ChoisirPointe.Execute(tip);
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_selectedColor != null)
+            {
+                _selectedColor.Background = Brushes.Transparent;
+            }
+            var button = (Button) sender;
+            _selectedColor = button;
+            _selectedColor.Background = Brushes.Gray;
+            ((EditorViewModel) DataContext).CouleurSelectionnee = ((Ellipse) _selectedColor.Content).Fill.ToString();
         }
     }
 }

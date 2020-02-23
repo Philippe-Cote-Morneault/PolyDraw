@@ -53,7 +53,7 @@ namespace ClientLourd
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
             (Profile.DataContext as ProfileViewModel).AfterLogin();
-            DialogHost.Show(new Tutorial(), "Default");
+            //DialogHost.Show(new Tutorial(), "Default");
         }
 
         private void OnUserLogout(object source, EventArgs args)
@@ -147,6 +147,11 @@ namespace ClientLourd
             {
                 NetworkConfig.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void CreateGame(object sender, RoutedEventArgs e)
+        {
+            DialogHost.Show(new GameCreationDialog(), "Default");
         }
     }
 }

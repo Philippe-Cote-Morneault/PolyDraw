@@ -8,15 +8,15 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d">
     <UserControl.Resources>
         <converter:BackgroundColorConverter x:Key="converterBackground" />
         <converter:BorderConverter x:Key="converterBorder" />
         <converter:EditorModeConverter x:Key="converterMode" />
     </UserControl.Resources>
-    <DockPanel>
-        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,0.5" BorderBrush="#77000000">
+    <materialDesign:Card   materialDesign:ShadowAssist.ShadowDepth="Depth4">
+    <DockPanel >
+        <Border DockPanel.Dock="Top" BorderThickness="0,0.5,0,0.5" BorderBrush="#77000000">
             <ToolBarTray>
                 <ToolBar Style="{DynamicResource MaterialDesignToolBar}"
                          ClipToBounds="False">
@@ -53,32 +53,52 @@
                         SelectedIndex="0">
                         <ListBoxItem
                             ToolTip="Circle tip"
-                            Tag="ronde">
+                            Tag="circle">
                             <materialDesign:PackIcon
                                 Kind="Circle" />
                         </ListBoxItem>
                         <ListBoxItem
                             ToolTip="Square tip"
-                            Tag="carree">
+                            Tag="square">
                             <materialDesign:PackIcon
                                 Kind="Square" />
                         </ListBoxItem>
                     </ListBox>
                     <Separator />
-
-                    <xctk:ColorPicker x:Name="selecteurCouleur"
-                                      VerticalContentAlignment="Stretch"
-                                      ToolTip="Color"
-                                      Background="#00000000"
-                                      ShowDropDownButton="False"
-                                      ShowRecentColors="True"
-                                      BorderBrush="#80000000"
-                                      Margin="5,0,0,0"
-                                      SelectedColor="{Binding Path=CouleurSelectionnee, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      AvailableColorsHeader="Palette"
-                                      StandardColorsHeader="Couleurs de base"
-                                      RecentColorsHeader="Récemment utilisées"
-                                      UsingAlphaChannel="True" />
+                        <ItemsControl>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Width="80" Height="40" />
+                                    
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Items>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Black"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="White"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Red"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Green"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Blue"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Yellow"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Cyan"/>
+                                </Button>
+                                <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
+                                        <Ellipse Width="15" Height="15" Fill="Magenta"/>
+                                </Button>
+                            </ItemsControl.Items>
+                        </ItemsControl>
                     <Separator />
                     <Slider Width="100" Minimum="1" Maximum="50"
                             ToolTip="Tip size"
@@ -97,7 +117,7 @@
             </StackPanel>
         </Border>
 
-        <Grid DockPanel.Dock="Left">
+        <!--<Grid DockPanel.Dock="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Name="colonne" Width="550" />
                 <ColumnDefinition Width="6" />
@@ -127,7 +147,15 @@
                     <DropShadowEffect Opacity="0.3" BlurRadius="10" />
                 </Border.Effect>
             </Border>
-        </Grid>
+        </Grid>-->
+            <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                       MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
+                       Strokes="{Binding Path=Traits, Mode=OneTime}"
+                       MouseDown="StartTimer"
+                       StrokeCollected="Test"
+                       EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource converterMode}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                       DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" />
     </DockPanel>
-
+    </materialDesign:Card>
 </UserControl>

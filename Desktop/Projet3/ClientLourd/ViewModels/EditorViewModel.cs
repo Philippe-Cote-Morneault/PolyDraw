@@ -39,12 +39,8 @@ namespace ClientLourd.ViewModels
 
         public StrokeCollection Traits { get; set; }
 
-        // Commandes sur lesquels la vue pourra se connecter.
-        public RelayCommand<object> Empiler { get; set; }
-        public RelayCommand<object> Depiler { get; set; }
         public RelayCommand<string> ChoisirPointe { get; set; }
         public RelayCommand<string> ChoisirOutil { get; set; }
-        public RelayCommand<object> Reinitialiser { get; set; }
 
         /// <summary>
         /// Constructeur de VueModele
@@ -81,7 +77,7 @@ namespace ClientLourd.ViewModels
         {
             if (e.PropertyName == "CouleurSelectionnee")
             {
-                AttributsDessin.Color = (Color) ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
+                AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
             }
             else if (e.PropertyName == "OutilSelectionne")
             {
@@ -108,8 +104,9 @@ namespace ClientLourd.ViewModels
         /// </summary>
         private void AjusterPointe()
         {
+
             AttributsDessin.StylusTip =
-                (editeur.PointeSelectionnee == "ronde") ? StylusTip.Ellipse : StylusTip.Rectangle;
+                (editeur.PointeSelectionnee == "circle") ? StylusTip.Ellipse : StylusTip.Rectangle;
             AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
             AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
         }
