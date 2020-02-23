@@ -14,7 +14,7 @@ import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.utils.format.DateFormatter
 
-class MessageViewHolder : RecyclerView.ViewHolder {
+class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
     private var view: ConstraintLayout
     private var messageTextView: TextView
     private var usernameTextView: TextView

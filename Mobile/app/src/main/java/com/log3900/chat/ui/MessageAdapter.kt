@@ -6,19 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.chat.ChatMessage
-import com.log3900.chat.Message.ReceivedMessage
 import java.util.*
 
-class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {
+class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String) : RecyclerView.Adapter<ReceivedMessageViewHolder>() {
     private lateinit var recyclerView: RecyclerView
 
     fun setMessage(messages: LinkedList<ChatMessage>) {
         this.messages = messages
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReceivedMessageViewHolder {
         val textView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_message, parent, false) as View
-        return MessageViewHolder(textView, username)
+        return ReceivedMessageViewHolder(textView, username)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -27,7 +26,7 @@ class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String
         this.recyclerView = recyclerView
     }
 
-    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReceivedMessageViewHolder, position: Int) {
         holder.bind(messages[position])
     }
 
