@@ -5,16 +5,24 @@
 # - $HOME/.polydraw/config.yaml
 # - /etc/polydraw/config.yaml
 
+# Database should be a postgres database
 database:
     engine: postgres
     connection: "host=localhost port=5432 user=postgres dbname=log3900 password=123456 sslmode=disable"
+
+# Redis used for caching and for sets. It is recommended that redis has data persistance enabled
 redis:
     address: "localhost:6379"
     password: ""
     database: 0
+
+# Ports used and adress for the various ports
 rest:
     port: 3000
     address: 127.0.0.1
 socket:
     port: 3001
     address: 127.0.0.1
+
+# Path used to store the uploads and SVG files
+datastore: "/data/"
