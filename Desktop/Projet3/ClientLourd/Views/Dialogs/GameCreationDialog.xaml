@@ -21,6 +21,7 @@
     <materialDesign:DialogHost Identifier="Dialog">
         
     <DockPanel>
+    <!--<DockPanel x:Name="Container">-->
         <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
         </Button>
@@ -121,6 +122,7 @@
                 <!-- Drawing or upload slide-->
             </materialDesign:TransitionerSlide>
             <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropFile">
+            <!--<materialDesign:TransitionerSlide AllowDrop="True" Drop="DropUpload" >-->
                 <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
                     </materialDesign:TransitionerSlide.BackwardWipe>
@@ -136,6 +138,9 @@
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
                             <Button Grid.Column="1" Margin="5" Click="UploadImageClick" Content="Next" />
                         </Grid>
+                            <!--<Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Click="GenerateXMLDoc"  Content="Next" />
+                            
+                    </Grid>-->
                         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                             
                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
@@ -159,7 +164,7 @@
                             </StackPanel>
                         </StackPanel>
                         <Grid Name="EditorGrid" IsEnabled="{Binding Path=IsImageUpload, Converter={StaticResource InverseBooleanConverter}}">
-                            <controls:Editor Width="800" Height="450"/>
+                            <controls:Editor x:Name="EditorView" Width="800" Height="450"/>
                         </Grid>
                     </DockPanel>
             </materialDesign:TransitionerSlide>

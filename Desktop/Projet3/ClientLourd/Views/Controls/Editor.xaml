@@ -53,13 +53,13 @@
                         SelectedIndex="0">
                         <ListBoxItem
                             ToolTip="Circle tip"
-                            Tag="ronde">
+                            Tag="circle">
                             <materialDesign:PackIcon
                                 Kind="Circle" />
                         </ListBoxItem>
                         <ListBoxItem
                             ToolTip="Square tip"
-                            Tag="carree">
+                            Tag="square">
                             <materialDesign:PackIcon
                                 Kind="Square" />
                         </ListBoxItem>
@@ -116,10 +116,45 @@
                 <TextBlock Name="textBlockPosition" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </StackPanel>
         </Border>
+
+        <!--<Grid DockPanel.Dock="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Name="colonne" Width="550" />
+                <ColumnDefinition Width="6" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Name="ligne" Height="310" />
+                <RowDefinition Height="6" />
+            </Grid.RowDefinitions>
+            <Thumb Name="horizontal" Grid.Row="0" Grid.Column="1" Background="Red"
+                   Width="6" Height="6" DragDelta="GlisserMouvementRecu"
+                   DragStarted="GlisserCommence" DragCompleted="GlisserTermine" />
+            <Thumb Name="diagonal" Grid.Row="1" Grid.Column="1" Background="Red"
+                   Width="6" Height="6" DragDelta="GlisserMouvementRecu"
+                   DragStarted="GlisserCommence" DragCompleted="GlisserTermine" />
+            <Thumb Name="vertical" Grid.Row="1" Grid.Column="0" Background="Red"
+                   Width="6" Height="6" DragDelta="GlisserMouvementRecu"
+                   DragStarted="GlisserCommence" DragCompleted="GlisserTermine" />
+            <Border BorderThickness="5,5,0,0">
+                <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin"
+                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                           MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
+                           Strokes="{Binding Path=Traits, Mode=OneTime}"
+                           StrokeCollected="Test"
+                           EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource converterMode}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                           DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" />
+                <Border.Effect>
+                    <DropShadowEffect Opacity="0.3" BlurRadius="10" />
+                </Border.Effect>
+            </Border>
+        </Grid>-->
             <InkCanvas ClipToBounds="True" Grid.Column="0" Grid.Row="0" Name="surfaceDessin"
                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                        MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
                        Strokes="{Binding Path=Traits, Mode=OneTime}"
+                       MouseDown="SaveDrawDebutTime"
+                       StrokeCollected="OnStrokeAdded"
+                       StrokeErasing="OnStrokeErase"
                        EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource converterMode}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                        DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" />
     </DockPanel>
