@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 	"io"
+	"io/ioutil"
 	"os"
 )
 
@@ -34,7 +35,11 @@ func PostFile(reader io.Reader) (string, error) {
 	}
 
 	return fileName, nil
+}
 
+func PutFile(data *[]byte, key string) error {
+	filePath := GetPath(key)
+	return ioutil.WriteFile(filePath, *data, 0644)
 }
 
 //GenerateFileKey is used to generate a unique filename
