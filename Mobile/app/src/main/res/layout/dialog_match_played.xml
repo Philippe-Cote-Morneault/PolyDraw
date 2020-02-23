@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
         android:id="@+id/match_info_title"
@@ -119,8 +120,18 @@
         android:orientation="vertical"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/match_players_title"
         app:layout_constraintEnd_toEndOf="@+id/match_type_value"
         app:layout_constraintStart_toStartOf="@+id/match_type_value"
         app:layout_constraintTop_toTopOf="@+id/match_players_title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/close_dialog_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MyTheme.DayNight"
+        android:text="@string/close"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/match_players_title"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

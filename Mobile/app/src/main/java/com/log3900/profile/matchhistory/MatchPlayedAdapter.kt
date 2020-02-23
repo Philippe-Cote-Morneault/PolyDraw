@@ -1,5 +1,6 @@
 package com.log3900.profile.matchhistory
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -7,13 +8,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
 import com.log3900.utils.format.formatDuration
 
-class MatchPlayedAdapter(val matchesPlayed: List<GamePlayed>, val username: String)
-    : RecyclerView.Adapter<MatchPlayedAdapter.ViewHolder>() {
+class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
+                         private val username: String,
+                         private val recyclerView: RecyclerView
+) : RecyclerView.Adapter<MatchPlayedAdapter.ViewHolder>() {
 
     lateinit var context: Context
 
@@ -63,7 +67,26 @@ class MatchPlayedAdapter(val matchesPlayed: List<GamePlayed>, val username: Stri
         holder.matchDuration.text = formatDuration(match.duration)
 
         holder.setBackgroundColor(matchResultColorBackground)
+
+        holder.itemView.setOnClickListener {
+            startMatchDetailsDialog(match)
+        }
     }
 
     override fun getItemCount(): Int = matchesPlayed.size
+
+
+
+    private fun startMatchDetailsDialog(match: GamePlayed) {
+        val activity = context as FragmentActivity
+        val fragmentManager = activity.supportFragmentManager
+        val ft = fragmentManager.beginTransaction()
+        fragmentManager.findFragmentByTag("dialog")?.let {
+            ft.remove(it)
+        }
+        ft.addToBackStack(null)
+
+        val dialog = MatchDetailsDialog(match, username)
+        dialog.show(ft, "dialog")
+    }
 }
