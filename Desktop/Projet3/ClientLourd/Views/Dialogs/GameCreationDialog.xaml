@@ -182,14 +182,26 @@
                                 <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Confirm" />
                         </Grid>
                         <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Vertical">
-                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                       Text="Set the black level threshold (%)"/>
-                            <Slider
-                              Minimum="0"
-                              Maximum="100"
-                              Style="{StaticResource MaterialDesignDiscreteSlider}"
-                              ToolTip="MaterialDesignDiscreteSlider"
-                              Value="{Binding BlackLevelThreshold}"/>
+                            <!-- Upload image settings-->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <StackPanel Margin="10" Orientation="Vertical">
+                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                               Text="Black level threshold (%)"/>
+                                    <Slider
+                                      Minimum="0"
+                                      Maximum="100"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                      Value="{Binding BlackLevelThreshold}"/>
+                                </StackPanel>
+                                <StackPanel Margin="10" Orientation="Vertical">
+                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                               Text="Brush size"/>
+                                    <Slider
+                                      Minimum="0"
+                                      Maximum="100"
+                                      Style="{StaticResource MaterialDesignDiscreteSlider}"/>
+                                </StackPanel>
+                            </StackPanel>
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                        Text="Select the way the draw will be display"/>
                             <ComboBox SelectedItem="{Binding Path=SelectedMode}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
