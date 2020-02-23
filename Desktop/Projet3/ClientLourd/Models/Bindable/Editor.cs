@@ -71,9 +71,8 @@ namespace ClientLourd.Models.Bindable
         // L'outil actif devient celui passé en paramètre.
         public void ChoisirOutil(string outil) 
         {
-
+            
             OutilSelectionne = outil;
-        
         }
 
         

@@ -29,7 +29,7 @@ namespace ClientLourd.Views.Controls
         public static readonly Guid brushType = new Guid("12345678-9012-3456-7890-123456789444");
         public static readonly Guid brushColor = new Guid("12345678-9012-3456-7890-123456789555");
         public static readonly Guid eraser = new Guid("12345678-9012-3456-7890-123456789666");
-
+        
         public Editor()
         {
             InitializeComponent();
@@ -78,11 +78,22 @@ namespace ClientLourd.Views.Controls
         private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string tool = (ToolsList.SelectedItem as ListBoxItem)?.Tag as string;
-            if(tool== "efface_segment")
-            {
- //               ((EditorViewModel)DataContext).CouleurSelectionnee = "#FFFFFFFF";
+            
 
-                surfaceDessin.EraserShape = new EllipseStylusShape(5, 5, 0);
+            if ((DataContext as EditorViewModel) != null)
+            {
+                if (tool == "efface_segment")
+                {
+                    surfaceDessin.UseCustomCursor = true;
+                    //surfaceDessin.Cursor = Cursors.;
+                    (DataContext as EditorViewModel).CouleurSelectionnee = "#FFFFFFFF";
+
+                }
+                else
+                {
+                    surfaceDessin.UseCustomCursor = false;
+                    ((EditorViewModel)DataContext).CouleurSelectionnee = (_selectedColor != null) ? ((Ellipse)_selectedColor.Content).Fill.ToString(): "#FF000000";
+                }
             }
             (DataContext as EditorViewModel)?.ChoisirOutil.Execute(tool);
         }
