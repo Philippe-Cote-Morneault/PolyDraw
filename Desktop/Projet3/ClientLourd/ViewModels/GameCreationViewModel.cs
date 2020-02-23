@@ -165,7 +165,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGameImage(_gameID, _image, PotraceMode.Center, BlackLevelThreshold/100.0);
+                await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold/100.0);
                 NotifyPropertyChanged(nameof(PotraceModes));
                 NotifyPropertyChanged(nameof(BlackLevelThreshold));
                 //If the game is valid move to the next slide
