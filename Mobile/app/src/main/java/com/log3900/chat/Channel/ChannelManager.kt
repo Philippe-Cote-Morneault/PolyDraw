@@ -1,6 +1,7 @@
 package com.log3900.chat.Channel
 
 import com.log3900.chat.ChatManager
+import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -93,7 +94,7 @@ class ChannelManager {
                 onChannelDeleted(event.data as UUID)
             }
             EventType.RECEIVED_MESSAGE -> {
-                onMessageReceived(event.data as ReceivedMessage)
+                onMessageReceived(event.data as ChatMessage)
             }
         }
     }
@@ -129,7 +130,7 @@ class ChannelManager {
         EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, activeChannel))
     }
 
-    private fun onMessageReceived(message: ReceivedMessage) {
+    private fun onMessageReceived(message: ChatMessage) {
         if (message.channelID != activeChannel.ID) {
             if (!unreadMessages.containsKey(message.channelID)) {
                 unreadMessages.put(message.channelID, 0)
@@ -138,7 +139,6 @@ class ChannelManager {
             unreadMessages[message.channelID]?.plus(1)
             unreadMessagesTotal += 1
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
-            println("unread messages for channel = " + message.channelID + " are = to " + unreadMessages[message.channelID])
         }
     }
 

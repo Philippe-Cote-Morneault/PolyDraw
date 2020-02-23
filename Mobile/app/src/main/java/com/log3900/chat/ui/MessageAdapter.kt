@@ -5,13 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
+import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
 import java.util.*
 
-class MessageAdapter(var messages: LinkedList<ReceivedMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {
+class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String) : RecyclerView.Adapter<MessageViewHolder>() {
     private lateinit var recyclerView: RecyclerView
 
-    fun setMessage(messages: LinkedList<ReceivedMessage>) {
+    fun setMessage(messages: LinkedList<ChatMessage>) {
         this.messages = messages
     }
 
