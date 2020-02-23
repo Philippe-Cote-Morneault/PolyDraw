@@ -42,6 +42,9 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="Fizzler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4ebff4844e382110, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fizzler.1.2.0\lib\netstandard2.0\Fizzler.dll</HintPath>
+    </Reference>
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587">
       <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
       <Private>True</Private>
@@ -64,6 +67,9 @@
     </Reference>
     <Reference Include="RestSharp, Version=106.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.10.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Svg, Version=3.0.0.0, Culture=neutral, PublicKeyToken=12a0bac221edeae2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Svg.3.0.102\lib\net452\Svg.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -150,6 +156,7 @@
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
+    <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
@@ -165,6 +172,7 @@
     <Compile Include="Utilities\Converters\ComparatorToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
+    <Compile Include="Utilities\Extensions\CursorHelper.cs" />
     <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
     <Compile Include="Utilities\ValidationRules\HintRules.cs" />
     <Compile Include="Utilities\ValidationRules\NameRule.cs" />
@@ -357,6 +365,7 @@
     <Resource Include="Resources\Avatar\8.jpg" />
     <Resource Include="Resources\Avatar\9.jpg" />
     <Resource Include="Resources\Avatar\16.jpg" />
+    <None Include="Resources\PointEraser.cur" />
     <Content Include="Resources\poly.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

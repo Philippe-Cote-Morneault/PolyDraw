@@ -221,7 +221,5 @@ namespace ClientLourd.ViewModels
             //TODO validate the file
             Image = image;
         }
-        
-        
     }
 }
