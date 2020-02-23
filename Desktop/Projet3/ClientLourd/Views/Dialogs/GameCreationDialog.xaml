@@ -197,8 +197,9 @@
                                     <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                                Text="Brush size"/>
                                     <Slider
-                                      Minimum="0"
+                                      Minimum="1"
                                       Maximum="100"
+                                      Value="{Binding BrushSize}"
                                       Style="{StaticResource MaterialDesignDiscreteSlider}"/>
                                 </StackPanel>
                             </StackPanel>
