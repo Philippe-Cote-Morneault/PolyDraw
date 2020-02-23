@@ -71,7 +71,13 @@ namespace ClientLourd.ViewModels
         public string SelectedMode 
         {
             get { return _selectedMode.GetDescription(); }
-            set { _selectedMode = value.GetEnumFromDescription<PotraceMode>(); } 
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _selectedMode = value.GetEnumFromDescription<PotraceMode>();
+                }
+            } 
         }
         private PotraceMode _selectedMode;
 
@@ -93,8 +99,17 @@ namespace ClientLourd.ViewModels
 
         public string SelectedDifficulty
         {
-            get { return _selectedDifficulty.GetDescription(); }
-            set { _selectedDifficulty = value.GetEnumFromDescription<DifficultyLevel>(); } 
+            get
+            {
+                return _selectedDifficulty.GetDescription();
+            }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _selectedDifficulty = value.GetEnumFromDescription<DifficultyLevel>();
+                }
+            } 
         }
         
         public List<string> DifficultyLevels
