@@ -10,6 +10,7 @@ using ClientLourd.ViewModels;
 using Microsoft.Win32;
 using Svg;
 using ClientLourd.Utilities.Constants;
+using System.Windows.Ink;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -44,6 +45,9 @@ namespace ClientLourd.Views.Dialogs
         {
             var svg = new SvgDocument();
             
+            // Add polydram namespace
+            svg.CustomAttributes.Add("xmlns:polydraw", "http://polydraw");
+
             var colorServer = new SvgColourServer(System.Drawing.Color.Black);
             var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
             
@@ -64,32 +68,13 @@ namespace ClientLourd.Views.Dialogs
 
                     if (!String.IsNullOrEmpty(data))
                     {
-                        var svgPath = new SvgPath 
-                        {
-                            PathData = SvgPathBuilder.Parse(data),
-                            Fill = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
-                            Stroke = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
-                            ID = Guid.NewGuid().ToString()
-                        };
-                        
-                        //TODO add namespace
-                        svgPath.CustomAttributes.Add("polydraw:time", stroke.GetPropertyData(GUIDs.time).ToString());
-                        svgPath.CustomAttributes.Add("polydraw:order", i.ToString());
-                        svgPath.CustomAttributes.Add("polydraw:color", stroke.GetPropertyData(GUIDs.color).ToString());
-                        svgPath.CustomAttributes.Add("polydraw:eraser", stroke.GetPropertyData(GUIDs.eraser).ToString());
-                        svgPath.CustomAttributes.Add("polydraw:brush", stroke.GetPropertyData(GUIDs.brushType).ToString());
-                        svgPath.CustomAttributes.Add("polydraw:brushsize", stroke.GetPropertyData(GUIDs.brushSize).ToString());
+                        // Remove the close path attribute (z)
+                        data = data.Remove(data.Length - 1);
 
-                        group.Children.Add(svgPath);
+                        group.Children.Add(GenerateSVGPath(stroke, data, i));
                     }
                 }
             }
-            
-
-
-            svg.CustomAttributes.Add("xmlns:polydraw", "http://polydraw");
-            
-
 
             var memoryStream = new MemoryStream();
             svg.Write(memoryStream);
@@ -100,5 +85,35 @@ namespace ClientLourd.Views.Dialogs
             
             xmlDocument.Load(memoryStream);
         }
+
+        /// <summary>
+        /// Generates a <path/> from a stroke and data (d). 
+        /// </summary>
+        /// <param name="stroke"></param>
+        /// <param name="data"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        private SvgPath GenerateSVGPath(Stroke stroke, string data, int order)
+        {
+            var svgPath = new SvgPath
+            {
+                PathData = SvgPathBuilder.Parse(data),
+                Fill = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
+                Stroke = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
+                ID = Guid.NewGuid().ToString()
+            };
+
+
+            svgPath.CustomAttributes.Add("polydraw:time", stroke.GetPropertyData(GUIDs.time).ToString());
+            svgPath.CustomAttributes.Add("polydraw:order", order.ToString());
+            svgPath.CustomAttributes.Add("polydraw:color", stroke.GetPropertyData(GUIDs.color).ToString());
+            svgPath.CustomAttributes.Add("polydraw:eraser", stroke.GetPropertyData(GUIDs.eraser).ToString());
+            svgPath.CustomAttributes.Add("polydraw:brush", stroke.GetPropertyData(GUIDs.brushType).ToString());
+            svgPath.CustomAttributes.Add("polydraw:brushsize", stroke.GetPropertyData(GUIDs.brushSize).ToString());
+
+            return svgPath;
+        } 
+
+        
     }
 }
