@@ -23,6 +23,7 @@ namespace ClientLourd.ViewModels
             Hints = new ObservableCollection<string>(new string[3]);
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
+            BrushSize = 12;
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
@@ -124,6 +125,7 @@ namespace ClientLourd.ViewModels
         private string _gameID;
         
         public int BlackLevelThreshold { get; set; }
+        public int BrushSize { get; set; }
         
         RelayCommand<object> _validateGameCommand;
 
@@ -165,9 +167,10 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold/100.0);
+                await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold/100.0, BrushSize);
                 NotifyPropertyChanged(nameof(PotraceModes));
                 NotifyPropertyChanged(nameof(BlackLevelThreshold));
+                NotifyPropertyChanged(nameof(BrushSize));
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
             }

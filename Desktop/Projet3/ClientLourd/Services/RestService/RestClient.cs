@@ -171,12 +171,13 @@ namespace ClientLourd.Services.RestService
             return deseralizer.Deserialize<dynamic>(response)["GameID"];
         }
 
-        public async Task PostGameImage(string gameID, string image, PotraceMode mode, double blackLevel)
+        public async Task PostGameImage(string gameID, string image, PotraceMode mode, double blackLevel, int brushSize)
         {
             RestRequest request = new RestRequest($"games/{gameID}/image", Method.POST);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddFile("file", image, "");
             request.AddParameter("blacklevel", blackLevel, ParameterType.GetOrPost);
+            request.AddParameter("brushsize", brushSize, ParameterType.GetOrPost);
             request.AddParameter("mode", (int) mode, ParameterType.GetOrPost);
             var response = await Execute(request);
         }
