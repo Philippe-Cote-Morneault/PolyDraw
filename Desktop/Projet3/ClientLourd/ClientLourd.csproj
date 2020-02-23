@@ -156,6 +156,7 @@
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
+    <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />

@@ -14,6 +14,7 @@ using Svg;
 using System.Text;
 using System.Windows.Ink;
 using ClientLourd.Utilities.Extensions;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.Views.Controls
 {
@@ -30,13 +31,6 @@ namespace ClientLourd.Views.Controls
         DateTime _strokeStart;
         private Cursor _pointEraser = CursorHelper.FromByteArray(Properties.Resources.PointEraser);
 
-        // Stroke Custom Attributes
-        public static readonly Guid time = new Guid("12345678-9012-3456-7890-123456789012");
-        public static readonly Guid brushSize = new Guid("12345678-9012-3456-7890-123456789333");
-        public static readonly Guid brushType = new Guid("12345678-9012-3456-7890-123456789444");
-        public static readonly Guid brushColor = new Guid("12345678-9012-3456-7890-123456789555");
-        public static readonly Guid eraser = new Guid("12345678-9012-3456-7890-123456789666");
-        
         public Editor()
         {
             InitializeComponent();
@@ -47,7 +41,7 @@ namespace ClientLourd.Views.Controls
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             // Bubble inkCanvas event so we can capture it
-            surfaceDessin.AddHandler(InkCanvas.MouseDownEvent, new MouseButtonEventHandler(StartTimer), true);
+            surfaceDessin.AddHandler(InkCanvas.MouseDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
         }
 
         private Button _selectedColor;
@@ -55,28 +49,40 @@ namespace ClientLourd.Views.Controls
         // Pour la gToolsList_OnSelectionChangedition du pointeur.
         private void surfaceDessin_MouseLeave(object sender, MouseEventArgs e) => textBlockPosition.Text = "";
 
-        public void StartTimer(object sender, MouseEventArgs e)
+        public void SaveDrawDebutTime(object sender, MouseEventArgs e)
         {
             _strokeStart = DateTime.Now;
         }
 
-        public void Test(object sender, InkCanvasStrokeCollectedEventArgs e)
+        public void OnStrokeAdded(object sender, InkCanvasStrokeCollectedEventArgs e)
+        {
+            AddAttributesToStroke(e.Stroke);
+        }
+
+        private void AddAttributesToStroke(Stroke stroke)
         {
             DateTime strokeEnd = DateTime.Now;
             var editorVM = DataContext as EditorViewModel;
             double millisecondsTakenToDraw = (strokeEnd - _strokeStart).TotalMilliseconds;
             if (millisecondsTakenToDraw > 5000)
                 millisecondsTakenToDraw = 5000;
-                
-            e.Stroke.AddPropertyData(time, millisecondsTakenToDraw);
-            e.Stroke.AddPropertyData(brushSize, editorVM.TailleTrait);
-            e.Stroke.AddPropertyData(brushType, editorVM.PointeSelectionnee);
-            e.Stroke.AddPropertyData(eraser, (editorVM.OutilSelectionne == "efface_segment").ToString());
+
+            stroke.AddPropertyData(GUIDs.time, millisecondsTakenToDraw);
+            stroke.AddPropertyData(GUIDs.brushSize, editorVM.TailleTrait);
+            stroke.AddPropertyData(GUIDs.brushType, editorVM.PointeSelectionnee);
+            stroke.AddPropertyData(GUIDs.eraser, (editorVM.OutilSelectionne == "efface_segment").ToString());
+            // TODO: Add color property
         }
 
-        public void Test2(object sender, InkCanvasStrokeErasingEventArgs e)
+        private int ColorToNumber()
         {
-            if (e.Stroke.GetPropertyData(eraser) as string == "True")
+            // TODO
+            return 0;
+        }
+
+        public void OnStrokeErase(object sender, InkCanvasStrokeErasingEventArgs e)
+        {
+            if (e.Stroke.GetPropertyData(GUIDs.eraser) as string == "True")
             {
                 e.Cancel = true;
             }

@@ -60,15 +60,6 @@ namespace ClientLourd.Views.Dialogs
 
                     if (!String.IsNullOrEmpty(data))
                     {
-                        /*group.Children.Add(new SvgPath
-                        {
-                            PathData = SvgPathBuilder.Parse(data),
-                            Fill = colorServer,
-                            Stroke = colorServer,
-                            ID = Guid.NewGuid().ToString()
-
-                        });*/
-
                         var svgPath = new SvgPath 
                         {
                             PathData = SvgPathBuilder.Parse(data),
