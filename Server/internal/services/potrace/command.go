@@ -25,7 +25,7 @@ func Trace(imageKey string, blacklevel float64) (string, error) {
 	svgPath := datastore.GetPath(svgKey)
 	imagePath := datastore.GetPath(imageKey)
 
-	cmd := fmt.Sprintf("convert %s bmp:- | potrace - -s -k %f -o %s", imagePath, blacklevel, svgPath)
+	cmd := fmt.Sprintf("convert -flatten %s bmp:- | potrace - -s -k %f -o %s", imagePath, blacklevel, svgPath)
 	_, err := exec.Command("sh", "-c", cmd).Output()
 	if err != nil {
 		return "", fmt.Errorf("Failed to execute the conversion")
