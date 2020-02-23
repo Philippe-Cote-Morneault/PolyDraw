@@ -183,6 +183,11 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 			//Load jpg
 			image.ImageFile = keyFile
 
+			if modeInt == 0 {
+				rbody.JSONError(w, http.StatusBadRequest, "The mode can't be set to manual.")
+				return
+			}
+
 			//Check if the blackness level is set
 			blackLevelStr := r.FormValue("blacklevel")
 			blackLevel, err := strconv.ParseFloat(blackLevelStr, 64)
@@ -198,6 +203,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be between 0 and 1.")
 				return
 			}
+
 			svgKey, err := potrace.Trace(keyFile, blackLevel)
 			if err != nil {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
