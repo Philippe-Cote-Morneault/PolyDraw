@@ -66,5 +66,4 @@ func Translate(svgKey string, brushSize int) error {
 		return err
 	}
 	return nil
-
 }
