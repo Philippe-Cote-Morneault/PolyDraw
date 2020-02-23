@@ -18,7 +18,7 @@
         <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter"/>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
-    <DockPanel x:Name="Container" Width="500" Height="500">
+    <DockPanel x:Name="Container">
         <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
         </Button>
@@ -33,7 +33,7 @@
                     </materialDesign:TransitionerSlide.ForwardWipe>
                 <DockPanel>
                     <Button Margin="5" DockPanel.Dock="Bottom" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Content="Next">
-                        <!--<Button.IsEnabled>
+                        <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
                                 <Binding ElementName="WordBox" Path="(Validation.HasError)" />
                                 <Binding ElementName="Hint1Box" Path="(Validation.HasError)" />
@@ -41,7 +41,7 @@
                                 <Binding ElementName="Hint3Box" Path="(Validation.HasError)" />
                                 <Binding Path="AreFieldsEmpty"/>
                             </MultiBinding>
-                        </Button.IsEnabled>-->
+                        </Button.IsEnabled>
                     </Button>
                     
                     <StackPanel>
