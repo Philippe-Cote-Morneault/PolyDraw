@@ -69,7 +69,11 @@ namespace ClientLourd.Views.Dialogs
                     if (!String.IsNullOrEmpty(data))
                     {
                         // Remove the close path attribute (z)
-                        data = data.Remove(data.Length - 1);
+                        if (data[data.Length - 1] == 'z')
+                        {
+                            data = data.Remove(data.Length - 1);
+                        }
+                        
 
                         group.Children.Add(GenerateSVGPath(stroke, data, i));
                     }
