@@ -128,18 +128,18 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 	//Check for the fields
 	mode := r.FormValue("mode")
 	if mode == "" {
-		rbody.JSONError(w, http.StatusBadRequest, "The mode is not set. Please set the number of the mode between 0-3.")
+		rbody.JSONError(w, http.StatusBadRequest, "The mode is not set. Please set the number of the mode between 0-7.")
 		return
 	}
 
 	modeInt, err := strconv.Atoi(mode)
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The mode is not a number. The mode must be between 0-3.")
+		rbody.JSONError(w, http.StatusBadRequest, "The mode is not a number. The mode must be between 0-7.")
 		return
 	}
 
-	if modeInt > 3 || modeInt < 0 {
-		rbody.JSONError(w, http.StatusBadRequest, "The mode must be between 0-3.")
+	if modeInt > 7 || modeInt < 0 {
+		rbody.JSONError(w, http.StatusBadRequest, "The mode must be between 0-7.")
 		return
 	}
 
@@ -185,7 +185,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 			//Check if the blackness level is set
 			blackLevelStr := r.FormValue("blacklevel")
-			blackLevel, err := strconv.ParseFloat(blackLevelStr, 32)
+			blackLevel, err := strconv.ParseFloat(blackLevelStr, 64)
 			if blackLevelStr == "" {
 				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be set when uploading a non vector image.")
 				return
