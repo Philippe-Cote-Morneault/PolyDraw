@@ -31,6 +31,12 @@
             app:srcCompat="@drawable/ic_add_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <SearchView
+        android:id="@+id/fragment_channel_list_search_view_channels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Search for channels"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_channel_list_recycler_view_channels"
         android:layout_width="match_parent"
