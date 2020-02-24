@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 	"log"
 	"strconv"
 	"unicode"
@@ -12,7 +13,7 @@ const (
 
 type fsm struct {
 	state      int
-	number     StrBuilder
+	number     strbuilder.StrBuilder
 	numbers    []float32
 	curCommand rune
 	Commands   []Command

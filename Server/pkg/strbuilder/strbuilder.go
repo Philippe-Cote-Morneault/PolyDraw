@@ -4,7 +4,7 @@
 
 // M.Pouliot edit the code to improve memory allocation
 
-package parser
+package strbuilder
 
 import (
 	"unicode/utf8"
