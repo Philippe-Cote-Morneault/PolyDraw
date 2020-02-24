@@ -72,10 +72,10 @@ func (b *StrBuilder) WriteByte(c byte) error {
 
 // WriteRune appends the UTF-8 encoding of Unicode code point r to b's buffer.
 // It returns the length of r and a nil error.
-func (b *StrBuilder) WriteRune(r rune) (int, error) {
+func (b *StrBuilder) WriteRune(r rune) int {
 	if r < utf8.RuneSelf {
 		b.buf = append(b.buf, byte(r))
-		return 1, nil
+		return 1
 	}
 	l := len(b.buf)
 	if cap(b.buf)-l < utf8.UTFMax {
@@ -83,7 +83,7 @@ func (b *StrBuilder) WriteRune(r rune) (int, error) {
 	}
 	n := utf8.EncodeRune(b.buf[l:l+utf8.UTFMax], r)
 	b.buf = b.buf[:l+n]
-	return n, nil
+	return n
 }
 
 // WriteString appends the contents of s to b's buffer.
