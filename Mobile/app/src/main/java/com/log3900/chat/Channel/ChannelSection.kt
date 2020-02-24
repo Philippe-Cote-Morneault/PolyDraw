@@ -94,7 +94,7 @@ class ChannelSection : Section, Filterable {
                 } else {
                     val filteredList = arrayListOf<Channel>()
                     channelGroup.channels.forEach {
-                        if (it.name.contains(query)) {
+                        if (it.name.toLowerCase().contains(query)) {
                             filteredList.add(it)
                         }
                     }
