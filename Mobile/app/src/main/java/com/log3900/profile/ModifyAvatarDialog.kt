@@ -1,6 +1,5 @@
 package com.log3900.profile
 
-import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,10 +15,15 @@ import com.google.android.material.button.MaterialButton
 import com.log3900.R
 import com.log3900.utils.ui.getAvatarID
 
-class ModifyAvatarDialog : DialogFragment() {
+
+interface ModifyAvatarDialogLauncher {
+    fun onAvatarChanged(avatarIndex: Int)
+}
+
+class ModifyAvatarDialog(private val launcher: ModifyAvatarDialogLauncher) : DialogFragment() {
 
     companion object {
-        fun start(activity: FragmentActivity) {
+        fun start(launcher: ModifyAvatarDialogLauncher, activity: FragmentActivity) {
             val fragmentManager = activity.supportFragmentManager
             val ft = fragmentManager.beginTransaction()
             fragmentManager.findFragmentByTag("avatar_dialog")?.let {
@@ -27,7 +31,7 @@ class ModifyAvatarDialog : DialogFragment() {
             }
             ft.addToBackStack(null)
 
-            val avatarDialogFragment = ModifyAvatarDialog()
+            val avatarDialogFragment = ModifyAvatarDialog(launcher)
             avatarDialogFragment.show(ft, "avatar_dialog")
         }
     }
@@ -63,6 +67,10 @@ class ModifyAvatarDialog : DialogFragment() {
             dismiss()
         }
         confirmButton = root.findViewById(R.id.confirm_dialog_button)
+        confirmButton.setOnClickListener {
+            launcher.onAvatarChanged(selectedAvatarID)
+            dismiss()
+        }
 
         selectedAvatarView = root.findViewById(R.id.selected_avatar)
         selectedTitle = root.findViewById(R.id.selected_title)
