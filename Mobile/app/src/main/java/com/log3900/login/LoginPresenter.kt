@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
+import java.util.*
 
 class LoginPresenter(var loginView: LoginView) : Presenter {
 
@@ -31,7 +32,8 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                     200 -> {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
-                        handleSuccessAuth(bearerToken, sessionToken, username)
+                        val userID = response.body()!!.get("UserID").asString
+                        handleSuccessAuth(bearerToken, sessionToken, username, userID)
                     }
                         else -> {
                         handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
@@ -50,7 +52,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
         })
     }
 
-    private fun handleSuccessAuth(bearer: String, session: String, username: String) {
+    private fun handleSuccessAuth(bearer: String, session: String, username: String, userID: String) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()
@@ -61,15 +63,16 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             }
         })
 
-        storeUser(username, session, bearer)
+        storeUser(username, session, bearer, userID)
         SocketService.instance?.sendMessage(
             Event.SOCKET_CONNECTION,
             session.toByteArray(Charsets.UTF_8))
     }
 
-    private fun storeUser(username: String, sessionToken: String, bearerToken: String) {
+    private fun storeUser(username: String, sessionToken: String, bearerToken: String, userID: String) {
         // TODO: Get actual info
         AccountRepository.createAccount(Account(
+            UUID.fromString(userID),
             username.toLowerCase(),
             0,
             "dummy@email.com",
