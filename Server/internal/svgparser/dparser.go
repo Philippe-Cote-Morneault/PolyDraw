@@ -31,23 +31,22 @@ func getXY(str string) (int, int, bool) {
 	if cut == -1 {
 		x, errX := strconv.Atoi(str)
 		if errX != nil {
-			fmt.Errorf("ERROR while parsing d : 'd' format is incorrect")
+			fmt.Println("ERROR while parsing d : 'd' format is incorrect")
 			return 0, 0, false
 		}
 
 		return x, 0, false
-	} else {
-
-		x, errX := strconv.Atoi(str[1:cut])
-		y, errY := strconv.Atoi(str[cut+1 : len(str)])
-
-		if errX != nil || errY != nil {
-			fmt.Errorf("ERROR while parsing d : 'd' format is incorrect")
-			return 0, 0, false
-		}
-
-		return x, y, true
 	}
+
+	x, errX := strconv.Atoi(str[1:cut])
+	y, errY := strconv.Atoi(str[cut+1 : len(str)])
+
+	if errX != nil || errY != nil {
+		fmt.Println("ERROR while parsing d : 'd' format is incorrect")
+		return 0, 0, false
+	}
+
+	return x, y, true
 }
 
 func cleanD(dSplit []string) []string {
