@@ -93,6 +93,12 @@ namespace ClientLourd.Models.Bindable
         }
 
 
+        public int UserMessageCount
+        {
+            get { return Messages.Count(m => m.User.ID != "-1"); }
+        }
+
+
         public int Notification
         {
             get { return _notification; }
