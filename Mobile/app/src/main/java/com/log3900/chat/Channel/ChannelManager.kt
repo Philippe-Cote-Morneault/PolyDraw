@@ -36,7 +36,6 @@ class ChannelManager {
     }
 
     fun changeSubscriptionStatus(channel: Channel) {
-        var changeToGeneral = false
         if (channel.ID.toString() == "00000000-0000-0000-0000-000000000000") {
             return
         }
@@ -46,7 +45,10 @@ class ChannelManager {
             EventBus.getDefault().post(MessageEvent(EventType.SUBSCRIBED_TO_CHANNEL, channel))
         } else if (joinedChannels.contains(channel)){
             if (activeChannel == channel) {
-                changeToGeneral = true
+                val newActiveChannel = joinedChannels.find {
+                    it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+                }!!
+                changeActiveChannel(newActiveChannel)
             }
             ChannelRepository.instance?.unsubscribeFromChannel(channel)
             EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
@@ -54,13 +56,6 @@ class ChannelManager {
             // TODO: Handle this incoherent state
         }
 
-        if (changeToGeneral) {
-            val newActiveChannel = joinedChannels.find {
-                it.ID.toString() == "00000000-0000-0000-0000-000000000000"
-            }!!
-            changeActiveChannel(newActiveChannel)
-            EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, activeChannel))
-        }
     }
 
     fun createChannel(channelName: String): Boolean {
@@ -139,6 +134,8 @@ class ChannelManager {
             unreadMessages[message.channelID]?.plus(1)
             unreadMessagesTotal += 1
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
+        } else {
+            EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED, message))
         }
     }
 
