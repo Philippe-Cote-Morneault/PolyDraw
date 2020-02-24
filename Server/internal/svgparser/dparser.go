@@ -79,7 +79,7 @@ func parseBlock(d []DElement, block string) []DElement {
 	case "a":
 		count := 0
 		for i := 0; i < len(values); i++ {
-			x, err := strconv.Atoi(values[i])
+			x, err := strconv.ParseFloat(values[i], 64)
 			if err != nil {
 				log.Printf("ERROR while parsing d : 'd' format is incorrect")
 				return nil
@@ -91,7 +91,7 @@ func parseBlock(d []DElement, block string) []DElement {
 					return nil
 				}
 
-				y, err2 := strconv.Atoi(values[i])
+				y, err2 := strconv.ParseFloat(values[i], 64)
 				if err2 != nil {
 					log.Printf("ERROR while parsing d : 'd' format is incorrect")
 					return nil
@@ -114,7 +114,7 @@ func parseBlock(d []DElement, block string) []DElement {
 // Extract all values and add it in dValues
 func extractValues(dValues *[]interface{}, values []string, isPoint bool) {
 	for i := 0; i < len(values); i++ {
-		x, err := strconv.Atoi(values[i])
+		x, err := strconv.ParseFloat(values[i], 64)
 		if err != nil {
 			log.Printf("ERROR while parsing d : 'd' format is incorrect")
 			return
@@ -126,7 +126,7 @@ func extractValues(dValues *[]interface{}, values []string, isPoint bool) {
 				return
 			}
 
-			y, err2 := strconv.Atoi(values[i])
+			y, err2 := strconv.ParseFloat(values[i], 64)
 			if err2 != nil {
 				log.Printf("ERROR while parsing d : 'd' format is incorrect")
 				return

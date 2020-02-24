@@ -2,8 +2,8 @@ package svgparser
 
 // Point represents a 2 dimensionnal points with X,Y coordinates
 type Point struct {
-	X int
-	Y int
+	X float64
+	Y float64
 }
 
 // DElement represents an element in d value with a command and all the associated values
