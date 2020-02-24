@@ -39,7 +39,7 @@ namespace ClientLourd.Views.Controls
             {
                 ((ChatViewModel) DataContext).LoadHistoryCommand.Execute(10);
             }
-            else if (e.ExtentHeightChange > 0)
+            else if (e.ExtentHeightChange > 100)
             {
                 scroll.ScrollToVerticalOffset(scroll.ViewportHeight);
             }
