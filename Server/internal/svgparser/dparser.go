@@ -1,7 +1,6 @@
 package svgparser
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -31,7 +30,7 @@ func getXY(str string) (int, int, bool) {
 	if cut == -1 {
 		x, errX := strconv.Atoi(str)
 		if errX != nil {
-			fmt.Println("ERROR while parsing d : 'd' format is incorrect")
+			log.Printf("ERROR while parsing d : 'd' format is incorrect")
 			return 0, 0, false
 		}
 
@@ -42,7 +41,7 @@ func getXY(str string) (int, int, bool) {
 	y, errY := strconv.Atoi(str[cut+1 : len(str)])
 
 	if errX != nil || errY != nil {
-		fmt.Println("ERROR while parsing d : 'd' format is incorrect")
+		log.PrinPrintftln("ERROR while parsing d : 'd' format is incorrect")
 		return 0, 0, false
 	}
 
