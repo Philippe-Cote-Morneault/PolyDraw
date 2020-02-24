@@ -14,6 +14,7 @@ const (
 type fsm struct {
 	state      int
 	number     strbuilder.StrBuilder
+	isDecimal  bool
 	numbers    []float32
 	curCommand rune
 	Commands   []Command
@@ -23,6 +24,7 @@ func (f *fsm) Init() {
 	f.state = 0
 	f.curCommand = ' '
 	f.number.Grow(NUMBUFF)
+	f.isDecimal = true
 	f.numbers = make([]float32, 0, 16)
 	f.Commands = make([]Command, 0, 16)
 }
@@ -71,7 +73,7 @@ func (f *fsm) StateMachine(char rune) {
 }
 
 func (f *fsm) isNumber(char rune) bool {
-	return unicode.IsDigit(char) || char == '.' || char == '-'
+	return unicode.IsDigit(char) || char == '-' || char == '.'
 }
 
 //parseLetter add the letter to the state
@@ -80,6 +82,9 @@ func (f *fsm) parseLetter(char rune) {
 }
 
 func (f *fsm) parseNumber(char rune) {
+	if char == '.' {
+		f.isDecimal = true
+	}
 	f.number.WriteRune(char)
 }
 
@@ -102,14 +107,24 @@ func (f *fsm) endCommand() {
 func (f *fsm) endNumber() {
 	//Try to parse the number and reset the buffer
 	numStr := f.number.String()
-	number, err := strconv.ParseFloat(numStr, 32)
-	if err != nil {
-		log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+
+	//If decimal call parseFloat if not call Atoi which is quicker
+	if f.isDecimal {
+		number, err := strconv.ParseFloat(numStr, 32)
+		if err != nil {
+			log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+		}
+		f.numbers = append(f.numbers, float32(number))
+	} else {
+		number, err := strconv.Atoi(numStr)
+		if err != nil {
+			log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+		}
+		f.numbers = append(f.numbers, float32(number))
 	}
-	f.numbers = append(f.numbers, float32(number))
 
 	f.number.Reset()
-	f.number.Grow(NUMBUFF)
+	f.isDecimal = false
 }
 
 //end of the state machine
