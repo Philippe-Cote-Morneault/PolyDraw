@@ -210,7 +210,7 @@
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                        Text="Select the way the draw will be display"/>
                             <ComboBox SelectedItem="{Binding Path=SelectedMode}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
-                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview" HorizontalAlignment="Center" />
+                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview" HorizontalAlignment="Center" Click="PlayPreview" />
                         </StackPanel>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
                             <InkCanvas Width="800" Height="450" IsEnabled="False" />

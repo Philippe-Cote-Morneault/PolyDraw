@@ -13,6 +13,10 @@ using Svg;
 using ClientLourd.Utilities.Constants;
 using System.Windows.Ink;
 using System.Text;
+using ClientLourd.Services.SocketService;
+using ClientLourd.Models.NonBindable;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -21,6 +25,19 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
+            SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
+            SocketClient.ServerStartsDrawing += SocketClientOnServerStartsDrawing;
+            SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
+        }
+
+        public SocketClient SocketClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+
+        public SessionInformations SessionInformations
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations; }
         }
 
         private GameCreationViewModel ViewModel
@@ -157,8 +174,30 @@ namespace ClientLourd.Views.Dialogs
             svgPath.CustomAttributes.Add("polydraw:brushsize", stroke.GetPropertyData(GUIDs.brushSize).ToString());
 
             return svgPath;
-        } 
+        }
 
-        
+        public void PlayPreview(object sender, EventArgs e)
+        {
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
+        }
+
+        private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
+        {
+            // If 0x00
+            // Dialog with error
+        }
+
+        private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
+        {
+            // Disable dialog
+        }
+
+        private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
+        {
+            // Enable dialog
+        }
+
+
+
     }
 }

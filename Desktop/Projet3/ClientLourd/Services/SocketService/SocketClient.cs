@@ -164,6 +164,15 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.UserDeletedChannel:
                             OnUserDeletedChannel(this, new MessageReceivedEventArgs(data));
                             break;
+                        case SocketMessageTypes.ServerStartsDrawing:
+                            OnServerStartsDrawing(this, new DrawingEventArgs(data));
+                            break;
+                        case SocketMessageTypes.ServerEndsDrawing:
+                            OnServerEndsDrawing(this, new DrawingEventArgs(data));
+                            break;
+                        case SocketMessageTypes.DrawingPreviewResponse:
+                            OnDrawingPreviewResponse(this, new DrawingEventArgs(data));
+                            break;
                         case SocketMessageTypes.ServerMessage:
                             OnServerMessage(this, new SocketErrorEventArgs(data));
                             break;
