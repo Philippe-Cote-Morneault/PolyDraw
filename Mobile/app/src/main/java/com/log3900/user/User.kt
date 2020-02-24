@@ -3,4 +3,6 @@ package com.log3900.user
 import com.squareup.moshi.Json
 import java.util.*
 
-data class User(@Json(name = "Name") var name: String, @Json(name = "ID") var ID: UUID)
+class User(@Json(name = "ID") var ID: UUID, @Json(name = "FirstName") var firstName: String, @Json(name = "LastName") var lastName: String,
+           @Json(name = "Username") var username: String, @Json(name = "Email") var email: String, @Json(name = "PictureID") var pictureID: Int,
+           @Json(name = "CreatedAt") var createdAt: Int, @Json(name = "UpdatedAt") var updatedAt: Int)
