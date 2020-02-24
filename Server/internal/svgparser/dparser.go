@@ -25,7 +25,11 @@ func findCommand(str string) string {
 	return ""
 }
 
-func getXY(str string) (int, int, bool) {
+func getXY(str string, start bool) (int, int, bool) {
+	begin := 1
+	if !start {
+		begin := 0
+	}
 	cut := strings.Index(str, ",")
 	if cut == -1 {
 		x, errX := strconv.Atoi(str)
@@ -37,7 +41,7 @@ func getXY(str string) (int, int, bool) {
 		return x, 0, false
 	}
 
-	x, errX := strconv.Atoi(str[1:cut])
+	x, errX := strconv.Atoi(str[begin:cut])
 	y, errY := strconv.Atoi(str[cut+1 : len(str)])
 
 	if errX != nil || errY != nil {
@@ -66,13 +70,16 @@ func ParseD(d string) []DElement {
 	dSplit := cleanD(strings.Split(d, " "))
 
 	indexdElement := -1
+	start := true
 	for i := 0; i < len(dSplit); i++ {
 		command := findCommand(dSplit[i])
 		if command != "" {
 			dElements = append(dElements, DElement{Command: command})
 			indexdElement++
+			start = true
 		}
-		x, y, isPoint := getXY(dSplit[i])
+		x, y, isPoint := getXY(dSplit[i], start)
+		start = false
 
 		if isPoint {
 			dElements[indexdElement].Values = append(dElements[indexdElement].Values, Point{X: x, Y: y})
