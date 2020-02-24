@@ -16,7 +16,7 @@ class ChannelCache {
 
         for (channel in channels) {
             if (channel.users.find {
-                    it.name == username
+                    it == AccountRepository.getAccount().userID
                 } != null) {
                 addJoinedChannel(channel)
             } else {
