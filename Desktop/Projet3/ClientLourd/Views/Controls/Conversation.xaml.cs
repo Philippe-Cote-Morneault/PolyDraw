@@ -37,7 +37,11 @@ namespace ClientLourd.Views.Controls
             }
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
-                ((ChatViewModel) DataContext).LoadHistoryCommand.Execute(10);
+                ICommand loadHistory = ((ChatViewModel) DataContext).LoadHistoryCommand;
+                if (loadHistory.CanExecute(10))
+                {
+                    loadHistory.Execute(10);
+                }
             }
             else if (e.ExtentHeightChange > 0)
             {

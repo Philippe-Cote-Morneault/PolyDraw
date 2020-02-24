@@ -95,7 +95,7 @@ namespace ClientLourd.ViewModels
                     if (_selectedChannel != null)
                     {
                         _selectedChannel.IsSelected = true;
-                        if (_selectedChannel.Messages.Count < 10)
+                        if (_selectedChannel.Messages.Count == 0)
                         {
                             LoadHistory(25);
                         }
@@ -252,7 +252,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _loadHistoryCommand ??
-                       (_loadHistoryCommand = new RelayCommand<int>(numberOfMessages => LoadHistory(numberOfMessages)));
+                       (_loadHistoryCommand = new RelayCommand<int>(numberOfMessages => LoadHistory(numberOfMessages), numberOfMessage => SelectedChannel!= null && SelectedChannel.Messages.Count > 0));
             }
         }
 
@@ -260,6 +260,7 @@ namespace ClientLourd.ViewModels
         {
             if (SelectedChannel != null)
             {
+                _mutex.WaitOne();
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
                     SelectedChannel.Messages.Count,
                     SelectedChannel.Messages.Count + numberOfMessages);
@@ -275,6 +276,7 @@ namespace ClientLourd.ViewModels
                     SelectedChannel.Messages =
                         new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
                 }
+                _mutex.ReleaseMutex();
             }
         }
         
