@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,7 @@ class ChannelListFragment : Fragment(), ChannelListView {
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var channelsAdapter: SectionedRecyclerViewAdapter
     private lateinit var createChannelButton: ImageView
+    private lateinit var channelSearchView: SearchView
     private var channelCreationDialog: Dialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -33,6 +35,23 @@ class ChannelListFragment : Fragment(), ChannelListView {
         layoutManager = LinearLayoutManager(this.context)
         channelsRecyclerView.layoutManager = layoutManager
         channelsAdapter = SectionedRecyclerViewAdapter()
+
+        channelSearchView = rootView.findViewById(R.id.fragment_channel_list_search_view_channels)
+        channelSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).filter.filter(query)
+                (channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection).filter.filter(query)
+                channelsAdapter.notifyDataSetChanged()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).filter.filter(newText)
+                (channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection).filter.filter(newText)
+                channelsAdapter.notifyDataSetChanged()
+                return false
+            }
+        })
 
         createChannelButton = rootView.findViewById(R.id.fragment_channel_list_button_create_channel)
         createChannelButton.setOnClickListener {
@@ -148,6 +167,8 @@ class ChannelListFragment : Fragment(), ChannelListView {
     }
 
     override fun notifyChannelsChange() {
+        (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).filter.filter(channelSearchView.query)
+        (channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection).filter.filter(channelSearchView.query)
         channelsAdapter.notifyDataSetChanged()
     }
 

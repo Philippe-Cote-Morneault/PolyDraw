@@ -10,10 +10,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
+import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.utils.format.DateFormatter
 
-class MessageViewHolder : RecyclerView.ViewHolder {
+class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
     private var view: ConstraintLayout
     private var messageTextView: TextView
     private var usernameTextView: TextView
@@ -32,16 +33,16 @@ class MessageViewHolder : RecyclerView.ViewHolder {
         this.username = username
     }
 
-    fun bind(message: ReceivedMessage) {
-        this.message = message
-        messageTextView.text = message.message
-        usernameTextView.text = message.username
-        dateTextView.text = DateFormatter.formatDate(message.timestamp)
+    fun bind(message: ChatMessage) {
+        this.message = message.message as ReceivedMessage
+        messageTextView.text = this.message.message
+        usernameTextView.text = this.message.username
+        dateTextView.text = DateFormatter.formatDate(this.message.timestamp)
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(view)
 
-        if (message.username == username) {
+        if (this.message.username == username) {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.START)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
             messageTextView.setBackgroundColor(Color.parseColor("#3F51B5"))

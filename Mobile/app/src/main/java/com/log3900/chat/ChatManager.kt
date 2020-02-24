@@ -88,7 +88,7 @@ class ChatManager : Service() {
         return channelManager?.activeChannel!!
     }
 
-    fun getCurrentChannelMessages(): Single<LinkedList<ReceivedMessage>> = messageManager?.getMessages(channelManager?.activeChannel!!)!!
+    fun getCurrentChannelMessages(): Single<LinkedList<ChatMessage>> = messageManager?.getMessages(channelManager?.activeChannel!!)!!
 
     fun sendMessage(message: String) {
         messageManager?.sendMessage(channelManager?.activeChannel?.ID!!, message)

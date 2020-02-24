@@ -133,7 +133,7 @@ class ChatFragment : Fragment(), ChatView {
         messagesViewAdapter.messageInserted()
     }
 
-    override fun setReceivedMessages(messages: LinkedList<ReceivedMessage>) {
+    override fun setChatMessages(messages: LinkedList<ChatMessage>) {
         messagesViewAdapter.setMessage(messages)
         messagesViewAdapter.notifyDataSetChanged()
     }
