@@ -93,7 +93,7 @@ func (f *fsm) endCommand() {
 		})
 
 		f.curCommand = ' '
-		f.numbers = make([]float32, 0, 16)
+		f.numbers = f.numbers[:0]
 	} else {
 		log.Printf("[Potrace] -> Invalid command \"%c\" in d attribute.", f.curCommand)
 	}
