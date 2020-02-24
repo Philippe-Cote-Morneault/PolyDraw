@@ -52,6 +52,11 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
     }
 
     private fun setUpUi(root: View) {
+        val modifyAvatarBtn = root.findViewById<MaterialButton>(R.id.modify_avatar_button)
+        modifyAvatarBtn.setOnClickListener {
+            ModifyAvatarDialog.start(activity!!)
+        }
+
         val cancelBtn = root.findViewById<MaterialButton>(R.id.cancel_modify_button)
         cancelBtn.setOnClickListener {
             dismiss()

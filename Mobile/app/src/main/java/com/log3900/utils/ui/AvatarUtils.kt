@@ -5,12 +5,12 @@ import com.log3900.user.Account
 import com.log3900.user.AccountRepository
 
 /**
- * Returns the ID of the given [Account]'s pictureID linking to the corresponding mipmap
- * @sample avatarView.setImageResource(getAccountAvatarID(myAccount))
+ * Returns the ID of the pictureID from the corresponding index
+ * @param index The picture index (from [1..16] included)
+ * @return avatar_1 if index out of range
  */
-fun getAccountAvatarID(account: Account): Int {
-    val avatarID = account.pictureID
-    return when(avatarID) {
+fun getAvatarID(index: Int): Int {
+    return when(index) {
         1 -> R.mipmap.avatar_1
         2 -> R.mipmap.avatar_2
         3 -> R.mipmap.avatar_3
@@ -31,6 +31,12 @@ fun getAccountAvatarID(account: Account): Int {
         else -> R.mipmap.avatar_1   // Avatar 1 by default?
     }
 }
+
+/**
+ * Returns the ID of the given [Account]'s pictureID linking to the corresponding mipmap
+ * @sample avatarView.setImageResource(getAccountAvatarID(myAccount))
+ */
+fun getAccountAvatarID(account: Account): Int = getAvatarID(account.pictureID)
 
 /**
  * Returns the ID of the current [Account]'s avatar

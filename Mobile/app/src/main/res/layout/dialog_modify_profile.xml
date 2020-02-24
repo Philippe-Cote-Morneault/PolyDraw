@@ -31,6 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/modify_text"
         app:layout_constraintStart_toStartOf="parent" />
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/modify_avatar_button"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="@string/modify"
