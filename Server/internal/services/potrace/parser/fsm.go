@@ -3,17 +3,16 @@ package parser
 import (
 	"log"
 	"strconv"
-	"strings"
 	"unicode"
 )
 
 const (
-	NUMBUFF = 32
+	NUMBUFF = 8
 )
 
 type fsm struct {
 	state      int
-	number     strings.Builder
+	number     StrBuilder
 	numbers    []float32
 	curCommand rune
 	Commands   []Command
@@ -65,7 +64,7 @@ func (f *fsm) StateMachine(char rune) {
 			f.parseLetter(char)
 		} else if f.isNumber(char) {
 			f.state = 2
-			f.number.WriteRune(char)
+			f.parseNumber(char)
 		}
 	}
 }
