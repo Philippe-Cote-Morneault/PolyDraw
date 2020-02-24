@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/datastore"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/parser"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -60,6 +61,7 @@ func Translate(svgKey string, brushSize int, mode int) error {
 		path.D = strings.Replace(path.D, "\n", " ", -1)
 	}
 	xmlSvg.XmlnsPolydraw = "http://polydraw"
+	splitPath(&xmlSvg.G.XMLPaths)
 	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
 	data, err := xml.Marshal(&xmlSvg)
 	err = datastore.PutFile(&data, svgKey)
@@ -67,4 +69,11 @@ func Translate(svgKey string, brushSize int, mode int) error {
 		return err
 	}
 	return nil
+}
+
+//splitPath export paths
+func splitPath(paths *[]model.XMLPath) {
+	for i := range *paths {
+		parser.ParseD((*paths)[i].D)
+	}
 }
