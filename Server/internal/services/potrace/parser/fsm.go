@@ -41,35 +41,46 @@ func (f *fsm) StateMachine(char rune) {
 		if f.isNumber(char) {
 			f.state = 2
 			f.parseNumber(char)
-		} else if unicode.IsSpace(char) || char == ',' {
+		} else if f.isSpace(char) {
 			f.state = 3
 		} else {
 			f.parseLetter(char)
 		}
 	case 2:
-		if unicode.IsLetter(char) {
-			f.state = 1
-			f.endNumber()
-
-			f.endCommand()
-			f.parseLetter(char)
-		} else if unicode.IsSpace(char) || char == ',' {
+		if f.isNumber(char) {
+			f.parseNumber(char)
+		} else if f.isSpace(char) {
 			f.endNumber()
 			f.state = 3
-		} else {
-			f.parseNumber(char)
+		} else if unicode.IsLetter(char) {
+			f.state = 1
+			f.endNumber()
+
+			f.endCommand()
+			f.parseLetter(char)
 		}
 	case 3:
-		if unicode.IsLetter(char) {
+		if f.isNumber(char) {
+			f.state = 2
+			f.parseNumber(char)
+		} else if unicode.IsLetter(char) {
 			f.state = 1
 
 			f.endCommand()
 			f.parseLetter(char)
-		} else if f.isNumber(char) {
-			f.state = 2
-			f.parseNumber(char)
 		}
 	}
+}
+
+//isSpace method based on unicode.isSpace to check if it's a space.
+//the character \v \f, 0x85, 0xA0 are omitted because they are so rare
+//in svg files
+func (f *fsm) isSpace(char rune) bool {
+	switch char {
+	case ' ', ',', '\t', '\n', '\r':
+		return true
+	}
+	return false
 }
 
 func (f *fsm) isNumber(char rune) bool {
