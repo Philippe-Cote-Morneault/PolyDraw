@@ -4,7 +4,7 @@ enum class GroupType {
     AVAILABLE,
     JOINED
 }
-class ChannelGroup(var type: GroupType, var channels: ArrayList<Channel>) {
+class ChannelGroup(var type: GroupType, var channels: ArrayList<Channel>, var filteredChannels: ArrayList<Channel> = arrayListOf()) {
     fun getName(): String {
         when (type) {
             GroupType.AVAILABLE -> return "Available"
