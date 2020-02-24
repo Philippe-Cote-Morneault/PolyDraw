@@ -111,8 +111,8 @@ class ChatPresenter : Presenter {
             EventType.ACTIVE_CHANNEL_CHANGED -> {
                 onChannelChanged(event.data as Channel)
             }
-            EventType.RECEIVED_MESSAGE -> {
-                onNewMessage(event.data as ChatMessage)
+            EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED -> {
+                onActiveChannelMessageReceived(event.data as ChatMessage)
             }
         }
     }
@@ -128,7 +128,7 @@ class ChatPresenter : Presenter {
         )
     }
 
-    private fun onNewMessage(message: ChatMessage) {
+    private fun onActiveChannelMessageReceived(message: ChatMessage) {
         chatView.notifyNewMessage()
         if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && AccountRepository.getAccount().username != (message.message as ReceivedMessage).username) {
             chatView.playNewMessageNotification()
