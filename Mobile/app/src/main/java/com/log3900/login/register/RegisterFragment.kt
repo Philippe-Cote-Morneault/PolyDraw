@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
@@ -13,13 +14,19 @@ import com.google.android.material.textfield.TextInputEditText
 import com.log3900.MainActivity
 import com.log3900.R
 import com.log3900.login.LoginFragment
+import com.log3900.profile.ModifyAvatarDialog
+import com.log3900.profile.ModifyAvatarDialogLauncher
 import com.log3900.shared.architecture.ViewNavigator
 import com.log3900.shared.ui.ProfileView
 import com.log3900.user.Account
+import com.log3900.utils.ui.getAvatarID
+import kotlin.random.Random
 
-class RegisterFragment : Fragment(), ProfileView, ViewNavigator {
+class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, ViewNavigator {
     val registerPresenter = RegisterPresenter(this)
 
+    var avatarIndex = Random.nextInt(1, 17) // From 1 to 16
+    lateinit var avatarView: ImageView
     lateinit var usernameInput: TextInputEditText
     lateinit var passwordInput: TextInputEditText
     lateinit var emailInput:    TextInputEditText
@@ -49,6 +56,14 @@ class RegisterFragment : Fragment(), ProfileView, ViewNavigator {
         backBtn = root.findViewById(R.id.back_button)
         backBtn.setOnClickListener {
             activity?.onBackPressed()
+        }
+
+        avatarView = root.findViewById(R.id.current_avatar)
+        avatarView.setImageResource(getAvatarID(avatarIndex))
+
+        val modifyAvatarButton: MaterialButton = root.findViewById(R.id.modify_avatar_button)
+        modifyAvatarButton.setOnClickListener {
+            ModifyAvatarDialog.start(this, activity!!)
         }
 
         usernameInput = root.findViewById<TextInputEditText>(R.id.username_input).apply {
@@ -92,11 +107,17 @@ class RegisterFragment : Fragment(), ProfileView, ViewNavigator {
         registerPresenter.register(
             usernameInput.text.toString(),
             passwordInput.text.toString(),
-            1,  // TODO: Change
+            avatarIndex,
             emailInput.text.toString(),
             firstnameInput.text.toString(),
             lastnameInput.text.toString()
         )
+    }
+
+    override fun onAvatarChanged(avatarIndex: Int) {
+        this.avatarIndex = avatarIndex
+        avatarView.setImageResource(getAvatarID(avatarIndex))
+        enableRegisterIfAllValid()
     }
 
     fun onRegisterSuccess() {

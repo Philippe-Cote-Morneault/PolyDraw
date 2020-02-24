@@ -13,8 +13,11 @@
     <!--buttons-->
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="modify">Modify</string>
     <string name="restore_default">Restore Default</string>
+    <string name="view_all">View all</string>
+    <string name="confirm">Confirm</string>
 
     <!--login-->
     <string name="login_welcome">Welcome!</string>
@@ -39,7 +42,34 @@
     <string name="profile_stats_title">Statistics</string>
     <string name="password_asterisks">********</string>
     <string name="modify_profile">Modify Your Profile</string>
+    <string name="avatar_choose">Choose an avatar</string>
+    <string name="avatar_selected">Selected avatar:</string>
     <string name="apply_changes">Apply changes</string>
+    <string name="statistics">Statistics</string>
+    <string name="games_played_title">Games played:</string>
+    <string name="win_ratio_title">Win ratio:</string>
+    <string name="avg_game_duration_title">Average game duration:</string>
+    <string name="time_played_title">Time played:</string>
+    <string name="best_solo_score_title">Best Solo Score:</string>
+    <string name="connection_history_title">Connection history:</string>
+    <string name="connection_history">Connection history</string>
+    <string name="connected_at">Connected at </string>
+    <string name="disconnected_at">Disconnected at </string>
+    <string name="achievements">Achievements</string>
+    <string name="achievements_lower">achievements</string>
+    <string name="unlocked_message">You have unlocked</string>
+    <string name="so_far_message">achievements so far</string>
+    <string name="so_far_message_singular">achievement so far</string>
+    <string name="obtained_title">Obtained:</string>
+    <string name="match_history">Match History</string>
+    <string name="match_details">Match Details</string>
+    <string name="match_type_title">Match Type:</string>
+    <string name="match_result_title">Result:</string>
+    <string name="match_winner_title">Winner:</string>
+    <string name="match_duration_title">Duration:</string>
+    <string name="match_players_title">Players:</string>
+    <string name="match_win">Win</string>
+    <string name="match_loss">Loss</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>

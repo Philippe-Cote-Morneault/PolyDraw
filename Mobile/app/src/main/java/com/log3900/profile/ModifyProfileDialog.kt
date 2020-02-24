@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
@@ -14,11 +15,15 @@ import com.log3900.R
 import com.log3900.shared.ui.ProfileView
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository
+import com.log3900.utils.ui.getAccountAvatarID
+import com.log3900.utils.ui.getAvatarID
 
-class ModifyProfileDialog : DialogFragment(), ProfileView {
+class ModifyProfileDialog : DialogFragment(), ProfileView, ModifyAvatarDialogLauncher {
     lateinit var modifyProfilePresenter: ModifyProfilePresenter
 
     lateinit var originalAccount: Account
+    var avatarIndex: Int = -1
+    lateinit var avatarView: ImageView
     lateinit var usernameInput: TextInputEditText
     lateinit var passwordInput: TextInputEditText
     lateinit var emailInput: TextInputEditText
@@ -44,11 +49,17 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
         val rootView = inflater.inflate(R.layout.dialog_modify_profile, container, false)
         modifyProfilePresenter = ModifyProfilePresenter(this)
         originalAccount = AccountRepository.getAccount()
+        avatarIndex = originalAccount.pictureID
         setUpUi(rootView)
         return rootView
     }
 
     private fun setUpUi(root: View) {
+        val modifyAvatarBtn = root.findViewById<MaterialButton>(R.id.modify_avatar_button)
+        modifyAvatarBtn.setOnClickListener {
+            ModifyAvatarDialog.start(this, activity!!)
+        }
+
         val cancelBtn = root.findViewById<MaterialButton>(R.id.cancel_modify_button)
         cancelBtn.setOnClickListener {
             dismiss()
@@ -76,7 +87,7 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
 
         val updatedAccount = Account(
             usernameInput.text.toString(),
-            0,  // TODO: Change
+            avatarIndex,
             emailInput.text.toString(),
             firstnameInput.text.toString(),
             lastnameInput.text.toString(),
@@ -91,7 +102,9 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
      * Fills the dialog with current account info
      */
     private fun fillDefaultDialogFields(root: View) {
-        // TODO: Avatar
+        avatarView = root.findViewById(R.id.current_avatar)
+        avatarView.setImageResource(getAccountAvatarID(originalAccount))
+
         usernameInput = root.findViewById<TextInputEditText>(R.id.username_input).apply {
             setText(originalAccount.username)
             doAfterTextChanged {
@@ -141,6 +154,13 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
         }
     }
 
+    override fun onAvatarChanged(avatarIndex: Int) {
+        println("Avatar changed: ${this.avatarIndex} -> $avatarIndex")
+        avatarView.setImageResource(getAvatarID(avatarIndex))
+        this.avatarIndex = avatarIndex
+        enableUpdateIfAllValid()
+    }
+
     /**
      * Changes if the "Apply changes" button is enabled
      */
@@ -157,7 +177,8 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
                     || (password != resources.getString(R.string.password_asterisks))
                     || (email != originalAccount.email)
                     || (firstname != originalAccount.firstname)
-                    || (lastname != originalAccount.lastname))
+                    || (lastname != originalAccount.lastname)
+                    || (avatarIndex != originalAccount.pictureID))
                     // All fields are valid
                     && modifyProfilePresenter.validateUsername(username)
                     && modifyProfilePresenter.validatePassword(password)

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- GENERAL -->
+    <color name="color_win_background">#804CAF50</color>
+    <color name="color_win_text">#4CAF50</color>
+    <color name="color_loss_background">#80E91E63</color>
+    <color name="color_loss_text">#E91E63</color>
+
+    <!-- MATERIAL COLORS -->
+
     <!--colorPrimary colors map to components and elements, such as app bars and buttons. -->
     <!--colorSecondary colors are most often used as accents on components, such as FABs and -->
     <!--selection controls.-->
@@ -29,6 +38,7 @@
     <color name="color_on_primary">#FFFFFF</color>
     <color name="color_on_secondary">#000000</color>
     <color name="color_on_background">#000000</color>
+    <color name="color_on_background_light">#B2000000</color>
     <color name="color_on_surface">#000000</color>
     <color name="color_on_error">#ffffff</color>
 </resources>
