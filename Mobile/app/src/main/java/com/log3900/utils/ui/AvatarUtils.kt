@@ -6,7 +6,7 @@ import com.log3900.user.AccountRepository
 
 /**
  * Returns the ID of the given [Account]'s pictureID linking to the corresponding mipmap
- * @sample imageView.setImageDrawable(ContextCompat.getDrawable(activity, getAccountAvatarID(account)));
+ * @sample avatarView.setImageResource(getAccountAvatarID(myAccount))
  */
 fun getAccountAvatarID(account: Account): Int {
     val avatarID = account.pictureID

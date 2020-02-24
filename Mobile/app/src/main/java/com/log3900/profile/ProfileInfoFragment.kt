@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.log3900.R
 import com.log3900.databinding.FragmentProfileInfoBinding
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository
+import com.log3900.utils.ui.getAccountAvatarID
 
 class ProfileInfoFragment : Fragment() {
     private lateinit var infoBinding: FragmentProfileInfoBinding
@@ -32,6 +34,9 @@ class ProfileInfoFragment : Fragment() {
         // Clickable ImageView, acts as button
         val modifyButton = root.findViewById<ImageView>(R.id.modify_button)
         modifyButton.setOnClickListener { showModifyDialog() }
+
+        val avatarView: ImageView = root.findViewById(R.id.avatar_info)
+        avatarView.setImageResource(getAccountAvatarID(infoBinding.info!!))
     }
 
     private fun showModifyDialog() {
