@@ -69,7 +69,7 @@ namespace ClientLourd.Models.Bindable
             {
                 if (value != _messages)
                 {
-                    _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
+                    _messages = value;
                     Messages.CollectionChanged += MessagesOnCollectionChanged;
                     NotifyPropertyChanged();
                 }

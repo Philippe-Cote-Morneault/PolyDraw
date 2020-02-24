@@ -236,9 +236,12 @@ namespace ClientLourd.ViewModels
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            Message m = new Message(args.Date,await GetUser(args.Username, args.UserID), args.Message);
-            App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
-            NotifyPropertyChanged("NewMessages");
+            await App.Current.Dispatcher.InvokeAsync(async() =>
+            {
+                Message m = new Message(args.Date, await GetUser(args.Username, args.UserID), args.Message);
+                Channels.First(c => c.ID == args.ChannelId).Messages.Add(m);
+                NotifyPropertyChanged(nameof(NewMessages));
+            });
         }
         
         
@@ -260,12 +263,17 @@ namespace ClientLourd.ViewModels
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
                     SelectedChannel.Messages.Count,
                     SelectedChannel.Messages.Count + numberOfMessages);
+                messages.Reverse();
                 // TODO Change for a linkedList
-                for (int i = messages.Count-1; i >= 0; i--)
+                foreach (var message in messages)
                 {
-                    User u = messages[i].User;
-                    messages[i].User = (await GetUser(u.Username, u.ID));
-                    SelectedChannel.Messages.Add(messages[i]);
+                    User u = message.User;
+                    message.User = (await GetUser(u.Username, u.ID));
+                }
+                if (messages.Count > 0)
+                {
+                    SelectedChannel.Messages =
+                        new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
                 }
             }
         }
