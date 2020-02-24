@@ -18,6 +18,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler ConnectionLost;
         public event SocketEventHandler StartWaiting;
         public event SocketEventHandler StopWaiting;
+        public event SocketEventHandler ServerStrokeSent;
         public event SocketEventHandler ServerStartsDrawing;
         public event SocketEventHandler ServerEndsDrawing;
         public event SocketEventHandler DrawingPreviewResponse;
@@ -78,6 +79,11 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnStopWaiting(object source)
         {
             StopWaiting?.Invoke(source, EventArgs.Empty);
+        }
+
+        protected virtual void OnServerStrokeSent(object source, EventArgs e)
+        {
+            ServerStrokeSent?.Invoke(source, e);
         }
 
         protected virtual void OnServerStartsDrawing(object source, EventArgs e)

@@ -1,0 +1,134 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
+using ClientLourd.Utilities.Constants;
+
+namespace ClientLourd.Models.Bindable
+{
+    class StrokeInfo
+    {
+        private Guid _strokeID;
+        private Guid _userID;
+        private StylusPointCollection _pointCollection;
+        private Color _strokeColor;
+        private bool _isAnEraser;
+
+        // BrushType (square, circle) not useful, since we have the points
+        // BrushSize not useful since we have the points
+        // Number of points in _pointCollection.Count
+        // MaxX and MaxY useless since the canvas size is fix for clients
+
+        public StrokeInfo(byte[] data)
+        {
+            _pointCollection = new StylusPointCollection();
+            ParseData(data);
+        }
+
+        private void ParseData(byte[] data)
+        {
+            //TODO check if MSB or LSB
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(data);
+
+            SetIsAnEraser(data[0]);
+            SetColor(data[0]);
+            SetStrokeUID(data.Skip(StrokeMessageOffsets.STROKE_ID).Take(16).ToArray());
+            SetUserID(data.Skip(StrokeMessageOffsets.USER_ID).Take(16).ToArray());
+            SetPoints(data.Skip(StrokeMessageOffsets.POINTS).ToArray());
+
+        }
+
+        private void SetIsAnEraser(byte firstByte)
+        {
+            IsAnEraser = (firstByte >> 7) == 1;
+        }
+
+        private void SetColor(byte firstByte)
+        {
+            StrokeColor = NumberToColor(firstByte & 0x0F);
+        }
+
+        private Color NumberToColor(int colorNumber)
+        {
+            switch (colorNumber)
+            {
+                case 0:
+                    return Colors.Black;
+                case 1:
+                    return Colors.White;
+                case 2:
+                    return Colors.Red;
+                case 3:
+                    return Colors.Green;
+                case 4:
+                    return Colors.Blue;
+                case 5:
+                    return Colors.Yellow;
+                case 6:
+                    return Colors.Cyan;
+                case 7:
+                    return Colors.Magenta;
+                default:
+                    return Colors.Black;
+            }
+        }
+
+
+        private void SetStrokeUID(byte[] strokeUID)
+        {
+            StrokeID = new Guid(BitConverter.ToString(strokeUID));
+        }
+        
+        private void SetUserID(byte[] userUID)
+        {
+            UserID = new Guid(BitConverter.ToString(userUID));
+        }
+
+        private void SetPoints(byte[] points)
+        {
+            for (int i = 0; i < points.Length; i += 4)
+            {
+                int xPoint = BitConverter.ToInt32(points.Skip(i).Take(2).ToArray(), 0);
+                int yPoint = BitConverter.ToInt32(points.Skip(i + 2).Take(2).ToArray(), 0);
+                PointCollection.Add(new StylusPoint(xPoint, yPoint));
+            }
+        }
+
+
+        Guid StrokeID
+        {
+            get => _strokeID;
+            set => _strokeID = value;
+        }
+
+        Guid UserID
+        {
+            get => _userID;
+            set => _userID = value;
+        }
+
+        StylusPointCollection PointCollection
+        {
+            get => _pointCollection;
+            set => _pointCollection = value;
+        }
+
+        Color StrokeColor
+        {
+            get => _strokeColor;
+            set => _strokeColor = value;
+        }
+
+        bool IsAnEraser
+        {
+            get => _isAnEraser;
+            set => IsAnEraser = value;
+        }
+
+
+    }
+}

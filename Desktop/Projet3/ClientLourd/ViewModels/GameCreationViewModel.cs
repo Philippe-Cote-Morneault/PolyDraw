@@ -20,6 +20,7 @@ namespace ClientLourd.ViewModels
     {
         public GameCreationViewModel()
         {
+            PreviewGUIEnabled = true;
             Hints = new ObservableCollection<string>(new string[3]);
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
@@ -229,5 +230,21 @@ namespace ClientLourd.ViewModels
             //TODO validate the file
             Image = image;
         }
+
+        bool _previewGUIEnabled;
+
+        public bool PreviewGUIEnabled
+        {
+            get { return _previewGUIEnabled; }
+            set
+            {
+                if (value != _previewGUIEnabled)
+                {
+                    _previewGUIEnabled = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+            
     }
 }

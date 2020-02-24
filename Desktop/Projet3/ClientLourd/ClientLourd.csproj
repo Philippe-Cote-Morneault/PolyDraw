@@ -153,6 +153,7 @@
     <Compile Include="Services\RestService\Exceptions\RestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
+    <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />

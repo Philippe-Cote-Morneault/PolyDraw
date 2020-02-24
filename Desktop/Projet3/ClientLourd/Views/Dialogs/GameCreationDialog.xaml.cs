@@ -17,6 +17,7 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Models.Bindable;
+using System.Windows.Input;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -178,6 +179,11 @@ namespace ClientLourd.Views.Dialogs
 
         public void PlayPreview(object sender, EventArgs e)
         {
+            // 1000 0111
+            //byte[] firstByte = BitConverter.GetBytes(135);
+
+
+            AddPoints();
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
         }
 
@@ -189,15 +195,40 @@ namespace ClientLourd.Views.Dialogs
 
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
-            // Disable dialog
+            ViewModel.PreviewGUIEnabled = false;
+            
         }
 
         private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
         {
-            // Enable dialog
+            ViewModel.PreviewGUIEnabled = true;
         }
 
+        private void AddPoints()
+        {
+            if (PreviewCanvas.Strokes.Count == 0)
+            {
+                StylusPointCollection spCol = new StylusPointCollection();
+                for (int i = 0; i < 100; i++)
+                {
+                    spCol.Add(new StylusPoint(i, i));
+                    spCol.Add(new StylusPoint(i + 1, i + 1));
+                }
+                Stroke newStroke = new Stroke(spCol);
+                PreviewCanvas.Strokes.Add(newStroke);
+            }
+            else
+            {
+                
+            }
+            
+            //PreviewCanvas.Str
+        }
 
+        private void CreateStroke()
+        {
+
+        }
 
     }
 }
