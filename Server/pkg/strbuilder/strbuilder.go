@@ -15,33 +15,7 @@ import (
 // It minimizes memory copying. The zero value is ready to use.
 // Do not copy a non-zero StrBuilder.
 type StrBuilder struct {
-	addr *StrBuilder // of receiver, to detect copies by value
-	buf  []byte
-}
-
-// noescape hides a pointer from escape analysis.  noescape is
-// the identity function but escape analysis doesn't think the
-// output depends on the input. noescape is inlined and currently
-// compiles down to zero instructions.
-// USE CAREFULLY!
-// This was copied from the runtime; see issues 23382 and 7921.
-//go:nosplit
-func noescape(p unsafe.Pointer) unsafe.Pointer {
-	x := uintptr(p)
-	return unsafe.Pointer(x ^ 0)
-}
-
-func (b *StrBuilder) copyCheck() {
-	if b.addr == nil {
-		// This hack works around a failing of Go's escape analysis
-		// that was causing b to escape and be heap allocated.
-		// See issue 23382.
-		// TODO: once issue 7921 is fixed, this should be reverted to
-		// just "b.addr = b".
-		b.addr = (*StrBuilder)(noescape(unsafe.Pointer(b)))
-	} else if b.addr != b {
-		panic("strings: illegal use of non-zero StrBuilder copied by value")
-	}
+	buf []byte
 }
 
 // String returns the accumulated string.
@@ -74,7 +48,6 @@ func (b *StrBuilder) grow(n int) {
 // another n bytes. After Grow(n), at least n bytes can be written to b
 // without another allocation. If n is negative, Grow panics.
 func (b *StrBuilder) Grow(n int) {
-	b.copyCheck()
 	if n < 0 {
 		panic("strings.StrBuilder.Grow: negative count")
 	}
@@ -86,7 +59,6 @@ func (b *StrBuilder) Grow(n int) {
 // Write appends the contents of p to b's buffer.
 // Write always returns len(p), nil.
 func (b *StrBuilder) Write(p []byte) (int, error) {
-	b.copyCheck()
 	b.buf = append(b.buf, p...)
 	return len(p), nil
 }
@@ -94,7 +66,6 @@ func (b *StrBuilder) Write(p []byte) (int, error) {
 // WriteByte appends the byte c to b's buffer.
 // The returned error is always nil.
 func (b *StrBuilder) WriteByte(c byte) error {
-	b.copyCheck()
 	b.buf = append(b.buf, c)
 	return nil
 }
@@ -102,7 +73,6 @@ func (b *StrBuilder) WriteByte(c byte) error {
 // WriteRune appends the UTF-8 encoding of Unicode code point r to b's buffer.
 // It returns the length of r and a nil error.
 func (b *StrBuilder) WriteRune(r rune) (int, error) {
-	b.copyCheck()
 	if r < utf8.RuneSelf {
 		b.buf = append(b.buf, byte(r))
 		return 1, nil
@@ -119,7 +89,6 @@ func (b *StrBuilder) WriteRune(r rune) (int, error) {
 // WriteString appends the contents of s to b's buffer.
 // It returns the length of s and a nil error.
 func (b *StrBuilder) WriteString(s string) (int, error) {
-	b.copyCheck()
 	b.buf = append(b.buf, s...)
 	return len(s), nil
 }
