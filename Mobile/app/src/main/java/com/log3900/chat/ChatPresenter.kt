@@ -122,6 +122,7 @@ class ChatPresenter : Presenter {
             { messages ->
                 chatView.setCurrentChannnelName(channel.name)
                 chatView.setChatMessages(messages)
+                chatView.scrollMessage()
             },
             { error ->
             }
