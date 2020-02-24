@@ -1,92 +1,162 @@
 package svgparser
 
 import (
+	"log"
 	"strconv"
 	"strings"
 )
 
-type dTest struct {
-	D string
-}
+// Finds first command in str
+// Returns command, index found
+func findCommand(str string) (string, int) {
+	commands := [10]string{"z", "m", "l", "h", "v", "c", "s", "q", "t", "a"}
+	minIndex := len(str)
+	command := ""
 
-func findCommand(str string) string {
-	liste := [10]string{"z", "m", "l", "h", "v", "c", "s", "q", "t", "a"}
+	for i := 0; i < len(commands); i++ {
+		index := strings.Index(str, commands[i])                   // index for lowerCase command
+		index2 := strings.Index(str, strings.ToUpper(commands[i])) // index for upperCase command
+		if index != -1 && index < minIndex {
+			minIndex = index
 
-	for i := 0; i < len(liste); i++ {
-		index := strings.Index(str, liste[i])
-		index2 := strings.Index(str, strings.ToUpper(liste[i]))
-		if index != -1 {
-			return liste[i]
-
-		} else if index2 != -1 {
-			return strings.ToUpper(liste[i])
+		}
+		if index2 != -1 && index2 < minIndex {
+			minIndex = index2
 		}
 	}
-	return ""
+
+	if minIndex == len(str) { // If no command found
+		return "", -1
+	}
+	return command, minIndex
 }
 
-func getXY(str string, start bool) (int, int, bool) {
-	begin := 1
-	if !start {
-		begin := 0
+// Removes all empty strings in d
+func clean(d []string) []string {
+	var newD []string
+	for i := 0; i < len(d); i++ {
+		if d[i] != "" {
+			newD = append(newD, d[i])
+		}
 	}
-	cut := strings.Index(str, ",")
-	if cut == -1 {
-		x, errX := strconv.Atoi(str)
-		if errX != nil {
+	return newD
+}
+
+// Finds next block in str
+// Returns next block, current index
+func getNextBlock(str string) (string, int) {
+	_, start := findCommand(str)
+	if start != -1 {
+		_, end := findCommand(str[start+1:])
+
+		if end == -1 {
+			return str[start:], -1 // Last block
+		}
+		return str[start : end+len(str[:start])+1], end + len(str[:start]) + 1
+	}
+
+	return "", -1 // No command found, returns empty block
+
+}
+
+// Parse and extract all values from block in dElement
+//Returns new dElement with commands appended
+func parseBlock(d []DElement, block string) []DElement {
+
+	dElements := d
+
+	dElements = append(dElements, DElement{Command: string(block[0])})
+	indexD := len(dElements) - 1
+
+	values := clean(strings.Split(block[1:], "*"))
+
+	switch strings.ToLower(string(block[0])) {
+	case "h", "v":
+		extractValues(&dElements[indexD].Values, values, false)
+
+	case "m", "l", "t", "s", "q", "c":
+		extractValues(&dElements[indexD].Values, values, true)
+	case "a":
+		count := 0
+		for i := 0; i < len(values); i++ {
+			x, err := strconv.Atoi(values[i])
+			if err != nil {
+				log.Printf("ERROR while parsing d : 'd' format is incorrect")
+				return nil
+			}
+			if count != 1 { // if point, we add a point with Y coordinates
+				i++
+				if i >= len(values) {
+					log.Printf("ERROR while parsing d : 'd' format is incorrect")
+					return nil
+				}
+
+				y, err2 := strconv.Atoi(values[i])
+				if err2 != nil {
+					log.Printf("ERROR while parsing d : 'd' format is incorrect")
+					return nil
+				}
+
+				dElements[indexD].Values = append(dElements[indexD].Values, Point{X: x, Y: y})
+			} else { // else we add single value
+				dElements[indexD].Values = append(dElements[indexD].Values, x)
+			}
+			count++
+			if count == 4 {
+				count = 0
+			}
+		}
+	}
+
+	return dElements
+}
+
+// Extract all values and add it in dValues
+func extractValues(dValues *[]interface{}, values []string, isPoint bool) {
+	for i := 0; i < len(values); i++ {
+		x, err := strconv.Atoi(values[i])
+		if err != nil {
 			log.Printf("ERROR while parsing d : 'd' format is incorrect")
-			return 0, 0, false
+			return
 		}
+		if isPoint { // if point, we add a point with Y coordinates
+			i++
+			if i >= len(values) {
+				log.Printf("ERROR while parsing d : 'd' format is incorrect")
+				return
+			}
 
-		return x, 0, false
-	}
+			y, err2 := strconv.Atoi(values[i])
+			if err2 != nil {
+				log.Printf("ERROR while parsing d : 'd' format is incorrect")
+				return
+			}
 
-	x, errX := strconv.Atoi(str[begin:cut])
-	y, errY := strconv.Atoi(str[cut+1 : len(str)])
-
-	if errX != nil || errY != nil {
-		log.PrinPrintftln("ERROR while parsing d : 'd' format is incorrect")
-		return 0, 0, false
-	}
-
-	return x, y, true
-}
-
-func cleanD(dSplit []string) []string {
-	var newdSplit []string
-	for i := 0; i < len(dSplit); i++ {
-		if dSplit[i] != "" {
-			newdSplit = append(newdSplit, dSplit[i])
+			*dValues = append(*dValues, Point{X: x, Y: y})
+		} else { // else we add single value
+			*dValues = append(*dValues, x)
 		}
 	}
-	return newdSplit
 }
 
 // ParseD parses the elements in d
 func ParseD(d string) []DElement {
 
+	d = strings.ReplaceAll(strings.ReplaceAll(d, " ", "*"), ",", "*")
+
+	dCleaned := strings.Join(clean(strings.Split(d, "*")), "*")
 	var dElements []DElement
 
-	dSplit := cleanD(strings.Split(d, " "))
-
-	indexdElement := -1
-	start := true
-	for i := 0; i < len(dSplit); i++ {
-		command := findCommand(dSplit[i])
-		if command != "" {
-			dElements = append(dElements, DElement{Command: command})
-			indexdElement++
-			start = true
+	index := 0
+	newD := dCleaned
+	for {
+		block, i := getNextBlock(newD[index:])
+		dElements = parseBlock(dElements, block)
+		if i == -1 {
+			break
 		}
-		x, y, isPoint := getXY(dSplit[i], start)
-		start = false
-
-		if isPoint {
-			dElements[indexdElement].Values = append(dElements[indexdElement].Values, Point{X: x, Y: y})
-		} else {
-			dElements[indexdElement].Values = append(dElements[indexdElement].Values, x)
-		}
+		index += i
 	}
-
 	return dElements
+
 }
