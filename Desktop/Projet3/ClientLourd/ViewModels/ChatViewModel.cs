@@ -262,8 +262,8 @@ namespace ClientLourd.ViewModels
             {
                 _mutex.WaitOne();
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
-                    SelectedChannel.Messages.Count,
-                    SelectedChannel.Messages.Count + numberOfMessages);
+                    SelectedChannel.UserMessageCount,
+                    SelectedChannel.UserMessageCount + numberOfMessages - 1);
                 messages.Reverse();
                 // TODO Change for a linkedList
                 foreach (var message in messages)

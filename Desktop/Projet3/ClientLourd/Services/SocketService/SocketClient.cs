@@ -73,13 +73,13 @@ namespace ClientLourd.Services.SocketService
             try
             {
                 SendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
+                _healthCheckTimer.Close();
             }
             catch
             {
                 //The connection will be close 
             }
 
-            _healthCheckTimer.Close();
             _stream.Close();
             _socket.Close();
         }
@@ -194,6 +194,7 @@ namespace ClientLourd.Services.SocketService
         private void InitializeTimer()
         {
             _healthCheckTimer = new Timer(6000);
+            _healthCheckTimer.AutoReset = false;
             _healthCheckTimer.Elapsed += TriggerConnectionLost;
             _healthCheckTimer.Start();
         }
