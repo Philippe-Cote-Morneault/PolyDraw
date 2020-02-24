@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Timers;
 
 namespace ClientLourd.Models.Bindable
 {
@@ -8,13 +9,29 @@ namespace ClientLourd.Models.Bindable
     {
         public Channel()
         {
+            InitTimer();
         }
         public Channel(string name, string id)
         {
+            InitTimer();
             Name = name;
             ID = id;
             Users = new ObservableCollection<User>();
             Messages = new ObservableCollection<Message>();
+        }
+
+        private Timer _clearMessageTimer;
+        private void InitTimer()
+        {
+            _clearMessageTimer = new Timer(10000);
+            _clearMessageTimer.AutoReset = false;
+            _clearMessageTimer.Elapsed += (sender, args) =>
+            {
+                if (Messages.Count > 25)
+                {
+                    Messages = new ObservableCollection<Message>(Messages.Skip(Messages.Count - 25));
+                }
+            };
         }
 
         public ObservableCollection<User> Users
@@ -123,6 +140,14 @@ namespace ClientLourd.Models.Bindable
                     _isSelected = value;
                     Notification = 0;
                     NotifyPropertyChanged();
+                    if (_isSelected)
+                    {
+                        _clearMessageTimer.Stop();
+                    }
+                    else
+                    {
+                        _clearMessageTimer.Start();
+                    }
                 }
             }
         }
