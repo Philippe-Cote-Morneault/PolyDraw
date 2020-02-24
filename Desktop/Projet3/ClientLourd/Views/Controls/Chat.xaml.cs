@@ -12,6 +12,18 @@ namespace ClientLourd.Views.Controls
         {
             InitializeComponent();
         }
+        
+        
+        public static readonly DependencyProperty IsWaitingProperty =
+            DependencyProperty.Register("IsWaiting", typeof(Boolean), typeof(Chat), new PropertyMetadata(false));
+
+
+        public bool IsWaiting
+        {
+            get { return (bool) GetValue(IsWaitingProperty); }
+            set { SetValue(IsWaitingProperty, value); }
+        }
+        
 
         public void OnChatToggle(bool isOpen)
         {

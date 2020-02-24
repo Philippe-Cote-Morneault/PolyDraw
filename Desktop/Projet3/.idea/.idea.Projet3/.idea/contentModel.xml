@@ -98,6 +98,7 @@
           <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
           <e p="LogoMakr_4YSBb4.png" t="Include" />
+          <e p="PointEraser.cur" t="Include" />
           <e p="poly.png" t="Include" />
           <e p="WhiteLogo.png" t="Include" />
         </e>
@@ -134,6 +135,7 @@
           </e>
           <e p="Constants" t="Include">
             <e p="ApplicationInformations.cs" t="Include" />
+            <e p="GUIDs.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
@@ -163,6 +165,7 @@
             <e p="Views.cs" t="Include" />
           </e>
           <e p="Extensions" t="Include">
+            <e p="CursorHelper.cs" t="Include" />
             <e p="ScrollViewerExtensions.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">

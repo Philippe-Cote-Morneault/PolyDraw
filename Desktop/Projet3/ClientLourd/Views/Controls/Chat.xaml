@@ -9,6 +9,7 @@
              mc:Ignorable="d"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+             Name="Control"
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
@@ -87,6 +88,14 @@
                                    Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
                     </StackPanel>
                 </materialDesign:ColorZone>
+                <Grid DockPanel.Dock="Top" Visibility="{Binding ElementName=Control, Path=IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar
+                        Height="24"
+                        Width="24"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Value="0"
+                        IsIndeterminate="True" />
+                </Grid>
                 <controls:Conversation />
             </DockPanel>
         </Border>
