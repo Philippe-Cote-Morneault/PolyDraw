@@ -23,16 +23,20 @@ namespace ClientLourd.Models.Bindable
         private Timer _clearMessageTimer;
         private void InitTimer()
         {
+            IsFullyLoaded = false;
             _clearMessageTimer = new Timer(10000);
             _clearMessageTimer.AutoReset = false;
             _clearMessageTimer.Elapsed += (sender, args) =>
             {
-                if (Messages.Count > 25)
+                if (Messages.Count > 50)
                 {
-                    Messages = new ObservableCollection<Message>(Messages.Skip(Messages.Count - 25));
+                    Messages = new ObservableCollection<Message>(Messages.Skip(Messages.Count - 50));
+                    IsFullyLoaded = false;
                 }
             };
         }
+        
+        public bool IsFullyLoaded { get; set; }
 
         public ObservableCollection<User> Users
         {

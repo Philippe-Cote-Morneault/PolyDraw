@@ -258,23 +258,23 @@ namespace ClientLourd.ViewModels
 
         private async Task LoadHistory(int numberOfMessages)
         {
-            if (SelectedChannel != null)
+            if (SelectedChannel != null && !SelectedChannel.IsFullyLoaded)
             {
                 _mutex.WaitOne();
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
                     SelectedChannel.UserMessageCount,
                     SelectedChannel.UserMessageCount + numberOfMessages - 1);
                 messages.Reverse();
-                // TODO Change for a linkedList
                 foreach (var message in messages)
                 {
                     User u = message.User;
                     message.User = (await GetUser(u.Username, u.ID));
                 }
-                if (messages.Count > 0)
+                SelectedChannel.Messages =
+                    new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
+                if (messages.Count < numberOfMessages)
                 {
-                    SelectedChannel.Messages =
-                        new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
+                    SelectedChannel.IsFullyLoaded = true;
                 }
                 _mutex.ReleaseMutex();
             }
