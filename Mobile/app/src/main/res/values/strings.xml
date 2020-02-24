@@ -41,6 +41,7 @@
     <string name="profile_stats_title">Statistics</string>
     <string name="password_asterisks">********</string>
     <string name="modify_profile">Modify Your Profile</string>
+    <string name="avatar_choose">Choose an avatar</string>
     <string name="apply_changes">Apply changes</string>
     <string name="statistics">Statistics</string>
     <string name="games_played_title">Games played:</string>

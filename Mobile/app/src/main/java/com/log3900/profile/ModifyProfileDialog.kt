@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
@@ -14,11 +15,13 @@ import com.log3900.R
 import com.log3900.shared.ui.ProfileView
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository
+import com.log3900.utils.ui.getAccountAvatarID
 
 class ModifyProfileDialog : DialogFragment(), ProfileView {
     lateinit var modifyProfilePresenter: ModifyProfilePresenter
 
     lateinit var originalAccount: Account
+    lateinit var avatarView: ImageView
     lateinit var usernameInput: TextInputEditText
     lateinit var passwordInput: TextInputEditText
     lateinit var emailInput: TextInputEditText
@@ -91,7 +94,9 @@ class ModifyProfileDialog : DialogFragment(), ProfileView {
      * Fills the dialog with current account info
      */
     private fun fillDefaultDialogFields(root: View) {
-        // TODO: Avatar
+        avatarView = root.findViewById(R.id.current_avatar)
+        avatarView.setImageResource(getAccountAvatarID(originalAccount))
+
         usernameInput = root.findViewById<TextInputEditText>(R.id.username_input).apply {
             setText(originalAccount.username)
             doAfterTextChanged {
