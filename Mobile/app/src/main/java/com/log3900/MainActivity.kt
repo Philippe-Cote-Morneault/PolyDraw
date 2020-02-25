@@ -35,6 +35,7 @@ import com.log3900.ui.home.HomeFragment
 open class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +55,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
 
@@ -67,14 +68,12 @@ open class MainActivity : AppCompatActivity() {
 
         navView.setupWithNavController(navController)
         navView.menu.findItem(R.id.nav_home).setOnMenuItemClickListener {
-            drawerLayout.closeDrawer(GravityCompat.START)
-            startFragment("HOME_VIEW_FRAGMENT") { HomeFragment() }
+            startFragment("HOME_VIEW_FRAGMENT", HomeFragment())
             true
         }
 
         navView.menu.findItem(R.id.nav_draw).setOnMenuItemClickListener {
-            drawerLayout.closeDrawer(GravityCompat.START)
-            startFragment("DRAW_VIEW_FRAGMENT") { DrawViewFragment() }
+            startFragment("DRAW_VIEW_FRAGMENT", DrawViewFragment())
             true
         }
 
@@ -86,8 +85,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         navView.menu.findItem(R.id.nav_profile).setOnMenuItemClickListener {
-            drawerLayout.closeDrawer(GravityCompat.START)
-            startFragment("PROFILE_VIEW_FRAGMENT_TAG") { ProfileFragment() }
+            startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
             true
         }
 
@@ -95,8 +93,7 @@ open class MainActivity : AppCompatActivity() {
         val header = navView.getHeaderView(0)
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.START)
-            startFragment("PROFILE_VIEW_FRAGMENT_TAG") { ProfileFragment() }
+            startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
         }
 
     }
@@ -122,12 +119,12 @@ open class MainActivity : AppCompatActivity() {
         logout()
     }
 
-    private fun<T: Fragment> startFragment(tag: String, fragmentConstructor: () -> T) {
+    private fun startFragment(tag: String, fragment: Fragment) {
+        drawerLayout.closeDrawer(GravityCompat.START)
         val fragmentManager = supportFragmentManager
         if (fragmentManager.findFragmentByTag(tag) != null)
             return
 
-        val fragment: Fragment = fragmentConstructor()
         fragmentManager.beginTransaction().apply {
             replace(R.id.nav_host_fragment, fragment, tag)
             commit()
