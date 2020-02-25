@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment
 import com.divyanshu.draw.widget.DrawView
 import com.log3900.R
 
-class DrawViewFragment() : Fragment() {
+// See https://github.com/divyanshub024/AndroidDraw
+// and https://android.jlelse.eu/a-guide-to-drawing-in-android-631237ab6e28
+
+class DrawViewFragment : Fragment() {
     lateinit var drawView: DrawView
 
     override fun onCreateView(
