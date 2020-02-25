@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClientLourd.Models.Exceptions.Rest
+namespace ClientLourd.Services.RestService.Exceptions
 {
     public class RestBadRequestException : RestException
     {

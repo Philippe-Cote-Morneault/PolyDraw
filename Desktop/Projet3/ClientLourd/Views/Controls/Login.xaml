@@ -20,7 +20,8 @@
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
     <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
-        <Grid>
+        <Grid
+            IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}">
             <Grid.RowDefinitions>
 
                 <RowDefinition Height="*" />
@@ -39,7 +40,8 @@
             <!--Logo-->
             <StackPanel Grid.Row="1">
                 <!-- Might change if we translate  ClientLourd in English-->
-                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="../../Resources/blacklogo.png" />
+                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
+                       Source="../../Resources/blacklogo.png" />
             </StackPanel>
 
             <!--Username-->
@@ -51,8 +53,7 @@
                     materialDesign:HintAssist.Hint="Username"
                     materialDesign:HintAssist.HelperText="">
                     <TextBox.Text>
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
-                                 Path="DataContext.Username" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                        <Binding Path="User.Username">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -64,29 +65,38 @@
             <!--Password-->
             <StackPanel Grid.Row="3">
                 <PasswordBox
+                    PasswordChanged="PasswordBox_OnPasswordChanged"
                     Margin="20 0 20 0"
                     x:Name="PasswordBox"
                     MaxLength="64"
                     materialDesign:HintAssist.Hint="Password"
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     materialDesign:HintAssist.HelperText="At least 8 characters" />
+                <CheckBox Name="RememberMeCheckBox" Margin="20 20 20 0" Content="Remember me"/>
             </StackPanel>
 
             <!--Login button-->
-            <Button Grid.Row="4"
+            <StackPanel Grid.Row="4">
+                
+            <Button 
                     IsDefault="True"
                     Margin="40 0 40 0"
-                    IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Command="{Binding Path=LoginCommand}">
                 <Button.CommandParameter>
                     <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                         <Binding ElementName="NameTextBox" Path="Text" />
                         <Binding ElementName="PasswordBox" />
+                        <Binding ElementName="RememberMeCheckBox" Path="IsChecked" />
+                        <Binding ElementName="Control" Path="IsBearerActive" />
                     </MultiBinding>
                 </Button.CommandParameter>
                 Login
             </Button>
+                <TextBlock HorizontalAlignment="Center" >
+                    <Hyperlink Command="{Binding SignUpCommand}">Register now !</Hyperlink>
+                </TextBlock>
+            </StackPanel>
 
         </Grid>
     </materialDesign:Card>
