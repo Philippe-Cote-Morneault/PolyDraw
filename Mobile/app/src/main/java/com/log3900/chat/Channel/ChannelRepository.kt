@@ -9,7 +9,6 @@ import android.os.Looper
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.log3900.chat.ChannelAdapter
 import com.log3900.chat.ChatRestService
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
