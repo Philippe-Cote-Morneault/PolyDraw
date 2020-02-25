@@ -2,17 +2,11 @@ package parser
 
 //Point represents a point
 type Point struct {
-	X int
-	Y int
+	X float32
+	Y float32
 }
 
-//Command represents a command of the D string
-type Command struct {
-	Command    rune
-	InitialPos Point
-	Parameters []float32
-}
-
+//ParseD  parses d string in svg
 func ParseD(input string) []Command {
 	fsm := fsm{}
 	fsm.Init()
