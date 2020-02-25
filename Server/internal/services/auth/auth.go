@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"github.com/tevino/abool"
 	"log"
+
+	"github.com/tevino/abool"
 
 	"github.com/google/uuid"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"

@@ -57,6 +57,8 @@ func (r *Router) listen() {
 				//Route the message to the correct service if authenticated
 				if auth.IsAuthenticated(message) {
 					r.route(message)
+				} else {
+					log.Printf("[SRouter] -> Message not authenticated!")
 				}
 			}
 		case data := <-r.closingChan:

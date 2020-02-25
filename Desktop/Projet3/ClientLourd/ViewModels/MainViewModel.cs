@@ -2,37 +2,72 @@
 using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Input;
+using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.ViewModels
 {
     class MainViewModel : ViewModelBase
     {
-        string _username;
+        string _containedView;
+       
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
+        public NetworkInformations NetworkInformations { get; set; }
+        private SessionInformations _sessionInformations;
+
+        public SessionInformations SessionInformations
+        {
+            get { return _sessionInformations; }
+            set
+            {
+                if (value != _sessionInformations)
+                {
+                    _sessionInformations = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
 
         public MainViewModel()
         {
-            Init();
+            AfterLogOut();
         }
 
-
-        public override void Init()
+        public override void AfterLogin()
         {
-            Username = "";
-            RestClient = new RestClient();
+            //TODO
+
+        }
+
+        public override void AfterLogOut()
+        {
+            NetworkInformations = new NetworkInformations();
+            SessionInformations = new SessionInformations();
+            ContainedView = Utilities.Enums.Views.Editor.ToString();
+            RestClient = new RestClient(NetworkInformations);
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
-            SocketClient = new SocketClient();
+            SocketClient = new SocketClient(NetworkInformations);
             SocketClient.StartWaiting += (source, args) => { IsWaiting = true; };
             SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
+            SocketClient.ServerMessage += SocketClientOnServerMessage;
+        }
+
+        private void SocketClientOnServerMessage(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                DialogHost.Show(new ClosableErrorDialog(((SocketErrorEventArgs)args).Message));
+            });
         }
 
         private bool _isWaiting;
@@ -49,6 +84,18 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        
+        private RelayCommand<string> _changeNetworkCommand;
+        public ICommand ChangeNetworkCommand
+        {
+            get
+            {
+                return _changeNetworkCommand ??
+                       (_changeNetworkCommand = new RelayCommand<string>(config => NetworkInformations.Config = int.Parse(config)));
+            }
+        }
+        
+        
 
         private RelayCommand<LoginViewModel> _logoutCommand;
 
@@ -71,15 +118,15 @@ namespace ClientLourd.ViewModels
 
         public event LogOutHandler UserLogout;
 
-        public string Username
+        public string ContainedView
         {
-            get { return _username; }
+            get { return _containedView; }
 
             set
             {
-                if (value != _username)
+                if (value != _containedView)
                 {
-                    _username = value;
+                    _containedView = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -102,27 +149,36 @@ namespace ClientLourd.ViewModels
             Logout();
         }
 
-        public delegate void ChatOpenHandler(object source, EventArgs args);
+        private RelayCommand<object> _myProfileCommand;
 
-        public event ChatOpenHandler ChatOpen;
-
-        protected virtual void OnChatOpen(object source)
+        public ICommand MyProfileCommand
         {
-            ChatOpen?.Invoke(source, EventArgs.Empty);
+            get
+            {
+                return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile()));
+            }
         }
 
-        private RelayCommand<object> _openChatCommand;
-
-        public ICommand OpenChatCommand
+        private void MyProfile()
         {
-            get { return _openChatCommand ?? (_openChatCommand = new RelayCommand<object>(lvm => OpenChat())); }
+            ContainedView = Utilities.Enums.Views.Profile.ToString();
         }
 
-        private void OpenChat()
+        private RelayCommand<object> _homeCommand;
+
+        public ICommand HomeCommand
         {
-            OnChatOpen(this);
+            get
+            {
+                return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home()));
+            }
         }
 
+        private void Home()
+        {
+            // TODO: Change to home view
+            ContainedView = Utilities.Enums.Views.Editor.ToString();
+        }
 
     }
 }

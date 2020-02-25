@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows;
@@ -17,6 +18,7 @@ using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.ViewModels;
+using ClientLourd.Views.Dialogs;
 using ClientLourd.Views.Windows;
 
 namespace ClientLourd
@@ -30,41 +32,68 @@ namespace ClientLourd
         {
             InitializeComponent();
             ((MainViewModel) DataContext).UserLogout += OnUserLogout;
+            ((LoginViewModel) LoginScreen.DataContext).LoggedIn += OnLoggedIn;
+        }
+
+        private void OnLoggedIn(object source, EventArgs args)
+        {
+            var loginViewModel = (LoginViewModel) source;
+            Dispatcher.Invoke(() =>
+            {
+                AfterLogin(loginViewModel);
+                ChatBox.AfterLogin();
+                LoginScreen.AfterLogin();
+            });
+        }
+
+        private void AfterLogin(LoginViewModel loginViewModel)
+        {
+            var mainViewModel = (MainViewModel) DataContext;
+            mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
+            mainViewModel.SessionInformations.User = loginViewModel.User;
+            mainViewModel.AfterLogin();
+            (Profile.DataContext as ProfileViewModel).AfterLogin();
+            DialogHost.Show(new Tutorial(), "Default");
         }
 
         private void OnUserLogout(object source, EventArgs args)
         {
             Dispatcher.Invoke(() =>
             {
-                Init();
-                ChatBox.Init();
-                LoginScreen.Init();
+                AfterLogout();
+                ChatBox.AfterLogout();
+                LoginScreen.AfterLogout();
             });
         }
 
-        private void Init()
+        private void AfterLogout()
         {
-            ((ViewModelBase) DataContext).Init();
+            ((ViewModelBase) DataContext).AfterLogOut();
             MenuToggleButton.IsChecked = false;
             ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();
+            DevConfigButton.IsChecked = true;
         }
 
         /// <summary>
-        /// Clear the chat notification when the chat is open or close
+        /// Called when the chat is open or close
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ChatToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            ClearChatNotification();
+            Task.Factory.StartNew(() =>
+            {
+                //Wait until the drawer is open
+                Thread.Sleep(100);
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    ChatBox.OnChatToggle(ChatToggleButton.IsChecked != null && (bool)ChatToggleButton.IsChecked);
+                });
+            });
         }
 
-        public void ClearChatNotification()
-        {
-            //Clear the notification when chatToggleButton is checked or unchecked
-            ((ChatViewModel) ChatBox.DataContext).ClearNotificationCommand.Execute(null);
-        }
+
 
         private ChatWindow _chatWindow;
 
@@ -83,18 +112,41 @@ namespace ClientLourd
             }
         }
 
+        public object MainDialogHost { get; internal set; }
+
         private void ExportChat(object sender, RoutedEventArgs e)
         {
             Drawer.IsRightDrawerOpen = false;
-            RightDrawerContent.Children.Clear();
-            _chatWindow = new ChatWindow(ChatBox)
-            {
-                Title = "Chat",
-                DataContext = DataContext,
-                Owner = this,
-            };
             ChatToggleButton.IsEnabled = false;
-            _chatWindow.Show();
+            RightDrawerContent.Children.Clear();
+            Task.Factory.StartNew(() =>
+            {
+                //Wait until the drawer is close
+                Thread.Sleep(100);
+                Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    _chatWindow = new ChatWindow(ChatBox)
+                    {
+                        Title = "Chat",
+                        DataContext = DataContext,
+                        Owner = this,
+                    };
+                    _chatWindow.Show();
+                });
+            });
+        }
+
+        private void ConfigButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (NetworkConfig.Visibility == Visibility.Hidden)
+            {
+                NetworkConfig.Visibility = Visibility.Visible;
+                ConfigButton.Click -= ConfigButton_OnClick;
+            }
+            else
+            {
+                NetworkConfig.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
