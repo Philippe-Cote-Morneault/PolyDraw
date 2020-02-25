@@ -14,6 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 data class TokenData(val session: String, val bearer: String?)
 
@@ -78,6 +79,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
         })
 
         AccountRepository.createAccount(Account(
+            UUID.randomUUID(),
             username.toLowerCase(),
             pictureID,
             email,

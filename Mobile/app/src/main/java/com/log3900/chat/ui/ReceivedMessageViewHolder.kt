@@ -1,5 +1,6 @@
 package com.log3900.chat.ui
 
+import android.content.res.Resources
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
@@ -8,11 +9,18 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
+import com.log3900.user.UserRepository
 import com.log3900.utils.format.DateFormatter
+import com.log3900.utils.ui.getAvatarID
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
     private var view: ConstraintLayout
@@ -21,6 +29,7 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
     private var dateTextView: TextView
     private var username: String
     private var messageBoxCardView: CardView
+    private var messageHeader: Chip
     private lateinit var message: ReceivedMessage
 
     constructor(itemView: View, username: String) : super(itemView) {
@@ -30,6 +39,7 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
         dateTextView = itemView.findViewById(R.id.list_item_message_date)
         messageTextView.maxLines = Integer.MAX_VALUE
         messageBoxCardView = itemView.findViewById(R.id.list_item_message_text_card_view)
+        messageHeader = itemView.findViewById(R.id.list_item_message_header)
         this.username = username
     }
 
@@ -64,6 +74,17 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
             usernameTextView.visibility = View.VISIBLE
             usernameTextView.setTextColor(Color.parseColor("#000000"))
             dateTextView.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+
+            UserRepository.getInstance().getUser(this.message.userID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                {
+                    messageHeader.chipIcon = ResourcesCompat.getDrawable(MainApplication.instance.resources, getAvatarID(it.pictureID), null)
+                },
+                {
+                }
+            )
         }
 
         constraintSet.applyTo(view)

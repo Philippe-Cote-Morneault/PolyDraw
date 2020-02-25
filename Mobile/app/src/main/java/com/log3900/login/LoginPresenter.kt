@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
+import java.util.*
 
 class LoginPresenter(var loginView: LoginView) : Presenter {
 
@@ -32,7 +33,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
-                        handleSuccessAuth(bearerToken, sessionToken, userID, username)
+                        handleSuccessAuth(bearerToken, sessionToken, username, userID)
                     }
                         else -> {
                         handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
@@ -51,7 +52,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
         })
     }
 
-    private fun handleSuccessAuth(bearer: String, session: String, userID: String, username: String) {
+    private fun handleSuccessAuth(bearer: String, session: String, username: String, userID: String) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()
@@ -170,6 +171,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
 
     private fun parseJsonAccount(json: JsonObject): Account {
         return Account(
+            UUID.fromString(json.get("ID").asString),
             json.get("Username").asString,
             json.get("PictureID").asInt,
             json.get("Email").asString,
