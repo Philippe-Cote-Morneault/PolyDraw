@@ -1,6 +1,9 @@
 package parser
 
-import "unicode"
+import (
+	"log"
+	"unicode"
+)
 
 //Command represents a command of the D string
 type Command struct {
@@ -24,43 +27,53 @@ func (c *Command) Parse(lastPoint *Point) {
 		c.parseParam(lastPoint, 1, -1, 0)
 	case 'v':
 		c.parseParam(lastPoint, 1, 0, -1)
-		//TODO do the things that are horrible
-		/*
-			case 's':
-				c.parseS(lastPoint)
-			case 'q':
-				c.parseQ(lastPoint)
-			case 't':
-				c.parseT(lastPoint)
-			case 'a':
-				c.parseA(lastPoint)
-		*/
+	case 'z':
+		c.StartPos = Point{lastPoint.X, lastPoint.Y}
+		c.EndPos = Point{lastPoint.X, lastPoint.Y}
+	//TODO do the things that are horrible
+	/*
+		case 's':
+			c.parseS(lastPoint)
+		case 'q':
+			c.parseQ(lastPoint)
+		case 't':
+			c.parseT(lastPoint)
+		case 'a':
+			c.parseA(lastPoint)
+	*/
+	default:
+		log.Printf("[Potrace] -> Format contains invalid command \"%c\"", c.Command)
 	}
 }
 
 func (c *Command) parseParam(lastPoint *Point, size int, offsetX int, offsetY int) {
-	//Check if multiple of 6
-	if len(c.Parameters)%size == 0 {
+	lenParams := len(c.Parameters)
+	if lenParams%size == 0 {
 		c.StartPos = Point{lastPoint.X, lastPoint.Y}
 
 		if unicode.IsUpper(c.Command) {
 			//Just take the last position
 			c.EndPos = Point{}
+
 			if offsetX >= 0 {
-				c.EndPos.X = c.Parameters[offsetX]
+				c.EndPos.X = c.Parameters[lenParams-size+offsetX]
+			} else {
+				c.EndPos.X = lastPoint.X
 			}
 			if offsetY >= 0 {
-				c.EndPos.Y = c.Parameters[offsetY]
+				c.EndPos.Y = c.Parameters[lenParams-size+offsetY]
+			} else {
+				c.EndPos.Y = lastPoint.Y
 			}
 		} else {
 			//We need to compute every node to get the last point
 			currentPoint := Point{X: lastPoint.X, Y: lastPoint.Y}
-			for i := range c.Parameters {
+			for i := 0; i < lenParams; i += size {
 				if offsetX >= 0 {
-					currentPoint.X += c.Parameters[i*size+offsetX]
+					currentPoint.X += c.Parameters[i+offsetX]
 				}
 				if offsetY >= 0 {
-					currentPoint.Y += c.Parameters[i*size+offsetY]
+					currentPoint.Y += c.Parameters[i+offsetY]
 				}
 			}
 			c.EndPos = currentPoint
