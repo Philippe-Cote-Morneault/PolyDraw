@@ -6,7 +6,7 @@ import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
 import com.log3900.shared.architecture.Presenter
-import com.log3900.shared.ui.ProgressDialog
+import com.log3900.shared.ui.dialogs.ProgressDialog
 import com.log3900.socket.*
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository

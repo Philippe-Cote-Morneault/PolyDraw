@@ -14,7 +14,7 @@ import com.log3900.MainApplication
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
-import com.log3900.shared.ui.ErrorDialog
+import com.log3900.shared.ui.dialogs.ErrorDialog
 import com.log3900.socket.*
 
 
