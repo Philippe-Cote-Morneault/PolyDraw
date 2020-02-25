@@ -24,6 +24,7 @@
     <string name="login_username_hint">Username</string>
     <string name="login_username_error">The username cannot be empty</string>
     <string name="login_password_hint">Password</string>
+    <string name="login_reenter_password_hint">Confirm password</string>
     <string name="login_password_help">At least 8 characters</string>
     <string name="login_password_error">The password cannot be empty</string>
     <string name="login_button">Login</string>

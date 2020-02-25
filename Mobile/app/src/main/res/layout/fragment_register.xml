@@ -88,6 +88,27 @@
                 android:backgroundTint="@color/color_background"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password_input_verify_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="32dp"
+            android:hint="@string/login_reenter_password_hint"
+            app:errorEnabled="true"
+            app:endIconMode="password_toggle"
+
+            app:layout_constraintTop_toBottomOf="@+id/password_input_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password_reenter_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/color_background"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_input_layout"
@@ -98,7 +119,7 @@
             android:layout_marginBottom="32dp"
             android:hint="@string/email_hint"
             app:errorEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/password_input_layout"
+            app:layout_constraintTop_toBottomOf="@+id/password_input_verify_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
             <com.google.android.material.textfield.TextInputEditText
