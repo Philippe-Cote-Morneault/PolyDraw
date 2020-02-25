@@ -14,10 +14,10 @@ class DateFormatter {
         fun formatDate(date: Date): String {
             var dateFormat: SimpleDateFormat? = null
             if (DateUtils.isToday(date.time)) {
-                dateFormat = SimpleDateFormat("hh:mm:ss")
+                dateFormat = SimpleDateFormat("HH:mm:ss")
             }
             else {
-                dateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm:ss")
+                dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
             }
             val dateString = dateFormat.format(date)
             return dateString

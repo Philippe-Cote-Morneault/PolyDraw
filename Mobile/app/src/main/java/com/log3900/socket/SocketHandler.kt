@@ -44,7 +44,7 @@ object SocketHandler {
 
     fun connect() {
         socket = Socket()
-        socket.connect(InetSocketAddress("log3900.fsae.polymtl.ca", 5011), 10000)
+        socket.connect(InetSocketAddress("log3900.fsae.polymtl.ca", 5001), 10000)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
         state.set(State.CONNECTED)
@@ -93,9 +93,11 @@ object SocketHandler {
     }
 
     fun onDisconnect() {
-        state.set(State.DISCONNECTING)
-        socketHealthcheckTimer.cancel()
-        socket.close()
+        if (state.get() == State.CONNECTED) {
+            state.set(State.DISCONNECTING)
+            socketHealthcheckTimer.cancel()
+            socket.close()
+        }
     }
 
     private fun handleRequest(message: android.os.Message) {

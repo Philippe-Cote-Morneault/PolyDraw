@@ -142,14 +142,16 @@ class SocketService : Service() {
         //val req = android.os.Message()
         //req.what = Request.DISCONNECT.ordinal
         //socketHandler.sendRequest(req)
-        socketHandler.setDisconnectionListener(Handler {
-            handler?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
-            notifyEventSubscribers(SocketEvent.DISCONNECTED, it)
-            socketHandler.setDisconnectionListener(null)
-            true
-        })
-        socketHandler.setConnectionErrorListener(null)
-        socketHandler.onDisconnect()
+        if (SocketHandler.state.get() == State.CONNECTED) {
+            socketHandler.setDisconnectionListener(Handler {
+                handler?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
+                notifyEventSubscribers(SocketEvent.DISCONNECTED, it)
+                socketHandler.setDisconnectionListener(null)
+                true
+            })
+            socketHandler.setConnectionErrorListener(null)
+            socketHandler.onDisconnect()
+        }
     }
 
     fun getSocketState(): State {

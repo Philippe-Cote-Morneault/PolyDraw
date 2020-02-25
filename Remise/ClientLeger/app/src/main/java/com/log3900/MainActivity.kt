@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 
@@ -75,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-
         SocketService.instance?.disconnectSocket(Handler {
             intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -83,6 +83,11 @@ class MainActivity : AppCompatActivity() {
             finish()
             true
         })
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        logout()
     }
 
 }
