@@ -171,6 +171,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
 
     private fun parseJsonAccount(json: JsonObject): Account {
         return Account(
+            UUID.fromString(json.get("ID").asString),
             json.get("Username").asString,
             json.get("PictureID").asInt,
             json.get("Email").asString,
