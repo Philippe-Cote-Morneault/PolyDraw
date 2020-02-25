@@ -177,6 +177,7 @@
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
     <Compile Include="Utilities\Extensions\CursorHelper.cs" />
+    <Compile Include="Utilities\Extensions\InkCanvasExtension.cs" />
     <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
     <Compile Include="Utilities\ValidationRules\HintRules.cs" />
     <Compile Include="Utilities\ValidationRules\NameRule.cs" />

@@ -18,6 +18,7 @@ using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Models.Bindable;
 using System.Windows.Input;
+using ClientLourd.Utilities.Extensions;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -92,11 +93,10 @@ namespace ClientLourd.Views.Dialogs
             
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
-            using (XmlWriter w = XmlWriter.Create("tmp.svg", settings))
+            using (XmlWriter w = XmlWriter.Create($"{Path.GetTempFileName()}.svg", settings))
             {
                 xmlDoc.Save(w);
             }
-
         }
 
         private XmlDocument GenerateXMLDoc()
@@ -184,8 +184,13 @@ namespace ClientLourd.Views.Dialogs
             byte[] strokeUid = Encoding.ASCII.GetBytes("12345678-9012-34");
             byte[] userUid = Encoding.ASCII.GetBytes("12345678-9012-34");
             byte[] twoBytesPadding = new byte[2];
-            byte[] oneBytePadding = new byte[1];
-            byte[] points = new byte[8] { 0, 255, 0, 123, 1, 23, 0, 233 };
+            byte[] oneBytePadding = new byte[1] {11};
+            byte[] points = new byte[200];
+            for (byte i = 0; i < 200; i +=2)
+            {
+                points[i] = 0;
+                points[i + 1] = i;
+            }
 
             var mockData = new byte[firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length + points.Length];
 
@@ -203,11 +208,11 @@ namespace ClientLourd.Views.Dialogs
         public void PlayPreview(object sender, EventArgs e)
         {
 
-            StrokeInfo mock = GetMockStrokeMessage();            
-
-
-            AddPoints();
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
+            StrokeInfo mock = GetMockStrokeMessage();
+            //StrokeInfo mock2;
+            PreviewCanvas.AddStroke(mock);
+            PreviewCanvas.AddStroke(mock);
+            //SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
         }
 
         private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
@@ -248,10 +253,6 @@ namespace ClientLourd.Views.Dialogs
             //PreviewCanvas.Str
         }
 
-        private void CreateStroke()
-        {
-
-        }
 
     }
 }

@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.Models.Bindable
 {
-    class StrokeInfo
+    public class StrokeInfo
     {
         private Guid _strokeID;
         private Guid _userID;
         private StylusPointCollection _pointCollection;
         private Color _strokeColor;
+        private int _brushSize;
+        private StylusTip _brushTip;
         private bool _isAnEraser;
 
         // BrushType (square, circle) not useful, since we have the points
@@ -32,10 +35,21 @@ namespace ClientLourd.Models.Bindable
         {
             SetIsAnEraser(data[0]);
             SetColor(data[0]);
+            SetBrushTip(data[0]);
+            SetBrushSize(data.Skip(StrokeMessageOffsets.BRUSH_SIZE).Take(1).ToArray()[0]);
             SetStrokeUID(data.Skip(StrokeMessageOffsets.STROKE_ID).Take(16).ToArray());
             SetUserID(data.Skip(StrokeMessageOffsets.USER_ID).Take(16).ToArray());
             SetPoints(data.Skip(StrokeMessageOffsets.POINTS).ToArray());
+        }
 
+        private void SetBrushTip(byte firstByte)
+        {
+            BrushTip = ((firstByte & 0x40) == 0) ? StylusTip.Ellipse: StylusTip.Rectangle;
+        }
+
+        private void SetBrushSize(byte brushSizeByte)
+        {
+            BrushSize = brushSizeByte;
         }
 
         private void SetIsAnEraser(byte firstByte)
@@ -103,37 +117,46 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
+        public int BrushSize
+        {
+            get => _brushSize;
+            set => _brushSize = value;
+        }
 
-        Guid StrokeID
+        public StylusTip BrushTip
+        {
+            get => _brushTip;
+            set => _brushTip = value;
+        }
+
+        public Guid StrokeID
         {
             get => _strokeID;
             set => _strokeID = value;
         }
 
-        Guid UserID
+        public Guid UserID
         {
             get => _userID;
             set => _userID = value;
         }
 
-        StylusPointCollection PointCollection
+        public StylusPointCollection PointCollection
         {
             get => _pointCollection;
             set => _pointCollection = value;
         }
 
-        Color StrokeColor
+        public Color StrokeColor
         {
             get => _strokeColor;
             set => _strokeColor = value;
         }
 
-        bool IsAnEraser
+        public bool IsAnEraser
         {
             get => _isAnEraser;
             set => _isAnEraser = value;
         }
-
-
     }
 }
