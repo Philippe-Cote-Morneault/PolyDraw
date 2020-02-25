@@ -16,6 +16,7 @@ import com.log3900.utils.ui.getAccountAvatarID
 
 class ProfileInfoFragment : Fragment() {
     private lateinit var infoBinding: FragmentProfileInfoBinding
+    lateinit var avatarView: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +36,14 @@ class ProfileInfoFragment : Fragment() {
         val modifyButton = root.findViewById<ImageView>(R.id.modify_button)
         modifyButton.setOnClickListener { showModifyDialog() }
 
-        val avatarView: ImageView = root.findViewById(R.id.avatar_info)
+        avatarView = root.findViewById(R.id.avatar_info)
         avatarView.setImageResource(getAccountAvatarID(infoBinding.info!!))
+    }
+
+    fun updateProfileInfo(updatedAccount: Account) {
+        infoBinding.info = updatedAccount
+        avatarView.setImageResource(getAccountAvatarID(updatedAccount))
+        infoBinding.invalidateAll()
     }
 
     private fun showModifyDialog() {
@@ -47,7 +54,7 @@ class ProfileInfoFragment : Fragment() {
         }
         ft.addToBackStack(null)
 
-        val modifyDialogFragment = ModifyProfileDialog()
+        val modifyDialogFragment = ModifyProfileDialog(this)
         modifyDialogFragment.show(ft, "dialog")
     }
 }

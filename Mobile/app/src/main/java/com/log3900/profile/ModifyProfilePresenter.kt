@@ -51,6 +51,5 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
                 }
             })
         }
-
     }
 }
