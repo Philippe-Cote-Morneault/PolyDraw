@@ -88,7 +88,7 @@ func (b *StrBuilder) WriteRune(r rune) int {
 
 // WriteString appends the contents of s to b's buffer.
 // It returns the length of s and a nil error.
-func (b *StrBuilder) WriteString(s string) (int, error) {
+func (b *StrBuilder) WriteString(s string) int {
 	b.buf = append(b.buf, s...)
-	return len(s), nil
+	return len(s)
 }
