@@ -30,10 +30,6 @@ namespace ClientLourd.Models.Bindable
 
         private void ParseData(byte[] data)
         {
-            //TODO check if MSB or LSB
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
-
             SetIsAnEraser(data[0]);
             SetColor(data[0]);
             SetStrokeUID(data.Skip(StrokeMessageOffsets.STROKE_ID).Take(16).ToArray());
@@ -80,20 +76,29 @@ namespace ClientLourd.Models.Bindable
 
         private void SetStrokeUID(byte[] strokeUID)
         {
-            StrokeID = new Guid(BitConverter.ToString(strokeUID));
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(strokeUID);
+
+            StrokeID = new Guid(strokeUID);
         }
         
         private void SetUserID(byte[] userUID)
         {
-            UserID = new Guid(BitConverter.ToString(userUID));
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(userUID);
+
+            UserID = new Guid(userUID);
         }
 
         private void SetPoints(byte[] points)
         {
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(points);
+
             for (int i = 0; i < points.Length; i += 4)
             {
-                int xPoint = BitConverter.ToInt32(points.Skip(i).Take(2).ToArray(), 0);
-                int yPoint = BitConverter.ToInt32(points.Skip(i + 2).Take(2).ToArray(), 0);
+                int xPoint = BitConverter.ToUInt16(points.Skip(i).Take(2).ToArray(), 0);
+                int yPoint = BitConverter.ToUInt16(points.Skip(i + 2).Take(2).ToArray(), 0);
                 PointCollection.Add(new StylusPoint(xPoint, yPoint));
             }
         }
@@ -126,7 +131,7 @@ namespace ClientLourd.Models.Bindable
         bool IsAnEraser
         {
             get => _isAnEraser;
-            set => IsAnEraser = value;
+            set => _isAnEraser = value;
         }
 
 

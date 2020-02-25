@@ -177,10 +177,33 @@ namespace ClientLourd.Views.Dialogs
             return svgPath;
         }
 
+        // TODO: Delete this
+        private StrokeInfo GetMockStrokeMessage() 
+        {
+            byte[] firstByte = new byte[] { 135 };
+            byte[] strokeUid = Encoding.ASCII.GetBytes("12345678-9012-34");
+            byte[] userUid = Encoding.ASCII.GetBytes("12345678-9012-34");
+            byte[] twoBytesPadding = new byte[2];
+            byte[] oneBytePadding = new byte[1];
+            byte[] points = new byte[8] { 0, 255, 0, 123, 1, 23, 0, 233 };
+
+            var mockData = new byte[firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length + points.Length];
+
+            firstByte.CopyTo(mockData, 0);
+            strokeUid.CopyTo(mockData, firstByte.Length);
+            userUid.CopyTo(mockData, strokeUid.Length + firstByte.Length);
+            twoBytesPadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length);
+            twoBytesPadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length);
+            oneBytePadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length);
+            points.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length);
+
+            return new StrokeInfo(mockData);
+        }
+
         public void PlayPreview(object sender, EventArgs e)
         {
-            // 1000 0111
-            //byte[] firstByte = BitConverter.GetBytes(135);
+
+            StrokeInfo mock = GetMockStrokeMessage();            
 
 
             AddPoints();

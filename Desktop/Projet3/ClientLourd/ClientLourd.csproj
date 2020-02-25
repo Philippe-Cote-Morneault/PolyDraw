@@ -139,6 +139,7 @@
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
     <Compile Include="Models\Bindable\StatsHistory.cs" />
+    <Compile Include="Models\Bindable\StrokeInfo.cs" />
     <Compile Include="Models\Bindable\User.cs" />
     <Compile Include="Models\NonBindable\NetworkInformations.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
@@ -156,8 +157,10 @@
     <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
+    <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Constants\GUIDs.cs" />
+    <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
