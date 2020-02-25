@@ -18,16 +18,20 @@ class ChannelCache {
             if (channel.users.find {
                     it.name == username
                 } != null) {
-                joinedChannels.add(channel)
+                addJoinedChannel(channel)
             } else {
-                availableChannels.add(channel)
+                addAvailableChannel(channel)
             }
         }
     }
 
     fun addJoinedChannel(channel: Channel) {
         if (!joinedChannels.contains(channel)) {
-            joinedChannels.add(channel)
+            var index = Collections.binarySearch(joinedChannels, channel, ChannelAlphabeticalComparator())
+            if (index < 0) {
+                index = -index - 1
+            }
+            joinedChannels.add(index, channel)
         }
     }
 
@@ -37,7 +41,11 @@ class ChannelCache {
 
     fun addAvailableChannel(channel: Channel) {
         if (!availableChannels.contains(channel)) {
-            availableChannels.add(channel)
+            var index = Collections.binarySearch(availableChannels, channel, ChannelAlphabeticalComparator())
+            if (index < 0) {
+                index = -(index + 1)
+            }
+            availableChannels.add(index, channel)
         }
     }
 
@@ -62,6 +70,18 @@ class ChannelCache {
         if (channelToRemove != null) {
             removeJoinedChannel(channelToRemove)
             return
+        }
+    }
+
+    inner class ChannelAlphabeticalComparator : Comparator<Channel> {
+        override fun compare(channel1: Channel, channel2: Channel): Int {
+            if (channel1.ID.equals(Channel.GENERAL_CHANNEL_ID)) {
+                return -1
+            } else if (channel2.ID.equals(Channel.GENERAL_CHANNEL_ID)) {
+                return 1
+            } else {
+                return channel1.name.compareTo(channel2.name)
+            }
         }
     }
 }

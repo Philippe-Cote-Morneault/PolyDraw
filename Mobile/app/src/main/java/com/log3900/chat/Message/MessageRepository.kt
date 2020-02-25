@@ -6,19 +6,22 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import androidx.navigation.common.R
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
+import com.log3900.chat.ChatMessage
 import com.log3900.chat.ChatRestService
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.AccountRepository
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Call
 import java.util.*
@@ -30,7 +33,7 @@ import kotlin.collections.HashSet
 
 class MessageRepository : Service() {
     enum class Event {
-        MESSAGE_RECEIVED
+        CHAT_MESSAGE_RECEIVED,
     }
 
     // Service
@@ -47,7 +50,7 @@ class MessageRepository : Service() {
         var instance: MessageRepository? = null
     }
 
-    fun getChannelMessages(channelID: UUID): Single<LinkedList<ReceivedMessage>> {
+    fun getChannelMessages(channelID: UUID): Single<LinkedList<ChatMessage>> {
         return Single.create {
             if (messageCache.getMessages(channelID).size == 0) {
                 getChannelMessages(channelID, 0, 50).subscribe(
@@ -65,7 +68,7 @@ class MessageRepository : Service() {
         }
     }
 
-    fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ReceivedMessage>> {
+    fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ChatMessage>> {
         return Single.create {
                 val call = ChatRestService.service.getChannelMessages(
                     AccountRepository.getAccount().sessionToken,
@@ -94,7 +97,7 @@ class MessageRepository : Service() {
                                         )
                                     )
                                 val messages = adapter.fromJson(response.body()!!.getAsJsonArray("Messages").toString())
-                                it.onSuccess(LinkedList(messages))
+                                it.onSuccess(ChatMessage.fromReceivedMessages(messages!!))
                             }
                             else -> {
                             }
@@ -168,7 +171,14 @@ class MessageRepository : Service() {
                 receiveMessage(it.obj as Message)
                 true
             })
-
+            socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, Handler {
+                onUserJoinedChannel(it.obj as Message)
+                true
+            })
+            socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, Handler {
+                onUserLeftChannel(it.obj as Message)
+                true
+            })
             Looper.loop()
         }).start()
     }
@@ -179,18 +189,20 @@ class MessageRepository : Service() {
     }
 
     private fun receiveMessage(message: Message) {
-        val tempMessage = android.os.Message()
-        tempMessage.what = Event.MESSAGE_RECEIVED.ordinal
         val moshi = MoshiPack({
             add(TimeStampAdapter())
             add(UUIDAdapter())
+            add(KotlinJsonAdapterFactory())
         })
-        tempMessage.obj = moshi.unpack(message.data) as ReceivedMessage
-        addMessageToCache(tempMessage.obj as ReceivedMessage)
-        notifySubscribers(Event.MESSAGE_RECEIVED, tempMessage)
+        val chatMessage = ChatMessage.fromReceivedMessage(moshi.unpack(message.data) as ReceivedMessage)
+        addMessageToCache(chatMessage)
+        val osMessage = android.os.Message()
+        osMessage.what = Event.CHAT_MESSAGE_RECEIVED.ordinal
+        osMessage.obj = chatMessage
+        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
     }
 
-    private fun addMessageToCache(message: ReceivedMessage) {
+    private fun addMessageToCache(message: ChatMessage) {
         messageCache.appendMessage(message)
     }
 
@@ -206,7 +218,43 @@ class MessageRepository : Service() {
         }
     }
 
+    private fun onUserJoinedChannel(message: Message) {
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+            add(KotlinJsonAdapterFactory())
+        })
+        val userJoinedChannelMessage = moshi.unpack(message.data) as UserJoinedChannelMessage
+        val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
+        val chatMessage = ChatMessage.fromEventMessage(messageEvent, userJoinedChannelMessage.channelID)
+        addMessageToCache(chatMessage)
+        val osMessage = android.os.Message()
+        osMessage.obj = chatMessage
+        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+    }
+
+    private fun onUserLeftChannel(message: Message) {
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+            add(KotlinJsonAdapterFactory())
+        })
+        val userLeftChannelMessage = moshi.unpack(message.data) as UserLeftChannelMessage
+        val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
+        val chatMessage = ChatMessage.fromEventMessage(messageEvent, userLeftChannelMessage.channelID)
+        addMessageToCache(chatMessage)
+        val osMessage = android.os.Message()
+        osMessage.obj = chatMessage
+        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+    }
+    
     inner class MessageRepositoryBinder : Binder() {
         fun getService(): MessageRepository = this@MessageRepository
     }
 }
+
+data class UserJoinedChannelMessage(@Json(name = "UserID") var userID: UUID, @Json(name = "Username") var username: String,
+                                    @Json(name = "ChannelID") var channelID: UUID, @Json(name = "Timestamp") var timestamp: Date)
+
+data class UserLeftChannelMessage(@Json(name = "UserID") var userID: UUID, @Json(name = "Username") var username: String,
+                                    @Json(name = "ChannelID") var channelID: UUID, @Json(name = "Timestamp") var timestamp: Date)

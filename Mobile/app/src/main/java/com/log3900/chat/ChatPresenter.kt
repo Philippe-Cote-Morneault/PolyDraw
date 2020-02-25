@@ -45,7 +45,7 @@ class ChatPresenter : Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    chatView.setReceivedMessages(it)
+                    chatView.setChatMessages(it)
                     chatView.scrollMessage()
                 },
                 {
@@ -111,8 +111,8 @@ class ChatPresenter : Presenter {
             EventType.ACTIVE_CHANNEL_CHANGED -> {
                 onChannelChanged(event.data as Channel)
             }
-            EventType.RECEIVED_MESSAGE -> {
-                onNewMessage(event.data as ReceivedMessage)
+            EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED -> {
+                onActiveChannelMessageReceived(event.data as ChatMessage)
             }
         }
     }
@@ -121,16 +121,17 @@ class ChatPresenter : Presenter {
         chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { messages ->
                 chatView.setCurrentChannnelName(channel.name)
-                chatView.setReceivedMessages(messages)
+                chatView.setChatMessages(messages)
+                chatView.scrollMessage()
             },
             { error ->
             }
         )
     }
 
-    private fun onNewMessage(message: ReceivedMessage) {
+    private fun onActiveChannelMessageReceived(message: ChatMessage) {
         chatView.notifyNewMessage()
-        if (AccountRepository.getAccount().username != message.username) {
+        if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && AccountRepository.getAccount().username != (message.message as ReceivedMessage).username) {
             chatView.playNewMessageNotification()
         }
     }

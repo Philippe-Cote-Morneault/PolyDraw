@@ -92,15 +92,15 @@ class ChannelListPresenter : Presenter {
     }
 
     private fun onChannelSubscribed(channel: Channel) {
-        channelListView.notifyChannelSubscribed(channel)
+        channelListView.notifyChannelsChange()
     }
 
     private fun onChannelUnsubscribed(channel: Channel) {
-        channelListView.notifyChannelUnsubscried(channel)
+        channelListView.notifyChannelsChange()
     }
 
     private fun onChannelCreated(channel: Channel) {
-        channelListView.notifyChannelSubscribed(channel)
+        channelListView.notifyChannelsChange()
     }
 
     private fun onChannelDeleted(channel: UUID) {

@@ -9,7 +9,7 @@ interface ChatView {
     fun closeNavigationDrawer()
     fun isNavigationDrawerOpened(): Boolean
     fun notifyNewMessage()
-    fun setReceivedMessages(messages: LinkedList<ReceivedMessage>)
+    fun setChatMessages(messages: LinkedList<ChatMessage>)
     fun setCurrentChannnelName(name: String)
     fun playNewMessageNotification()
     fun scrollMessage()
