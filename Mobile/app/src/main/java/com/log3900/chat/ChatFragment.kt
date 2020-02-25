@@ -1,32 +1,31 @@
 package com.log3900.chat
 
-import android.app.Activity
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Handler
 import android.util.TypedValue
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
+import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.chat.ui.MessageAdapter
-import com.log3900.utils.ui.KeyboardHelper
-import java.lang.Thread.sleep
 import java.util.*
 
-class ChatFragment : Fragment() {
+class ChatFragment : Fragment(), ChatView {
     // Services
-    private lateinit var messageService: MessageService
+    private lateinit var chatPresenter: ChatPresenter
     // UI elements
     private lateinit var messagesRecyclerView: RecyclerView
     private lateinit var messagesViewAdapter: MessageAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var viewManager: LinearLayoutManager
     private lateinit var sendMessageButton: Button
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
@@ -34,11 +33,9 @@ class ChatFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_chat, container, false)
 
-        messageService = MessageService()
-
         setupUiElements(rootView)
 
-        subscribeToEvents()
+        chatPresenter = ChatPresenter(this)
 
         return rootView
     }
@@ -54,7 +51,7 @@ class ChatFragment : Fragment() {
         setupMessagesRecyclerView(rootView)
 
         sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
-        sendMessageButton.setOnClickListener { v -> onSendMessageButtonClick(v)}
+        sendMessageButton.setOnClickListener { v -> onSendMessageButtonClick(v) }
 
         setupToolbar(rootView)
 
@@ -66,20 +63,20 @@ class ChatFragment : Fragment() {
             val heightDiff = rootView.rootView.height - rootView.height
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200f, context?.resources?.displayMetrics)
             if (heightDiff > pixels) {
-                messagesViewAdapter.scrollToBottom()
+                chatPresenter.onKeyboardChange(true)
+            }
+            else {
+                chatPresenter.onKeyboardChange(false)
             }
         }
 
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     private fun setupToolbar(rootView: View) {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
-        //toolbar.inflateMenu(R.menu.fragment_chat_top_menu)
-        //toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
-        toolbar.setTitle("General")
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
 
-        //toolbar.setNavigationOnClickListener {onToolbarNavigationClick()}
+        toolbar.setNavigationOnClickListener {chatPresenter.handleNavigationDrawerClick()}
     }
 
     private fun setupMessagesRecyclerView(rootView: View) {
@@ -90,29 +87,15 @@ class ChatFragment : Fragment() {
             layoutManager = viewManager
             adapter = messagesViewAdapter
         }
-    }
 
-    /**
-     * Subscribes to all events from services this fragment wants to handle.
-     *
-     */
-    private fun subscribeToEvents() {
-        messageService.subscribe(MessageEvent.MESSAGE_RECEIVED, Handler{ msg ->
-            onNewMessageReceived(msg)
-            true
-        })
-    }
-
-    /**
-     * Handles click on the top toolbar navigation icon. Closes and opens the navigation drawer, which contains the channel list.
-     *
-     */
-    private fun onToolbarNavigationClick() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(Gravity.LEFT)
-        } else {
-            drawer.openDrawer(Gravity.LEFT)
+        val scrollListener = object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                chatPresenter.scrolledToPositions(viewManager.findFirstVisibleItemPosition(), viewManager.findLastVisibleItemPosition(), dy)
+            }
         }
+
+        messagesRecyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun onSendMessageButtonClick(v: View) {
@@ -121,7 +104,7 @@ class ChatFragment : Fragment() {
         messageInput.text?.clear()
         if (messageText != "" && messageText.trim().length > 0)
         {
-            messageService.sendMessage(messageText.trim())
+            chatPresenter.sendMessage(messageText.trim())
         }
     }
 
@@ -129,12 +112,54 @@ class ChatFragment : Fragment() {
         messagesViewAdapter.scrollToBottom()
     }
 
-    /**
-     * Handles a new chat message received. Informs the recyclerView of its presence.
-     *
-     * @param message the chat message received
-     */
-    private fun onNewMessageReceived(message: android.os.Message) {
-        messagesViewAdapter.appendMessage(message.obj as ReceivedMessage)
+    override fun onResume() {
+        super.onResume()
+        chatPresenter.resume()
+    }
+
+    override fun openNavigationDrawer() {
+        drawer.openDrawer(Gravity.LEFT)
+    }
+
+    override fun closeNavigationDrawer() {
+        drawer.closeDrawer(Gravity.LEFT)
+    }
+
+    override fun isNavigationDrawerOpened(): Boolean {
+        return drawer.isDrawerOpen(GravityCompat.START)
+    }
+
+    override fun notifyNewMessage() {
+        messagesViewAdapter.messageInserted()
+    }
+
+    override fun setChatMessages(messages: LinkedList<ChatMessage>) {
+        messagesViewAdapter.setMessage(messages)
+        messagesViewAdapter.notifyDataSetChanged()
+    }
+
+    override fun setCurrentChannnelName(name: String) {
+        toolbar.setTitle(name)
+    }
+
+    override fun playNewMessageNotification() {
+        val musicPlayer = MediaPlayer.create(this.context, R.raw.audio_notification_new_message)
+        musicPlayer.start()
+    }
+
+    override fun scrollMessage() {
+        messagesViewAdapter.scrollToBottom()
+    }
+
+    override fun showProgressDialog(dialog: DialogFragment) {
+        dialog.show(activity?.supportFragmentManager!!, "progressDialog")
+    }
+
+    override fun hideProgressDialog(dialog: DialogFragment) {
+        dialog.dismiss()
+    }
+
+    override fun notifyMessagesPrepended(count: Int) {
+        messagesViewAdapter.prependMessages(count)
     }
 }
