@@ -39,6 +39,7 @@
     <string name="quit_app_confirm">You are about to exit the application. Do you wish to continue?</string>
 
     <!-- profile -->
+    <string name="profile">Profile</string>
     <string name="profile_info_title">Profile Information</string>
     <string name="profile_stats_title">Statistics</string>
     <string name="password_asterisks">********</string>

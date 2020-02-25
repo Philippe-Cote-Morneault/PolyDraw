@@ -13,11 +13,12 @@ namespace ClientLourd.Utilities.ValidationRules
         public LoginInputRules()
         {
         }
-        
+
         public bool StringIsEmpty(string myInput)
         {
             return String.IsNullOrEmpty(myInput);
         }
+
         public bool StringIsWhiteSpace(string myInput)
         {
             return String.IsNullOrWhiteSpace(myInput);
@@ -32,7 +33,7 @@ namespace ClientLourd.Utilities.ValidationRules
         {
             return myInput.Length >= 8 && myInput.Length <= 64;
         }
-        
+
         public bool IsAlphaNumeric(string myInput)
         {
             Regex r = new Regex("^[a-zA-Z0-9]*$");

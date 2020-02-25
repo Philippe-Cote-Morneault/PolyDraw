@@ -42,6 +42,10 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.2.920, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.2\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -53,6 +57,10 @@
     </Reference>
     <Reference Include="MessagePack.Annotations, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
       <HintPath>..\packages\MessagePack.Annotations.2.0.335\lib\netstandard2.0\MessagePack.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=106.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.10.1\lib\net452\RestSharp.dll</HintPath>
@@ -123,14 +131,39 @@
     <Compile Include="Models\Bindable\Editor.cs" />
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
+    <Compile Include="Models\Bindable\SessionInformations.cs" />
+    <Compile Include="Models\Bindable\StatsHistory.cs" />
     <Compile Include="Models\Bindable\User.cs" />
-    <Compile Include="Models\Constants\Networks.cs" />
-    <Compile Include="Models\Enums\SocketMessageTypes.cs" />
-    <Compile Include="Models\EventsArguments\MessageReceivedEventArgs.cs" />
-    <Compile Include="Models\Exceptions\Rest\RestBadRequestException.cs" />
-    <Compile Include="Models\Exceptions\Rest\RestConflictException.cs" />
-    <Compile Include="Models\Exceptions\Rest\RestException.cs" />
+    <Compile Include="Models\NonBindable\NetworkInformations.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
+    <Compile Include="Models\NonBindable\TokenPair.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Services\CredentialsService\CredentialManager.cs" />
+    <Compile Include="Models\Bindable\Stats.cs" />
+    <Compile Include="Services\DateService\Timestamp.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
+    <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
+    <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
+    <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
+    <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
+    <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
+    <Compile Include="Utilities\Converters\NotificationConverter.cs" />
+    <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
+    <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
+    <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
+    <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
+    <Compile Include="Utilities\Enums\Views.cs" />
+    <Compile Include="Utilities\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\ComparatorToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
+    <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
+    <Compile Include="Utilities\ValidationRules\NameRule.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
@@ -139,6 +172,7 @@
     <Compile Include="Services\SocketService\SocketClient.cs" />
     <Compile Include="Services\SocketService\SocketEventsPublisher.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
+    <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Utilities\Converters\BorderConverter.cs" />
@@ -151,6 +185,9 @@
     <Compile Include="Utilities\Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Utilities\ValidationRules\LoginInputRules.cs" />
     <Compile Include="Utilities\ValidationRules\UsernameRule.cs" />
+    <Compile Include="Views\Controls\ChannelSection.xaml.cs">
+      <DependentUpon>ChannelSection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
@@ -163,11 +200,44 @@
     <Compile Include="Views\Controls\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Profile.xaml.cs">
+      <DependentUpon>Profile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Tutorial\ChatTutorial.xaml.cs">
+      <DependentUpon>ChatTutorial.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AvatarSelectionDialog.xaml.cs">
+      <DependentUpon>AvatarSelectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ClosableErrorDialog.xaml.cs">
       <DependentUpon>ClosableErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\ConfirmationDialog.xaml.cs">
+      <DependentUpon>ConfirmationDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ConnectionHistoryDialog.xaml.cs">
+      <DependentUpon>ConnectionHistoryDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\EditProfileDialog.xaml.cs">
+      <DependentUpon>EditProfileDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml.cs">
+      <DependentUpon>GamesPlayedHistoryDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\InputDialog.xaml.cs">
+      <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\MessageDialog.xaml.cs">
+      <DependentUpon>MessageDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\RegisterDialog.xaml.cs">
+      <DependentUpon>RegisterDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Tutorial.xaml.cs">
+      <DependentUpon>Tutorial.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
@@ -184,6 +254,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Controls\ChannelSection.xaml" />
     <Page Include="Views\Controls\Chat.xaml" />
     <Page Include="Views\Controls\Conversation.xaml" />
     <Page Include="Views\Controls\Editor.xaml">
@@ -194,8 +265,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Profile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Tutorial\ChatTutorial.xaml" />
+    <Page Include="Views\Dialogs\AvatarSelectionDialog.xaml" />
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\ConfirmationDialog.xaml" />
+    <Page Include="Views\Dialogs\ConnectionHistoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\EditProfileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
+    <Page Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\InputDialog.xaml" />
+    <Page Include="Views\Dialogs\MessageDialog.xaml" />
+    <Page Include="Views\Dialogs\RegisterDialog.xaml" />
+    <Page Include="Views\Dialogs\Tutorial.xaml" />
     <Page Include="Views\Windows\ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -236,10 +330,24 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\avatar.jpg" />
+    <Resource Include="Resources\Avatar\1.jpg" />
+    <Resource Include="Resources\Avatar\10.jpg" />
+    <Resource Include="Resources\Avatar\11.jpg" />
+    <Resource Include="Resources\Avatar\12.jpg" />
+    <Resource Include="Resources\Avatar\13.jpg" />
+    <Resource Include="Resources\Avatar\14.jpg" />
+    <Resource Include="Resources\Avatar\15.jpg" />
+    <Resource Include="Resources\Avatar\2.jpg" />
+    <Resource Include="Resources\Avatar\3.jpg" />
+    <Resource Include="Resources\Avatar\4.jpg" />
+    <Resource Include="Resources\Avatar\5.jpg" />
+    <Resource Include="Resources\Avatar\6.jpg" />
+    <Resource Include="Resources\Avatar\7.jpg" />
+    <Resource Include="Resources\Avatar\8.jpg" />
+    <Resource Include="Resources\Avatar\9.jpg" />
+    <Resource Include="Resources\Avatar\16.jpg" />
     <Content Include="Resources\poly.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\ToolTips\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />
