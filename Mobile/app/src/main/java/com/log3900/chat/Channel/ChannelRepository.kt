@@ -9,6 +9,7 @@ import android.os.Looper
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.log3900.chat.ChannelAdapter
 import com.log3900.chat.ChatRestService
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -17,6 +18,7 @@ import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.User
 import com.log3900.user.AccountRepository
+import com.log3900.user.UserRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -156,7 +158,7 @@ class ChannelRepository : Service() {
             add(UUIDAdapter())
         })
         val channelCreated = moshi.unpack<ChannelCreatedMessage>(message.data)
-        val channel = Channel(channelCreated.channelID, channelCreated.name, arrayOf(User(channelCreated.username, channelCreated.userID)))
+        val channel = Channel(channelCreated.channelID, channelCreated.name, arrayOf(ChannelUser(channelCreated.username, channelCreated.userID)))
         channelCache.addAvailableChannel(channel)
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_CREATED, channel))
     }
