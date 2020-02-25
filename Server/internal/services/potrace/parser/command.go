@@ -2,6 +2,8 @@ package parser
 
 import (
 	"log"
+	"strconv"
+	"strings"
 	"unicode"
 )
 
@@ -80,5 +82,28 @@ func (c *Command) parseParam(lastPoint *Point, size int, offsetX int, offsetY in
 		}
 	} else {
 		//TODO Error
+	}
+}
+
+//Encode encodes the command to the new svg type
+func (c *Command) Encode() string {
+	builder := strings.Builder{}
+	builder.Grow(32)
+	if c.Command == 'm' {
+		builder.WriteString("M ")
+
+		builder.WriteString(strconv.FormatFloat(float64(c.EndPos.X), 'f', -1, 32))
+		builder.WriteRune(' ')
+		builder.WriteString(strconv.FormatFloat(float64(c.EndPos.Y), 'f', -1, 32))
+		builder.WriteRune(' ')
+		return builder.String()
+	} else {
+		builder.WriteRune(c.Command)
+		builder.WriteRune(' ')
+		for i := range c.Parameters {
+			builder.WriteString(strconv.FormatFloat(float64(c.Parameters[i]), 'f', -1, 32))
+			builder.WriteRune(' ')
+		}
+		return builder.String()
 	}
 }
