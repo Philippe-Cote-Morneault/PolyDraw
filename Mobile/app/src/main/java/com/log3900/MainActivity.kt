@@ -129,7 +129,7 @@ open class MainActivity : AppCompatActivity() {
 
         val fragment: Fragment = fragmentConstructor()
         fragmentManager.beginTransaction().apply {
-            add(R.id.nav_host_fragment, fragment, tag)
+            replace(R.id.nav_host_fragment, fragment, tag)
             commit()
         }
     }
