@@ -33,8 +33,6 @@ func setupFile() {
 
 func setupDefault() {
 
-	viper.SetDefault("database.engine", "sqlite3")
-	viper.SetDefault("database.connection", ":memory:")
 	viper.SetDefault("datastore", "/tmp/images")
 	viper.SetDefault("rest.port", "3000")
 	viper.SetDefault("rest.address", "127.0.0.1")

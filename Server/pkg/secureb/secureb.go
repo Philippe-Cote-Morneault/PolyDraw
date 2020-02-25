@@ -6,6 +6,8 @@ package secureb
 import (
 	"crypto/rand"
 	"encoding/base64"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // GenerateRandomBytes returns securely generated random bytes.
@@ -43,4 +45,16 @@ func GenerateRandomString(s int) (string, error) {
 func GenerateToken() (string, error) {
 	str, err := GenerateRandomString(32)
 	return str, err
+}
+
+//HashPassword hashes the password
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+//CheckPasswordHash compare the hash
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

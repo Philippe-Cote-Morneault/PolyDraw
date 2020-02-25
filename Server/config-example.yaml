@@ -6,8 +6,8 @@
 # - /etc/polydraw/config.yaml
 
 database:
-    engine: sqlite3
-    connection: ":memory:"
+    engine: postgres
+    connection: "host=localhost port=5432 user=postgres dbname=log3900 password=123456 sslmode=disable"
 rest:
     port: 3000
     address: 127.0.0.1
