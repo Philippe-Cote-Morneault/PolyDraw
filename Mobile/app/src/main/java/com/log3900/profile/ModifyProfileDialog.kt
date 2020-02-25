@@ -18,7 +18,8 @@ import com.log3900.user.AccountRepository
 import com.log3900.utils.ui.getAccountAvatarID
 import com.log3900.utils.ui.getAvatarID
 
-class ModifyProfileDialog : DialogFragment(), ProfileView, ModifyAvatarDialogLauncher {
+class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
+    : DialogFragment(), ProfileView, ModifyAvatarDialogLauncher {
     lateinit var modifyProfilePresenter: ModifyProfilePresenter
 
     lateinit var originalAccount: Account
@@ -214,6 +215,7 @@ class ModifyProfileDialog : DialogFragment(), ProfileView, ModifyAvatarDialogLau
 
         originalAccount = updatedAccount
         fillDefaultDialogFields(view!!)
+        profileInfoFragment.updateProfileInfo(updatedAccount)
     }
 
     fun onModifyError(error: String) {

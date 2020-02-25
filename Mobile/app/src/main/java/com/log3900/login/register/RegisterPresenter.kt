@@ -107,4 +107,14 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
             bearer
         )
     }
+
+    fun validateConfirmPassword(password: String, confirmPassword: String): Boolean {
+        return if (password != confirmPassword) {
+            profileView.setConfirmPasswordError("Password doesn't match")
+            true
+        } else {
+            profileView.setConfirmPasswordError(null)
+            true
+        }
+    }
 }

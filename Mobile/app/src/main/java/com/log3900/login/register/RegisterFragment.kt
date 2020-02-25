@@ -29,12 +29,13 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
     lateinit var avatarView: ImageView
     lateinit var usernameInput: TextInputEditText
     lateinit var passwordInput: TextInputEditText
-    lateinit var emailInput:    TextInputEditText
+    lateinit var confirmPasswordInput: TextInputEditText
+    lateinit var emailInput: TextInputEditText
     lateinit var firstnameInput: TextInputEditText
     lateinit var lastnameInput: TextInputEditText
 
-    lateinit var backBtn:   MaterialButton
-    lateinit var registerBtn:   MaterialButton
+    lateinit var backBtn: MaterialButton
+    lateinit var registerBtn: MaterialButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,6 +80,15 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
                 enableRegisterIfAllValid()
             }
         }
+
+        confirmPasswordInput =
+            root.findViewById<TextInputEditText>(R.id.password_reenter_input).apply {
+                doAfterTextChanged {
+                    val password = passwordInput.text.toString()
+                    registerPresenter.validateConfirmPassword(password, text.toString())
+                    enableRegisterIfAllValid()
+                }
+            }
 
         emailInput = root.findViewById<TextInputEditText>(R.id.email_input).apply {
             doAfterTextChanged {
@@ -158,15 +168,17 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
      * Changes if the "Register" button is enabled
      */
     private fun enableRegisterIfAllValid() {
-        val username    = usernameInput.text.toString()
-        val password    = passwordInput.text.toString()
-        val email       = emailInput.text.toString()
-        val firstname   = firstnameInput.text.toString()
-        val lastname    = lastnameInput.text.toString()
+        val username = usernameInput.text.toString()
+        val password = passwordInput.text.toString()
+        val confirmPassword = confirmPasswordInput.text.toString()
+        val email = emailInput.text.toString()
+        val firstname = firstnameInput.text.toString()
+        val lastname = lastnameInput.text.toString()
 
         // All fields are valid
         registerBtn.isEnabled = registerPresenter.validateUsername(username)
                 && registerPresenter.validatePassword(password)
+                && registerPresenter.validateConfirmPassword(password, confirmPassword)
                 && registerPresenter.validateEmail(email)
                 && registerPresenter.validateFirstname(firstname)
                 && registerPresenter.validateLastname(lastname)
@@ -175,16 +187,24 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
     override fun setUsernameError(error: String?) {
         usernameInput.error = error
     }
+
     override fun setPasswordError(error: String?) {
         passwordInput.error = error
     }
+
     override fun setEmailError(error: String?) {
         emailInput.error = error
     }
+
     override fun setFirstnameError(error: String?) {
         firstnameInput.error = error
     }
+
     override fun setLastnameError(error: String?) {
         lastnameInput.error = error
+    }
+
+    fun setConfirmPasswordError(error: String?) {
+        confirmPasswordInput.error = error
     }
 }

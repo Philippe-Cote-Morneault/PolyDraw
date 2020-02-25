@@ -5,9 +5,7 @@ import com.google.gson.JsonObject
 import com.log3900.shared.network.rest.Retrofit
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface AuthenticationRestService {
     @POST("/auth")
@@ -19,8 +17,13 @@ interface AuthenticationRestService {
         @Body data: JsonObject
     ): Call<JsonObject>
 
+    @GET("/users/{userID}")
+    fun getUserInfo(
+        @Header("SessionToken") sessionToken: String,
+        @Path("userID") userID: String
+    ): Call<JsonObject>
+
     companion object {
         val service: AuthenticationRestService = Retrofit.retrofit.create(AuthenticationRestService::class.java)
     }
-
 }

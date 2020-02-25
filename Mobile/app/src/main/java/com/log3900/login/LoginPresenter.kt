@@ -63,23 +63,46 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             }
         })
 
-        storeUser(username, session, bearer, userID)
+        getUserInfo(session, bearer, userID)
+//        val account = getUserInfo(session, bearer, userID)
+//        if (account == null) {
+//            handleErrorAuth("Error while trying to get account information")
+//            return
+//        }
+//        storeUser(account, session, bearer)
         SocketService.instance?.sendMessage(
             Event.SOCKET_CONNECTION,
             session.toByteArray(Charsets.UTF_8))
     }
 
-    private fun storeUser(username: String, sessionToken: String, bearerToken: String, userID: String) {
-        // TODO: Get actual info
-        AccountRepository.createAccount(Account(
-            UUID.fromString(userID),
-            username.toLowerCase(),
-            0,
-            "dummy@email.com",
-            "Firstname",
-            "Last-Name",
-            sessionToken,
-            bearerToken
+    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String) {
+        println("Getting user info...")
+        val call = AuthenticationRestService.service.getUserInfo(sessionToken, userID)
+        call.enqueue(object: Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                when (response.code()) {
+                    200 -> {
+                        println("Sucessful user response")
+                        val account = parseJsonAccount(response.body()!!)
+                        storeUser(account, sessionToken, bearerToken)
+                    }
+
+                    else -> {
+                        handleErrorAuth("Error while getting account information.")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                handleErrorAuth(t.toString())
+            }
+        })
+    }
+
+    private fun storeUser(account: Account, sessionToken: String, bearerToken: String) {
+        AccountRepository.createAccount(account.copy(
+            sessionToken = sessionToken,
+            bearerToken = bearerToken
         ))
     }
 
@@ -144,5 +167,17 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
 
     override fun pause() {
 
+    }
+
+    private fun parseJsonAccount(json: JsonObject): Account {
+        return Account(
+            json.get("Username").asString,
+            json.get("PictureID").asInt,
+            json.get("Email").asString,
+            json.get("FirstName").asString,
+            json.get("LastName").asString,
+            "",     // Session token and bearer token are not important right now
+            ""
+        )
     }
 }
