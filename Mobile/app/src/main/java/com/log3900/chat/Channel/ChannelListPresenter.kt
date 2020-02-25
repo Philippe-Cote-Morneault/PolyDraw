@@ -4,6 +4,7 @@ import com.log3900.chat.ChatManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
+import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -74,7 +75,13 @@ class ChannelListPresenter : Presenter {
     }
 
     fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
-        chatManager.deleteChannel(channel)
+        channelListView.showConfirmationDialog("Delete message", "Are you sure you want to delete channel ${channel.name}?",
+            { _, _ ->
+                chatManager.deleteChannel(channel)
+            },
+            { dialog, _ ->
+                dialog.dismiss()
+            })
     }
 
     fun onCreateChannelButtonClick() {
