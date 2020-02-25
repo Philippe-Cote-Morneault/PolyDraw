@@ -76,7 +76,7 @@ open class MainActivity : AppCompatActivity() {
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.START)
-            startProfileFragment()
+            startFragment("PROFILE_VIEW_FRAGMENT_TAG") { ProfileFragment() }
         }
 
     }
@@ -85,18 +85,6 @@ open class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
 
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    private fun startProfileFragment() {
-        val PROFILE_TAG = "PROFILE_VIEW_FRAGMENT_TAG"
-        val fragmentManager = supportFragmentManager
-        if (fragmentManager.findFragmentByTag(PROFILE_TAG) != null)
-            return
-
-        val fragment = ProfileFragment()
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.nav_host_fragment, fragment, PROFILE_TAG)
-        fragmentTransaction.commit()
     }
 
     private fun logout() {
@@ -114,4 +102,15 @@ open class MainActivity : AppCompatActivity() {
         logout()
     }
 
+    private fun<T: Fragment> startFragment(tag: String, fragmentConstr: () -> T) {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.findFragmentByTag(tag) != null)
+            return
+
+        val fragment: Fragment = fragmentConstr()
+        fragmentManager.beginTransaction().apply {
+            add(R.id.nav_host_fragment, fragment, tag)
+            commit()
+        }
+    }
 }
