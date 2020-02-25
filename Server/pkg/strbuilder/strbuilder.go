@@ -23,6 +23,10 @@ func (b *StrBuilder) String() string {
 	return *(*string)(unsafe.Pointer(&b.buf))
 }
 
+func (b *StrBuilder) StringVal() string {
+	return string(b.buf)
+}
+
 // Len returns the number of accumulated bytes; b.Len() == len(b.String()).
 func (b *StrBuilder) Len() int { return len(b.buf) }
 
