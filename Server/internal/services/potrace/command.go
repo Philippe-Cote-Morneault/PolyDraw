@@ -7,6 +7,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/datastore"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/parser"
+	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 	"io/ioutil"
 	"os/exec"
 	"strings"
@@ -49,6 +50,8 @@ func Translate(svgKey string, brushSize int, mode int) error {
 		return err
 	}
 
+	xmlSvg.G.Style = "fill:none;stroke:black"
+
 	//Check all the paths
 	for i := range xmlSvg.G.XMLPaths {
 		var path *model.XMLPath
@@ -73,7 +76,52 @@ func Translate(svgKey string, brushSize int, mode int) error {
 
 //splitPath export paths
 func splitPath(paths *[]model.XMLPath) {
+	builder := strbuilder.StrBuilder{}
+	builder.Grow(128)
+	newPaths := make([]model.XMLPath, 0, 20)
 	for i := range *paths {
-		parser.ParseD((*paths)[i].D)
+		commands := parser.ParseD((*paths)[i].D)
+
+		lastChunk := 0
+		subPathCount := 0
+
+		for j := range commands {
+			char := commands[j].Command
+			if (char == 'm' || char == 'M') && j != 0 {
+				singleCommands := commands[lastChunk:j]
+				processChunk(&singleCommands, &(*paths)[i], &newPaths, &builder, lastChunk)
+
+				lastChunk = j
+				subPathCount++
+			} else if j == 0 {
+				if char == 'm' || char == 'M' {
+					subPathCount++
+				}
+			}
+		}
+
+		if subPathCount >= 1 {
+			singleCommands := commands[lastChunk:]
+			processChunk(&singleCommands, &(*paths)[i], &newPaths, &builder, lastChunk)
+		}
 	}
+	*paths = newPaths
+}
+
+func processChunk(commands *[]parser.Command, currentPath *model.XMLPath, paths *[]model.XMLPath, builder *strbuilder.StrBuilder, j int) {
+	builder.Reset()
+
+	singlePath := model.XMLPath{
+		ID:        uuid.New(),
+		Eraser:    currentPath.Eraser,
+		Brush:     currentPath.Brush,
+		BrushSize: currentPath.BrushSize,
+		Color:     currentPath.Color,
+	}
+
+	for i := range *commands {
+		builder.WriteString((*commands)[i].Encode())
+	}
+	singlePath.D = builder.StringVal()
+	*paths = append(*paths, singlePath)
 }
