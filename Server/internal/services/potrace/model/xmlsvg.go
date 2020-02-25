@@ -20,6 +20,7 @@ type XMLSvg struct {
 //XMLG model G
 type XMLG struct {
 	Transform string    `xml:"transform,attr"`
+	Style     string    `xml:"style,attr"`
 	XMLPaths  []XMLPath `xml:"path"`
 }
 
