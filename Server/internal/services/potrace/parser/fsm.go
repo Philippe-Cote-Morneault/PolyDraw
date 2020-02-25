@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	//NUMBUFF buffer containing the number of digits. If more memory allocation will take care of it
 	NUMBUFF = 8
 )
 
@@ -102,11 +103,18 @@ func (f *fsm) parseNumber(char rune) {
 //parseCommand of the command add it to the array
 func (f *fsm) endCommand() {
 	if f.curCommand != ' ' {
-		//TODO command parse for the point relativeness
 		f.Commands = append(f.Commands, Command{
 			Command:    f.curCommand,
 			Parameters: f.numbers,
 		})
+
+		cmdLength := len(f.Commands)
+		if cmdLength > 1 {
+			f.Commands[cmdLength-1].Parse(&f.Commands[cmdLength-2].EndPos)
+		} else {
+			startPos := Point{}
+			f.Commands[cmdLength-1].Parse(&startPos)
+		}
 
 		f.curCommand = ' '
 		f.numbers = make([]float32, 0, 16)
