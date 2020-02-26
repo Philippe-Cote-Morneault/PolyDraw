@@ -120,6 +120,9 @@ func processChunk(commands *[]svgparser.Command, currentPath *model.XMLPath, pat
 	}
 
 	for i := range *commands {
+		if i == 0 {
+			singlePath.FirstCommand = (*commands)[i]
+		}
 		builder.WriteString((*commands)[i].Encode())
 	}
 	singlePath.D = builder.StringVal()

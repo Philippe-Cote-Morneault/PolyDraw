@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/xml"
 	"github.com/google/uuid"
+	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 )
 
 //XMLSvg model XML
@@ -26,12 +27,13 @@ type XMLG struct {
 
 //XMLPath model path
 type XMLPath struct {
-	D         string    `xml:"d,attr"`
-	Time      int       `xml:"polydraw:time,attr"`
-	Order     int       `xml:"polydraw:order,attr"`
-	Color     int       `xml:"polydraw:color,attr"`
-	Eraser    bool      `xml:"polydraw:eraser,attr"`
-	Brush     string    `xml:"polydraw:brush,attr"`
-	BrushSize int       `xml:"polydraw:brushsize,attr"`
-	ID        uuid.UUID `xml:"id,attr"`
+	D            string            `xml:"d,attr"`
+	Time         int               `xml:"polydraw:time,attr"`
+	Order        int               `xml:"polydraw:order,attr"`
+	Color        int               `xml:"polydraw:color,attr"`
+	Eraser       bool              `xml:"polydraw:eraser,attr"`
+	Brush        string            `xml:"polydraw:brush,attr"`
+	BrushSize    int               `xml:"polydraw:brushsize,attr"`
+	ID           uuid.UUID         `xml:"id,attr"`
+	FirstCommand svgparser.Command `xml:"-"`
 }
