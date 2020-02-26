@@ -310,7 +310,7 @@ namespace ClientLourd.ViewModels
 
         private async Task CreateChannel()
         {
-            var dialog = new InputDialog("Enter the name for the new channel");
+            var dialog = new InputDialog("Enter the name for the new channel", 20);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
             {

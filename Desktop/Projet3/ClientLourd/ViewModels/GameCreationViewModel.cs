@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -227,7 +228,15 @@ namespace ClientLourd.ViewModels
         private void AddImage(string image)
         {
             //TODO validate the file
-            Image = image;
+            FileInfo f = new FileInfo(image);
+            if (f.Length >= 5000000)
+            {
+                DialogHost.Show(new ClosableErrorDialog("You cant upload a file larger than 5MB"), "Dialog");
+            }
+            else
+            {
+                Image = image;
+            }
         }
     }
 }
