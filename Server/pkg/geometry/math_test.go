@@ -1,7 +1,6 @@
 package geometry
 
 import "testing"
-import "fmt"
 
 func BenchmarkBezierLength(b *testing.B) {
 	InitTable()
@@ -10,16 +9,16 @@ func BenchmarkBezierLength(b *testing.B) {
 		Y: 0,
 	}
 	c1 := Point{
-		X: 0,
-		Y: 5,
+		X: -400,
+		Y: -400,
 	}
 	c2 := Point{
-		X: 0,
-		Y: 10,
+		X: 200,
+		Y: 200,
 	}
 	end := Point{
-		X: 5,
-		Y: 5,
+		X: 200,
+		Y: 200,
 	}
 	b.ResetTimer()
 	var value float64
