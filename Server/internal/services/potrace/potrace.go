@@ -2,6 +2,7 @@ package potrace
 
 import (
 	"log"
+	"regexp"
 	"syscall"
 
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
@@ -13,7 +14,7 @@ type Potrace struct {
 
 //Init the messenger service
 func (p *Potrace) Init() {
-
+	transformReg = regexp.MustCompile(`(?P<command>\w*)\((?P<attr1>[-\d.e]+)(,(?P<attr2>[-\d.e]+))?\)`)
 }
 
 //Start the potrace service
