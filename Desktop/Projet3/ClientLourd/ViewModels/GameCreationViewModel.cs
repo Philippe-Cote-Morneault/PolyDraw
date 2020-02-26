@@ -21,6 +21,7 @@ namespace ClientLourd.ViewModels
     {
         public GameCreationViewModel()
         {
+            PreviewGUIEnabled = true;
             Hints = new ObservableCollection<string>(new string[3]);
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
@@ -189,9 +190,9 @@ namespace ClientLourd.ViewModels
                 }
                 else
                 {
-                    await RestClient.PostGameImage(_gameID, AppDomain.CurrentDomain.BaseDirectory + "tmp.svg", PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
-
+                    await RestClient.PostGameImage(_gameID, DrawnImagePath, PotraceMode.Classic, BlackLevelThreshold / 100.0, BrushSize);
                 }
+
                 NotifyPropertyChanged(nameof(PotraceModes));
                 NotifyPropertyChanged(nameof(BlackLevelThreshold));
                 NotifyPropertyChanged(nameof(BrushSize));
@@ -238,5 +239,29 @@ namespace ClientLourd.ViewModels
                 Image = image;
             }
         }
+
+        bool _previewGUIEnabled;
+
+        public bool PreviewGUIEnabled
+        {
+            get { return _previewGUIEnabled; }
+            set
+            {
+                if (value != _previewGUIEnabled)
+                {
+                    _previewGUIEnabled = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        string _drawnImagePath;
+
+        public string DrawnImagePath
+        {
+            get => _drawnImagePath;
+            set => _drawnImagePath = value;
+        }
+            
     }
 }

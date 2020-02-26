@@ -13,6 +13,12 @@ using Svg;
 using ClientLourd.Utilities.Constants;
 using System.Windows.Ink;
 using System.Text;
+using ClientLourd.Services.SocketService;
+using ClientLourd.Models.NonBindable;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Models.Bindable;
+using System.Windows.Input;
+using ClientLourd.Utilities.Extensions;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -21,6 +27,19 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
+            SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
+            SocketClient.ServerStartsDrawing += SocketClientOnServerStartsDrawing;
+            SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
+        }
+
+        public SocketClient SocketClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+
+        public SessionInformations SessionInformations
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations; }
         }
 
         private GameCreationViewModel ViewModel
@@ -74,11 +93,11 @@ namespace ClientLourd.Views.Dialogs
             
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
-            using (XmlWriter w = XmlWriter.Create("tmp.svg", settings))
+            ViewModel.DrawnImagePath = $"{Path.GetTempFileName()}.svg";
+            using (XmlWriter w = XmlWriter.Create(ViewModel.DrawnImagePath, settings))
             {
                 xmlDoc.Save(w);
             }
-
         }
 
         private XmlDocument GenerateXMLDoc()
@@ -86,7 +105,7 @@ namespace ClientLourd.Views.Dialogs
             var svg = new SvgDocument();
             
             // Add polydram namespace
-            svg.CustomAttributes.Add("xmlns:polydraw", "http://polydraw");
+            svg.CustomAttributes.Add("xmlns:polydraw", "http://example.org/polydraw");
 
             var colorServer = new SvgColourServer(System.Drawing.Color.Black);
             var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
@@ -157,8 +176,84 @@ namespace ClientLourd.Views.Dialogs
             svgPath.CustomAttributes.Add("polydraw:brushsize", stroke.GetPropertyData(GUIDs.brushSize).ToString());
 
             return svgPath;
-        } 
+        }
 
-        
+        // TODO: Delete this
+        private StrokeInfo GetMockStrokeMessage() 
+        {
+            byte[] firstByte = new byte[] { 135 };
+            byte[] strokeUid = Encoding.ASCII.GetBytes("12345678-9012-34");
+            byte[] userUid = Encoding.ASCII.GetBytes("12345678-9012-34");
+            byte[] twoBytesPadding = new byte[2];
+            byte[] oneBytePadding = new byte[1] {11};
+            byte[] points = new byte[200];
+            for (byte i = 0; i < 200; i +=2)
+            {
+                points[i] = 0;
+                points[i + 1] = i;
+            }
+
+            var mockData = new byte[firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length + points.Length];
+
+            firstByte.CopyTo(mockData, 0);
+            strokeUid.CopyTo(mockData, firstByte.Length);
+            userUid.CopyTo(mockData, strokeUid.Length + firstByte.Length);
+            twoBytesPadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length);
+            twoBytesPadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length);
+            oneBytePadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length);
+            points.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length);
+
+            return new StrokeInfo(mockData);
+        }
+
+        public void PlayPreview(object sender, EventArgs e)
+        {
+
+            StrokeInfo mock = GetMockStrokeMessage();
+            //StrokeInfo mock2;
+            PreviewCanvas.AddStroke(mock);
+            PreviewCanvas.AddStroke(mock);
+            //SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
+        }
+
+        private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
+        {
+            // If 0x00
+            // Dialog with error
+        }
+
+        private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
+        {
+            ViewModel.PreviewGUIEnabled = false;
+            
+        }
+
+        private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
+        {
+            ViewModel.PreviewGUIEnabled = true;
+        }
+
+        private void AddPoints()
+        {
+            if (PreviewCanvas.Strokes.Count == 0)
+            {
+                StylusPointCollection spCol = new StylusPointCollection();
+                for (int i = 0; i < 100; i++)
+                {
+                    spCol.Add(new StylusPoint(i, i));
+                    spCol.Add(new StylusPoint(i + 1, i + 1));
+                }
+                Stroke newStroke = new Stroke(spCol);
+                PreviewCanvas.Strokes.Add(newStroke);
+            }
+            else
+            {
+                
+            }
+            
+            //PreviewCanvas.Str
+        }
+
+
     }
 }

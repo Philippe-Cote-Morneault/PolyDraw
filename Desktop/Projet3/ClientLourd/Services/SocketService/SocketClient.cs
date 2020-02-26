@@ -164,6 +164,18 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.UserDeletedChannel:
                             OnUserDeletedChannel(this, new MessageReceivedEventArgs(data));
                             break;
+                        case SocketMessageTypes.ServerStrokeSent:
+                            OnServerStrokeSent(this, new StrokeSentEventArgs(data));
+                            break;
+                        case SocketMessageTypes.ServerStartsDrawing:
+                            OnServerStartsDrawing(this, new DrawingEventArgs(data));
+                            break;
+                        case SocketMessageTypes.ServerEndsDrawing:
+                            OnServerEndsDrawing(this, new DrawingEventArgs(data));
+                            break;
+                        case SocketMessageTypes.DrawingPreviewResponse:
+                            OnDrawingPreviewResponse(this, new DrawingEventArgs(data));
+                            break;
                         case SocketMessageTypes.ServerMessage:
                             OnServerMessage(this, new SocketErrorEventArgs(data));
                             break;
@@ -185,6 +197,10 @@ namespace ClientLourd.Services.SocketService
                 //Raw bytes
                 case SocketMessageTypes.ServerConnectionResponse:
                     return bytes;
+                case SocketMessageTypes.ServerStrokeSent:
+                    return bytes;
+
+
                 //Message pack
                 default:
                     return MessagePackSerializer.Deserialize<dynamic>(bytes, ContractlessStandardResolver.Options);
