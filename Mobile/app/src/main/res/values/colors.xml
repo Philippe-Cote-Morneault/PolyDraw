@@ -7,6 +7,17 @@
     <color name="color_loss_background">#80E91E63</color>
     <color name="color_loss_text">#E91E63</color>
     <color name="color_border">@color/color_primary_mid_brush</color>
+    
+    <!-- DRAW COLORS -->
+    <color name="color_draw_black">#000000</color>
+    <color name="color_draw_white">#FFFFFF</color>
+    <color name="color_draw_red">#FF0000</color>
+    <color name="color_draw_green">#00FF00</color>
+    <color name="color_draw_blue">#0000FF</color>
+    <color name="color_draw_yellow">#FFFF00</color>
+    <color name="color_draw_cyan">#00FFFF</color>
+    <color name="color_draw_magenta">#FF00FF</color>
+
     <!-- MATERIAL COLORS -->
 
     <!--colorPrimary colors map to components and elements, such as app bars and buttons. -->
