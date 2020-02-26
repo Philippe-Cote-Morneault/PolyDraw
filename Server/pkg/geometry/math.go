@@ -9,6 +9,7 @@ type legendreGauss struct {
 
 var quadratureTable map[int]legendreGauss
 
+//InitTable of Legendre-Gauss in memory
 func InitTable() {
 	quadratureTable = map[int]legendreGauss{
 		1: {0.5688888888888889, 0.0000000000000000},
