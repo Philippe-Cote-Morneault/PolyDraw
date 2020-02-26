@@ -9,5 +9,5 @@ func EucledianDist(a *Point, b *Point) float64 {
 
 //BezierLength calculates the length of a bezier curve
 func BezierLength(start *Point, c1 *Point, c2 *Point, end *Point) float64 {
-
+	return 0.0
 }
