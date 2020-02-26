@@ -15,7 +15,7 @@
         <e p="Models" t="Include">
           <e p="Bindable" t="Include">
             <e p="Channel.cs" t="Include" />
-            <e p="Editor.cs" t="Include" />
+            <e p="EditorInformation.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="ModelBase.cs" t="Include" />
             <e p="SessionInformations.cs" t="Include" />
@@ -40,7 +40,6 @@
                 <e p="ChannelSection.g.cs" t="Include" />
                 <e p="Chat.g.cs" t="Include" />
                 <e p="Conversation.g.cs" t="Include" />
-                <e p="Editor.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
                 <e p="Tutorial" t="Include">

@@ -13,6 +13,7 @@ using ClientLourd.ViewModels;
 using Svg;
 using System.Text;
 using System.Windows.Ink;
+using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Extensions;
 using ClientLourd.Utilities.Constants;
 
@@ -34,14 +35,15 @@ namespace ClientLourd.Views.Controls
         public Editor()
         {
             InitializeComponent();
-            DataContext = new EditorViewModel();
             Loaded += OnLoad;
+            var context = (EditorViewModel) DataContext;
         }
+
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             // Bubble inkCanvas event so we can capture it
-            surfaceDessin.AddHandler(InkCanvas.MouseDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
+            Canvas.AddHandler(InkCanvas.MouseDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
         }
 
         private Button _selectedColor;
@@ -68,9 +70,9 @@ namespace ClientLourd.Views.Controls
                 millisecondsTakenToDraw = 5000;
 
             stroke.AddPropertyData(GUIDs.time, millisecondsTakenToDraw);
-            stroke.AddPropertyData(GUIDs.brushSize, editorVM.TailleTrait);
-            stroke.AddPropertyData(GUIDs.brushType, editorVM.PointeSelectionnee);
-            stroke.AddPropertyData(GUIDs.eraser, (editorVM.OutilSelectionne == "efface_segment").ToString());
+            stroke.AddPropertyData(GUIDs.brushSize, editorVM.EditorInformation.BrushSize.ToString());
+            stroke.AddPropertyData(GUIDs.brushType, editorVM.EditorInformation.SelectedTip.ToString());
+            stroke.AddPropertyData(GUIDs.eraser, (editorVM.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
             stroke.AddPropertyData(GUIDs.color, ColorToNumber(stroke.DrawingAttributes.Color.ToString()).ToString());
         }
 
@@ -86,38 +88,55 @@ namespace ClientLourd.Views.Controls
 
         private void surfaceDessin_MouseMove(object sender, MouseEventArgs e)
         {
-            Point p = e.GetPosition(surfaceDessin);
+            Point p = e.GetPosition(Canvas);
             textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 
 
         private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string tool = (ToolsList.SelectedItem as ListBoxItem)?.Tag as string;
-            
-
-            if ((DataContext as EditorViewModel) != null)
-            {
-                if (tool == "efface_segment")
+                if(Canvas != null)
                 {
-                    surfaceDessin.UseCustomCursor = true;
-                    surfaceDessin.Cursor = _pointEraser;
-                    (DataContext as EditorViewModel).CouleurSelectionnee = "#FFFFFFFF";
+                    var tag = (ToolsList.SelectedItem as ListBoxItem)?.Tag;
+                    if (tag != null)
+                    {
+                        InkCanvasEditingMode tool = tag is InkCanvasEditingMode ? (InkCanvasEditingMode) tag : InkCanvasEditingMode.None;
 
+                        if ((DataContext as EditorViewModel) != null)
+                        {
+                            if (tool == InkCanvasEditingMode.EraseByPoint)
+                            {
+                                Canvas.UseCustomCursor = true;
+                                Canvas.Cursor = _pointEraser;
+                                ((EditorViewModel) DataContext).EditorInformation.SelectedColor = Colors.White;
+                            }
+                            else
+                            {
+                                Canvas.UseCustomCursor = false;
+                                if (_selectedColor != null)
+                                {
+                                    Color c = (Color)((Ellipse) _selectedColor.Content).Tag;
+                                    ((EditorViewModel) DataContext).EditorInformation.SelectedColor = c;
+                                }
+                                else
+                                {
+                                    ((EditorViewModel) DataContext).EditorInformation.SelectedColor = Colors.Red;
+                                }
+                            }
+                        }
+                        (DataContext as EditorViewModel)?.ChangeToolCommand.Execute(tool);
+                    }
                 }
-                else
-                {
-                    surfaceDessin.UseCustomCursor = false;
-                    ((EditorViewModel)DataContext).CouleurSelectionnee = (_selectedColor != null) ? ((Ellipse)_selectedColor.Content).Fill.ToString(): "#FF000000";
-                }
-            }
-            (DataContext as EditorViewModel)?.ChoisirOutil.Execute(tool);
         }
 
         private void TipsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string tip = (TipsList.SelectedItem as ListBoxItem)?.Tag as string;
-            (DataContext as EditorViewModel)?.ChoisirPointe.Execute(tip);
+            var tag = (TipsList.SelectedItem as ListBoxItem)?.Tag;
+            if (tag != null)
+            {
+                var tip = tag is StylusTip ? (StylusTip) tag : StylusTip.Rectangle;
+                (DataContext as EditorViewModel)?.ChangeTipCommand.Execute(tip);
+            }
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -129,7 +148,8 @@ namespace ClientLourd.Views.Controls
             var button = (Button) sender;
             _selectedColor = button;
             _selectedColor.Background = Brushes.Gray;
-            ((EditorViewModel) DataContext).CouleurSelectionnee = ((Ellipse) _selectedColor.Content).Fill.ToString();
+            Color c = (Color)((Ellipse) _selectedColor.Content).Tag;
+            (DataContext as EditorViewModel)?.ChangeColorCommand.Execute(c);
         }
 
         private int ColorToNumber(string colorHex)

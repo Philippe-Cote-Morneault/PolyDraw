@@ -27,7 +27,7 @@ namespace ClientLourd.Services.InkCanvas
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
-            _editor.surfaceDessin.AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(CanvasOnMouseDown), true);
+            _editor.Canvas.AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(CanvasOnMouseDown), true);
             _points = new List<Point>();
             _timer = new Timer(20);
             _timer.Elapsed += TimerOnElapsed;
@@ -49,18 +49,18 @@ namespace ClientLourd.Services.InkCanvas
         public void Start()
         {
             //TODO send message to server
-            _editor.surfaceDessin.MouseMove += CanvasOnMouseMove;
-            _editor.surfaceDessin.MouseDown += CanvasOnMouseDown;
-            _editor.surfaceDessin.MouseUp += CanvasOnMouseUp;
+            _editor.Canvas.MouseMove += CanvasOnMouseMove;
+            _editor.Canvas.MouseDown += CanvasOnMouseDown;
+            _editor.Canvas.MouseUp += CanvasOnMouseUp;
             _timer.Start();
         }
         public void Stop()
         {
             //TODO send message to server
             _timer.Stop();
-            _editor.surfaceDessin.MouseMove -= CanvasOnMouseMove;
-            _editor.surfaceDessin.MouseDown -= CanvasOnMouseDown;
-            _editor.surfaceDessin.MouseUp -= CanvasOnMouseUp;
+            _editor.Canvas.MouseMove -= CanvasOnMouseMove;
+            _editor.Canvas.MouseDown -= CanvasOnMouseDown;
+            _editor.Canvas.MouseUp -= CanvasOnMouseUp;
         }
 
 
@@ -81,7 +81,7 @@ namespace ClientLourd.Services.InkCanvas
         {
             if (_strokeID != null)
             {
-                _points.Add(e.GetPosition(_editor.surfaceDessin));
+                _points.Add(e.GetPosition(_editor.Canvas));
             }
         }
     }

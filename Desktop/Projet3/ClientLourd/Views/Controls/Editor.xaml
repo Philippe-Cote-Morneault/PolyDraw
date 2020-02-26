@@ -6,14 +6,13 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <converter:BackgroundColorConverter x:Key="converterBackground" />
-        <converter:BorderConverter x:Key="converterBorder" />
-        <converter:EditorModeConverter x:Key="converterMode" />
-    </UserControl.Resources>
+    <UserControl.DataContext>
+        <viewModels:EditorViewModel/>
+    </UserControl.DataContext>
     <materialDesign:Card   materialDesign:ShadowAssist.ShadowDepth="Depth4">
     <DockPanel >
         <Border DockPanel.Dock="Top" BorderThickness="0,0.5,0,0.5" BorderBrush="#77000000">
@@ -27,19 +26,19 @@
                         SelectedIndex="0">
                         <ListBoxItem
                             ToolTip="Pencil"
-                            Tag="crayon">
+                            Tag="{x:Static InkCanvasEditingMode.Ink}">
                             <materialDesign:PackIcon
                                 Kind="Pencil" />
                         </ListBoxItem>
                         <ListBoxItem
-                            ToolTip="Free eraser"
-                            Tag="efface_segment">
+                            ToolTip="Erase by point"
+                            Tag="{x:Static InkCanvasEditingMode.EraseByPoint}">
                             <materialDesign:PackIcon
                                 Kind="PencilRemove" />
                         </ListBoxItem>
                         <ListBoxItem
-                            ToolTip="Assisted eraser"
-                            Tag="efface_trait">
+                            ToolTip="Erase by stroke"
+                            Tag="{x:Static InkCanvasEditingMode.EraseByStroke}">
                             <materialDesign:PackIcon
                                 Kind="Eraser" />
                         </ListBoxItem>
@@ -53,13 +52,13 @@
                         SelectedIndex="0">
                         <ListBoxItem
                             ToolTip="Circle tip"
-                            Tag="circle">
+                            Tag="{x:Static StylusTip.Ellipse}">
                             <materialDesign:PackIcon
                                 Kind="Circle" />
                         </ListBoxItem>
                         <ListBoxItem
                             ToolTip="Square tip"
-                            Tag="square">
+                            Tag="{x:Static StylusTip.Rectangle}">
                             <materialDesign:PackIcon
                                 Kind="Square" />
                         </ListBoxItem>
@@ -74,37 +73,36 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Items>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Black"/>
+                                        <Ellipse Width="15" Height="15" Fill="Black" Tag="{x:Static Colors.Black}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="White"/>
+                                        <Ellipse Width="15" Height="15" Fill="White" Tag="{x:Static Colors.White}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Red"/>
+                                        <Ellipse Width="15" Height="15" Fill="Red" Tag="{x:Static Colors.Red}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Green"/>
+                                        <Ellipse Width="15" Height="15" Fill="Green" Tag="{x:Static Colors.Green}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Blue"/>
+                                        <Ellipse Width="15" Height="15" Fill="Blue" Tag="{x:Static Colors.Blue}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Yellow"/>
+                                        <Ellipse Width="15" Height="15" Fill="Yellow" Tag="{x:Static Colors.Yellow}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Cyan"/>
+                                        <Ellipse Width="15" Height="15" Fill="Cyan" Tag="{x:Static Colors.Cyan}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Magenta"/>
+                                        <Ellipse Width="15" Height="15" Fill="Magenta" Tag="{x:Static Colors.Magenta}"/>
                                 </Button>
                             </ItemsControl.Items>
                         </ItemsControl>
                     <Separator />
-                    <Slider Width="100" Minimum="1" Maximum="50"
-                            ToolTip="Tip size"
-                            Value="{Binding Path=TailleTrait, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                            Foreground="Gray"
-                            TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="False" />
+                    <Slider Width="100" Minimum="1" Maximum="100"
+                            ToolTip="Brush size"
+                            TickFrequency="10"
+                            Value="{Binding Path=EditorInformation.BrushSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </ToolBar>
             </ToolBarTray>
 
@@ -117,15 +115,15 @@
             </StackPanel>
         </Border>
 
-            <InkCanvas ClipToBounds="True"  Name="surfaceDessin"
+            <InkCanvas ClipToBounds="True"  Name="Canvas"
                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                        MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
-                       Strokes="{Binding Path=Traits, Mode=OneTime}"
+                       Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
                        MouseDown="SaveDrawDebutTime"
                        StrokeCollected="OnStrokeAdded"
                        StrokeErasing="OnStrokeErase"
-                       EditingMode="{Binding Path=OutilSelectionne, Converter={StaticResource converterMode}, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                       DefaultDrawingAttributes="{Binding Path=AttributsDessin, Mode=OneTime}" />
+                       EditingMode="{Binding Path=EditorInformation.SelectedTool, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                       DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}" />
     </DockPanel>
     </materialDesign:Card>
 </UserControl>

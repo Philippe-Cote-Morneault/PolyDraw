@@ -56,7 +56,7 @@ namespace ClientLourd.Views.Dialogs
         private void UploadImageClick(object sender, RoutedEventArgs e)
         {
             // Bug here: if we use the erase by point eraser, there will be white strokes in the canvas.
-            if (EditorView.surfaceDessin.Strokes.Count > 0)
+            if (EditorView.Canvas.Strokes.Count > 0)
             {
                 CreateSVGFile(GenerateXMLDoc());
             }
@@ -93,9 +93,9 @@ namespace ClientLourd.Views.Dialogs
             
             svg.Children.Add(group);
 
-            for (int i = 0; i < EditorView.surfaceDessin.Strokes.Count; i++)
+            for (int i = 0; i < EditorView.Canvas.Strokes.Count; i++)
             {
-                var stroke = EditorView.surfaceDessin.Strokes[i];
+                var stroke = EditorView.Canvas.Strokes[i];
                 var geometry = stroke.GetGeometry(stroke.DrawingAttributes).GetOutlinedPath‌​Geometry();
 
                 var s = XamlWriter.Save(geometry);

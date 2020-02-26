@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Windows.Controls;
 using System.Windows.Ink;
+using System.Windows.Input;
 using System.Windows.Media;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
@@ -8,109 +11,64 @@ namespace ClientLourd.ViewModels
 {
     class EditorViewModel : ViewModelBase
     {
-        private Editor editeur = new Editor();
+        private EditorInformation _editorInformation = new EditorInformation();
 
-        // Ensemble d'attributs qui définissent l'apparence d'un trait.
-        public DrawingAttributes AttributsDessin { get; set; } = new DrawingAttributes();
-
-        public string OutilSelectionne
+        public EditorInformation EditorInformation
         {
-            get { return editeur.OutilSelectionne; }
-            set { NotifyPropertyChanged(); }
+            get { return _editorInformation; }
+            set
+            {
+                _editorInformation = value;
+                NotifyPropertyChanged();
+            }
         }
 
-        public string CouleurSelectionnee
-        {
-            get { return editeur.CouleurSelectionnee; }
-            set { editeur.CouleurSelectionnee = value; }
-        }
 
-        public string PointeSelectionnee
-        {
-            get { return editeur.PointeSelectionnee; }
-            set { NotifyPropertyChanged(); }
-        }
-
-        public int TailleTrait
-        {
-            get { return editeur.TailleTrait; }
-            set { editeur.TailleTrait = value; }
-        }
-
-        public StrokeCollection Traits { get; set; }
-
-        public RelayCommand<string> ChoisirPointe { get; set; }
-        public RelayCommand<string> ChoisirOutil { get; set; }
-
-        /// <summary>
-        /// Constructeur de VueModele
-        /// On récupère certaines données initiales du modèle et on construit les commandes
-        /// sur lesquelles la vue se connectera.
-        /// </summary>
         public EditorViewModel()
         {
-            // On écoute pour des changements sur le modèle. Lorsqu'il y en a, EditeurProprieteModifiee est appelée.
-            editeur.PropertyChanged += new PropertyChangedEventHandler(EditeurProprieteModifiee);
-
-            // On initialise les attributs de dessin avec les valeurs de départ du modèle.
-            AttributsDessin = new DrawingAttributes();
-            AttributsDessin.Color = (Color) ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
-            AjusterPointe();
-
-            Traits = editeur.traits;
-
-            // Pour les commandes suivantes, il est toujours possible des les activer.
-            // Donc, aucune vérification de type Peut"Action" à faire.
-            ChoisirPointe = new RelayCommand<string>(editeur.ChoisirPointe);
-            ChoisirOutil = new RelayCommand<string>(editeur.ChoisirOutil);
         }
 
+        private RelayCommand<InkCanvasEditingMode > _changeToolCommand;
 
-        /// <summary>
-        /// Traite les évènements de modifications de propriétés qui ont été lancés à partir
-        /// du modèle.
-        /// </summary>
-        /// <param name="sender">L'émetteur de l'évènement (le modèle)</param>
-        /// <param name="e">Les paramètres de l'évènement. PropertyName est celui qui nous intéresse. 
-        /// Il indique quelle propriété a été modifiée dans le modèle.</param>
-        private void EditeurProprieteModifiee(object sender, PropertyChangedEventArgs e)
+        public ICommand ChangeToolCommand
         {
-            if (e.PropertyName == "CouleurSelectionnee")
+            get
             {
-                AttributsDessin.Color = (Color)ColorConverter.ConvertFromString(editeur.CouleurSelectionnee);
-            }
-            else if (e.PropertyName == "OutilSelectionne")
-            {
-                OutilSelectionne = editeur.OutilSelectionne;
-            }
-            else if (e.PropertyName == "PointeSelectionnee")
-            {
-                PointeSelectionnee = editeur.PointeSelectionnee;
-                AjusterPointe();
-            }
-            else // e.PropertyName == "TailleTrait"
-            {
-                AjusterPointe();
+                return _changeToolCommand ??
+                       (_changeToolCommand = new RelayCommand<InkCanvasEditingMode >(tool =>
+                       {
+                           EditorInformation.SelectedTool = tool;
+                       }));
             }
         }
 
-        
+        RelayCommand<StylusTip> _changeTipCommand;
 
-
-        /// <summary>
-        /// C'est ici qu'est défini la forme de la pointe, mais aussi sa taille (TailleTrait).
-        /// Pourquoi deux caractéristiques se retrouvent définies dans une même méthode? Parce que pour créer une pointe 
-        /// horizontale ou verticale, on utilise une pointe carrée et on joue avec les tailles pour avoir l'effet désiré.
-        /// </summary>
-        private void AjusterPointe()
+        public ICommand ChangeTipCommand
         {
-
-            AttributsDessin.StylusTip =
-                (editeur.PointeSelectionnee == "circle") ? StylusTip.Ellipse : StylusTip.Rectangle;
-            AttributsDessin.Width = (editeur.PointeSelectionnee == "verticale") ? 1 : editeur.TailleTrait;
-            AttributsDessin.Height = (editeur.PointeSelectionnee == "horizontale") ? 1 : editeur.TailleTrait;
+            get
+            {
+                return _changeTipCommand ??
+                       (_changeTipCommand = new RelayCommand<StylusTip>(tip =>
+                       {
+                           EditorInformation.SelectedTip = tip;
+                       }));
+            }
         }
 
+        RelayCommand<Color> _changeColorCommand;
+
+        public ICommand ChangeColorCommand
+        {
+            get
+            {
+                return _changeColorCommand ??
+                       (_changeColorCommand = new RelayCommand<Color>(color =>
+                       {
+                           EditorInformation.SelectedColor = color;
+                       }));
+            }
+        }
         public override void AfterLogOut()
         {
             //TODO 
