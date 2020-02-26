@@ -36,11 +36,15 @@ func BezierLength(start *Point, c1 *Point, c2 *Point, end *Point) float64 {
 
 func bezierF(t float64, start *Point, c1 *Point, c2 *Point, end *Point) float64 {
 	result := 3 * math.Sqrt(
-		math.Pow(math.Pow(-1+t, 2)*float64(start.X)+(-1+(4-3*t)*t)*float64(c1.X)+
-			t*((-2+3*t)*float64(c2.X)-t*float64(end.X)), 2)+
+		pow2(pow2(-1+t)*float64(start.X)+(-1+(4-3*t)*t)*float64(c1.X)+
+			t*((-2+3*t)*float64(c2.X)-t*float64(end.X)))+
 
-			math.Pow(math.Pow(-1+t, 2)*float64(start.Y)+(-1+(4-3*t)*t)*float64(c1.Y)+
-				t*((-2+3*t)*float64(c2.Y)-t*float64(end.Y)), 2),
+			pow2(pow2(-1+t)*float64(start.Y)+(-1+(4-3*t)*t)*float64(c1.Y)+
+				t*((-2+3*t)*float64(c2.Y)-t*float64(end.Y))),
 	)
 	return result
+}
+
+func pow2(a float64) float64 {
+	return a * a
 }
