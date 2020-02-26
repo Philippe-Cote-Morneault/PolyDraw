@@ -23,6 +23,7 @@ func (b *StrBuilder) String() string {
 	return *(*string)(unsafe.Pointer(&b.buf))
 }
 
+//StringVal returns the string by value. The String() method returns a string that is linked to the buffer
 func (b *StrBuilder) StringVal() string {
 	return string(b.buf)
 }

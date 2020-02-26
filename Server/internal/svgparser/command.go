@@ -97,13 +97,13 @@ func (c *Command) Encode() string {
 		builder.WriteString(strconv.FormatFloat(float64(c.EndPos.Y), 'f', -1, 32))
 		builder.WriteRune(' ')
 		return builder.String()
-	} else {
-		builder.WriteRune(c.Command)
-		builder.WriteRune(' ')
-		for i := range c.Parameters {
-			builder.WriteString(strconv.FormatFloat(float64(c.Parameters[i]), 'f', -1, 32))
-			builder.WriteRune(' ')
-		}
-		return builder.String()
 	}
+	builder.WriteRune(c.Command)
+	builder.WriteRune(' ')
+	for i := range c.Parameters {
+		builder.WriteString(strconv.FormatFloat(float64(c.Parameters[i]), 'f', -1, 32))
+		builder.WriteRune(' ')
+	}
+	return builder.String()
+
 }
