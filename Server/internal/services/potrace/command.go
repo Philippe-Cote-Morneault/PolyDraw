@@ -62,6 +62,7 @@ func Translate(svgKey string, brushSize int, mode int) error {
 		path.BrushSize = brushSize
 	}
 	splitPath(&xmlSvg.G.XMLPaths)
+	Transform(&xmlSvg)
 	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
 	data, err := xml.Marshal(&xmlSvg)
 	err = datastore.PutFile(&data, svgKey)
@@ -115,13 +116,15 @@ func processChunk(commands *[]svgparser.Command, currentPath *model.XMLPath, pat
 		BrushSize: currentPath.BrushSize,
 		Color:     currentPath.Color,
 	}
-
+	length := 0.0
 	for i := range *commands {
 		if i == 0 {
 			singlePath.FirstCommand = (*commands)[i]
 		}
 		builder.WriteString((*commands)[i].Encode())
+		length += (*commands)[i].ComputeLength()
 	}
+	singlePath.Length = length
 	singlePath.D = builder.StringVal()
 	*paths = append(*paths, singlePath)
 }
