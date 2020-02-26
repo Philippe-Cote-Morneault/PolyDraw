@@ -10,7 +10,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 	"io/ioutil"
 	"os/exec"
-	"strings"
 )
 
 func checkCommand(command string) bool {
@@ -59,11 +58,9 @@ func Translate(svgKey string, brushSize int, mode int) error {
 		if path.ID == uuid.Nil {
 			path.ID = uuid.New()
 			path.Brush = "circle"
-			path.BrushSize = brushSize
 		}
-		path.D = strings.Replace(path.D, "\n", " ", -1)
+		path.BrushSize = brushSize
 	}
-	xmlSvg.XmlnsPolydraw = "http://polydraw"
 	splitPath(&xmlSvg.G.XMLPaths)
 	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
 	data, err := xml.Marshal(&xmlSvg)
