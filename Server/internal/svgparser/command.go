@@ -3,6 +3,7 @@ package svgparser
 import (
 	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 	"unicode"
@@ -106,5 +107,35 @@ func (c *Command) Encode() string {
 		builder.WriteRune(' ')
 	}
 	return builder.String()
+}
 
+//ComputeLength calculates the length of path
+func (c *Command) ComputeLength() float64 {
+	cLowerCase := unicode.ToLower(c.Command)
+	switch cLowerCase {
+	case 'l':
+		length := 0.0
+		current := geometry.Point{}
+		if unicode.IsLower(c.Command) {
+			for i := 0; i < len(c.Parameters); i += 2 {
+				length += geometry.EucledianDist(&current, &geometry.Point{X: c.Parameters[i], Y: c.Parameters[i+1]})
+			}
+			return length
+		}
+
+		current.X = c.StartPos.X
+		current.Y = c.StartPos.Y
+		for i := 0; i < len(c.Parameters); i += 2 {
+			length += geometry.EucledianDist(&current, &geometry.Point{X: c.Parameters[i], Y: c.Parameters[i+1]})
+			current.X = c.Parameters[i]
+			current.X = c.Parameters[i+1]
+		}
+	case 'h':
+		return math.Abs(float64(c.EndPos.X - c.StartPos.X))
+	case 'v':
+		return math.Abs(float64(c.EndPos.Y - c.StartPos.Y))
+	case 'c':
+
+	}
+	return 0
 }
