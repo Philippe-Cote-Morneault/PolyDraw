@@ -45,19 +45,19 @@ func random(paths *[]model.XMLPath) {
 func pano(paths *[]model.XMLPath, mode int) {
 	switch mode {
 	case 2:
-		sort.Slice(paths, func(i, j int) bool {
+		sort.Slice(*paths, func(i, j int) bool {
 			return (*paths)[i].FirstCommand.EndPos.X > (*paths)[j].FirstCommand.EndPos.X
 		})
 	case 3:
-		sort.Slice(paths, func(i, j int) bool {
+		sort.Slice(*paths, func(i, j int) bool {
 			return (*paths)[i].FirstCommand.EndPos.X < (*paths)[j].FirstCommand.EndPos.X
 		})
 	case 4:
-		sort.Slice(paths, func(i, j int) bool {
+		sort.Slice(*paths, func(i, j int) bool {
 			return (*paths)[i].FirstCommand.EndPos.Y > (*paths)[j].FirstCommand.EndPos.Y
 		})
 	case 5:
-		sort.Slice(paths, func(i, j int) bool {
+		sort.Slice(*paths, func(i, j int) bool {
 			return (*paths)[i].FirstCommand.EndPos.Y < (*paths)[j].FirstCommand.EndPos.Y
 		})
 	}
@@ -77,12 +77,12 @@ func centered(paths *[]model.XMLPath, mode int) {
 	//Order by distance
 	switch mode {
 	case 6:
-		sort.Slice(paths, func(i, j int) bool {
-			return distNonSquared(&(*paths)[i], &center) > distNonSquared(&(*paths)[j], &center)
+		sort.Slice(*paths, func(i, j int) bool {
+			return distNonSquared(&(*paths)[i], &center) < distNonSquared(&(*paths)[j], &center)
 		})
 	case 7:
-		sort.Slice(paths, func(i, j int) bool {
-			return distNonSquared(&(*paths)[i], &center) < distNonSquared(&(*paths)[j], &center)
+		sort.Slice(*paths, func(i, j int) bool {
+			return distNonSquared(&(*paths)[i], &center) > distNonSquared(&(*paths)[j], &center)
 		})
 	}
 	applyOrder(paths)
