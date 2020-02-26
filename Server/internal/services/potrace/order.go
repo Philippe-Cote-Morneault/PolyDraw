@@ -2,7 +2,7 @@ package potrace
 
 import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
-	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"math"
 	"math/rand"
 	"sort"
@@ -65,7 +65,7 @@ func pano(paths *[]model.XMLPath, mode int) {
 }
 
 func centered(paths *[]model.XMLPath, mode int) {
-	center := svgparser.Point{}
+	center := geometry.Point{}
 	for i := range *paths {
 		center.X += (*paths)[i].FirstCommand.EndPos.X
 		center.Y += (*paths)[i].FirstCommand.EndPos.Y
@@ -98,7 +98,7 @@ func pop(a *[]int, i int, lastElement int) int {
 	return value
 }
 
-func distNonSquared(a *model.XMLPath, b *svgparser.Point) float64 {
+func distNonSquared(a *model.XMLPath, b *geometry.Point) float64 {
 	return math.Pow(float64(a.FirstCommand.EndPos.X-b.X), 2) + math.Pow(float64(a.FirstCommand.EndPos.Y-b.Y), 2)
 }
 
