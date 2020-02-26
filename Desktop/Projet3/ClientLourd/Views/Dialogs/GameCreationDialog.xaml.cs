@@ -93,7 +93,8 @@ namespace ClientLourd.Views.Dialogs
             
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
-            using (XmlWriter w = XmlWriter.Create($"{Path.GetTempFileName()}.svg", settings))
+            ViewModel.DrawnImagePath = $"{Path.GetTempFileName()}.svg";
+            using (XmlWriter w = XmlWriter.Create(ViewModel.DrawnImagePath, settings))
             {
                 xmlDoc.Save(w);
             }
@@ -104,7 +105,7 @@ namespace ClientLourd.Views.Dialogs
             var svg = new SvgDocument();
             
             // Add polydram namespace
-            svg.CustomAttributes.Add("xmlns:polydraw", "http://polydraw");
+            svg.CustomAttributes.Add("xmlns:polydraw", "http://example.org/polydraw");
 
             var colorServer = new SvgColourServer(System.Drawing.Color.Black);
             var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
