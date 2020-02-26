@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"log"
 
 	"github.com/spf13/viper"
@@ -23,6 +24,7 @@ import (
 func main() {
 	config.Init()
 	model.DBConnect()
+	geometry.InitTable()
 
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}
