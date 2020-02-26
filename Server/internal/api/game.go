@@ -40,6 +40,12 @@ type gameResponseCreation struct {
 	GameID string
 }
 
+type gameImageRequestUpdate struct {
+	Mode       *int
+	BrushSize  *int
+	BlackLevel *float64
+}
+
 //PostGame represent the game creation
 func PostGame(w http.ResponseWriter, r *http.Request) {
 	var request gameRequestCreation
@@ -215,6 +221,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			image.BrushSize = brushsize
+			image.BlackLevel = blackLevel
 
 			svgKey, err := potrace.Trace(keyFile, blackLevel)
 			if err != nil {
@@ -238,6 +245,87 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+//PutGameImage used to update the mode of the picture
+func PutGameImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	gameID, err := uuid.Parse(vars["id"])
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		return
+	}
+
+	//Check if the game exists
+	game := model.Game{}
+	model.DB().Preload("Image").Where("id = ?", gameID).First(&game)
+
+	if game.ID == uuid.Nil {
+		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		return
+	}
+	//Parse json request
+	var request gameImageRequestUpdate
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&request)
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	if request.Mode != nil {
+		modeInt := *request.Mode
+		if modeInt > 7 || modeInt < 0 {
+			rbody.JSONError(w, http.StatusBadRequest, "The mode must be between 0-7.")
+			return
+		}
+		if game.Image.ImageFile != "" && modeInt == 0 {
+			rbody.JSONError(w, http.StatusBadRequest, "The mode can't be set to manual.")
+			return
+		}
+		game.Image.Mode = modeInt
+	}
+
+	if game.Image.ImageFile != "" {
+		//Error validation for Blacklevel & BrushSize
+		if request.BlackLevel != nil {
+			if *request.BlackLevel > 1 || *request.BlackLevel < 0 {
+				rbody.JSONError(w, http.StatusBadRequest, "The blacklevel must be between 0 and 1.")
+				return
+			}
+			game.Image.BlackLevel = *request.BlackLevel
+		}
+		if request.BrushSize != nil {
+			if *request.BrushSize > 100 || *request.BrushSize < 1 {
+				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be between 1 and 100.")
+				return
+			}
+			game.Image.BrushSize = *request.BrushSize
+
+		}
+
+		xmlNeedsUpdating := false
+		if request.BlackLevel != nil {
+			svgKey, err := potrace.Trace(game.Image.ImageFile, game.Image.BlackLevel)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			game.Image.SVGFile = svgKey
+			xmlNeedsUpdating = true
+		}
+		if request.BrushSize != nil || xmlNeedsUpdating {
+			err = potrace.Translate(game.Image.SVGFile, game.Image.BrushSize, game.Image.Mode)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+		}
+		model.DB().Save(&game)
+		rbody.JSON(w, http.StatusOK, "OK")
+		return
+	}
+	//Native SVG
+	//TODO SVG update order
 }
 
 //GetGame returns a game

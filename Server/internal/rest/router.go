@@ -33,6 +33,7 @@ func (a *Server) setRouters() {
 	a.Post("/games", a.handleRequest(api.PostGame))
 	a.Get("/games/{id}", a.handleRequest(api.GetGame))
 	a.Post("/games/{id}/image", a.handleRequest(api.PostGameImage))
+	a.Put("/games/{id}/image", a.handleRequest(api.PutGameImage))
 
 }
 
