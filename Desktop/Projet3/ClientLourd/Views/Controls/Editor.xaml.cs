@@ -122,6 +122,11 @@ namespace ClientLourd.Views.Controls
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            if ((DataContext as EditorViewModel).OutilSelectionne == "efface_segment")
+            {
+                return;
+            }
+
             if (_selectedColor != null)
             {
                 _selectedColor.Background = Brushes.Transparent;
