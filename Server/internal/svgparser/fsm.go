@@ -1,4 +1,4 @@
-package parser
+package svgparser
 
 import (
 	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"

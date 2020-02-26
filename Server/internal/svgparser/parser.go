@@ -1,4 +1,4 @@
-package parser
+package svgparser
 
 //Point represents a point
 type Point struct {

@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/datastore"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/parser"
+	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 	"io/ioutil"
 	"os/exec"
@@ -80,7 +80,7 @@ func splitPath(paths *[]model.XMLPath) {
 	builder.Grow(128)
 	newPaths := make([]model.XMLPath, 0, 20)
 	for i := range *paths {
-		commands := parser.ParseD((*paths)[i].D)
+		commands := svgparser.ParseD((*paths)[i].D)
 
 		lastChunk := 0
 		subPathCount := 0
@@ -108,7 +108,7 @@ func splitPath(paths *[]model.XMLPath) {
 	*paths = newPaths
 }
 
-func processChunk(commands *[]parser.Command, currentPath *model.XMLPath, paths *[]model.XMLPath, builder *strbuilder.StrBuilder, j int) {
+func processChunk(commands *[]svgparser.Command, currentPath *model.XMLPath, paths *[]model.XMLPath, builder *strbuilder.StrBuilder, j int) {
 	builder.Reset()
 
 	singlePath := model.XMLPath{
