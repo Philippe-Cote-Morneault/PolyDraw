@@ -1,4 +1,4 @@
-package com.log3900.shared.ui
+package com.log3900.shared.ui.dialogs
 
 import android.app.Dialog
 import android.content.DialogInterface

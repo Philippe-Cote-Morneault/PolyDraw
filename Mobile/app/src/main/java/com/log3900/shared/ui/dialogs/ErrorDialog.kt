@@ -1,11 +1,7 @@
-package com.log3900.shared.ui
+package com.log3900.shared.ui.dialogs
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import java.lang.IllegalStateException
-import android.R
 import android.app.Activity
 import android.content.Intent
 import com.log3900.login.LoginActivity

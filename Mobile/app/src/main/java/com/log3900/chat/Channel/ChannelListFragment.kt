@@ -2,6 +2,7 @@ package com.log3900.chat.Channel
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
+import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.dialog_fragment_progress_dialog.*
 import kotlin.collections.ArrayList
@@ -164,6 +166,16 @@ class ChannelListFragment : Fragment(), ChannelListView {
             channelCreationDialog?.dismiss()
             channelCreationDialog = null
         }
+    }
+
+    override fun showConfirmationDialog(title: String, message: String, positiveButtonListener: (dialog: DialogInterface, which: Int) -> Unit,
+                                        negativeButtonListener: (dialog: DialogInterface, which: Int) -> Unit) {
+
+        SimpleConfirmationDialog(this.context!!, title, message, positiveButtonListener, negativeButtonListener).show()
+    }
+
+    override fun hideConfirmationDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun notifyChannelsChange() {

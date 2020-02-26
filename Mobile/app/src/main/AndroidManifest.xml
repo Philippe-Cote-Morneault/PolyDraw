@@ -37,7 +37,7 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
 
-        <activity android:name=".shared.ui.ErrorDialog" />
+        <activity android:name=".shared.ui.dialogs.ErrorDialog" />
 
         <service android:name=".socket.SocketService"/>
         <service android:name=".session.MonitoringService"/>
