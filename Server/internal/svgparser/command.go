@@ -130,6 +130,7 @@ func (c *Command) ComputeLength() float64 {
 			current.X = c.Parameters[i]
 			current.X = c.Parameters[i+1]
 		}
+		return length
 	case 'h':
 		return math.Abs(float64(c.EndPos.X - c.StartPos.X))
 	case 'v':
