@@ -1,6 +1,7 @@
 package svgparser
 
 import (
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 	"log"
 	"strconv"
@@ -112,7 +113,7 @@ func (f *fsm) endCommand() {
 		if cmdLength > 1 {
 			f.Commands[cmdLength-1].Parse(&f.Commands[cmdLength-2].EndPos)
 		} else {
-			startPos := Point{}
+			startPos := geometry.Point{}
 			f.Commands[cmdLength-1].Parse(&startPos)
 		}
 

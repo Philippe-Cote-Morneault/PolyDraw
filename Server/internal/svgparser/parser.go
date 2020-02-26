@@ -1,11 +1,5 @@
 package svgparser
 
-//Point represents a point
-type Point struct {
-	X float32
-	Y float32
-}
-
 //ParseD  parses d string in svg
 func ParseD(input string) []Command {
 	fsm := fsm{}

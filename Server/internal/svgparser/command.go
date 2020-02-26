@@ -1,6 +1,7 @@
 package svgparser
 
 import (
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"log"
 	"strconv"
 	"strings"
@@ -10,13 +11,13 @@ import (
 //Command represents a command of the D string
 type Command struct {
 	Command    rune
-	StartPos   Point
-	EndPos     Point
+	StartPos   geometry.Point
+	EndPos     geometry.Point
 	Parameters []float32
 }
 
 //Parse is used to validate if the command is ok and to keep track of the current point
-func (c *Command) Parse(lastPoint *Point) {
+func (c *Command) Parse(lastPoint *geometry.Point) {
 	commandLower := unicode.ToLower(c.Command)
 	switch commandLower {
 	case 'c':
@@ -30,8 +31,8 @@ func (c *Command) Parse(lastPoint *Point) {
 	case 'v':
 		c.parseParam(lastPoint, 1, 0, -1)
 	case 'z':
-		c.StartPos = Point{lastPoint.X, lastPoint.Y}
-		c.EndPos = Point{lastPoint.X, lastPoint.Y}
+		c.StartPos = geometry.Point{lastPoint.X, lastPoint.Y}
+		c.EndPos = geometry.Point{lastPoint.X, lastPoint.Y}
 	//TODO do the things that are horrible
 	/*
 		case 's':
@@ -48,14 +49,14 @@ func (c *Command) Parse(lastPoint *Point) {
 	}
 }
 
-func (c *Command) parseParam(lastPoint *Point, size int, offsetX int, offsetY int) {
+func (c *Command) parseParam(lastPoint *geometry.Point, size int, offsetX int, offsetY int) {
 	lenParams := len(c.Parameters)
 	if lenParams%size == 0 {
-		c.StartPos = Point{lastPoint.X, lastPoint.Y}
+		c.StartPos = geometry.Point{lastPoint.X, lastPoint.Y}
 
 		if unicode.IsUpper(c.Command) {
 			//Just take the last position
-			c.EndPos = Point{}
+			c.EndPos = geometry.Point{}
 
 			if offsetX >= 0 {
 				c.EndPos.X = c.Parameters[lenParams-size+offsetX]
@@ -69,7 +70,7 @@ func (c *Command) parseParam(lastPoint *Point, size int, offsetX int, offsetY in
 			}
 		} else {
 			//We need to compute every node to get the last point
-			currentPoint := Point{X: lastPoint.X, Y: lastPoint.Y}
+			currentPoint := geometry.Point{X: lastPoint.X, Y: lastPoint.Y}
 			for i := 0; i < lenParams; i += size {
 				if offsetX >= 0 {
 					currentPoint.X += c.Parameters[i+offsetX]
