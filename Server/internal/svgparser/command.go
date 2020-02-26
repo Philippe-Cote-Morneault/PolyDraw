@@ -109,7 +109,7 @@ func (c *Command) Encode() string {
 	return builder.String()
 }
 
-//ComputeLength calculates the length of path
+//ComputeLength calculates the length of path of the commands used by potrace only
 func (c *Command) ComputeLength() float64 {
 	cLowerCase := unicode.ToLower(c.Command)
 	switch cLowerCase {
@@ -136,7 +136,31 @@ func (c *Command) ComputeLength() float64 {
 	case 'v':
 		return math.Abs(float64(c.EndPos.Y - c.StartPos.Y))
 	case 'c':
+		length := 0.0
+		current := geometry.Point{}
+		if unicode.IsLower(c.Command) {
+			for i := 0; i < len(c.Parameters); i += 6 {
+				length += geometry.BezierLength(&current,
+					&geometry.Point{X: c.Parameters[i], Y: c.Parameters[i+1]},
+					&geometry.Point{X: c.Parameters[i+2], Y: c.Parameters[i+3]},
+					&geometry.Point{X: c.Parameters[i+4], Y: c.Parameters[i+5]},
+				)
+			}
+			return length
+		}
 
+		current.X = c.StartPos.X
+		current.Y = c.StartPos.Y
+		for i := 0; i < len(c.Parameters); i += 6 {
+			length += geometry.BezierLength(&current,
+				&geometry.Point{X: c.Parameters[i], Y: c.Parameters[i+1]},
+				&geometry.Point{X: c.Parameters[i+2], Y: c.Parameters[i+3]},
+				&geometry.Point{X: c.Parameters[i+4], Y: c.Parameters[i+5]},
+			)
+			current.X = c.Parameters[i+4]
+			current.X = c.Parameters[i+5]
+		}
+		return length
 	}
 	return 0
 }
