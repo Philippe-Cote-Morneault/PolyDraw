@@ -13,7 +13,11 @@ namespace ClientLourd.Models.Bindable
             SelectedTool = InkCanvasEditingMode.Ink;
             SelectedTip= StylusTip.Ellipse;
             SelectedColor= Colors.Black;
+            IsAnEraser = false;
         }
+
+        
+
         private StrokeCollection _strokes = new StrokeCollection();
         
         private DrawingAttributes _drawingAttributes = new DrawingAttributes();
@@ -96,6 +100,21 @@ namespace ClientLourd.Models.Bindable
                 DrawingAttribtes.Width = BrushSize;
                 DrawingAttribtes.Height =BrushSize;
                 NotifyPropertyChanged();
+            }
+        }
+
+        private bool _isAnEraser;
+
+        public bool IsAnEraser
+        {
+            get { return _isAnEraser; }
+            set
+            {
+                if (_isAnEraser != value)
+                {
+                    _isAnEraser = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
     }

@@ -36,7 +36,11 @@ namespace ClientLourd.Views.Controls
         {
             InitializeComponent();
             Loaded += OnLoad;
-            var context = (EditorViewModel) DataContext;
+        }
+
+        private EditorViewModel ViewModel
+        {
+            get => DataContext as EditorViewModel;
         }
 
 
@@ -64,15 +68,14 @@ namespace ClientLourd.Views.Controls
         private void AddAttributesToStroke(Stroke stroke)
         {
             DateTime strokeEnd = DateTime.Now;
-            var editorVM = DataContext as EditorViewModel;
             double millisecondsTakenToDraw = (strokeEnd - _strokeStart).TotalMilliseconds;
             if (millisecondsTakenToDraw > 5000)
                 millisecondsTakenToDraw = 5000;
 
             stroke.AddPropertyData(GUIDs.time, millisecondsTakenToDraw);
-            stroke.AddPropertyData(GUIDs.brushSize, editorVM.EditorInformation.BrushSize.ToString());
-            stroke.AddPropertyData(GUIDs.brushType, editorVM.EditorInformation.SelectedTip.ToString());
-            stroke.AddPropertyData(GUIDs.eraser, (editorVM.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
+            stroke.AddPropertyData(GUIDs.brushSize, ViewModel.EditorInformation.BrushSize.ToString());
+            stroke.AddPropertyData(GUIDs.brushType, ViewModel.EditorInformation.SelectedTip.ToString());
+            stroke.AddPropertyData(GUIDs.eraser, (ViewModel.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
             stroke.AddPropertyData(GUIDs.color, ColorToNumber(stroke.DrawingAttributes.Color.ToString()).ToString());
         }
 
@@ -102,29 +105,33 @@ namespace ClientLourd.Views.Controls
                     {
                         InkCanvasEditingMode tool = tag is InkCanvasEditingMode ? (InkCanvasEditingMode) tag : InkCanvasEditingMode.None;
 
-                        if ((DataContext as EditorViewModel) != null)
+                        if (ViewModel != null)
                         {
                             if (tool == InkCanvasEditingMode.EraseByPoint)
                             {
                                 Canvas.UseCustomCursor = true;
                                 Canvas.Cursor = _pointEraser;
-                                ((EditorViewModel) DataContext).EditorInformation.SelectedColor = Colors.White;
-                            }
+                                ViewModel.EditorInformation.SelectedColor = Colors.White;
+                                ViewModel?.ChangeToolCommand.Execute(InkCanvasEditingMode.Ink);
+                                ViewModel.EditorInformation.IsAnEraser = true;
+                                return;
+                        }
                             else
                             {
+                                ViewModel.EditorInformation.IsAnEraser = false;
                                 Canvas.UseCustomCursor = false;
                                 if (_selectedColor != null)
                                 {
                                     Color c = (Color)((Ellipse) _selectedColor.Content).Tag;
-                                    ((EditorViewModel) DataContext).EditorInformation.SelectedColor = c;
+                                    ViewModel.EditorInformation.SelectedColor = c;
                                 }
                                 else
                                 {
-                                    ((EditorViewModel) DataContext).EditorInformation.SelectedColor = Colors.Red;
+                                    ViewModel.EditorInformation.SelectedColor = Colors.Black;
                                 }
                             }
                         }
-                        (DataContext as EditorViewModel)?.ChangeToolCommand.Execute(tool);
+                        ViewModel?.ChangeToolCommand.Execute(tool);
                     }
                 }
         }
@@ -135,13 +142,13 @@ namespace ClientLourd.Views.Controls
             if (tag != null)
             {
                 var tip = tag is StylusTip ? (StylusTip) tag : StylusTip.Rectangle;
-                (DataContext as EditorViewModel)?.ChangeTipCommand.Execute(tip);
+                ViewModel?.ChangeTipCommand.Execute(tip);
             }
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            if ((DataContext as EditorViewModel).OutilSelectionne == "efface_segment")
+            if (ViewModel.EditorInformation.IsAnEraser)
             {
                 return;
             }
@@ -154,7 +161,7 @@ namespace ClientLourd.Views.Controls
             _selectedColor = button;
             _selectedColor.Background = Brushes.Gray;
             Color c = (Color)((Ellipse) _selectedColor.Content).Tag;
-            (DataContext as EditorViewModel)?.ChangeColorCommand.Execute(c);
+            ViewModel?.ChangeColorCommand.Execute(c);
         }
 
         private int ColorToNumber(string colorHex)
