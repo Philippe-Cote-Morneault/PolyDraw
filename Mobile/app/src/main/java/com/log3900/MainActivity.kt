@@ -25,6 +25,7 @@ import com.log3900.draw.DrawViewFragment
 import com.log3900.login.LoginActivity
 import com.log3900.profile.ProfileActivity
 import com.log3900.profile.ProfileFragment
+import com.log3900.settings.ThemeManager
 import com.log3900.socket.Event
 import com.log3900.socket.SocketEvent
 
@@ -38,6 +39,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.setTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
