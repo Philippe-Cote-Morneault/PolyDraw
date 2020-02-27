@@ -1,7 +1,8 @@
 /**
  * @author Originally from https://github.com/divyanshub024/AndroidDraw
  * License: Apache 2.0
- * Modifications:   - Added setTip() function
+ * Modifications:   - Added setTip()
+ *                  - Added setDrawMode(), removed isEraser
  */
 
 package com.log3900.draw.divyanshuwidget
@@ -33,9 +34,6 @@ class DrawView @JvmOverloads constructor(
     private var mStartY = 0f
     private var mIsSaving = false
     private var mIsStrokeWidthBarEnabled = false
-
-    var isEraserOn = false
-        private set
 
     init {
         mPaint.apply {
@@ -128,7 +126,7 @@ class DrawView @JvmOverloads constructor(
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
-        mPaint.color = if (paintOptions.isEraserOn) Color.WHITE else paintOptions.color
+        mPaint.color = if (paintOptions.drawMode == DrawMode.ERASE) Color.WHITE else paintOptions.color
         mPaint.strokeWidth = paintOptions.strokeWidth
     }
 
@@ -164,7 +162,7 @@ class DrawView @JvmOverloads constructor(
 
         mPaths[mPath] = mPaintOptions
         mPath = MyPath()
-        mPaintOptions = PaintOptions(mPaintOptions.color, mPaintOptions.strokeWidth, mPaintOptions.alpha, mPaintOptions.isEraserOn)
+        mPaintOptions = PaintOptions(mPaintOptions.color, mPaintOptions.strokeWidth, mPaintOptions.alpha, mPaintOptions.drawMode)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -186,10 +184,20 @@ class DrawView @JvmOverloads constructor(
         return true
     }
 
-    fun toggleEraser() {
-        isEraserOn = !isEraserOn
-        mPaintOptions.isEraserOn = isEraserOn
-        invalidate()
-    }
+//    fun toggleEraser() {
+//        isEraserOn = !isEraserOn
+//        mPaintOptions.isEraserOn = isEraserOn
+//        invalidate()
+//    }
 
+    fun setDrawMode(mode: DrawMode) {
+        mPaintOptions.drawMode = mode
+        when (mode) {
+            DrawMode.DRAW -> {}
+            DrawMode.REMOVE -> {}
+            DrawMode.ERASE -> {
+                invalidate()
+            }
+        }
+    }
 }

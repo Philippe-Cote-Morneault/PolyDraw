@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.log3900.draw.divyanshuwidget.DrawView
 import com.log3900.R
+import com.log3900.draw.divyanshuwidget.DrawMode
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_fab
 import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_view
@@ -41,14 +42,14 @@ class DrawViewFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
-        drawView.setOnTouchListener { view, motionEvent ->
-            when(motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> println("ACTION: DOWN")
-                MotionEvent.ACTION_UP -> println("ACTION: UP")
-                MotionEvent.ACTION_MOVE -> println("ACTION: MOVE (${motionEvent.x}, ${motionEvent.y})")
-            }
-            true
-        }
+//        drawView.setOnTouchListener { view, motionEvent ->
+//            when(motionEvent.action) {
+//                MotionEvent.ACTION_DOWN -> println("ACTION: DOWN")
+//                MotionEvent.ACTION_UP -> println("ACTION: UP")
+//                MotionEvent.ACTION_MOVE -> println("ACTION: MOVE (${motionEvent.x}, ${motionEvent.y})")
+//            }
+//            true
+//        }
     }
 
     private fun setUpFab() {
@@ -82,6 +83,7 @@ class DrawViewFragment : Fragment() {
         draw_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
             // TODO: Change draw mode...
+            drawView.setDrawMode(DrawMode.DRAW)
         }
         remove_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
@@ -90,7 +92,7 @@ class DrawViewFragment : Fragment() {
         erase_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
             // TODO: Change draw mode...
-            drawView.toggleEraser()
+            drawView.setDrawMode(DrawMode.ERASE)
         }
 
         // Circle tip selected by default
