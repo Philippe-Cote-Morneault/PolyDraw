@@ -1,12 +1,13 @@
 package svgparser
 
 import (
-	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"log"
 	"math"
 	"strconv"
 	"strings"
 	"unicode"
+
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 )
 
 //Command represents a command of the D string
@@ -34,17 +35,15 @@ func (c *Command) Parse(lastPoint *geometry.Point) {
 	case 'z':
 		c.StartPos = geometry.Point{lastPoint.X, lastPoint.Y}
 		c.EndPos = geometry.Point{lastPoint.X, lastPoint.Y}
-	//TODO do the things that are horrible
-	/*
-		case 's':
-			c.parseS(lastPoint)
-		case 'q':
-			c.parseQ(lastPoint)
-		case 't':
-			c.parseT(lastPoint)
-		case 'a':
-			c.parseA(lastPoint)
-	*/
+	case 's':
+		c.parseParam(lastPoint, 4, 2, 3)
+	case 'q':
+		c.parseParam(lastPoint, 4, 2, 3)
+	case 't':
+		c.parseParam(lastPoint, 2, 0, 1)
+	case 'a':
+		c.parseParam(lastPoint, 7, 5, 6)
+
 	default:
 		log.Printf("[Potrace] -> Format contains invalid command \"%c\"", c.Command)
 	}
