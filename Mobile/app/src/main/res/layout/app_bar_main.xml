@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/color_primary_mid_brush">
+            android:background="?colorPrimary">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                app:backgroundTint="@color/color_primary_dark_foreground"
+                app:backgroundTint="?colorOnPrimaryDark"
                 android:layout_margin="3dp"
                 app:srcCompat="@drawable/ic_message"/>
 
