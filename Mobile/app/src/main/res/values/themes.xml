@@ -5,25 +5,7 @@
 
     <!--Base custom theme which will be shared between both light and dark theme variants-->
     <style name="Base.MyTheme" parent="Base.MaterialThemeBuilder">
-        <!--Material color attributes -->
-        <item name="colorPrimary">@color/color_primary_mid_brush</item>
-        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
-        <item name="colorSecondary">@color/color_secondary</item>
-        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
 
-        <item name="android:colorBackground">@color/color_background</item>
-        <item name="colorSurface">@color/color_surface</item>
-        <item name="colorError">@color/color_error</item>
-
-        <item name="colorOnPrimary">@color/color_on_primary</item>
-        <item name="colorOnSecondary">@color/color_on_secondary</item>
-        <item name="colorOnBackground">@color/color_on_background</item>
-        <item name="colorOnSurface">@color/color_on_surface</item>
-        <item name="colorOnError">@color/color_on_error</item>
-
-        <!--Component styles-->
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert</item>
-        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
     </style>
 
     <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -37,5 +19,53 @@
         <!--Remap legacy AppCompat attributes to MaterialComponent attributes-->
         <item name="colorPrimaryDark">?colorPrimaryVariant</item>
         <item name="colorAccent">?colorSecondary</item>
+    </style>
+
+    <!--Base custom theme which will be shared between both light and dark theme variants-->
+    <style name="MyTheme.BlueYellow" parent="Base.MyTheme">
+        <!--Material color attributes -->
+        <item name="colorPrimary">@color/colorPrimaryBlueYellow</item>
+        <item name="colorSecondary">@color/colorPrimaryBlueYellow</item>
+        <item name="colorSecondaryVariant">@color/colorPrimaryBlueYellow</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+        --
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+
+        <!--Component styles-->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
+    </style>
+
+
+    <!--Orange/Blue theme-->
+    <style name="MyTheme.OrangeBlue" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryOrangeBlue</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryOrangeBlue</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryOrangeBlueLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryOrangeBlueLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryOrangeBlueDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryOrangeBlueDark</item>
+        <item name="colorSecondary">@color/colorSecondaryOrangeBlue</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryOrangeBlue</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryOrangeBlueLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryOrangeBlueLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryOrangeBlueDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryOrangeBlueDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+        --
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
     </style>
 </resources>
