@@ -83,29 +83,41 @@ class DrawViewFragment : Fragment() {
         updateColorScale(color_picker_black)
 
         color_picker_black.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_black, null))
             updateColorScale(it)
         }
         color_picker_white.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_white, null))
             updateColorScale(it)
         }
         color_picker_red.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_red, null))
             updateColorScale(it)
         }
         color_picker_green.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_green, null))
             updateColorScale(it)
         }
         color_picker_blue.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_blue, null))
             updateColorScale(it)
         }
         color_picker_yellow.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_yellow, null))
             updateColorScale(it)
         }
         color_picker_cyan.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_cyan, null))
             updateColorScale(it)
         }
         color_picker_magenta.setOnClickListener {
+            changeDrawColor(resources.getColor(R.color.color_draw_magenta, null))
             updateColorScale(it)
         }
+    }
+
+    private fun changeDrawColor(color: Int) {
+        drawView.setColor(color)
     }
 
     private fun updateColorScale(colorPicked: View) {
