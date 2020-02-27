@@ -1,7 +1,7 @@
 <shape android:shape="oval"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/color_draw_white"/>
-    <stroke android:color="@color/color_draw_black" android:width="1dp"/>
+    <stroke android:color="@color/color_draw_black" android:width="2dp"/>
     <!-- Set the same value for both width and height to get a circular shape -->
     <size android:width="24dp" android:height="24dp"/>
 </shape>

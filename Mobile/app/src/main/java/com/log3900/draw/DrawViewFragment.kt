@@ -79,9 +79,65 @@ class DrawViewFragment : Fragment() {
     }
 
     private fun setUpColorButtons() {
+        // Black by default
+        updateColorScale(color_picker_black)
+
         color_picker_black.setOnClickListener {
-            it.scaleX = 1.5f
-            it.scaleY = 1.5f
+            updateColorScale(it)
         }
+        color_picker_white.setOnClickListener {
+            updateColorScale(it)
+        }
+        color_picker_red.setOnClickListener {
+            updateColorScale(it)
+        }
+        color_picker_green.setOnClickListener {
+            updateColorScale(it)
+        }
+        color_picker_blue.setOnClickListener {
+            updateColorScale(it)
+        }
+        color_picker_yellow.setOnClickListener {
+            updateColorScale(it)
+        }
+        color_picker_cyan.setOnClickListener {
+            updateColorScale(it)
+        }
+        color_picker_magenta.setOnClickListener {
+            updateColorScale(it)
+        }
+    }
+
+    private fun updateColorScale(colorPicked: View) {
+        // Reset all colors
+        color_picker_black.scaleX = 1f
+        color_picker_black.scaleY = 1f
+
+        color_picker_white.scaleX = 1f
+        color_picker_white.scaleY = 1f
+
+        color_picker_red.scaleX = 1f
+        color_picker_red.scaleY = 1f
+
+        color_picker_green.scaleX = 1f
+        color_picker_green.scaleY = 1f
+
+        color_picker_blue.scaleX = 1f
+        color_picker_blue.scaleY = 1f
+
+        color_picker_yellow.scaleX = 1f
+        color_picker_yellow.scaleY = 1f
+
+        color_picker_cyan.scaleX = 1f
+        color_picker_cyan.scaleY = 1f
+
+        color_picker_magenta.scaleX = 1f
+        color_picker_magenta.scaleY = 1f
+
+        // Scale up the selected color
+        colorPicked.isSelected = true
+        colorPicked.animate()
+            .scaleX(1.5f)
+            .scaleY(1.5f)
     }
 }
