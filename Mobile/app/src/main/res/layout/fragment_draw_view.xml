@@ -20,14 +20,31 @@
             android:layout_margin="32dp"
             android:background="@drawable/border_background"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginStart="@dimen/fab_margin"
-            android:layout_marginTop="@dimen/fab_margin"
-            android:layout_marginEnd="43dp"
-            android:layout_marginBottom="50dp"
-            android:src="@drawable/ic_palette_24dp" />
+            android:layout_gravity="bottom|end">
+            <include
+                android:id="@+id/draw_tools_view"
+                layout="@layout/fragment_draw_tools"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/draw_tools_fab"
+                app:layout_constraintBottom_toBottomOf="@id/draw_tools_fab"
+                app:layout_constraintEnd_toStartOf="@id/draw_tools_fab"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/draw_tools_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginEnd="43dp"
+                android:layout_marginBottom="50dp"
+                android:src="@drawable/ic_palette_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
