@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using ClientLourd.Utilities.Constants;
 
-namespace ClientLourd.Models.Bindable
+namespace ClientLourd.Models.NonBindable
 {
     public class StrokeInfo
     {
@@ -20,8 +20,6 @@ namespace ClientLourd.Models.Bindable
         private StylusTip _brushTip;
         private bool _isAnEraser;
 
-        // BrushType (square, circle) not useful, since we have the points
-        // BrushSize not useful since we have the points
         // Number of points in _pointCollection.Count
         // MaxX and MaxY useless since the canvas size is fix for clients
 
@@ -44,7 +42,7 @@ namespace ClientLourd.Models.Bindable
 
         private void SetBrushTip(byte firstByte)
         {
-            BrushTip = ((firstByte & 0x40) == 0) ? StylusTip.Ellipse: StylusTip.Rectangle;
+            BrushTip = ((firstByte & 0x40) == 0) ? StylusTip.Ellipse : StylusTip.Rectangle;
         }
 
         private void SetBrushSize(byte brushSizeByte)
@@ -95,7 +93,7 @@ namespace ClientLourd.Models.Bindable
 
             StrokeID = new Guid(strokeUID);
         }
-        
+
         private void SetUserID(byte[] userUID)
         {
             if (BitConverter.IsLittleEndian)
@@ -160,3 +158,5 @@ namespace ClientLourd.Models.Bindable
         }
     }
 }
+
+

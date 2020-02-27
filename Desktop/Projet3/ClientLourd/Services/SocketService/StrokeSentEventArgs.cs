@@ -1,4 +1,4 @@
-﻿using ClientLourd.Models.Bindable;
+﻿using ClientLourd.Models.NonBindable;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

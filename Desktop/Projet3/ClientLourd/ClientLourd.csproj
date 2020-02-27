@@ -139,9 +139,9 @@
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
     <Compile Include="Models\Bindable\StatsHistory.cs" />
-    <Compile Include="Models\Bindable\StrokeInfo.cs" />
     <Compile Include="Models\Bindable\User.cs" />
     <Compile Include="Models\NonBindable\NetworkInformations.cs" />
+    <Compile Include="Models\NonBindable\StrokeInfo.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
     <Compile Include="Models\NonBindable\TokenPair.cs" />
     <Compile Include="Properties\Annotations.cs" />

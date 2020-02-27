@@ -1,4 +1,4 @@
-﻿using ClientLourd.Models.Bindable;
+﻿using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Constants;
 using System;
 using System.Collections.Generic;
