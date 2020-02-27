@@ -18,7 +18,7 @@
         UserCreatedChannel = 27,
         DeleteChannel = 28,
         UserDeletedChannel = 29,
-        ServerStrokeSent = 30,
+        ServerStrokeSent = 31,
         ServerStartsDrawing = 33,
         ServerEndsDrawing = 35,
         DrawingPreviewRequest = 36,
