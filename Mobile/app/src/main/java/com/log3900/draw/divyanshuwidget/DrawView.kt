@@ -128,6 +128,7 @@ class DrawView @JvmOverloads constructor(
     private fun changePaint(paintOptions: PaintOptions) {
         mPaint.color = if (paintOptions.drawMode == DrawMode.ERASE) Color.WHITE else paintOptions.color
         mPaint.strokeWidth = paintOptions.strokeWidth
+        mPaint.strokeCap = paintOptions.strokeCap
     }
 
     fun clearCanvas() {
@@ -189,6 +190,10 @@ class DrawView @JvmOverloads constructor(
 //        mPaintOptions.isEraserOn = isEraserOn
 //        invalidate()
 //    }
+
+    fun setCap(cap: Paint.Cap) {
+        mPaintOptions.strokeCap = cap
+    }
 
     fun setDrawMode(mode: DrawMode) {
         mPaintOptions.drawMode = mode

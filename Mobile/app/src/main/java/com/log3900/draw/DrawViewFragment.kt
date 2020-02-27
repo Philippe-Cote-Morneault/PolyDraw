@@ -3,6 +3,7 @@ package com.log3900.draw
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -100,14 +101,17 @@ class DrawViewFragment : Fragment() {
         circle_tip_button.setOnClickListener {
             updateTipButtonPressed(it)
             // TODO: Change draw mode...
+            drawView.setCap(Paint.Cap.ROUND)
         }
         square_tip_button.setOnClickListener {
             updateTipButtonPressed(it)
             // TODO: Change draw mode...
+            drawView.setCap(Paint.Cap.SQUARE)
         }
 
         adjust_width_button.setOnClickListener {
             // TODO: Change draw mode...
+            drawView.setStrokeWidth(15f)
         }
     }
 
