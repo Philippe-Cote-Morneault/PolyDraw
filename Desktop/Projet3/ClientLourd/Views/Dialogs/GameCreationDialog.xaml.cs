@@ -19,6 +19,7 @@ using ClientLourd.Utilities.Enums;
 using ClientLourd.Models.Bindable;
 using System.Windows.Input;
 using ClientLourd.Utilities.Extensions;
+using ClientLourd.Services.RestService;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -35,6 +36,11 @@ namespace ClientLourd.Views.Dialogs
         public SocketClient SocketClient
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+
+        public RestClient RestClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public SessionInformations SessionInformations
@@ -206,8 +212,12 @@ namespace ClientLourd.Views.Dialogs
             return new StrokeInfo(mockData);
         }
 
-        public void PlayPreview(object sender, EventArgs e)
+        public async void PlayPreview(object sender, EventArgs e)
         {
+
+            // Only do this if info has been modified?    
+            await RestClient.PutGameInformations(ViewModel.GameID, ViewModel.SelectedModeToPotraceEnum(), ViewModel.BrushSize, (double)ViewModel.BlackLevelThreshold / 100.0);
+            
 
             StrokeInfo mock = GetMockStrokeMessage();
             //StrokeInfo mock2;
