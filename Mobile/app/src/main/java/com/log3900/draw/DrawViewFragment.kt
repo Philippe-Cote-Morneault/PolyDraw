@@ -2,12 +2,14 @@ package com.log3900.draw
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.divyanshu.draw.widget.DrawView
+import com.log3900.draw.divyanshuwidget.DrawView
 import com.log3900.R
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_fab
@@ -36,8 +38,17 @@ class DrawViewFragment : Fragment() {
         setUpColorButtons()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
+        drawView.setOnTouchListener { view, motionEvent ->
+            when(motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> println("ACTION: DOWN")
+                MotionEvent.ACTION_UP -> println("ACTION: UP")
+                MotionEvent.ACTION_MOVE -> println("ACTION: MOVE (${motionEvent.x}, ${motionEvent.y})")
+            }
+            true
+        }
     }
 
     private fun setUpFab() {
@@ -79,6 +90,7 @@ class DrawViewFragment : Fragment() {
         erase_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
             // TODO: Change draw mode...
+            drawView.toggleEraser()
         }
 
         // Circle tip selected by default

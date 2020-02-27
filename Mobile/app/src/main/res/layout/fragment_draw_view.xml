@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <com.divyanshu.draw.widget.DrawView
+        <com.log3900.draw.divyanshuwidget.DrawView
             android:id="@+id/draw_view_canvas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
