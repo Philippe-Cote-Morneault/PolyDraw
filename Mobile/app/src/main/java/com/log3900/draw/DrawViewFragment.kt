@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.scaleMatrix
 import androidx.fragment.app.Fragment
 import com.divyanshu.draw.widget.DrawView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.log3900.R
-import kotlinx.android.synthetic.main.fragment_draw_view.*
+import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_fab
 import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_view
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
@@ -34,23 +32,12 @@ class DrawViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpFab()
+        setUpToolButtons()
         setUpColorButtons()
     }
 
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
-
-        val draw: FloatingActionButton  = root.findViewById(R.id.draw_tools_fab)
-        println(draw)
-        println(draw_tools_fab)
-
-//        draw_tools_fab.setOnClickListener {
-//            draw_tools_view.visibility =
-//                if (it.visibility == View.GONE)
-//                    View.VISIBLE
-//                else
-//                    View.GONE
-//        }
     }
 
     private fun setUpFab() {
@@ -72,10 +59,57 @@ class DrawViewFragment : Fragment() {
                                 visibility = View.GONE
                             }
                         })
-
                 }
             }
         }
+    }
+
+    private fun setUpToolButtons() {
+        // Drawing selected by default
+        draw_button.isPressed = true
+
+        draw_button.setOnClickListener {
+            updateDrawToolButtonPressed(it)
+            // TODO: Change draw mode...
+        }
+        remove_button.setOnClickListener {
+            updateDrawToolButtonPressed(it)
+            // TODO: Change draw mode...
+        }
+        erase_button.setOnClickListener {
+            updateDrawToolButtonPressed(it)
+            // TODO: Change draw mode...
+        }
+
+        // Circle tip selected by default
+        circle_tip_button.isPressed = true
+        circle_tip_button.setOnClickListener {
+            updateTipButtonPressed(it)
+            // TODO: Change draw mode...
+        }
+        square_tip_button.setOnClickListener {
+            updateTipButtonPressed(it)
+            // TODO: Change draw mode...
+        }
+
+        adjust_width_button.setOnClickListener {
+            // TODO: Change draw mode...
+        }
+    }
+
+    private fun updateDrawToolButtonPressed(button: View) {
+        draw_button.isPressed = false
+        remove_button.isPressed = false
+        erase_button.isPressed = false
+
+        button.isPressed = true
+    }
+    
+    private fun updateTipButtonPressed(button: View) {
+        circle_tip_button.isPressed = false
+        square_tip_button.isPressed = false
+
+        button.isPressed = true
     }
 
     private fun setUpColorButtons() {
@@ -147,7 +181,7 @@ class DrawViewFragment : Fragment() {
         color_picker_magenta.scaleY = 1f
 
         // Scale up the selected color
-        colorPicked.isSelected = true
+        colorPicked.isPressed = true
         colorPicked.animate()
             .scaleX(1.5f)
             .scaleY(1.5f)
