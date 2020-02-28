@@ -25,6 +25,7 @@
           </e>
           <e p="NonBindable" t="Include">
             <e p="NetworkInformations.cs" t="Include" />
+            <e p="StrokeInfo.cs" t="Include" />
             <e p="TLV.cs" t="Include" />
             <e p="TokenPair.cs" t="Include" />
           </e>
@@ -40,6 +41,7 @@
                 <e p="ChannelSection.g.cs" t="Include" />
                 <e p="Chat.g.cs" t="Include" />
                 <e p="Conversation.g.cs" t="Include" />
+                <e p="Editor.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
                 <e p="Tutorial" t="Include">
@@ -125,10 +127,12 @@
             <e p="RestClient.cs" t="Include" />
           </e>
           <e p="SocketService" t="Include">
+            <e p="DrawingEventArgs.cs" t="Include" />
             <e p="MessageReceivedEventArgs.cs" t="Include" />
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketErrorEventArgs.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
+            <e p="StrokeSentEventArgs.cs" t="Include" />
           </e>
         </e>
         <e p="Utilities" t="Include">
@@ -138,6 +142,7 @@
           <e p="Constants" t="Include">
             <e p="ApplicationInformations.cs" t="Include" />
             <e p="GUIDs.cs" t="Include" />
+            <e p="StrokeMessageOffsets.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
             <e p="BackgroundColorConverter.cs" t="Include" />
@@ -168,6 +173,7 @@
           </e>
           <e p="Extensions" t="Include">
             <e p="CursorHelper.cs" t="Include" />
+            <e p="InkCanvasExtension.cs" t="Include" />
             <e p="ScrollViewerExtensions.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">

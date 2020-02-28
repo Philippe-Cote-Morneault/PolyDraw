@@ -37,6 +37,12 @@ namespace ClientLourd.Models.NonBindable
             Value = Encoding.ASCII.GetBytes(message);
         }
 
+        public Tlv(SocketMessageTypes type, byte[] bytes)
+        {
+            Type = (byte)(int)type;
+            Value = bytes;
+        }
+
         public Tlv(SocketMessageTypes type, Guid guid)
         {
             Type = (byte) ((int) type);

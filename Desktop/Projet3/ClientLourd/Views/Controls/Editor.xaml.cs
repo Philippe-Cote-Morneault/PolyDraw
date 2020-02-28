@@ -77,6 +77,22 @@ namespace ClientLourd.Views.Controls
             stroke.AddPropertyData(GUIDs.brushType, ViewModel.EditorInformation.SelectedTip.ToString());
             stroke.AddPropertyData(GUIDs.eraser, (ViewModel.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
             stroke.AddPropertyData(GUIDs.color, ColorToNumber(stroke.DrawingAttributes.Color.ToString()).ToString());
+            OnStrokeAdded(stroke);
+        }
+
+        public delegate void EditEventHandler(object sender, EventArgs args);
+
+        public event EditEventHandler StrokeDeleted;
+        public event EditEventHandler StrokedAdded;
+        
+        protected virtual void OnStrokeDeleted(object sender)
+        {
+            StrokeDeleted?.Invoke(sender, EventArgs.Empty);
+        }
+        
+        protected virtual void OnStrokeAdded(object sender)
+        {
+            StrokedAdded?.Invoke(sender, EventArgs.Empty);
         }
 
         public void OnStrokeErase(object sender, InkCanvasStrokeErasingEventArgs e)
@@ -85,6 +101,10 @@ namespace ClientLourd.Views.Controls
             if (e.Stroke.GetPropertyData(GUIDs.eraser) as string == "True")
             {
                 e.Cancel = true;
+            }
+            else
+            {
+                OnStrokeDeleted(e.Stroke);
             }
         }
 
@@ -115,7 +135,7 @@ namespace ClientLourd.Views.Controls
                                 ViewModel?.ChangeToolCommand.Execute(InkCanvasEditingMode.Ink);
                                 ViewModel.EditorInformation.IsAnEraser = true;
                                 return;
-                        }
+                            }
                             else
                             {
                                 ViewModel.EditorInformation.IsAnEraser = false;
@@ -184,5 +204,6 @@ namespace ClientLourd.Views.Controls
 
             return -1;
         }
+
     }
 }
