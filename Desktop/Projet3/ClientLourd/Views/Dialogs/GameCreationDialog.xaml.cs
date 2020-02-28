@@ -20,6 +20,7 @@ using ClientLourd.Models.Bindable;
 using System.Windows.Input;
 using ClientLourd.Utilities.Extensions;
 using ClientLourd.Services.RestService;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -31,6 +32,7 @@ namespace ClientLourd.Views.Dialogs
             SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
             SocketClient.ServerStartsDrawing += SocketClientOnServerStartsDrawing;
             SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
+            SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
         }
 
         public SocketClient SocketClient
@@ -217,60 +219,58 @@ namespace ClientLourd.Views.Dialogs
 
             // Only do this if info has been modified?    
             await RestClient.PutGameInformations(ViewModel.GameID, ViewModel.SelectedModeToPotraceEnum(), ViewModel.BrushSize, ViewModel.BlackLevelThreshold / 100.0);
-            
 
-            StrokeInfo mock = GetMockStrokeMessage();
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(ViewModel.GameID)));
+
+            //StrokeInfo mock = GetMockStrokeMessage();
 
             //StrokeInfo mock2;
-            if (PreviewCanvas.Strokes.Count == 0) 
+            /*if (PreviewCanvas.Strokes.Count == 0) 
             {
                 PreviewCanvas.AddStroke(mock);
             }
             else
             {
                 PreviewCanvas.RemoveStroke(mock.StrokeID);
-            }
-            //SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
+            }*/
+            
         }
 
-        private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
+        private async void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
         {
-            // If 0x00
-            // Dialog with error
+            if ((args as DrawingEventArgs).Data == 0)
+            {
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
+                });
+
+            }
         }
 
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
-            ViewModel.PreviewGUIEnabled = false;
-            
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                ViewModel.PreviewGUIEnabled = false;
+            });
         }
 
         private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
         {
-            ViewModel.PreviewGUIEnabled = true;
+            Application.Current.Dispatcher.Invoke(delegate
+            {
+                ViewModel.PreviewGUIEnabled = true;
+            });
         }
 
-        private void AddPoints()
+        private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
-            if (PreviewCanvas.Strokes.Count == 0)
+            Application.Current.Dispatcher.Invoke(delegate
             {
-                StylusPointCollection spCol = new StylusPointCollection();
-                for (int i = 0; i < 100; i++)
-                {
-                    spCol.Add(new StylusPoint(i, i));
-                    spCol.Add(new StylusPoint(i + 1, i + 1));
-                }
-                Stroke newStroke = new Stroke(spCol);
-                PreviewCanvas.Strokes.Add(newStroke);
-            }
-            else
-            {
-                
-            }
-            
-            //PreviewCanvas.Str
+                PreviewCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
+            });
         }
-
 
     }
 }

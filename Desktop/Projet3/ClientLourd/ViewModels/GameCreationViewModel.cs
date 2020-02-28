@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService;
+using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Dialogs;
@@ -52,7 +53,8 @@ namespace ClientLourd.ViewModels
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
-        
+
+
         public bool AreFieldsEmpty
         {
             get { return string.IsNullOrEmpty(_word) || _hints.Any(string.IsNullOrEmpty); }
@@ -297,13 +299,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        string _drawnImagePath;
-
-        public string DrawnImagePath
-        {
-            get => _drawnImagePath;
-            set => _drawnImagePath = value;
-        }
-            
+        public string DrawnImagePath { get; set; }
     }
 }

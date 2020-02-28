@@ -33,7 +33,7 @@
                 <materialDesign:TransitionerSlide.ForwardWipe>
                       <materialDesign:SlideWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
-                <DockPanel>
+                <DockPanel >
                     <Button Margin="5" DockPanel.Dock="Bottom" Click="ValidateTheGame"  Content="Next">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">

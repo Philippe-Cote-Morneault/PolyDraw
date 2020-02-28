@@ -15,5 +15,10 @@ namespace ClientLourd.Services.SocketService
 
         private dynamic _data;
 
+        public dynamic Data
+        {
+            get => _data;
+        }
+
     }
 }

@@ -47,7 +47,7 @@ namespace ClientLourd.Utilities.Extensions
         {
             Stroke newStroke = new Stroke(strokeInfo.PointCollection);
             newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
-            newStroke.DrawingAttributes.StylusTip = StylusTip.Ellipse;
+            newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
             newStroke.DrawingAttributes.Height = strokeInfo.BrushSize;
             newStroke.DrawingAttributes.Width = strokeInfo.BrushSize;
             newStroke.AddPropertyData(GUIDs.ID, strokeInfo.StrokeID.ToString());
