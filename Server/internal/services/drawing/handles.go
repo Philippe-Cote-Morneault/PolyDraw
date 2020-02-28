@@ -8,10 +8,12 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 )
 
+//MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
 
 type point geometry.Point
 
+//Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
 	ID        uuid.UUID
 	color     byte
@@ -97,6 +99,7 @@ func sendDummyDrawing(socketID uuid.UUID) {
 	socket.SendRawMessageToSocketID(packet, socketID)
 }
 
+//Marshall encode the stroke to binary
 func (s *Stroke) Marshall() []byte {
 	if s.ID == uuid.Nil {
 		s.ID = uuid.New()
