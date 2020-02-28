@@ -38,7 +38,7 @@ func Trace(imageKey string, blacklevel float64) (string, error) {
 }
 
 //Translate changes the potrace svg to be compatible with our custom svg format
-func Translate(svgKey string, brushSize int, mode int) error {
+func Translate(svgKey string, brushSize int, mode int, update bool) error {
 	file, err := datastore.GetFile(svgKey)
 	if err != nil {
 		return err
@@ -61,9 +61,21 @@ func Translate(svgKey string, brushSize int, mode int) error {
 			path.ID = uuid.New()
 			path.Brush = "circle"
 		}
-		path.BrushSize = brushSize
+		if brushSize > 0 {
+			path.BrushSize = brushSize
+		}
+
+		if update {
+			commands := svgparser.ParseD(path.D, []svgparser.TransformCommand{})
+			if len(commands) > 0 {
+				path.FirstCommand = commands[0]
+			}
+		}
 	}
-	splitPath(&xmlSvg, xmlSvg.G.Transform)
+	if !update {
+		splitPath(&xmlSvg, xmlSvg.G.Transform)
+	}
+
 	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
 	if xmlSvg.G.Transform != "" {
 		xmlSvg.G.Transform = ""
