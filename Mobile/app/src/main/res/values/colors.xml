@@ -18,6 +18,8 @@
     <color name="color_draw_cyan">#00FFFF</color>
     <color name="color_draw_magenta">#FF00FF</color>
 
+    <color name="color_background_half_transparent">#BFE4E4E4</color>
+
     <!-- MATERIAL COLORS -->
 
     <!--colorPrimary colors map to components and elements, such as app bars and buttons. -->

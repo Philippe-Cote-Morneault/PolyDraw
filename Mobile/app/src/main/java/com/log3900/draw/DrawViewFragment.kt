@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.log3900.draw.divyanshuwidget.DrawView
 import com.log3900.R
@@ -37,6 +38,7 @@ class DrawViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpFab()
         setUpToolButtons()
+        setUpWidthSeekbar()
         setUpColorButtons()
     }
 
@@ -115,19 +117,16 @@ class DrawViewFragment : Fragment() {
         }
     }
 
-    private fun updateDrawToolButtonPressed(button: View) {
-        draw_button.isPressed = false
-        remove_button.isPressed = false
-        erase_button.isPressed = false
+    private fun setUpWidthSeekbar() {
+        seekbar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                drawView.setStrokeWidth(progress.toFloat())
+            }
 
-        button.isPressed = true
-    }
-    
-    private fun updateTipButtonPressed(button: View) {
-        circle_tip_button.isPressed = false
-        square_tip_button.isPressed = false
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
-        button.isPressed = true
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 
     private fun setUpColorButtons() {
@@ -168,8 +167,19 @@ class DrawViewFragment : Fragment() {
         }
     }
 
-    private fun changeDrawColor(color: Int) {
-        drawView.setColor(color)
+    private fun updateDrawToolButtonPressed(button: View) {
+        draw_button.isPressed = false
+        remove_button.isPressed = false
+        erase_button.isPressed = false
+
+        button.isPressed = true
+    }
+
+    private fun updateTipButtonPressed(button: View) {
+        circle_tip_button.isPressed = false
+        square_tip_button.isPressed = false
+
+        button.isPressed = true
     }
 
     private fun updateColorScale(colorPicked: View) {
@@ -203,5 +213,9 @@ class DrawViewFragment : Fragment() {
         colorPicked.animate()
             .scaleX(1.5f)
             .scaleY(1.5f)
+    }
+
+    private fun changeDrawColor(color: Int) {
+        drawView.setColor(color)
     }
 }
