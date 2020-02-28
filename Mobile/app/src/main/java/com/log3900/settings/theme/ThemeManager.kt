@@ -9,11 +9,17 @@ import com.log3900.R
 
 class ThemeManager {
     companion object {
-        private val defaultThemeID = R.style.MyTheme_BlueYellow
+        private val defaultThemeID = R.style.MyTheme_IndigoOrange
         private val registeredActivities: HashMap<Activity, Int> = HashMap()
         var themes: HashMap<Int, Theme> = hashMapOf(
-            R.style.MyTheme_BlueYellow to Theme(R.style.MyTheme_BlueYellow, R.drawable.green_turtoise_theme_button),
-            R.style.MyTheme_OrangeBlue to Theme(R.style.MyTheme_OrangeBlue, R.drawable.blue_orang_theme_button)
+            R.style.MyTheme_BlueYellow to Theme(R.style.MyTheme_BlueYellow, R.drawable.blue_yellow_theme_button),
+            R.style.MyTheme_BrownGreen to Theme(R.style.MyTheme_BrownGreen, R.drawable.brown_green_theme_button),
+            R.style.MyTheme_GreenTeal to Theme(R.style.MyTheme_GreenTeal, R.drawable.green_teal_theme_button),
+            R.style.MyTheme_IndigoOrange to Theme(R.style.MyTheme_IndigoOrange, R.drawable.indigo_orange_theme_button),
+            R.style.MyTheme_OrangeLightBlue to Theme(R.style.MyTheme_OrangeLightBlue, R.drawable.orange_light_blue_theme_button),
+            R.style.MyTheme_PurpleGreen to Theme(R.style.MyTheme_PurpleGreen, R.drawable.purple_green_theme_button),
+            R.style.MyTheme_RedYellow to Theme(R.style.MyTheme_RedYellow, R.drawable.red_yellow_theme_button),
+            R.style.MyTheme_TealLime to Theme(R.style.MyTheme_TealLime, R.drawable.teal_lime_theme_button)
         )
 
         fun applyTheme(activity: Activity) {
