@@ -216,13 +216,20 @@ namespace ClientLourd.Views.Dialogs
         {
 
             // Only do this if info has been modified?    
-            await RestClient.PutGameInformations(ViewModel.GameID, ViewModel.SelectedModeToPotraceEnum(), ViewModel.BrushSize, (double)ViewModel.BlackLevelThreshold / 100.0);
+            await RestClient.PutGameInformations(ViewModel.GameID, ViewModel.SelectedModeToPotraceEnum(), ViewModel.BrushSize, ViewModel.BlackLevelThreshold / 100.0);
             
 
             StrokeInfo mock = GetMockStrokeMessage();
+
             //StrokeInfo mock2;
-            PreviewCanvas.AddStroke(mock);
-            PreviewCanvas.AddStroke(mock);
+            if (PreviewCanvas.Strokes.Count == 0) 
+            {
+                PreviewCanvas.AddStroke(mock);
+            }
+            else
+            {
+                PreviewCanvas.RemoveStroke(mock.StrokeID);
+            }
             //SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, SessionInformations.User.ID));   
         }
 
