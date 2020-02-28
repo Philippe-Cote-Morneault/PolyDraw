@@ -26,6 +26,8 @@ type messageType struct {
 	UserCreateChannel        int
 	DestroyChannel           int
 	UserDestroyedChannel     int
+	PreviewDrawing           int
+	PreviewDrawingResponse   int
 	ErrorResponse            int
 }
 
@@ -47,6 +49,8 @@ var MessageType = &messageType{
 	UserCreateChannel:        27,
 	DestroyChannel:           28,
 	UserDestroyedChannel:     29,
+	PreviewDrawing:           36,
+	PreviewDrawingResponse:   37,
 	ErrorResponse:            255,
 }
 
