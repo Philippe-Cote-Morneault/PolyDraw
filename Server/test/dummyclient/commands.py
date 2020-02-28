@@ -42,6 +42,10 @@ def execute():
         {"Message":"Hello ca va", "ChannelID":"7040b302-6b1e-40f0-b9e8-12ee7301b2bf"}
     ))
     """
+    """
+    #Send preview drawing
+    sendMessage(36, uuid.UUID("7040b302-6b1e-40f0-b9e8-12ee7301b2bf").bytes)
+    """
     
     
     
