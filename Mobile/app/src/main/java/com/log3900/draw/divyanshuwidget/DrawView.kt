@@ -163,7 +163,13 @@ class DrawView @JvmOverloads constructor(
 
         mPaths[mPath] = mPaintOptions
         mPath = MyPath()
-        mPaintOptions = PaintOptions(mPaintOptions.color, mPaintOptions.strokeWidth, mPaintOptions.alpha, mPaintOptions.drawMode)
+        mPaintOptions = PaintOptions(
+            mPaintOptions.color,
+            mPaintOptions.strokeWidth,
+            mPaintOptions.alpha,
+            mPaintOptions.drawMode,
+            mPaintOptions.strokeCap
+        )
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
