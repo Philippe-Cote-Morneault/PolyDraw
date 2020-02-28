@@ -184,7 +184,6 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 		if mime == "text/xml; charset=utf-8" {
 			//Load svg
 			image.SVGFile = keyFile
-			//TODO validate the SVG
 		} else {
 			//Load jpg
 			image.ImageFile = keyFile
