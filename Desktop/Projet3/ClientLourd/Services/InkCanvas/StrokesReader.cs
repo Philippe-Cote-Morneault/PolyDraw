@@ -21,7 +21,7 @@ namespace ClientLourd.Services.InkCanvas
 {
     public class StrokesReader
     {
-        private const int SEND_RATE = 5000;
+        private const int SEND_RATE = 20;
         private const int UUID_OFFSET = 17;
         private const int MAX_X_OFFSET = 33;
         private const int MAX_y_OFFSET = 35;
@@ -76,50 +76,51 @@ namespace ClientLourd.Services.InkCanvas
         {
             Stroke stroke = (Stroke) sender;
             stroke.AddPropertyData(GUIDs.ID, _currentStrokeID.ToString());
-            SendStroke();
-            _currentStrokeID = Guid.Empty;
+            Console.WriteLine(_currentStrokeID.ToString());
+            SendStroke(true);
         }
         
         private void EditorOnStrokeDeleted(object sender, EventArgs args)
         {
             Stroke stroke = (Stroke) sender;
             _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, new Guid(stroke.GetPropertyData(GUIDs.ID).ToString())));
+            Console.WriteLine(new Guid(stroke.GetPropertyData(GUIDs.ID).ToString()));
+            
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             //Send all the points
-            SendStroke();
+            SendStroke(false);
         }
 
-        private void SendStroke()
+        private void SendStroke(bool startNewStroke)
         {
+            if (_information.SelectedTool == InkCanvasEditingMode.EraseByStroke)
+                return;
             _mutex.WaitOne();
             if(_currentStrokeID != Guid.Empty && _points.Count > 0)
             {
-                try
+                byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
+                message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
+                //TODO validate bytes order
+                _currentStrokeID.ToByteArray().CopyTo(message, 1);
+                //message[MAX_X_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Width);
+                //message[MAX_y_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Height);
+                message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
+                for (int i = 0; i < _points.Count; i++)
                 {
-                    byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
-                    message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
-                    //TODO validate bytes order
-                    _currentStrokeID.ToByteArray().CopyTo(message, 1);
-                    //message[MAX_X_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Width);
-                    //message[MAX_y_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Height);
-                    message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
-                    for (int i = 0; i < _points.Count; i++)
-                    {
-                        int x = (int) Math.Ceiling(_points[i].X);
-                        int y = (int) Math.Ceiling(_points[i].Y);
-                        message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
-                        message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(2, x);
-                        message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
-                        message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(2, y);
-                    }
-                    _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
+                    int x = (int) Math.Ceiling(_points[i].X);
+                    int y = (int) Math.Ceiling(_points[i].Y);
+                    message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
+                    message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(2, x);
+                    message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
+                    message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(2, y);
                 }
-                catch
+                _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
+                if (startNewStroke)
                 {
-                    //This is not a valid operation
+                    _currentStrokeID = Guid.Empty;
                 }
                 _points.Clear();
             }
@@ -140,10 +141,12 @@ namespace ClientLourd.Services.InkCanvas
 
         private void CanvasOnMouseMove(object sender, MouseEventArgs e)
         {
+            _mutex.WaitOne();
             if (_currentStrokeID != Guid.Empty)
             {
                 _points.Add(e.GetPosition(_editor.Canvas));
             }
+            _mutex.ReleaseMutex();
         }
 
         private int GetTipValue()
