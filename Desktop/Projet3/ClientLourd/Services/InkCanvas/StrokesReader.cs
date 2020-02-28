@@ -21,7 +21,7 @@ namespace ClientLourd.Services.InkCanvas
 {
     public class StrokesReader
     {
-        private const int SEND_RATE = 5000;
+        private const int SEND_RATE = 20;
         private const int UUID_OFFSET = 17;
         private const int MAX_X_OFFSET = 33;
         private const int MAX_y_OFFSET = 35;
@@ -34,13 +34,11 @@ namespace ClientLourd.Services.InkCanvas
         private Guid _currentStrokeID;
         private Mutex _mutex;
 
-        private EditorInformation _information
-        {
-            get => ((EditorViewModel) _editor.DataContext).EditorInformation;
-        }
+        private EditorInformation _information;
         
-        public StrokesReader(Editor editor, SocketClient socket)
+        public StrokesReader(Editor editor, SocketClient socket, EditorInformation information)
         {
+            _information = information;
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
@@ -77,27 +75,31 @@ namespace ClientLourd.Services.InkCanvas
         private void EditorOnStokeAdded(object sender, EventArgs args)
         {
             Stroke stroke = (Stroke) sender;
-            stroke.AddPropertyData(GUIDs.ID, _currentStrokeID);
-            SendStroke();
-            _currentStrokeID = Guid.Empty;
+            stroke.AddPropertyData(GUIDs.ID, _currentStrokeID.ToString());
+            Console.WriteLine(_currentStrokeID.ToString());
+            SendStroke(true);
         }
         
         private void EditorOnStrokeDeleted(object sender, EventArgs args)
         {
             Stroke stroke = (Stroke) sender;
-            _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, (Guid)stroke.GetPropertyData(GUIDs.ID)));
+            _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, new Guid(stroke.GetPropertyData(GUIDs.ID).ToString())));
+            Console.WriteLine(new Guid(stroke.GetPropertyData(GUIDs.ID).ToString()));
+            
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             //Send all the points
-            SendStroke();
+            SendStroke(false);
         }
 
-        private void SendStroke()
+        private void SendStroke(bool startNewStroke)
         {
+            if (_information.SelectedTool == InkCanvasEditingMode.EraseByStroke)
+                return;
             _mutex.WaitOne();
-            if(_currentStrokeID != null && _points.Count > 0)
+            if(_currentStrokeID != Guid.Empty && _points.Count > 0)
             {
                 byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
                 message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
@@ -116,6 +118,10 @@ namespace ClientLourd.Services.InkCanvas
                     message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(2, y);
                 }
                 _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
+                if (startNewStroke)
+                {
+                    _currentStrokeID = Guid.Empty;
+                }
                 _points.Clear();
             }
             _mutex.ReleaseMutex();
@@ -135,10 +141,12 @@ namespace ClientLourd.Services.InkCanvas
 
         private void CanvasOnMouseMove(object sender, MouseEventArgs e)
         {
-            if (_currentStrokeID != null)
+            _mutex.WaitOne();
+            if (_currentStrokeID != Guid.Empty)
             {
                 _points.Add(e.GetPosition(_editor.Canvas));
             }
+            _mutex.ReleaseMutex();
         }
 
         private int GetTipValue()
@@ -158,9 +166,10 @@ namespace ClientLourd.Services.InkCanvas
             {
                 case InkCanvasEditingMode.Ink:
                     return 0;
-                default:
+                case InkCanvasEditingMode.EraseByPoint:
                     return 1 << 7;
             }
+            throw new InvalidOperationException();
         }
         private int GetColorValue()
         {

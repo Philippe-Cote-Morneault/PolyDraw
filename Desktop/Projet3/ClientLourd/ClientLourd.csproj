@@ -162,6 +162,7 @@
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
+    <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
@@ -194,11 +195,8 @@
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
-    <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\DateConverter.cs" />
-    <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
     <Compile Include="Utilities\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
     <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />

@@ -131,14 +131,9 @@ namespace ClientLourd.Views.Controls
                             {
                                 Canvas.UseCustomCursor = true;
                                 Canvas.Cursor = _pointEraser;
-                                ViewModel.EditorInformation.SelectedColor = Colors.White;
-                                ViewModel?.ChangeToolCommand.Execute(InkCanvasEditingMode.Ink);
-                                ViewModel.EditorInformation.IsAnEraser = true;
-                                return;
                             }
                             else
                             {
-                                ViewModel.EditorInformation.IsAnEraser = false;
                                 Canvas.UseCustomCursor = false;
                                 if (_selectedColor != null)
                                 {
@@ -150,8 +145,8 @@ namespace ClientLourd.Views.Controls
                                     ViewModel.EditorInformation.SelectedColor = Colors.Black;
                                 }
                             }
+                            ViewModel.ChangeToolCommand.Execute(tool);
                         }
-                        ViewModel?.ChangeToolCommand.Execute(tool);
                     }
                 }
         }

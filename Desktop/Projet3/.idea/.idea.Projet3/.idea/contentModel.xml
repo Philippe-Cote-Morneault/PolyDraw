@@ -145,14 +145,12 @@
             <e p="StrokeMessageOffsets.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
-            <e p="BackgroundColorConverter.cs" t="Include" />
             <e p="BoolToVisibilityConverter.cs" t="Include" />
-            <e p="BorderConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
             <e p="ComparatorToVisibilityConverter.cs" t="Include" />
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
-            <e p="EditorModeConverter.cs" t="Include" />
+            <e p="EditingModeConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />

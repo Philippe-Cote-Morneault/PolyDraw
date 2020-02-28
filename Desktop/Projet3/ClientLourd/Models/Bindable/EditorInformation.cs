@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace ClientLourd.Models.Bindable
 {
-    class EditorInformation : ModelBase
+    public class EditorInformation : ModelBase
     {
 
         public EditorInformation()
@@ -56,6 +56,15 @@ namespace ClientLourd.Models.Bindable
             get { return _selectedTool; }
             set
             {
+                if (value == InkCanvasEditingMode.EraseByPoint)
+                {
+                    IsAnEraser = true;
+                    SelectedColor = Colors.White;
+                }
+                else
+                {
+                    IsAnEraser = false;
+                }
                 _selectedTool = value;
                 NotifyPropertyChanged();
             }
