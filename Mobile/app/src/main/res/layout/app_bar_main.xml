@@ -14,12 +14,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?colorPrimary">
+            android:background="?colorPrimary"
+            android:theme="@style/ToolBarStyle">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/polydraw_white"
+                android:tint="?colorOnPrimary"
                 android:layout_gravity="center"
                 android:id="@+id/toolbar_title" />
 
