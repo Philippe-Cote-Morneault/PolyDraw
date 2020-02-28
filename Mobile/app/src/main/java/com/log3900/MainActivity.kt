@@ -45,8 +45,7 @@ open class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val hideShowMessage: FloatingActionButton = findViewById(R.id.hideShowMessage)
-        hideShowMessage.setOnClickListener{ _ ->
-
+        hideShowMessage.setOnClickListener{
             var chatView = (supportFragmentManager.findFragmentById(R.id.fragment) as Fragment).view
             when(chatView!!.visibility){
                 View.INVISIBLE -> chatView.visibility = View.VISIBLE
