@@ -23,8 +23,7 @@ import com.log3900.draw.DrawViewFragment
 import com.log3900.login.LoginActivity
 import com.log3900.profile.ProfileFragment
 import com.log3900.settings.SettingsActivity
-import com.log3900.settings.SettingsFragment
-import com.log3900.settings.ThemeManager
+import com.log3900.settings.theme.ThemeManager
 
 
 import com.log3900.socket.SocketService
@@ -95,6 +94,14 @@ open class MainActivity : AppCompatActivity() {
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
             startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (ThemeManager.hasActivityThemeChanged(this)) {
+            println("Recreating activity")
+            this.recreate()
         }
     }
 
