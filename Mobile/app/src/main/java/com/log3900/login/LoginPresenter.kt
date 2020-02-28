@@ -10,6 +10,7 @@ import com.log3900.shared.ui.dialogs.ProgressDialog
 import com.log3900.socket.*
 import com.log3900.user.Account
 import com.log3900.user.AccountRepository
+import io.reactivex.Completable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -63,40 +64,45 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             }
         })
 
-        getUserInfo(session, bearer, userID)
+        getUserInfo(session, bearer, userID).subscribe {
+            SocketService.instance?.sendMessage(
+                Event.SOCKET_CONNECTION,
+                session.toByteArray(Charsets.UTF_8))
+        }
 //        val account = getUserInfo(session, bearer, userID)
 //        if (account == null) {
 //            handleErrorAuth("Error while trying to get account information")
 //            return
 //        }
 //        storeUser(account, session, bearer)
-        SocketService.instance?.sendMessage(
-            Event.SOCKET_CONNECTION,
-            session.toByteArray(Charsets.UTF_8))
     }
 
-    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String) {
+    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String): Completable {
         println("Getting user info...")
-        val call = AuthenticationRestService.service.getUserInfo(sessionToken, userID)
-        call.enqueue(object: Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                when (response.code()) {
-                    200 -> {
-                        println("Sucessful user response")
-                        val account = parseJsonAccount(response.body()!!)
-                        storeUser(account, sessionToken, bearerToken)
-                    }
+        return Completable.create {
+            val call = AuthenticationRestService.service.getUserInfo(sessionToken, userID)
+            call.enqueue(object: Callback<JsonObject> {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    when (response.code()) {
+                        200 -> {
+                            println("Sucessful user response")
+                            val account = parseJsonAccount(response.body()!!)
+                            storeUser(account, sessionToken, bearerToken)
+                            it.onComplete()
+                        }
 
-                    else -> {
-                        handleErrorAuth("Error while getting account information.")
+                        else -> {
+                            handleErrorAuth("Error while getting account information.")
+                            it.onComplete()
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                handleErrorAuth(t.toString())
-            }
-        })
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    handleErrorAuth(t.toString())
+                }
+            })
+        }
     }
 
     private fun storeUser(account: Account, sessionToken: String, bearerToken: String) {
