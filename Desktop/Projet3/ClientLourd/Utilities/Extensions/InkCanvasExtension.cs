@@ -26,6 +26,11 @@ namespace ClientLourd.Utilities.Extensions
             inkCanvas.Strokes.Add(CreateStroke(strokeInfo));
         }
 
+        public static void RemoveStroke(this InkCanvas inkCanvas, Guid strokeID)
+        {
+            inkCanvas.Strokes.Remove(FindStroke(inkCanvas, strokeID));
+        }
+
         private static Stroke FindStroke(InkCanvas inkCanvas, Guid strokeID)       
         {
             foreach (Stroke stroke in inkCanvas.Strokes)

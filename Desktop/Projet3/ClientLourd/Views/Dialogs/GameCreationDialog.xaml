@@ -120,9 +120,8 @@
                 </DockPanel>
                 <!-- Drawing or upload slide-->
             </materialDesign:TransitionerSlide>
-            <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropFile">
-            <!--<materialDesign:TransitionerSlide AllowDrop="True" Drop="DropUpload" >-->
-                <materialDesign:TransitionerSlide.BackwardWipe>
+                <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropFile">
+                    <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
                     </materialDesign:TransitionerSlide.BackwardWipe>
                 <materialDesign:TransitionerSlide.ForwardWipe>
@@ -137,9 +136,6 @@
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
                             <Button Grid.Column="1" Margin="5" Click="UploadImageClick" Content="Next" />
                         </Grid>
-                            <!--<Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" Click="GenerateXMLDoc"  Content="Next" />
-                            
-                    </Grid>-->
                         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                             
                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
@@ -210,7 +206,7 @@
                             </StackPanel>
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                        Text="Select the way the draw will be display"/>
-                            <ComboBox  IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
+                            <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
                             <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Click="PlayPreview" />
                         </StackPanel>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">

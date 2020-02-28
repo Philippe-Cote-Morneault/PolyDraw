@@ -45,6 +45,8 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
+
+        
         
         public RestClient RestClient
         {
@@ -62,6 +64,7 @@ namespace ClientLourd.ViewModels
             {
                 if (_word != value)
                 {
+
                     _word = value;
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(AreFieldsEmpty));
@@ -78,10 +81,12 @@ namespace ClientLourd.ViewModels
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _selectedMode = value.GetEnumFromDescription<PotraceMode>();
+                    NotifyPropertyChanged();
                 }
             } 
         }
         private PotraceMode _selectedMode;
+
 
         public List<string> PotraceModes
         {
@@ -140,8 +145,14 @@ namespace ClientLourd.ViewModels
         }
 
         private string _gameID;
+
+        public string GameID
+        {
+            get => _gameID;
+        }
         
-        public int BlackLevelThreshold { get; set; }
+
+        public int BlackLevelThreshold { get;  set;}
         public int BrushSize { get; set; }
         
         RelayCommand<object> _validateGameCommand;
@@ -180,16 +191,47 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public PotraceMode SelectedModeToPotraceEnum()
+        {
+            if (SelectedMode == PotraceMode.Classic.GetDescription())
+                return PotraceMode.Classic;
+
+            if (SelectedMode == PotraceMode.InsideToOutside.GetDescription())
+                return PotraceMode.InsideToOutside;
+
+            if (SelectedMode == PotraceMode.LeftToRight.GetDescription())
+                return PotraceMode.LeftToRight;
+
+            if (SelectedMode == PotraceMode.OutsideToInside.GetDescription())
+                return PotraceMode.OutsideToInside;
+
+            if (SelectedMode == PotraceMode.Random.GetDescription())
+                return PotraceMode.Random;
+
+            if (SelectedMode == PotraceMode.RightToLeft.GetDescription())
+                return PotraceMode.RightToLeft;
+
+            if (SelectedMode == PotraceMode.TopToBottom.GetDescription())
+                return PotraceMode.TopToBottom;
+
+            if (SelectedMode == PotraceMode.BottomToTop.GetDescription())
+                return PotraceMode.BottomToTop;
+
+            throw new Exception("No PotraceMode corresponding to the selected mode.");
+        }
+
         private async  Task UploadImage(object param)
         {
             try
             {
                 if (IsImageUpload)
                 {
+                    SelectedMode = PotraceMode.LeftToRight.GetDescription();
                     await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
                 }
                 else
                 {
+                    SelectedMode = PotraceMode.Classic.GetDescription();
                     await RestClient.PostGameImage(_gameID, DrawnImagePath, PotraceMode.Classic, BlackLevelThreshold / 100.0, BrushSize);
                 }
 
