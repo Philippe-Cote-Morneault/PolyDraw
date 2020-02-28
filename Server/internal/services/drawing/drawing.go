@@ -10,9 +10,7 @@ import (
 
 //Drawing service used to route the packets and send the preview
 type Drawing struct {
-	connected cbroadcast.Channel
-	close     cbroadcast.Channel
-	preview   cbroadcast.Channel
+	preview cbroadcast.Channel
 
 	shutdown chan bool
 }
@@ -40,10 +38,6 @@ func (d *Drawing) listen() {
 
 	for {
 		select {
-		case id := <-d.connected:
-			log.Printf("[Drawing] -> connected id: %s", id)
-		case id := <-d.close:
-			log.Printf("[Drawing] -> disconnect id: %s", id)
 		case data := <-d.preview:
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				//Start a new function to handle the connection
@@ -57,7 +51,5 @@ func (d *Drawing) listen() {
 }
 
 func (d *Drawing) subscribe() {
-	d.connected, _, _ = cbroadcast.Subscribe(socket.BSocketConnected)
-	d.close, _, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
 	d.preview, _, _ = cbroadcast.Subscribe(BPreview)
 }
