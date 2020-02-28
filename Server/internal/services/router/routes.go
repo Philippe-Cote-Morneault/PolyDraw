@@ -1,6 +1,7 @@
 package router
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/healthcheck"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -16,4 +17,7 @@ func (r *Router) routing() {
 
 	//Healthcheck
 	r.handle(socket.MessageType.HealthCheckResponse, healthcheck.BReceived)
+
+	//Drawing
+	r.handle(socket.MessageType.PreviewDrawing, drawing.BPreview)
 }
