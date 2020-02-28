@@ -34,13 +34,11 @@ namespace ClientLourd.Services.InkCanvas
         private Guid _currentStrokeID;
         private Mutex _mutex;
 
-        private EditorInformation _information
-        {
-            get => ((EditorViewModel) _editor.DataContext).EditorInformation;
-        }
+        private EditorInformation _information;
         
-        public StrokesReader(Editor editor, SocketClient socket)
+        public StrokesReader(Editor editor, SocketClient socket, EditorInformation information)
         {
+            _information = information;
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
@@ -77,7 +75,7 @@ namespace ClientLourd.Services.InkCanvas
         private void EditorOnStokeAdded(object sender, EventArgs args)
         {
             Stroke stroke = (Stroke) sender;
-            stroke.AddPropertyData(GUIDs.ID, _currentStrokeID);
+            stroke.AddPropertyData(GUIDs.ID, _currentStrokeID.ToString());
             SendStroke();
             _currentStrokeID = Guid.Empty;
         }
@@ -85,7 +83,7 @@ namespace ClientLourd.Services.InkCanvas
         private void EditorOnStrokeDeleted(object sender, EventArgs args)
         {
             Stroke stroke = (Stroke) sender;
-            _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, (Guid)stroke.GetPropertyData(GUIDs.ID)));
+            _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, new Guid(stroke.GetPropertyData(GUIDs.ID).ToString())));
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
@@ -97,25 +95,32 @@ namespace ClientLourd.Services.InkCanvas
         private void SendStroke()
         {
             _mutex.WaitOne();
-            if(_currentStrokeID != null && _points.Count > 0)
+            if(_currentStrokeID != Guid.Empty && _points.Count > 0)
             {
-                byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
-                message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
-                //TODO validate bytes order
-                _currentStrokeID.ToByteArray().CopyTo(message, 1);
-                //message[MAX_X_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Width);
-                //message[MAX_y_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Height);
-                message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
-                for (int i = 0; i < _points.Count; i++)
+                try
                 {
-                    int x = (int) Math.Ceiling(_points[i].X);
-                    int y = (int) Math.Ceiling(_points[i].Y);
-                    message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
-                    message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(2, x);
-                    message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
-                    message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(2, y);
+                    byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
+                    message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
+                    //TODO validate bytes order
+                    _currentStrokeID.ToByteArray().CopyTo(message, 1);
+                    //message[MAX_X_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Width);
+                    //message[MAX_y_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Height);
+                    message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
+                    for (int i = 0; i < _points.Count; i++)
+                    {
+                        int x = (int) Math.Ceiling(_points[i].X);
+                        int y = (int) Math.Ceiling(_points[i].Y);
+                        message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
+                        message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(2, x);
+                        message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
+                        message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(2, y);
+                    }
+                    _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
                 }
-                _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
+                catch
+                {
+                    //This is not a valid operation
+                }
                 _points.Clear();
             }
             _mutex.ReleaseMutex();
@@ -135,7 +140,7 @@ namespace ClientLourd.Services.InkCanvas
 
         private void CanvasOnMouseMove(object sender, MouseEventArgs e)
         {
-            if (_currentStrokeID != null)
+            if (_currentStrokeID != Guid.Empty)
             {
                 _points.Add(e.GetPosition(_editor.Canvas));
             }
@@ -158,9 +163,10 @@ namespace ClientLourd.Services.InkCanvas
             {
                 case InkCanvasEditingMode.Ink:
                     return 0;
-                default:
+                case InkCanvasEditingMode.EraseByPoint:
                     return 1 << 7;
             }
+            throw new InvalidOperationException();
         }
         private int GetColorValue()
         {
