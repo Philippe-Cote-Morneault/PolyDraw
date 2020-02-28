@@ -42,7 +42,6 @@ func (d *Drawing) Register() {
 func (d *Drawing) listen() {
 	defer service.Closed()
 
-	//Message viewer
 	for {
 		select {
 		case id := <-d.connected:
