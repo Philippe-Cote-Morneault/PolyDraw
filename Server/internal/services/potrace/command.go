@@ -12,6 +12,8 @@ import (
 	"os/exec"
 )
 
+const defaultDraw = 0.5
+
 func checkCommand(command string) bool {
 	_, err := exec.LookPath(command)
 	if err != nil {
@@ -129,6 +131,7 @@ func processChunk(commands *[]svgparser.Command, currentPath *model.XMLPath, pat
 		length += (*commands)[i].ComputeLength()
 	}
 	singlePath.Length = length
+	singlePath.Time = int(defaultDraw * length)
 	singlePath.D = builder.StringVal()
 	*paths = append(*paths, singlePath)
 }
