@@ -63,7 +63,6 @@ namespace ClientLourd.Models.Bindable
                 }
                 else
                 {
-                    SelectedColor = Colors.Black;
                     IsAnEraser = false;
                 }
                 _selectedTool = value;
