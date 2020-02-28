@@ -20,7 +20,22 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 		return
 	}
 	sendPreviewResponse(message.SocketID, true)
-	//TODO add other packets
+	uuidBytes, _ := drawingID.MarshalBinary()
+
+	socket.SendRawMessageToSocketID(socket.RawMessage{
+		MessageType: byte(socket.MessageType.StartDrawingServer),
+		Length:      uint16(len(uuidBytes)),
+		Bytes:       uuidBytes,
+	}, message.SocketID)
+	//Call method to start the drawing here
+	//TODO Allan your code goes here!
+
+	socket.SendRawMessageToSocketID(socket.RawMessage{
+		MessageType: byte(socket.MessageType.EndDrawingServer),
+		Length:      uint16(len(uuidBytes)),
+		Bytes:       uuidBytes,
+	}, message.SocketID)
+
 }
 
 func sendPreviewResponse(socketID uuid.UUID, response bool) {

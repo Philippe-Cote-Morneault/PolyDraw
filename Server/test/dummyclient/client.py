@@ -101,6 +101,11 @@ def printType(str):
     print(colored(str, 'green'))
 def printMsgPack(msg):
      print(colored(msg, 'yellow'))
+def printBool(msg):
+     if msg == 0x01:
+        print(colored(True, 'yellow'))
+     else:
+        print(colored(False, 'yellow'))
 
 def handle(typeVal, valBytes):
     if typeVal == 9:
@@ -121,7 +126,13 @@ def handle(typeVal, valBytes):
     if typeVal == 29:
         printType("-> Channel destroy")
         printMsgPack(msgpack.unpackb(valBytes))
-
+    if typeVal == 33:
+        printType("-> Start drawing server")
+    if typeVal == 35:
+        printType("-> End drawing server")
+    if typeVal == 37:
+        printType("-> Preview drawing response")
+        printBool(valBytes)
     if typeVal == 255:
         printType("-> [[ERROR]]")
         printMsgPack(msgpack.unpackb(valBytes))
