@@ -1,8 +1,8 @@
 package potrace
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 	"log"
-	"regexp"
 	"syscall"
 
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
@@ -14,7 +14,7 @@ type Potrace struct {
 
 //Init the messenger service
 func (p *Potrace) Init() {
-	transformReg = regexp.MustCompile(`(?P<command>\w*)\((?P<attr1>[-\d.e]+)(,(?P<attr2>[-\d.e]+))?\)`)
+	svgparser.TransformInit()
 }
 
 //Start the potrace service

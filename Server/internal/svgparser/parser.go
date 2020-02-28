@@ -1,9 +1,9 @@
 package svgparser
 
 //ParseD  parses d string in svg
-func ParseD(input string) []Command {
+func ParseD(input string, transformations []TransformCommand) []Command {
 	fsm := fsm{}
-	fsm.Init()
+	fsm.Init(&transformations)
 	for _, char := range input {
 		fsm.StateMachine(char)
 	}

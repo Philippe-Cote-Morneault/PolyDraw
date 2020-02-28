@@ -61,8 +61,7 @@ func Translate(svgKey string, brushSize int, mode int) error {
 		}
 		path.BrushSize = brushSize
 	}
-	splitPath(&xmlSvg.G.XMLPaths)
-	Transform(&xmlSvg)
+	splitPath(&xmlSvg.G.XMLPaths, xmlSvg.G.Transform)
 	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
 	data, err := xml.Marshal(&xmlSvg)
 	err = datastore.PutFile(&data, svgKey)
@@ -73,12 +72,14 @@ func Translate(svgKey string, brushSize int, mode int) error {
 }
 
 //splitPath export paths
-func splitPath(paths *[]model.XMLPath) {
+func splitPath(paths *[]model.XMLPath, transform string) {
 	builder := strbuilder.StrBuilder{}
 	builder.Grow(128)
 	newPaths := make([]model.XMLPath, 0, 20)
+	transformCommands := svgparser.TransformParse(transform)
+
 	for i := range *paths {
-		commands := svgparser.ParseD((*paths)[i].D)
+		commands := svgparser.ParseD((*paths)[i].D, transformCommands)
 
 		lastChunk := 0
 		subPathCount := 0
