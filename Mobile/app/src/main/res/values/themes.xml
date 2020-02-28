@@ -21,48 +21,200 @@
         <item name="colorAccent">?colorSecondary</item>
     </style>
 
-    <!--Base custom theme which will be shared between both light and dark theme variants-->
+    <!--Blue/Yellow theme-->
     <style name="MyTheme.BlueYellow" parent="Base.MyTheme">
-        <!--Material color attributes -->
         <item name="colorPrimary">@color/colorPrimaryBlueYellow</item>
-        <item name="colorSecondary">@color/colorPrimaryBlueYellow</item>
-        <item name="colorSecondaryVariant">@color/colorPrimaryBlueYellow</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryBlueYellow</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryBlueYellowLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryBlueYellowLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBlueYellowDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryBlueYellowDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryBlueYellow</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryBlueYellow</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryBlueYellowLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryBlueYellowLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryBlueYellowDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryBlueYellowDark</item>
 
         <item name="android:colorBackground">@color/color_background</item>
         <item name="colorSurface">@color/color_surface</item>
         <item name="colorError">@color/color_error</item>
-        --
-        <item name="colorOnPrimary">@color/color_on_primary</item>
-        <item name="colorOnSecondary">@color/color_on_secondary</item>
+
         <item name="colorOnBackground">@color/color_on_background</item>
         <item name="colorOnSurface">@color/color_on_surface</item>
         <item name="colorOnError">@color/color_on_error</item>
-
-        <!--Component styles-->
-        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert</item>
-        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>
     </style>
 
+    <!--Brown/Green theme-->
+    <style name="MyTheme.BrownGreen" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryBrownGreen</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryBrownGreen</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryBrownGreenLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryBrownGreenLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBrownGreenDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryBrownGreenDark</item>
 
-    <!--Orange/Blue theme-->
-    <style name="MyTheme.OrangeBlue" parent="Base.MyTheme">
-        <item name="colorPrimary">@color/colorPrimaryOrangeBlue</item>
-        <item name="colorOnPrimary">@color/colorOnPrimaryOrangeBlue</item>
-        <item name="colorPrimaryLight">@color/colorPrimaryOrangeBlueLight</item>
-        <item name="colorOnPrimaryLight">@color/colorOnPrimaryOrangeBlueLight</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryOrangeBlueDark</item>
-        <item name="colorOnPrimaryDark">@color/colorOnPrimaryOrangeBlueDark</item>
-        <item name="colorSecondary">@color/colorSecondaryOrangeBlue</item>
-        <item name="colorOnSecondary">@color/colorOnSecondaryOrangeBlue</item>
-        <item name="colorSecondaryLight">@color/colorSecondaryOrangeBlueLight</item>
-        <item name="colorOnSecondaryLight">@color/colorOnSecondaryOrangeBlueLight</item>
-        <item name="colorSecondaryDark">@color/colorSecondaryOrangeBlueDark</item>
-        <item name="colorOnSecondaryDark">@color/colorOnSecondaryOrangeBlueDark</item>
+        <item name="colorSecondary">@color/colorSecondaryBrownGreen</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryBrownGreen</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryBrownGreenLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryBrownGreenLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryBrownGreenDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryBrownGreenDark</item>
 
         <item name="android:colorBackground">@color/color_background</item>
         <item name="colorSurface">@color/color_surface</item>
         <item name="colorError">@color/color_error</item>
-        --
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+    </style>
+
+    <!--Green/Teal theme-->
+    <style name="MyTheme.GreenTeal" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryGreenTeal</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryGreenTeal</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryGreenTealLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryGreenTealLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryGreenTealDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryGreenTealDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryGreenTeal</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryGreenTeal</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryGreenTealLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryGreenTealLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryGreenTealDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryGreenTealDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+    </style>
+
+    <!--Indigo/Orange theme-->
+    <style name="MyTheme.IndigoOrange" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryIndigoOrange</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryIndigoOrange</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryIndigoOrangeLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryIndigoOrangeLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryIndigoOrangeDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryIndigoOrangeDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryIndigoOrange</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryIndigoOrange</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryIndigoOrangeLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryIndigoOrangeLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryIndigoOrangeDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryIndigoOrangeDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+    </style>
+
+    <!--Orange/LightBlue theme-->
+    <style name="MyTheme.OrangeBlue" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryOrangeLightBlue</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryOrangeLightBlue</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryOrangeLightBlueLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryOrangeLightBlueLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryOrangeLightBlueDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryOrangeLightBlueDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryOrangeLightBlue</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryOrangeLightBlue</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryOrangeLightBlueLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryOrangeLightBlueLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryOrangeLightBlueDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryOrangeLightBlueDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+    </style>
+
+    <!--Purple/Green theme-->
+    <style name="MyTheme.PurpleGreen" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryPurpleGreen</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryPurpleGreen</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryPurpleGreenLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryPurpleGreenLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryPurpleGreenDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryPurpleGreenDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryPurpleGreen</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryPurpleGreen</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryPurpleGreenLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryPurpleGreenLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryPurpleGreenDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryPurpleGreenDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+    </style>
+
+    <!--Red/Yellow theme-->
+    <style name="MyTheme.RedYellow" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryRedYellow</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryRedYellow</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryRedYellowLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryRedYellowLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryRedYellowDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryRedYellowDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryRedYellow</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryRedYellow</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryRedYellowLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryRedYellowLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryRedYellowDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryRedYellowDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+    </style>
+
+    <!--Teal/Lime theme-->
+    <style name="MyTheme.TealLime" parent="Base.MyTheme">
+        <item name="colorPrimary">@color/colorPrimaryTealLime</item>
+        <item name="colorOnPrimary">@color/colorOnPrimaryTealLime</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryTealLimeLight</item>
+        <item name="colorOnPrimaryLight">@color/colorOnPrimaryTealLimeLight</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryTealLimeDark</item>
+        <item name="colorOnPrimaryDark">@color/colorOnPrimaryTealLimeDark</item>
+
+        <item name="colorSecondary">@color/colorSecondaryTealLime</item>
+        <item name="colorOnSecondary">@color/colorOnSecondaryTealLime</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryTealLimeLight</item>
+        <item name="colorOnSecondaryLight">@color/colorOnSecondaryTealLimeLight</item>
+        <item name="colorSecondaryDark">@color/colorSecondaryTealLimeDark</item>
+        <item name="colorOnSecondaryDark">@color/colorOnSecondaryTealLimeDark</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
 
         <item name="colorOnBackground">@color/color_on_background</item>
         <item name="colorOnSurface">@color/color_on_surface</item>
