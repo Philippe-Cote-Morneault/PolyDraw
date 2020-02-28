@@ -20,6 +20,7 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 		return
 	}
 	sendPreviewResponse(message.SocketID, true)
+	//TODO add other packets
 }
 
 func sendPreviewResponse(socketID uuid.UUID, response bool) {
