@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.app.Activity
 import android.content.Intent
 import com.log3900.login.LoginActivity
+import com.log3900.settings.theme.ThemeManager
 
 class ErrorDialog : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(this)
         super.onCreate(savedInstanceState)
 
         AlertDialog.Builder(this)

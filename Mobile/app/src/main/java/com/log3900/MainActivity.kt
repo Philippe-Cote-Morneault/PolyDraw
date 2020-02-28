@@ -3,8 +3,6 @@ package com.log3900
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -23,10 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.draw.DrawViewFragment
 import com.log3900.login.LoginActivity
-import com.log3900.profile.ProfileActivity
 import com.log3900.profile.ProfileFragment
-import com.log3900.socket.Event
-import com.log3900.socket.SocketEvent
+import com.log3900.settings.SettingsActivity
+import com.log3900.settings.theme.ThemeManager
 
 
 import com.log3900.socket.SocketService
@@ -38,15 +35,17 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setupUI()
 
         val toolbar:Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         val hideShowMessage: FloatingActionButton = findViewById(R.id.hideShowMessage)
-        hideShowMessage.setOnClickListener{ _ ->
-
+        hideShowMessage.setOnClickListener{
             var chatView = (supportFragmentManager.findFragmentById(R.id.fragment) as Fragment).view
             when(chatView!!.visibility){
                 View.INVISIBLE -> chatView.visibility = View.VISIBLE
@@ -95,13 +94,26 @@ open class MainActivity : AppCompatActivity() {
         avatar.setOnClickListener {
             startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (ThemeManager.hasActivityThemeChanged(this)) {
+            println("Recreating activity")
+            this.recreate()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
 
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun setupUI() {
+        findViewById<ImageView>(R.id.app_bar_main_settings).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
     }
 
     private fun logout() {
