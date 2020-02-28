@@ -100,11 +100,11 @@ def socketReceive():
 def printType(str):
     print(colored(str, 'green'))
 def printMsgPack(msg):
-     print(colored(msg, 'yellow'))
+    print(colored(msg, 'yellow'))
 def printBool(msg):
-     if msg == 0x01:
+    if msg == b'\x01':
         print(colored(True, 'yellow'))
-     else:
+    else:
         print(colored(False, 'yellow'))
 
 def handle(typeVal, valBytes):
