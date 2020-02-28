@@ -24,7 +24,7 @@
 
     <!--Brown/Green colors-->
     <color name="colorPrimaryBrownGreen">#795548</color>
-    <color name="colorOnPrimaryBrownGreen">#000000</color>
+    <color name="colorOnPrimaryBrownGreen">#FFFFFF</color>
     <color name="colorPrimaryBrownGreenLight">#A98274</color>
     <color name="colorOnPrimaryBrownGreenLight">#000000</color>
     <color name="colorPrimaryBrownGreenDark">#4B2C20</color>
@@ -50,11 +50,11 @@
     <color name="colorSecondaryGreenTealLight">#52C7B8</color>
     <color name="colorOnSecondaryGreenTealLight">#000000</color>
     <color name="colorSecondaryGreenTealDark">#00675B</color>
-    <color name="colorOnSecondaryGreenTealDark">#000000</color>
+    <color name="colorOnSecondaryGreenTealDark">#FFFFFF</color>
 
     <!--Indigo/Orange colors-->
     <color name="colorPrimaryIndigoOrange">#3F51B5</color>
-    <color name="colorOnPrimaryIndigoOrange">#000000</color>
+    <color name="colorOnPrimaryIndigoOrange">#FFFFFF</color>
     <color name="colorPrimaryIndigoOrangeLight">#757DE8</color>
     <color name="colorOnPrimaryIndigoOrangeLight">#000000</color>
     <color name="colorPrimaryIndigoOrangeDark">#002984</color>
@@ -73,18 +73,18 @@
     <color name="colorPrimaryOrangeLightBlueLight">#ffca47</color>
     <color name="colorOnPrimaryOrangeLightBlueLight">#000000</color>
     <color name="colorPrimaryOrangeLightBlueDark">#c66a00</color>
-    <color name="colorOnPrimaryOrangeLightBlueDark">#ffffff</color>
+    <color name="colorOnPrimaryOrangeLightBlueDark">#000000</color>
 
     <color name="colorSecondaryOrangeLightBlue">#009dff</color>
-    <color name="colorOnSecondaryOrangeLightBlue">#ffffff</color>
+    <color name="colorOnSecondaryOrangeLightBlue">#000000</color>
     <color name="colorSecondaryOrangeLightBlueLight">#69ceff</color>
     <color name="colorOnSecondaryOrangeLightBlueLight">#000000</color>
     <color name="colorSecondaryOrangeLightBlueDark">#006fcb</color>
-    <color name="colorOnSecondaryOrangeLightBlueDark">#ffffff</color>
+    <color name="colorOnSecondaryOrangeLightBlueDark">#FFFFFF</color>
 
     <!--Purple/Green colors-->
     <color name="colorPrimaryPurpleGreen">#9C27B0</color>
-    <color name="colorOnPrimaryPurpleGreen">#000000</color>
+    <color name="colorOnPrimaryPurpleGreen">#FFFFFF</color>
     <color name="colorPrimaryPurpleGreenLight">#D05CE3</color>
     <color name="colorOnPrimaryPurpleGreenLight">#000000</color>
     <color name="colorPrimaryPurpleGreenDark">#6A0080</color>
