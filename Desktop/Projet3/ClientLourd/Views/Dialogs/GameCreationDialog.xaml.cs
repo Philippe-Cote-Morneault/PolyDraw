@@ -214,6 +214,12 @@ namespace ClientLourd.Views.Dialogs
             return new StrokeInfo(mockData);
         }
 
+        public void ClearPreviewCanvas(object sender,EventArgs arg)
+        {
+            PreviewCanvas.Strokes.Clear();
+        }
+
+
         public async void PlayPreview(object sender, EventArgs e)
         {
 
