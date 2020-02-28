@@ -1,5 +1,6 @@
-package com.log3900.settings
+package com.log3900.settings.theme
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
@@ -14,18 +15,25 @@ import com.log3900.R
 
 class ThemePickerFragment : DialogFragment() {
     private lateinit var themesRecyclerView: RecyclerView
-    private lateinit var themesAdapter: 
+    private lateinit var themesAdapter: ThemeAdapter
+    private var themes = ThemeManager.getThemesAsArrayList()
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(activity)
             .setTitle("Theme Picker")
             .setPositiveButton("Save") { _, _ ->
-                //ThemeManager.se
+                ThemeManager.changeTheme(themesAdapter.selectedTheme)
             }
             .setNegativeButton("Cancel") { _, _ ->
 
             }
 
         val view = activity?.layoutInflater?.inflate(R.layout.fragment_theme_picker, null)
+
+        themesRecyclerView = view?.findViewById(R.id.fragment_theme_picker_recycler_view)!!
+
+        setupRecyclerView()
+
         dialogBuilder.setView(view)
         return dialogBuilder.create()
     }
@@ -33,12 +41,15 @@ class ThemePickerFragment : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_theme_picker, container, false)
 
-        themesRecyclerView = rootView.findViewById(R.id.fragment_theme_picker_recycler_view)
-
         return rootView
     }
 
     private fun setupRecyclerView() {
-        themesRecyclerView.layoutManager = GridLayoutManager(this.context, 2)
+        themesAdapter = ThemeAdapter(themes)
+        themesRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(this.context, 4)
+            adapter = themesAdapter
+        }
     }
 }
