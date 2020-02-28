@@ -55,14 +55,14 @@ func (c *Command) transform(transformations *[]TransformCommand) {
 	for i := range *transformations {
 		for j := range c.Parameters {
 			if commandLower == 'h' {
-				c.Parameters[j] = (*transformations)[i].Apply(c.Parameters[j], true)
+				c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], true)
 			} else if commandLower == 'v' {
-				c.Parameters[j] = (*transformations)[i].Apply(c.Parameters[j], false)
+				c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], false)
 			} else {
-				if i%2 == 0 {
-					c.Parameters[j] = (*transformations)[i].Apply(c.Parameters[j], true)
+				if j%2 == 0 {
+					c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], true)
 				} else {
-					c.Parameters[j] = (*transformations)[i].Apply(c.Parameters[j], false)
+					c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], false)
 				}
 			}
 		}
