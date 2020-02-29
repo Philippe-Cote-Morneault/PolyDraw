@@ -4,23 +4,35 @@ import android.content.Context
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.shared.database.AppDatabase
+import io.reactivex.Completable
+import io.reactivex.Single
 import java.util.*
 
 class AccountRepository {
     companion object {
         var currentAccountID: UUID? = null
 
-        fun getAccount(): Account {
-            return AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().findByID(
-                currentAccountID!!)
+        fun getAccount(): Single<Account> {
+            return Single.create {
+                it.onSuccess(AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().findByID(
+                    currentAccountID!!))
+            }
         }
 
-        fun createAccount(account: Account) {
-            AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().insertAccount(account)
+        fun createAccount(account: Account): Completable {
+            return Completable.create {
+                AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
+                    .insertAccount(account)
+                it.onComplete()
+            }
         }
 
-        fun updateAccount(account: Account) {
-            AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().updateAccount(account)
+        fun updateAccount(account: Account): Completable {
+            return Completable.create {
+                AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
+                    .updateAccount(account)
+                it.onComplete()
+            }
         }
     }
 }
