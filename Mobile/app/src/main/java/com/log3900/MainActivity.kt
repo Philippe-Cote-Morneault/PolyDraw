@@ -1,6 +1,7 @@
 package com.log3900
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
@@ -27,6 +28,7 @@ import com.log3900.settings.theme.ThemeManager
 
 
 import com.log3900.socket.SocketService
+import com.log3900.tutorial.TutorialActivity
 import com.log3900.ui.home.HomeFragment
 
 open class MainActivity : AppCompatActivity() {
@@ -113,6 +115,9 @@ open class MainActivity : AppCompatActivity() {
     private fun setupUI() {
         findViewById<ImageView>(R.id.app_bar_main_settings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        findViewById<ImageView>(R.id.app_bar_main_tutorial).setOnClickListener {
+            startActivity(Intent(this, TutorialActivity::class.java))
         }
     }
 
