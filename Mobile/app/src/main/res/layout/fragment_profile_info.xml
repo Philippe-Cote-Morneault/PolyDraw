@@ -5,7 +5,7 @@
      <data>
          <variable
              name="info"
-             type="com.log3900.user.Account" />
+             type="com.log3900.user.account.Account" />
      </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

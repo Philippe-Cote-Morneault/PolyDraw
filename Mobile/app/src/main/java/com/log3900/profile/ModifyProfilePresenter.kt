@@ -2,10 +2,9 @@ package com.log3900.profile
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.log3900.login.Validator
 import com.log3900.shared.ui.ProfilePresenter
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call

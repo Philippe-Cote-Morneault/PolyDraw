@@ -1,4 +1,4 @@
-package com.log3900.user
+package com.log3900.user.account
 
 import android.content.Context
 import com.log3900.MainApplication

@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.log3900.R
 import com.log3900.databinding.FragmentProfileInfoBinding
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.ui.getAccountAvatarID
 
 class ProfileInfoFragment : Fragment() {

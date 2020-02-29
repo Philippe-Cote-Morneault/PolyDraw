@@ -15,9 +15,7 @@ import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.User
-import com.log3900.user.AccountRepository
-import com.log3900.user.UserRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter

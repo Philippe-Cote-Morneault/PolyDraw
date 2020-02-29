@@ -1,6 +1,6 @@
 package com.log3900.chat.Channel
 
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import java.util.*
 import kotlin.collections.ArrayList
 

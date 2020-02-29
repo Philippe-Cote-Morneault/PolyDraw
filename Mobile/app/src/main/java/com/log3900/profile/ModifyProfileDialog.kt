@@ -13,8 +13,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.shared.ui.ProfileView
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.ui.getAccountAvatarID
 import com.log3900.utils.ui.getAvatarID
 

@@ -1,10 +1,8 @@
 package com.log3900.utils.ui
 
-import android.content.res.Resources
-import androidx.core.content.res.ResourcesCompat
 import com.log3900.R
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 
 /**
  * Returns the ID of the pictureID from the corresponding index

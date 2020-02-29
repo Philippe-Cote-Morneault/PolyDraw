@@ -6,15 +6,13 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import androidx.navigation.common.R
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.ChatRestService
-import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.Json

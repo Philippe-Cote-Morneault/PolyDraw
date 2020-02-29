@@ -1,6 +1,7 @@
 package com.log3900.user
 
 import com.google.gson.JsonObject
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi

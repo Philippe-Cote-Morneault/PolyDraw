@@ -2,7 +2,7 @@ package com.log3900.profile.stats
 
 import com.google.gson.JsonObject
 import com.log3900.profile.ProfileRestService
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
