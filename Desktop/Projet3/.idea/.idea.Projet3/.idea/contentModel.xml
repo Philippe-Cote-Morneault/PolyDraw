@@ -202,6 +202,16 @@
             <e p="Conversation.xaml.cs" t="Include" />
             <e p="Editor.xaml" t="Include" />
             <e p="Editor.xaml.cs" t="Include" />
+            <e p="Game" t="Include">
+              <e p="EditorZone.xaml" t="Include" />
+              <e p="EditorZone.xaml.cs" t="Include" />
+              <e p="GamePanel.xaml" t="Include" />
+              <e p="GamePanel.xaml.cs" t="Include" />
+              <e p="GameStatus.xaml" t="Include" />
+              <e p="GameStatus.xaml.cs" t="Include" />
+              <e p="TopBar.xaml" t="Include" />
+              <e p="TopBar.xaml.cs" t="Include" />
+            </e>
             <e p="Login.xaml" t="Include" />
             <e p="Login.xaml.cs" t="Include" />
             <e p="Profile.xaml" t="Include" />

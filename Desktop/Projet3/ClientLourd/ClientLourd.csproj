@@ -215,6 +215,18 @@
     <Compile Include="Views\Controls\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Game\EditorZone.xaml.cs">
+      <DependentUpon>EditorZone.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\GamePanel.xaml.cs">
+      <DependentUpon>GamePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\GameStatus.xaml.cs">
+      <DependentUpon>GameStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\TopBar.xaml.cs">
+      <DependentUpon>TopBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -282,6 +294,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Game\EditorZone.xaml" />
+    <Page Include="Views\Controls\Game\GamePanel.xaml" />
+    <Page Include="Views\Controls\Game\GameStatus.xaml" />
+    <Page Include="Views\Controls\Game\TopBar.xaml" />
     <Page Include="Views\Controls\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

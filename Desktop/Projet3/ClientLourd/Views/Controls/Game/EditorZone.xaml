@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Game.EditorZone"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls.Game"
+             xmlns:control="clr-namespace:ClientLourd.Views.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel Margin="10">
+        <materialDesign:Card  materialDesign:ShadowAssist.ShadowDepth="Depth4" DockPanel.Dock="Bottom">
+            <StackPanel  Orientation="Horizontal" Margin="5">
+                <TextBlock VerticalAlignment="Center" Text="Guess here: " FontSize="24" FontWeight="Medium"/>
+                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+            </StackPanel>
+        </materialDesign:Card>
+        <control:Editor/>
+    </DockPanel>
+</UserControl>
