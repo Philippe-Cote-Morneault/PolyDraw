@@ -48,11 +48,14 @@ namespace ClientLourd.ViewModels
         
         private async void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
         {
-            if ((args as DrawingEventArgs).Data == 0)
+            Application.Current.Dispatcher.Invoke(delegate
             {
-                DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
+                if ((args as DrawingEventArgs).Data == 0)
+                {
+                    DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
 
-            }
+                }
+            });
 
         }
 
