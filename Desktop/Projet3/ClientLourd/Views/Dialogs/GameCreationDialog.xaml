@@ -34,7 +34,7 @@
                       <materialDesign:SlideWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
                 <DockPanel >
-                    <Button Margin="5" DockPanel.Dock="Bottom" Click="ValidateTheGame"  Content="Next">
+                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{Binding ValidateGameCommand}"  Content="Next">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
                                 <Binding ElementName="WordBox" Path="(Validation.HasError)" />
@@ -207,7 +207,7 @@
                             <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                        Text="Select the way the draw will be display"/>
                             <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
-                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Click="PlayPreview" />
+                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
                         </StackPanel>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
                             <InkCanvas x:Name="PreviewCanvas" Width="800" Height="450" IsEnabled="False" />

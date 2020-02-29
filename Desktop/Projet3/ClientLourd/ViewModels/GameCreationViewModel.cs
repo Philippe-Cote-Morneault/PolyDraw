@@ -5,13 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
+using ClientLourd.Utilities.Extensions;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
@@ -27,6 +30,34 @@ namespace ClientLourd.ViewModels
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
             BrushSize = 12;
+            SocketClient.ServerStartsDrawing += SocketClientOnServerStartsDrawing;
+            SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
+            SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
+            SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
+        }
+        
+        private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
+        {
+            PreviewGUIEnabled = false;
+        }
+
+        private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
+        {
+            PreviewGUIEnabled = true;
+        }
+        
+        private async void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
+        {
+            if ((args as DrawingEventArgs).Data == 0)
+            {
+                DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
+
+            }
+        }
+
+        private void SocketClientOnServerStrokeSent(object source, EventArgs args)
+        {
+            CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
@@ -52,6 +83,11 @@ namespace ClientLourd.ViewModels
         public RestClient RestClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
+        
+        public SocketClient SocketClient
+        {
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
 
@@ -152,7 +188,18 @@ namespace ClientLourd.ViewModels
         {
             get => _gameID;
         }
-        
+
+        private InkCanvas _currentCanvas;
+
+        public InkCanvas CurrentCanvas
+        {
+            get => _currentCanvas;
+            set
+            {
+                _currentCanvas = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public int BlackLevelThreshold { get;  set;}
         public int BrushSize { get; set; }
@@ -193,34 +240,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public PotraceMode SelectedModeToPotraceEnum()
-        {
-            if (SelectedMode == PotraceMode.Classic.GetDescription())
-                return PotraceMode.Classic;
-
-            if (SelectedMode == PotraceMode.InsideToOutside.GetDescription())
-                return PotraceMode.InsideToOutside;
-
-            if (SelectedMode == PotraceMode.LeftToRight.GetDescription())
-                return PotraceMode.LeftToRight;
-
-            if (SelectedMode == PotraceMode.OutsideToInside.GetDescription())
-                return PotraceMode.OutsideToInside;
-
-            if (SelectedMode == PotraceMode.Random.GetDescription())
-                return PotraceMode.Random;
-
-            if (SelectedMode == PotraceMode.RightToLeft.GetDescription())
-                return PotraceMode.RightToLeft;
-
-            if (SelectedMode == PotraceMode.TopToBottom.GetDescription())
-                return PotraceMode.TopToBottom;
-
-            if (SelectedMode == PotraceMode.BottomToTop.GetDescription())
-                return PotraceMode.BottomToTop;
-
-            throw new Exception("No PotraceMode corresponding to the selected mode.");
-        }
 
         private async  Task UploadImage(object param)
         {
@@ -259,6 +278,30 @@ namespace ClientLourd.ViewModels
                        (_addImageCommand = new RelayCommand<string>(image => AddImage(image)));
             }
         }
+        
+        RelayCommand<object> _playPreviewCommand;
+        public ICommand PlayPreviewCommand
+        {
+            get
+            {
+                return _playPreviewCommand ??
+                       (_playPreviewCommand = new RelayCommand<object>(image => PlayPreview()));
+            }
+        }
+
+        private async void PlayPreview()
+        {
+            try
+            {
+                await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
+            }
+            catch (Exception e)
+            {
+                await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
+            }
+        }
+        
         
         RelayCommand<object> _removeImageCommand;
         public ICommand RemoveImageCommand

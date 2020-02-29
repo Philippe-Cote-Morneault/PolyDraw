@@ -29,25 +29,7 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
-            SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
-            SocketClient.ServerStartsDrawing += SocketClientOnServerStartsDrawing;
-            SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
-            SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
-        }
-
-        public SocketClient SocketClient
-        {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
-        }
-
-        public RestClient RestClient
-        {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
-        }
-
-        public SessionInformations SessionInformations
-        {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations; }
+            Loaded += (sender, args) => { ViewModel.CurrentCanvas = EditorView.Canvas; };
         }
 
         private GameCreationViewModel ViewModel
@@ -73,11 +55,6 @@ namespace ClientLourd.Views.Dialogs
                   string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                   if (files != null) ViewModel.AddImageCommand.Execute(files[0]);
               }
-        }
-
-        private void ValidateTheGame(object sender, RoutedEventArgs e)
-        {
-            ViewModel.ValidateGameCommand.Execute(null);
         }
 
         private void UploadImageClick(object sender, RoutedEventArgs e)
@@ -186,33 +163,6 @@ namespace ClientLourd.Views.Dialogs
             return svgPath;
         }
 
-        // TODO: Delete this
-        private StrokeInfo GetMockStrokeMessage() 
-        {
-            byte[] firstByte = new byte[] { 135 };
-            byte[] strokeUid = Encoding.ASCII.GetBytes("12345678-9012-34");
-            byte[] userUid = Encoding.ASCII.GetBytes("12345678-9012-34");
-            byte[] twoBytesPadding = new byte[2];
-            byte[] oneBytePadding = new byte[1] {11};
-            byte[] points = new byte[200];
-            for (byte i = 0; i < 200; i +=2)
-            {
-                points[i] = 0;
-                points[i + 1] = i;
-            }
-
-            var mockData = new byte[firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length + points.Length];
-
-            firstByte.CopyTo(mockData, 0);
-            strokeUid.CopyTo(mockData, firstByte.Length);
-            userUid.CopyTo(mockData, strokeUid.Length + firstByte.Length);
-            twoBytesPadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length);
-            twoBytesPadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length);
-            oneBytePadding.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length);
-            points.CopyTo(mockData, firstByte.Length + strokeUid.Length + userUid.Length + twoBytesPadding.Length + twoBytesPadding.Length + oneBytePadding.Length);
-
-            return new StrokeInfo(mockData);
-        }
 
         public void ClearPreviewCanvas(object sender,EventArgs arg)
         {
@@ -220,63 +170,7 @@ namespace ClientLourd.Views.Dialogs
         }
 
 
-        public async void PlayPreview(object sender, EventArgs e)
-        {
 
-            // Only do this if info has been modified?    
-            await RestClient.PutGameInformations(ViewModel.GameID, ViewModel.SelectedModeToPotraceEnum(), ViewModel.BrushSize, ViewModel.BlackLevelThreshold / 100.0);
-
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(ViewModel.GameID)));
-
-            //StrokeInfo mock = GetMockStrokeMessage();
-
-            //StrokeInfo mock2;
-            /*if (PreviewCanvas.Strokes.Count == 0) 
-            {
-                PreviewCanvas.AddStroke(mock);
-            }
-            else
-            {
-                PreviewCanvas.RemoveStroke(mock.StrokeID);
-            }*/
-            
-        }
-
-        private async void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
-        {
-            if ((args as DrawingEventArgs).Data == 0)
-            {
-                Application.Current.Dispatcher.Invoke(delegate
-                {
-                    DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
-                });
-
-            }
-        }
-
-        private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
-        {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                ViewModel.PreviewGUIEnabled = false;
-            });
-        }
-
-        private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
-        {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                ViewModel.PreviewGUIEnabled = true;
-            });
-        }
-
-        private void SocketClientOnServerStrokeSent(object source, EventArgs args)
-        {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                PreviewCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
-            });
-        }
 
     }
 }
