@@ -87,7 +87,7 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
                 null
 
         val updatedAccount = Account(
-            originalAccount.userID,
+            originalAccount.ID,
             usernameInput.text.toString(),
             avatarIndex,
             emailInput.text.toString(),

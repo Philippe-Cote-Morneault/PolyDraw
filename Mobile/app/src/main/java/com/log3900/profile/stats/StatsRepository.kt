@@ -57,7 +57,7 @@ object StatsRepository {
     }
 
     private suspend fun sendUserStatsRequest(): UserStats {
-        val userID = "" // TODO: get acutal userID
+        val userID = "" // TODO: get acutal ID
         val session = AccountRepository.getAccount().sessionToken
         val responseJson = ProfileRestService.service.getUserStats(session, "EN")   //TODO: get language
 

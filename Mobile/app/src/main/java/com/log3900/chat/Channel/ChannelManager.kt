@@ -93,7 +93,7 @@ class ChannelManager {
     }
 
     fun onChannelCreated(channel: Channel) {
-        if (channel.users.get(0).ID == account.userID) {
+        if (channel.users.get(0).ID == account.ID) {
             changeSubscriptionStatus(channel)
             changeActiveChannel(channel)
         }

@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity
 data class Account(
-    @PrimaryKey var userID: UUID,
+    @PrimaryKey var ID: UUID,
     var username:       String,
     val pictureID:      Int,
     val email:          String,

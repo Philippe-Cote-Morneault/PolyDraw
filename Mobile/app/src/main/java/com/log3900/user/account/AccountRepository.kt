@@ -41,7 +41,7 @@ class AccountRepository {
             val preferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
             if (preferences != null) {
                 with (preferences.edit()) {
-                    putString(context.getString(R.string.preference_file_userID_key), account.userID.toString())
+                    putString(context.getString(R.string.preference_file_userID_key), account.ID.toString())
                     putString(context.getString(R.string.preference_file_username_key), account.username)
                     putString(context.getString(R.string.preference_file_pictureid_key), account.pictureID.toString())
                     putString(context.getString(R.string.preference_file_email_key), account.email)

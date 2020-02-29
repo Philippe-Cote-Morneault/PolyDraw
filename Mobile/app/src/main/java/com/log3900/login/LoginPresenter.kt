@@ -69,7 +69,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                 Event.SOCKET_CONNECTION,
                 session.toByteArray(Charsets.UTF_8))
         }
-//        val account = getUserInfo(session, bearer, userID)
+//        val account = getUserInfo(session, bearer, ID)
 //        if (account == null) {
 //            handleErrorAuth("Error while trying to get account information")
 //            return
