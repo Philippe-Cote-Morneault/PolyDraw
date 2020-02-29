@@ -17,10 +17,10 @@ interface AuthenticationRestService {
         @Body data: JsonObject
     ): Call<JsonObject>
 
-    @GET("/users/{userID}")
+    @GET("/users/{ID}")
     fun getUserInfo(
         @Header("SessionToken") sessionToken: String,
-        @Path("userID") userID: String
+        @Path("ID") userID: String
     ): Call<JsonObject>
 
     companion object {

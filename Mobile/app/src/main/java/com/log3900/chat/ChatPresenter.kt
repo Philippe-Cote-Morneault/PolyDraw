@@ -1,5 +1,6 @@
 package com.log3900.chat
 
+import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage
@@ -7,7 +8,8 @@ import com.log3900.chat.Message.SentMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
@@ -21,9 +23,13 @@ class ChatPresenter : Presenter {
     private var keyboardOpened: Boolean = false
     private var loadingMessages: Boolean
 
+    lateinit var account: Account
+
     constructor(chatView: ChatView) {
         this.chatView = chatView
         loadingMessages = false
+        account = AccountRepository.getInstance().getAccount()
+
         ChatManager.getInstance()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -51,6 +57,7 @@ class ChatPresenter : Presenter {
 
                 }
             )
+
         chatView.setCurrentChannnelName(chatManager.getActiveChannel().name)
         messageRepository = MessageRepository.instance!!
 
@@ -130,7 +137,7 @@ class ChatPresenter : Presenter {
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {
         chatView.notifyNewMessage()
-        if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && AccountRepository.getAccount().username != (message.message as ReceivedMessage).username) {
+        if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && account.username != (message.message as ReceivedMessage).username) {
             chatView.playNewMessageNotification()
         }
     }

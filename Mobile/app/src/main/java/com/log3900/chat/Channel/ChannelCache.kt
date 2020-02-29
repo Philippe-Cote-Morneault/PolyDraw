@@ -1,6 +1,6 @@
 package com.log3900.chat.Channel
 
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -9,14 +9,12 @@ class ChannelCache {
     var availableChannels: ArrayList<Channel> = arrayListOf()
 
     fun reloadChannels(channels: ArrayList<Channel>) {
-        val username = AccountRepository.getAccount().username
-
         joinedChannels.clear()
         availableChannels.clear()
 
         for (channel in channels) {
             if (channel.users.find {
-                    it.ID == AccountRepository.getAccount().userID
+                    it.ID == AccountRepository.getInstance().getAccount().ID
                 } != null) {
                 addJoinedChannel(channel)
             } else {

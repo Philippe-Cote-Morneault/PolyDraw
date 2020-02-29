@@ -15,9 +15,7 @@ import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.User
-import com.log3900.user.AccountRepository
-import com.log3900.user.UserRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -27,6 +25,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,7 +48,7 @@ class ChannelRepository : Service() {
         instance = this
         socketService = SocketService.instance
         channelCache = ChannelCache()
-        getChannels(AccountRepository.getAccount().sessionToken).subscribe(
+        getChannels(AccountRepository.getInstance().getAccount().sessionToken).subscribe(
             {
                 channelCache.reloadChannels(it)
                 isReady = true

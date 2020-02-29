@@ -6,11 +6,14 @@ import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
 import com.log3900.shared.architecture.Presenter
+import com.log3900.shared.database.AppDatabase
 import com.log3900.shared.ui.dialogs.ProgressDialog
 import com.log3900.socket.*
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -69,7 +72,7 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                 Event.SOCKET_CONNECTION,
                 session.toByteArray(Charsets.UTF_8))
         }
-//        val account = getUserInfo(session, bearer, userID)
+//        val account = getUserInfo(session, bearer, ID)
 //        if (account == null) {
 //            handleErrorAuth("Error while trying to get account information")
 //            return
@@ -88,7 +91,9 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                             println("Sucessful user response")
                             val account = parseJsonAccount(response.body()!!)
                             storeUser(account, sessionToken, bearerToken)
-                            it.onComplete()
+                                .subscribe {
+                                    it.onComplete()
+                                }
                         }
 
                         else -> {
@@ -105,11 +110,20 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
         }
     }
 
-    private fun storeUser(account: Account, sessionToken: String, bearerToken: String) {
-        AccountRepository.createAccount(account.copy(
-            sessionToken = sessionToken,
-            bearerToken = bearerToken
-        ))
+    private fun storeUser(account: Account, sessionToken: String, bearerToken: String): Completable {
+        return Completable.create {
+            AccountRepository.getInstance().createAccount(
+                account.copy(
+                    sessionToken = sessionToken,
+                    bearerToken = bearerToken
+                )
+            ).subscribe {
+                    AccountRepository.getInstance().setCurrentAccount(account.ID)
+                        .subscribe{
+                            it.onComplete()
+                        }
+                }
+        }
     }
 
     private fun handleErrorAuth(error: String) {

@@ -13,8 +13,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.shared.ui.ProfileView
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.ui.getAccountAvatarID
 import com.log3900.utils.ui.getAvatarID
 
@@ -49,7 +49,7 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.dialog_modify_profile, container, false)
         modifyProfilePresenter = ModifyProfilePresenter(this)
-        originalAccount = AccountRepository.getAccount()
+        originalAccount = AccountRepository.getInstance().getAccount()
         avatarIndex = originalAccount.pictureID
         setUpUi(rootView)
         return rootView
@@ -87,7 +87,7 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
                 null
 
         val updatedAccount = Account(
-            originalAccount.userID,
+            originalAccount.ID,
             usernameInput.text.toString(),
             avatarIndex,
             emailInput.text.toString(),

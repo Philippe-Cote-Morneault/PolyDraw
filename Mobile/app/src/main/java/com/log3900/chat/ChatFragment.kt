@@ -17,6 +17,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.chat.ui.MessageAdapter
+import com.log3900.user.account.AccountRepository
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class ChatFragment : Fragment(), ChatView {
@@ -81,7 +83,7 @@ class ChatFragment : Fragment(), ChatView {
 
     private fun setupMessagesRecyclerView(rootView: View) {
         messagesRecyclerView = rootView.findViewById(R.id.fragment_chat_message_recycler_view)
-        messagesViewAdapter = MessageAdapter(LinkedList(), activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)?.getString(getString(R.string.preference_file_username_key), "nil")!!)
+        messagesViewAdapter = MessageAdapter(LinkedList(), AccountRepository.getInstance().getAccount().username)
         messagesRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = viewManager

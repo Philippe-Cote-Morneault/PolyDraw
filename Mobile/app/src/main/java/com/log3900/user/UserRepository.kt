@@ -1,6 +1,7 @@
 package com.log3900.user
 
 import com.google.gson.JsonObject
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -51,7 +52,7 @@ class UserRepository {
 
     private fun getUserFromRest(userID: UUID): Single<User> {
         return Single.create {
-            val call = UserRestService.service.getUser(AccountRepository.getAccount().sessionToken, "EN", userID.toString())
+            val call = UserRestService.service.getUser(AccountRepository.getInstance().getAccount().sessionToken, "EN", userID.toString())
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(
                     call: Call<JsonObject>,

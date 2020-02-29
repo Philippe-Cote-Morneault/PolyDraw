@@ -2,7 +2,7 @@ package com.log3900.profile.stats
 
 import com.google.gson.JsonObject
 import com.log3900.profile.ProfileRestService
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -57,8 +57,8 @@ object StatsRepository {
     }
 
     private suspend fun sendUserStatsRequest(): UserStats {
-        val userID = "" // TODO: get acutal userID
-        val session = AccountRepository.getAccount().sessionToken
+        val userID = "" // TODO: get acutal ID
+        val session = AccountRepository.getInstance().getAccount().sessionToken
         val responseJson = ProfileRestService.service.getUserStats(session, "EN")   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
@@ -70,7 +70,7 @@ object StatsRepository {
     }
 
     private suspend fun sendHistoryStatsRequest(): HistoryStats {
-        val session = AccountRepository.getAccount().sessionToken
+        val session = AccountRepository.getInstance().getAccount().sessionToken
         val responseJson = ProfileRestService.service.getHistory(session, "EN")   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {

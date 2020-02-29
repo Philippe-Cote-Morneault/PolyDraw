@@ -40,7 +40,8 @@
                 android:layout_gravity="right"
                 app:backgroundTint="?colorOnPrimaryDark"
                 android:layout_margin="3dp"
-                app:srcCompat="@drawable/ic_message"/>
+                app:srcCompat="@drawable/ic_message"
+                app:tint="?attr/colorPrimaryDark"/>
 
         </androidx.appcompat.widget.Toolbar>
 
