@@ -1,9 +1,11 @@
 package com.log3900.tutorial
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
@@ -33,7 +35,7 @@ class TutorialActivity : AppCompatActivity() {
 
     private fun setupUI() {
         toolbar = findViewById(R.id.activity_tutorial_toolbar)
-        drawerLayout = findViewById(R.id.activity_tutorial_drawer_layoutt)
+        drawerLayout = findViewById(R.id.activity_tutorial_drawer_layout)
         previousButton = findViewById(R.id.activity_tutorial_footer_button_prev)
         skipTutorialButton = findViewById(R.id.activity_tutorial_footer_button_skip)
         nextButton = findViewById(R.id.activity_tutorial_footer_button_next)
@@ -55,7 +57,7 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        tutorialSlidesAdapter = TutorialFragmentPagerAdapter(supportFragmentManager, tutorialManager.tutorialSlides)
+        tutorialSlidesAdapter = TutorialFragmentPagerAdapter(supportFragmentManager, tutorialManager.getSlidesAsArrayList())
         viewPager.adapter = tutorialSlidesAdapter
 
         viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
@@ -74,7 +76,9 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
+
+        toolbar.setNavigationOnClickListener { handleNavigationDrawerClick() }
     }
 
     private fun onViewPagerPageChanged(position: Int) {
@@ -126,5 +130,23 @@ class TutorialActivity : AppCompatActivity() {
         } else {
             finish()
         }
+    }
+
+    private fun handleNavigationDrawerClick() {
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            println("drawer is open!")
+            closeNavigationDrawer()
+        } else {
+            println("drawer is not open!")
+            openNavigationDrawer()
+        }
+    }
+
+    private fun openNavigationDrawer() {
+        drawerLayout.openDrawer(Gravity.LEFT)
+    }
+
+    private fun closeNavigationDrawer() {
+        drawerLayout.closeDrawer(Gravity.LEFT)
     }
 }
