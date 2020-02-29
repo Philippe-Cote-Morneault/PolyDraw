@@ -79,6 +79,12 @@
     <string name="chat_user_joined_channel_message">%1$s has joined the channel</string>
     <string name="chat_user_left_channel_message">%1$s has left the channel</string>
 
+    <!--Tutorial-->
+    <string name="tutorial">Tutorial</string>
+    <string name="tutorial_button_previous">Previous</string>
+    <string name="tutorial_button_skip_tutorial">Skip Tutorial</string>
+    <string name="tutorial_button_next">Next</string>
+
     <!--misc-->
     <string name="preference_file_key">com.log3900.mobile.PREFERENCE_FILE_KEY</string>
     <string name="preference_file_userID_key">com.log3900.mobile.PREFERENCE_FILE_USERID_KEY</string>
