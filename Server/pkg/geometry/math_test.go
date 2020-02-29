@@ -1,6 +1,9 @@
 package geometry
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func BenchmarkBezierLength(b *testing.B) {
 	InitTable()
