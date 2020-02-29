@@ -5,7 +5,7 @@ import java.util.*
 
 @Dao
 interface AccountDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAccount(account: Account)
 
     @Query("SELECT * FROM account WHERE ID == :id LIMIT 1")
