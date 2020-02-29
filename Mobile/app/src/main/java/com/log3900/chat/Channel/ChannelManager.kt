@@ -1,5 +1,6 @@
 package com.log3900.chat.Channel
 
+import android.util.Log
 import com.log3900.chat.ChatMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -13,7 +14,6 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ChannelManager {
-    private var account: Account
     lateinit var activeChannel: Channel
     lateinit var availableChannels: ArrayList<Channel>
     lateinit var joinedChannels: ArrayList<Channel>
@@ -21,12 +21,11 @@ class ChannelManager {
     var unreadMessagesTotal: Int = 0
 
     constructor() {
-        account = AccountRepository.getAccount()
     }
 
     fun init() {
-        joinedChannels = ChannelRepository.instance?.getJoinedChannels(account.sessionToken)?.blockingGet()!!
-        availableChannels = ChannelRepository.instance?.getAvailableChannels(account.sessionToken)?.blockingGet()!!
+        joinedChannels = ChannelRepository.instance?.getJoinedChannels(AccountRepository.getInstance().getAccount().sessionToken)?.blockingGet()!!
+        availableChannels = ChannelRepository.instance?.getAvailableChannels(AccountRepository.getInstance().getAccount().sessionToken)?.blockingGet()!!
         activeChannel = joinedChannels.find {
             it.ID.toString() == "00000000-0000-0000-0000-000000000000"
         }!!
@@ -93,7 +92,7 @@ class ChannelManager {
     }
 
     fun onChannelCreated(channel: Channel) {
-        if (channel.users.get(0).ID == account.ID) {
+        if (channel.users.get(0).ID == AccountRepository.getInstance().getAccount().ID) {
             changeSubscriptionStatus(channel)
             changeActiveChannel(channel)
         }

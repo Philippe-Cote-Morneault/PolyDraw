@@ -23,7 +23,7 @@ class ProfileInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         infoBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile_info, container, false)
-        infoBinding.info = AccountRepository.getAccount()
+        infoBinding.info = AccountRepository.getInstance().getAccount()
 
         setUpUi(infoBinding.root)
 

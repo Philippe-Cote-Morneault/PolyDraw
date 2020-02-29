@@ -49,7 +49,7 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.dialog_modify_profile, container, false)
         modifyProfilePresenter = ModifyProfilePresenter(this)
-        originalAccount = AccountRepository.getAccount()
+        originalAccount = AccountRepository.getInstance().getAccount()
         avatarIndex = originalAccount.pictureID
         setUpUi(rootView)
         return rootView

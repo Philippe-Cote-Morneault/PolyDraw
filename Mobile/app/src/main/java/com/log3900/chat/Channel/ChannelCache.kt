@@ -9,14 +9,12 @@ class ChannelCache {
     var availableChannels: ArrayList<Channel> = arrayListOf()
 
     fun reloadChannels(channels: ArrayList<Channel>) {
-        val username = AccountRepository.getAccount().username
-
         joinedChannels.clear()
         availableChannels.clear()
 
         for (channel in channels) {
             if (channel.users.find {
-                    it.ID == AccountRepository.getAccount().ID
+                    it.ID == AccountRepository.getInstance().getAccount().ID
                 } != null) {
                 addJoinedChannel(channel)
             } else {

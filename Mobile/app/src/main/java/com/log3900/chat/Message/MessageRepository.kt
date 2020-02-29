@@ -6,6 +6,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
 import com.log3900.chat.ChatMessage
@@ -38,7 +39,6 @@ class MessageRepository : Service() {
     private val binder = MessageRepositoryBinder()
     private var socketService: SocketService? = null
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
-    private lateinit var sessionToken: String
 
     // Data
     private val messageCache: MessageCache = MessageCache()
@@ -69,7 +69,7 @@ class MessageRepository : Service() {
     fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ChatMessage>> {
         return Single.create {
                 val call = ChatRestService.service.getChannelMessages(
-                    AccountRepository.getAccount().sessionToken,
+                    AccountRepository.getInstance().getAccount().sessionToken,
                     "EN",
                     channelID.toString(),
                     startIndex,
@@ -161,7 +161,6 @@ class MessageRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-        sessionToken = AccountRepository.getAccount().sessionToken
 
         Thread(Runnable {
             Looper.prepare()

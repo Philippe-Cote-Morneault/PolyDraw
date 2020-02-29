@@ -40,7 +40,7 @@ class ProfileMatchHistoryFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 val rvMatches: RecyclerView = root.findViewById(R.id.rv_matches)
                 val matches = getMatchesPlayed()
-                val matchesAdapter = MatchPlayedAdapter(matches, AccountRepository.getAccount().username, rvMatches)
+                val matchesAdapter = MatchPlayedAdapter(matches, AccountRepository.getInstance().getAccount().username, rvMatches)
 
                 rvMatches.apply {
                     adapter = matchesAdapter

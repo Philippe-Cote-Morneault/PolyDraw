@@ -58,7 +58,7 @@ object StatsRepository {
 
     private suspend fun sendUserStatsRequest(): UserStats {
         val userID = "" // TODO: get acutal ID
-        val session = AccountRepository.getAccount().sessionToken
+        val session = AccountRepository.getInstance().getAccount().sessionToken
         val responseJson = ProfileRestService.service.getUserStats(session, "EN")   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
@@ -70,7 +70,7 @@ object StatsRepository {
     }
 
     private suspend fun sendHistoryStatsRequest(): HistoryStats {
-        val session = AccountRepository.getAccount().sessionToken
+        val session = AccountRepository.getInstance().getAccount().sessionToken
         val responseJson = ProfileRestService.service.getHistory(session, "EN")   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {

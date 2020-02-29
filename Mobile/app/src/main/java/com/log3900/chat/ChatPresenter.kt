@@ -1,5 +1,6 @@
 package com.log3900.chat
 
+import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage
@@ -22,22 +23,12 @@ class ChatPresenter : Presenter {
     private var keyboardOpened: Boolean = false
     private var loadingMessages: Boolean
 
-    private lateinit var account: Account
+    lateinit var account: Account
 
     constructor(chatView: ChatView) {
         this.chatView = chatView
         loadingMessages = false
-        AccountRepository.getAccount()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    account = it
-                },
-                {
-
-                }
-            ).dispose()
+        account = AccountRepository.getInstance().getAccount()
 
         ChatManager.getInstance()
             .observeOn(AndroidSchedulers.mainThread())
@@ -49,7 +40,7 @@ class ChatPresenter : Presenter {
             {
 
             }
-        ).dispose()
+        )
 
     }
 
@@ -65,7 +56,7 @@ class ChatPresenter : Presenter {
                 {
 
                 }
-            ).dispose()
+            )
 
         chatView.setCurrentChannnelName(chatManager.getActiveChannel().name)
         messageRepository = MessageRepository.instance!!
@@ -141,7 +132,7 @@ class ChatPresenter : Presenter {
             },
             { error ->
             }
-        ).dispose()
+        )
     }
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {

@@ -18,7 +18,7 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
         sendUpdatedInfo(updatedAccount, password).observeOn(AndroidSchedulers.mainThread()).subscribe(
             { success ->
                 profileView.onModifySuccess(updatedAccount)
-                AccountRepository.updateAccount(updatedAccount)
+                AccountRepository.getInstance().updateAccount(updatedAccount)
             },
             { error -> profileView.onModifyError(error.toString()) }
         )

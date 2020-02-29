@@ -78,7 +78,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
             }
         })
 
-        AccountRepository.createAccount(
+        AccountRepository.getInstance().createAccount(
             Account(
                 UUID.randomUUID(),
                 username.toLowerCase(),
@@ -89,11 +89,11 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 tokenData.session,
                 tokenData.bearer ?: ""  // TODO: Actually handle the missing bearer token
             )
-        )
-
-        SocketService.instance?.sendMessage(
-            Event.SOCKET_CONNECTION,
-            tokenData.session.toByteArray(Charsets.UTF_8))
+        ).subscribe {
+            SocketService.instance?.sendMessage(
+                Event.SOCKET_CONNECTION,
+                tokenData.session.toByteArray(Charsets.UTF_8))
+        }
     }
 
 
