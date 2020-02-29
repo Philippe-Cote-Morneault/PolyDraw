@@ -84,6 +84,8 @@
     <string name="tutorial_button_previous">Previous</string>
     <string name="tutorial_button_skip_tutorial">Skip Tutorial</string>
     <string name="tutorial_button_next">Next</string>
+    <string name="tutorial_slide_welcome_01_title">Welcome</string>
+    <string name="tutorial_slide_chat_01_title">Chat 1</string>
 
     <!--misc-->
     <string name="preference_file_key">com.log3900.mobile.PREFERENCE_FILE_KEY</string>
