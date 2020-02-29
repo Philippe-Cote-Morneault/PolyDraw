@@ -1,43 +1,63 @@
 package com.log3900.user.account
 
 import android.content.Context
+import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.shared.database.AppDatabase
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class AccountRepository {
+    private var currentAccount: Account? = null
+
     companion object {
-        var currentAccountID: UUID? = null
-        private var currentAccount: Account? = null
+        private var instance: AccountRepository? = null
 
-        fun getAccount(): Single<Account> {
-            return Single.create {
-                if (currentAccount != null) {
-                    it.onSuccess(currentAccount!!)
-                } else {
-                    it.onSuccess(AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().findByID(
-                        currentAccountID!!))
-                }
+        fun getInstance(): AccountRepository {
+            if (instance == null) {
+                instance = AccountRepository()
             }
+
+            return instance!!
         }
 
-        fun createAccount(account: Account): Completable {
-            return Completable.create {
+    }
+
+    fun setCurrentAccount(accountID: UUID): Completable {
+        return Completable.create {
+            currentAccount =
                 AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
-                    .insertAccount(account)
-                it.onComplete()
-            }
-        }
+                    .findByID(
+                        accountID
+                    )
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
+    }
 
-        fun updateAccount(account: Account): Completable {
-            return Completable.create {
-                AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
-                    .updateAccount(account)
-                it.onComplete()
+    fun getAccount(): Account {
+        return currentAccount!!
+    }
+
+    fun createAccount(account: Account): Completable {
+        return Completable.create {
+            AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
+                .insertAccount(account)
+            it.onComplete()
+        }.subscribeOn(Schedulers.io())
+    }
+
+    fun updateAccount(account: Account): Completable {
+        return Completable.create {
+            AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
+                .updateAccount(account)
+            it.onComplete()
+
+            if (currentAccount?.ID == account.ID) {
+                currentAccount = account
             }
-        }
+        }.subscribeOn(Schedulers.io())
     }
 }
