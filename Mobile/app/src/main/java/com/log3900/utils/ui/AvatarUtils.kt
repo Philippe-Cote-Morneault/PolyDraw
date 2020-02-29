@@ -22,11 +22,3 @@ fun getAvatarID(index: Int): Int {
  * @sample avatarView.setImageResource(getAccountAvatarID(myAccount))
  */
 fun getAccountAvatarID(account: Account): Int = getAvatarID(account.pictureID)
-
-/**
- * Returns the ID of the current [Account]'s avatar
- */
-fun getCurrentAccountAvatarID(): Int {
-    val current = AccountRepository.getAccount()
-    return getAccountAvatarID(current)
-}
