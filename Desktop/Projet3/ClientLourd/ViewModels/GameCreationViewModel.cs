@@ -53,11 +53,15 @@ namespace ClientLourd.ViewModels
                 DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
 
             }
+
         }
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
-            CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
+            Application.Current.Dispatcher.Invoke(delegate 
+            {
+                CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
+            });
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
@@ -293,7 +297,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
+                //await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
             }
             catch (Exception e)

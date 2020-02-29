@@ -29,7 +29,7 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
-            Loaded += (sender, args) => { ViewModel.CurrentCanvas = EditorView.Canvas; };
+            Loaded += (sender, args) => { ViewModel.CurrentCanvas = PreviewCanvas; };
         }
 
         private GameCreationViewModel ViewModel
@@ -74,14 +74,10 @@ namespace ClientLourd.Views.Dialogs
             ViewModel.UploadImageCommand.Execute(null);
         }
 
-        /// <summary>
-        /// Creates an SVG file from an XMLDocument in AppDomain.CurrentDomain.BaseDirectory (ClientLourd\Bin\Debug)
-        /// TODO: Check if this causes a problem while running from exe
-        /// </summary>
         private void CreateSVGFile(XmlDocument xmlDoc)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
+            settings.Encoding = new UTF8Encoding(false); // The false means do not emit the BOM.
             ViewModel.DrawnImagePath = $"{Path.GetTempFileName()}.svg";
             using (XmlWriter w = XmlWriter.Create(ViewModel.DrawnImagePath, settings))
             {

@@ -20,7 +20,7 @@
     </UserControl.Resources>
     <materialDesign:DialogHost Identifier="Dialog">
 
-        <DockPanel>
+        <DockPanel Width="300" Height="300">
             <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
             <materialDesign:PackIcon Kind="Close" />
         </Button>
