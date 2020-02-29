@@ -2,10 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -75,7 +76,7 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if request.Difficulty < 0 || request.Difficulty > 3 {
-		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be betwene 0 and 3.")
+		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 3.")
 		return
 	}
 
