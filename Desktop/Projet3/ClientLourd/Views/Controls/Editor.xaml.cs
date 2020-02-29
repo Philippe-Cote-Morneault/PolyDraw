@@ -72,9 +72,9 @@ namespace ClientLourd.Views.Controls
             if (millisecondsTakenToDraw > 5000)
                 millisecondsTakenToDraw = 5000;
 
-            stroke.AddPropertyData(GUIDs.time, millisecondsTakenToDraw);
+            stroke.AddPropertyData(GUIDs.time, (int)millisecondsTakenToDraw);
             stroke.AddPropertyData(GUIDs.brushSize, ViewModel.EditorInformation.BrushSize.ToString());
-            stroke.AddPropertyData(GUIDs.brushType, ViewModel.EditorInformation.SelectedTip.ToString());
+            stroke.AddPropertyData(GUIDs.brushType, (ViewModel.EditorInformation.SelectedTip.ToString() == "Ellipse") ? "circle": "square");
             stroke.AddPropertyData(GUIDs.eraser, (ViewModel.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
             stroke.AddPropertyData(GUIDs.color, ColorToNumber(stroke.DrawingAttributes.Color.ToString()).ToString());
             OnStrokeAdded(stroke);
