@@ -62,11 +62,16 @@ namespace ClientLourd.Views.Dialogs
             // Bug here: if we use the erase by point eraser, there will be white strokes in the canvas.
             if (EditorView.Canvas.Strokes.Count > 0)
             {
-                CreateSVGFile(GenerateXMLDoc());
+                try
+                {
+                    CreateSVGFile(EditorView.GenerateXMLDoc());
+                }
+                catch(Exception ex)
+                {
+                    DialogHost.Show(new ClosableErrorDialog(ex), "Dialog");
+                }
             }
-            
             ViewModel.UploadImageCommand.Execute(null);
-
         }
 
         /// <summary>
@@ -75,7 +80,6 @@ namespace ClientLourd.Views.Dialogs
         /// </summary>
         private void CreateSVGFile(XmlDocument xmlDoc)
         {
-            
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
             ViewModel.DrawnImagePath = $"{Path.GetTempFileName()}.svg";
@@ -85,92 +89,10 @@ namespace ClientLourd.Views.Dialogs
             }
         }
 
-        private XmlDocument GenerateXMLDoc()
-        {
-            var svg = new SvgDocument();
-            
-            // Add polydram namespace
-            svg.CustomAttributes.Add("xmlns:polydraw", "http://example.org/polydraw");
-
-            var colorServer = new SvgColourServer(System.Drawing.Color.Black);
-            var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
-            
-            svg.Children.Add(group);
-
-            for (int i = 0; i < EditorView.Canvas.Strokes.Count; i++)
-            {
-                var stroke = EditorView.Canvas.Strokes[i];
-                var geometry = stroke.GetGeometry(stroke.DrawingAttributes).GetOutlinedPath‌​Geometry();
-
-                var s = XamlWriter.Save(geometry);
-
-                if (!String.IsNullOrEmpty(s))
-                {
-                    var element = XElement.Parse(s);
-
-                    var data = element.Attribute("Figures")?.Value;
-
-                    if (!String.IsNullOrEmpty(data))
-                    {
-                        // Remove the close path attribute (z)
-                        if (data[data.Length - 1] == 'z')
-                        {
-                            data = data.Remove(data.Length - 1);
-                        }
-                        
-
-                        group.Children.Add(GenerateSVGPath(stroke, data, i));
-                    }
-                }
-            }
-
-            var memoryStream = new MemoryStream();
-            svg.Write(memoryStream);
-
-            memoryStream.Seek(0, SeekOrigin.Begin);
-
-            var xmlDocument = new XmlDocument();
-            xmlDocument.Load(memoryStream);
-          
-            return xmlDocument;
-        }
-
-        /// <summary>
-        /// Generates a <path/> from a stroke and data (d). 
-        /// </summary>
-        /// <param name="stroke"></param>
-        /// <param name="data"></param>
-        /// <param name="order"></param>
-        /// <returns></returns>
-        private SvgPath GenerateSVGPath(Stroke stroke, string data, int order)
-        {
-            var svgPath = new SvgPath
-            {
-                PathData = SvgPathBuilder.Parse(data),
-                Fill = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
-                Stroke = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
-                ID = Guid.NewGuid().ToString()
-            };
-
-
-            svgPath.CustomAttributes.Add("polydraw:time", stroke.GetPropertyData(GUIDs.time).ToString());
-            svgPath.CustomAttributes.Add("polydraw:order", order.ToString());
-            svgPath.CustomAttributes.Add("polydraw:color", stroke.GetPropertyData(GUIDs.color).ToString());
-            svgPath.CustomAttributes.Add("polydraw:eraser", stroke.GetPropertyData(GUIDs.eraser).ToString());
-            svgPath.CustomAttributes.Add("polydraw:brush", stroke.GetPropertyData(GUIDs.brushType).ToString());
-            svgPath.CustomAttributes.Add("polydraw:brushsize", stroke.GetPropertyData(GUIDs.brushSize).ToString());
-
-            return svgPath;
-        }
-
-
         public void ClearPreviewCanvas(object sender,EventArgs arg)
         {
             PreviewCanvas.Strokes.Clear();
         }
-
-
-
 
     }
 }
