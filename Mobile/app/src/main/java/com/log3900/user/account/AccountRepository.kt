@@ -11,11 +11,16 @@ import java.util.*
 class AccountRepository {
     companion object {
         var currentAccountID: UUID? = null
+        private var currentAccount: Account? = null
 
         fun getAccount(): Single<Account> {
             return Single.create {
-                it.onSuccess(AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().findByID(
-                    currentAccountID!!))
+                if (currentAccount != null) {
+                    it.onSuccess(currentAccount!!)
+                } else {
+                    it.onSuccess(AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO().findByID(
+                        currentAccountID!!))
+                }
             }
         }
 
