@@ -20,15 +20,17 @@ type fsm struct {
 	numbers    []float32
 	curCommand rune
 	Commands   []Command
+	transform  *[]TransformCommand
 }
 
-func (f *fsm) Init() {
+func (f *fsm) Init(transformations *[]TransformCommand) {
 	f.state = 0
 	f.curCommand = ' '
 	f.number.Grow(NUMBUFF)
 	f.isDecimal = true
 	f.numbers = make([]float32, 0, 16)
 	f.Commands = make([]Command, 0, 16)
+	f.transform = transformations
 }
 
 //StateMachine used for the lexical analysis of the d string
@@ -111,10 +113,10 @@ func (f *fsm) endCommand() {
 
 		cmdLength := len(f.Commands)
 		if cmdLength > 1 {
-			f.Commands[cmdLength-1].Parse(&f.Commands[cmdLength-2].EndPos)
+			f.Commands[cmdLength-1].Parse(&f.Commands[cmdLength-2].EndPos, f.transform)
 		} else {
 			startPos := geometry.Point{}
-			f.Commands[cmdLength-1].Parse(&startPos)
+			f.Commands[cmdLength-1].Parse(&startPos, f.transform)
 		}
 
 		f.curCommand = ' '

@@ -12,6 +12,8 @@ import (
 	"os/exec"
 )
 
+const defaultDraw = 0.5
+
 func checkCommand(command string) bool {
 	_, err := exec.LookPath(command)
 	if err != nil {
@@ -36,7 +38,7 @@ func Trace(imageKey string, blacklevel float64) (string, error) {
 }
 
 //Translate changes the potrace svg to be compatible with our custom svg format
-func Translate(svgKey string, brushSize int, mode int) error {
+func Translate(svgKey string, brushSize int, mode int, update bool) error {
 	file, err := datastore.GetFile(svgKey)
 	if err != nil {
 		return err
@@ -59,10 +61,25 @@ func Translate(svgKey string, brushSize int, mode int) error {
 			path.ID = uuid.New()
 			path.Brush = "circle"
 		}
-		path.BrushSize = brushSize
+		if brushSize > 0 {
+			path.BrushSize = brushSize
+		}
+
+		if update {
+			commands := svgparser.ParseD(path.D, []svgparser.TransformCommand{})
+			if len(commands) > 0 {
+				path.FirstCommand = commands[0]
+			}
+		}
 	}
-	splitPath(&xmlSvg.G.XMLPaths)
+	if !update {
+		splitPath(&xmlSvg, xmlSvg.G.Transform)
+	}
+
 	ChangeOrder(&xmlSvg.G.XMLPaths, mode)
+	if xmlSvg.G.Transform != "" {
+		xmlSvg.G.Transform = ""
+	}
 	data, err := xml.Marshal(&xmlSvg)
 	err = datastore.PutFile(&data, svgKey)
 	if err != nil {
@@ -72,12 +89,14 @@ func Translate(svgKey string, brushSize int, mode int) error {
 }
 
 //splitPath export paths
-func splitPath(paths *[]model.XMLPath) {
+func splitPath(svg *model.XMLSvg, transform string) {
 	builder := strbuilder.StrBuilder{}
 	builder.Grow(128)
 	newPaths := make([]model.XMLPath, 0, 20)
-	for i := range *paths {
-		commands := svgparser.ParseD((*paths)[i].D)
+	transformCommands := svgparser.TransformParse(transform, svg.Width, svg.Height)
+
+	for i := range svg.G.XMLPaths {
+		commands := svgparser.ParseD(svg.G.XMLPaths[i].D, transformCommands)
 
 		lastChunk := 0
 		subPathCount := 0
@@ -86,7 +105,7 @@ func splitPath(paths *[]model.XMLPath) {
 			char := commands[j].Command
 			if (char == 'm' || char == 'M') && j != 0 {
 				singleCommands := commands[lastChunk:j]
-				processChunk(&singleCommands, &(*paths)[i], &newPaths, &builder, lastChunk)
+				processChunk(&singleCommands, &(svg.G.XMLPaths)[i], &newPaths, &builder, lastChunk)
 
 				lastChunk = j
 				subPathCount++
@@ -99,10 +118,10 @@ func splitPath(paths *[]model.XMLPath) {
 
 		if subPathCount >= 1 {
 			singleCommands := commands[lastChunk:]
-			processChunk(&singleCommands, &(*paths)[i], &newPaths, &builder, lastChunk)
+			processChunk(&singleCommands, &(svg.G.XMLPaths)[i], &newPaths, &builder, lastChunk)
 		}
 	}
-	*paths = newPaths
+	svg.G.XMLPaths = newPaths
 }
 
 func processChunk(commands *[]svgparser.Command, currentPath *model.XMLPath, paths *[]model.XMLPath, builder *strbuilder.StrBuilder, j int) {
@@ -115,13 +134,16 @@ func processChunk(commands *[]svgparser.Command, currentPath *model.XMLPath, pat
 		BrushSize: currentPath.BrushSize,
 		Color:     currentPath.Color,
 	}
-
+	length := 0.0
 	for i := range *commands {
 		if i == 0 {
 			singlePath.FirstCommand = (*commands)[i]
 		}
 		builder.WriteString((*commands)[i].Encode())
+		length += (*commands)[i].ComputeLength()
 	}
+	singlePath.Length = length
+	singlePath.Time = int(defaultDraw * length)
 	singlePath.D = builder.StringVal()
 	*paths = append(*paths, singlePath)
 }

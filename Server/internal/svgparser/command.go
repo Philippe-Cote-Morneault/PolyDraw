@@ -19,7 +19,8 @@ type Command struct {
 }
 
 //Parse is used to validate if the command is ok and to keep track of the current point
-func (c *Command) Parse(lastPoint *geometry.Point) {
+func (c *Command) Parse(lastPoint *geometry.Point, transformations *[]TransformCommand) {
+	c.transform(transformations)
 	commandLower := unicode.ToLower(c.Command)
 	switch commandLower {
 	case 'c':
@@ -46,6 +47,25 @@ func (c *Command) Parse(lastPoint *geometry.Point) {
 
 	default:
 		log.Printf("[Potrace] -> Format contains invalid command \"%c\"", c.Command)
+	}
+}
+func (c *Command) transform(transformations *[]TransformCommand) {
+	commandLower := unicode.ToLower(c.Command)
+	for i := range *transformations {
+		for j := range c.Parameters {
+			if commandLower == 'h' {
+				c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], true)
+			} else if commandLower == 'v' {
+				c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], false)
+			} else {
+				if j%2 == 0 {
+					c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], true)
+				} else {
+					c.Parameters[j] = (*transformations)[i].Apply(c.Command, c.Parameters[j], false)
+				}
+			}
+		}
+
 	}
 }
 

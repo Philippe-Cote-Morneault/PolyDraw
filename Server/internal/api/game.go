@@ -184,7 +184,6 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 		if mime == "text/xml; charset=utf-8" {
 			//Load svg
 			image.SVGFile = keyFile
-			//TODO validate the SVG
 		} else {
 			//Load jpg
 			image.ImageFile = keyFile
@@ -229,7 +228,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			err = potrace.Translate(svgKey, brushsize, modeInt)
+			err = potrace.Translate(svgKey, brushsize, modeInt, false)
 			if err != nil {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
@@ -272,6 +271,9 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	xmlNeedsUpdating := false
+	updateOnlySVG := true
 	if request.Mode != nil {
 		modeInt := *request.Mode
 		if modeInt > 7 || modeInt < 0 {
@@ -282,6 +284,7 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 			rbody.JSONError(w, http.StatusBadRequest, "The mode can't be set to manual.")
 			return
 		}
+		xmlNeedsUpdating = true
 		game.Image.Mode = modeInt
 	}
 
@@ -293,6 +296,7 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			game.Image.BlackLevel = *request.BlackLevel
+			xmlNeedsUpdating = true
 		}
 		if request.BrushSize != nil {
 			if *request.BrushSize > 100 || *request.BrushSize < 1 {
@@ -300,10 +304,9 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			game.Image.BrushSize = *request.BrushSize
-
+			xmlNeedsUpdating = true
 		}
 
-		xmlNeedsUpdating := false
 		if request.BlackLevel != nil {
 			svgKey, err := potrace.Trace(game.Image.ImageFile, game.Image.BlackLevel)
 			if err != nil {
@@ -312,20 +315,20 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 			}
 			game.Image.SVGFile = svgKey
 			xmlNeedsUpdating = true
+			updateOnlySVG = false
 		}
-		if request.BrushSize != nil || xmlNeedsUpdating {
-			err = potrace.Translate(game.Image.SVGFile, game.Image.BrushSize, game.Image.Mode)
-			if err != nil {
-				rbody.JSONError(w, http.StatusBadRequest, err.Error())
-				return
-			}
-		}
-		model.DB().Save(&game)
-		rbody.JSON(w, http.StatusOK, "OK")
-		return
+	} else {
+		game.Image.BrushSize = -1
 	}
-	//Native SVG
-	//TODO SVG update order
+	if xmlNeedsUpdating {
+		err = potrace.Translate(game.Image.SVGFile, game.Image.BrushSize, game.Image.Mode, updateOnlySVG)
+		if err != nil {
+			rbody.JSONError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+	}
+	model.DB().Save(&game)
+	rbody.JSON(w, http.StatusOK, "OK")
 }
 
 //GetGame returns a game

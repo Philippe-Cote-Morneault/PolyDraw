@@ -1,6 +1,7 @@
 package potrace
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 	"log"
 	"syscall"
 
@@ -13,7 +14,7 @@ type Potrace struct {
 
 //Init the messenger service
 func (p *Potrace) Init() {
-
+	svgparser.TransformInit()
 }
 
 //Start the potrace service
