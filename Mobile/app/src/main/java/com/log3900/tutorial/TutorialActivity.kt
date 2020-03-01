@@ -23,7 +23,6 @@ class TutorialActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
 
     private lateinit var tutorialSlidesAdapter: TutorialFragmentPagerAdapter
-    private var tutorialManager: TutorialManager = TutorialManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
@@ -48,6 +47,10 @@ class TutorialActivity : AppCompatActivity() {
         addButtonListeners()
 
         setupToolbar()
+
+        TutorialManager.addSlideChangedListener { oldPos, newPos ->
+            onSlideChanged(oldPos, newPos)
+        }
     }
 
     private fun addButtonListeners() {
@@ -57,7 +60,7 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        tutorialSlidesAdapter = TutorialFragmentPagerAdapter(supportFragmentManager, tutorialManager.getSlidesAsArrayList())
+        tutorialSlidesAdapter = TutorialFragmentPagerAdapter(supportFragmentManager, TutorialManager.getSlidesAsArrayList())
         viewPager.adapter = tutorialSlidesAdapter
 
         viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
@@ -70,7 +73,7 @@ class TutorialActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                onViewPagerPageChanged(position)
+                TutorialManager.changeActiveTutorialSlide(position)
             }
         })
     }
@@ -81,13 +84,15 @@ class TutorialActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener { handleNavigationDrawerClick() }
     }
 
-    private fun onViewPagerPageChanged(position: Int) {
-        if (position + 1 == tutorialSlidesAdapter.count) {
+    private fun onSlideChanged(oldPos: Int, newPos: Int) {
+        if (newPos + 1 == tutorialSlidesAdapter.count) {
             setNextButtonToFinish()
             togglePreviousButton(true)
-        } else if (position == 0) {
+            viewPager.currentItem = newPos
+        } else if (newPos == 0) {
             togglePreviousButton(false)
             setFinishButtonToNext()
+            viewPager.currentItem = newPos
         } else {
             setFinishButtonToNext()
             togglePreviousButton(true)
