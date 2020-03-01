@@ -25,15 +25,16 @@
                 android:layout_gravity="center"
                 android:id="@+id/toolbar_title" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.andremion.counterfab.CounterFab
                 android:id="@+id/hideShowMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 app:backgroundTint="?colorOnPrimaryDark"
-                android:layout_margin="3dp"
                 app:srcCompat="@drawable/ic_message"
-                app:tint="?attr/colorPrimaryDark"/>
+                app:tint="?attr/colorPrimaryDark"
+                app:badgeBackgroundColor="?attr/colorSecondary"
+                app:badgeTextColor="?attr/colorOnSecondary"/>
 
             <ImageView
                 android:id="@+id/app_bar_main_tutorial"

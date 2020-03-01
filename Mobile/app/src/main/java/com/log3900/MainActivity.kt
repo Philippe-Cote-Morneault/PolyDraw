@@ -18,6 +18,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.andremion.counterfab.CounterFab
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.draw.DrawViewFragment
@@ -25,17 +26,23 @@ import com.log3900.login.LoginActivity
 import com.log3900.profile.ProfileFragment
 import com.log3900.settings.SettingsActivity
 import com.log3900.settings.theme.ThemeManager
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 
 
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.ui.home.HomeFragment
 import com.log3900.user.account.AccountRepository
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 open class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var hideShowMessagesFAB: CounterFab
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
@@ -47,8 +54,8 @@ open class MainActivity : AppCompatActivity() {
         val toolbar:Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val hideShowMessage: FloatingActionButton = findViewById(R.id.hideShowMessage)
-        hideShowMessage.setOnClickListener{
+        hideShowMessagesFAB = findViewById(R.id.hideShowMessage)
+        hideShowMessagesFAB.setOnClickListener{
             var chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
             when(chatView!!.visibility){
                 View.INVISIBLE -> chatView.visibility = View.VISIBLE
@@ -101,6 +108,8 @@ open class MainActivity : AppCompatActivity() {
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
         }
+
+        EventBus.getDefault().register(this)
     }
 
     override fun onResume() {
@@ -150,6 +159,19 @@ open class MainActivity : AppCompatActivity() {
         fragmentManager.beginTransaction().apply {
             replace(R.id.nav_host_fragment, fragment, tag)
             commit()
+        }
+    }
+
+    private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {
+        hideShowMessagesFAB.count = unreadMessagesCount
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.UNREAD_MESSAGES_CHANGED -> {
+                onUnreadMessagesChanged(event.data as Int)
+            }
         }
     }
 }

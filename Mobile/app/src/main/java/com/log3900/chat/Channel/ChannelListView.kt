@@ -13,4 +13,7 @@ interface ChannelListView {
                                negativeButtonListener: ((dialog: DialogInterface, which: Int) -> Unit))
     fun hideConfirmationDialog()
     fun notifyChannelsChange()
+    fun changeActiveChannel(channel: Channel)
+    fun changeChanngelUnreadMessages(channel: Channel, unreadMessages: Int)
+    fun addChannelSection(channelGroup: ChannelGroup)
 }

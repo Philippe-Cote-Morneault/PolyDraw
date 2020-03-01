@@ -17,8 +17,8 @@ class ChannelManager {
     lateinit var activeChannel: Channel
     lateinit var availableChannels: ArrayList<Channel>
     lateinit var joinedChannels: ArrayList<Channel>
-    var unreadMessages: HashMap<UUID, Int> = hashMapOf()
-    var unreadMessagesTotal: Int = 0
+    private var unreadMessages: HashMap<UUID, Int> = hashMapOf()
+    private var unreadMessagesTotal: Int = 0
 
     constructor() {
     }
@@ -113,13 +113,19 @@ class ChannelManager {
         }
     }
 
-    private fun changeActiveChannel(channel: Channel) {
+    fun changeActiveChannel(channel: Channel) {
         activeChannel = channel
         if (unreadMessages.containsKey(channel.ID)) {
             unreadMessagesTotal -= unreadMessages.get(channel.ID)!!
             unreadMessages[channel.ID] = 0
+
+            EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         }
         EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, activeChannel))
+    }
+
+    fun getUnreadMessage(): HashMap<UUID, Int> {
+        return unreadMessages
     }
 
     private fun onMessageReceived(message: ChatMessage) {
@@ -128,7 +134,7 @@ class ChannelManager {
                 unreadMessages.put(message.channelID, 0)
             }
 
-            unreadMessages[message.channelID]?.plus(1)
+            unreadMessages.put(message.channelID, unreadMessages[message.channelID]!! + 1)
             unreadMessagesTotal += 1
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         } else {

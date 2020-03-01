@@ -23,6 +23,7 @@
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
         app:layout_constraintStart_toEndOf="@id/list_item_channel_group_icon_expandable"/>
 
 

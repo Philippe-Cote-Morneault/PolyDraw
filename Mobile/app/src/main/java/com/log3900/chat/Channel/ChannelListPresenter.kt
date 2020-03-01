@@ -1,10 +1,10 @@
 package com.log3900.chat.Channel
 
 import com.log3900.chat.ChatManager
+import com.log3900.chat.ChatMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
-import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -14,6 +14,9 @@ import java.util.*
 class ChannelListPresenter : Presenter {
     private var channelListView: ChannelListView
     private lateinit var chatManager: ChatManager
+
+    lateinit var availableChannelsGroup: ChannelGroup
+    lateinit var joinedChannelsGroup: ChannelGroup
 
     constructor(channelListView: ChannelListView) {
         this.channelListView = channelListView
@@ -33,19 +36,22 @@ class ChannelListPresenter : Presenter {
     private fun init() {
         chatManager.getJoinedChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { channels ->
-                channelListView.setJoinedChannels(channels)
+                joinedChannelsGroup = ChannelGroup(GroupType.JOINED, channels, chatManager.getUnreadMessages(),  channels.clone() as ArrayList<Channel>, chatManager.getActiveChannel())
+                channelListView.addChannelSection(joinedChannelsGroup)
+
+                chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    { channels ->
+                        availableChannelsGroup = ChannelGroup(GroupType.AVAILABLE, channels, chatManager.getUnreadMessages(), channels.clone() as ArrayList<Channel>)
+                        channelListView.addChannelSection(availableChannelsGroup)
+                    },
+                    { _ ->
+                    }
+                )
+                EventBus.getDefault().register(this)
             },
             { _ ->
             }
         )
-        chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
-            { channels ->
-                channelListView.setAvailableChannels(channels)
-            },
-            { _ ->
-            }
-        )
-        EventBus.getDefault().register(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -62,6 +68,12 @@ class ChannelListPresenter : Presenter {
             }
             EventType.CHANNEL_DELETED -> {
                 onChannelDeleted(event.data as UUID)
+            }
+            EventType.ACTIVE_CHANNEL_CHANGED -> {
+                onActiveChannelChanged(event.data as Channel)
+            }
+            EventType.RECEIVED_MESSAGE -> {
+                onMessageReceived(event.data as ChatMessage)
             }
         }
     }
@@ -110,6 +122,15 @@ class ChannelListPresenter : Presenter {
     }
 
     private fun onChannelDeleted(channel: UUID) {
+        channelListView.notifyChannelsChange()
+    }
+
+    private fun onActiveChannelChanged(channel: Channel?) {
+        joinedChannelsGroup.activeChannel = channel
+        channelListView.notifyChannelsChange()
+    }
+
+    private fun onMessageReceived(message: ChatMessage) {
         channelListView.notifyChannelsChange()
     }
 

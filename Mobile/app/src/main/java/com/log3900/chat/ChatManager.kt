@@ -21,6 +21,7 @@ import java.lang.Exception
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ChatManager : Service() {
     private var channelManager: ChannelManager? = null
@@ -80,8 +81,7 @@ class ChatManager : Service() {
     }
 
     fun setActiveChannel(channel: Channel) {
-        channelManager?.activeChannel = channel
-        EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
+        channelManager?.changeActiveChannel(channel)
     }
 
     fun getActiveChannel(): Channel {
@@ -123,6 +123,9 @@ class ChatManager : Service() {
         channelManager?.deleteChannel(channel)
     }
 
+    fun getUnreadMessages(): HashMap<UUID, Int> {
+        return channelManager?.getUnreadMessage()!!
+    }
 
     private fun setReadyState() {
         isReady = true
