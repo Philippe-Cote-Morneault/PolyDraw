@@ -9,15 +9,15 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel Margin="10">
-        <materialDesign:Card  materialDesign:ShadowAssist.ShadowDepth="Depth4" DockPanel.Dock="Bottom">
+        <materialDesign:Card Margin="5" materialDesign:ShadowAssist.ShadowDepth="Depth4" DockPanel.Dock="Bottom">
             <StackPanel  Orientation="Horizontal" Margin="5">
-                <TextBlock VerticalAlignment="Center" Text="Guess here: " FontSize="24" FontWeight="Medium"/>
                 <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
                 <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
                 <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
                 <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
                 <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
                 <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                <Button Content="Guess"></Button>
             </StackPanel>
         </materialDesign:Card>
         <control:Editor/>

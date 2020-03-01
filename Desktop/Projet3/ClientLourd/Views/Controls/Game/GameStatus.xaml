@@ -8,6 +8,25 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <ListView>
+            <ListViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Joe"></TextBlock>
+                    <materialDesign:PackIcon Kind="Check"/>
+                </StackPanel>
+            </ListViewItem>
+            <ListViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Joe"></TextBlock>
+                    <materialDesign:PackIcon Kind="Check"/>
+                </StackPanel>
+            </ListViewItem>
+            <ListViewItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Joe"></TextBlock>
+                </StackPanel>
+            </ListViewItem>
+        </ListView>
         
     </Grid>
 </UserControl>

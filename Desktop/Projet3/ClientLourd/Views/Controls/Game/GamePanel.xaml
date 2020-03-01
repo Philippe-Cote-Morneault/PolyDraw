@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Controls.Game"
              xmlns:control="clr-namespace:ClientLourd.Views.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d">
     <DockPanel>
         <local:TopBar DockPanel.Dock="Top"/>
         <local:GameStatus DockPanel.Dock="Left"></local:GameStatus>
         <local:EditorZone/>
+        
     </DockPanel>
 </UserControl>
