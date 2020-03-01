@@ -110,7 +110,7 @@
                         <!--Sound button-->
                         <Grid DockPanel.Dock="Right">
                             <materialDesign:PackIcon
-                                Visibility="{Binding Path=SoundIsOn, Converter={StaticResource VisibleIfTrueConverter}}"
+                                Visibility="{Binding Path=SoundService.SoundIsOn, Converter={StaticResource VisibleIfTrueConverter}}"
                                 Cursor="Hand"
                                 Background="{StaticResource PrimaryHueMidBrush}"
                                 Margin="0 0 20 0"
@@ -130,7 +130,7 @@
                             </materialDesign:PackIcon>
 
                             <materialDesign:PackIcon
-                                Visibility="{Binding Path=SoundIsOn, Converter={StaticResource VisibleIfFalseConverter}}"
+                                Visibility="{Binding Path=SoundService.SoundIsOn, Converter={StaticResource VisibleIfFalseConverter}}"
                                 Margin="0 0 20 0"
                                 Cursor="Hand"
                                 Background="{StaticResource PrimaryHueMidBrush}"

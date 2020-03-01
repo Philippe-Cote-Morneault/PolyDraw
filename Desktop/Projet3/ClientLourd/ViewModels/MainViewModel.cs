@@ -10,6 +10,8 @@ using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Enums;
+using System.Media;
+using ClientLourd.Services.SoundService;
 
 namespace ClientLourd.ViewModels
 {
@@ -39,8 +41,10 @@ namespace ClientLourd.ViewModels
         public MainViewModel()
         {
             AfterLogOut();
-            SoundIsOn = true;
+            SoundService = new SoundService();
         }
+
+        public SoundService SoundService { get; set; }
 
         public override void AfterLogin()
         {
@@ -181,21 +185,6 @@ namespace ClientLourd.ViewModels
             ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
 
-        private bool _soundIsOn;
-
-        public bool SoundIsOn
-        {
-            get => _soundIsOn;
-            set
-            {
-                if (value != _soundIsOn)
-                {
-                    _soundIsOn = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
         private RelayCommand<object> _toggleSoundCommand;
 
         public ICommand ToggleSoundCommand
@@ -208,7 +197,7 @@ namespace ClientLourd.ViewModels
 
         private void ToggleSound()
         {
-            SoundIsOn = !SoundIsOn;
+            SoundService.ToggleSound();
         }
 
     }

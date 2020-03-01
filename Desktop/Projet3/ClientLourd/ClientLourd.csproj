@@ -159,6 +159,7 @@
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
+    <Compile Include="Services\SoundService\SoundService.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
@@ -370,6 +371,9 @@
     <Resource Include="Resources\Avatar\9.jpg" />
     <Resource Include="Resources\Avatar\16.jpg" />
     <None Include="Resources\PointEraser.cur" />
+    <None Include="Resources\MessageNotification.mp3" />
+    <None Include="Resources\MessageNotification.wav" />
+    <None Include="Resources\Message.wav" />
     <Content Include="Resources\poly.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

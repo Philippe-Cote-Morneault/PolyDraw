@@ -15,6 +15,7 @@ using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Services.RestService;
+using ClientLourd.Services.SoundService;
 
 namespace ClientLourd.ViewModels
 {
@@ -56,6 +57,11 @@ namespace ClientLourd.ViewModels
                 SelectedChannel.IsSelected = false;
             }
             
+        }
+
+        public SoundService SoundService
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
         public SessionInformations SessionInformations
@@ -238,6 +244,10 @@ namespace ClientLourd.ViewModels
             //TODO cache user 
             await App.Current.Dispatcher.InvokeAsync(async() =>
             {
+                if (SessionInformations.User.ID != args.UserID)
+                {
+                    SoundService.PlayNotification();
+                }
                 Message m = new Message(args.Date, await GetUser(args.Username, args.UserID), args.Message);
                 Channels.First(c => c.ID == args.ChannelId).Messages.Add(m);
                 NotifyPropertyChanged(nameof(NewMessages));

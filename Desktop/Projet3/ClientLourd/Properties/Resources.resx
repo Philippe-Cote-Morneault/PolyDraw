@@ -127,6 +127,9 @@
   <data name="LogoMakr_4YSBb41" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LogoMakr_4YSBb4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Message" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Message.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="PointEraser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PointEraser.cur;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
