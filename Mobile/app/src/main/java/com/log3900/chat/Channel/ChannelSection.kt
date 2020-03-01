@@ -65,6 +65,9 @@ class ChannelSection : Section, Filterable {
         } else {
             itemHolder.buttonAction1.setImageResource(R.drawable.ic_add_black_24dp)
         }
+
+        itemHolder.setActive(channelGroup.activeChannel == channelGroup.filteredChannels.get(position))
+        itemHolder.setUnreadCounter(channelGroup.unreadMessages.getOrDefault( channelGroup.filteredChannels.get(position).ID, 0))
         itemHolder.bind(this.channelGroup.filteredChannels.get(position))
     }
 
