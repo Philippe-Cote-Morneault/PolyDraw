@@ -1,12 +1,13 @@
 package potrace
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
-	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"math"
 	"math/rand"
 	"sort"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
+	geometry "gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
 )
 
 //ChangeOrder update the order of the svg file

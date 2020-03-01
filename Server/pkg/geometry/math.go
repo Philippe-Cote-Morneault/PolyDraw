@@ -1,6 +1,10 @@
 package geometry
 
-import "math"
+import (
+	"math"
+
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
+)
 
 type legendreGauss struct {
 	w float64
@@ -21,12 +25,12 @@ func InitTable() {
 }
 
 //EucledianDist calculates the distance between two points
-func EucledianDist(a *Point, b *Point) float64 {
+func EucledianDist(a *model.Point, b *model.Point) float64 {
 	return math.Sqrt(math.Pow(float64(a.X-b.X), 2) + math.Pow(float64(a.Y-b.Y), 2))
 }
 
 //BezierLength calculates the length of a bezier curve
-func BezierLength(start *Point, c1 *Point, c2 *Point, end *Point) float64 {
+func BezierLength(start *model.Point, c1 *model.Point, c2 *model.Point, end *model.Point) float64 {
 	intShift := 1 / 2.0
 	sum := 0.0
 	for _, v := range quadratureTable {
@@ -35,7 +39,7 @@ func BezierLength(start *Point, c1 *Point, c2 *Point, end *Point) float64 {
 	return intShift * sum
 }
 
-func bezierF(t float64, start *Point, c1 *Point, c2 *Point, end *Point) float64 {
+func bezierF(t float64, start *model.Point, c1 *model.Point, c2 *model.Point, end *model.Point) float64 {
 	result := 3 * math.Sqrt(
 		pow2(pow2(-1+t)*float64(start.X)+(-1+(4-3*t)*t)*float64(c1.X)+
 			t*((-2+3*t)*float64(c2.X)-t*float64(end.X)))+

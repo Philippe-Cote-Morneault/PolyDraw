@@ -2,10 +2,11 @@ package drawing
 
 import (
 	"encoding/binary"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
-	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
+	geometry "gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
 )
 
 //MaxUint16 represents the maximum value of a uint16
