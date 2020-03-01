@@ -26,12 +26,17 @@ import com.log3900.login.LoginActivity
 import com.log3900.profile.ProfileFragment
 import com.log3900.settings.SettingsActivity
 import com.log3900.settings.theme.ThemeManager
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 
 
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.ui.home.HomeFragment
 import com.log3900.user.account.AccountRepository
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 open class MainActivity : AppCompatActivity() {
 
@@ -103,6 +108,8 @@ open class MainActivity : AppCompatActivity() {
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
         }
+
+        EventBus.getDefault().register(this)
     }
 
     override fun onResume() {
@@ -157,5 +164,14 @@ open class MainActivity : AppCompatActivity() {
 
     private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {
         hideShowMessagesFAB.count = unreadMessagesCount
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.UNREAD_MESSAGES_CHANGED -> {
+                onUnreadMessagesChanged(event.data as Int)
+            }
+        }
     }
 }
