@@ -126,23 +126,21 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun onSkipTutorialButtonClick() {
-        finish()
+        finishTutorial()
     }
 
     private fun onNextButtonClick() {
         if (viewPager.currentItem < tutorialSlidesAdapter.count - 1) {
             viewPager.setCurrentItem(viewPager.currentItem + 1)
         } else {
-            finish()
+            finishTutorial()
         }
     }
 
     private fun handleNavigationDrawerClick() {
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-            println("drawer is open!")
             closeNavigationDrawer()
         } else {
-            println("drawer is not open!")
             openNavigationDrawer()
         }
     }
@@ -153,5 +151,11 @@ class TutorialActivity : AppCompatActivity() {
 
     private fun closeNavigationDrawer() {
         drawerLayout.closeDrawer(Gravity.LEFT)
+    }
+
+    private fun finishTutorial() {
+        TutorialManager.setAccountFinishedTutorial().subscribe {
+            finish()
+        }
     }
 }
