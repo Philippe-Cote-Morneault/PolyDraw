@@ -152,6 +152,10 @@ func (f *fsm) endNumber() {
 
 //end of the state machine
 func (f *fsm) End() {
+
+	if f.state == 2 {
+		f.endNumber()
+	}
 	if f.state == 1 || f.state == 2 {
 		f.endCommand()
 	}
