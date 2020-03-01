@@ -15,8 +15,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/badge_background"
-        android:gravity="center"
-        android:text="10"/>
+        android:textColor="?attr/colorOnPrimaryLight"
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/list_item_channel_name"
