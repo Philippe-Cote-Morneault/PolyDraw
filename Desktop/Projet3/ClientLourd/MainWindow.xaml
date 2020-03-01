@@ -17,11 +17,14 @@
         <viewModels:MainViewModel />
     </Window.DataContext>
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="VisibleIfFalseConverter" TrueValue="Collapsed" FalseValue="Visible"/>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
         <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter"/>
         <converter:NotificationConverter x:Key="NotificationConverter"/>
+        
+        
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="OemTilde"
@@ -58,6 +61,7 @@
                                       Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                       HorizontalAlignment="Right" Margin="16"
                                       Name="MenuToggleButton" />
+
                         <!-- Use for hiding the button when the chat is export-->
                         <Grid DockPanel.Dock="Right"
                               Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -102,6 +106,49 @@
                                     Width="24" />
                             </ToggleButton>
                         </Grid>
+
+                        <!--Sound button-->
+                        <Grid DockPanel.Dock="Right">
+                            <materialDesign:PackIcon
+                                Visibility="{Binding Path=SoundIsOn, Converter={StaticResource VisibleIfTrueConverter}}"
+                                Cursor="Hand"
+                                Background="{StaticResource PrimaryHueMidBrush}"
+                                Margin="0 0 20 0"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                Kind="VolumeHigh"
+                                Height="24"
+                                Width="24">
+                                <materialDesign:PackIcon.InputBindings>
+                                    <MouseBinding Gesture="LeftClick" 
+                                    Command="{Binding Path=ToggleSoundCommand}"/>
+                                    <MouseBinding Gesture="LeftDoubleClick" 
+                                    Command="{Binding Path=ToggleSoundCommand}"/>
+                                    
+                                </materialDesign:PackIcon.InputBindings>
+                            </materialDesign:PackIcon>
+
+                            <materialDesign:PackIcon
+                                Visibility="{Binding Path=SoundIsOn, Converter={StaticResource VisibleIfFalseConverter}}"
+                                Margin="0 0 20 0"
+                                Cursor="Hand"
+                                Background="{StaticResource PrimaryHueMidBrush}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                Kind="VolumeOff"
+                                Height="24"
+                                Width="24">
+                                <materialDesign:PackIcon.InputBindings>
+                                    <MouseBinding Gesture="LeftClick" 
+                                    Command="{Binding Path=ToggleSoundCommand}"/>
+                                    <MouseBinding Gesture="LeftDoubleClick" 
+                                    Command="{Binding Path=ToggleSoundCommand}"/>
+                                </materialDesign:PackIcon.InputBindings>
+                            </materialDesign:PackIcon>
+                        </Grid>
+
                         <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
                                Source="Resources/WhiteLogo.png" />
                     </DockPanel>

@@ -39,6 +39,7 @@ namespace ClientLourd.ViewModels
         public MainViewModel()
         {
             AfterLogOut();
+            SoundIsOn = true;
         }
 
         public override void AfterLogin()
@@ -178,6 +179,36 @@ namespace ClientLourd.ViewModels
         {
             // TODO: Change to home view
             ContainedView = Utilities.Enums.Views.Editor.ToString();
+        }
+
+        private bool _soundIsOn;
+
+        public bool SoundIsOn
+        {
+            get => _soundIsOn;
+            set
+            {
+                if (value != _soundIsOn)
+                {
+                    _soundIsOn = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private RelayCommand<object> _toggleSoundCommand;
+
+        public ICommand ToggleSoundCommand
+        {
+            get
+            {
+                return _toggleSoundCommand ?? (_toggleSoundCommand = new RelayCommand<object>(obj => ToggleSound()));
+            }
+        }
+
+        private void ToggleSound()
+        {
+            SoundIsOn = !SoundIsOn;
         }
 
     }
