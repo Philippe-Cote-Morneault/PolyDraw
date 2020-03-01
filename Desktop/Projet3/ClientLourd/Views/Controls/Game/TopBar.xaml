@@ -27,6 +27,7 @@
         
         <StackPanel HorizontalAlignment="Left" Grid.Column="2">
             <TextBlock Text="Best score: 345"/>
+            <TextBlock Text="Round 2/3"/>
         </StackPanel>
     </Grid>
 </UserControl>
