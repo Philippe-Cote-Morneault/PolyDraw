@@ -187,6 +187,7 @@
           <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
           <e p="GameCreationViewModel.cs" t="Include" />
+          <e p="GameViewModel.cs" t="Include" />
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ProfileViewModel.cs" t="Include" />
