@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
+import com.log3900.shared.ui.SearchViewUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.dialog_fragment_progress_dialog.*
@@ -48,9 +50,15 @@ class ChannelListFragment : Fragment(), ChannelListView {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).filter.filter(newText)
-                (channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection).filter.filter(newText)
-                channelsAdapter.notifyDataSetChanged()
+                if (SearchViewUtils.isFocused(channelSearchView)) {
+                    (channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection).filter.filter(
+                        newText
+                    )
+                    (channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection).filter.filter(
+                        newText
+                    )
+                    channelsAdapter.notifyDataSetChanged()
+                }
                 return false
             }
         })
