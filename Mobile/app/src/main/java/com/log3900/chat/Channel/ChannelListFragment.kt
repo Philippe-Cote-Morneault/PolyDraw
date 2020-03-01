@@ -60,39 +60,16 @@ class ChannelListFragment : Fragment(), ChannelListView {
             channelListPresenter.onCreateChannelButtonClick()
         }
 
-        channelsAdapter.addSection(GroupType.JOINED.name, ChannelSection(ChannelGroup(GroupType.JOINED, arrayListOf()), object: ChannelSection.ClickListener {
+        channelsRecyclerView.adapter = channelsAdapter
+        channelListPresenter = ChannelListPresenter(this)
+        return rootView
+    }
+
+    override fun addChannelSection(channelGroup: ChannelGroup) {
+        channelsAdapter.addSection(channelGroup.type.name,ChannelSection(channelGroup, object: ChannelSection.ClickListener {
             override fun onHeaderRootViewClick(group: ChannelGroup) {
-                val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.JOINED.name)
-                val section = channelsAdapter.getSection(GroupType.JOINED.name) as ChannelSection
-                val count = section.contentItemsTotal
-
-                section.expanded = !section.expanded
-                sectionAdapter.notifyHeaderChanged()
-
-                if (!section.expanded) {
-                    sectionAdapter.notifyItemRangeRemoved(0, count)
-                } else {
-                    sectionAdapter.notifyAllItemsInserted()
-                }
-            }
-
-            override fun onChannelClickListener(channel: Channel) {
-                channelListPresenter.onChannelClicked(channel)
-            }
-
-            override fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
-               channelListPresenter.onChannelActionButton1Click(channel, channelState)
-            }
-
-            override fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
-                channelListPresenter.onChannelActionButton2Click(channel, channelState)
-            }
-        }))
-
-        channelsAdapter.addSection(GroupType.AVAILABLE.name,ChannelSection(ChannelGroup(GroupType.AVAILABLE, arrayListOf()), object: ChannelSection.ClickListener {
-            override fun onHeaderRootViewClick(group: ChannelGroup) {
-                val sectionAdapter = channelsAdapter.getAdapterForSection(GroupType.AVAILABLE.name)
-                val section = channelsAdapter.getSection(GroupType.AVAILABLE.name) as ChannelSection
+                val sectionAdapter = channelsAdapter.getAdapterForSection(channelGroup.type.name)
+                val section = channelsAdapter.getSection(channelGroup.type.name) as ChannelSection
                 val count = section.contentItemsTotal
 
                 section.expanded = !section.expanded
@@ -117,10 +94,8 @@ class ChannelListFragment : Fragment(), ChannelListView {
                 channelListPresenter.onChannelActionButton2Click(channel, channelState)
             }
         }))
-
-        channelListPresenter = ChannelListPresenter(this)
-        channelsRecyclerView.adapter = channelsAdapter
-        return rootView
+        channelsAdapter.notifyDataSetChanged()
+        channelsAdapter.getAdapterForSection(channelGroup.type.name).notifyAllItemsChanged()
     }
 
     override fun setAvailableChannels(channels: ArrayList<Channel>) {
