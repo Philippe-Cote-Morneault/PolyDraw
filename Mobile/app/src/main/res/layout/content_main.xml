@@ -19,7 +19,7 @@
         app:navGraph="@navigation/mobile_navigation" />
 
     <fragment
-        android:id="@+id/fragment"
+        android:id="@+id/activity_main_chat_fragment_container"
         android:name="com.log3900.chat.ChatFragment"
         android:layout_width="352dp"
         android:layout_height="match_parent"
