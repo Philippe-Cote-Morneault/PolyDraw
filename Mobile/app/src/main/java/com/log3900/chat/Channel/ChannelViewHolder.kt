@@ -34,7 +34,7 @@ class ChannelViewHolder : RecyclerView.ViewHolder {
         if (isActive) {
             rootView.setBackgroundColor(ThemeUtils.resolveAttribute(R.attr.colorPrimaryLight))
         } else {
-            rootView.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            rootView.setBackgroundColor(Color.parseColor("#fcfcfc"))
         }
     }
 
