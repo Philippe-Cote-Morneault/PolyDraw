@@ -39,6 +39,7 @@
                     <ListViewItem >
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="#2" FontSize="24" Margin="5"/>
                                 <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                     <materialDesign:Chip.Style>
                                         <Style TargetType="materialDesign:Chip">
@@ -63,6 +64,7 @@
                     <ListViewItem >
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="#3" FontSize="24" Margin="5"/>
                                 <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
                                     <materialDesign:Chip.Style>
                                         <Style TargetType="materialDesign:Chip">

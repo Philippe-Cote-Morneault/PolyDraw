@@ -2,27 +2,38 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Timers;
+using System.Windows.Input;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Utilities.Commands;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.ViewModels
 {
     public class GameViewModel : ModelBase
     {
 
-        private string _guess;
+        private char[] _guess;
         private string _artistID;
         private DateTime _time;
         private Timer _timer;
         public GameViewModel()
         {
             InitTimer();
+            Guess = new char[20];
         }
 
         private void InitTimer()
         {
             Time = DateTime.MinValue.AddMinutes(1);
             _timer = new Timer(1000);
-            _timer.Elapsed += (sender, args) => { Time = Time.AddSeconds(-1); };
+            _timer.Elapsed += (sender, args) => { 
+                Time = Time.AddSeconds(-1);
+                if(Time == DateTime.MinValue)
+                {
+                    _timer.Stop();
+                }
+            };
             _timer.Start();
         }
 
@@ -32,9 +43,9 @@ namespace ClientLourd.ViewModels
         }
         
         public ObservableCollection<User> Users { get; set; }
-
         
-        public string Guess
+        
+        public char[] Guess
         {
             get => _guess;
             set
@@ -53,7 +64,22 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        
+        RelayCommand<object> _sendGuessCommand;
 
+        public ICommand SendGuessCommand
+        {
+            get
+            {
+                return _sendGuessCommand ??
+                       (_sendGuessCommand = new RelayCommand<object>(channel => SendGuess()));
+            }
+        }
+
+        private void SendGuess()
+        {
+            DialogHost.Show(new MessageDialog("Guess", new string(Guess)), "Default");
+        }
 
 
 

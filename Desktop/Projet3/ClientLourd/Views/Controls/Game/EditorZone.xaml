@@ -9,15 +9,26 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel Margin="10">
-            <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Bottom"  Orientation="Horizontal" Margin="5">
-                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
-                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
-                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
-                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
-                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
-                <TextBox FontSize="24" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
-                <Button Content="Guess"></Button>
-            </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
+            <ItemsControl AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBox FontSize="24" Tag="{Binding 
+                                 Path=(ItemsControl.AlternationIndex), 
+                                 RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Command="{Binding SendGuessCommand}" IsDefault="True">
+                Guess
+            </Button>
+        </StackPanel>
         <control:Editor/>
     </DockPanel>
 </UserControl>
