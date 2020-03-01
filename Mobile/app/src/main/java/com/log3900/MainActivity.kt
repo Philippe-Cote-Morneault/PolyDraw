@@ -30,6 +30,7 @@ import com.log3900.settings.theme.ThemeManager
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.ui.home.HomeFragment
+import com.log3900.user.account.AccountRepository
 
 open class MainActivity : AppCompatActivity() {
 
@@ -95,6 +96,10 @@ open class MainActivity : AppCompatActivity() {
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
             startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
+        }
+
+        if (!AccountRepository.getInstance().getAccount().tutorialDone) {
+            startActivity(Intent(applicationContext, TutorialActivity::class.java))
         }
     }
 
