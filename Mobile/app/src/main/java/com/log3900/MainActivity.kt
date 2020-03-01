@@ -18,6 +18,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.andremion.counterfab.CounterFab
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.draw.DrawViewFragment
@@ -36,6 +37,7 @@ open class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var hideShowMessagesFAB: CounterFab
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
@@ -47,8 +49,8 @@ open class MainActivity : AppCompatActivity() {
         val toolbar:Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val hideShowMessage: FloatingActionButton = findViewById(R.id.hideShowMessage)
-        hideShowMessage.setOnClickListener{
+        hideShowMessagesFAB = findViewById(R.id.hideShowMessage)
+        hideShowMessagesFAB.setOnClickListener{
             var chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
             when(chatView!!.visibility){
                 View.INVISIBLE -> chatView.visibility = View.VISIBLE
@@ -151,5 +153,9 @@ open class MainActivity : AppCompatActivity() {
             replace(R.id.nav_host_fragment, fragment, tag)
             commit()
         }
+    }
+
+    private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {
+        hideShowMessagesFAB.count = unreadMessagesCount
     }
 }
