@@ -124,6 +124,10 @@ class ChannelManager {
         EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, activeChannel))
     }
 
+    fun getUnreadMessage(): HashMap<UUID, Int> {
+        return unreadMessages
+    }
+
     private fun onMessageReceived(message: ChatMessage) {
         if (message.channelID != activeChannel.ID) {
             if (!unreadMessages.containsKey(message.channelID)) {
