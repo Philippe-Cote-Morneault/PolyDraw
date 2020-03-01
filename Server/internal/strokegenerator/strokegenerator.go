@@ -1,32 +1,24 @@
-package geometry
+package strokegenerator
 
 import (
 	"fmt"
 	"log"
 	"unicode"
+
+	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
 )
-
-type fsm struct {
-	Commands []Command
-}
-
-//Command css
-type Command struct {
-	C          rune
-	StartPos   Point
-	Parameters []float32
-}
 
 // Stroke dd
 type Stroke struct {
-	Points []Point
+	Points []model.Point
 }
 
 //BezierParams f
 type BezierParams struct {
-	InfluencePoint1 Point
-	InfluencePoint2 Point
-	EndPoint        Point
+	InfluencePoint1 model.Point
+	InfluencePoint2 model.Point
+	EndPoint        model.Point
 }
 
 func getNbParameters(command rune) int {
@@ -41,35 +33,35 @@ func getNbParameters(command rune) int {
 	}
 }
 
-func extractPointsStrokes(f fsm) []Stroke {
+func extractPointsStrokes(commands *[]svgparser.Command) []Stroke {
 	var strokes []Stroke
-	for iStroke, command := range f.Commands {
+	for iStroke, command := range *commands {
 		strokes = append(strokes, Stroke{})
 		currentPoint := command.StartPos
-		commandLower := unicode.ToLower(command.C)
+		commandLower := unicode.ToLower(command.Command)
 		if len(command.Parameters)%getNbParameters(commandLower) == 0 {
 			for i := 0; i < len(command.Parameters); i++ {
 				offsetX := float32(0)
 				offsetY := float32(0)
-				if unicode.IsLower(command.C) {
+				if unicode.IsLower(command.Command) {
 					offsetX = currentPoint.X
 					offsetY = currentPoint.Y
 				}
 				switch commandLower {
 				case 'm', 'l':
-					lastPoint := Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
+					lastPoint := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
 					generateForLinear(&strokes[iStroke].Points, &currentPoint, &lastPoint)
 					currentPoint = lastPoint
 					i++
 				case 'c':
-					infl2 := Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
-					infl1 := Point{X: command.Parameters[i+2] + offsetX, Y: command.Parameters[i+3] + offsetY}
-					endPoint := Point{X: command.Parameters[i+4] + offsetX, Y: command.Parameters[i+5] + offsetY}
+					infl2 := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
+					infl1 := model.Point{X: command.Parameters[i+2] + offsetX, Y: command.Parameters[i+3] + offsetY}
+					endPoint := model.Point{X: command.Parameters[i+4] + offsetX, Y: command.Parameters[i+5] + offsetY}
 					i += 5
 					generateForBezier(&strokes[iStroke].Points, &currentPoint, &BezierParams{InfluencePoint1: infl1, InfluencePoint2: infl2, EndPoint: endPoint})
 					currentPoint = endPoint
 				default:
-					log.Printf("[Potrace] -> Format contains invalid command \"%c\"", command.C)
+					log.Printf("[Potrace] -> Format contains invalid command \"%c\"", command.Command)
 				}
 
 			}
@@ -80,7 +72,7 @@ func extractPointsStrokes(f fsm) []Stroke {
 	return strokes
 }
 
-func generateForLinear(points *[]Point, start *Point, end *Point) {
+func generateForLinear(points *[]model.Point, start *model.Point, end *model.Point) {
 	fmt.Printf("[Linear] start(%f,%f) et end(%f,%f) : \n", start.X, start.Y, end.X, end.Y)
 
 	grad := calculateGradient(start, end)
@@ -94,7 +86,7 @@ func generateForLinear(points *[]Point, start *Point, end *Point) {
 	fmt.Printf("Offset : %f\n", offset)
 	for t := start.X; allPointsGenerated(t, end.X, start.X < end.X); t += offset {
 		y := grad*t + (start.Y - grad*start.X)
-		*points = append(*points, Point{X: t, Y: y})
+		*points = append(*points, model.Point{X: t, Y: y})
 
 	}
 	*points = append(*points, *end)
@@ -108,13 +100,13 @@ func allPointsGenerated(t, end float32, isIncreasing bool) bool {
 	return t >= end
 }
 
-func calculateGradient(start *Point, end *Point) float32 {
+func calculateGradient(start *model.Point, end *model.Point) float32 {
 	return (start.Y - end.Y) / (start.X - end.X)
 }
 
-func generateForBezier(points *[]Point, start *Point, params *BezierParams) {
+func generateForBezier(points *[]model.Point, start *model.Point, params *BezierParams) {
 	for t := float32(0); t < 1; t += 0.02 {
-		*points = append(*points, Point{X: evaluateBezier(t, start.X, params.InfluencePoint2.X, params.InfluencePoint1.X, params.EndPoint.X),
+		*points = append(*points, model.Point{X: evaluateBezier(t, start.X, params.InfluencePoint2.X, params.InfluencePoint1.X, params.EndPoint.X),
 			Y: evaluateBezier(t, start.Y, params.InfluencePoint2.Y, params.InfluencePoint1.Y, params.EndPoint.Y)})
 	}
 }
@@ -124,26 +116,9 @@ func evaluateBezier(t, start, infl2, infl1, end float32) float32 {
 }
 
 //GetPointsFromStrokes gives strokes with points generated based on lengths
-func GetPointsFromStrokes() []Stroke {
-	var commands []Command
-	commands = append(commands, Command{C: 'C', StartPos: Point{100, 100}})
-	commands[0].Parameters = append(commands[0].Parameters, 75)
-	commands[0].Parameters = append(commands[0].Parameters, 80)
-	commands[0].Parameters = append(commands[0].Parameters, 125)
-	commands[0].Parameters = append(commands[0].Parameters, 20)
-	commands[0].Parameters = append(commands[0].Parameters, 150)
-	commands[0].Parameters = append(commands[0].Parameters, 150)
+func GetPointsFromStrokes(commands *[]svgparser.Command) []Stroke {
 
-	commands[0].Parameters = append(commands[0].Parameters, 75)
-	commands[0].Parameters = append(commands[0].Parameters, 80)
-	commands[0].Parameters = append(commands[0].Parameters, 125)
-	commands[0].Parameters = append(commands[0].Parameters, 20)
-	commands[0].Parameters = append(commands[0].Parameters, 150)
-	commands[0].Parameters = append(commands[0].Parameters, 50)
-
-	d := fsm{Commands: commands}
-
-	strokes := extractPointsStrokes(d)
+	strokes := extractPointsStrokes(commands)
 	s := strokes[0].Points
 	for _, pp := range s {
 		fmt.Println(pp)
