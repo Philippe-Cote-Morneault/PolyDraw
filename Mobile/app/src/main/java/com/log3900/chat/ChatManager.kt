@@ -80,8 +80,7 @@ class ChatManager : Service() {
     }
 
     fun setActiveChannel(channel: Channel) {
-        channelManager?.activeChannel = channel
-        EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
+        channelManager?.changeActiveChannel(channel)
     }
 
     fun getActiveChannel(): Channel {
