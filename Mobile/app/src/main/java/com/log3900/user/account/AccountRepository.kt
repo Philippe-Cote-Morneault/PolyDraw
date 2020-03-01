@@ -9,6 +9,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.util.*
+import kotlin.NoSuchElementException
 
 class AccountRepository {
     private var currentAccount: Account? = null
@@ -35,6 +36,20 @@ class AccountRepository {
                     )
             it.onComplete()
         }.subscribeOn(Schedulers.io())
+    }
+
+    fun getAccountByID(id: UUID): Single<Account> {
+        val single: Single<Account> = Single.create {
+            val account = AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
+                .findByID(id)
+            if (account != null) {
+                it.onSuccess(account)
+            } else {
+                it.onError(NoSuchElementException())
+            }
+        }
+
+        return single.subscribeOn(Schedulers.io())
     }
 
     fun getAccount(): Account {

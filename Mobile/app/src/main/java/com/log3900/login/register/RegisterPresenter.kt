@@ -87,7 +87,8 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 firstName,
                 lastName,
                 tokenData.session,
-                tokenData.bearer ?: ""  // TODO: Actually handle the missing bearer token
+                tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
+                false
             )
         ).subscribe {
             SocketService.instance?.sendMessage(

@@ -111,18 +111,35 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     }
 
     private fun storeUser(account: Account, sessionToken: String, bearerToken: String): Completable {
-        return Completable.create {
-            AccountRepository.getInstance().createAccount(
-                account.copy(
-                    sessionToken = sessionToken,
-                    bearerToken = bearerToken
-                )
-            ).subscribe {
-                    AccountRepository.getInstance().setCurrentAccount(account.ID)
-                        .subscribe{
-                            it.onComplete()
-                        }
-                }
+        return Completable.create {completable ->
+            AccountRepository.getInstance().getAccountByID(account.ID).subscribe(
+                {
+                    AccountRepository.getInstance().createAccount(
+                        account.copy(
+                            sessionToken = sessionToken,
+                            bearerToken = bearerToken,
+                            tutorialDone = it.tutorialDone
+                        )
+                    ).subscribe {
+                        AccountRepository.getInstance().setCurrentAccount(account.ID)
+                            .subscribe{
+                                completable.onComplete()
+                            }
+                    }
+                },
+                {
+                    AccountRepository.getInstance().createAccount(
+                        account.copy(
+                            sessionToken = sessionToken,
+                            bearerToken = bearerToken
+                        )
+                    ).subscribe {
+                        AccountRepository.getInstance().setCurrentAccount(account.ID)
+                            .subscribe{
+                                completable.onComplete()
+                            }
+                    }
+                })
         }
     }
 
@@ -198,7 +215,8 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             json.get("FirstName").asString,
             json.get("LastName").asString,
             "",     // Session token and bearer token are not important right now
-            ""
+            "",
+            false
         )
     }
 }

@@ -9,7 +9,7 @@ interface AccountDAO {
     fun insertAccount(account: Account)
 
     @Query("SELECT * FROM account WHERE ID == :id LIMIT 1")
-    fun findByID(id: UUID): Account
+    fun findByID(id: UUID): Account?
 
     @Update
     fun updateAccount(account: Account)

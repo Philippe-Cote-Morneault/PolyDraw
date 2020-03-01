@@ -13,5 +13,6 @@ data class Account(
     val firstname:      String,
     val lastname:       String,
     var sessionToken:   String,
-    var bearerToken:    String
+    var bearerToken:    String,
+    var tutorialDone: Boolean
 )
