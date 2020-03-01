@@ -184,4 +184,12 @@ class ChannelListFragment : Fragment(), ChannelListView {
         channelsAdapter.notifyDataSetChanged()
     }
 
+    override fun changeActiveChannel(channel: Channel) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun changeChanngelUnreadMessages(channel: Channel, unreadMessages: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }
