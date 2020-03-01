@@ -15,4 +15,5 @@ interface ChannelListView {
     fun notifyChannelsChange()
     fun changeActiveChannel(channel: Channel)
     fun changeChanngelUnreadMessages(channel: Channel, unreadMessages: Int)
+    fun addChannelSection(channelGroup: ChannelGroup)
 }
