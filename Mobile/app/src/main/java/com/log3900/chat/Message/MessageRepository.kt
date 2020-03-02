@@ -39,6 +39,7 @@ class MessageRepository : Service() {
     private val binder = MessageRepositoryBinder()
     private var socketService: SocketService? = null
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
+    private var socketMessageHandler: Handler? = null
 
     // Data
     private val messageCache: MessageCache = MessageCache()
@@ -163,6 +164,16 @@ class MessageRepository : Service() {
         }
     }
 
+    private fun handleSocketMessage(message: android.os.Message) {
+        val socketMessage = message.obj as Message
+
+        when (socketMessage.type) {
+            com.log3900.socket.Event.MESSAGE_RECEIVED -> receiveMessage(socketMessage)
+            com.log3900.socket.Event.JOINED_CHANNEL -> onUserJoinedChannel(socketMessage)
+            com.log3900.socket.Event.LEFT_CHANNEL -> onUserLeftChannel(socketMessage)
+        }
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -174,26 +185,25 @@ class MessageRepository : Service() {
 
         Thread(Runnable {
             Looper.prepare()
-            socketService?.subscribeToMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, Handler {
-                receiveMessage(it.obj as Message)
+            socketMessageHandler = Handler {
+                handleSocketMessage(it)
                 true
-            })
-            socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, Handler {
-                onUserJoinedChannel(it.obj as Message)
-                true
-            })
-            socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, Handler {
-                onUserLeftChannel(it.obj as Message)
-                true
-            })
+            }
+            socketService?.subscribeToMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
+            socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
+            socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
+        socketMessageHandler = null
         socketService = null
         instance = null
+        super.onDestroy()
     }
 
     private fun receiveMessage(message: Message) {
