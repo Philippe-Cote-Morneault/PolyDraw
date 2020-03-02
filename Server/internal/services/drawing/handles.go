@@ -122,18 +122,20 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		log.Println(err)
 	}
 
+	width, errW := strconv.ParseUint(xmlSvg.Width, 10, 16)
+	height, errH := strconv.ParseUint(xmlSvg.Height, 10, 16)
+
+	if errW != nil {
+		log.Println("[Drawing] Error conversion svg width")
+	}
+
+	if errH != nil {
+		log.Println("[Drawing] Error conversion svg height")
+	}
+
 	var commands []svgparser.Command
+	var payloads [][]byte
 	for _, path := range xmlSvg.G.XMLPaths {
-		width, errW := strconv.ParseUint(xmlSvg.Width, 10, 16)
-		height, errH := strconv.ParseUint(xmlSvg.Height, 10, 16)
-
-		if errW != nil {
-			log.Println("[Drawing] Error conversion svg width")
-		}
-
-		if errH != nil {
-			log.Println("[Drawing] Error conversion svg height")
-		}
 		stroke := Stroke{
 			ID:        uuid.New(),
 			color:     path.Color,
@@ -145,8 +147,9 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
-
-		payload := stroke.Marshall()
+		payloads = append(payloads, stroke.Marshall())
+	}
+	for _, payload := range payloads {
 		packet := socket.RawMessage{
 			MessageType: byte(socket.MessageType.StrokeChunkServer),
 			Length:      uint16(len(payload)),
