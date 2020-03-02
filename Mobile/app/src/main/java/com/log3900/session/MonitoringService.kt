@@ -28,6 +28,8 @@ import org.greenrobot.eventbus.ThreadMode
 class MonitoringService : Service() {
     private val binder = MonitoringBinder()
     private var socketService: SocketService? = null
+    private var socketEventHandler: Handler? = null
+    private var socketMessageHandler: Handler? = null
 
     companion object {
         var instance: MonitoringService? = null
@@ -43,20 +45,20 @@ class MonitoringService : Service() {
         socketService = SocketService.instance
         Thread(Runnable {
             Looper.prepare()
-            socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, Handler {
+            socketEventHandler = Handler {
                 handleEvent(it)
                 true
-            })
+            }
 
-            socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, Handler {
+            socketMessageHandler = Handler {
                 handleMessage(it)
                 true
-            })
+            }
+            socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
 
-            socketService?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
-                handleMessage(it)
-                true
-            })
+            socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
+
+            socketService?.subscribeToMessage(Event.SERVER_RESPONSE, socketMessageHandler!!)
             Looper.loop()
         }).start()
 
@@ -64,9 +66,15 @@ class MonitoringService : Service() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         socketService = null
         EventBus.getDefault().unregister(this)
+        socketService?.unsubscribeFromEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
+        socketService?.unsubscribeFromMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.SERVER_RESPONSE, socketMessageHandler!!)
+
+        socketMessageHandler = null
+        socketEventHandler = null
+        super.onDestroy()
     }
 
     fun handleEvent(message: android.os.Message) {
