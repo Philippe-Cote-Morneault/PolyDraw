@@ -123,7 +123,7 @@ func (f *fsm) endCommand() {
 		f.curCommand = ' '
 		f.numbers = make([]float32, 0, 16)
 	} else {
-		log.Printf("[Potrace] -> Invalid command \"%c\" in d attribute.", f.curCommand)
+		log.Printf("[SvgParser] -> Invalid command \"%c\" in d attribute.", f.curCommand)
 	}
 }
 
@@ -135,13 +135,13 @@ func (f *fsm) endNumber() {
 	if f.isDecimal {
 		number, err := strconv.ParseFloat(numStr, 32)
 		if err != nil {
-			log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+			log.Printf("[SvgParser] -> Invalid number \"%s\" in d attribute.", numStr)
 		}
 		f.numbers = append(f.numbers, float32(number))
 	} else {
 		number, err := strconv.Atoi(numStr)
 		if err != nil {
-			log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+			log.Printf("[SvgParser] -> Invalid number \"%s\" in d attribute.", numStr)
 		}
 		f.numbers = append(f.numbers, float32(number))
 	}
