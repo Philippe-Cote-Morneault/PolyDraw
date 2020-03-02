@@ -159,7 +159,9 @@ object SocketHandler {
             val message = Message(type, values)
 
             if (message.type == Event.HEALTH_CHECK_SERVER) {
+                Log.d("Healthcheck", "Received server healthcheck")
                 onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
+                Log.d("Healthcheck", "Sent healthcheck response")
                 socketHealthcheckTimer.cancel()
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
