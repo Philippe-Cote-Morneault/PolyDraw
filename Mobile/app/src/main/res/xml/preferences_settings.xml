@@ -4,8 +4,12 @@
 
     <Preference
         app:key="theme"
-        app:title="Theme"
-        app:summary="Select a theme"
-        app:icon="@drawable/ic_settings_black"/>
+        app:title="@string/settings_theme_title"
+        app:summary="Select a theme" />
+    <Preference
+        app:key="language"
+        app:title="Language"
+        app:summary="Select a language"/>
+
 
 </PreferenceScreen>
