@@ -14,7 +14,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ChannelManager {
-    lateinit var activeChannel: Channel
+    var activeChannel: Channel? = null
     lateinit var availableChannels: ArrayList<Channel>
     lateinit var joinedChannels: ArrayList<Channel>
     private var unreadMessages: HashMap<UUID, Int> = hashMapOf()
@@ -99,7 +99,7 @@ class ChannelManager {
     }
 
     fun onChannelDeleted(channelID: UUID) {
-        if (activeChannel.ID == channelID) {
+        if (activeChannel?.ID == channelID) {
             val newActiveChannel = joinedChannels.find {
                 it.ID.toString() == "00000000-0000-0000-0000-000000000000"
             }!!
@@ -113,9 +113,9 @@ class ChannelManager {
         }
     }
 
-    fun changeActiveChannel(channel: Channel) {
+    fun changeActiveChannel(channel: Channel?) {
         activeChannel = channel
-        if (unreadMessages.containsKey(channel.ID)) {
+        if (channel != null && unreadMessages.containsKey(channel.ID)) {
             unreadMessagesTotal -= unreadMessages.get(channel.ID)!!
             unreadMessages[channel.ID] = 0
 
@@ -128,8 +128,14 @@ class ChannelManager {
         return unreadMessages
     }
 
+    fun getDefaultChannel(): Channel {
+        return joinedChannels.find {
+            it.ID == Channel.GENERAL_CHANNEL_ID
+        }!!
+    }
+
     private fun onMessageReceived(message: ChatMessage) {
-        if (message.channelID != activeChannel.ID) {
+        if (message.channelID != activeChannel?.ID) {
             if (!unreadMessages.containsKey(message.channelID)) {
                 unreadMessages.put(message.channelID, 0)
             }
