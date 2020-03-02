@@ -66,6 +66,7 @@ class MonitoringService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         socketService = null
+        EventBus.getDefault().unregister(this)
     }
 
     fun handleEvent(message: android.os.Message) {
