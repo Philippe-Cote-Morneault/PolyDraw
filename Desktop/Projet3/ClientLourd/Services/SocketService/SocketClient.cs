@@ -15,6 +15,7 @@ using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.Enums;
 using MessagePack.Resolvers;
+using System.Threading;
 
 namespace ClientLourd.Services.SocketService
 {
@@ -28,7 +29,7 @@ namespace ClientLourd.Services.SocketService
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
-        private Timer _healthCheckTimer;
+        private System.Timers.Timer _healthCheckTimer;
         private NetworkInformations _networkInformations;
 
         public SocketClient(NetworkInformations informations)
@@ -126,6 +127,7 @@ namespace ClientLourd.Services.SocketService
                 try
                 {
                     // Read the type and the length
+                    Thread.Sleep(50);
                     _stream.Read(typeAndLength, 0, 3);
 
                     SocketMessageTypes type = (SocketMessageTypes) typeAndLength[0];
@@ -213,7 +215,7 @@ namespace ClientLourd.Services.SocketService
 
         private void InitializeTimer()
         {
-            _healthCheckTimer = new Timer(6000);
+            _healthCheckTimer = new System.Timers.Timer(6000);
             _healthCheckTimer.AutoReset = false;
             _healthCheckTimer.Elapsed += TriggerConnectionLost;
             _healthCheckTimer.Start();
