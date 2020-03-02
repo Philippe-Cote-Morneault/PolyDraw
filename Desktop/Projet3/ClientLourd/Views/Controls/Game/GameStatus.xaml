@@ -4,18 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Controls.Game"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
+             Name="Control"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid Margin="10">
         <materialDesign:Card>
             <StackPanel>
-                <ListView AlternationCount="{Binding Guess.Length}" x:Name="List" ItemsSource="{Binding Players}">
-                    <ListView.ItemTemplate>
+                <ItemsControl AlternationCount="{Binding Guess.Length}" x:Name="List" ItemsSource="{Binding Players}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="10" Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding ElementName=List, Path=(ListView.AlternationIndex)}"
+                                    <TextBlock Text="{Binding 
+                                                Path=(ItemsControl.AlternationIndex), 
+                                                Converter={StaticResource MathAddConverter},
+                                                ConverterParameter=1,
+                                                StringFormat={}#{0},
+                                                RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                          FontSize="24" Margin="5"/>
                                     <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding Username}">
                                         <materialDesign:Chip.Style>
@@ -27,14 +42,24 @@
                                             <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
                                         </materialDesign:Chip.Icon>
                                     </materialDesign:Chip>
-                                    <materialDesign:PackIcon Kind="Check" VerticalAlignment="Center" Foreground="Green"></materialDesign:PackIcon>
+                                    <!-- Icon -->
+                                    <materialDesign:PackIcon Kind="Pencil"  VerticalAlignment="Center">
+                                        <materialDesign:PackIcon.Visibility>
+                                                        <MultiBinding
+                                                            ConverterParameter="1"
+                                                            Converter="{StaticResource ComparatorToVisibilityConverter}">
+                                                            <Binding Path="ID" />
+                                                            <Binding ElementName="Control" Path="DataContext.ArtistID" />
+                                                        </MultiBinding>
+                                        </materialDesign:PackIcon.Visibility>
+                                    </materialDesign:PackIcon>
                                 </StackPanel>
                                 <TextBlock HorizontalAlignment="Center" Text="score: 450"></TextBlock>
                                 <Separator/>
                             </StackPanel>
                         </DataTemplate>     
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </materialDesign:Card>
         
