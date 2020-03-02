@@ -73,6 +73,15 @@ namespace ClientLourd
             ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();
             DevConfigButton.IsChecked = true;
+            MoveChatToGamePanel();
+        }
+
+        private void MoveChatToGamePanel()
+        {
+            RightDrawerContent.Children.Clear();
+            Drawer.IsRightDrawerOpen = false;
+            ChatToggleButton.IsEnabled = false;
+            GameView.ChatCard.Content = ChatBox;
         }
 
         /// <summary>

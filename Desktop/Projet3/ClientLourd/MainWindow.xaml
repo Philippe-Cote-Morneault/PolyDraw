@@ -117,7 +117,7 @@
                     <DockPanel Name="ControlSelector">
 
                         <DockPanel Width="{Binding ElementName=Drawer, Path=ActualWidth}"   Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Editor'}">
-                            <game:GamePanel/>
+                            <game:GamePanel x:Name="GameView"/>
                         </DockPanel>
                         
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
