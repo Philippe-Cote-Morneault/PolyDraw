@@ -143,6 +143,7 @@ class ChannelListPresenter : Presenter {
     }
 
     override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        EventBus.getDefault().unregister(this)
+
     }
 }
