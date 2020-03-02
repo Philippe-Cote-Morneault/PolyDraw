@@ -28,6 +28,20 @@
         DrawingPreviewResponse = 37,
         DeleteStroke = 38, 
         UserDeletedStroke = 39,
+        ReadyToStart = 52,
+        MatchStarted = 53,
+        LeaveMatch = 54,
+        PlayerLeftMatch = 55,
+        NewDrawer = 57,
+        YourTurnToDraw = 59,
+        TimesUp = 61,
+        MatchSync = 63,
+        GuessTheWord = 64,
+        GuessResponse = 65,
+        PlayerGuessed = 67,
+        MatchCheckPoint = 69,
+        MatchEnd = 71,
+        
         ServerMessage = 255,
     }
 }
