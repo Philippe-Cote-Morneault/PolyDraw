@@ -2,17 +2,24 @@ package drawing
 
 import (
 	"encoding/binary"
+	"encoding/xml"
+	"io/ioutil"
+	"log"
+	"strconv"
+	"time"
 
 	"github.com/google/uuid"
+	"gitlab.com/jigsawcorp/log3900/internal/datastore"
+	svgmodel "gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
+	"gitlab.com/jigsawcorp/log3900/internal/strokegenerator"
+	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 	"gitlab.com/jigsawcorp/log3900/model"
 	geometry "gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
 )
 
 //MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
-
-type point geometry.Point
 
 //Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
@@ -23,7 +30,7 @@ type Stroke struct {
 	width     uint16
 	height    uint16
 	brushSize byte
-	points    []point
+	points    []geometry.Point
 }
 
 func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
@@ -49,7 +56,8 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}, message.SocketID)
 	//Call method to start the drawing here
 	//TODO Allan your code goes here!
-	sendDummyDrawing(message.SocketID)
+	// sendDummyDrawing(message.SocketID)
+	sendDrawing(message.SocketID, game.Image.SVGFile)
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.EndDrawingServer),
 		Length:      uint16(len(uuidBytes)),
@@ -83,7 +91,7 @@ func sendDummyDrawing(socketID uuid.UUID) {
 		height:    1080,
 		brushSize: 25,
 	}
-	points := []point{
+	points := []geometry.Point{
 		{0, 0},
 		{5, 5},
 		{10, 10},
@@ -98,6 +106,56 @@ func sendDummyDrawing(socketID uuid.UUID) {
 		Bytes:       payload,
 	}
 	socket.SendRawMessageToSocketID(packet, socketID)
+}
+
+func sendDrawing(socketID uuid.UUID, svgKey string) {
+	//TODO: Download Image
+	file, err := datastore.GetFile(svgKey)
+	if err != nil {
+		log.Println(err)
+	}
+	byteValue, _ := ioutil.ReadAll(file)
+	var xmlSvg svgmodel.XMLSvg
+
+	err = xml.Unmarshal(byteValue, &xmlSvg)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var commands []svgparser.Command
+	for _, path := range xmlSvg.G.XMLPaths {
+		width, errW := strconv.ParseUint(xmlSvg.Width, 10, 16)
+		height, errH := strconv.ParseUint(xmlSvg.Height, 10, 16)
+
+		if errW != nil {
+			log.Println("[Drawing] Error conversion svg width")
+		}
+
+		if errH != nil {
+			log.Println("[Drawing] Error conversion svg height")
+		}
+		stroke := Stroke{
+			ID:        uuid.New(),
+			color:     path.Color,
+			isEraser:  path.Eraser,
+			isSquared: path.Brush == "squared",
+			brushSize: path.BrushSize,
+			width:     uint16(width),
+			height:    uint16(height),
+		}
+		commands = svgparser.ParseD(path.D, nil)
+		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
+
+		payload := stroke.Marshall()
+		packet := socket.RawMessage{
+			MessageType: byte(socket.MessageType.StrokeChunkServer),
+			Length:      uint16(len(payload)),
+			Bytes:       payload,
+		}
+		socket.SendRawMessageToSocketID(packet, socketID)
+		//Wait 20ms
+		time.Sleep(20 * time.Millisecond)
+	}
 }
 
 //Marshall encode the stroke to binary
@@ -135,14 +193,14 @@ func (s *Stroke) Marshall() []byte {
 	response = append(response, height...)
 	response = append(response, s.brushSize)
 	for i := range s.points {
-		response = append(response, s.points[i].Marshall()...)
+		response = append(response, marshallPoint(s.points[i])...)
 	}
 	return response
 }
 
-func (p *point) Marshall() []byte {
+func marshallPoint(p geometry.Point) []byte {
 	//Round the number up if larger than uint16 max
-	p.round()
+	round(&p)
 	x := uint16(p.X)
 	y := uint16(p.Y)
 	xArray := make([]byte, 2)
@@ -159,7 +217,7 @@ func (p *point) Marshall() []byte {
 	return response
 }
 
-func (p *point) round() {
+func round(p *geometry.Point) {
 	if p.X > float32(MaxUint16) {
 		p.X = float32(MaxUint16)
 	}
