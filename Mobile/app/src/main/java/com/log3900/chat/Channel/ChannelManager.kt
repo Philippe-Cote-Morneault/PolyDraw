@@ -19,6 +19,7 @@ class ChannelManager {
     lateinit var joinedChannels: ArrayList<Channel>
     private var unreadMessages: HashMap<UUID, Int> = hashMapOf()
     private var unreadMessagesTotal: Int = 0
+    var previousChannel: Channel? = null
 
     constructor() {
     }
@@ -46,8 +47,10 @@ class ChannelManager {
                     it.ID.toString() == "00000000-0000-0000-0000-000000000000"
                 }!!
                 changeActiveChannel(newActiveChannel)
+                previousChannel = newActiveChannel
             }
             ChannelRepository.instance?.unsubscribeFromChannel(channel)
+
             EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
         } else {
             // TODO: Handle this incoherent state
@@ -103,6 +106,7 @@ class ChannelManager {
             val newActiveChannel = joinedChannels.find {
                 it.ID.toString() == "00000000-0000-0000-0000-000000000000"
             }!!
+            previousChannel = newActiveChannel
             changeActiveChannel(newActiveChannel)
         }
 
