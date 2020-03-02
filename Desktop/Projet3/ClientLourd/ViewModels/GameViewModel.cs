@@ -6,9 +6,11 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
@@ -161,6 +163,27 @@ namespace ClientLourd.ViewModels
             DialogHost.Show(new MessageDialog("Guess", new string(Guess)), "Default");
         }
 
+        RelayCommand<object> _prepareMatchCommand;
+        
+        /// <summary>
+        /// Set the environment for the match
+        /// </summary>
+        public ICommand PrepareMatchCommand
+        {
+            get
+            {
+                return _prepareMatchCommand ??
+                       (_prepareMatchCommand = new RelayCommand<object>(channel => PrepareMatch()));
+            }
+        }
+
+        private void PrepareMatch()
+        {
+            //TODO
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
+        }
+        
+        
 
 
     }
