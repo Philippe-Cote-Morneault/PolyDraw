@@ -58,7 +58,11 @@ class ChatPresenter : Presenter {
                 }
             )
 
-        chatView.setCurrentChannnelName(chatManager.getActiveChannel().name)
+        if (chatManager.getActiveChannel() == null) {
+            chatView.setCurrentChannnelName("")
+        } else {
+            chatView.setCurrentChannnelName(chatManager.getActiveChannel()!!.name)
+        }
         messageRepository = MessageRepository.instance!!
 
         subscribeToEvents()
@@ -115,7 +119,7 @@ class ChatPresenter : Presenter {
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
             EventType.ACTIVE_CHANNEL_CHANGED -> {
-                onChannelChanged(event.data as Channel)
+                onChannelChanged(event.data as Channel?)
             }
             EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED -> {
                 onActiveChannelMessageReceived(event.data as ChatMessage)
@@ -123,16 +127,19 @@ class ChatPresenter : Presenter {
         }
     }
 
-    private fun onChannelChanged(channel: Channel) {
-        chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread()).subscribe(
-            { messages ->
-                chatView.setCurrentChannnelName(channel.name)
-                chatView.setChatMessages(messages)
-                chatView.scrollMessage()
-            },
-            { error ->
-            }
-        )
+    private fun onChannelChanged(channel: Channel?) {
+        if (channel != null) {
+            chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { messages ->
+                        chatView.setCurrentChannnelName(channel.name)
+                        chatView.setChatMessages(messages)
+                        chatView.scrollMessage()
+                    },
+                    { error ->
+                    }
+                )
+        }
     }
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {
