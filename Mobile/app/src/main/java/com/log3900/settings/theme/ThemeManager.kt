@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.core.content.edit
 import com.log3900.MainApplication
 import com.log3900.R
+import com.log3900.user.account.AccountRepository
+import io.reactivex.Completable
 
 class ThemeManager {
     companion object {
@@ -34,19 +36,14 @@ class ThemeManager {
         }
 
         fun getCurrentTheme(): Theme {
-            val context = MainApplication.instance.applicationContext
-            val preferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            val themeIndex = preferences.getInt(context.getString(R.string.preference_file_theme_key), 3)
-            return themes[themeIndex]
+            return themes[AccountRepository.getInstance().getAccount().themeID]
         }
 
-        fun changeTheme(theme: Theme) {
-            val context = MainApplication.instance.applicationContext
-            val preferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            preferences.edit {
-                putInt(context.getString(R.string.preference_file_theme_key), theme.index)
-                commit()
-            }
+        fun changeTheme(theme: Theme): Completable {
+            Log.d("POTATO", "ThemeManager::changeTheme(${theme.index})")
+            val currentAccount = AccountRepository.getInstance().getAccount()
+            currentAccount.themeID = theme.index
+            return AccountRepository.getInstance().updateAccount(currentAccount)
         }
 
         fun getThemesAsArrayList(): ArrayList<Theme> {
