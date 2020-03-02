@@ -3,8 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Timers;
+using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Services.RestService;
+using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
@@ -59,6 +62,42 @@ namespace ClientLourd.ViewModels
                 }
             };
             _timer.Start();
+        }
+        
+        public SessionInformations SessionInformations
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                        ?.SessionInformations;
+                });
+            }
+        }
+
+        public SocketClient SocketClient
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                            ?.SocketClient;
+                    });
+            }
+        }
+
+        public RestClient RestClient
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                            ?.RestClient;
+                    });
+            }
         }
 
         public Player Artist
