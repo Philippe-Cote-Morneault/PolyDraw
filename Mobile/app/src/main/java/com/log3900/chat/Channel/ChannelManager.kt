@@ -138,6 +138,10 @@ class ChannelManager {
         }!!
     }
 
+    fun delete() {
+        EventBus.getDefault().unregister(this)
+    }
+
     private fun onMessageReceived(message: ChatMessage) {
         if (message.channelID != activeChannel?.ID) {
             if (!unreadMessages.containsKey(message.channelID)) {
