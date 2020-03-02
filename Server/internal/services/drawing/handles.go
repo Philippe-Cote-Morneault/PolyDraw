@@ -147,6 +147,8 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
+		log.Printf("[Drawing] Number of points is : %v", len(stroke.points))
+
 		if len(stroke.points) > maxPointsperPacket {
 			s := stroke.clone()
 			index := 0
@@ -157,7 +159,7 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 				} else {
 					s.points = stroke.points[index:maxPointsperPacket]
 				}
-				payloads = append(payloads, stroke.Marshall())
+				payloads = append(payloads, s.Marshall())
 				index += maxPointsperPacket
 			}
 		} else {
@@ -170,8 +172,6 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 			Length:      uint16(len(payload)),
 			Bytes:       payload,
 		}
-		log.Printf("[Drawing] MessageType is : %v", byte(socket.MessageType.StrokeChunkServer))
-		log.Printf("[Drawing] Length of payload is : %v", uint16(len(payload)))
 		socket.SendRawMessageToSocketID(packet, socketID)
 		//Wait 20ms
 		time.Sleep(20 * time.Millisecond)
