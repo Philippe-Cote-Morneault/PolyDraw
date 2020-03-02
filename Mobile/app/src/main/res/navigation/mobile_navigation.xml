@@ -3,13 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/navigation_main_home_fragment">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/navigation_main_home_fragment"
         android:name="com.log3900.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_profileFragment"
+            app:destination="@id/navigation_main_profile_fragment"
+            app:popUpTo="@id/navigation_main_profile_fragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_home_to_drawViewFragment"
+            app:destination="@id/navigation_main_draw_view_fragment"
+            app:popUpTo="@id/navigation_main_draw_view_fragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_main_profile_fragment"
+        android:name="com.log3900.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_nav_home2"
+            app:destination="@id/navigation_main_home_fragment"
+            app:popUpTo="@id/navigation_main_home_fragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_profileFragment_to_drawViewFragment"
+            app:destination="@id/navigation_main_draw_view_fragment"
+            app:popUpTo="@id/navigation_main_draw_view_fragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_main_draw_view_fragment"
+        android:name="com.log3900.draw.DrawViewFragment"
+        android:label="DrawViewFragment" >
+        <action
+            android:id="@+id/action_drawViewFragment_to_profileFragment"
+            app:destination="@id/navigation_main_profile_fragment"
+            app:popUpTo="@id/navigation_main_profile_fragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_drawViewFragment_to_nav_home2"
+            app:destination="@id/navigation_main_home_fragment"
+            app:popUpTo="@id/navigation_main_home_fragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 
 </navigation>
