@@ -182,6 +182,24 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 		image := model.GameImage{}
 		image.Mode = modeInt
+
+		brushsizeStr := r.FormValue("brushsize")
+		brushsize, err := strconv.Atoi(brushsizeStr)
+		if brushsizeStr == "" {
+			rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be set when uploading a non vector image.")
+			return
+		}
+		if err != nil {
+			rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be a integer number.")
+		}
+
+		if brushsize > 100 || brushsize < 1 {
+			rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be between 1 and 100.")
+			return
+		}
+
+		image.BrushSize = brushsize
+
 		if mime == "text/xml; charset=utf-8" {
 			//Load svg
 			image.SVGFile = keyFile
@@ -206,21 +224,6 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			brushsizeStr := r.FormValue("brushsize")
-			brushsize, err := strconv.Atoi(brushsizeStr)
-			if brushsizeStr == "" {
-				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be set when uploading a non vector image.")
-				return
-			}
-			if err != nil {
-				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be a integer number.")
-			}
-
-			if brushsize > 100 || brushsize < 1 {
-				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be between 1 and 100.")
-				return
-			}
-			image.BrushSize = brushsize
 			image.BlackLevel = blackLevel
 
 			svgKey, err := potrace.Trace(keyFile, blackLevel)
