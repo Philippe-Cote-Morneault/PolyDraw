@@ -5,21 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/menu_item_activity_main_drawer_home"
             android:icon="@drawable/ic_menu_home"
             android:title="Home" />
 
         <item
-            android:id="@+id/nav_profile"
+            android:id="@+id/menu_item_activity_main_drawer_profile"
             android:icon="@drawable/ic_person"
             android:title="@string/profile"/>
 
         <item
-            android:id="@+id/nav_draw"
+            android:id="@+id/menu_item_activity_main_drawer_draw"
             android:icon="@drawable/ic_create_black_24dp"
             android:title="Draw (temp)"/>
         <item
-            android:id="@+id/logoutButton"
+            android:id="@+id/menu_item_activity_main_drawer_logout"
             android:icon="@drawable/ic_menu_logout"
             android:title="Logout" />
     </group>
