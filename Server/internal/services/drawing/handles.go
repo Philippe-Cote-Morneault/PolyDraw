@@ -154,6 +154,8 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 			Length:      uint16(len(payload)),
 			Bytes:       payload,
 		}
+		log.Printf("[Drawing] MessageType is : %v", byte(socket.MessageType.StrokeChunkServer))
+		log.Printf("[Drawing] Length of payload is : %v", uint16(len(payload)))
 		socket.SendRawMessageToSocketID(packet, socketID)
 		//Wait 20ms
 		time.Sleep(20 * time.Millisecond)
