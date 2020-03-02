@@ -7,11 +7,13 @@
 package com.log3900.draw.divyanshuwidget
 
 import android.graphics.Path
+import android.graphics.Point
 import java.io.ObjectInputStream
 import java.io.Serializable
 import java.util.*
 
 class MyPath : Path(), Serializable {
+    val id: UUID = UUID.randomUUID()
     val actions = LinkedList<Action>()
 
     private fun readObject(inputStream: ObjectInputStream) {
@@ -29,11 +31,14 @@ class MyPath : Path(), Serializable {
     }
 
     override fun moveTo(x: Float, y: Float) {
+//        println(FloatPoint(200f, 200f).isInBounds(FloatPoint(200.5f, 200.5f)))
+//        points.add(FloatPoint(x, y))
         actions.add(Move(x, y))
         super.moveTo(x, y)
     }
 
     override fun lineTo(x: Float, y: Float) {
+//        points.add(FloatPoint(x, y))
         actions.add(Line(x, y))
         super.lineTo(x, y)
     }

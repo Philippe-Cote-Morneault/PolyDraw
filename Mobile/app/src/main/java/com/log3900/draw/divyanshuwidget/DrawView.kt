@@ -9,12 +9,22 @@ package com.log3900.draw.divyanshuwidget
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.log3900.socket.Event
+import com.log3900.socket.SocketService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.LinkedHashMap
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class DrawView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -43,6 +53,25 @@ class DrawView @JvmOverloads constructor(
             strokeCap = Paint.Cap.ROUND
             strokeWidth = mPaintOptions.strokeWidth
             isAntiAlias = true
+        }
+
+        SocketService.instance!!.subscribeToMessage(Event.DRAW_START_SERVER, Handler {
+            Log.d("DRAW", "received message")
+            true
+        })
+
+        GlobalScope.launch {
+            mStartX = 200f
+            mStartY = 200f
+
+            actionDown(200f, 200f)
+            for (i in 1..300) {
+                actionMove(200f + i.toFloat(), 200f + i.toFloat())
+                invalidate()
+                delay(10)
+            }
+            actionUp()
+            invalidate()
         }
     }
 
@@ -176,6 +205,12 @@ class DrawView @JvmOverloads constructor(
         val x = event.x
         val y = event.y
 
+        if (mPaintOptions.drawMode == DrawMode.REMOVE) {
+//            if (event.action == MotionEvent.ACTION_DOWN)
+                removePathIfIntersection(x, y)
+            return true
+        }
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mStartX = x
@@ -191,11 +226,49 @@ class DrawView @JvmOverloads constructor(
         return true
     }
 
-//    fun toggleEraser() {
-//        isEraserOn = !isEraserOn
-//        mPaintOptions.isEraserOn = isEraserOn
-//        invalidate()
-//    }
+    private fun removePathIfIntersection(x: Float, y: Float) {
+    val sortedMap = mPaths
+    var keyToRemove = MyPath()
+    var found = false
+    for ((key, value) in sortedMap) {
+        for (action in key.actions) {
+            var width = 30
+            if (value.strokeWidth > 30)
+                width = value.strokeWidth.toInt()
+            if (action is Quad) {
+                val q: Quad = action
+                val distance1 = sqrt((q.x1.toDouble() - x.toDouble()).pow(2.0) + (q.y1.toDouble() - y.toDouble()).pow(2.0))
+                val distance2 = sqrt((q.x2.toDouble() - x.toDouble()).pow(2.0) + (q.y2.toDouble() - y.toDouble()).pow(2.0))
+                if (value.color != 0xFFFFFFFF.toInt() && (distance1 <= width || distance2 <= width)) {
+                    found = true
+                    keyToRemove = key
+                }
+            } else if (action is Line) {
+                val q: Line = action
+                val distance = sqrt((q.x.toDouble() - x.toDouble()).pow(2.0) + (q.y.toDouble() - y.toDouble()).pow(2.0))
+                if (distance <= width && value.color != 0xFFFFFFFF.toInt()) {
+                    found = true
+                    keyToRemove = key
+                }
+            }
+        }
+    }
+    if(found) {
+        mPaths.remove(keyToRemove)
+        invalidate()
+    }
+//        val point = FloatPoint(x, y)
+//        println("Checking point: $point")
+//        mPaths.forEach { (myPath, paintOptions) ->
+//
+//            println(myPath.points)
+//            if (myPath.points.any{ it.isInBounds(point) }) {
+//                println("removing path!")
+//                mPaths.remove(myPath)
+//            }
+//        }
+        invalidate()
+    }
 
     fun setCap(cap: Paint.Cap) {
         mPaintOptions.strokeCap = cap

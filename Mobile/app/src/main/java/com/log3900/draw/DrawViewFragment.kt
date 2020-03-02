@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.view_draw_color_palette.*
 // and https://android.jlelse.eu/a-guide-to-drawing-in-android-631237ab6e28
 
 class DrawViewFragment : Fragment() {
-    lateinit var drawView: DrawView
+    lateinit var drawView: DrawViewBase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,16 +85,15 @@ class DrawViewFragment : Fragment() {
 
         draw_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
-            // TODO: Change draw mode...
             drawView.setDrawMode(DrawMode.DRAW)
         }
         remove_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
             // TODO: Change draw mode...
+            drawView.setDrawMode(DrawMode.REMOVE)
         }
         erase_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
-            // TODO: Change draw mode...
             drawView.setDrawMode(DrawMode.ERASE)
         }
 
@@ -102,19 +101,17 @@ class DrawViewFragment : Fragment() {
         circle_tip_button.isPressed = true
         circle_tip_button.setOnClickListener {
             updateTipButtonPressed(it)
-            // TODO: Change draw mode...
             drawView.setCap(Paint.Cap.ROUND)
         }
         square_tip_button.setOnClickListener {
             updateTipButtonPressed(it)
-            // TODO: Change draw mode...
             drawView.setCap(Paint.Cap.SQUARE)
         }
 
-        adjust_width_button.setOnClickListener {
-            // TODO: Change draw mode...
-            drawView.setStrokeWidth(15f)
-        }
+//        adjust_width_button.setOnClickListener {
+//            // TODO: Change draw mode...
+//            drawView.setStrokeWidth(15f)
+//        }
     }
 
     private fun setUpWidthSeekbar() {

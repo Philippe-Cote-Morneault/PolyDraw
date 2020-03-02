@@ -9,7 +9,7 @@ package com.log3900.draw.divyanshuwidget
 import android.graphics.Path
 import java.io.Writer
 
-class Quad(private val x1: Float, private val y1: Float, private val x2: Float, private val y2: Float) :
+class Quad(val x1: Float, val y1: Float, val x2: Float, val y2: Float) :
     Action {
 
     override fun perform(path: Path) {
