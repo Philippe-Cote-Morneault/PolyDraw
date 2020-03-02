@@ -46,12 +46,14 @@ class SocketService : Service() {
         sendMessage(event, MoshiPack().jsonToMsgpack(data).readByteArray())
     }
 
-    fun subscribeToMessage(event: Event, handler: Handler) {
+    fun subscribeToMessage(event: Event, handler: Handler): Handler {
         if (!messageSubscribers.containsKey(event)) {
             messageSubscribers[event] = ArrayList()
         }
 
         messageSubscribers[event]?.add(handler)
+
+        return handler
     }
 
     fun subscribeToEvent(event: SocketEvent, handler: Handler) {
@@ -98,8 +100,20 @@ class SocketService : Service() {
         }
     }
 
-    fun unsubscribeFromEvent(event: SocketEvent, handler: Handler) {
+    fun unsubscribeFromMessage(messageType: Event, handler: Handler) {
+        messageSubscribers[messageType]?.forEach {
+            if (it == handler) {
+                messageSubscribers[messageType]?.remove(it)
+            }
+        }
+    }
 
+    fun unsubscribeFromEvent(eventType: SocketEvent, handler: Handler) {
+        eventSubscribers[eventType]?.forEach {
+            if (it == handler) {
+                eventSubscribers[eventType]?.remove(it)
+            }
+        }
     }
 
     private fun onMessageRead(message: android.os.Message) {
