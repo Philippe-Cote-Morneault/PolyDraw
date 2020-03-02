@@ -66,7 +66,6 @@ class MonitoringService : Service() {
     }
 
     override fun onDestroy() {
-        socketService = null
         EventBus.getDefault().unregister(this)
         socketService?.unsubscribeFromEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
         socketService?.unsubscribeFromMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
@@ -74,6 +73,8 @@ class MonitoringService : Service() {
 
         socketMessageHandler = null
         socketEventHandler = null
+
+        socketService = null
         super.onDestroy()
     }
 
