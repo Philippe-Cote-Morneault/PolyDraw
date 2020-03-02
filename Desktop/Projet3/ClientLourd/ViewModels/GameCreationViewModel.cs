@@ -302,6 +302,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
+                CurrentCanvas.Strokes.Clear();
                 await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
             }
