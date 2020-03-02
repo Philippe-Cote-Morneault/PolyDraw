@@ -4,6 +4,7 @@ import android.content.Intent
 import android.media.Image
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -196,5 +197,10 @@ open class MainActivity : AppCompatActivity() {
                 onUnreadMessagesChanged(event.data as Int)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }
