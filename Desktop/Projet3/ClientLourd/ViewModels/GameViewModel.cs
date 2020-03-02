@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
@@ -17,6 +18,7 @@ namespace ClientLourd.ViewModels
         private DateTime _time;
         private Timer _timer;
         private int _healthPoint;
+        private ObservableCollection<Player> _players;
         public GameViewModel()
         {
             InitTimer();
@@ -43,7 +45,6 @@ namespace ClientLourd.ViewModels
                     User = new User("test4", "4"),
                 },
             };
-            NotifyPropertyChanged(nameof(Players));
         }
 
         private void InitTimer()
@@ -51,7 +52,7 @@ namespace ClientLourd.ViewModels
             Time = DateTime.MinValue.AddMinutes(1);
             _timer = new Timer(1000);
             _timer.Elapsed += (sender, args) => { 
-                Time = Time.AddSeconds(-1);
+                Time = Time.AddSeconds(-5);
                 if(Time == DateTime.MinValue)
                 {
                     _timer.Stop();
@@ -64,9 +65,16 @@ namespace ClientLourd.ViewModels
         {
             get => Players.FirstOrDefault(p => p.IsDrawing);
         }
-        
-        public ObservableCollection<Player> Players { get; set; }
-        
+
+        public ObservableCollection<Player> Players
+        {
+            get => new ObservableCollection<Player>(_players.OrderByDescending(p => p.Score)); 
+            set
+            {
+                _players = value;
+                NotifyPropertyChanged();
+            }
+        }
         
         public char[] Guess
         {
