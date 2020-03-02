@@ -20,10 +20,10 @@ import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.util.*
 
-class LoginPresenter(var loginView: LoginView) : Presenter {
+class LoginPresenter(var loginView: LoginView?) : Presenter {
 
     fun authenticate(username: String, password: String) {
-        loginView.showProgresBar()
+        loginView?.showProgresBar()
 
         val authJson = JsonObject()
         authJson.addProperty("Username", username)
@@ -144,38 +144,38 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
     }
 
     private fun handleErrorAuth(error: String) {
-        loginView.showErrorDialog("Authentication error", error, null, null)
-        loginView.hideProgressBar()
+        loginView?.showErrorDialog("Authentication error", error, null, null)
+        loginView?.hideProgressBar()
     }
 
     fun startMainActivity() {
-        loginView.navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        loginView?.navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 
     fun validateUsername(username: String) {
         if (!Validator.validateUsername(username)) {
-            loginView.setUsernameError("Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)")
+            loginView?.setUsernameError("Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)")
         } else {
-            loginView.clearUsernameError()
+            loginView?.clearUsernameError()
         }
     }
 
     fun validatePassword(password: String) {
         if (!Validator.validatePassword(password)) {
-            loginView.setPasswordError("Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)")
+            loginView?.setPasswordError("Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)")
         } else {
-            loginView.clearPasswordError()
+            loginView?.clearPasswordError()
         }
     }
 
     override fun destroy() {
-
+        loginView = null
     }
 
     override fun resume() {
         if (SocketService.instance?.getSocketState() != State.CONNECTED) {
             val socketConnectionDialog = ProgressDialog()
-            loginView.showProgressDialog(socketConnectionDialog)
+            loginView?.showProgressDialog(socketConnectionDialog)
             val timer = object: CountDownTimer(60000, 15000) {
                 override fun onTick(millisUntilFinished: Long) {
                     if (SocketService.instance?.getSocketState() != State.CONNECTED) {
@@ -184,12 +184,12 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                 }
 
                 override fun onFinish() {
-                    loginView.hideProgressDialog(socketConnectionDialog)
-                    loginView.showErrorDialog("Connection Error",
+                    loginView?.hideProgressDialog(socketConnectionDialog)
+                    loginView?.showErrorDialog("Connection Error",
                         "Could not establish connection to server after 4 attempts. The application will now close.",
                         null,
                         {_, _ ->
-                            loginView.closeView()
+                            loginView?.closeView()
                         })
                 }
             }
