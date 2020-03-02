@@ -11,11 +11,18 @@ import android.os.Message
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.log3900.MainApplication
+import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
+import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.MessageRepository
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.ui.dialogs.ErrorDialog
 import com.log3900.socket.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class MonitoringService : Service() {
@@ -52,6 +59,8 @@ class MonitoringService : Service() {
             })
             Looper.loop()
         }).start()
+
+        EventBus.getDefault().register(this)
     }
 
     override fun onDestroy() {
@@ -100,8 +109,23 @@ class MonitoringService : Service() {
         MainApplication.instance.startService(ChatManager::class.java)
     }
 
+    private fun onLogout(){
+        MainApplication.instance.stopService(ChatManager::class.java)
+        MainApplication.instance.stopService(ChannelRepository::class.java)
+        MainApplication.instance.stopService(MessageRepository::class.java)
+    }
+
     fun displayErro() {
 
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.LOGOUT -> {
+                onLogout()
+            }
+        }
     }
 
     inner class MonitoringBinder : Binder() {

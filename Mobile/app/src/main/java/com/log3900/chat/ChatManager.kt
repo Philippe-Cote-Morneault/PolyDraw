@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelManager
 import com.log3900.chat.Message.MessageManager
@@ -17,9 +18,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.lang.Exception
 import java.util.*
 import java.util.concurrent.CountDownLatch
+import kotlin.NoSuchElementException
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -78,17 +82,42 @@ class ChatManager : Service() {
     override fun onDestroy() {
         super.onDestroy()
         instance = null
+        isReady = false
     }
 
-    fun setActiveChannel(channel: Channel) {
+    fun openChat() {
+        if (channelManager?.previousChannel != null) {
+            setActiveChannel(channelManager?.previousChannel)
+        } else {
+            setActiveChannel(channelManager?.getDefaultChannel())
+        }
+    }
+
+    fun closeChat() {
+        channelManager?.previousChannel = channelManager?.activeChannel
+        setActiveChannel(null)
+    }
+
+    fun setActiveChannel(channel: Channel?) {
+        if (channel != null) {
+            channelManager?.previousChannel = channel
+        }
         channelManager?.changeActiveChannel(channel)
     }
 
-    fun getActiveChannel(): Channel {
-        return channelManager?.activeChannel!!
+    fun getActiveChannel(): Channel? {
+        return channelManager?.activeChannel
     }
 
-    fun getCurrentChannelMessages(): Single<LinkedList<ChatMessage>> = messageManager?.getMessages(channelManager?.activeChannel!!)!!
+    fun getCurrentChannelMessages(): Single<LinkedList<ChatMessage>>{
+        if (channelManager?.activeChannel != null) {
+            return messageManager?.getMessages(channelManager?.activeChannel!!)!!
+        } else {
+            return Single.create {
+                it.onError(NoSuchElementException())
+            }
+        }
+    }
 
     fun sendMessage(message: String) {
         messageManager?.sendMessage(channelManager?.activeChannel?.ID!!, message)
@@ -131,7 +160,6 @@ class ChatManager : Service() {
         isReady = true
         isReadySignal.onNext(true)
     }
-
 
     inner class ChatManagerBinder : Binder() {
         fun getService(): ChatManager = this@ChatManager
