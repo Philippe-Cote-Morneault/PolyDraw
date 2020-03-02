@@ -88,6 +88,8 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 lastName,
                 tokenData.session,
                 tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
+                0,
+                -1,
                 false
             )
         ).subscribe {

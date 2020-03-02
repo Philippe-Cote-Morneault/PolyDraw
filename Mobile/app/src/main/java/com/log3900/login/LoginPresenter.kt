@@ -216,6 +216,8 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             json.get("LastName").asString,
             "",     // Session token and bearer token are not important right now
             "",
+            0,
+            -1,
             false
         )
     }

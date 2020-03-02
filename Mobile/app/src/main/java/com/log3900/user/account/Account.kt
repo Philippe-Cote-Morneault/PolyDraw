@@ -14,5 +14,7 @@ data class Account(
     val lastname:       String,
     var sessionToken:   String,
     var bearerToken:    String,
+    var themeID:        Int,
+    var languageID:     Int,
     var tutorialDone: Boolean
 )
