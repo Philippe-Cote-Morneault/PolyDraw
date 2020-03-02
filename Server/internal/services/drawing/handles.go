@@ -139,7 +139,7 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 			color:     path.Color,
 			isEraser:  path.Eraser,
 			isSquared: path.Brush == "squared",
-			brushSize: path.BrushSize,
+			brushSize: byte(path.BrushSize),
 			width:     uint16(width),
 			height:    uint16(height),
 		}

@@ -33,7 +33,7 @@ type XMLPath struct {
 	Color     byte      `xml:"http://example.org/polydraw color,attr"`
 	Eraser    bool      `xml:"http://example.org/polydraw eraser,attr"`
 	Brush     string    `xml:"http://example.org/polydraw brush,attr"`
-	BrushSize byte      `xml:"http://example.org/polydraw brushsize,attr"`
+	BrushSize int       `xml:"http://example.org/polydraw brushsize,attr"`
 	ID        uuid.UUID `xml:"id,attr"`
 
 	FirstCommand svgparser.Command `xml:"-"`
