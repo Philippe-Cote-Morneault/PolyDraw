@@ -42,6 +42,12 @@
                 <e p="Chat.g.cs" t="Include" />
                 <e p="Conversation.g.cs" t="Include" />
                 <e p="Editor.g.cs" t="Include" />
+                <e p="Game" t="Include">
+                  <e p="EditorZone.g.cs" t="Include" />
+                  <e p="GamePanel.g.cs" t="Include" />
+                  <e p="GameStatus.g.cs" t="Include" />
+                  <e p="TopBar.g.cs" t="Include" />
+                </e>
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
                 <e p="Tutorial" t="Include">
@@ -151,6 +157,7 @@
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
             <e p="EditingModeConverter.cs" t="Include" />
+            <e p="HealthPointConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />

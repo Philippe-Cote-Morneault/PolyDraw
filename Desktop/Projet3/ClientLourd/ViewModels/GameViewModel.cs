@@ -17,10 +17,20 @@ namespace ClientLourd.ViewModels
         private string _artistID;
         private DateTime _time;
         private Timer _timer;
+        private int _healthPoint;
         public GameViewModel()
         {
             InitTimer();
+            HealthPoint = 3;
             Guess = new char[20];
+            Players = new ObservableCollection<User>()
+            {
+                new User("test", "2"),
+                new User("test2", "2"),
+                new User("test3", "2"),
+                new User("test4", "2"),
+            };
+            NotifyPropertyChanged(nameof(Players));
         }
 
         private void InitTimer()
@@ -39,10 +49,10 @@ namespace ClientLourd.ViewModels
 
         public User Artist
         {
-            get => Users.FirstOrDefault(u => u.ID == _artistID);
+            get => Players.FirstOrDefault(u => u.ID == _artistID);
         }
         
-        public ObservableCollection<User> Users { get; set; }
+        public ObservableCollection<User> Players { get; set; }
         
         
         public char[] Guess
@@ -61,6 +71,16 @@ namespace ClientLourd.ViewModels
             set
             {
                 _time = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int HealthPoint
+        {
+            get => _healthPoint;
+            set
+            {
+                _healthPoint = value;
                 NotifyPropertyChanged();
             }
         }

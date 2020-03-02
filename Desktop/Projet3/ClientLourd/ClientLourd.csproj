@@ -163,6 +163,7 @@
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
+    <Compile Include="Utilities\Converters\HealthPointConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />

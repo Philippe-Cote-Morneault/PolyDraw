@@ -9,81 +9,31 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="5">
         <materialDesign:Card>
-            <StackPanel Orientation="Vertical">
-                <ListView>
-                    <ListViewItem >
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="#1" FontSize="24" Margin="5"/>
-                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                    <materialDesign:Chip.Style>
-                                        <Style TargetType="materialDesign:Chip">
-                                            <Setter Property="Background" Value="WhiteSmoke" />
-                                        </Style>
-                                    </materialDesign:Chip.Style>
-                                    <materialDesign:Chip.Icon>
-                                        <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
-                                    </materialDesign:Chip.Icon>
-                                    <materialDesign:Chip.Content>
-                                        MrClean
-                                    </materialDesign:Chip.Content>
-                                </materialDesign:Chip>
-                                <materialDesign:PackIcon Kind="Check" VerticalAlignment="Center" Foreground="Green"></materialDesign:PackIcon>
+            <StackPanel>
+                <ListView AlternationCount="{Binding Guess.Length}" x:Name="List" ItemsSource="{Binding Players}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ElementName=List, Path=(ListView.AlternationIndex)}"
+                                         FontSize="24" Margin="5"/>
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding Username}">
+                                        <materialDesign:Chip.Style>
+                                            <Style TargetType="materialDesign:Chip">
+                                                <Setter Property="Background" Value="WhiteSmoke" />
+                                            </Style>
+                                        </materialDesign:Chip.Style>
+                                        <materialDesign:Chip.Icon>
+                                            <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
+                                        </materialDesign:Chip.Icon>
+                                    </materialDesign:Chip>
+                                    <materialDesign:PackIcon Kind="Check" VerticalAlignment="Center" Foreground="Green"></materialDesign:PackIcon>
+                                </StackPanel>
+                                <TextBlock HorizontalAlignment="Center" Text="score: 450"></TextBlock>
+                                <Separator/>
                             </StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="score: 450"></TextBlock>
-                            <Separator/>
-                        </StackPanel>
-                    </ListViewItem>
-                    
-                    
-                    <ListViewItem >
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="#2" FontSize="24" Margin="5"/>
-                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                    <materialDesign:Chip.Style>
-                                        <Style TargetType="materialDesign:Chip">
-                                            <Setter Property="Background" Value="WhiteSmoke" />
-                                        </Style>
-                                    </materialDesign:Chip.Style>
-                                    <materialDesign:Chip.Icon>
-                                        <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
-                                    </materialDesign:Chip.Icon>
-                                    <materialDesign:Chip.Content>
-                                        MrClean
-                                    </materialDesign:Chip.Content>
-                                </materialDesign:Chip>
-                                <materialDesign:PackIcon Kind="Check" VerticalAlignment="Center" Foreground="Green"></materialDesign:PackIcon>
-                            </StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="score: 450"></TextBlock>
-                            <Separator/>
-                        </StackPanel>
-                    </ListViewItem>
-                    
-                    
-                    <ListViewItem >
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="#3" FontSize="24" Margin="5"/>
-                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                                    <materialDesign:Chip.Style>
-                                        <Style TargetType="materialDesign:Chip">
-                                            <Setter Property="Background" Value="WhiteSmoke" />
-                                        </Style>
-                                    </materialDesign:Chip.Style>
-                                    <materialDesign:Chip.Icon>
-                                        <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
-                                    </materialDesign:Chip.Icon>
-                                    <materialDesign:Chip.Content>
-                                        Mrnet
-                                    </materialDesign:Chip.Content>
-                                </materialDesign:Chip>
-                                <materialDesign:PackIcon Kind="Pen" VerticalAlignment="Center" ></materialDesign:PackIcon>
-                            </StackPanel>
-                            <TextBlock HorizontalAlignment="Center" Text="score: 200"></TextBlock>
-                            <Separator/>
-                        </StackPanel>
-                    </ListViewItem>
+                        </DataTemplate>     
+                    </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
         </materialDesign:Card>
