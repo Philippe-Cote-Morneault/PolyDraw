@@ -26,7 +26,7 @@ func InitTable() {
 
 //EucledianDist calculates the distance between two points
 func EucledianDist(a *model.Point, b *model.Point) float64 {
-	return math.Sqrt(math.Pow(float64(a.X-b.X), 2) + math.Pow(float64(a.Y-b.Y), 2))
+	return math.Sqrt(pow2(float64(a.X-b.X)) + pow2(float64(a.Y-b.Y)))
 }
 
 //BezierLength calculates the length of a bezier curve
