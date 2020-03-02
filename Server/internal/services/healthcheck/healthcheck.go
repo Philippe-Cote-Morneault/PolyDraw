@@ -34,8 +34,8 @@ func (h *HealthCheck) Init() {
 
 //Start the messenger service
 func (h *HealthCheck) Start() {
-	// log.Println("[Healthcheck] -> Starting service")
-	// go h.listen()
+	log.Println("[Healthcheck] -> Starting service")
+	go h.listen()
 }
 
 //Shutdown the messenger service
