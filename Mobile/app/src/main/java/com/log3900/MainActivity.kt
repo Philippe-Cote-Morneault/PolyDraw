@@ -21,6 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.andremion.counterfab.CounterFab
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.log3900.chat.Message.EventMessage
 import com.log3900.draw.DrawViewFragment
 import com.log3900.login.LoginActivity
 import com.log3900.profile.ProfileFragment
@@ -141,6 +142,7 @@ open class MainActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             finish()
+            EventBus.getDefault().post(MessageEvent(EventType.LOGOUT, ""))
             true
         })
     }
