@@ -175,4 +175,9 @@ class ChannelListFragment : Fragment(), ChannelListView {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        channelListPresenter.destroy()
+    }
+
 }
