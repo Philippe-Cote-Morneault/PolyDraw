@@ -89,7 +89,7 @@ func (f *fsm) isSpace(char rune) bool {
 }
 
 func (f *fsm) isNumber(char rune) bool {
-	return unicode.IsDigit(char) || char == '-' || char == '.' || char == 'E'
+	return unicode.IsDigit(char) || char == '-' || char == '.' || char == 'E' || char == 'e'
 }
 
 //parseLetter add the letter to the state
