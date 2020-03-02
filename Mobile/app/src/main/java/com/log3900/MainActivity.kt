@@ -21,6 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.andremion.counterfab.CounterFab
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.EventMessage
 import com.log3900.draw.DrawViewFragment
 import com.log3900.login.LoginActivity
@@ -35,6 +36,7 @@ import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.ui.home.HomeFragment
 import com.log3900.user.account.AccountRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -44,11 +46,23 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var hideShowMessagesFAB: CounterFab
+    private lateinit var chatManager: ChatManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        ChatManager.getInstance()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    chatManager = it
+                },
+                {
+
+                }
+            )
 
         setupUI()
 
@@ -59,8 +73,14 @@ open class MainActivity : AppCompatActivity() {
         hideShowMessagesFAB.setOnClickListener{
             var chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
             when(chatView!!.visibility){
-                View.INVISIBLE -> chatView.visibility = View.VISIBLE
-                View.VISIBLE -> chatView.visibility = View.INVISIBLE
+                View.INVISIBLE -> {
+                    chatManager.openChat()
+                    chatView.visibility = View.VISIBLE
+                }
+                View.VISIBLE -> {
+                    chatView.visibility = View.INVISIBLE
+                    chatManager.closeChat()
+                }
             }
         }
 
@@ -118,6 +138,7 @@ open class MainActivity : AppCompatActivity() {
         if (ThemeManager.hasActivityThemeChanged(this)) {
             println("Recreating activity")
             this.recreate()
+            chatManager.openChat()
         }
     }
 
