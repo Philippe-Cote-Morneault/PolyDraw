@@ -70,7 +70,7 @@ class ChannelListPresenter : Presenter {
                 onChannelDeleted(event.data as UUID)
             }
             EventType.ACTIVE_CHANNEL_CHANGED -> {
-                onActiveChannelChanged(event.data as Channel)
+                onActiveChannelChanged(event.data as Channel?)
             }
             EventType.RECEIVED_MESSAGE -> {
                 onMessageReceived(event.data as ChatMessage)
