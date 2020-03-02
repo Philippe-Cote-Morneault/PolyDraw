@@ -18,7 +18,7 @@ type BezierParams struct {
 	EndPoint        model.Point
 }
 
-var gapPoints float32 = 1
+var gapPoints float32 = 0.6
 
 func getNbParameters(command rune) int {
 	switch command {
@@ -26,9 +26,11 @@ func getNbParameters(command rune) int {
 		return 2
 	case 'c':
 		return 6
-	default:
-		log.Printf("Format contains invalid command \"%c\"", command)
+	case 'z':
 		return 0
+	default:
+		log.Printf("(strokegenerator): Format contains invalid command \"%c\"", command)
+		return -1
 	}
 }
 
@@ -81,7 +83,7 @@ func generateForLinear(points *[]model.Point, start *model.Point, end *model.Poi
 
 	intercept := start.Y - slope*start.X
 	offsetX := float32(math.Cos(math.Atan(float64(slope)))) * gapPoints
-	for x := start.X; x < lastX; x += offsetX {
+	for x := currentX; x < lastX; x += offsetX {
 		y := slope*x + intercept
 		*points = append(*points, model.Point{X: x, Y: y})
 	}
@@ -95,7 +97,7 @@ func generateForBezier(points *[]model.Point, params *BezierParams) {
 	interval := getIntervalBezier(params)
 	for t := float32(0); t < 1; t += interval {
 		*points = append(*points, model.Point{X: evaluateBezier(t, params.StartPoint.X, params.InfluencePoint1.X, params.InfluencePoint2.X, params.EndPoint.X),
-			Y: -evaluateBezier(t, params.StartPoint.Y, params.InfluencePoint1.Y, params.InfluencePoint2.Y, params.EndPoint.Y)})
+			Y: evaluateBezier(t, params.StartPoint.Y, params.InfluencePoint1.Y, params.InfluencePoint2.Y, params.EndPoint.Y)})
 	}
 }
 
@@ -111,8 +113,15 @@ func getIntervalBezier(params *BezierParams) float32 {
 func ExtractPointsStrokes(commands *[]svgparser.Command) []model.Point {
 	var points []model.Point
 	currentPoint := getStartPoint(commands)
+	beginPoint := currentPoint
+	isSuccessiveM := false
 	for _, command := range *commands {
 		commandLower := unicode.ToLower(command.Command)
+		if commandLower == 'z' {
+			generateForLinear(&points, &currentPoint, &beginPoint)
+			currentPoint = beginPoint
+			continue
+		}
 		if len(command.Parameters)%getNbParameters(commandLower) == 0 {
 			for i := 0; i < len(command.Parameters); i++ {
 				offsetX := float32(0)
@@ -122,15 +131,28 @@ func ExtractPointsStrokes(commands *[]svgparser.Command) []model.Point {
 					offsetY = currentPoint.Y
 				}
 				switch commandLower {
+
 				case 'm':
-					currentPoint = model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
+					beginPoint = currentPoint
+					if isSuccessiveM {
+						lastPoint := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
+						generateForLinear(&points, &currentPoint, &lastPoint)
+						currentPoint = lastPoint
+					} else {
+						currentPoint = model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
+					}
+					isSuccessiveM = true
 					i++
 				case 'l':
+					isSuccessiveM = false
+					beginPoint = currentPoint
 					lastPoint := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
 					generateForLinear(&points, &currentPoint, &lastPoint)
 					currentPoint = lastPoint
 					i++
 				case 'c':
+					isSuccessiveM = false
+					beginPoint = currentPoint
 					infl1 := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
 					infl2 := model.Point{X: command.Parameters[i+2] + offsetX, Y: command.Parameters[i+3] + offsetY}
 					endPoint := model.Point{X: command.Parameters[i+4] + offsetX, Y: command.Parameters[i+5] + offsetY}
