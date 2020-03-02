@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelManager
 import com.log3900.chat.Message.MessageManager
@@ -78,6 +79,7 @@ class ChatManager : Service() {
     override fun onDestroy() {
         super.onDestroy()
         instance = null
+        isReady = false
     }
 
     fun setActiveChannel(channel: Channel) {
