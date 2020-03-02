@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/xml"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 )
