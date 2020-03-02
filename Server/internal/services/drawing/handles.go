@@ -109,7 +109,6 @@ func sendDummyDrawing(socketID uuid.UUID) {
 }
 
 func sendDrawing(socketID uuid.UUID, svgKey string) {
-	//TODO: Download Image
 	file, err := datastore.GetFile(svgKey)
 	if err != nil {
 		log.Println(err)
