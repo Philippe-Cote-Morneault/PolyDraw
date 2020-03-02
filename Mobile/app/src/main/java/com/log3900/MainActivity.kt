@@ -1,7 +1,6 @@
 package com.log3900
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -14,17 +13,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.andremion.counterfab.CounterFab
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.chat.ChatManager
-import com.log3900.chat.Message.EventMessage
-import com.log3900.draw.DrawViewFragment
 import com.log3900.login.LoginActivity
 import com.log3900.profile.ProfileFragment
 import com.log3900.settings.SettingsActivity
@@ -35,7 +32,6 @@ import com.log3900.shared.architecture.MessageEvent
 
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
-import com.log3900.ui.home.HomeFragment
 import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
@@ -48,6 +44,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var hideShowMessagesFAB: CounterFab
     private lateinit var chatManager: ChatManager
+    private lateinit var navigationController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
@@ -88,35 +85,38 @@ open class MainActivity : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
+        navigationController = findNavController(R.id.nav_host_fragment)
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home
+                R.id.navigation_main_home_fragment,
+                R.id.navigation_main_profile_fragment,
+                R.id.navigation_main_draw_view_fragment
             ), drawerLayout)
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(navigationController, appBarConfiguration)
 
-        navView.setupWithNavController(navController)
-        navView.menu.findItem(R.id.nav_home).setOnMenuItemClickListener {
-            startFragment("HOME_VIEW_FRAGMENT", HomeFragment())
+        navView.setupWithNavController(navigationController)
+        navView.menu.findItem(R.id.menu_item_activity_main_drawer_home).setOnMenuItemClickListener {
+            navigationController.popBackStack(navigationController.currentDestination!!.id, true)
+            navigationController.navigate(R.id.navigation_main_home_fragment)
             true
         }
 
-        navView.menu.findItem(R.id.nav_draw).setOnMenuItemClickListener {
-            startFragment("DRAW_VIEW_FRAGMENT", DrawViewFragment())
+        navView.menu.findItem(R.id.menu_item_activity_main_drawer_draw).setOnMenuItemClickListener {
+            navigationController.popBackStack(navigationController.currentDestination!!.id, true)
+            navigationController.navigate(R.id.navigation_main_draw_view_fragment)
             true
         }
 
-        navView.menu.findItem(R.id.logoutButton).setOnMenuItemClickListener { item: MenuItem? ->
-            when (item!!.itemId) {
-                R.id.logoutButton -> logout()
-            }
+        navView.menu.findItem(R.id.menu_item_activity_main_drawer_logout).setOnMenuItemClickListener {
+            logout()
             true
         }
 
-        navView.menu.findItem(R.id.nav_profile).setOnMenuItemClickListener {
-            startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
+        navView.menu.findItem(R.id.menu_item_activity_main_drawer_profile).setOnMenuItemClickListener {
+            navigationController.popBackStack(navigationController.currentDestination!!.id, true)
+            navigationController.navigate(R.id.navigation_main_profile_fragment)
             true
         }
 
@@ -137,16 +137,13 @@ open class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (ThemeManager.hasActivityThemeChanged(this)) {
-            println("Recreating activity")
             this.recreate()
             chatManager.openChat()
         }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        return navigationController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     private fun setupUI() {
@@ -169,13 +166,14 @@ open class MainActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        logout()
-    }
+    //override fun onBackPressed() {
+    //    super.onBackPressed()
+        //logout()
+    //}
 
     private fun startFragment(tag: String, fragment: Fragment) {
         drawerLayout.closeDrawer(GravityCompat.START)
+
         val fragmentManager = supportFragmentManager
         if (fragmentManager.findFragmentByTag(tag) != null)
             return
@@ -200,7 +198,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         EventBus.getDefault().unregister(this)
+        super.onDestroy()
     }
 }
