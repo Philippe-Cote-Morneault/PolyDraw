@@ -179,6 +179,30 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.ServerMessage:
                             OnServerMessage(this, new SocketErrorEventArgs(data));
                             break;
+                        case SocketMessageTypes.ReadyToStart:
+                            break;
+                        case SocketMessageTypes.MatchStarted:
+                            break;
+                        case SocketMessageTypes.MatchEnd:
+                            break;
+                        case SocketMessageTypes.PlayerLeftMatch:
+                            break;
+                        case SocketMessageTypes.NewDrawer:
+                            break;
+                        case SocketMessageTypes.YourTurnToDraw:
+                            break;
+                        case SocketMessageTypes.TimesUp:
+                            break;
+                        case SocketMessageTypes.MatchSync:
+                            break;
+                        case SocketMessageTypes.GuessResponse:
+                            break;
+                        case SocketMessageTypes.PlayerGuessed:
+                            break;
+                        case SocketMessageTypes.MatchCheckPoint:
+                            break;
+                        
+                        
                         default:
                             throw new InvalidDataException();
                     }
