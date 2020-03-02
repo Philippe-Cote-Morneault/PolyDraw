@@ -51,13 +51,11 @@ func (h *HealthCheck) listen() {
 		select {
 		case data := <-h.newConnection:
 			if socketID, ok := data.(uuid.UUID); ok {
-				//TODO handle
 				//Start a new function to handle the connection
 				go h.handleNewHost(socketID)
 			}
 		case data := <-h.connectionClosed:
 			if socketID, ok := data.(uuid.UUID); ok {
-				//TODO handle
 				go h.handleCloseHost(socketID)
 			}
 		case data := <-h.checkReceived:

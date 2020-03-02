@@ -253,7 +253,6 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 					return
 				}
 
-				//TODO make sure that we delete any message associated with the channel
 				for socketID := range h.channelsConnections[uuid.Nil] {
 					go socket.SendRawMessageToSocketID(rawMessage, socketID)
 				}

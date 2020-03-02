@@ -91,7 +91,6 @@ func SendRawMessageToSocketID(message RawMessage, id uuid.UUID) error {
 	if clientConnection, ok := m.clients[id]; ok {
 		_, err := clientConnection.socket.Write(message.ToBytesSlice())
 		if err != nil {
-			// TODO: Handle error when writing
 			return err
 		}
 	}
@@ -121,6 +120,5 @@ func RemoveClientFromID(clientID uuid.UUID) error {
 		return fmt.Errorf("The clientSocketManger was not instanced")
 	}
 	m.unregisterClient(clientID)
-	//TODO error management
 	return nil
 }

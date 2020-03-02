@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
+	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"log"
 
 	"github.com/spf13/viper"
@@ -21,6 +25,7 @@ import (
 func main() {
 	config.Init()
 	model.DBConnect()
+	geometry.InitTable()
 
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}
@@ -63,4 +68,7 @@ func registerServices() {
 	service.Add(&logger.Logger{})
 	service.Add(&auth.Auth{})
 	service.Add(&healthcheck.HealthCheck{})
+	service.Add(&redisservice.RedisService{})
+	service.Add(&potrace.Potrace{})
+	service.Add(&drawing.Drawing{})
 }

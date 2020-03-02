@@ -55,8 +55,6 @@ func (l *Logger) listen() {
 			if ok {
 				log.Printf("[Logger] -> Socket data received: %s | %d | %d | %#x", message.SocketID, message.Payload.MessageType, message.Payload.Length, message.Payload.Bytes)
 			}
-
-			//fmt.Printf("data: %s | %#x\n", data, data)
 		case id := <-l.connected:
 			log.Printf("[Logger] -> connected id: %s", id)
 		case id := <-l.close:
