@@ -145,12 +145,22 @@ class MessageRepository : Service() {
         }
     }
 
-    fun subscribe(event: Event, handler: Handler) {
+    fun subscribe(event: Event, handler: Handler): Handler {
         if (!subscribers.containsKey(event)) {
             subscribers[event] = ArrayList()
         }
 
         subscribers[event]?.add(handler)
+
+        return handler
+    }
+
+    fun unsubscribe(event: Event, handler: Handler) {
+        subscribers[event]?.forEach {
+            if (it == handler) {
+                subscribers[event]?.remove(it)
+            }
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -183,6 +193,7 @@ class MessageRepository : Service() {
     override fun onDestroy() {
         super.onDestroy()
         socketService = null
+        instance = null
     }
 
     private fun receiveMessage(message: Message) {
