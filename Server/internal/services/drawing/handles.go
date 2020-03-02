@@ -20,6 +20,7 @@ import (
 
 //MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
+const maxPointsperPacket = 16000
 
 //Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
@@ -146,7 +147,22 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
-		payloads = append(payloads, stroke.Marshall())
+		if len(stroke.points) > maxPointsperPacket {
+			s := stroke.clone()
+			index := 0
+			iterations := int(len(stroke.points) / maxPointsperPacket)
+			for i := 0; i < iterations; i++ {
+				if maxPointsperPacket+index >= len(stroke.points) {
+					s.points = stroke[index:]
+				} else {
+					s.points = stroke[index:maxPointsperPacket]
+				}
+				payloads = append(payloads, stroke.Marshall())
+				index += maxPointsperPacket
+			}
+		} else {
+			payloads = append(payloads, stroke.Marshall())
+		}
 	}
 	for _, payload := range payloads {
 		packet := socket.RawMessage{
@@ -200,23 +216,17 @@ func (s *Stroke) Marshall() []byte {
 	return response
 }
 
-func marshallPoint(p geometry.Point) []byte {
-	//Round the number up if larger than uint16 max
-	round(&p)
-	x := uint16(p.X)
-	y := uint16(p.Y)
-	xArray := make([]byte, 2)
-	yArray := make([]byte, 2)
-
-	binary.BigEndian.PutUint16(xArray, x)
-	binary.BigEndian.PutUint16(yArray, y)
-
-	response := make([]byte, 0, 4)
-
-	response = append(response, xArray...)
-	response = append(response, yArray...)
-
-	return response
+//Marshall encode the stroke to binary
+func (s *Stroke) clone() Stroke {
+	return Stroke{
+		ID:        s.ID,
+		color:     s.Color,
+		isEraser:  s.isEraser,
+		isSquared: s.isSquared,
+		brushSize: s.brushSize,
+		width:     s.width,
+		height:    s.height,
+	}
 }
 
 func round(p *geometry.Point) {
