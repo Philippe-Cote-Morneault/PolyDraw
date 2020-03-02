@@ -83,6 +83,10 @@ class ChatManager : Service() {
         super.onDestroy()
         instance = null
         isReady = false
+        channelManager?.delete()
+        messageManager?.delete()
+        channelManager = null
+        messageManager = null
     }
 
     fun openChat() {
