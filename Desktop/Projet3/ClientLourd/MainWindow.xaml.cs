@@ -52,6 +52,7 @@ namespace ClientLourd
             mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
+            MoveChatToGamePanel();
             (Profile.DataContext as ProfileViewModel).AfterLogin();
             DialogHost.Show(new Tutorial(), "Default");
         }
@@ -73,7 +74,6 @@ namespace ClientLourd
             ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();
             DevConfigButton.IsChecked = true;
-            MoveChatToGamePanel();
         }
 
         private void MoveChatToGamePanel()
