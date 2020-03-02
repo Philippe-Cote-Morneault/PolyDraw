@@ -12,4 +12,4 @@ enum class EventType {
     LOGOUT,
 
 }
-data class MessageEvent(var type: EventType, var data: Any)
+data class MessageEvent(var type: EventType, var data: Any?)
