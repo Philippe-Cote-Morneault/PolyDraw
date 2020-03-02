@@ -15,7 +15,7 @@
         <local:TopBar DockPanel.Dock="Top"/>
         <local:GameStatus DockPanel.Dock="Left"/>
         <local:EditorZone DockPanel.Dock="Left"/>
-        <materialDesign:Card Margin="5" Name="ChatCard"  DockPanel.Dock="Right">
+        <materialDesign:Card Margin="10" Name="ChatCard"  DockPanel.Dock="Right">
         </materialDesign:Card>
     </DockPanel>
 </UserControl>

@@ -7,7 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="5">
+    <Grid Margin="10">
         <materialDesign:Card>
             <StackPanel>
                 <ListView AlternationCount="{Binding Guess.Length}" x:Name="List" ItemsSource="{Binding Players}">

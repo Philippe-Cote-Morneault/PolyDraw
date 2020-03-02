@@ -18,20 +18,26 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0">
             <materialDesign:PackIcon Foreground="Red" Visibility="{Binding Path=HealthPoint, Converter={StaticResource HealthPointConverter}, ConverterParameter=1}" Height="30" Width="30" Kind="Heart"/>
             <materialDesign:PackIcon Foreground="Red" Visibility="{Binding Path=HealthPoint, Converter={StaticResource HealthPointConverter}, ConverterParameter=2}" Height="30" Width="30" Kind="Heart"/>
             <materialDesign:PackIcon Foreground="Red" Visibility="{Binding Path=HealthPoint, Converter={StaticResource HealthPointConverter}, ConverterParameter=3}" Height="30" Width="30" Kind="Heart"/>
         </StackPanel>
         
-        <StackPanel HorizontalAlignment="Center" Grid.Column="1">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
             <materialDesign:PackIcon Kind="Clock" HorizontalAlignment="Center"></materialDesign:PackIcon>
             <TextBlock Text="{Binding Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black"/>
         </StackPanel>
         
-        <StackPanel HorizontalAlignment="Left" Grid.Column="2">
-            <TextBlock Text="Best score: 345"/>
-            <TextBlock Text="Round 2/3"/>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2">
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Draw" Width="24" Height="24"/>
+                <TextBlock FontSize="24" Text="Round 2/3"/>
+            </StackPanel>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24"/>
+                <TextBlock Text="Best score: 345" FontSize="24"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>
