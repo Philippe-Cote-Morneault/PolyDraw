@@ -222,12 +222,15 @@ class MessageRepository : Service() {
             add(KotlinJsonAdapterFactory())
         })
         val userJoinedChannelMessage = moshi.unpack(message.data) as UserJoinedChannelMessage
-        val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
-        val chatMessage = ChatMessage.fromEventMessage(messageEvent, userJoinedChannelMessage.channelID)
-        addMessageToCache(chatMessage)
-        val osMessage = android.os.Message()
-        osMessage.obj = chatMessage
-        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+
+        if (userJoinedChannelMessage.userID != AccountRepository.getInstance().getAccount().ID) {
+            val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
+            val chatMessage = ChatMessage.fromEventMessage(messageEvent, userJoinedChannelMessage.channelID)
+            addMessageToCache(chatMessage)
+            val osMessage = android.os.Message()
+            osMessage.obj = chatMessage
+            notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        }
     }
 
     private fun onUserLeftChannel(message: Message) {
@@ -237,12 +240,16 @@ class MessageRepository : Service() {
             add(KotlinJsonAdapterFactory())
         })
         val userLeftChannelMessage = moshi.unpack(message.data) as UserLeftChannelMessage
-        val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
-        val chatMessage = ChatMessage.fromEventMessage(messageEvent, userLeftChannelMessage.channelID)
-        addMessageToCache(chatMessage)
-        val osMessage = android.os.Message()
-        osMessage.obj = chatMessage
-        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        if (userLeftChannelMessage.userID == AccountRepository.getInstance().getAccount().ID) {
+            messageCache.removeEntry(userLeftChannelMessage.channelID)
+        } else {
+            val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
+            val chatMessage = ChatMessage.fromEventMessage(messageEvent, userLeftChannelMessage.channelID)
+            addMessageToCache(chatMessage)
+            val osMessage = android.os.Message()
+            osMessage.obj = chatMessage
+            notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        }
     }
     
     inner class MessageRepositoryBinder : Binder() {
