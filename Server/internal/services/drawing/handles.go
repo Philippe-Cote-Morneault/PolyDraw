@@ -20,6 +20,7 @@ import (
 
 //MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
+const maxPointsperPacket = 16000
 
 //Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
@@ -146,7 +147,22 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
-		payloads = append(payloads, stroke.Marshall())
+		if len(stroke.points) > maxPointsperPacket {
+			s := stroke.clone()
+			index := 0
+			iterations := int(len(stroke.points) / maxPointsperPacket)
+			for i := 0; i < iterations; i++ {
+				if maxPointsperPacket+index >= len(stroke.points) {
+					s.points = stroke.points[index:]
+				} else {
+					s.points = stroke.points[index:maxPointsperPacket]
+				}
+				payloads = append(payloads, stroke.Marshall())
+				index += maxPointsperPacket
+			}
+		} else {
+			payloads = append(payloads, stroke.Marshall())
+		}
 	}
 	for _, payload := range payloads {
 		packet := socket.RawMessage{
@@ -219,6 +235,19 @@ func marshallPoint(p geometry.Point) []byte {
 	response = append(response, yArray...)
 
 	return response
+}
+
+//Marshall encode the stroke to binary
+func (s *Stroke) clone() Stroke {
+	return Stroke{
+		ID:        s.ID,
+		color:     s.color,
+		isEraser:  s.isEraser,
+		isSquared: s.isSquared,
+		brushSize: s.brushSize,
+		width:     s.width,
+		height:    s.height,
+	}
 }
 
 func round(p *geometry.Point) {
