@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class ChatPresenter : Presenter {
-    private var chatView: ChatView
+    private var chatView: ChatView?
     private lateinit var messageRepository: MessageRepository
     private lateinit var chatManager: ChatManager
     private var keyboardOpened: Boolean = false
@@ -50,8 +50,8 @@ class ChatPresenter : Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    chatView.setChatMessages(it)
-                    chatView.scrollMessage()
+                    chatView?.setChatMessages(it)
+                    chatView?.scrollMessage()
                 },
                 {
 
@@ -59,9 +59,9 @@ class ChatPresenter : Presenter {
             )
 
         if (chatManager.getActiveChannel() == null) {
-            chatView.setCurrentChannnelName("")
+            chatView?.setCurrentChannnelName("")
         } else {
-            chatView.setCurrentChannnelName(chatManager.getActiveChannel()!!.name)
+            chatView?.setCurrentChannnelName(chatManager.getActiveChannel()!!.name)
         }
         messageRepository = MessageRepository.instance!!
 
@@ -77,10 +77,10 @@ class ChatPresenter : Presenter {
     }
 
     fun handleNavigationDrawerClick() {
-        if (chatView.isNavigationDrawerOpened()) {
-            chatView.closeNavigationDrawer()
+        if (chatView!!.isNavigationDrawerOpened()) {
+            chatView?.closeNavigationDrawer()
         } else {
-            chatView.openNavigationDrawer()
+            chatView?.openNavigationDrawer()
         }
     }
 
@@ -88,7 +88,7 @@ class ChatPresenter : Presenter {
         if (opened != keyboardOpened) {
             keyboardOpened = opened
             if (keyboardOpened) {
-                chatView.scrollMessage()
+                chatView?.scrollMessage()
             }
         }
     }
@@ -100,7 +100,7 @@ class ChatPresenter : Presenter {
                 chatManager.loadMoreMessages().subscribe(
                     {
                         if (it > 0) {
-                            chatView.notifyMessagesPrepended(it)
+                            chatView?.notifyMessagesPrepended(it)
                         }
                         loadingMessages = false
                     },
@@ -132,9 +132,9 @@ class ChatPresenter : Presenter {
             chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { messages ->
-                        chatView.setCurrentChannnelName(channel.name)
-                        chatView.setChatMessages(messages)
-                        chatView.scrollMessage()
+                        chatView?.setCurrentChannnelName(channel.name)
+                        chatView?.setChatMessages(messages)
+                        chatView?.scrollMessage()
                     },
                     { error ->
                     }
@@ -143,9 +143,9 @@ class ChatPresenter : Presenter {
     }
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {
-        chatView.notifyNewMessage()
+        chatView?.notifyNewMessage()
         if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && account.username != (message.message as ReceivedMessage).username) {
-            chatView.playNewMessageNotification()
+            chatView?.playNewMessageNotification()
         }
     }
 
@@ -158,6 +158,7 @@ class ChatPresenter : Presenter {
     }
 
     override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        EventBus.getDefault().unregister(this)
+        chatView = null
     }
 }
