@@ -118,7 +118,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         account.copy(
                             sessionToken = sessionToken,
                             bearerToken = bearerToken,
-                            tutorialDone = it.tutorialDone
+                            tutorialDone = it.tutorialDone,
+                            themeID = it.themeID,
+                            languageID =  it.languageID
                         )
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
