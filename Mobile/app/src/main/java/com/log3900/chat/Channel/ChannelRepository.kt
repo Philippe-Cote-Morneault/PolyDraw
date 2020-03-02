@@ -36,6 +36,7 @@ import kotlin.collections.ArrayList
 class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
     private var socketService: SocketService? = null
+    private var socketMessageHandler: Handler? = null
     private lateinit var channelCache: ChannelCache
 
     var isReady = false
@@ -171,6 +172,15 @@ class ChannelRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_DELETED, channelCreated.channelID))
     }
 
+    private fun handleSocketMessage(message: android.os.Message) {
+        val socketMessage = message.obj as Message
+
+        when (socketMessage.type) {
+            Event.CHANNEL_CREATED -> onChannelCreated(socketMessage)
+            Event.CHANNEL_DELETED -> onChannelDeleted(socketMessage)
+        }
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -182,22 +192,22 @@ class ChannelRepository : Service() {
 
         Thread(Runnable {
             Looper.prepare()
-            socketService?.subscribeToMessage(Event.CHANNEL_CREATED, Handler {
-                onChannelCreated(it.obj as Message)
+            socketMessageHandler = Handler {
+                handleSocketMessage(it)
                 true
-            })
-            socketService?.subscribeToMessage(Event.CHANNEL_DELETED, Handler {
-                onChannelDeleted(it.obj as Message)
-                true
-            })
+            }
+            socketService?.subscribeToMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        socketService?.unsubscribeFromMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
         socketService = null
         instance = null
+        super.onDestroy()
     }
 
 
