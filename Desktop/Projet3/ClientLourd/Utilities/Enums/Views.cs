@@ -3,6 +3,7 @@
     public enum Views
     {
         Editor,
-        Profile
+        Profile,
+        Home
     }
 }

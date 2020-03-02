@@ -181,9 +181,25 @@ namespace ClientLourd.ViewModels
 
         private void Home()
         {
-            // TODO: Change to home view
+            ContainedView = Utilities.Enums.Views.Home.ToString();
+        }
+
+        // TODO: Delete this
+        private RelayCommand<object> _editorCommand;
+
+        public ICommand EditorCommand
+        {
+            get
+            {
+                return _editorCommand ?? (_editorCommand = new RelayCommand<object>(obj => Editor()));
+            }
+        }
+
+        private void Editor()
+        {
             ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
+
 
         private RelayCommand<object> _toggleSoundCommand;
 

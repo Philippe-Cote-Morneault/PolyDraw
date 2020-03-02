@@ -63,7 +63,9 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(delegate 
             {
+
                 CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
+
             });
         }
         

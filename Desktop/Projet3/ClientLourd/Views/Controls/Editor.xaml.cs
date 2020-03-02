@@ -215,7 +215,9 @@ namespace ClientLourd.Views.Controls
 
             for (int i = 0; i < Canvas.Strokes.Count; i++)
             {
-                var stroke = Canvas.Strokes[i];
+                var stroke = Canvas.Strokes[i].Clone();
+                stroke.DrawingAttributes.Width = 1;
+                stroke.DrawingAttributes.Height = 1;
                 var geometry = stroke.GetGeometry(stroke.DrawingAttributes).GetOutlinedPath‌​Geometry();
 
                 var s = XamlWriter.Save(geometry);

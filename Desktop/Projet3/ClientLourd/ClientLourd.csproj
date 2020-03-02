@@ -135,6 +135,7 @@
     </ApplicationDefinition>
     <Compile Include="Models\Bindable\Channel.cs" />
     <Compile Include="Models\Bindable\EditorInformation.cs" />
+    <Compile Include="Models\Bindable\Lobby.cs" />
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
     <Compile Include="Utilities\Enums\DifficultyLevel.cs" />
+    <Compile Include="Utilities\Enums\GameModes.cs" />
     <Compile Include="Utilities\Enums\PotraceMode.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
@@ -188,6 +190,7 @@
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\GameCreationViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Services\RestService\RestClient.cs" />
@@ -215,6 +218,9 @@
     </Compile>
     <Compile Include="Views\Controls\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Home.xaml.cs">
+      <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
@@ -280,6 +286,10 @@
     <Page Include="Views\Controls\Chat.xaml" />
     <Page Include="Views\Controls\Conversation.xaml" />
     <Page Include="Views\Controls\Editor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

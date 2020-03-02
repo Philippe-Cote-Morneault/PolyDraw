@@ -104,14 +104,15 @@ namespace ClientLourd.Models.NonBindable
 
         private void SetPoints(byte[] points)
         {
-            if (BitConverter.IsLittleEndian)
+            if (BitConverter.IsLittleEndian) 
                 Array.Reverse(points);
 
             for (int i = 0; i < points.Length; i += 4)
             {
                 int xPoint = BitConverter.ToUInt16(points.Skip(i).Take(2).ToArray(), 0);
                 int yPoint = BitConverter.ToUInt16(points.Skip(i + 2).Take(2).ToArray(), 0);
-                PointCollection.Add(new StylusPoint(xPoint, yPoint));
+                // if littleEndiant, point X and Y and inversed
+                PointCollection.Add((BitConverter.IsLittleEndian) ? new StylusPoint(yPoint, xPoint) : new StylusPoint(xPoint, yPoint));   
             }
         }
 
