@@ -21,14 +21,27 @@ namespace ClientLourd.ViewModels
         {
             InitTimer();
             HealthPoint = 3;
-            ArtistID = "3";
             Guess = new char[20];
-            Players = new ObservableCollection<User>()
+            Players = new ObservableCollection<Player>()
             {
-                new User("test", "1"),
-                new User("test2", "2"),
-                new User("test3", "3"),
-                new User("test4", "2"),
+                new Player()
+                {
+                    User = new User("test1", "1"),
+                    GuessedTheWord = true,
+                },
+                new Player()
+                {
+                    User = new User("test2", "2"),
+                    IsDrawing = true,
+                },
+                new Player()
+                {
+                    User = new User("test3", "3"),
+                },
+                new Player()
+                {
+                    User = new User("test4", "4"),
+                },
             };
             NotifyPropertyChanged(nameof(Players));
         }
@@ -47,13 +60,12 @@ namespace ClientLourd.ViewModels
             _timer.Start();
         }
 
-        public string ArtistID { get; set; }
-        public User Artist
+        public Player Artist
         {
-            get => Players.FirstOrDefault(u => u.ID == ArtistID);
+            get => Players.FirstOrDefault(p => p.IsDrawing);
         }
         
-        public ObservableCollection<User> Players { get; set; }
+        public ObservableCollection<Player> Players { get; set; }
         
         
         public char[] Guess

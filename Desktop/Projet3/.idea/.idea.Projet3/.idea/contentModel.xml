@@ -18,6 +18,7 @@
             <e p="EditorInformation.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="ModelBase.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
             <e p="SessionInformations.cs" t="Include" />
             <e p="Stats.cs" t="Include" />
             <e p="StatsHistory.cs" t="Include" />

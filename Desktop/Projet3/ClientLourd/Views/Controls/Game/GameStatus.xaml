@@ -32,29 +32,21 @@
                                                 StringFormat={}#{0},
                                                 RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                          FontSize="24" Margin="5"/>
-                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding Username}">
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}">
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
                                                 <Setter Property="Background" Value="WhiteSmoke" />
                                             </Style>
                                         </materialDesign:Chip.Style>
                                         <materialDesign:Chip.Icon>
-                                            <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
+                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
                                         </materialDesign:Chip.Icon>
                                     </materialDesign:Chip>
                                     <!-- Icon -->
-                                    <materialDesign:PackIcon Kind="Pencil"  VerticalAlignment="Center">
-                                        <materialDesign:PackIcon.Visibility>
-                                                        <MultiBinding
-                                                            ConverterParameter="1"
-                                                            Converter="{StaticResource ComparatorToVisibilityConverter}">
-                                                            <Binding Path="ID" />
-                                                            <Binding ElementName="Control" Path="DataContext.ArtistID" />
-                                                        </MultiBinding>
-                                        </materialDesign:PackIcon.Visibility>
-                                    </materialDesign:PackIcon>
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"  VerticalAlignment="Center" Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                 </StackPanel>
-                                <TextBlock HorizontalAlignment="Center" Text="score: 450"></TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Score, StringFormat={}Score: {0}}"></TextBlock>
                                 <Separator/>
                             </StackPanel>
                         </DataTemplate>     
