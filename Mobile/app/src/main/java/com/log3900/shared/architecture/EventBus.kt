@@ -9,6 +9,7 @@ enum class EventType {
     CHANNEL_DELETED,
     RECEIVED_MESSAGE,
     UNREAD_MESSAGES_CHANGED,
+    LOGOUT,
 
 }
 data class MessageEvent(var type: EventType, var data: Any)
