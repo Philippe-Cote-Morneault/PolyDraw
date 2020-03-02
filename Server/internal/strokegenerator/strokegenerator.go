@@ -1,7 +1,6 @@
 package strokegenerator
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"unicode"
@@ -28,7 +27,7 @@ func getNbParameters(command rune) int {
 	case 'c':
 		return 6
 	default:
-		log.Printf("[Potrace] -> Format contains invalid command \"%c\"", command)
+		log.Printf("Format contains invalid command \"%c\"", command)
 		return 0
 	}
 }
@@ -42,15 +41,12 @@ func getStartPoint(commands *[]svgparser.Command) model.Point {
 }
 
 func generateForLinear(points *[]model.Point, start *model.Point, end *model.Point) {
-	fmt.Printf("[Linear] start(%f,%f) et end(%f,%f) : \n", start.X, start.Y, end.X, end.Y)
 
 	if (end.X-start.X) == 0 && (end.Y-start.Y) == 0 {
 		return
 	}
 
 	slope := calculateSlope(start, end)
-	fmt.Printf("[Linear] slope : %v\n", slope)
-
 	currentX := start.X
 	lastX := end.X
 
@@ -59,25 +55,22 @@ func generateForLinear(points *[]model.Point, start *model.Point, end *model.Poi
 		lastX = start.X
 	}
 
-	fmt.Printf("[Linear] Start Position: (%v, %v)\n", currentX, lastX)
-
 	if slope == 0 {
 		x := currentX
 		nbPoints := int(float32(geometry.EucledianDist(start, end)) / gapPoints)
-		fmt.Printf("[Linear] nbPoints (slope=0) : %v\n", nbPoints)
 
 		for i := 0; i < nbPoints; i++ {
 			x += gapPoints
 			*points = append(*points, model.Point{X: x, Y: start.Y})
 		}
 		return
+
 	} else if math.IsInf(float64(slope), 0) {
 		y := start.Y
 		if end.Y < y {
 			y = end.Y
 		}
 		nbPoints := int(float32(geometry.EucledianDist(start, end)) / gapPoints)
-		fmt.Printf("[Linear] nbPoints (slope=NaN) : %v\n", nbPoints)
 
 		for i := 0; i < nbPoints; i++ {
 			y += gapPoints
@@ -92,16 +85,6 @@ func generateForLinear(points *[]model.Point, start *model.Point, end *model.Poi
 		y := slope*x + intercept
 		*points = append(*points, model.Point{X: x, Y: y})
 	}
-
-	fmt.Printf("[Linear] nbPoints (classic) : %v\n", len(*points))
-
-}
-
-func allPointsGenerated(t, end float32, isIncreasing bool) bool {
-	if isIncreasing {
-		return t <= end
-	}
-	return t >= end
 }
 
 func calculateSlope(start *model.Point, end *model.Point) float32 {
@@ -111,17 +94,17 @@ func calculateSlope(start *model.Point, end *model.Point) float32 {
 func generateForBezier(points *[]model.Point, params *BezierParams) {
 	interval := getIntervalBezier(params)
 	for t := float32(0); t < 1; t += interval {
-		*points = append(*points, model.Point{X: evaluateBezier(t, params.StartPoint.X, params.InfluencePoint2.X, params.InfluencePoint1.X, params.EndPoint.X),
-			Y: evaluateBezier(t, params.StartPoint.Y, params.InfluencePoint2.Y, params.InfluencePoint1.Y, params.EndPoint.Y)})
+		*points = append(*points, model.Point{X: evaluateBezier(t, params.StartPoint.X, params.InfluencePoint1.X, params.InfluencePoint2.X, params.EndPoint.X),
+			Y: -evaluateBezier(t, params.StartPoint.Y, params.InfluencePoint1.Y, params.InfluencePoint2.Y, params.EndPoint.Y)})
 	}
 }
 
-func evaluateBezier(t, start, infl2, infl1, end float32) float32 {
-	return (1-t)*(1-t)*(1-t)*start + 3*t*(1-t)*(1-t)*infl2 + 3*t*t*(1-t)*infl1 + t*t*t*end
+func evaluateBezier(t, start, infl1, infl2, end float32) float32 {
+	return (1-t)*(1-t)*(1-t)*start + 3*t*(1-t)*(1-t)*infl1 + 3*t*t*(1-t)*infl2 + t*t*t*end
 }
 
 func getIntervalBezier(params *BezierParams) float32 {
-	return float32(geometry.BezierLength(&params.StartPoint, &params.InfluencePoint1, &params.InfluencePoint2, &params.EndPoint)) * gapPoints
+	return gapPoints / float32(geometry.BezierLength(&params.StartPoint, &params.InfluencePoint1, &params.InfluencePoint2, &params.EndPoint))
 }
 
 //ExtractPointsStrokes gives stroke containing all points generated
@@ -148,8 +131,8 @@ func ExtractPointsStrokes(commands *[]svgparser.Command) []model.Point {
 					currentPoint = lastPoint
 					i++
 				case 'c':
-					infl2 := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
-					infl1 := model.Point{X: command.Parameters[i+2] + offsetX, Y: command.Parameters[i+3] + offsetY}
+					infl1 := model.Point{X: command.Parameters[i] + offsetX, Y: command.Parameters[i+1] + offsetY}
+					infl2 := model.Point{X: command.Parameters[i+2] + offsetX, Y: command.Parameters[i+3] + offsetY}
 					endPoint := model.Point{X: command.Parameters[i+4] + offsetX, Y: command.Parameters[i+5] + offsetY}
 					i += 5
 					generateForBezier(&points, &BezierParams{StartPoint: currentPoint, InfluencePoint1: infl1, InfluencePoint2: infl2, EndPoint: endPoint})
