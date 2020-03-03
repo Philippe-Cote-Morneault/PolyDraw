@@ -5,4 +5,12 @@
     <string name="language_english_title">Anglais</string>
     <string name="language_french_title">Français</string>
     <string name="language_system_title">Système</string>
+    <string name="theme_blue_yellow_title">Bleu/Jaune</string>
+    <string name="theme_brown_green_title">Brun/Vert</string>
+    <string name="theme_green_teal_title">Vert/Sarcelle</string>
+    <string name="theme_indigo_orange_title">Indigo/Orange</string>
+    <string name="theme_orange_light_blue_title">Orange/Bleu Ciel</string>
+    <string name="theme_purple_green_title">Violet/Vert</string>
+    <string name="theme_red_yellow_title">Rouge/Jaune</string>
+    <string name="theme_teal_lime_title">Sarcelle/Lime</string>
 </resources>
