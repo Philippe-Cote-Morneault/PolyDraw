@@ -84,6 +84,7 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("You cannot have more than %d players in a game", maxPlayer))
 		return
 	}
+	//TODO Check if the user only has a single group that he has created
 
 	var groupName string
 	if request.GroupName != "" {
