@@ -40,6 +40,10 @@ func random(paths *[]model.XMLPath) {
 
 		remaining--
 	}
+
+	sort.Slice(*paths, func(i, j int) bool {
+		return (*paths)[i].Order < (*paths)[j].Order
+	})
 }
 
 //pano changes the order according to the panoramic order
