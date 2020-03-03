@@ -1,8 +1,10 @@
 package lobby
 
 import (
-	"github.com/google/uuid"
 	"log"
+
+	"github.com/google/uuid"
+	"gitlab.com/jigsawcorp/log3900/model"
 
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -56,10 +58,10 @@ func (l *Lobby) listen() {
 		select {
 		case id := <-l.connected:
 			log.Printf("[Lobby] -> New session id: %s", id)
-			l.groups.RegisterSession(uuid.MustParse(id.(string)))
+			l.groups.RegisterSession(id.(uuid.UUID))
 		case id := <-l.close:
 			log.Printf("[Lobby] -> Session disconnected id: %s", id)
-			l.groups.UnRegisterSession(uuid.MustParse(id.(string)))
+			l.groups.UnRegisterSession(id.(uuid.UUID))
 		case <-l.shutdown:
 			return
 		}
