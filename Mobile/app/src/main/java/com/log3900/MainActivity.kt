@@ -89,7 +89,7 @@ open class MainActivity : AppCompatActivity() {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_main_home_fragment,
+                R.id.navigation_main_match_lobby_fragment,
                 R.id.navigation_main_profile_fragment,
                 R.id.navigation_main_draw_view_fragment
             ), drawerLayout)
@@ -97,13 +97,13 @@ open class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navigationController, appBarConfiguration)
 
         navView.setupWithNavController(navigationController)
-        navView.menu.findItem(R.id.menu_item_activity_main_drawer_home).setOnMenuItemClickListener {
-            if (navigationController.currentDestination?.id != R.id.navigation_main_home_fragment) {
+        navView.menu.findItem(R.id.menu_item_activity_main_drawer_lobby).setOnMenuItemClickListener {
+            if (navigationController.currentDestination?.id != R.id.navigation_main_match_lobby_fragment) {
                 navigationController.popBackStack(
                     navigationController.currentDestination!!.id,
                     true
                 )
-                navigationController.navigate(R.id.navigation_main_home_fragment)
+                navigationController.navigate(R.id.navigation_main_match_lobby_fragment)
             }
             true
         }
@@ -142,7 +142,7 @@ open class MainActivity : AppCompatActivity() {
             startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
         }
 
-        navView.setCheckedItem(R.id.menu_item_activity_main_drawer_home)
+        navView.setCheckedItem(R.id.menu_item_activity_main_drawer_lobby)
 
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
