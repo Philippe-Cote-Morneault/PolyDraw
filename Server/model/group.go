@@ -8,6 +8,7 @@ import (
 //0 created and waiting for players
 //1 game started
 //2 game ended
+//3 abandoned for example 5 minutes of inactivity or server closing
 
 //Group represent a new group used for a game
 type Group struct {
