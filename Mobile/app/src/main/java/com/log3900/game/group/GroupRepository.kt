@@ -6,9 +6,11 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import com.google.gson.JsonArray
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.moshi.ArrayListUUIDAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -18,6 +20,8 @@ import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GroupRepository : Service() {
     private val binder = GroupRepositoryBinder()
@@ -37,10 +41,6 @@ class GroupRepository : Service() {
         groupCache = GroupCache()
         getGroups(AccountRepository.getInstance().getAccount().sessionToken).subscribe(
             {
-                println("Groups = ")
-                it.forEach {group ->
-                    println(group.toString())
-                }
                 isReady = true
             },
             {
@@ -57,6 +57,7 @@ class GroupRepository : Service() {
                     val moshi = Moshi.Builder()
                         .add(KotlinJsonAdapterFactory())
                         .add(UUIDAdapter())
+                        .add(ArrayListUUIDAdapter())
                         .build()
 
                     val adapter: JsonAdapter<List<Group>> = moshi.adapter(Types.newParameterizedType(List::class.java, Group::class.java))
