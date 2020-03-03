@@ -7,10 +7,12 @@ using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
+using ClientLourd.Services.InkCanvas;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
+using ClientLourd.Views.Controls;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 
@@ -18,18 +20,22 @@ namespace ClientLourd.ViewModels
 {
     public class GameViewModel : ModelBase
     {
-
+        private string _drawingID;
+        private string _word;
         private char[] _guess;
         private DateTime _time;
         private Timer _timer;
         private int _healthPoint;
         private ObservableCollection<Player> _players;
         private int _round;
+        private StrokesReader _stokesReader;
         public GameViewModel()
         {
             InitTimer();
+            InitEventHandler();
             HealthPoint = 3;
             Guess = new char[20];
+            Word = "test";
             Players = new ObservableCollection<Player>()
             {
                 new Player()
@@ -84,7 +90,12 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnYourTurnToDraw(object source, EventArgs args)
         {
+            var e = (MatchEventArgs) args;
             //Enable the canvas
+            Word = e.Word;
+            Time = e.Time;
+            _drawingID = e.DrawingID;
+            _stokesReader.Start(_drawingID);
         }
 
         private void SocketClientOnMatchSync(object source, EventArgs args)
@@ -112,9 +123,7 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchReadyToStart(object source, EventArgs args)
         {
-            InitTimer();
-            HealthPoint = 3;
-            Guess = new char[20];
+            PrepareMatch();
         }
 
         private void SocketClientOnMatchCheckPoint(object source, EventArgs args)
@@ -124,13 +133,27 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
         {
-            throw new NotImplementedException();
+            var e = (MatchEventArgs) args;
+            if(_timer.Enabled)
+                _timer.Stop();
+            Editor.Canvas.Strokes.Clear();
+            //Round end
+            if (e.Type == 1)
+            {
+                _stokesReader.Stop();    
+            }
+            //Game end
+            else if (e.Type == 2)
+            {
+                
+            }
         }
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
-            _timer.Stop();
-            throw new NotImplementedException();
+            var e = (MatchEventArgs) args;
+            Player Winner = Players.FirstOrDefault(p => p.User.ID == e.WinnerID);
+            DialogHost.Show(new MessageDialog("Game ended", $"The winner is {Winner.User.Username}"));
         }
 
         private void SocketClientOnMatchStarted(object source, EventArgs args)
@@ -143,7 +166,7 @@ namespace ClientLourd.ViewModels
             Time = DateTime.MinValue.AddMinutes(1);
             _timer = new Timer(1000);
             _timer.Elapsed += (sender, args) => { 
-                Time = Time.AddSeconds(-5);
+                Time = Time.AddSeconds(-1);
                 if(Time == DateTime.MinValue)
                 {
                     _timer.Stop();
@@ -212,6 +235,21 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public bool IsYourTurn
+        {
+            get => !string.IsNullOrEmpty(Word);
+        }
+
+        public string Word
+        {
+            get => _word;
+            set
+            {
+                _word = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsYourTurn));
+            }
+        }
         public int Round
         {
             get => _round;
@@ -240,6 +278,7 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+        public Editor Editor { get; set; }
         
         RelayCommand<object> _sendGuessCommand;
 
@@ -257,23 +296,13 @@ namespace ClientLourd.ViewModels
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.GuessTheWord, new string(Guess)));
         }
 
-        RelayCommand<object> _prepareMatchCommand;
-        
-        /// <summary>
-        /// Set the environment for the match
-        /// </summary>
-        public ICommand PrepareMatchCommand
-        {
-            get
-            {
-                return _prepareMatchCommand ??
-                       (_prepareMatchCommand = new RelayCommand<object>(channel => PrepareMatch()));
-            }
-        }
-
         private void PrepareMatch()
         {
-            //TODO
+            InitTimer();
+            HealthPoint = 3;
+            Guess = new char[20];
+            Editor.Canvas.Strokes.Clear();
+            _stokesReader = new StrokesReader(Editor, SocketClient);                        
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
         }
         

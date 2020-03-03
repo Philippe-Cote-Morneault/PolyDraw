@@ -57,7 +57,17 @@ namespace ClientLourd.Services.SocketService
         public bool Valid
         {
             get  => _data["Valid"]; 
-        } 
+        }
+
+        public int Type
+        {
+            get => _data["Type"];
+        }
+
+        public string WinnerID
+        {
+            get => _data["Winner"];
+        }
         
     }
 }

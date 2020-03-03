@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.ViewModels;
 
@@ -9,6 +10,12 @@ namespace ClientLourd.Views.Controls.Game
         public EditorZone()
         {
             InitializeComponent();
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ((GameViewModel) DataContext).Editor = Editor;
         }
 
         private GameViewModel ViewModel
