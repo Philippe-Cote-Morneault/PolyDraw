@@ -5,9 +5,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/menu_item_activity_main_drawer_home"
+            android:id="@+id/menu_item_activity_main_drawer_lobby"
             android:icon="@drawable/ic_menu_home"
-            android:title="Home" />
+            android:title="@string/fragment_match_lobby_title" />
 
         <item
             android:id="@+id/menu_item_activity_main_drawer_profile"
@@ -21,7 +21,7 @@
         <item
             android:id="@+id/menu_item_activity_main_drawer_logout"
             android:icon="@drawable/ic_menu_logout"
-            android:title="Logout" />
+            android:title="@string/logout" />
     </group>
 
 </menu>
