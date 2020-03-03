@@ -150,7 +150,7 @@
                         </Grid>
 
                         <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
-                               Source="Resources/_16.png" />
+                               Source="Resources/WhiteLogo.png" />
                     </DockPanel>
                 </materialDesign:ColorZone>
                 
