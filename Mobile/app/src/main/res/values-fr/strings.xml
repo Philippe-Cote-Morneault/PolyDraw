@@ -13,4 +13,5 @@
     <string name="theme_purple_green_title">Violet/Vert</string>
     <string name="theme_red_yellow_title">Rouge/Jaune</string>
     <string name="theme_teal_lime_title">Sarcelle/Lime</string>
+    <string name="fragment_match_lobby_title">Lobby</string>
 </resources>
