@@ -40,6 +40,7 @@ func (a *Server) setRouters() {
 	a.Post("/games/{id}/image", a.handleRequest(api.PostGameImage))
 	a.Put("/games/{id}/image", a.handleRequest(api.PutGameImage))
 
+	a.Post("/groups", a.handleRequest(api.PostGroup))
 }
 
 func defaultRoute(w http.ResponseWriter, r *http.Request) {
