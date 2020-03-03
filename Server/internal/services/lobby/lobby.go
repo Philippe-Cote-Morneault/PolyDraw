@@ -44,6 +44,11 @@ func (l *Lobby) Register() {
 
 }
 
+//CreateGroup method used to broadcast a message that a new group was created
+func (l *Lobby) CreateGroup(group *model.Group) {
+	l.groups.AddGroup(group)
+}
+
 func (l *Lobby) listen() {
 	defer service.Closed()
 
