@@ -36,6 +36,7 @@ type groups struct {
 
 func (g *groups) Init() {
 	g.assignment = make(map[uuid.UUID]uuid.UUID)
+	g.groups = make(map[uuid.UUID][]uuid.UUID)
 	g.queue = make(map[uuid.UUID]bool)
 }
 
@@ -76,10 +77,11 @@ func (g *groups) AddGroup(group *model.Group) {
 		ID:         group.ID.String(),
 		Name:       group.Name,
 		OwnerName:  group.Owner.Username,
-		OwnerID:    group.Owner.ID.String(),
+		OwnerID:    group.OwnerID.String(),
 		PlayersMax: group.PlayersMax,
 	})
-
+	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
+	//TODO only if not solo
 	g.mutex.Lock()
 	for k := range g.queue {
 		go socket.SendRawMessageToSocketID(message, k)
@@ -87,7 +89,8 @@ func (g *groups) AddGroup(group *model.Group) {
 }
 
 //JoinGroup used to add a user to the groups can be called in rest that's why we can avoid the db operation
-func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) {
+func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
+	//TODO add logic to respect conditions
 	g.mutex.Lock()
 	if _, ok := g.queue[socketID]; ok {
 		//Check if groups exists
@@ -96,6 +99,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) 
 		if groupDB.ID != uuid.Nil {
 			delete(g.queue, socketID)
 			g.assignment[socketID] = groupID
+
 			g.groups[groupID] = append(g.groups[groupID], socketID)
 			g.mutex.Unlock()
 
@@ -106,7 +110,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) 
 				Error:    "",
 			})
 
-			if socket.SendRawMessageToSocketID(message, socketID) == nil && addToBD {
+			if socket.SendRawMessageToSocketID(message, socketID) == nil {
 				//We only commit the data to the db if the message was sent successfully
 				//else we will handle the error in the disconnect message
 				user, _ := auth.GetUser(socketID)
@@ -122,7 +126,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) 
 				g.mutex.Lock()
 				for i := range g.groups[groupID] {
 					if g.groups[groupID][i] != socketID {
-						go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
+						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
 					}
 				}
 				g.mutex.Unlock()
@@ -136,7 +140,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) 
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
 			Response: false,
-			Error:    "The groups could not be found.",
+			Error:    "The group could not be found.",
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
 	} else {
@@ -145,7 +149,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) 
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
 			Response: false,
-			Error:    "The user can only join one groups",
+			Error:    "The user can only join one group",
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
 	}
@@ -153,8 +157,6 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) 
 
 //QuitGroup quits the groups the user is currently in.
 func (g *groups) QuitGroup(socketID uuid.UUID) {
-	defer g.mutex.Unlock()
-
 	g.mutex.Lock()
 	if _, ok := g.assignment[socketID]; ok {
 		groupID := g.assignment[socketID]
@@ -182,7 +184,17 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		model.DB().Model(&groupDB).Association("Users").Delete(&user)
 	} else {
 		g.mutex.Unlock()
-		go socket.SendErrorToSocketID(44, 404, "The user does not belong to this groups", socketID)
+		go socket.SendErrorToSocketID(44, 404, "The user does not belong to this group", socketID)
+	}
+}
+
+//Set all groups in the database who are set to status waiting to abandoned
+func (g *groups) CleanAllGroups() {
+	var groups []model.Group
+	model.DB().Model(&groups).Where("status = 0").Find(&groups)
+	for i := range groups {
+		groups[i].Status = 3
+		model.DB().Save(groups[i])
 	}
 }
 
