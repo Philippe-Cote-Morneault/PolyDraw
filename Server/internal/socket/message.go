@@ -31,11 +31,13 @@ type messageType struct {
 	EndDrawingServer         int
 	PreviewDrawing           int
 	PreviewDrawingResponse   int
+	ResponseGroupCreated     int
 	RequestJoinGroup         int
 	ResponseJoinGroup        int
 	RequestLeaveGroup        int
 	ResponseLeaveGroup       int
 	ErrorResponse            int
+	UserJoinedGroup          int
 }
 
 // MessageType represents the available message types to send to clients.
@@ -63,8 +65,10 @@ var MessageType = &messageType{
 	PreviewDrawingResponse:   37,
 	RequestJoinGroup:         40,
 	ResponseJoinGroup:        41,
+	UserJoinedGroup:          43,
 	RequestLeaveGroup:        44,
 	ResponseLeaveGroup:       45,
+	ResponseGroupCreated:     51,
 	ErrorResponse:            255,
 }
 
