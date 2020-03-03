@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.IllegalArgumentException
 import java.util.*
 
 class ChannelListPresenter : Presenter {
@@ -79,7 +80,19 @@ class ChannelListPresenter : Presenter {
     }
 
     fun onChannelClicked(channel: Channel) {
-        chatManager.setActiveChannel(channel)
+        try {
+            chatManager.onChannelClicked(channel)
+        } catch (e: IllegalArgumentException) {
+            channelListView.showConfirmationDialog("Unsubscribed channel",
+                "You are not subscribed to channel ${channel.name}. Would you like to subscribe to it?",
+                { _, _ ->
+                    chatManager.changeSubscriptionStatus(channel)
+                    chatManager.setActiveChannel(channel)
+                },
+                { dialog, _ ->
+                    dialog.dismiss()
+                })
+        }
     }
 
     fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
