@@ -26,6 +26,7 @@ func (l *Lobby) Init() {
 func (l *Lobby) Start() {
 	log.Println("[Lobby] -> Starting service")
 	go l.listen()
+	//TODO include a cleanup for unused groups after x minutes
 }
 
 //Shutdown the lobby service
