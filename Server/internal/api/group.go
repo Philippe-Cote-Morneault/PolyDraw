@@ -22,6 +22,16 @@ type responseGroupCreate struct {
 	GroupName string
 	GroupID   string
 }
+type responseGroup struct {
+	ID             string
+	GroupName      string
+	PlayersMax     int
+	VirtualPlayers int
+	GameType       int
+	Difficulty     int
+	Owner          userResponse
+	Players        []userResponse
+}
 
 const maxPlayer = 12
 
@@ -105,5 +115,39 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		GroupID:   group.ID.String(),
 	}
 
+	rbody.JSON(w, http.StatusOK, response)
+}
+
+//GetGroups returns all the groups that are currently available
+func GetGroups(w http.ResponseWriter, r *http.Request) {
+	var groups []model.Group
+	model.DB().Model(&groups).Related(&model.User{}, "Users")
+	model.DB().Preload("Users").Preload("Owner").Where("status = ?", 0).Find(&groups)
+
+	response := make([]responseGroup, len(groups))
+	for i := range groups {
+		owner := userResponse{
+			Name: groups[i].Owner.Username,
+			ID:   groups[i].OwnerID.String(),
+		}
+		players := make([]userResponse, len(groups[i].Users))
+		for j := range groups[i].Users {
+			players[j] = userResponse{
+				ID:   groups[i].Users[j].ID.String(),
+				Name: groups[i].Users[j].Username,
+			}
+		}
+
+		response[i] = responseGroup{
+			ID:             groups[i].ID.String(),
+			GroupName:      groups[i].Name,
+			PlayersMax:     groups[i].PlayersMax,
+			VirtualPlayers: groups[i].VirtualPlayers,
+			GameType:       groups[i].GameType,
+			Difficulty:     groups[i].Difficulty,
+			Owner:          owner,
+			Players:        players,
+		}
+	}
 	rbody.JSON(w, http.StatusOK, response)
 }
