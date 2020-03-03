@@ -133,6 +133,18 @@ def handle(typeVal, valBytes):
     if typeVal == 37:
         printType("-> Preview drawing response")
         printBool(valBytes)
+    if typeVal == 41:
+         printType("-> Response group join")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 43:
+         printType("-> New user joined")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 45:
+         printType("-> User quit")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 51:
+        printType("-> Group created")
+        printMsgPack(msgpack.unpackb(valBytes))
     if typeVal == 255:
         printType("-> [[ERROR]]")
         printMsgPack(msgpack.unpackb(valBytes))
