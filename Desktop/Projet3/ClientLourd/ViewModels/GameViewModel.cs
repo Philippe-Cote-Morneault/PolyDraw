@@ -24,6 +24,7 @@ namespace ClientLourd.ViewModels
         private Timer _timer;
         private int _healthPoint;
         private ObservableCollection<Player> _players;
+        private int _round;
         public GameViewModel()
         {
             InitTimer();
@@ -52,6 +53,91 @@ namespace ClientLourd.ViewModels
             };
         }
 
+        private void InitEventHandler()
+        {
+            SocketClient.MatchStarted += SocketClientOnMatchStarted;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
+            SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
+            SocketClient.MatchCheckPoint += SocketClientOnMatchCheckPoint;
+            SocketClient.MatchReadyToStart += SocketClientOnMatchReadyToStart;
+            SocketClient.GuessResponse += SocketClientOnGuessResponse;
+            SocketClient.PlayerGuessedTheWord += SocketClientOnPlayerGuessedTheWord;
+            SocketClient.MatchSync += SocketClientOnMatchSync;
+            SocketClient.YourTurnToDraw += SocketClientOnYourTurnToDraw;
+            SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
+            SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+        }
+
+        private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
+        }
+
+        private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            Players.ToList().ForEach(p => p.IsDrawing = false);
+            Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
+            //Disable the canvas
+        }
+
+        private void SocketClientOnYourTurnToDraw(object source, EventArgs args)
+        {
+            //Enable the canvas
+        }
+
+        private void SocketClientOnMatchSync(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            _round = e.Laps;
+            Time = e.Time;
+        }
+
+        private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            Players.FirstOrDefault(p => p.User.ID == e.UserID).GuessedTheWord = true;
+        }
+
+        private void SocketClientOnGuessResponse(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            if (e.Valid)
+            {
+                Players.FirstOrDefault(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
+                //disable canvas
+            }
+        }
+
+        private void SocketClientOnMatchReadyToStart(object source, EventArgs args)
+        {
+            InitTimer();
+            HealthPoint = 3;
+            Guess = new char[20];
+        }
+
+        private void SocketClientOnMatchCheckPoint(object source, EventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SocketClientOnMatchTimesUp(object source, EventArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SocketClientOnMatchEnded(object source, EventArgs args)
+        {
+            _timer.Stop();
+            throw new NotImplementedException();
+        }
+
+        private void SocketClientOnMatchStarted(object source, EventArgs args)
+        {
+            _timer.Start();
+        }
+
         private void InitTimer()
         {
             Time = DateTime.MinValue.AddMinutes(1);
@@ -63,7 +149,6 @@ namespace ClientLourd.ViewModels
                     _timer.Stop();
                 }
             };
-            _timer.Start();
         }
         
         public SessionInformations SessionInformations
@@ -127,6 +212,15 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public int Round
+        {
+            get => _round;
+            set
+            {
+                _round = value;
+                NotifyPropertyChanged();
+            }
+        }
         public DateTime Time
         {
             get => _time;
@@ -160,7 +254,7 @@ namespace ClientLourd.ViewModels
 
         private void SendGuess()
         {
-            DialogHost.Show(new MessageDialog("Guess", new string(Guess)), "Default");
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.GuessTheWord, new string(Guess)));
         }
 
         RelayCommand<object> _prepareMatchCommand;
@@ -182,6 +276,7 @@ namespace ClientLourd.ViewModels
             //TODO
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
         }
+        
         
         
 

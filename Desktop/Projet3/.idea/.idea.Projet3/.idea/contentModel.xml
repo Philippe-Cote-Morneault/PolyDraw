@@ -135,6 +135,7 @@
           </e>
           <e p="SocketService" t="Include">
             <e p="DrawingEventArgs.cs" t="Include" />
+            <e p="MatchEventArgs.cs" t="Include" />
             <e p="MessageReceivedEventArgs.cs" t="Include" />
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketErrorEventArgs.cs" t="Include" />
