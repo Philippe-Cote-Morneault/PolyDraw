@@ -15,19 +15,20 @@
 
     <UserControl.Resources>
         <converters:GameModeToImageConverter x:Key="GameModeToImageConverter"/>
+        <converters:WidthToLeftMarginConverter x:Key="WidthToLeftMarginConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid Margin="10" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" x:Name="modeIcon"/>
-            <Grid Grid.Column="1" x:Name="mode" Background="Azure"/>
+            <Grid Grid.Column="1" x:Name="mode"/>
             <Grid Grid.Column="2" x:Name="gameName"/>
             <Grid Grid.Column="3" x:Name="host"/>
             <Grid Grid.Column="4" x:Name="players"/>
@@ -48,10 +49,18 @@
                         <GridViewColumn Width="{Binding ElementName=modeIcon, Path=ActualWidth}"  >
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="{Binding Mode, Converter={StaticResource GameModeToImageConverter}}"></Image>
-                            </DataTemplate>
+                                    <Image Stretch="Uniform" Height="40" x:Name="image"  Source="{Binding Mode, Converter={StaticResource GameModeToImageConverter}}">
+                                        <Image.Margin>
+                                            <MultiBinding Converter="{StaticResource WidthToLeftMarginConverter}">
+                                                <Binding ElementName="image" Path="ActualWidth"></Binding>
+                                                <Binding ElementName="modeIcon" Path="ActualWidth"></Binding>
+                                            </MultiBinding>
+                                        </Image.Margin>
+                                    </Image>
+                                </DataTemplate>
                         </GridViewColumn.CellTemplate>
                         </GridViewColumn>
+
                         <GridViewColumn DisplayMemberBinding="{Binding Mode}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
@@ -59,6 +68,7 @@
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
+                        
                         <GridViewColumn DisplayMemberBinding="{Binding GameName}" Width="{Binding ElementName=gameName, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>

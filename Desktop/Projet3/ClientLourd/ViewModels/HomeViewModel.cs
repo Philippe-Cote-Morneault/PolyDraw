@@ -16,7 +16,7 @@ namespace ClientLourd.ViewModels
         public HomeViewModel()
         {
             Lobbies = new ObservableCollection<Lobby>();
-            Lobbies.Add(new Lobby("My nice lobby come join faggots", "TamereShortz", GameModes.Coop, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop, 8));
             Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo, 1));
             Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA, 8));
         }

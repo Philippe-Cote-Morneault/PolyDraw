@@ -173,6 +173,7 @@
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
+    <Compile Include="Utilities\Converters\WidthToLeftMarginConverter.cs" />
     <Compile Include="Utilities\Enums\DifficultyLevel.cs" />
     <Compile Include="Utilities\Enums\GameModes.cs" />
     <Compile Include="Utilities\Enums\PotraceMode.cs" />
