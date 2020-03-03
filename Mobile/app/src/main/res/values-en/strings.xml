@@ -14,4 +14,5 @@
     <string name="theme_red_yellow_title">Red/Yellow</string>
     <string name="theme_teal_lime_title">Teal/Lime</string>
     <string name="fragment_match_lobby_title">Lobby</string>
+    <string name="logout">Logout</string>
 </resources>
