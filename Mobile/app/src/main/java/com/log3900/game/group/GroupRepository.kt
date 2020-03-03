@@ -74,7 +74,22 @@ class GroupRepository : Service() {
                 }
 
                 override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-                    println("onFailure")
+                    it.onError(t)
+                }
+            })
+        }
+    }
+    
+    fun getGroup(sessionToken: String, groupID: UUID): Single<Group> {
+        return Single.create {
+            val call = GroupRestService.service.getGroup(sessionToken, "EN", groupID.toString())
+            call.enqueue(object : Callback<JsonObject> {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    it.onSuccess(GroupAdapter().fromJson(response.body()!!.asJsonObject))
+                }
+
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    it.onError(t)
                 }
             })
         }
