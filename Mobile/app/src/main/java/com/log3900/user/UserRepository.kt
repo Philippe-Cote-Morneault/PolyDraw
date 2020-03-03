@@ -1,5 +1,6 @@
 package com.log3900.user
 
+import android.util.Log
 import com.google.gson.JsonObject
 import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -11,9 +12,11 @@ import retrofit2.Call
 import java.util.*
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.collections.HashMap
 
 class UserRepository {
     private var userCache: UserCache = UserCache()
+    private var ongoingRequests: HashMap<UUID, Single<User>> = HashMap()
 
     companion object {
         private var instance: UserRepository? = null
@@ -32,17 +35,24 @@ class UserRepository {
             return Single.create {
                 it.onSuccess(getUserFromCache(userID))
             }
+        } else if (ongoingRequests.containsKey(userID)) {
+            return ongoingRequests[userID]!!
         } else {
-            return Single.create {
+            val request =  Single.create<User> {
                 getUserFromRest(userID).subscribe(
                     { user ->
                         userCache.addUser(user)
+                        ongoingRequests.remove(userID)
                         it.onSuccess(user)
                     },
                     {
                     }
                 )
-            }
+            }.cache()
+
+            ongoingRequests[userID] = request
+
+            return request
         }
     }
 
