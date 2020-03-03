@@ -98,6 +98,14 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 			rbody.JSONError(w, http.StatusBadRequest, "The hint cannot contain the word.")
 			return
 		}
+		currentHint := strings.TrimSpace(hintLower)
+		for j, hint := range request.Hints {
+			hintLower := strings.TrimSpace(strings.ToLower(hint))
+			if hintLower == currentHint && j != i {
+				rbody.JSONError(w, http.StatusBadRequest, "The hint cannot be the same.")
+				return
+			}
+		}
 
 		hints = append(hints, &model.GameHint{
 			Hint: request.Hints[i],
