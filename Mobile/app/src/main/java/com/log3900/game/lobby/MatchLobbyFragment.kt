@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment
 import com.log3900.R
 
 class MatchLobbyFragment : Fragment(), MatchLobbyView {
+    private lateinit var matchLobbyPresenter: MatchLobbyPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_match_lobby, container, false)
 
+
+        matchLobbyPresenter = MatchLobbyPresenter(this)
 
         return rootView
     }
