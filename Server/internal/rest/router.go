@@ -42,6 +42,7 @@ func (a *Server) setRouters() {
 
 	a.Post("/groups", a.handleRequest(api.PostGroup))
 	a.Get("/groups", a.handleRequest(api.GetGroups))
+	a.Get("/groups/{id}", a.handleRequest(api.GetGroup))
 }
 
 func defaultRoute(w http.ResponseWriter, r *http.Request) {
