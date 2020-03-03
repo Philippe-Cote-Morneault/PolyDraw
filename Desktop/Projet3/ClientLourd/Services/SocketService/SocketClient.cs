@@ -127,8 +127,11 @@ namespace ClientLourd.Services.SocketService
                 try
                 {
                     // Read the type and the length
-                    Thread.Sleep(50);
-                   _stream.Read(typeAndLength, 0, 3);
+                    int count = 0;
+                    while (count < 3)
+                    {
+                        count += _stream.Read(typeAndLength, count, 3 - count);
+                    }
 
                     SocketMessageTypes type = (SocketMessageTypes) typeAndLength[0];
                     int length = (typeAndLength[1] << 8) + typeAndLength[2];
@@ -136,7 +139,11 @@ namespace ClientLourd.Services.SocketService
                     {
                         //Read the data
                         byte[] bytes = new byte[length];
-                        _stream.Read(bytes, 0, length);
+                        count = 0;
+                        while (count < length)
+                        {
+                            count += _stream.Read(bytes, count, length - count);
+                        }
                         data = RetreiveData(type, bytes);
                     }
 
