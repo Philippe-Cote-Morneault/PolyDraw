@@ -38,6 +38,6 @@
                 Guess
             </Button>
         </StackPanel>
-        <control:Editor Name="Editor"/>
+        <control:Editor x:Name="DrawingEditor"/>
     </DockPanel>
 </UserControl>

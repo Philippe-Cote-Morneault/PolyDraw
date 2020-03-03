@@ -15,7 +15,7 @@ namespace ClientLourd.Views.Controls.Game
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ((GameViewModel) DataContext).Editor = Editor;
+            ((GameViewModel) DataContext).Editor = DrawingEditor;
         }
 
         private GameViewModel ViewModel
