@@ -51,7 +51,7 @@ class ChatPresenter : Presenter {
             .subscribe(
                 {
                     chatView?.setChatMessages(it)
-                    chatView?.scrollMessage()
+                    chatView?.scrollMessage(false)
                 },
                 {
 
@@ -88,7 +88,7 @@ class ChatPresenter : Presenter {
         if (opened != keyboardOpened) {
             keyboardOpened = opened
             if (keyboardOpened) {
-                chatView?.scrollMessage()
+                chatView?.scrollMessage(true)
             }
         }
     }
@@ -134,7 +134,7 @@ class ChatPresenter : Presenter {
                     { messages ->
                         chatView?.setCurrentChannnelName(channel.name)
                         chatView?.setChatMessages(messages)
-                        chatView?.scrollMessage()
+                        chatView?.scrollMessage(false)
                     },
                     { error ->
                     }

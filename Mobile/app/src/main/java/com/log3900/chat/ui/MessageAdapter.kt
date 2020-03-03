@@ -69,7 +69,7 @@ class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String
     fun messageInserted() {
         notifyItemInserted(messages.size - 1)
         if (!recyclerView.canScrollVertically(1)) {
-            recyclerView.smoothScrollToPosition(messages.size - 1)
+            smoothScrollToBottom()
         }
     }
 
@@ -77,7 +77,11 @@ class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String
         return !recyclerView.canScrollVertically(1)
     }
 
-    fun scrollToBottom() {
+    fun smoothScrollToBottom() {
         recyclerView.smoothScrollToPosition(messages.size - 1)
+    }
+
+    fun scrollToBottom() {
+        recyclerView.scrollToPosition(messages.size - 1)
     }
 }

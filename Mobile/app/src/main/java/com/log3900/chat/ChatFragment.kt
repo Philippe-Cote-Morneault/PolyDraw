@@ -1,9 +1,7 @@
 package com.log3900.chat
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.Button
@@ -16,10 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
-import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.chat.ui.MessageAdapter
 import com.log3900.user.account.AccountRepository
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class ChatFragment : Fragment(), ChatView {
@@ -112,7 +108,7 @@ class ChatFragment : Fragment(), ChatView {
     }
 
     private fun onMessageTextInputClick(v: View) {
-        messagesViewAdapter.scrollToBottom()
+        messagesViewAdapter.smoothScrollToBottom()
     }
 
     override fun onResume() {
@@ -150,8 +146,12 @@ class ChatFragment : Fragment(), ChatView {
         musicPlayer.start()
     }
 
-    override fun scrollMessage() {
-        messagesViewAdapter.scrollToBottom()
+    override fun scrollMessage(smooth: Boolean) {
+        if (smooth) {
+            messagesViewAdapter.smoothScrollToBottom()
+        } else {
+            messagesViewAdapter.scrollToBottom()
+        }
     }
 
     override fun showProgressDialog(dialog: DialogFragment) {
