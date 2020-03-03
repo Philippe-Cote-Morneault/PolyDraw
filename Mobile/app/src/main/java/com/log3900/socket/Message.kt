@@ -16,10 +16,11 @@ enum class Event(var eventType: Byte) {
     CHANNEL_CREATED(27),
     DELETE_CHANNEL(28),
     CHANNEL_DELETED(29),
+    STROKE_DATA_SERVER(31),
     DRAW_START_SERVER(33),
     DRAW_END_SERVER(35),
-    DRAW_PREVIEW_REQUEST(36),
-    DRAW_PREVIEW_RESPONSE(37),
+    DRAW_PREVIEW_REQUEST(36),   // TODO: Remove, test purposes only
+    DRAW_PREVIEW_RESPONSE(37),  // TODO: Remove, test purposes only
 }
 
 data class Message(var type: Event, var data: ByteArray)

@@ -8,7 +8,7 @@ import com.log3900.socket.SocketService
 import com.log3900.utils.format.UUIDUtils
 import java.util.*
 
-class SocketDrawingReceiver(val drawView: DrawViewBase) {
+class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private val socketService: SocketService = SocketService.instance!!
 
     init {
@@ -29,17 +29,26 @@ class SocketDrawingReceiver(val drawView: DrawViewBase) {
 
         socketService.subscribeToMessage(Event.DRAW_PREVIEW_RESPONSE, Handler {
             Log.d("DRAW", (it.obj as Message).toString())
+            val message = (it.obj as Message).data.toString()
+            Log.d("DRAW", "Drawing starting: $message")
+            true
+        })
+
+        socketService.subscribeToMessage(Event.STROKE_DATA_SERVER, Handler {
+            Log.d("DRAW", "Stroke data server")
             val message = it.obj as Message
             parseMessageToStroke(message.data)
             true
         })
 
-//        socketService.sendSerializedMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray())
+        val gameUUID = UUID.fromString("61db7e41-1cb2-4d88-a834-29c59dbcd389")
+        Log.d("DRAW", gameUUID.toString())
+        socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
     private fun parseMessageToStroke(data: ByteArray) {
         val strokeInfo = DrawingMessageParser.unpackStrokeInfo(data)
-
+        Log.d("DRAW", "Stroke info: $strokeInfo")
         drawStrokes(strokeInfo)
     }
 

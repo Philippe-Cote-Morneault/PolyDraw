@@ -57,18 +57,18 @@ open class DrawViewBase @JvmOverloads constructor(
             isAntiAlias = true
         }
 
-        GlobalScope.launch {
-            mStartX = 200f
-            mStartY = 200f
-
-            drawStart(DrawPoint(200f, 200f))
-            for (i in 1..300) {
-                drawMove(DrawPoint(200f + i.toFloat(), 200f + i.toFloat()))
-                delay(10)
-            }
-            drawEnd()
-            invalidate()
-        }
+//        GlobalScope.launch {
+//            mStartX = 200f
+//            mStartY = 200f
+//
+//            drawStart(DrawPoint(200f, 200f))
+//            for (i in 1..300) {
+//                drawMove(DrawPoint(200f + i.toFloat(), 200f + i.toFloat()))
+//                delay(10)
+//            }
+//            drawEnd()
+//            invalidate()
+//        }
     }
 
     fun drawStart(start: DrawPoint) {
