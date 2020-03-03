@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.database.AppDatabase
 import com.log3900.shared.ui.dialogs.ProgressDialog
@@ -219,7 +220,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             "",     // Session token and bearer token are not important right now
             "",
             0,
-            -1,
+            LanguageManager.LANGUAGE.SYSTEM.ordinal,
             false
         )
     }
