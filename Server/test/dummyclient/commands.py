@@ -46,7 +46,13 @@ def execute():
     #Send preview drawing
     sendMessage(36, uuid.UUID("7040b302-6b1e-40f0-b9e8-12ee7301b2bf").bytes)
     """
-    
-    
+    """
+    #Join group
+    sendMessage(40, uuid.UUID("3688bc1b-6731-4a32-a515-d34d9cbef8e6").bytes)
+    """
+    """
+    #Leave group
+    sendMessage(44, uuid.UUID("3688bc1b-6731-4a32-a515-d34d9cbef8e6").bytes)
+    """
     
     
