@@ -35,6 +35,12 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	if request.Difficulty < 0 || request.Difficulty > 3 {
+		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 3.")
+		return
+	}
+
 	if request.GameType > 2 || request.GameType < 0 {
 		rbody.JSONError(w, http.StatusBadRequest, "The game mode must be between 0 and 2")
 		return
