@@ -22,11 +22,6 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             true
         })
 
-//        socketService.subscribeToMessage(Event.DRAW_PREVIEW, Handler {
-//            Log.d("DRAW", (it.obj as Message).toString())
-//            true
-//        })
-
         socketService.subscribeToMessage(Event.DRAW_PREVIEW_RESPONSE, Handler {
             Log.d("DRAW", (it.obj as Message).toString())
             val message = (it.obj as Message).data.toString()
