@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.architecture.Presenter
 import com.log3900.shared.database.AppDatabase
 import com.log3900.shared.ui.dialogs.ProgressDialog
@@ -118,7 +119,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         account.copy(
                             sessionToken = sessionToken,
                             bearerToken = bearerToken,
-                            tutorialDone = it.tutorialDone
+                            tutorialDone = it.tutorialDone,
+                            themeID = it.themeID,
+                            languageID =  it.languageID
                         )
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
@@ -216,6 +219,8 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             json.get("LastName").asString,
             "",     // Session token and bearer token are not important right now
             "",
+            0,
+            LanguageManager.LANGUAGE.SYSTEM.ordinal,
             false
         )
     }

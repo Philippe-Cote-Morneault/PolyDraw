@@ -3,6 +3,7 @@ package com.log3900.login.register
 import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.login.AuthenticationRestService
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.ui.ProfilePresenter
 import com.log3900.socket.Event
 import com.log3900.socket.Message
@@ -88,6 +89,8 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 lastName,
                 tokenData.session,
                 tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
+                0,
+                LanguageManager.LANGUAGE.SYSTEM.ordinal,
                 false
             )
         ).subscribe {

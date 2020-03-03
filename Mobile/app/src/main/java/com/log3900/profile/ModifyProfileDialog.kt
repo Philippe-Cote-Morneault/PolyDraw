@@ -95,6 +95,8 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
             lastnameInput.text.toString(),
             originalAccount.sessionToken,
             originalAccount.bearerToken,
+            originalAccount.themeID,
+            originalAccount.languageID,
             originalAccount.tutorialDone
         )
         modifyProfilePresenter.updateAccountInfo(updatedAccount, password)
