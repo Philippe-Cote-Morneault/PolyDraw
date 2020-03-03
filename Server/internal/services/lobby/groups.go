@@ -13,10 +13,18 @@ type responseJoinGroup struct {
 	Error    string
 }
 
-type responseQuitGroup struct {
+type responseGroup struct {
 	UserID   string
 	Username string
 	GroupID  string
+}
+
+type responseNewGroup struct {
+	ID         string
+	Name       string
+	OwnerName  string
+	OwnerID    string
+	PlayersMax int
 }
 
 type groups struct {
@@ -59,8 +67,27 @@ func (g *groups) UnRegisterSession(socketID uuid.UUID) {
 	}
 }
 
-//AddGroup used to add a user to the groups can be called in rest that's why we can avoid the db operation
-func (g *groups) AddGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) {
+//AddGroup add the group and send the message to all the users in queue
+func (g *groups) AddGroup(group *model.Group) {
+	defer g.mutex.Unlock()
+
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.ResponseGroupCreated), responseNewGroup{
+		ID:         group.ID.String(),
+		Name:       group.Name,
+		OwnerName:  group.Owner.Username,
+		OwnerID:    group.Owner.ID.String(),
+		PlayersMax: group.PlayersMax,
+	})
+
+	g.mutex.Lock()
+	for k := range g.queue {
+		go socket.SendRawMessageToSocketID(message, k)
+	}
+}
+
+//JoinGroup used to add a user to the groups can be called in rest that's why we can avoid the db operation
+func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) {
 	g.mutex.Lock()
 	if _, ok := g.queue[socketID]; ok {
 		//Check if groups exists
@@ -82,8 +109,24 @@ func (g *groups) AddGroup(socketID uuid.UUID, groupID uuid.UUID, addToBD bool) {
 			if socket.SendRawMessageToSocketID(message, socketID) == nil && addToBD {
 				//We only commit the data to the db if the message was sent successfully
 				//else we will handle the error in the disconnect message
-				userID, _ := auth.GetUserID(socketID)
-				model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: userID}})
+				user, _ := auth.GetUser(socketID)
+				model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
+
+				//Send a message to all the member of the group to advertise that a new user is in the group
+				newUser := socket.RawMessage{}
+				newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
+					UserID:   user.ID.String(),
+					Username: user.Username,
+					GroupID:  groupID.String(),
+				})
+				g.mutex.Lock()
+				for i := range g.groups[groupID] {
+					if g.groups[groupID][i] != socketID {
+						go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
+					}
+				}
+				g.mutex.Unlock()
+
 			}
 			return
 
@@ -123,7 +166,7 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		//Send a message to the groups member to advertise that the user quit the groups
 		user, _ := auth.GetUser(socketID)
 		message := socket.RawMessage{}
-		message.ParseMessagePack(byte(socket.MessageType.ResponseLeaveGroup), responseQuitGroup{
+		message.ParseMessagePack(byte(socket.MessageType.ResponseLeaveGroup), responseGroup{
 			UserID:   user.ID.String(),
 			Username: user.Username,
 			GroupID:  groupID.String(),
