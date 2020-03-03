@@ -22,7 +22,7 @@ class ThemePickerFragment : DialogFragment() {
         val dialogBuilder = AlertDialog.Builder(activity)
             .setTitle("Theme Picker")
             .setPositiveButton("Save") { _, _ ->
-                ThemeManager.changeTheme(themesAdapter.selectedTheme)
+                ThemeManager.changeTheme(themesAdapter.selectedTheme).subscribe()
             }
             .setNegativeButton("Cancel") { _, _ ->
 
