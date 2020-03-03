@@ -18,7 +18,7 @@ type Group struct {
 	PlayersMax     int
 	VirtualPlayers int
 	GameType       int
-	Difficulty     int     `gorm:"default:-1"`
+	Difficulty     int     `gorm:"default:0"`
 	Status         int     `gorm:"default:0"`
 	Users          []*User `gorm:"many2many:group_membership"`
 }
