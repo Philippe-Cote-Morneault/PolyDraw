@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"github.com/moby/moby/pkg/namesgenerator"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
@@ -29,6 +30,7 @@ type responseGroup struct {
 	VirtualPlayers int
 	GameType       int
 	Difficulty     int
+	Status         int
 	Owner          userResponse
 	Players        []userResponse
 }
@@ -145,9 +147,55 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 			VirtualPlayers: groups[i].VirtualPlayers,
 			GameType:       groups[i].GameType,
 			Difficulty:     groups[i].Difficulty,
+			Status:         0,
 			Owner:          owner,
 			Players:        players,
 		}
 	}
 	rbody.JSON(w, http.StatusOK, response)
+}
+
+//GetGroup returns the details of the specific group
+func GetGroup(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	groupID, err := uuid.Parse(vars["id"])
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, "The id is not a correct UUID format.")
+		return
+	}
+	var group model.Group
+	model.DB().Model(&group).Related(&model.User{}, "Users")
+	model.DB().Preload("Users").Preload("Owner").Where("id = ?", groupID).First(&group)
+
+	if group.ID != uuid.Nil {
+		owner := userResponse{
+			Name: group.Owner.Username,
+			ID:   group.OwnerID.String(),
+		}
+		players := make([]userResponse, len(group.Users))
+		for j := range group.Users {
+			players[j] = userResponse{
+				ID:   group.Users[j].ID.String(),
+				Name: group.Users[j].Username,
+			}
+		}
+
+		response := responseGroup{
+			ID:             group.ID.String(),
+			GroupName:      group.Name,
+			PlayersMax:     group.PlayersMax,
+			VirtualPlayers: group.VirtualPlayers,
+			GameType:       group.GameType,
+			Difficulty:     group.Difficulty,
+			Status:         group.Status,
+			Owner:          owner,
+			Players:        players,
+		}
+		rbody.JSON(w, http.StatusOK, response)
+		return
+	}
+
+	rbody.JSONError(w, http.StatusNotFound, "The group could not be found.")
+	return
+
 }
