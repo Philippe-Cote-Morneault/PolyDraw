@@ -18,6 +18,11 @@
         <converters:WidthToLeftMarginConverter x:Key="WidthToLeftMarginConverter"/>
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
         <Grid Margin="10" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -26,20 +31,20 @@
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-
+            
             <Grid Grid.Column="0" x:Name="modeIcon"/>
             <Grid Grid.Column="1" x:Name="mode"/>
             <Grid Grid.Column="2" x:Name="gameName"/>
             <Grid Grid.Column="3" x:Name="host"/>
             <Grid Grid.Column="4" x:Name="players"/>
         </Grid>
+
+
+
         
-        
-        
-        
-        <Border  Margin="50" BorderBrush="LightGray" BorderThickness="1">
+        <Border Grid.Row="0" Margin="50" BorderBrush="LightGray" BorderThickness="1" Height="{Binding ElementName=firstRow, Path=ActualHeight}">
             <ListView  ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListView.View>
+                <ListView.View>
                     <GridView>
                         <GridView.ColumnHeaderContainerStyle>
                             <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
@@ -58,7 +63,7 @@
                                         </Image.Margin>
                                     </Image>
                                 </DataTemplate>
-                        </GridViewColumn.CellTemplate>
+                            </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
                         <GridViewColumn DisplayMemberBinding="{Binding Mode}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
@@ -68,7 +73,7 @@
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
-                        
+
                         <GridViewColumn DisplayMemberBinding="{Binding GameName}" Width="{Binding ElementName=gameName, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
@@ -91,13 +96,17 @@
                                 </MultiBinding>
                             </GridViewColumn.DisplayMemberBinding>
                             <GridViewColumn.Header>
-                            <materialDesign:PackIcon Kind="UserGroup" />
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-
-                </GridView>
-            </ListView.View>
-        </ListView>
+                                <materialDesign:PackIcon Kind="UserGroup" />
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
         </Border>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+            <Button Width="300" Margin="0 0 20 0" Content="Create a lobby"/>
+            <Button Click="CreateGame" Width="300" Margin="20 0 0 0" Content="Create a game"/>
+        </StackPanel>
     </Grid>
 </UserControl>

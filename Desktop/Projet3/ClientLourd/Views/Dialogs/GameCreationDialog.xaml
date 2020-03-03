@@ -179,7 +179,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0" Margin="5" Click="ClearPreviewCanvas" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" IsEnabled="{Binding PreviewGUIEnabled}" Content="Previous" />
-                            <Button Grid.Column="1" Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" IsEnabled="{Binding PreviewGUIEnabled}" Content="Confirm" />
+                            <Button Grid.Column="1" Margin="5" Command="materialDesign:DialogHost.CloseDialogCommand" IsEnabled="{Binding PreviewGUIEnabled}" Content="Confirm" />
                         </Grid>
                         <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Vertical">
                             <!-- Upload image settings-->

@@ -16,7 +16,7 @@ namespace ClientLourd.Utilities.Converters
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             var cellWidth = (double)values[1];
-            var imageWidth = (double)values[0];
+            var imageWidth = (double)values[0] / 2;
             var leftMargin = (cellWidth / 2) - imageWidth;
 
             return new Thickness(leftMargin, 0, 0, 0);

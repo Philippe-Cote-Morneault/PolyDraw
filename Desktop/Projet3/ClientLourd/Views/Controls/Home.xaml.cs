@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Controls
 {
@@ -23,6 +25,11 @@ namespace ClientLourd.Views.Controls
         public Home()
         {
             InitializeComponent();
+        }
+
+        private void CreateGame(object sender, RoutedEventArgs e)
+        {
+            DialogHost.Show(new GameCreationDialog(), "Default");
         }
     }
 }
