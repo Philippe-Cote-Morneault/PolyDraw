@@ -31,6 +31,10 @@ type messageType struct {
 	EndDrawingServer         int
 	PreviewDrawing           int
 	PreviewDrawingResponse   int
+	RequestJoinGroup         int
+	ResponseJoinGroup        int
+	RequestLeaveGroup        int
+	ResponseLeaveGroup       int
 	ErrorResponse            int
 }
 
@@ -57,6 +61,10 @@ var MessageType = &messageType{
 	EndDrawingServer:         35,
 	PreviewDrawing:           36,
 	PreviewDrawingResponse:   37,
+	RequestJoinGroup:         40,
+	ResponseJoinGroup:        41,
+	RequestLeaveGroup:        44,
+	ResponseLeaveGroup:       45,
 	ErrorResponse:            255,
 }
 
