@@ -210,7 +210,7 @@
                             <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
                         </StackPanel>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
-                            <InkCanvas x:Name="PreviewCanvas" Width="800" Height="450" IsEnabled="True" />
+                            <InkCanvas x:Name="PreviewCanvas" Width="800" Height="450" IsEnabled="False" />
                         </materialDesign:Card>
                     </DockPanel>
             </materialDesign:TransitionerSlide>
