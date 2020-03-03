@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_main_home_fragment">
+    app:startDestination="@+id/navigation_main_match_lobby_fragment">
 
     <fragment
-        android:id="@+id/navigation_main_home_fragment"
-        android:name="com.log3900.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/navigation_main_match_lobby_fragment"
+        android:name="com.log3900.game.lobby.MatchLobbyFragment"
+        android:label="@string/fragment_match_lobby_title"
+        tools:layout="@layout/fragment_match_lobby" >
         <action
             android:id="@+id/action_nav_home_to_profileFragment"
             app:destination="@id/navigation_main_profile_fragment"
@@ -27,8 +27,8 @@
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_nav_home2"
-            app:destination="@id/navigation_main_home_fragment"
-            app:popUpTo="@id/navigation_main_home_fragment"
+            app:destination="@id/navigation_main_match_lobby_fragment"
+            app:popUpTo="@id/navigation_main_match_lobby_fragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_profileFragment_to_drawViewFragment"
@@ -47,8 +47,8 @@
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_drawViewFragment_to_nav_home2"
-            app:destination="@id/navigation_main_home_fragment"
-            app:popUpTo="@id/navigation_main_home_fragment"
+            app:destination="@id/navigation_main_match_lobby_fragment"
+            app:popUpTo="@id/navigation_main_match_lobby_fragment"
             app:popUpToInclusive="true"/>
     </fragment>
 
