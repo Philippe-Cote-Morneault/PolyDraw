@@ -7,10 +7,13 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.ArrayListUUIDAdapter
+import com.log3900.utils.format.moshi.GroupAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -20,6 +23,7 @@ import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -58,14 +62,47 @@ class GroupRepository : Service() {
                         .add(KotlinJsonAdapterFactory())
                         .add(UUIDAdapter())
                         .add(ArrayListUUIDAdapter())
+                        .add(GroupAdapter())
                         .build()
 
-                    val adapter: JsonAdapter<List<Group>> = moshi.adapter(Types.newParameterizedType(List::class.java, Group::class.java))
-                    val res = adapter.fromJson(response.body().toString())
-                    it.onSuccess(res as ArrayList<Group>)
+                    val groups = arrayListOf<Group>()
+
+                    response.body()?.forEach { group ->
+                        groups.add(GroupAdapter().fromJson(group.asJsonObject))
+                    }
+                    it.onSuccess(groups)
                 }
 
                 override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+                    println("onFailure")
+                }
+            })
+        }
+    }
+
+    fun createGroup(sessionToken: String, group: GroupCreated): Single<UUID> {
+        return Single.create {
+            val call = GroupRestService.service.createGroup(sessionToken, "EN", group.toJsonObject())
+            call.enqueue(object : Callback<JsonObject> {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    when (response.code()) {
+                        200 -> {
+                            val moshi = Moshi.Builder()
+                                .add(KotlinJsonAdapterFactory())
+                                .add(UUIDAdapter())
+                                .build()
+
+                            val adapter: JsonAdapter<UUID> = moshi.adapter(UUID::class.java)
+                            val res = adapter.fromJson(response.body()!!.getAsJsonPrimitive("GroupID").toString())
+                            it.onSuccess(res as UUID)
+                        }
+                        else -> {
+                            it.onError(Exception())
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                     println("onFailure")
                 }
             })
