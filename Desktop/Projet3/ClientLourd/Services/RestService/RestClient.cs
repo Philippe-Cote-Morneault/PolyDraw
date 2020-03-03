@@ -196,6 +196,21 @@ namespace ClientLourd.Services.RestService
             var response = await Execute(request);
         }
 
+        public async Task PostGroup(string groupName, int playersMax, int virtualPlayers, GameModes gameType)
+        {
+            RestRequest request = new RestRequest($"/groups", Method.POST);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddJsonBody(new
+            {
+                GroupName = groupName,
+                PlayersMax = playersMax,
+                VirtualPlayers = virtualPlayers,
+                GameType=(int)gameType
+
+            });
+            var response = await Execute(request);
+        }
+
 
         private Task<IRestResponse> Execute(RestRequest request)
         {

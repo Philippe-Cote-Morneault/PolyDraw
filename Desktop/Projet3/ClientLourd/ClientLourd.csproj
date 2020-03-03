@@ -187,12 +187,14 @@
     <Compile Include="Utilities\Extensions\InkCanvasExtension.cs" />
     <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
     <Compile Include="Utilities\ValidationRules\HintRules.cs" />
+    <Compile Include="Utilities\ValidationRules\LobbyNameRule.cs" />
     <Compile Include="Utilities\ValidationRules\NameRule.cs" />
     <Compile Include="Utilities\ValidationRules\WordRules.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\GameCreationViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\LobbyCreationViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Services\RestService\RestClient.cs" />
@@ -260,6 +262,9 @@
     <Compile Include="Views\Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\LobbyCreationDialog.xaml.cs">
+      <DependentUpon>LobbyCreationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
@@ -322,6 +327,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\InputDialog.xaml" />
+    <Page Include="Views\Dialogs\LobbyCreationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
     <Page Include="Views\Dialogs\RegisterDialog.xaml" />
     <Page Include="Views\Dialogs\Tutorial.xaml" />

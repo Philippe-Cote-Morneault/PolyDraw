@@ -27,6 +27,11 @@ namespace ClientLourd.Views.Controls
             InitializeComponent();
         }
 
+        private void CreateLobby(object sender, RoutedEventArgs e)
+        {
+            DialogHost.Show(new LobbyCreationDialog(), "Default");
+        }
+
         private void CreateGame(object sender, RoutedEventArgs e)
         {
             DialogHost.Show(new GameCreationDialog(), "Default");

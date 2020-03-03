@@ -9,11 +9,11 @@ namespace ClientLourd.Utilities.Enums
 {
     public enum GameModes
     {
-        [Description("FFA")]
+        [Description("Free-for-all")]
         FFA = 0,
         [Description("Solo")]
         Solo = 1,
-        [Description("Coop")]
+        [Description("Cooperative")]
         Coop = 2,
     }
 }
