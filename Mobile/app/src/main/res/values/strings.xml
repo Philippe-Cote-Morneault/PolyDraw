@@ -126,4 +126,5 @@
     <string name="theme_teal_lime_title">Teal/Lime</string>
     <string name="fragment_match_lobby_title">Lobby</string>
     <string name="logout">Logout</string>
+    <string name="create_match_button_title">Create match</string>
 </resources>
