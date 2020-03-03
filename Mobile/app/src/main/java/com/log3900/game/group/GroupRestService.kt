@@ -15,7 +15,7 @@ interface GroupRestService {
                     @Body data: JsonObject) : Call<JsonObject>
 
     @GET("groups/{groupID}")
-    fun getChannel(@Header("SessionToken") sessionToken: String, @Header("Language") language: String,
+    fun getGroup(@Header("SessionToken") sessionToken: String, @Header("Language") language: String,
                    @Path("groupID") groupID: String) : Call<JsonObject>
 
     companion object {
