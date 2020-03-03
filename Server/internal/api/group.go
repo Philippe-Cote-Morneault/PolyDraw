@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/moby/moby/pkg/namesgenerator"
+	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 	"net/http"
@@ -84,7 +85,14 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("You cannot have more than %d players in a game", maxPlayer))
 		return
 	}
+	userid := r.Context().Value(CtxUserID).(uuid.UUID)
 
+	var count int64
+	model.DB().Table("groups").Where("owner_id = ? and status = ?", userid, 0).Count(&count)
+	if count != 0 {
+		rbody.JSONError(w, http.StatusConflict, "You already have a group created you cannot create multiple groups.")
+		return
+	}
 	var groupName string
 	if request.GroupName != "" {
 		groupName = request.GroupName
@@ -92,8 +100,6 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		//Generate a docker like name
 		groupName = namesgenerator.GetRandomName(0)
 	}
-
-	userid := r.Context().Value(CtxUserID).(uuid.UUID)
 
 	group := model.Group{
 		OwnerID:        userid,
@@ -104,18 +110,13 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		Difficulty:     request.Difficulty,
 		Status:         0,
 	}
-
+	//TODO get owner object completely
 	model.DB().Create(&group)
-	model.DB().Model(&group).Association("Users").Append(&model.User{
-		Base: model.Base{
-			ID: userid,
-		},
-	})
-
 	response := responseGroupCreate{
 		GroupName: groupName,
 		GroupID:   group.ID.String(),
 	}
+	lobby.Instance().CreateGroup(&group)
 
 	rbody.JSON(w, http.StatusOK, response)
 }
