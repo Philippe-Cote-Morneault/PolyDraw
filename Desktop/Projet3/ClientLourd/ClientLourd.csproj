@@ -165,6 +165,7 @@
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
+    <Compile Include="Utilities\Converters\GameModeToImageConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
@@ -345,6 +346,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -363,6 +365,9 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\treasure.png" />
+    <Resource Include="Resources\swords.png" />
+    <Resource Include="Resources\sword.png" />
     <Resource Include="Resources\avatar.jpg" />
     <Resource Include="Resources\Avatar\1.jpg" />
     <Resource Include="Resources\Avatar\10.jpg" />

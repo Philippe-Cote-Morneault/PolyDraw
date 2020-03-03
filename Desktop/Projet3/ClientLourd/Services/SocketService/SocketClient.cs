@@ -128,7 +128,7 @@ namespace ClientLourd.Services.SocketService
                 {
                     // Read the type and the length
                     Thread.Sleep(50);
-                    _stream.Read(typeAndLength, 0, 3);
+                   _stream.Read(typeAndLength, 0, 3);
 
                     SocketMessageTypes type = (SocketMessageTypes) typeAndLength[0];
                     int length = (typeAndLength[1] << 8) + typeAndLength[2];
@@ -205,7 +205,6 @@ namespace ClientLourd.Services.SocketService
                     return bytes;
                 case SocketMessageTypes.ServerEndsDrawing:
                     return bytes;
-
 
                 //Message pack
                 default:

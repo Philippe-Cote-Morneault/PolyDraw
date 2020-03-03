@@ -3,29 +3,91 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
     <UserControl.DataContext>
         <viewModels:HomeViewModel/>
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <converters:GameModeToImageConverter x:Key="GameModeToImageConverter"/>
+    </UserControl.Resources>
     <Grid>
-        <ListView
-            ItemsSource="{Binding Items1}">
+        <Grid Margin="10" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" x:Name="modeIcon"/>
+            <Grid Grid.Column="1" x:Name="mode" Background="Azure"/>
+            <Grid Grid.Column="2" x:Name="gameName"/>
+            <Grid Grid.Column="3" x:Name="host"/>
+            <Grid Grid.Column="4" x:Name="players"/>
+        </Grid>
+        
+        
+        
+        
+        <Border  Margin="50" BorderBrush="LightGray" BorderThickness="1">
+            <ListView  ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.View>
-                <GridView>
-                    <GridViewColumn
-        DisplayMemberBinding="{Binding Code}"
-        Header="Code" />
-                    <GridViewColumn
-        DisplayMemberBinding="{Binding Name}"
-        Header="Name" />
-                    <GridViewColumn
-        DisplayMemberBinding="{Binding Description}"
-        Header="Description" />
+                    <GridView>
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="IsHitTestVisible" Value="False"/>
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        <GridViewColumn Width="{Binding ElementName=modeIcon, Path=ActualWidth}"  >
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60" Source="{Binding Mode, Converter={StaticResource GameModeToImageConverter}}"></Image>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Mode}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Mode"></Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding GameName}" Width="{Binding ElementName=gameName, Path=ActualWidth}" >
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Game Name"></Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=host, Path=ActualWidth}" Header="Host">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Host"></Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <MultiBinding StringFormat="{}{0}/{1}">
+                                    <Binding Path="PlayersCount"></Binding>
+                                    <Binding Path="PlayersMax"></Binding>
+                                </MultiBinding>
+                            </GridViewColumn.DisplayMemberBinding>
+                            <GridViewColumn.Header>
+                            <materialDesign:PackIcon Kind="UserGroup" />
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
                 </GridView>
             </ListView.View>
         </ListView>
+        </Border>
     </Grid>
 </UserControl>
