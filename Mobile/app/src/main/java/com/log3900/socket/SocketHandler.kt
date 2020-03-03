@@ -185,12 +185,15 @@ object SocketHandler {
     }
 
     private fun handlerError() {
+        Log.d("Healthcheck", "handlerError()")
         if (state.get() == State.DISCONNECTING) {
+            Log.d("Healthcheck", "State.Disconnecting")
             state.set(State.DISCONNECTED)
             readMessages.set(false)
             disconnectionErrorListener?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
         }
         else if (state.get() == State.CONNECTED) {
+            Log.d("Healthcheck", "State.conntected")
             state.set(State.ERROR)
             socketHealthcheckTimer.cancel()
             readMessages.set(false)
