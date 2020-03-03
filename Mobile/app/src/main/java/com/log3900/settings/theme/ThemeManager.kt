@@ -40,7 +40,6 @@ class ThemeManager {
         }
 
         fun changeTheme(theme: Theme): Completable {
-            Log.d("POTATO", "ThemeManager::changeTheme(${theme.index})")
             val currentAccount = AccountRepository.getInstance().getAccount()
             currentAccount.themeID = theme.index
             return AccountRepository.getInstance().updateAccount(currentAccount)
