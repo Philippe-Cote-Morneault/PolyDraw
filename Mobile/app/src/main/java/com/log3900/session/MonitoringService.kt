@@ -16,6 +16,7 @@ import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.MessageRepository
+import com.log3900.game.group.GroupRepository
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.ui.dialogs.ErrorDialog
@@ -117,9 +118,13 @@ class MonitoringService : Service() {
         MainApplication.instance.startService(MessageRepository::class.java)
         MainApplication.instance.startService(ChannelRepository::class.java)
         MainApplication.instance.startService(ChatManager::class.java)
+
+        MainApplication.instance.startService(GroupRepository::class.java)
     }
 
     private fun onLogout(){
+        MainApplication.instance.stopService(GroupRepository::class.java)
+
         MainApplication.instance.stopService(ChatManager::class.java)
         MainApplication.instance.stopService(ChannelRepository::class.java)
         MainApplication.instance.stopService(MessageRepository::class.java)
