@@ -19,17 +19,22 @@ func (a *Server) setRouters() {
 	}
 
 	a.Head("/healthcheck", a.handleRequest(api.HeadHealthcheck))
+
 	a.Post("/auth", a.handleRequest(api.PostAuth))
 	a.Post("/auth/bearer", a.handleRequest(api.PostAuthToken))
 	a.Post("/auth/register", a.handleRequest(api.PostAuthRegister))
+
 	a.Get("/users", a.handleRequest(api.GetUsers))
 	a.Put("/users", a.handleRequest(api.PutUser))
 	a.Get("/users/{id}", a.handleRequest(api.GetUser))
+
 	a.Get("/chat/channels", a.handleRequest(api.GetChatChannel))
 	a.Get("/chat/channels/{id}", a.handleRequest(api.GetChatChannelID))
 	a.Get("/chat/messages/{channelID}", a.handleRequest(api.GetChatMessages))
+
 	a.Get("/stats/", a.handleRequest(api.GetStats))
 	a.Get("/stats/history", a.handleRequest(api.GetHistory))
+
 	a.Post("/games", a.handleRequest(api.PostGame))
 	a.Get("/games/{id}", a.handleRequest(api.GetGame))
 	a.Post("/games/{id}/image", a.handleRequest(api.PostGameImage))
