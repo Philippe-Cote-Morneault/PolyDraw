@@ -3,6 +3,7 @@ package router
 import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/healthcheck"
+	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 )
@@ -20,4 +21,8 @@ func (r *Router) routing() {
 
 	//Drawing
 	r.handle(socket.MessageType.PreviewDrawing, drawing.BPreview)
+
+	//Lobby
+	r.handle(socket.MessageType.RequestLeaveGroup, lobby.BLeaveGroup)
+	r.handle(socket.MessageType.RequestJoinGroup, lobby.BJoinGroup)
 }
