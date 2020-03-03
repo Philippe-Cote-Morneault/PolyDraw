@@ -109,6 +109,14 @@ class ChatManager : Service() {
         channelManager?.changeActiveChannel(channel)
     }
 
+    fun onChannelClicked(channel: Channel) {
+        if (channelManager?.joinedChannels?.contains(channel)!!) {
+            setActiveChannel(channel)
+        } else {
+            throw IllegalArgumentException("")
+        }
+    }
+
     fun getActiveChannel(): Channel? {
         return channelManager?.activeChannel
     }
