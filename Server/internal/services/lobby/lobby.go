@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"github.com/google/uuid"
 	"log"
 
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
@@ -8,17 +9,20 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
-//Lobby service used the manage the group before the match
+//Lobby service used the manage the groups before the match
 type Lobby struct {
 	connected cbroadcast.Channel
 	close     cbroadcast.Channel
-
-	shutdown chan bool
+	groups    *groups
+	shutdown  chan bool
 }
 
 //Init the lobby service
 func (l *Lobby) Init() {
 	l.shutdown = make(chan bool)
+	l.groups = &groups{}
+	l.groups.Init()
+
 	l.subscribe()
 }
 
@@ -47,8 +51,10 @@ func (l *Lobby) listen() {
 		select {
 		case id := <-l.connected:
 			log.Printf("[Lobby] -> New session id: %s", id)
+			l.groups.RegisterSession(uuid.MustParse(id.(string)))
 		case id := <-l.close:
 			log.Printf("[Lobby] -> Session disconnected id: %s", id)
+			l.groups.UnRegisterSession(uuid.MustParse(id.(string)))
 		case <-l.shutdown:
 			return
 		}
