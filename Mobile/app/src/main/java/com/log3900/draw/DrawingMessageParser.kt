@@ -11,8 +11,15 @@ object DrawingMessageParser {
     private enum class Offset(val value: Int) {
         STROKE_ID(1),
         USER_ID(17),
+        MAX_X(33),
+        MAX_Y(35),
+        BRUSH_SIZE(37),
+        POINTS(38)
+        // TODO: Update with this when server has updated:
+        /*
         BRUSH_SIZE(33),
         POINTS(34)
+        */
     }
 
     fun unpackStrokeInfo(data: ByteArray): StrokeInfo {
@@ -21,7 +28,9 @@ object DrawingMessageParser {
         val brushType = data[0].toBrushType()
         val brushSize = data[Offset.BRUSH_SIZE.value].toInt()
         val strokeID = data.sliceArray(Offset.STROKE_ID.value until Offset.USER_ID.value).getUUID()
-        val userID = data.sliceArray(Offset.USER_ID.value until Offset.BRUSH_SIZE.value).getUUID()
+        val userID = data.sliceArray(Offset.USER_ID.value until Offset.MAX_X.value).getUUID()
+        // TODO: Update
+//        val userID = data.sliceArray(Offset.USER_ID.value until Offset.MAX_X.value).getUUID()
         val points = data.sliceArray(Offset.POINTS.value until data.size).getPoints()
 
         val paintOptions = PaintOptions(
