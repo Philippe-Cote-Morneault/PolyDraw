@@ -142,9 +142,15 @@ def handle(typeVal, valBytes):
     if typeVal == 45:
          printType("-> User quit")
          printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 49:
+         printType("-> Game creation response")
+         printMsgPack(msgpack.unpackb(valBytes))
     if typeVal == 51:
         printType("-> Group created")
         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 61:
+         printType("-> Game about to start")
+         printMsgPack(msgpack.unpackb(valBytes))
     if typeVal == 53:
         printType("-> Group Erased")
     if typeVal == 255:
