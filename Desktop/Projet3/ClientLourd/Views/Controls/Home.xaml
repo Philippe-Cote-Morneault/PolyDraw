@@ -31,6 +31,7 @@
                 <ColumnDefinition Width="4*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
             <Grid Grid.Column="0" x:Name="modeIcon"/>
@@ -38,6 +39,7 @@
             <Grid Grid.Column="2" x:Name="gameName"/>
             <Grid Grid.Column="3" x:Name="host"/>
             <Grid Grid.Column="4" x:Name="players"/>
+            <Grid Grid.Column="5" x:Name="difficulty"/>
         </Grid>
 
 
@@ -91,6 +93,20 @@
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Difficulty}" Width="{Binding ElementName=difficulty, Path=ActualWidth}" >
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Difficulty" Cursor="Hand">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Difficulty"/>
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+
                         <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=host, Path=ActualWidth}" Header="Host">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>

@@ -10,7 +10,7 @@ namespace ClientLourd.Models.Bindable
 {
     class Lobby: ModelBase
     {
-        public Lobby(string gameName, string host, GameModes gameMode, int playersCount,int nPlayersMax)
+        public Lobby(string gameName, string host, GameModes gameMode, DifficultyLevel difficulty, int playersCount,int nPlayersMax)
         {
             PlayersCount = playersCount;
             Players = new ObservableCollection<string>();
@@ -18,12 +18,15 @@ namespace ClientLourd.Models.Bindable
             GameName = gameName;
             Host = host;
             Mode = gameMode;
+            Difficulty = difficulty;
         }
 
         public int PlayersMax { get; set; }
         public int PlayersCount { get; set; }
         public string GameName { get; set; }
         public string Host { get; set; }
+
+        public DifficultyLevel Difficulty { get; set; }
 
         private ObservableCollection<string> _players;
 

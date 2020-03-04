@@ -138,6 +138,7 @@
     <Compile Include="Models\Bindable\Lobby.cs" />
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
+    <Compile Include="Models\Bindable\Player.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
     <Compile Include="Models\Bindable\StatsHistory.cs" />
     <Compile Include="Models\Bindable\User.cs" />

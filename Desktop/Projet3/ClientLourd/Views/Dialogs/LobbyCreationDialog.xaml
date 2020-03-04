@@ -49,16 +49,28 @@
                 <ComboBox SelectedItem="{Binding SelectedNumberOfVirtualPlayers}" ItemsSource="{Binding VirtualPlayersList}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100"></ComboBox>
             </StackPanel>
 
-            <StackPanel Margin="0 30 0 5" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Man" Height="40" Width="25" Margin="0 -5 10 0" />
-                <TextBlock FontSize="24" Margin="0 0 10 0" FontWeight="Bold">Minimum number of human players:</TextBlock>
-                <TextBlock TextDecorations="Underline" FontSize="24" Text="{Binding PlayerMin}"/>
+            <StackPanel Margin="0 20 0 20">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Skull" Width="24" Height="24" Margin="5" />
+                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Text="Select the level of difficulty of the word " />
+                    <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
+                                           FontWeight="Bold"
+                                           Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <ComboBox Width="400" ItemsSource="{Binding Difficulties}"  SelectedItem="{Binding SelectedDifficulty}"></ComboBox>
             </StackPanel>
 
-            <StackPanel Margin="0 5 0 30" Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Margin="0 30 0 5" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon Kind="Man" Height="40" Width="25" Margin="0 -5 10 0" />
+                <TextBlock FontSize="18" Margin="0 0 10 0" FontWeight="Bold">Minimum number of human players:</TextBlock>
+                <TextBlock TextDecorations="Underline" FontSize="18" Text="{Binding PlayerMin}"/>
+            </StackPanel>
+
+            <StackPanel Margin="0 5 0 0" Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Men" Height="40" Width="25" Margin="0 -5 10 0" />
-                <TextBlock FontSize="24" Margin="0 0 10 0" FontWeight="Bold">Maximum number of players (bots and humans):</TextBlock>
-                <TextBlock TextDecorations="Underline" FontSize="24" Text="{Binding PlayersMax}"></TextBlock>
+                <TextBlock FontSize="18" Margin="0 0 10 0" FontWeight="Bold">Maximum number of players (bots and humans):</TextBlock>
+                <TextBlock TextDecorations="Underline" FontSize="18" Text="{Binding PlayersMax}"></TextBlock>
                 </StackPanel>
             <Button Margin="0 30 0 30" Width="300" Command="{Binding CreateLobbyCommand}" CommandParameter="{Binding ElementName=LobbyName, Path=Text}">Create lobby</Button>
             </StackPanel>

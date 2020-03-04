@@ -21,15 +21,15 @@ namespace ClientLourd.ViewModels
         {
             SocketClient.LobbyCreated += OnLobbyCreated;
             Lobbies = new ObservableCollection<Lobby>();
-            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop,0, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo,1, 1));
-            Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA,2, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop, 3, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo, 0, 1));
-            Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA, 8, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop, 1, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo, 1, 1));
-            Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA, 1, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop, DifficultyLevel.Easy,0, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo, DifficultyLevel.Hard,1, 1));
+            Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA, DifficultyLevel.Easy,2, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop, DifficultyLevel.Medium, 3, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo, DifficultyLevel.Medium,0, 1));
+            Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA, DifficultyLevel.Easy, 8, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join COOP", "TamereShortz", GameModes.Coop, DifficultyLevel.Hard, 1, 8));
+            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "Tame2", GameModes.Solo, DifficultyLevel.Medium, 1, 1));
+            Lobbies.Add(new Lobby("FFA", "FFALover", GameModes.FFA, DifficultyLevel.Easy, 1, 8));
             _modeFilteredAscending = false;
             _lobbyFilteredAscending = false;
             _hostFilteredAscending = false;
@@ -72,8 +72,7 @@ namespace ClientLourd.ViewModels
             var lobbyCreated = (LobbyCreatedArgs)e;
             Application.Current.Dispatcher.Invoke(() =>
             {
-
-                Lobbies.Insert(0, new Lobby(lobbyCreated.Name, lobbyCreated.OwnerName, (GameModes)lobbyCreated.Mode, 1, lobbyCreated.PlayersMax));
+                Lobbies.Insert(0, new Lobby(lobbyCreated.Name, lobbyCreated.OwnerName, (GameModes)lobbyCreated.Mode, (DifficultyLevel)lobbyCreated.Difficulty, lobbyCreated.Players.Count, lobbyCreated.PlayersMax));
             });
         }
 
@@ -148,6 +147,22 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        private bool _difficultyFilteredAscending;
+
+        private void FilterDifficulty()
+        {
+
+            if (!_difficultyFilteredAscending)
+            {
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int)lobby.Difficulty).ToList());
+                _difficultyFilteredAscending = true;
+            }
+            else
+            {
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int)lobby.Difficulty).ToList());
+                _difficultyFilteredAscending = false;
+            }
+        }
 
         private RelayCommand<string> _filterLobbies;
 
@@ -170,6 +185,9 @@ namespace ClientLourd.ViewModels
                 FilterHost();
             if (attribute == "Players")
                 FilterPlayerCount();
+            if (attribute == "Difficulty")
+                FilterDifficulty();
+
         }
     }
 }

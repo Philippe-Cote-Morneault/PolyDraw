@@ -23,6 +23,7 @@ namespace ClientLourd.ViewModels
             GameName = "";
             SelectedMode = GameModes.FFA.GetDescription();
             SelectedNumberOfVirtualPlayers = 0;
+            SelectedDifficulty = DifficultyLevel.Easy.GetDescription();
         }
 
 
@@ -44,6 +45,28 @@ namespace ClientLourd.ViewModels
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
+
+        private DifficultyLevel _selectedDifficulty;
+
+        public string SelectedDifficulty
+        {
+            get
+            {
+                return _selectedDifficulty.GetDescription();
+            }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _selectedDifficulty = value.GetEnumFromDescription<DifficultyLevel>();
+                }
+            }
+        }
+
+        public List<string> Difficulties
+        {
+            get { return EnumManager.GetAllDescriptions<DifficultyLevel>(); }
+        }
 
 
         private GameModes _selectedMode;
@@ -138,7 +161,7 @@ namespace ClientLourd.ViewModels
 
         private async void CreateLobby()
         {
-            await RestClient.PostGroup(GameName, PlayersMax, SelectedNumberOfVirtualPlayers, SelectedMode.GetEnumFromDescription<GameModes>());
+            await RestClient.PostGroup(GameName, PlayersMax, SelectedNumberOfVirtualPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
         }
 
         public int PlayersMax
