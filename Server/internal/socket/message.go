@@ -39,11 +39,13 @@ type messageType struct {
 	ErrorResponse            int
 	UserJoinedGroup          int
 	ResponseGroupRemoved     int
+	RequestGameStart         int
 	GameStarting             int
 	RequestReadyMatch        int
 	RequestQuitMatch         int
 	RequestGuessWordMatch    int
 	RequestHintMatch         int
+	ResponseGameStart        int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -74,6 +76,8 @@ var MessageType = &messageType{
 	UserJoinedGroup:          43,
 	RequestLeaveGroup:        44,
 	ResponseLeaveGroup:       45,
+	RequestGameStart:         48,
+	ResponseGameStart:        49,
 	ResponseGroupCreated:     51,
 	ResponseGroupRemoved:     53,
 	RequestReadyMatch:        62,
