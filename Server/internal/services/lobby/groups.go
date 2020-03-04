@@ -97,7 +97,6 @@ func (g *groups) AddGroup(group *model.Group) {
 
 //JoinGroup used to add a user to the groups can be called in rest that's why we can avoid the db operation
 func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
-	//TODO add logic to respect conditions
 	g.mutex.Lock()
 	if _, ok := g.queue[socketID]; ok {
 		//Check if groups exists
