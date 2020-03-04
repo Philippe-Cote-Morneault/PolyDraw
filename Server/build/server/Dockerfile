@@ -12,7 +12,11 @@ RUN mkdir -p /app/dict/ && \
 wget -q -O /app/dict/en_US.txt https://log3900.blob.core.windows.net/polydraw/dict/en_US.txt && \
 wget -q -O /app/dict/en_US_bad.txt https://log3900.blob.core.windows.net/polydraw/badwords/en_US.txt && \
 wget -q -O /app/dict/fr_QC.txt https://log3900.blob.core.windows.net/polydraw/dict/fr_QC.txt && \
-wget -q -O /app/dict/fr_QC_bad.txt https://log3900.blob.core.windows.net/polydraw/badwords/fr_QC.txt
+wget -q -O /app/dict/fr_QC_bad.txt https://log3900.blob.core.windows.net/polydraw/badwords/fr_QC.txt && \
+wget -q -O /app/dict/fr_QC_words.txt https://log3900.blob.core.windows.net/polydraw/choices/fr_QC.txt && \
+wget -q -O /app/dict/en_US_words.txt https://log3900.blob.core.windows.net/polydraw/choices/en_US.txt
+
+
 
 COPY dist/server-linux /app/server
 RUN chmod +x /app/server
