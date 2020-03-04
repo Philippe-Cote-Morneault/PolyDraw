@@ -48,5 +48,6 @@
         <service android:name=".chat.Channel.ChannelRepository"/>
         <service android:name=".chat.ChatManager"/>
         <service android:name=".game.group.GroupRepository"/>
+        <service android:name=".game.lobby.GroupManager"/>
     </application>
 </manifest>
