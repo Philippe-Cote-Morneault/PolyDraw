@@ -65,6 +65,20 @@ func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 	}
 }
 
+//Guess used when the client wants to guess a word
+func (m *matchManager) Guess(message socket.RawMessageReceived) {
+	if groupID, ok := m.assignment[message.SocketID]; ok {
+		m.matches[groupID].TryWord(message.SocketID, string(message.Payload.Bytes))
+	}
+}
+
+//Hint used when the client wants to have a hint for the word
+func (m *matchManager) Hint(socketID uuid.UUID) {
+	if groupID, ok := m.assignment[socketID]; ok {
+		m.matches[groupID].HintRequested(socketID)
+	}
+}
+
 //Quit quits the match
 func (m *matchManager) Quit(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {

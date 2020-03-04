@@ -56,12 +56,18 @@ func (s *Service) listen() {
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				s.manager.Quit(message.SocketID)
 			}
-
 		case data := <-s.ready:
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				s.manager.Ready(message.SocketID)
 			}
-
+		case data := <-s.guess:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				s.manager.Guess(message)
+			}
+		case data := <-s.hint:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				s.manager.Hint(message.SocketID)
+			}
 		case <-s.shutdown:
 			return
 		}
