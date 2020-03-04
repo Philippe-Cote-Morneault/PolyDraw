@@ -8,7 +8,7 @@ import (
 	"github.com/vmihailenco/msgpack/v4"
 )
 
-// Quick implementation of enum to represent different message types
+// Quick implementation of enum to represent different message mode
 type messageType struct {
 	ServerConnection         int
 	ServerConnectionResponse int
@@ -39,9 +39,14 @@ type messageType struct {
 	ErrorResponse            int
 	UserJoinedGroup          int
 	ResponseGroupRemoved     int
+	GameStarting             int
+	RequestReadyMatch        int
+	RequestQuitMatch         int
+	RequestGuessWordMatch    int
+	RequestHintMatch         int
 }
 
-// MessageType represents the available message types to send to clients.
+// MessageType represents the available message mode to send to clients.
 var MessageType = &messageType{
 	ServerConnection:         0,
 	ServerConnectionResponse: 1,
@@ -71,6 +76,11 @@ var MessageType = &messageType{
 	ResponseLeaveGroup:       45,
 	ResponseGroupCreated:     51,
 	ResponseGroupRemoved:     53,
+	RequestReadyMatch:        62,
+	GameStarting:             63,
+	RequestQuitMatch:         64,
+	RequestGuessWordMatch:    74,
+	RequestHintMatch:         82,
 	ErrorResponse:            255,
 }
 
