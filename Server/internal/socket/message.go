@@ -46,6 +46,7 @@ type messageType struct {
 	RequestGuessWordMatch    int
 	RequestHintMatch         int
 	ResponseGameStart        int
+	GameWelcome              int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -80,6 +81,7 @@ var MessageType = &messageType{
 	ResponseGameStart:        49,
 	ResponseGroupCreated:     51,
 	ResponseGroupRemoved:     53,
+	GameWelcome:              61,
 	RequestReadyMatch:        62,
 	GameStarting:             63,
 	RequestQuitMatch:         64,
