@@ -52,7 +52,7 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 
 func (m *matchManager) Ready(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
-		m.matches[groupID].Ready()
+		m.matches[groupID].Ready(socketID)
 	}
 }
 

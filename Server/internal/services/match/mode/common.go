@@ -9,6 +9,7 @@ import (
 
 type base struct {
 	readyMatch  sync.WaitGroup
+	readyOnce   map[uuid.UUID]bool
 	connections []uuid.UUID
 	info        model.Group
 }
@@ -18,6 +19,11 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 	copy(b.connections, connections)
 	b.info = info
 	b.readyMatch.Add(len(b.connections))
+
+	b.readyOnce = make(map[uuid.UUID]bool)
+	for i := range b.connections {
+		b.readyOnce[b.connections[i]] = false
+	}
 
 }
 
@@ -38,6 +44,9 @@ func (b *base) waitForPlayers() {
 	b.broadcast(&message)
 }
 
-func (b *base) ready() {
-	b.readyMatch.Done()
+func (b *base) ready(socketID uuid.UUID) {
+	if !b.readyOnce[socketID] {
+		b.readyMatch.Done()
+		b.readyOnce[socketID] = true
+	}
 }

@@ -24,8 +24,8 @@ func (f *FFA) Start() {
 }
 
 //Ready registering that it is ready
-func (f *FFA) Ready() {
-	f.ready()
+func (f *FFA) Ready(socketID uuid.UUID) {
+	f.ready(socketID)
 }
 
 //GameLoop method should be called with start

@@ -13,7 +13,7 @@ type IMatch interface {
 	Init(connections []uuid.UUID, info model.Group)
 
 	//Ready called by every clients to tell the server that they are ready to start the game
-	Ready()
+	Ready(socketID uuid.UUID)
 
 	//Start is the method used to start the game loop. There should be the waiting for all the clients
 	Start()
