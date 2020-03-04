@@ -4,12 +4,17 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log
 import com.log3900.chat.ChatManager
+import com.log3900.game.group.GroupCreated
+import com.log3900.game.group.GroupRepository
+import com.log3900.user.account.AccountRepository
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 
 class GroupManager : Service() {
     private val binder = GroupManagerBinder()
+    private var groupRepository: GroupRepository? = null
 
     companion object {
         private var isReady = false
@@ -35,6 +40,15 @@ class GroupManager : Service() {
 
     }
 
+    fun createGroup(createdGroup: GroupCreated) {
+        groupRepository?.createGroup(AccountRepository.getInstance().getAccount().sessionToken, createdGroup)?.subscribe(
+            {
+            },
+            {
+            }
+        )
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -43,6 +57,7 @@ class GroupManager : Service() {
         super.onCreate()
 
         instance = this
+        groupRepository = GroupRepository.instance
 
         setReadyState()
     }
@@ -56,6 +71,7 @@ class GroupManager : Service() {
         super.onDestroy()
         instance = null
         isReady = false
+        groupRepository = null
     }
 
     inner class GroupManagerBinder : Binder() {
