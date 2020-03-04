@@ -31,3 +31,16 @@ type PlayerTurnDraw struct {
 	DrawingID string
 	Length    int
 }
+
+type PlayersDataPoint struct {
+	Username string
+	UserID   string
+	Point    int
+}
+
+type GameEnded struct {
+	Players    []PlayersDataPoint
+	Winner     string
+	WinnerName string
+	Time       int
+}
