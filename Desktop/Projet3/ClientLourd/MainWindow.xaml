@@ -174,7 +174,11 @@
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Home'}">
                             <controls:Home/>
                         </DockPanel>
-                    
+
+                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">
+                            <controls:Lobby/>
+                        </DockPanel>
+
                     </Grid>
                     <!--Chat Drawer-->
                     <materialDesign:DrawerHost.RightDrawerContent>

@@ -4,6 +4,7 @@
     {
         Editor,
         Profile,
-        Home
+        Home,
+        Lobby
     }
 }

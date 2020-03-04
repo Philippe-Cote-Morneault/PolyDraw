@@ -29,7 +29,10 @@
         DeleteStroke = 38, 
         UserDeletedStroke = 39,
         ServerJoinLobby = 41,
+        QuitLobbyRequest = 44,
+        QuitLobbyResponse = 45,
         LobbyCreated = 51,
+        LobbyErased = 53,
         ServerMessage = 255,
     }
 }

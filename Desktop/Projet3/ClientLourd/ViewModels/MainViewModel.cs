@@ -56,7 +56,7 @@ namespace ClientLourd.ViewModels
         {
             NetworkInformations = new NetworkInformations();
             SessionInformations = new SessionInformations();
-            ContainedView = Utilities.Enums.Views.Editor.ToString();
+            ContainedView = Utilities.Enums.Views.Home.ToString();
             RestClient = new RestClient(NetworkInformations);
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };

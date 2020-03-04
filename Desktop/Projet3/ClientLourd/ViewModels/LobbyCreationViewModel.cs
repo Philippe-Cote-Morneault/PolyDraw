@@ -5,6 +5,8 @@ using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Utilities.ValidationRules;
+using ClientLourd.Views.Dialogs;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +37,22 @@ namespace ClientLourd.ViewModels
             }
         }
 
+
         public SocketClient SocketClient
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+
+        public string ContainedView
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView;
+            }
+            set
+            {
+                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value;
+            }
         }
 
         public RestClient RestClient
@@ -161,8 +176,18 @@ namespace ClientLourd.ViewModels
 
         private async void CreateLobby()
         {
-            await RestClient.PostGroup(GameName, PlayersMax, SelectedNumberOfVirtualPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
+            try
+            {
+                await RestClient.PostGroup(GameName, PlayersMax, SelectedNumberOfVirtualPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
+                ContainedView = Utilities.Enums.Views.Lobby.ToString();
+                DialogHost.CloseDialogCommand.Execute(null, null);
+            }
+            catch (Exception e)
+            {
+                await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
+            }
         }
+        
 
         public int PlayersMax
         {
