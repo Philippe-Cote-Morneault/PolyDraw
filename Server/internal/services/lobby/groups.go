@@ -97,41 +97,53 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		groupDB := model.Group{}
 		model.DB().Where("id = ? and status = 0", groupID).First(&groupDB)
 		if groupDB.ID != uuid.Nil {
-			delete(g.queue, socketID)
-			g.assignment[socketID] = groupID
 
-			g.groups[groupID] = append(g.groups[groupID], socketID)
-			g.mutex.Unlock()
+			//Is the group full ?
+			if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
+				delete(g.queue, socketID)
+				g.assignment[socketID] = groupID
 
-			//send response to client
-			message := socket.RawMessage{}
-			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
-				Response: true,
-				Error:    "",
-			})
-
-			if socket.SendRawMessageToSocketID(message, socketID) == nil {
-				//We only commit the data to the db if the message was sent successfully
-				//else we will handle the error in the disconnect message
-				user, _ := auth.GetUser(socketID)
-				model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
-
-				//Send a message to all the member of the group to advertise that a new user is in the group
-				newUser := socket.RawMessage{}
-				newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
-					UserID:   user.ID.String(),
-					Username: user.Username,
-					GroupID:  groupID.String(),
-				})
-				g.mutex.Lock()
-				for i := range g.groups[groupID] {
-					if g.groups[groupID][i] != socketID {
-						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
-					}
-				}
+				g.groups[groupID] = append(g.groups[groupID], socketID)
 				g.mutex.Unlock()
 
+				//send response to client
+				message := socket.RawMessage{}
+				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
+					Response: true,
+					Error:    "",
+				})
+
+				if socket.SendRawMessageToSocketID(message, socketID) == nil {
+					//We only commit the data to the db if the message was sent successfully
+					//else we will handle the error in the disconnect message
+					user, _ := auth.GetUser(socketID)
+					model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
+
+					//Send a message to all the member of the group to advertise that a new user is in the group
+					newUser := socket.RawMessage{}
+					newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
+						UserID:   user.ID.String(),
+						Username: user.Username,
+						GroupID:  groupID.String(),
+					})
+					g.mutex.Lock()
+					for i := range g.groups[groupID] {
+						if g.groups[groupID][i] != socketID {
+							go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
+						}
+					}
+					g.mutex.Unlock()
+
+				}
+				return
 			}
+			g.mutex.Unlock()
+			message := socket.RawMessage{}
+			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
+				Response: false,
+				Error:    "The group is full",
+			})
+			socket.SendRawMessageToSocketID(message, socketID)
 			return
 
 		}
