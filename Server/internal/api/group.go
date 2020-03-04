@@ -20,6 +20,17 @@ type requestGroupCreate struct {
 	Difficulty     int
 }
 
+type responsePlayer struct {
+	ID       string
+	Username string
+	IsCPU    bool
+}
+
+type responsePlayerReal struct {
+	ID       string
+	Username string
+}
+
 type responseGroupCreate struct {
 	GroupName string
 	GroupID   string
@@ -32,8 +43,8 @@ type responseGroup struct {
 	GameType       int
 	Difficulty     int
 	Status         int
-	Owner          userResponse
-	Players        []userResponse
+	Owner          responsePlayerReal
+	Players        []responsePlayer
 }
 
 const maxPlayer = 12
@@ -132,15 +143,16 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 
 	response := make([]responseGroup, len(groups))
 	for i := range groups {
-		owner := userResponse{
-			Name: groups[i].Owner.Username,
-			ID:   groups[i].OwnerID.String(),
+		owner := responsePlayerReal{
+			Username: groups[i].Owner.Username,
+			ID:       groups[i].OwnerID.String(),
 		}
-		players := make([]userResponse, len(groups[i].Users))
+		players := make([]responsePlayer, len(groups[i].Users))
 		for j := range groups[i].Users {
-			players[j] = userResponse{
-				ID:   groups[i].Users[j].ID.String(),
-				Name: groups[i].Users[j].Username,
+			players[j] = responsePlayer{
+				ID:       groups[i].Users[j].ID.String(),
+				Username: groups[i].Users[j].Username,
+				IsCPU:    false,
 			}
 		}
 
@@ -172,15 +184,16 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Users").Preload("Owner").Where("id = ?", groupID).First(&group)
 
 	if group.ID != uuid.Nil {
-		owner := userResponse{
-			Name: group.Owner.Username,
-			ID:   group.OwnerID.String(),
+		owner := responsePlayerReal{
+			Username: group.Owner.Username,
+			ID:       group.OwnerID.String(),
 		}
-		players := make([]userResponse, len(group.Users))
+		players := make([]responsePlayer, len(group.Users))
 		for j := range group.Users {
-			players[j] = userResponse{
-				ID:   group.Users[j].ID.String(),
-				Name: group.Users[j].Username,
+			players[j] = responsePlayer{
+				ID:       group.Users[j].ID.String(),
+				Username: group.Users[j].Username,
+				IsCPU:    false,
 			}
 		}
 
