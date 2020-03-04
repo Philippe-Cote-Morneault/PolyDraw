@@ -24,6 +24,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     private lateinit var maxPlayersTextInput: EditText
     private lateinit var virtualPlayersTextInput: EditText
     private lateinit var gameTypeSpinner: Spinner
+    private lateinit var difficultySpinner: Spinner
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(activity)
@@ -33,7 +34,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
                         groupNameTextInput.text.toString(),
                         maxPlayersTextInput.text.toString().toInt(),
                         virtualPlayersTextInput.text.toString().toInt(),
-                        gameTypeSpinner.selectedItem as Int,
+                        MatchMode.values()[gameTypeSpinner.selectedItemPosition],
                         0))
             }
             .setNegativeButton("Cancel") { _, _ ->
@@ -53,19 +54,29 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         maxPlayersTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_max_players)
         virtualPlayersTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_virtual_players)
         gameTypeSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_match_type)
+        difficultySpinner = rootView.findViewById(R.id.dialog_create_match_spinner_difficulty)
 
-        setupSpinner()
+        setupSpinners()
     }
 
-    private fun setupSpinner() {
+    private fun setupSpinners() {
         val matchModeSpinnerItems = ArrayList<String>()
         MatchMode.values().forEach {
             matchModeSpinnerItems.add(resources.getString(MatchMode.stringRes(it)))
         }
 
-        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, matchModeSpinnerItems)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        gameTypeSpinner.adapter = adapter
+        val difficultySpinnerItems = ArrayList<String>()
+        Difficulty.values().forEach {
+            difficultySpinnerItems.add(resources.getString(Difficulty.stringRes(it)))
+        }
+
+        val matchTypeAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, matchModeSpinnerItems)
+        matchTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        gameTypeSpinner.adapter = matchTypeAdapter
+
+        val difficultyAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, difficultySpinnerItems)
+        difficultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        difficultySpinner.adapter = difficultyAdapter
     }
 
 
