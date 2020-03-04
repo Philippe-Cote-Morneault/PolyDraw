@@ -145,6 +145,8 @@ def handle(typeVal, valBytes):
     if typeVal == 51:
         printType("-> Group created")
         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 53:
+        printType("-> Group Erased")
     if typeVal == 255:
         printType("-> [[ERROR]]")
         printMsgPack(msgpack.unpackb(valBytes))
