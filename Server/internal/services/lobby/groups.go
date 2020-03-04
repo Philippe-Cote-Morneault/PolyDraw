@@ -313,6 +313,8 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				g.mutex.Unlock()
 
 				match.UpgradeGroup(groupID, connections, groupDB)
+				//TODO group cleanup
+				//change status and put all the users in the queue once they quit the game
 			} else {
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
