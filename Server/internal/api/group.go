@@ -110,7 +110,6 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		Difficulty:     request.Difficulty,
 		Status:         0,
 	}
-	//TODO get owner object completely
 	var user model.User
 	model.DB().Model(&user).Where("id = ?", userid).First(&user)
 	model.DB().Create(&group)
