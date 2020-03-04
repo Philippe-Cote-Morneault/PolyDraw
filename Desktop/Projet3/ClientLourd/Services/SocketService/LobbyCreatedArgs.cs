@@ -41,19 +41,7 @@ namespace ClientLourd.Services.SocketService
 
         public int Difficulty { get => (int)_data["Difficulty"]; }
 
-        private ObservableCollection<Player> _players;
-        public ObservableCollection<Player> Players //{ get => JsonConvert.DeserializeObject<Player>(_data["Players"][0]); }
-        {
-            get
-            {
-
-                return _players;
-            }
-            set
-            {
-                _players = value;
-            }
-        }
+        public ObservableCollection<Player> Players { get; set; }
     }
 
     

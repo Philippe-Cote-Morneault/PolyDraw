@@ -160,13 +160,13 @@
                     IsRightDrawerOpen="{Binding ElementName=ChatToggleButton, Path=IsChecked }"
                     IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
 
-                    <DockPanel Name="ControlSelector">
+                    <Grid Name="ControlSelector">
 
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Editor'}">
                             <controls:Editor/>
-                            <Button Click="CreateGame"> Add game</Button>
+                            <Button Click="CreateGame">Add game</Button>
                         </DockPanel>
-                        
+
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
                             <controls:Profile x:Name="Profile"/>
                         </DockPanel>
@@ -175,7 +175,7 @@
                             <controls:Home/>
                         </DockPanel>
                     
-                    </DockPanel>
+                    </Grid>
                     <!--Chat Drawer-->
                     <materialDesign:DrawerHost.RightDrawerContent>
                         <DockPanel
