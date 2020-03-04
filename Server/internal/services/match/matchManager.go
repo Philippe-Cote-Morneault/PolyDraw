@@ -59,7 +59,7 @@ func (m *matchManager) Ready(socketID uuid.UUID) {
 //Send a welcome message to the users of a match
 func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 	message := m.matches[groupID].GetWelcome()
-	connections := m.matches[groupID].GetConnections()
+	connections := m.matches[groupID].GetConnections().socketID
 	for i := range connections {
 		go socket.SendRawMessageToSocketID(message, connections[i]) //In parallel because this message is not determinist
 		m.assignment[connections[i]] = groupID
