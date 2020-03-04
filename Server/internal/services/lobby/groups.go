@@ -256,9 +256,9 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 	//Remove all the data associated with the groups
 	for _, v := range g.groups[groupDB.ID] {
 		delete(g.assignment, v)
-		g.removeSocketGroup(v, groupDB.ID)
 		g.queue[v] = true
 	}
+	g.groups[groupDB.ID] = make([]uuid.UUID, 0, 4) //Reset the group
 
 	groupDB.Status = 3
 	model.DB().Save(groupDB)
