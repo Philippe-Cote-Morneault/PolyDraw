@@ -19,4 +19,10 @@
     <string name="create_match_dialog_title">Créer une partie</string>
     <string name="create_match_dialog_match_name_hint">Nom de la partie</string>
     <string name="join_match_button_title">Rejoindre</string>
+    <string name="difficulty_easy_title">Facile</string>
+    <string name="difficulty_hard_title">Difficile</string>
+    <string name="difficulty_medium_title">Moyen</string>
+    <string name="match_mode_coop_title">Coop</string>
+    <string name="match_mode_ffa_title">Mêlée générale</string>
+    <string name="match_mode_solo_title">Solo</string>
 </resources>

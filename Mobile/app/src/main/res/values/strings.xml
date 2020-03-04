@@ -130,4 +130,10 @@
     <string name="create_match_dialog_title">Create match</string>
     <string name="create_match_dialog_match_name_hint">Match name</string>
     <string name="join_match_button_title">Join</string>
+    <string name="difficulty_easy_title">Easy</string>
+    <string name="difficulty_medium_title">Medium</string>
+    <string name="difficulty_hard_title">Hard</string>
+    <string name="match_mode_ffa_title">Free for all</string>
+    <string name="match_mode_coop_title">Coop</string>
+    <string name="match_mode_solo_title">Solo</string>
 </resources>
