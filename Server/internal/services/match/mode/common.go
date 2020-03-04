@@ -17,6 +17,7 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 	b.connections = make([]uuid.UUID, len(connections))
 	copy(b.connections, connections)
 	b.info = info
+	b.readyMatch.Add(len(b.connections))
 
 }
 
@@ -24,11 +25,6 @@ func (b *base) broadcast(message *socket.RawMessage) {
 	for i := range b.connections {
 		socket.SendRawMessageToSocketID(*message, b.connections[i])
 	}
-}
-
-//queueWait make sure that the client connections are added to the semaphore
-func (b *base) queueWait() {
-	b.readyMatch.Add(len(b.connections))
 }
 
 //Wait for all the clients to be ready
