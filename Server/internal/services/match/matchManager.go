@@ -35,7 +35,7 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 	var match IMatch
 	switch gameInfo.GameType {
 	case 0:
-		match = mode.FFA{}
+		match = &mode.FFA{}
 	}
 	//TODO add other game mode here!
 
@@ -60,9 +60,9 @@ func (m *matchManager) Ready(socketID uuid.UUID) {
 func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 	message := m.matches[groupID].GetWelcome()
 	connections := m.matches[groupID].GetConnections()
-
 	for i := range connections {
 		go socket.SendRawMessageToSocketID(message, connections[i]) //In parallel because this message is not determinist
+		m.assignment[connections[i]] = groupID
 	}
 }
 
