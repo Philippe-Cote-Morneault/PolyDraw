@@ -26,6 +26,7 @@ func (r *Router) routing() {
 	//Lobby
 	r.handle(socket.MessageType.RequestLeaveGroup, lobby.BLeaveGroup)
 	r.handle(socket.MessageType.RequestJoinGroup, lobby.BJoinGroup)
+	r.handle(socket.MessageType.RequestGameStart, lobby.BStartMatch)
 
 	//Match
 	r.handle(socket.MessageType.RequestReadyMatch, match.BMatchReady)
