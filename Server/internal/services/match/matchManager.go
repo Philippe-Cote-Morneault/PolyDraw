@@ -15,7 +15,7 @@ type matchManager struct {
 var matchManagerInstance *matchManager
 
 //UpgradeGroup method exposed to convert a group to a new game
-func UpgradeGroup(groupID uuid.UUID, connections *[]uuid.UUID, gameInfo model.Group) {
+func UpgradeGroup(groupID uuid.UUID, connections []uuid.UUID, gameInfo model.Group) {
 	if matchManagerInstance != nil {
 		matchManagerInstance.StartGame(groupID, connections, gameInfo)
 	}
@@ -30,7 +30,7 @@ func (m *matchManager) Init() {
 }
 
 //StartGame start the games with the current players in the group
-func (m *matchManager) StartGame(groupID uuid.UUID, connections *[]uuid.UUID, gameInfo model.Group) {
+func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gameInfo model.Group) {
 	var match IMatch
 	switch gameInfo.GameType {
 	case 0:
@@ -39,7 +39,7 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections *[]uuid.UUID, ga
 	//TODO add other game mode here!
 
 	if match != nil {
-		match.Init(*connections, gameInfo)
+		match.Init(connections, gameInfo)
 		m.matches[groupID] = match
 
 		m.sendWelcome(groupID) //Send welcome message to all the users
