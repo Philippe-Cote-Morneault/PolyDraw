@@ -1,4 +1,4 @@
-package match
+package mode
 
 //PlayersData represents usefull informations for a players
 type PlayersData struct {

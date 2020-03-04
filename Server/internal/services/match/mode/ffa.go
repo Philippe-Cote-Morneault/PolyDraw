@@ -2,7 +2,6 @@ package mode
 
 import (
 	"github.com/google/uuid"
-	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 )
@@ -59,20 +58,21 @@ func (f FFA) Close() {
 
 //GetConnections returns all the socketID of the match
 func (f FFA) GetConnections() []uuid.UUID {
+	return nil
 }
 
 //GetWelcome returns a packet to send to all the players. Presents various details about the game
 func (f FFA) GetWelcome() socket.RawMessage {
-	players := make([]match.PlayersData, 0, len(f.info.Users))
+	players := make([]PlayersData, 0, len(f.info.Users))
 	for i := range f.info.Users {
-		players = append(players, match.PlayersData{
+		players = append(players, PlayersData{
 			UserID:   f.info.Users[i].ID.String(),
 			Username: f.info.Users[i].Username,
 			IsCPU:    false,
 		})
 	}
 	//TODO parameters ??
-	welcome := match.ResponseGameInfo{
+	welcome := ResponseGameInfo{
 		Players:   players,
 		GameType:  0,
 		TimeImage: 30000,
