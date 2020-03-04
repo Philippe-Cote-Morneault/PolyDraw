@@ -9,6 +9,14 @@ class MatchLobbyPresenter : Presenter {
         this.matchLobbyView = matchLobbyView
     }
 
+    fun onCreateMatchClicked() {
+        matchLobbyView?.showMatchCreationDialog()
+    }
+
+    fun onCreateMatchDialogPositiveClick() {
+
+    }
+
     override fun resume() {
     }
 

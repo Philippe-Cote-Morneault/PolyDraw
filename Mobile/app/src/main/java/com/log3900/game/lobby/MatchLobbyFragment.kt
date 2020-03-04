@@ -35,7 +35,7 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
 
         createMatchButton = rootView.findViewById(R.id.fragment_match_lobby_button_create_match)
 
-        createMatchButton.setOnClickListener { onCreateMatchClicked() }
+        createMatchButton.setOnClickListener { matchLobbyPresenter?.onCreateMatchClicked() }
 
     }
 
@@ -54,7 +54,8 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
         }
     }
 
-    private fun onCreateMatchClicked() {
+
+    override fun showMatchCreationDialog() {
         MatchCreationDialogFragment().show(fragmentManager!!, "MatchCreationDialogFragment")
     }
 
