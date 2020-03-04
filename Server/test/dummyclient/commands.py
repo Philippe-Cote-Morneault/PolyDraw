@@ -48,7 +48,7 @@ def execute():
     """
     """
     #Join group
-    sendMessage(40, uuid.UUID("353f7810-9f6e-4717-885e-54ad0288715a").bytes)
+    sendMessage(40, uuid.UUID("a4a97e0e-e9cf-4c9c-97e0-da5be7208933").bytes)
     """
     """
     #Leave group
@@ -57,4 +57,8 @@ def execute():
     """
     #Start match
     sendMessage(48, [])
+    """
+    """
+    #Client is ready
+    sendMessage(62, [])
     """
