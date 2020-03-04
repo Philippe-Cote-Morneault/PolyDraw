@@ -16,4 +16,5 @@
     <string name="fragment_match_lobby_title">Lobby</string>
     <string name="logout">Logout</string>
     <string name="create_match_button_title">Create match</string>
+    <string name="create_match_dialog_title">Create match</string>
 </resources>
