@@ -72,7 +72,7 @@
                                 <DataTemplate>
                                     <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand" Content="Mode">
                                         <Label.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterModeCommand}"/>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Mode"/>
                                         </Label.InputBindings>
                                     </Label>
                                 </DataTemplate>
@@ -85,7 +85,7 @@
                                 <DataTemplate>
                                     <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Game Name" Cursor="Hand">
                                         <Label.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbyNameCommand}"/>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="LobbyName"/>
                                         </Label.InputBindings>
                                     </Label>
                                 </DataTemplate>
@@ -96,7 +96,7 @@
                                 <DataTemplate>
                                     <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Host" Cursor="Hand">
                                         <Label.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterHostNameCommand}"/>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Host"/>
                                         </Label.InputBindings>
                                     </Label>
                                 </DataTemplate>
@@ -114,7 +114,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="UserGroup" Cursor="Hand">
                                             <materialDesign:PackIcon.InputBindings>
-                                                <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterPlayerCountCommand}"/>
+                                                <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Players"/>
                                             </materialDesign:PackIcon.InputBindings>
                                         </materialDesign:PackIcon>
                                     </StackPanel>

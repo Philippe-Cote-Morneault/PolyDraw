@@ -77,16 +77,6 @@ namespace ClientLourd.ViewModels
             });
         }
 
-        private RelayCommand<object> _filterMode;
-
-        public ICommand FilterModeCommand
-        {
-            get
-            {
-                return _filterMode ?? (_filterMode = new RelayCommand<object>(param => FilterMode()));
-            }
-        }
-
         private bool _modeFilteredAscending;
 
         private void FilterMode()
@@ -105,19 +95,10 @@ namespace ClientLourd.ViewModels
         }
 
 
-        private RelayCommand<object> _filterLobbyName;
-
-        public ICommand FilterLobbyNameCommand
-        {
-            get
-            {
-                return _filterLobbyName ?? (_filterLobbyName = new RelayCommand<object>(param => FilterLobby()));
-            }
-        }
 
         private bool _lobbyFilteredAscending;
 
-        private void FilterLobby()
+        private void FilterLobbyName()
         {
 
             if (!_lobbyFilteredAscending)
@@ -129,16 +110,6 @@ namespace ClientLourd.ViewModels
             {
                 Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => lobby.GameName).ToList());
                 _lobbyFilteredAscending = false;
-            }
-        }
-
-        private RelayCommand<object> _filterHostName;
-
-        public ICommand FilterHostNameCommand
-        {
-            get
-            {
-                return _filterHostName ?? (_filterHostName = new RelayCommand<object>(param => FilterHost()));
             }
         }
 
@@ -159,15 +130,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private RelayCommand<object> _filterPlayerCountName;
-
-        public ICommand FilterPlayerCountCommand
-        {
-            get
-            {
-                return _filterPlayerCountName ?? (_filterPlayerCountName = new RelayCommand<object>(param => FilterPlayerCount()));
-            }
-        }
 
         private bool _playerCountFilteredAscending;
 
@@ -186,6 +148,29 @@ namespace ClientLourd.ViewModels
             }
         }
 
+
+        private RelayCommand<string> _filterLobbies;
+
+        public ICommand FilterLobbiesCommand
+        {
+            get
+            {
+                return _filterLobbies ?? (_filterLobbies = new RelayCommand<string>(attribute => FilterLobbies(attribute)));
+            }
+        }
+
+
+        private void FilterLobbies(string attribute)
+        {
+            if (attribute == "LobbyName")
+                FilterLobbyName();
+            if (attribute == "Mode")
+                FilterMode();
+            if (attribute == "Host")
+                FilterHost();
+            if (attribute == "Players")
+                FilterPlayerCount();
+        }
     }
 }
 
