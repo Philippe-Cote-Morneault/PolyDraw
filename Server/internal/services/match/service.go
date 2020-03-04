@@ -1,6 +1,7 @@
 package match
 
 import (
+	"github.com/google/uuid"
 	"log"
 
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
@@ -50,6 +51,17 @@ func (s *Service) listen() {
 		select {
 		case id := <-s.close:
 			log.Printf("[Match] -> disconnect in game id: %s", id)
+			s.manager.Quit(id.(uuid.UUID))
+		case data := <-s.quit:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				s.manager.Quit(message.SocketID)
+			}
+
+		case data := <-s.ready:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				s.manager.Ready(message.SocketID)
+			}
+
 		case <-s.shutdown:
 			return
 		}
