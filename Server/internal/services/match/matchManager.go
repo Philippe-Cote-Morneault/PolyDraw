@@ -8,8 +8,8 @@ import (
 )
 
 type matchManager struct {
-	connections map[uuid.UUID]IMatch    //group id
-	assignment  map[uuid.UUID]uuid.UUID //socket id -> game id
+	matches    map[uuid.UUID]IMatch    //group id
+	assignment map[uuid.UUID]uuid.UUID //socket id -> game id
 }
 
 var matchManagerInstance *matchManager
@@ -25,7 +25,7 @@ func UpgradeGroup(groupID uuid.UUID, connections *[]uuid.UUID, gameInfo model.Gr
 func (m *matchManager) Init() {
 	matchManagerInstance = m
 
-	m.connections = make(map[uuid.UUID]IMatch)
+	m.matches = make(map[uuid.UUID]IMatch)
 	m.assignment = make(map[uuid.UUID]uuid.UUID)
 }
 
@@ -40,7 +40,7 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections *[]uuid.UUID, ga
 
 	if match != nil {
 		match.Init(*connections, gameInfo)
-		m.connections[groupID] = match
+		m.matches[groupID] = match
 
 		m.sendWelcome(groupID) //Send welcome message to all the users
 
@@ -51,14 +51,14 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections *[]uuid.UUID, ga
 
 func (m *matchManager) Ready(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
-		m.connections[groupID].Ready()
+		m.matches[groupID].Ready()
 	}
 }
 
 //Send a welcome message to the users of a match
 func (m *matchManager) sendWelcome(groupID uuid.UUID) {
-	message := m.connections[groupID].GetWelcome()
-	connections := m.connections[groupID].GetConnections()
+	message := m.matches[groupID].GetWelcome()
+	connections := m.matches[groupID].GetConnections()
 
 	for i := range connections {
 		go socket.SendRawMessageToSocketID(message, connections[i]) //In parallel because this message is not determinist
