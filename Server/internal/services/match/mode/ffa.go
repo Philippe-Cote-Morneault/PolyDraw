@@ -57,9 +57,8 @@ func (f *FFA) GameLoop() {
 	//Choose a user.
 	curDrawer := f.connections[f.order[f.orderPos]]
 	drawingID := uuid.New()
-	word := ""
+	word := f.findWord()
 	message := socket.RawMessage{}
-	//TODO find a word
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawThis), PlayerDrawThis{
 		Word:      word,
 		Time:      f.timeImage,
@@ -145,6 +144,15 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
 	return message
 
+}
+
+func (f *FFA) findWord() string {
+	//TODO language
+	word, err := model.Redis().SRandMember("dict_words_en").Result()
+	if err != nil {
+		f.Close()
+	}
+	return word
 }
 
 func (f *FFA) setOrder() {
