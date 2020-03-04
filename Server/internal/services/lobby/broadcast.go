@@ -8,6 +8,7 @@ const BJoinGroup = "lobby:join"
 //BLeaveGroup leave a group
 const BLeaveGroup = "lobby:leave"
 
+//BStartMatch promote the group to a match
 const BStartMatch = "lobby:start"
 
 //BSize buffer size for the messenger service
