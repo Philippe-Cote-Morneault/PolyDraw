@@ -22,6 +22,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler ServerStartsDrawing;
         public event SocketEventHandler ServerEndsDrawing;
         public event SocketEventHandler DrawingPreviewResponse;
+        public event SocketEventHandler LobbyCreated;
 
         protected virtual void OnServerMessage(object source, EventArgs e)
         {
@@ -100,6 +101,11 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnDrawingPreviewResponse(object source, EventArgs e)
         {
             DrawingPreviewResponse?.Invoke(source, e);
+        }
+
+        protected virtual void OnLobbyCreated(object source, EventArgs e)
+        {
+            LobbyCreated?.Invoke(source, e);
         }
     }
 }

@@ -188,6 +188,11 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.ServerMessage:
                             OnServerMessage(this, new SocketErrorEventArgs(data));
                             break;
+                        case SocketMessageTypes.ServerJoinLobby:
+                            break;
+                        case SocketMessageTypes.LobbyCreated:
+                            OnLobbyCreated(this, new LobbyCreatedArgs(data));
+                            break;
                         default:
                             throw new InvalidDataException();
                     }

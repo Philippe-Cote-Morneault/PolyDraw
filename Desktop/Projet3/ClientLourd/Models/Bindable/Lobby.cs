@@ -10,9 +10,9 @@ namespace ClientLourd.Models.Bindable
 {
     class Lobby: ModelBase
     {
-        public Lobby(string gameName, string host, GameModes gameMode, int nPlayersMax)
+        public Lobby(string gameName, string host, GameModes gameMode, int playersCount,int nPlayersMax)
         {
-            PlayersCount = 1;
+            PlayersCount = playersCount;
             Players = new ObservableCollection<string>();
             PlayersMax = nPlayersMax;
             GameName = gameName;

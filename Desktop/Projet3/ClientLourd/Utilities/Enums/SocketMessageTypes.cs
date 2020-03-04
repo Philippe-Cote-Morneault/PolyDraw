@@ -28,6 +28,8 @@
         DrawingPreviewResponse = 37,
         DeleteStroke = 38, 
         UserDeletedStroke = 39,
+        ServerJoinLobby = 41,
+        LobbyCreated = 51,
         ServerMessage = 255,
     }
 }

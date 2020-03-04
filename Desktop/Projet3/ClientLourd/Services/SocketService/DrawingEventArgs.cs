@@ -8,6 +8,7 @@ namespace ClientLourd.Services.SocketService
 {
     public class DrawingEventArgs: EventArgs
     {
+
         public DrawingEventArgs(dynamic data)
         {
             _data = data;
