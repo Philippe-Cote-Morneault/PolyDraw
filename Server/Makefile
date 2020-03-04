@@ -20,7 +20,7 @@ else
 DOCKERNAME = $(DOCKERREGISTRY)/server-dev
 endif
 
-build: dist/dict/en_US.txt dist/dict/en_US_bad.txt dist/dict/fr_QC.txt dist/dict/fr_QC_bad.txt
+build: dist/dict/en_US.txt dist/dict/en_US_bad.txt dist/dict/fr_QC.txt dist/dict/fr_QC_bad.txt dist/dict/fr_QC_words.txt dist/dict/en_US_words.txt
 	$(GO) build -i -o $(DIST_ROOT)/server ./cmd/server
 	
 build-linux:
@@ -104,3 +104,11 @@ dist/dict/fr_QC.txt:
 dist/dict/fr_QC_bad.txt:
 	mkdir -p dist/dict/
 	curl https://log3900.blob.core.windows.net/polydraw/badwords/fr_QC.txt -o $@
+
+dist/dict/fr_QC_words.txt:
+	mkdir -p dist/dict/
+	curl https://log3900.blob.core.windows.net/polydraw/choices/fr_QC.txt -o $@
+
+dist/dict/en_US_words.txt:
+	mkdir -p dist/dict/
+	curl https://log3900.blob.core.windows.net/polydraw/choices/en_US.txt -o $@
