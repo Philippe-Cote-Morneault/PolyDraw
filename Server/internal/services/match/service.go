@@ -10,7 +10,8 @@ import (
 
 //Service service used to manage the matches
 type Service struct {
-	close cbroadcast.Channel
+	close   cbroadcast.Channel
+	manager matchManager
 
 	shutdown chan bool
 }
@@ -18,6 +19,9 @@ type Service struct {
 //Init the match service
 func (s *Service) Init() {
 	s.shutdown = make(chan bool)
+	s.manager = matchManager{}
+	s.manager.Init()
+
 	s.subscribe()
 }
 
@@ -31,11 +35,6 @@ func (s *Service) Start() {
 func (s *Service) Shutdown() {
 	log.Println("[Match] -> Closing service")
 	close(s.shutdown)
-}
-
-//Register register any broadcast not used
-func (s *Service) Register() {
-
 }
 
 func (s *Service) listen() {
