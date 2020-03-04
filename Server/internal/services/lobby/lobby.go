@@ -17,8 +17,9 @@ type Lobby struct {
 	connected cbroadcast.Channel
 	close     cbroadcast.Channel
 
-	join  cbroadcast.Channel
-	leave cbroadcast.Channel
+	join       cbroadcast.Channel
+	leave      cbroadcast.Channel
+	startMatch cbroadcast.Channel
 
 	groups   *groups
 	shutdown chan bool
@@ -76,10 +77,15 @@ func (l *Lobby) listen() {
 			groupID, err := uuid.FromBytes(rawMessage.Payload.Bytes)
 			if err == nil {
 				l.groups.JoinGroup(rawMessage.SocketID, groupID)
+			} else {
+				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
 			}
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
 			l.groups.QuitGroup(rawMessage.SocketID)
+		case message := <-l.startMatch:
+			rawMessage := message.(socket.RawMessageReceived)
+			l.groups.StartMatch(rawMessage.SocketID)
 		case <-l.shutdown:
 			return
 		}
@@ -91,5 +97,6 @@ func (l *Lobby) subscribe() {
 	l.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
 	l.join, _, _ = cbroadcast.Subscribe(BJoinGroup)
 	l.leave, _, _ = cbroadcast.Subscribe(BLeaveGroup)
+	l.startMatch, _, _ = cbroadcast.Subscribe(BStartMatch)
 
 }
