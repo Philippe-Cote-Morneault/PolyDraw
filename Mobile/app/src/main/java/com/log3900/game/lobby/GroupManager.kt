@@ -6,6 +6,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import com.log3900.chat.ChatManager
+import com.log3900.game.group.Group
 import com.log3900.game.group.GroupCreated
 import com.log3900.game.group.GroupRepository
 import com.log3900.user.account.AccountRepository
@@ -38,6 +39,10 @@ class GroupManager : Service() {
             }
         }
 
+    }
+
+    fun getAvailableGroups(): Single<ArrayList<Group>> {
+        return groupRepository?.getGroups(AccountRepository.getInstance().getAccount().sessionToken)!!
     }
 
     fun createGroup(createdGroup: GroupCreated) {
