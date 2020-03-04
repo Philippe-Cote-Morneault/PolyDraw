@@ -8,50 +8,50 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
-//Match service used to manage the matches
-type Match struct {
+//Service service used to manage the matches
+type Service struct {
 	close cbroadcast.Channel
 
 	shutdown chan bool
 }
 
 //Init the match service
-func (m *Match) Init() {
-	m.shutdown = make(chan bool)
-	m.subscribe()
+func (s *Service) Init() {
+	s.shutdown = make(chan bool)
+	s.subscribe()
 }
 
 //Start the match service
-func (m *Match) Start() {
+func (s *Service) Start() {
 	log.Println("[Match] -> Starting service")
-	go m.listen()
+	go s.listen()
 }
 
 //Shutdown the match service
-func (m *Match) Shutdown() {
+func (s *Service) Shutdown() {
 	log.Println("[Match] -> Closing service")
-	close(m.shutdown)
+	close(s.shutdown)
 }
 
 //Register register any broadcast not used
-func (m *Match) Register() {
+func (s *Service) Register() {
 
 }
 
-func (m *Match) listen() {
+func (s *Service) listen() {
 	defer service.Closed()
 
 	for {
 		select {
-		case id := <-m.close:
+		case id := <-s.close:
 			log.Printf("[Match] -> disconnect in game id: %s", id)
-		case <-m.shutdown:
+		case <-s.shutdown:
 			return
 		}
 	}
 
 }
 
-func (m *Match) subscribe() {
-	m.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+func (s *Service) subscribe() {
+	s.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
 }

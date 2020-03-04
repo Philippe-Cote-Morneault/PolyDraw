@@ -74,5 +74,5 @@ func registerServices() {
 	service.Add(&potrace.Potrace{})
 	service.Add(&drawing.Drawing{})
 	service.Add(&lobby.Lobby{})
-	service.Add(&match.Match{})
+	service.Add(&match.Service{})
 }
