@@ -109,20 +109,17 @@
                                     <Binding Path="PlayersMax"></Binding>
                                 </MultiBinding>
                             </GridViewColumn.DisplayMemberBinding>
-                            <GridViewColumn.Header>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="UserGroup" Cursor="Hand">
-                                        <materialDesign:PackIcon.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterPlayerCountCommand}"/>
-                                        </materialDesign:PackIcon.InputBindings>
-                                    </materialDesign:PackIcon>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Players" Cursor="Hand">
-                                        <Label.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterPlayerCountCommand}"/>
-                                        </Label.InputBindings>
-                                    </Label>
-                                </StackPanel>
-                            </GridViewColumn.Header>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="UserGroup" Cursor="Hand">
+                                            <materialDesign:PackIcon.InputBindings>
+                                                <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterPlayerCountCommand}"/>
+                                            </materialDesign:PackIcon.InputBindings>
+                                        </materialDesign:PackIcon>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
                     </GridView>
                 </ListView.View>
