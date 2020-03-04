@@ -20,8 +20,7 @@ class GroupAdapter {
             groupJson.getAsJsonPrimitive("GameType")!!.asInt,
             groupJson.getAsJsonPrimitive("Difficulty")!!.asInt,
             groupJson.getAsJsonPrimitive("Status")!!.asInt,
-            UUID.randomUUID(),
-            //UUID.fromString(groupJson.getAsJsonObject("Owner")!!.getAsJsonPrimitive("ID")!!.asString),
+            UUID.fromString(groupJson.getAsJsonObject("Owner")!!.getAsJsonPrimitive("ID")!!.asString),
             jsonArrayToUUID(groupJson.getAsJsonArray("Players")!!)
         )
     }
@@ -30,7 +29,7 @@ class GroupAdapter {
         var arrayList = arrayListOf<UUID>()
 
         ids.forEach {
-            arrayList.add(UUID.fromString(it.asJsonObject.asString))
+            arrayList.add(UUID.fromString(it.asJsonObject.getAsJsonPrimitive("ID").asString))
         }
 
         return arrayList
