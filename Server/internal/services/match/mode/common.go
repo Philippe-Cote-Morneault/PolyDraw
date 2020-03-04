@@ -14,8 +14,10 @@ type base struct {
 }
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
+	b.connections = make([]uuid.UUID, len(connections))
+	copy(b.connections, connections)
 	b.info = info
-	b.connections = connections
+
 }
 
 func (b *base) broadcast(message *socket.RawMessage) {
