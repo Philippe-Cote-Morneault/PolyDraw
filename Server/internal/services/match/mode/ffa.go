@@ -12,13 +12,16 @@ import (
 //FFA Free for all game mode
 type FFA struct {
 	base
-	order     []int
+	order  []int
+	scores []int //Scores data are in the order of the match so the first user to draw is the first one in the score board
+	//We can get the position with the field order
 	orderPos  int
 	curLap    int
 	lapsTotal int
 	rand      *rand.Rand
 	timeImage int
 	isRunning bool
+	time      int
 }
 
 //Init initialize the game mode
@@ -41,6 +44,7 @@ func (f *FFA) Start() {
 	for f.isRunning {
 		f.GameLoop()
 	}
+	f.finish()
 }
 
 //Ready registering that it is ready
@@ -161,5 +165,33 @@ func (f *FFA) setOrder() {
 
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
+
+	//Identify the winner
+	bestPlayerOrder := -1
+	bestScore := -1
+	players := make([]PlayersDataPoint, len(f.scores))
+
+	for i := range f.scores {
+		if bestScore < f.scores[i] {
+			bestPlayerOrder = i
+			bestScore = f.scores[i]
+		}
+		players[i] = PlayersDataPoint{
+			Username: f.connections[f.order[i]].Username,
+			UserID:   f.connections[f.order[i]].userID.String(),
+			Point:    f.scores[i],
+		}
+	}
+	winner := f.connections[f.order[bestPlayerOrder]]
+
 	//Send a message to all the players to give them the details of the game and who is the winner
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.GameEnded), GameEnded{
+		Players:    players,
+		Winner:     winner.userID.String(),
+		WinnerName: winner.Username,
+		Time:       f.time,
+	})
+
+	f.broadcast(&message)
 }
