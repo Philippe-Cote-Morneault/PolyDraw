@@ -26,7 +26,14 @@ class MatchLobbyPresenter : Presenter {
     }
 
     private fun init() {
+        groupManager?.getAvailableGroups()?.subscribe(
+            {
+                matchLobbyView?.setAvailableGroups(it)
+            },
+            {
 
+            }
+        )
     }
 
 
