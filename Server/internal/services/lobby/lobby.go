@@ -84,7 +84,6 @@ func (l *Lobby) listen() {
 			return
 		}
 	}
-
 }
 
 func (l *Lobby) subscribe() {
