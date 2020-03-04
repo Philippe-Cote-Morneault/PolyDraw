@@ -13,7 +13,7 @@ import com.log3900.game.group.Group
 import java.util.*
 
 class MatchLobbyFragment : Fragment(), MatchLobbyView {
-    private lateinit var matchLobbyPresenter: MatchLobbyPresenter
+    private var matchLobbyPresenter: MatchLobbyPresenter? = null
 
     // UI
     private lateinit var matchesRecyclerView: RecyclerView
@@ -58,4 +58,9 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
         MatchCreationDialogFragment().show(fragmentManager!!, "MatchCreationDialogFragment")
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        matchLobbyPresenter?.destroy()
+        matchLobbyPresenter = null
+    }
 }

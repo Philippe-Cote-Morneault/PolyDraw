@@ -3,8 +3,8 @@ package com.log3900.game.lobby
 import com.log3900.shared.architecture.Presenter
 
 class MatchLobbyPresenter : Presenter {
-    private var matchLobbyView: MatchLobbyView
-    
+    private var matchLobbyView: MatchLobbyView? = null
+
     constructor(matchLobbyView: MatchLobbyView) {
         this.matchLobbyView = matchLobbyView
     }
@@ -16,5 +16,6 @@ class MatchLobbyPresenter : Presenter {
     }
 
     override fun destroy() {
+        matchLobbyView = null
     }
 }
