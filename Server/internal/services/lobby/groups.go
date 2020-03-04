@@ -273,10 +273,10 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 		delete(g.assignment, v)
 		g.queue[v] = true
 	}
-	g.groups[groupDB.ID] = make([]uuid.UUID, 0, 4) //Reset the group
+	delete(g.groups, groupDB.ID)
 
 	groupDB.Status = 3
-	model.DB().Save(groupDB)
+	model.DB().Save(&groupDB)
 }
 
 //StartMatch method used to create the match
@@ -313,8 +313,16 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				g.mutex.Unlock()
 
 				match.UpgradeGroup(groupID, connections, groupDB)
-				//TODO group cleanup
+				groupDB.Status = 1
+				model.DB().Save(&groupDB)
+
 				//change status and put all the users in the queue once they quit the game
+				//Remove all the data associated with the groups
+				for _, v := range g.groups[groupDB.ID] {
+					delete(g.assignment, v)
+					g.queue[v] = true
+				}
+				delete(g.groups, groupDB.ID)
 			} else {
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
