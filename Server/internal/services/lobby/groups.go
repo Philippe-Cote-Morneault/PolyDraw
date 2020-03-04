@@ -65,6 +65,11 @@ func (g *groups) UnRegisterSession(socketID uuid.UUID) {
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		if groupDB.ID != uuid.Nil && err == nil {
 			model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
+
+			//If user is owner we delete the group
+			if groupDB.OwnerID == userID {
+				g.safeDeleteGroup(&groupDB)
+			}
 		}
 	}
 }
@@ -196,6 +201,14 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		var groupDB model.Group
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		model.DB().Model(&groupDB).Association("Users").Delete(&user)
+
+		g.mutex.Lock()
+		if user.ID == groupDB.OwnerID {
+			//The owner has left the group
+			g.safeDeleteGroup(&groupDB)
+		}
+		g.mutex.Unlock()
+
 	} else {
 		g.mutex.Unlock()
 		go socket.SendErrorToSocketID(44, 404, "The user does not belong to this group", socketID)
@@ -223,4 +236,30 @@ func (g *groups) removeSocketGroup(socketID uuid.UUID, groupID uuid.UUID) {
 			return
 		}
 	}
+}
+
+func (g *groups) safeDeleteGroup(groupDB *model.Group) {
+	//We remove the group
+	message := socket.RawMessage{}
+	uuidBytes, _ := groupDB.ID.MarshalBinary()
+	message.ParseMessage(byte(socket.MessageType.ResponseGroupRemoved), uint16(len(uuidBytes)), uuidBytes)
+	//Broadcast a message to all the users in queue
+	for k := range g.queue {
+		go socket.SendRawMessageToSocketID(message, k)
+	}
+
+	//Broadcast a message that the group was deleted and remove them from the group
+	for _, v := range g.groups[groupDB.ID] {
+		go socket.SendRawMessageToSocketID(message, v)
+	}
+
+	//Remove all the data associated with the groups
+	for _, v := range g.groups[groupDB.ID] {
+		delete(g.assignment, v)
+		g.removeSocketGroup(v, groupDB.ID)
+		g.queue[v] = true
+	}
+
+	groupDB.Status = 3
+	model.DB().Save(groupDB)
 }
