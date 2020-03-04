@@ -54,7 +54,16 @@
         app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_host"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.2"/>
+        app:layout_constraintWidth_percent="0.1"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/list_item_match_button_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/join_match_button_title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_player_count"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
