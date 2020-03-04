@@ -84,7 +84,8 @@ func UnRegisterUser(userID uuid.UUID) {
 //delayUnregister is used to delete the trace in the system 120 seconds after the connection was closed. It gives time
 //for the services that needs this data to
 func delayUnregister(session *model.Session) {
-	time.Sleep(time.Second * 120)
+	time.Sleep(time.Second * 5)
+	//TODO do something better perhaps a seperate queue for the messages that will be deleted.
 	defer mutex.Unlock()
 	mutex.Lock()
 
