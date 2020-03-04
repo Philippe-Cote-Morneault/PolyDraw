@@ -64,3 +64,11 @@ func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 		go socket.SendRawMessageToSocketID(message, connections[i]) //In parallel because this message is not determinist
 	}
 }
+
+//Quit quits the match
+func (m *matchManager) Quit(socketID uuid.UUID) {
+	if groupID, ok := m.assignment[socketID]; ok {
+		m.matches[groupID].Disconnect(socketID)
+		delete(m.assignment, socketID)
+	}
+}
