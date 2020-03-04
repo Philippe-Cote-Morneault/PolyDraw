@@ -10,7 +10,13 @@ import (
 
 //Service service used to manage the matches
 type Service struct {
-	close   cbroadcast.Channel
+	close cbroadcast.Channel
+
+	guess cbroadcast.Channel
+	hint  cbroadcast.Channel
+	quit  cbroadcast.Channel
+	ready cbroadcast.Channel
+
 	manager matchManager
 
 	shutdown chan bool
@@ -53,4 +59,9 @@ func (s *Service) listen() {
 
 func (s *Service) subscribe() {
 	s.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+
+	s.ready, _, _ = cbroadcast.Subscribe(BMatchReady)
+	s.hint, _, _ = cbroadcast.Subscribe(BMatchHint)
+	s.guess, _, _ = cbroadcast.Subscribe(BMatchGuess)
+	s.quit, _, _ = cbroadcast.Subscribe(BMatchQuit)
 }
