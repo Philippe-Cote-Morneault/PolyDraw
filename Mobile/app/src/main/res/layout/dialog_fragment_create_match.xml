@@ -65,8 +65,8 @@
 
         <ImageView
             android:id="@+id/dialog_create_match_button_remove_max_player"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="60dp"
             android:src="@drawable/ic_remove_black_24dp"
             app:layout_constraintEnd_toStartOf="@id/dialog_create_match_edit_text_max_players"
@@ -74,8 +74,8 @@
 
         <ImageView
             android:id="@+id/dialog_create_match_button_add_max_player"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:src="@drawable/ic_add_black_24dp"
             app:layout_constraintTop_toBottomOf="@id/dialog_create_match_text_view_max_players_hint"
@@ -118,8 +118,8 @@
 
         <ImageView
             android:id="@+id/dialog_create_match_button_remove_virtual_player"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="60dp"
             android:src="@drawable/ic_remove_black_24dp"
             app:layout_constraintEnd_toStartOf="@id/dialog_create_match_edit_text_virtual_players"
@@ -127,8 +127,8 @@
 
         <ImageView
             android:id="@+id/dialog_create_match_button_add_virtual_player"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="60dp"
             android:src="@drawable/ic_add_black_24dp"
             app:layout_constraintTop_toBottomOf="@id/dialog_create_match_text_view_virtual_players_hint"
