@@ -3,12 +3,13 @@ package lobby
 import (
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"sync"
 )
 
-type responseJoinGroup struct {
+type responseGen struct {
 	Response bool
 	Error    string
 }
@@ -129,7 +130,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 
 				//send response to client
 				message := socket.RawMessage{}
-				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
+				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 					Response: true,
 					Error:    "",
 				})
@@ -160,7 +161,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 			}
 			g.mutex.Unlock()
 			message := socket.RawMessage{}
-			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
+			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 				Response: false,
 				Error:    "The group is full",
 			})
@@ -171,7 +172,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		g.mutex.Unlock()
 
 		message := socket.RawMessage{}
-		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
+		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 			Response: false,
 			Error:    "The group could not be found.",
 		})
@@ -180,7 +181,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		g.mutex.Unlock()
 
 		message := socket.RawMessage{}
-		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseJoinGroup{
+		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 			Response: false,
 			Error:    "The user can only join one group",
 		})
@@ -276,4 +277,65 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 
 	groupDB.Status = 3
 	model.DB().Save(groupDB)
+}
+
+//StartMatch method used to create the match
+func (g *groups) StartMatch(socketID uuid.UUID) {
+
+	g.mutex.Lock()
+	groupID, hasGroup := g.assignment[socketID]
+	g.mutex.Unlock()
+
+	if hasGroup {
+		var groupDB model.Group
+		model.DB().Model(&groupDB).Related(&model.User{}, "Users")
+		model.DB().Preload("Users").Where("id = ?", groupID).First(&groupDB)
+
+		userID, _ := auth.GetUserID(socketID)
+		//Start only if the owner
+		if groupDB.OwnerID == userID {
+			//Check if there are enough people
+			g.mutex.Lock()
+			count := len(g.groups[groupID]) + groupDB.VirtualPlayers
+			g.mutex.Unlock()
+
+			//TODO make a check for solo
+			if count > 1 {
+				//We send the response and we pass it along to the match service
+				rawMessage := socket.RawMessage{}
+				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
+					Response: true,
+				})
+				socket.SendRawMessageToSocketID(rawMessage, socketID)
+
+				g.mutex.Lock()
+				connections := g.groups[groupID][:]
+				g.mutex.Unlock()
+
+				match.UpgradeGroup(groupID, connections, groupDB)
+			} else {
+				rawMessage := socket.RawMessage{}
+				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
+					Response: true,
+					Error:    "There are not enough users to start the game.",
+				})
+				socket.SendRawMessageToSocketID(rawMessage, socketID)
+			}
+
+		} else {
+			rawMessage := socket.RawMessage{}
+			rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
+				Response: false,
+				Error:    "Only the owner can request the game to start.",
+			})
+			socket.SendRawMessageToSocketID(rawMessage, socketID)
+		}
+	} else {
+		rawMessage := socket.RawMessage{}
+		rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
+			Response: false,
+			Error:    "The user is not associated with any group.",
+		})
+		socket.SendRawMessageToSocketID(rawMessage, socketID)
+	}
 }
