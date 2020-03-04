@@ -3,7 +3,7 @@ package com.log3900.game.waiting_room
 import com.log3900.shared.architecture.Presenter
 
 class MatchWaitingRoomPresenter : Presenter {
-    private var matchWaitingRoomView: MatchWaitingRoomView
+    private var matchWaitingRoomView: MatchWaitingRoomView? = null
 
     constructor(matchWaitingRoomView: MatchWaitingRoomView) {
         this.matchWaitingRoomView = matchWaitingRoomView
@@ -16,5 +16,6 @@ class MatchWaitingRoomPresenter : Presenter {
     }
 
     override fun destroy() {
+        matchWaitingRoomView = null
     }
 }
