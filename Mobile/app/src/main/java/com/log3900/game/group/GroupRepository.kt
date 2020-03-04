@@ -133,10 +133,6 @@ class GroupRepository : Service() {
 
         initializeRepository()
 
-        Thread(Runnable {
-            Looper.prepare()
-            Looper.loop()
-        }).start()
     }
 
     override fun onDestroy() {
