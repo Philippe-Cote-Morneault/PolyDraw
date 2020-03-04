@@ -15,3 +15,19 @@ type ResponseGameInfo struct {
 	Laps      int
 	TotalTime int
 }
+
+//PlayerDrawThis used for message 69
+type PlayerDrawThis struct {
+	Word      string
+	Time      int
+	DrawingID string
+}
+
+//PlyaerTurnDraw used for message 57
+type PlayerTurnDraw struct {
+	UserID    string
+	Username  string
+	Time      int
+	DrawingID string
+	Length    int
+}

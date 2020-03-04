@@ -47,6 +47,8 @@ type messageType struct {
 	RequestHintMatch         int
 	ResponseGameStart        int
 	GameWelcome              int
+	PlayerDrawingTurn        int
+	PlayerDrawThis           int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -85,9 +87,11 @@ var MessageType = &messageType{
 	RequestReadyMatch:        62,
 	GameStarting:             63,
 	RequestQuitMatch:         64,
-	RequestGuessWordMatch:    74,
-	RequestHintMatch:         82,
-	ErrorResponse:            255,
+	PlayerDrawingTurn:        57,
+	PlayerDrawThis:           69,
+	RequestGuessWordMatch: 74,
+	RequestHintMatch:      82,
+	ErrorResponse:         255,
 }
 
 // SerializableMessage Represents a serializable message sent over socket
