@@ -13,7 +13,7 @@ import com.log3900.R
 class MatchCreationDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(activity)
-            .setTitle(Resources.getSystem().getString(R.string.create_match_dialog_title))
+            .setTitle(resources.getString(R.string.create_match_dialog_title))
             .setPositiveButton("Create") { _, _ ->
 
             }
