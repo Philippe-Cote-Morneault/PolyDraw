@@ -42,6 +42,7 @@ func (s *Service) Start() {
 func (s *Service) Shutdown() {
 	log.Println("[Match] -> Closing service")
 	close(s.shutdown)
+	s.manager.Close()
 }
 
 func (s *Service) listen() {

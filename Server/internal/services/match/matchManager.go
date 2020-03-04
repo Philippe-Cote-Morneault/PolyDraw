@@ -5,6 +5,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/match/mode"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
+	"sync"
 )
 
 type matchManager struct {
@@ -85,4 +86,19 @@ func (m *matchManager) Quit(socketID uuid.UUID) {
 		m.matches[groupID].Disconnect(socketID)
 		delete(m.assignment, socketID)
 	}
+}
+
+//Close method used to close all the games currently
+func (m *matchManager) Close() {
+	wg := sync.WaitGroup{}
+	wg.Add(len(m.matches))
+	for k := range m.matches {
+		m.closeMatch(&wg, k)
+	}
+	wg.Wait()
+}
+
+func (m *matchManager) closeMatch(wg *sync.WaitGroup, groupID uuid.UUID) {
+	m.matches[groupID].Close()
+	wg.Done()
 }
