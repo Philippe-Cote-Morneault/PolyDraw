@@ -2,6 +2,7 @@ package mode
 
 import (
 	"github.com/google/uuid"
+	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 )
@@ -34,40 +35,52 @@ func (f FFA) GameLoop() {
 	//Make him draw
 	//Keep track of the scores of every user
 	//Check for guessing
-	panic("implement me")
 }
 
 //Disconnect endpoint for when a user exits
 func (f FFA) Disconnect(socketID uuid.UUID) {
-	panic("implement me")
 }
 
 //TryWord endpoint for when a user tries to guess a word
 func (f FFA) TryWord(socketID uuid.UUID, word string) {
-	panic("implement me")
 }
 
 //IsDrawing endpoint called by the drawing service when a user is drawing. Usefull to detect if a user is AFK
 func (f FFA) IsDrawing(socketID uuid.UUID) {
-	panic("implement me")
 }
 
 //HintRequested method used by the user when requesting a hint
 func (f FFA) HintRequested(socketID uuid.UUID) {
-	panic("implement me")
 }
 
 //Close forces the game to stop completely. Graceful shutdown
 func (f FFA) Close() {
-	panic("implement me")
 }
 
 //GetConnections returns all the socketID of the match
 func (f FFA) GetConnections() []uuid.UUID {
-	panic("implement me")
 }
 
 //GetWelcome returns a packet to send to all the players. Presents various details about the game
 func (f FFA) GetWelcome() socket.RawMessage {
-	panic("implement me")
+	players := make([]match.PlayersData, 0, len(f.info.Users))
+	for i := range f.info.Users {
+		players = append(players, match.PlayersData{
+			UserID:   f.info.Users[i].ID.String(),
+			Username: f.info.Users[i].Username,
+			IsCPU:    false,
+		})
+	}
+	//TODO parameters ??
+	welcome := match.ResponseGameInfo{
+		Players:   players,
+		GameType:  0,
+		TimeImage: 30000,
+		Laps:      3,
+		TotalTime: 0,
+	}
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
+	return message
+
 }
