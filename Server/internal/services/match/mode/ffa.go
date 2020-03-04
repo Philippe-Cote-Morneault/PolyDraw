@@ -12,24 +12,24 @@ type FFA struct {
 }
 
 //Init initialize the game mode
-func (f FFA) Init(connections []uuid.UUID, info model.Group) {
+func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.init(connections, info)
 }
 
 //Start the game mode
-func (f FFA) Start() {
+func (f *FFA) Start() {
 	f.waitForPlayers()
 	//We can start the game loop
 	f.GameLoop()
 }
 
 //Ready registering that it is ready
-func (f FFA) Ready() {
+func (f *FFA) Ready() {
 	f.ready()
 }
 
 //GameLoop method should be called with start
-func (f FFA) GameLoop() {
+func (f *FFA) GameLoop() {
 	//Choose a user.
 	//Make him draw
 	//Keep track of the scores of every user
@@ -37,32 +37,32 @@ func (f FFA) GameLoop() {
 }
 
 //Disconnect endpoint for when a user exits
-func (f FFA) Disconnect(socketID uuid.UUID) {
+func (f *FFA) Disconnect(socketID uuid.UUID) {
 }
 
 //TryWord endpoint for when a user tries to guess a word
-func (f FFA) TryWord(socketID uuid.UUID, word string) {
+func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 }
 
 //IsDrawing endpoint called by the drawing service when a user is drawing. Usefull to detect if a user is AFK
-func (f FFA) IsDrawing(socketID uuid.UUID) {
+func (f *FFA) IsDrawing(socketID uuid.UUID) {
 }
 
 //HintRequested method used by the user when requesting a hint
-func (f FFA) HintRequested(socketID uuid.UUID) {
+func (f *FFA) HintRequested(socketID uuid.UUID) {
 }
 
 //Close forces the game to stop completely. Graceful shutdown
-func (f FFA) Close() {
+func (f *FFA) Close() {
 }
 
 //GetConnections returns all the socketID of the match
-func (f FFA) GetConnections() []uuid.UUID {
-	return nil
+func (f *FFA) GetConnections() []uuid.UUID {
+	return f.connections
 }
 
 //GetWelcome returns a packet to send to all the players. Presents various details about the game
-func (f FFA) GetWelcome() socket.RawMessage {
+func (f *FFA) GetWelcome() socket.RawMessage {
 	players := make([]PlayersData, 0, len(f.info.Users))
 	for i := range f.info.Users {
 		players = append(players, PlayersData{
