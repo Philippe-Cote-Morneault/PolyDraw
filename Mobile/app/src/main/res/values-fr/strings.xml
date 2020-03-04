@@ -17,4 +17,5 @@
     <string name="logout">Déconnexion</string>
     <string name="create_match_button_title">Créer une partie</string>
     <string name="create_match_dialog_title">Créer une partie</string>
+    <string name="create_match_dialog_match_name_hint">Nom de la partie</string>
 </resources>

@@ -128,4 +128,5 @@
     <string name="logout">Logout</string>
     <string name="create_match_button_title">Create match</string>
     <string name="create_match_dialog_title">Create match</string>
+    <string name="create_match_dialog_match_name_hint">Match name</string>
 </resources>
