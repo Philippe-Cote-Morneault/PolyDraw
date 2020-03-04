@@ -19,6 +19,12 @@ type responseGroup struct {
 	GroupID  string
 }
 
+type responsePlayer struct {
+	IsCPU    bool
+	ID       string
+	Username string
+}
+
 type responseNewGroup struct {
 	ID         string
 	Name       string
@@ -26,6 +32,7 @@ type responseNewGroup struct {
 	OwnerID    string
 	PlayersMax int
 	Mode       int
+	Players    []responsePlayer
 }
 
 type groups struct {
@@ -79,6 +86,13 @@ func (g *groups) AddGroup(group *model.Group) {
 	defer g.mutex.Unlock()
 
 	message := socket.RawMessage{}
+	players := []responsePlayer{
+		{
+			IsCPU:    false,
+			ID:       group.OwnerID.String(),
+			Username: group.Owner.Username,
+		},
+	}
 	message.ParseMessagePack(byte(socket.MessageType.ResponseGroupCreated), responseNewGroup{
 		ID:         group.ID.String(),
 		Name:       group.Name,
@@ -86,6 +100,7 @@ func (g *groups) AddGroup(group *model.Group) {
 		OwnerID:    group.OwnerID.String(),
 		PlayersMax: group.PlayersMax,
 		Mode:       group.GameType,
+		Players:    players,
 	})
 	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	//TODO only if not solo
