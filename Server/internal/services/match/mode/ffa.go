@@ -15,8 +15,6 @@ func (f FFA) Init(connections []uuid.UUID, info model.Group) {
 }
 
 func (f FFA) Start() {
-	//Send a message for the players that the game is about to start
-
 	f.waitForPlayers()
 	//We can start the game loop
 	f.GameLoop()
