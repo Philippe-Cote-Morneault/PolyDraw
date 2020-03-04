@@ -25,6 +25,7 @@ type responseNewGroup struct {
 	OwnerName  string
 	OwnerID    string
 	PlayersMax int
+	Mode       int
 }
 
 type groups struct {
@@ -79,6 +80,7 @@ func (g *groups) AddGroup(group *model.Group) {
 		OwnerName:  group.Owner.Username,
 		OwnerID:    group.OwnerID.String(),
 		PlayersMax: group.PlayersMax,
+		Mode:       group.GameType,
 	})
 	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	//TODO only if not solo

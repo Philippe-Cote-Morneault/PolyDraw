@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -21,6 +20,7 @@ import (
 //MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
 const maxPointsperPacket = 16000
+const delayDrawSending = 20 //in Milliseconds
 
 //Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
@@ -28,8 +28,6 @@ type Stroke struct {
 	color     byte
 	isEraser  bool
 	isSquared bool
-	width     uint16
-	height    uint16
 	brushSize byte
 	points    []geometry.Point
 }
@@ -55,10 +53,9 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 		Length:      uint16(len(uuidBytes)),
 		Bytes:       uuidBytes,
 	}, message.SocketID)
-	//Call method to start the drawing here
-	//TODO Allan your code goes here!
-	// sendDummyDrawing(message.SocketID)
+
 	sendDrawing(message.SocketID, game.Image.SVGFile)
+
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.EndDrawingServer),
 		Length:      uint16(len(uuidBytes)),
@@ -82,33 +79,6 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 	socket.SendRawMessageToSocketID(packet, socketID)
 }
 
-func sendDummyDrawing(socketID uuid.UUID) {
-	fakeStroke := Stroke{
-		ID:        uuid.New(),
-		color:     0x02,
-		isEraser:  false,
-		isSquared: true,
-		width:     1920,
-		height:    1080,
-		brushSize: 25,
-	}
-	points := []geometry.Point{
-		{0, 0},
-		{5, 5},
-		{10, 10},
-		{15.5, 15.5},
-	}
-	fakeStroke.points = points
-
-	payload := fakeStroke.Marshall()
-	packet := socket.RawMessage{
-		MessageType: byte(socket.MessageType.StrokeChunkServer),
-		Length:      uint16(len(payload)),
-		Bytes:       payload,
-	}
-	socket.SendRawMessageToSocketID(packet, socketID)
-}
-
 func sendDrawing(socketID uuid.UUID, svgKey string) {
 	file, err := datastore.GetFile(svgKey)
 	if err != nil {
@@ -122,17 +92,6 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		log.Println(err)
 	}
 
-	width, errW := strconv.ParseUint(xmlSvg.Width, 10, 16)
-	height, errH := strconv.ParseUint(xmlSvg.Height, 10, 16)
-
-	if errW != nil {
-		log.Println("[Drawing] Error conversion svg width")
-	}
-
-	if errH != nil {
-		log.Println("[Drawing] Error conversion svg height")
-	}
-
 	var commands []svgparser.Command
 	var payloads [][]byte
 	for _, path := range xmlSvg.G.XMLPaths {
@@ -140,31 +99,15 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 			ID:        uuid.New(),
 			color:     path.Color,
 			isEraser:  path.Eraser,
-			isSquared: path.Brush == "squared",
+			isSquared: path.Brush != "circle",
 			brushSize: byte(path.BrushSize),
-			width:     uint16(width),
-			height:    uint16(height),
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
 		log.Printf("[Drawing] Number of points is : %v", len(stroke.points))
-
-		if len(stroke.points) > maxPointsperPacket {
-			s := stroke.clone()
-			index := 0
-			iterations := int(len(stroke.points) / maxPointsperPacket)
-			for i := 0; i < iterations; i++ {
-				if maxPointsperPacket+index >= len(stroke.points) {
-					s.points = stroke.points[index:]
-				} else {
-					s.points = stroke.points[index:maxPointsperPacket]
-				}
-				payloads = append(payloads, s.Marshall())
-				index += maxPointsperPacket
-			}
-		} else {
-			payloads = append(payloads, stroke.Marshall())
-		}
+		// s := stroke.clone()
+		// splitPointsIntoPayloads(&payloads, &stroke.points, &s, path.Time)
+		payloads = append(payloads, stroke.Marshall())
 	}
 	for _, payload := range payloads {
 		packet := socket.RawMessage{
@@ -173,8 +116,34 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 			Bytes:       payload,
 		}
 		socket.SendRawMessageToSocketID(packet, socketID)
-		//Wait 20ms
-		time.Sleep(20 * time.Millisecond)
+		//Wait 20ms between strokes
+		time.Sleep(delayDrawSending * time.Millisecond)
+	}
+}
+
+func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, stroke *Stroke, time int) {
+
+	nbPoints := (delayDrawSending * len(*points)) / time
+
+	if nbPoints >= maxPointsperPacket {
+		for nbPoints >= maxPointsperPacket {
+			nbPoints /= 2
+		}
+	}
+
+	index := 0
+	iterations := len(*points)%nbPoints + 1
+	for i := 0; i < iterations; i++ {
+		if nbPoints+index >= len(stroke.points) {
+			stroke.points = (*points)[index:]
+			*payloads = append(*payloads, stroke.Marshall())
+			break
+		}
+
+		stroke.points = (*points)[index:nbPoints]
+
+		*payloads = append(*payloads, stroke.Marshall())
+		index += nbPoints
 	}
 }
 
@@ -199,18 +168,11 @@ func (s *Stroke) Marshall() []byte {
 	}
 	strokeID, _ := s.ID.MarshalBinary()
 	nulID, _ := uuid.Nil.MarshalBinary()
-	width := make([]byte, 2)
-	height := make([]byte, 2)
-
-	binary.BigEndian.PutUint16(width, s.width)
-	binary.BigEndian.PutUint16(height, s.height)
 
 	response := make([]byte, 0, 40)
 	response = append(response, firstByte)
 	response = append(response, strokeID...)
 	response = append(response, nulID...)
-	response = append(response, width...)
-	response = append(response, height...)
 	response = append(response, s.brushSize)
 	for i := range s.points {
 		response = append(response, marshallPoint(s.points[i])...)
@@ -245,8 +207,6 @@ func (s *Stroke) clone() Stroke {
 		isEraser:  s.isEraser,
 		isSquared: s.isSquared,
 		brushSize: s.brushSize,
-		width:     s.width,
-		height:    s.height,
 	}
 }
 
