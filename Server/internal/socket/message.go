@@ -38,6 +38,7 @@ type messageType struct {
 	ResponseLeaveGroup       int
 	ErrorResponse            int
 	UserJoinedGroup          int
+	ResponseGroupRemoved     int
 }
 
 // MessageType represents the available message types to send to clients.
@@ -69,6 +70,7 @@ var MessageType = &messageType{
 	RequestLeaveGroup:        44,
 	ResponseLeaveGroup:       45,
 	ResponseGroupCreated:     51,
+	ResponseGroupRemoved:     53,
 	ErrorResponse:            255,
 }
 
