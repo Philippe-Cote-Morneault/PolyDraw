@@ -35,7 +35,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
                         maxPlayersTextInput.text.toString().toInt(),
                         virtualPlayersTextInput.text.toString().toInt(),
                         MatchMode.values()[gameTypeSpinner.selectedItemPosition],
-                        0))
+                        Difficulty.values()[difficultySpinner.selectedItemPosition]))
             }
             .setNegativeButton("Cancel") { _, _ ->
                 listener?.onNegativeClick()
