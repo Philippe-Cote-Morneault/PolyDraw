@@ -19,7 +19,9 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,7 +56,7 @@ class GroupRepository : Service() {
     }
 
     fun getGroups(sessionToken: String): Single<ArrayList<Group>> {
-        return Single.create {
+        val single = Single.create<ArrayList<Group>> {
             val call = GroupRestService.service.getGroups(sessionToken, "EN")
             call.enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
@@ -78,6 +80,8 @@ class GroupRepository : Service() {
                 }
             })
         }
+
+        return single.subscribeOn(Schedulers.io())
     }
     
     fun getGroup(sessionToken: String, groupID: UUID): Single<Group> {
