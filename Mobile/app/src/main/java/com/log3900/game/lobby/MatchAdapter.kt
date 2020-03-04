@@ -19,6 +19,6 @@ class MatchAdapter(var matches: ArrayList<Group>) : RecyclerView.Adapter<MatchVi
     }
 
     override fun onBindViewHolder(holder: MatchViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(matches[position])
     }
 }
