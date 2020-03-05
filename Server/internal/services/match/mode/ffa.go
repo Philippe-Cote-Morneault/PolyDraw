@@ -61,6 +61,9 @@ func (f *FFA) Start() {
 
 //Ready registering that it is ready
 func (f *FFA) Ready(socketID uuid.UUID) {
+	defer f.receiving.Unlock()
+	f.receiving.Lock()
+
 	f.ready(socketID)
 }
 
@@ -105,6 +108,7 @@ func (f *FFA) GameLoop() {
 	})
 	f.broadcast(&timeUpMessage)
 
+	f.receiving.Lock()
 	f.orderPos++
 	if f.orderPos > len(f.players)-1 {
 		f.orderPos = 0
@@ -119,10 +123,15 @@ func (f *FFA) GameLoop() {
 				Word: f.currentWord,
 			})
 			f.broadcast(&timeUpMessage)
+
+			f.receiving.Unlock()
 			return
 		}
 	}
+
 	f.currentWord = ""
+	f.resetGuess()
+	f.receiving.Unlock()
 }
 
 //Disconnect endpoint for when a user exits
@@ -138,17 +147,19 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		if f.receivingGuesses.IsSet() && !f.hasFoundit[socketID] {
 			f.hasFoundit[socketID] = true
 			f.waitingResponse.Done()
-			f.receiving.Unlock()
 
 			players := f.connections[socketID]
 			pointsForWord := 100 //TODO change the point system based with time
 			f.scores[players.Order] += pointsForWord
+			total := f.scores[players.Order]
+
+			f.receiving.Unlock()
 
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 				Valid:       true,
 				Point:       pointsForWord,
-				PointsTotal: f.scores[players.Order],
+				PointsTotal: total,
 			})
 			socket.SendRawMessageToSocketID(response, socketID)
 
@@ -158,21 +169,22 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				Username:    players.Username,
 				UserID:      players.userID.String(),
 				Point:       pointsForWord,
-				PointsTotal: f.scores[players.Order],
+				PointsTotal: total,
 			})
 			f.broadcast(&broadcast)
 		} else {
 			f.receiving.Unlock()
 		}
 	} else {
+		players := f.connections[socketID]
+		scoreTotal := f.scores[players.Order]
 		f.receiving.Unlock()
 
-		players := f.connections[socketID]
 		response := socket.RawMessage{}
 		response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 			Valid:       false,
 			Point:       0,
-			PointsTotal: f.scores[players.Order],
+			PointsTotal: scoreTotal,
 		})
 		socket.SendRawMessageToSocketID(response, socketID)
 	}
@@ -185,7 +197,10 @@ func (f *FFA) IsDrawing(socketID uuid.UUID) {
 //HintRequested method used by the user when requesting a hint
 func (f *FFA) HintRequested(socketID uuid.UUID) {
 	//Hint is not available in ffa
+	f.receiving.Lock()
 	if !f.players[f.order[f.orderPos]].IsCPU {
+		f.receiving.Unlock()
+
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
 			Hint:  "",
@@ -194,6 +209,8 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		socket.SendRawMessageToSocketID(message, socketID)
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
+		f.receiving.Unlock()
+
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
 			Hint:  "Not implemented", //TODO replace with the real hint from the virtual player
