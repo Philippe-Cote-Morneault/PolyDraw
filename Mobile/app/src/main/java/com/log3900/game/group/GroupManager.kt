@@ -12,6 +12,8 @@ import io.reactivex.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GroupManager : Service() {
     private val binder = GroupManagerBinder()
@@ -64,7 +66,11 @@ class GroupManager : Service() {
     }
 
     private fun onGroupJoined(group: Group) {
+        currentGroup = group
+    }
 
+    private fun onGroupLeft(groupID: UUID) {
+        currentGroup = null
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -100,6 +106,9 @@ class GroupManager : Service() {
         when(event.type) {
             EventType.GROUP_JOINED -> {
                 onGroupJoined(event.data as Group)
+            }
+            EventType.GROUP_LEFT -> {
+                onGroupLeft(event.data as UUID)
             }
         }
     }
