@@ -2,10 +2,7 @@ package com.log3900.game.group
 
 import android.app.Service
 import android.content.Intent
-import android.os.Binder
-import android.os.Handler
-import android.os.IBinder
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -134,12 +131,58 @@ class GroupRepository : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
+        socketMessageHandler = Handler {
+            handleSocketMessage(it)
+            true
+        }
+        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_LEFT_GROUP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.JOIN_GROUP_RESPONSE, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_CREATED, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_DELETED, socketMessageHandler!!)
         initializeRepository()
 
     }
 
+    private fun handleSocketMessage(message: Message) {
+        val socketMessage = message.obj as com.log3900.socket.Message
+
+        when (socketMessage.type) {
+            com.log3900.socket.Event.USER_JOINED_GROUP -> onUserJoinedGroup(socketMessage)
+            com.log3900.socket.Event.USER_LEFT_GROUP -> onUserLeftGroup(socketMessage)
+            com.log3900.socket.Event.JOIN_GROUP_RESPONSE -> onJoinGroupResponse(socketMessage)
+            com.log3900.socket.Event.GROUP_CREATED -> onGroupCreated(socketMessage)
+            com.log3900.socket.Event.GROUP_DELETED-> onGroupDeleted(socketMessage)
+        }
+    }
+
+    private fun onUserJoinedGroup(message: com.log3900.socket.Message) {
+
+    }
+
+    private fun onUserLeftGroup(message: com.log3900.socket.Message) {
+
+    }
+
+    private fun onJoinGroupResponse(message: com.log3900.socket.Message) {
+
+    }
+
+    private fun onGroupCreated(message: com.log3900.socket.Message) {
+
+    }
+
+    private fun onGroupDeleted(message: com.log3900.socket.Message) {
+
+    }
+
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.USER_LEFT_GROUP, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.JOIN_GROUP_RESPONSE, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.GROUP_CREATED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.GROUP_DELETED, socketMessageHandler!!)
+        socketMessageHandler = null
         socketService = null
         instance = null
         super.onDestroy()
