@@ -5,6 +5,7 @@ import kotlin.collections.ArrayList
 
 class GroupCache {
     private var groups: ArrayList<Group> = arrayListOf()
+    var needsReload: Boolean = true
 
     fun addGroup(group: Group) {
         groups.add(group)
