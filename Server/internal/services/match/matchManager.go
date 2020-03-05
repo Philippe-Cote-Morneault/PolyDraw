@@ -5,6 +5,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/match/mode"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
+	"log"
 	"sync"
 )
 
@@ -53,6 +54,8 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 func (m *matchManager) Ready(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
 		m.matches[groupID].Ready(socketID)
+	} else {
+		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
 	}
 }
 
@@ -64,12 +67,16 @@ func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 		go socket.SendRawMessageToSocketID(message, connections[i]) //In parallel because this message is not determinist
 		m.assignment[connections[i]] = groupID
 	}
+	log.Printf("[Match] -> Welcome sent to the match | %s", groupID.String())
+
 }
 
 //Guess used when the client wants to guess a word
 func (m *matchManager) Guess(message socket.RawMessageReceived) {
 	if groupID, ok := m.assignment[message.SocketID]; ok {
 		m.matches[groupID].TryWord(message.SocketID, string(message.Payload.Bytes))
+	} else {
+		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
 	}
 }
 
@@ -77,6 +84,8 @@ func (m *matchManager) Guess(message socket.RawMessageReceived) {
 func (m *matchManager) Hint(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
 		m.matches[groupID].HintRequested(socketID)
+	} else {
+		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
 	}
 }
 
@@ -85,6 +94,8 @@ func (m *matchManager) Quit(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
 		m.matches[groupID].Disconnect(socketID)
 		delete(m.assignment, socketID)
+	} else {
+		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
 	}
 }
 
