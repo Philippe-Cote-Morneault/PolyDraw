@@ -54,6 +54,14 @@ class GroupManager : Service() {
         )
     }
 
+    fun joinGroup(group: Group) {
+        groupRepository?.joinGroup(group.ID)
+    }
+
+    fun leaveGroup(group: Group) {
+
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
