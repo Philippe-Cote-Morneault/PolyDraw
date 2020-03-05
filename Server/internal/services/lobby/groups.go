@@ -18,6 +18,7 @@ type responseGroup struct {
 	UserID   string
 	Username string
 	GroupID  string
+	IsCPU    bool
 }
 
 type responsePlayer struct {
@@ -149,6 +150,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 						UserID:   user.ID.String(),
 						Username: user.Username,
 						GroupID:  groupID.String(),
+						IsCPU:    false,
 					})
 					g.mutex.Lock()
 					for i := range g.groups[groupID] {
@@ -208,6 +210,7 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 			UserID:   user.ID.String(),
 			Username: user.Username,
 			GroupID:  groupID.String(),
+			IsCPU:    false,
 		})
 		socket.SendRawMessageToSocketID(message, socketID) //We inform the user that the request was received.
 		for i := range g.groups[groupID] {
