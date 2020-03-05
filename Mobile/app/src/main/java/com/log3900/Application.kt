@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
@@ -13,6 +15,7 @@ import com.log3900.session.MonitoringService
 import com.log3900.socket.SocketService
 
 class MainApplication : Application() {
+    var mainActivity: MainActivity? = null
     companion object {
         lateinit var instance: MainApplication
     }
@@ -26,6 +29,10 @@ class MainApplication : Application() {
         startService(MonitoringService::class.java)
     }
 
+    fun startFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
+        mainActivity?.startNavigationFragment(destinationID, menuItem, keepBackstack)
+    }
+
     fun startService(service: Class<*>) {
         startService(Intent(this, service))
     }
@@ -33,4 +40,13 @@ class MainApplication : Application() {
     fun stopService(service: Class<*>) {
         stopService(Intent(this, service))
     }
+
+    fun registerMainActivity(activity: MainActivity) {
+        mainActivity = activity
+    }
+
+    fun unregisterMainActivity() {
+        mainActivity = null
+    }
+
 }
