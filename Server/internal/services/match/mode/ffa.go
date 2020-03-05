@@ -19,14 +19,15 @@ type FFA struct {
 	order  []int
 	scores []int //Scores data are in the order of the match so the first user to draw is the first one in the score board
 	//We can get the position with the field order
-	orderPos    int
-	curLap      int
-	lapsTotal   int
-	rand        *rand.Rand
-	timeImage   int
-	isRunning   bool
-	time        int
-	currentWord string
+	orderPos       int
+	curLap         int
+	lapsTotal      int
+	rand           *rand.Rand
+	timeImage      int64
+	isRunning      bool
+	currentWord    string
+	timeStart      time.Time
+	timeStartImage time.Time
 
 	receiving        sync.Mutex
 	receivingGuesses *abool.AtomicBool
@@ -53,6 +54,7 @@ func (f *FFA) Start() {
 
 	//We can start the game loop
 	log.Printf("[Match] [FFA] -> Starting gameloop Match: %s", f.info.ID)
+	f.timeStart = time.Now()
 	for f.isRunning {
 		f.GameLoop()
 	}
@@ -88,7 +90,8 @@ func (f *FFA) GameLoop() {
 		DrawingID: drawingID.String(),
 		Length:    len(f.currentWord),
 	})
-	f.broadcast(&message)
+	f.pbroadcast(&message)
+	f.timeStartImage = time.Now()
 	log.Printf("[Match] [FFA] -> Word sent waiting for guesses, Match: %s", f.info.ID)
 	f.receivingGuesses.Set()
 
@@ -106,7 +109,7 @@ func (f *FFA) GameLoop() {
 		Type: 1,
 		Word: f.currentWord,
 	})
-	f.broadcast(&timeUpMessage)
+	f.pbroadcast(&timeUpMessage)
 
 	f.receiving.Lock()
 	f.orderPos++
@@ -122,8 +125,7 @@ func (f *FFA) GameLoop() {
 				Type: 2,
 				Word: f.currentWord,
 			})
-			f.broadcast(&timeUpMessage)
-
+			f.pbroadcast(&timeUpMessage)
 			f.receiving.Unlock()
 			return
 		}
@@ -295,6 +297,28 @@ func (f *FFA) resetGuess() {
 
 }
 
+//syncPlayers message used to keep all the players in sync
+func (f *FFA) syncPlayers() {
+	players := make([]PlayersDataPoint, len(f.scores))
+	for i := range f.scores {
+		players[i] = PlayersDataPoint{
+			Username: f.players[f.order[i]].Username,
+			UserID:   f.players[f.order[i]].userID.String(),
+			Points:   f.scores[i],
+		}
+	}
+
+	message := socket.RawMessage{}
+	imageDuration := time.Now().Sub(f.timeStartImage)
+	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
+		Players:  players,
+		Laps:     f.curLap,
+		Time:     f.timeImage - imageDuration.Milliseconds(),
+		GameTime: 0,
+	})
+	f.pbroadcast(&message)
+}
+
 func (f *FFA) waitTimeout() bool {
 	defer f.receiving.Unlock() //Mutex prevents from having a negative semaphore upon cleanup
 
@@ -303,13 +327,20 @@ func (f *FFA) waitTimeout() bool {
 		defer close(c)
 		f.waitingResponse.Wait()
 	}()
-
-	select {
+	imageTimeout := time.After(time.Duration(f.timeImage))
+	for {
+		select {
+		//Send the check up message every 1 second
+		case <-time.After(time.Second):
+			//Send an update to the client
+			f.receiving.Lock()
+			f.syncPlayers()
+			f.receiving.Unlock()
 		case <-c:
 			f.receiving.Lock()
 			f.receivingGuesses.UnSet()
 			return false // completed normally
-	case <-time.After(time.Duration(f.timeImage)):
+		case <-imageTimeout:
 			f.receiving.Lock()
 			f.receivingGuesses.UnSet()
 			//Make sure to clear the semaphore to avoid goroutine leakage
@@ -321,9 +352,11 @@ func (f *FFA) waitTimeout() bool {
 			return true // timed out
 		}
 	}
+}
 
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
+	gameDuration := time.Now().Sub(f.timeStart)
 	log.Printf("[Match] [FFA] -> Game has ended. Match: %s", f.info.ID)
 	//Identify the winner
 	bestPlayerOrder := -1
@@ -350,7 +383,7 @@ func (f *FFA) finish() {
 		Players:    players,
 		Winner:     winner.userID.String(),
 		WinnerName: winner.Username,
-		Time:       f.time,
+		Time:       gameDuration.Milliseconds(),
 	})
 
 	f.broadcast(&message)
