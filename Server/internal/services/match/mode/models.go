@@ -11,7 +11,7 @@ type PlayersData struct {
 type ResponseGameInfo struct {
 	Players   []PlayersData
 	GameType  int
-	TimeImage int
+	TimeImage int64
 	Laps      int
 	TotalTime int
 }
@@ -19,7 +19,7 @@ type ResponseGameInfo struct {
 //PlayerDrawThis used for message 69
 type PlayerDrawThis struct {
 	Word      string
-	Time      int
+	Time      int64
 	DrawingID string
 }
 
@@ -27,7 +27,7 @@ type PlayerDrawThis struct {
 type PlayerTurnDraw struct {
 	UserID    string
 	Username  string
-	Time      int
+	Time      int64
 	DrawingID string
 	Length    int
 }
@@ -72,4 +72,12 @@ type TimeUp struct {
 type HintResponse struct {
 	Hint  string
 	Error string
+}
+
+//PlayerSync used to sync all the players with a unique trusted time source
+type PlayerSync struct {
+	Players  []PlayersDataPoint
+	Laps     int
+	Time     int64
+	GameTime int
 }
