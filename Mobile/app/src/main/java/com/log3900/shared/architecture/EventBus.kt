@@ -14,6 +14,7 @@ enum class EventType {
     // Group
     GROUP_CREATED,
     GROUP_DELETED,
+    GROUP_UPDATED,
     // Session
     LOGOUT,
 
