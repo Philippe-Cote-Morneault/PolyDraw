@@ -21,6 +21,10 @@ class GroupCache {
         return groups
     }
 
+    fun getGroup(groupID: UUID): Group? {
+        return groups.find { it.ID == groupID }
+    }
+
     fun addUserToGroup(groupID: UUID, player: Player) {
         val group = groups.find {
             it.ID == groupID
