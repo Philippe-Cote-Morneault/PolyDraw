@@ -47,7 +47,11 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
 
     private fun setupRecyclerView(rootView: View) {
         matchesRecyclerView = rootView.findViewById(R.id.fragment_match_lobby_recycler_view_matches)
-        matchesAdapter = MatchAdapter(arrayListOf())
+        matchesAdapter = MatchAdapter(arrayListOf(), object : MatchViewHolder.Listener {
+            override fun joinButtonClicked(group: Group) {
+                matchLobbyPresenter?.onJoinMatchClick(group)
+            }
+        })
 
         matchesRecyclerView.apply {
             setHasFixedSize(true)
