@@ -177,6 +177,22 @@ func (f *FFA) IsDrawing(socketID uuid.UUID) {
 
 //HintRequested method used by the user when requesting a hint
 func (f *FFA) HintRequested(socketID uuid.UUID) {
+	//Hint is not available in ffa
+	if !f.players[f.order[f.orderPos]].IsCPU {
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
+			Hint:  "",
+			Error: "Hints are not available for this player. The drawing player needs to be a virtual player.",
+		})
+		socket.SendRawMessageToSocketID(message, socketID)
+	} else {
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
+			Hint:  "Not implemented", //TODO replace with the real hint from the virtual player
+			Error: "",
+		})
+		socket.SendRawMessageToSocketID(message, socketID)
+	}
 }
 
 //Close forces the game to stop completely. Graceful shutdown
