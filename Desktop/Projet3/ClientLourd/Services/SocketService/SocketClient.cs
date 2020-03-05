@@ -188,14 +188,14 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.ServerMessage:
                             OnServerMessage(this, new SocketErrorEventArgs(data));
                             break;
-                        case SocketMessageTypes.ServerJoinLobby:
-                            // TODO
+                        case SocketMessageTypes.JoinLobbyResponse:
+                            OnJoinLobbyResponse(this, new LobbyEventArgs(data));
                             break;
                         case SocketMessageTypes.QuitLobbyResponse:
                             // TODO
                             break;
                         case SocketMessageTypes.LobbyCreated:
-                            OnLobbyCreated(this, new LobbyCreatedArgs(data));
+                            OnLobbyCreated(this, new LobbyEventArgs(data));
                             break;
                         case SocketMessageTypes.LobbyErased:
                             // TODO

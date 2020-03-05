@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ClientLourd.Models.Bindable;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls
 {
@@ -27,6 +29,11 @@ namespace ClientLourd.Views.Controls
             InitializeComponent();
         }
 
+        public HomeViewModel HomeViewModel
+        {
+            get => (DataContext as HomeViewModel);
+        }
+
         private void CreateLobby(object sender, RoutedEventArgs e)
         {
             DialogHost.Show(new LobbyCreationDialog(), "Default");
@@ -36,5 +43,16 @@ namespace ClientLourd.Views.Controls
         {
             DialogHost.Show(new GameCreationDialog(), "Default");
         }
+
+        private void OnLobbySelection(object sender, EventArgs e)
+        {
+
+            Models.Bindable.Lobby lobbySelected = (Models.Bindable.Lobby)(sender as ListView).SelectedItem;
+            if (lobbySelected != null)
+            {
+                HomeViewModel.JoinLobby(lobbySelected);
+            }
+        }
+
     }
 }

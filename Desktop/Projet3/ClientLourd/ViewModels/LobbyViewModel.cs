@@ -14,11 +14,11 @@ using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.ViewModels
 {
-    class LobbyViewModel: ViewModelBase
+    class LobbyViewModel : ViewModelBase
     {
         public LobbyViewModel()
         {
-
+            SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
         }
 
         public SocketClient SocketClient
@@ -40,6 +40,12 @@ namespace ClientLourd.ViewModels
             {
                 (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value;
             }
+        }
+
+        public Lobby CurrentLobby
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
+            set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; NotifyPropertyChanged(); }
         }
 
 
@@ -69,5 +75,16 @@ namespace ClientLourd.ViewModels
             ContainedView = Utilities.Enums.Views.Home.ToString();
         }
 
+        private void OnJoinLobbyResponse(object sender, EventArgs e)
+        {
+            var joinLobbyArgs = (LobbyEventArgs)e;
+            if (joinLobbyArgs.Response)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    CurrentLobby = CurrentLobby;
+                });
+            }
+        }
     }
 }

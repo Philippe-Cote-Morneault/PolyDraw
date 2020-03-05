@@ -158,7 +158,9 @@
     <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
     <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
+    <Compile Include="Services\SocketService\JoinLobbyEventArgs.cs" />
     <Compile Include="Services\SocketService\LobbyCreatedArgs.cs" />
+    <Compile Include="Services\SocketService\LobbyEventArgs.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />

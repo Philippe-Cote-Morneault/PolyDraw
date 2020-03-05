@@ -8,31 +8,57 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Models.Bindable
 {
-    class Lobby: ModelBase
+    public class Lobby: ModelBase
     {
-        public Lobby(string gameName, string host, GameModes gameMode, DifficultyLevel difficulty, int playersCount,int nPlayersMax)
+        public Lobby(
+            string gameName,
+            string gameID,
+            string host, 
+            string hostID, 
+            ObservableCollection<Player> players,
+            GameModes gameMode, 
+            DifficultyLevel difficulty, 
+            int playersCount,
+            int nPlayersMax
+            )
         {
             PlayersCount = playersCount;
-            Players = new ObservableCollection<string>();
+            Players = players;
             PlayersMax = nPlayersMax;
             GameName = gameName;
+            ID = gameID;
             Host = host;
+            HostID = hostID;
             Mode = gameMode;
             Difficulty = difficulty;
         }
+        public string ID { get; set; }
+
+        public string HostID { get; set; }
+
 
         public int PlayersMax { get; set; }
         public int PlayersCount { get; set; }
         public string GameName { get; set; }
-        public string Host { get; set; }
+
+        private string _host;
+        public string Host 
+        { 
+            get => _host;
+            set
+            {
+                _host = value;
+                NotifyPropertyChanged();
+            } 
+        }
 
         public DifficultyLevel Difficulty { get; set; }
 
-        private ObservableCollection<string> _players;
+        private ObservableCollection<Player> _players;
 
         public GameModes Mode { get; set; }
 
-        public ObservableCollection<string> Players 
+        public ObservableCollection<Player> Players 
         {
             get { return _players; }
             set

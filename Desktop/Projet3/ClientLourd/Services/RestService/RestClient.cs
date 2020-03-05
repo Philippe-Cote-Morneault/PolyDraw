@@ -196,7 +196,7 @@ namespace ClientLourd.Services.RestService
             var response = await Execute(request);
         }
 
-        public async Task PostGroup(string groupName, int playersMax, int virtualPlayers, GameModes gameType, DifficultyLevel difficulty)
+        public async Task<string> PostGroup(string groupName, int playersMax, int virtualPlayers, GameModes gameType, DifficultyLevel difficulty)
         {
             RestRequest request = new RestRequest($"/groups", Method.POST);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
@@ -210,7 +210,20 @@ namespace ClientLourd.Services.RestService
 
             });
             var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+
+            return deseralizer.Deserialize<dynamic>(response)["GroupID"];
         }
+
+        /*public async Task<object> GetGroup(string groupID)
+        {
+            RestRequest request = new RestRequest($"/groups/{groupID}", Method.GET);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            var response = await Execute(request);
+            
+            var deseralizer = new JsonDeserializer();
+            return deseralizer.Deserialize<dynamic>(response);
+        }*/
 
 
         private Task<IRestResponse> Execute(RestRequest request)

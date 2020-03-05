@@ -12,7 +12,11 @@
     </UserControl.DataContext>
     <Grid>
         
-        <Label>Lobby view</Label>
+
         <Button Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
+        <StackPanel>
+            <TextBlock Text="{Binding CurrentLobby.GameName}"></TextBlock>
+            <TextBlock Text="{Binding CurrentLobby.Host}"></TextBlock>
+        </StackPanel>
     </Grid>
 </UserControl>

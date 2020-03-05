@@ -21,6 +21,9 @@ namespace ClientLourd.ViewModels
        
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
+
+        public Lobby CurrentLobby { get; set; }
+
         public NetworkInformations NetworkInformations { get; set; }
         private SessionInformations _sessionInformations;
 

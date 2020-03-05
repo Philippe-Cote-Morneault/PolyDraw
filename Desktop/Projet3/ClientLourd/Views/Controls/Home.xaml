@@ -45,15 +45,9 @@
 
 
         <Border Grid.Row="0" Margin="50" BorderBrush="LightGray" BorderThickness="1" Height="{Binding ElementName=firstRow, Path=ActualHeight}">
-            <ListView  ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView  ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" PreviewMouseLeftButtonUp="OnLobbySelection">
                 <ListView.View>
                     <GridView>
-                        <!--<GridView.ColumnHeaderContainerStyle>
-                            <Style BasedOn="{StaticResource {x:Type GridViewColumnHeader}}" TargetType="{x:Type GridViewColumnHeader}">
-                                <Setter Property="IsHitTestVisible" Value="False"/>
-                            </Style>
-                        </GridView.ColumnHeaderContainerStyle>-->
-                        
                         <GridViewColumn Width="{Binding ElementName=modeIcon, Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

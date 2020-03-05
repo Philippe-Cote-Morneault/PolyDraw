@@ -28,7 +28,6 @@ namespace ClientLourd.ViewModels
             SelectedDifficulty = DifficultyLevel.Easy.GetDescription();
         }
 
-
         public SessionInformations SessionInformations
         {
             get
@@ -43,23 +42,12 @@ namespace ClientLourd.ViewModels
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
-        public string ContainedView
-        {
-            get
-            {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView;
-            }
-            set
-            {
-                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value;
-            }
-        }
-
         public RestClient RestClient
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
+        
 
         private DifficultyLevel _selectedDifficulty;
 
@@ -179,7 +167,6 @@ namespace ClientLourd.ViewModels
             try
             {
                 await RestClient.PostGroup(GameName, PlayersMax, SelectedNumberOfVirtualPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
-                ContainedView = Utilities.Enums.Views.Lobby.ToString();
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
