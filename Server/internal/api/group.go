@@ -43,7 +43,8 @@ type responseGroup struct {
 	GameType       int
 	Difficulty     int
 	Status         int
-	Owner          responsePlayerReal
+	OwnerName      string
+	OwnerID        string
 	Players        []responsePlayer
 }
 
@@ -143,10 +144,6 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 
 	response := make([]responseGroup, len(groups))
 	for i := range groups {
-		owner := responsePlayerReal{
-			Username: groups[i].Owner.Username,
-			ID:       groups[i].OwnerID.String(),
-		}
 		players := make([]responsePlayer, len(groups[i].Users))
 		for j := range groups[i].Users {
 			players[j] = responsePlayer{
@@ -164,7 +161,8 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 			GameType:       groups[i].GameType,
 			Difficulty:     groups[i].Difficulty,
 			Status:         0,
-			Owner:          owner,
+			OwnerName:      groups[i].Owner.Username,
+			OwnerID:        groups[i].OwnerID.String(),
 			Players:        players,
 		}
 	}
@@ -184,10 +182,6 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Users").Preload("Owner").Where("id = ?", groupID).First(&group)
 
 	if group.ID != uuid.Nil {
-		owner := responsePlayerReal{
-			Username: group.Owner.Username,
-			ID:       group.OwnerID.String(),
-		}
 		players := make([]responsePlayer, len(group.Users))
 		for j := range group.Users {
 			players[j] = responsePlayer{
@@ -205,7 +199,8 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 			GameType:       group.GameType,
 			Difficulty:     group.Difficulty,
 			Status:         group.Status,
-			Owner:          owner,
+			OwnerName:      group.Owner.Username,
+			OwnerID:        group.Owner.ID.String(),
 			Players:        players,
 		}
 		rbody.JSON(w, http.StatusOK, response)

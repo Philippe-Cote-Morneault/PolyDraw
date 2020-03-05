@@ -29,7 +29,7 @@ type responsePlayer struct {
 
 type responseNewGroup struct {
 	ID         string
-	Name       string
+	GroupName  string
 	OwnerName  string
 	OwnerID    string
 	PlayersMax int
@@ -98,7 +98,7 @@ func (g *groups) AddGroup(group *model.Group) {
 	}
 	message.ParseMessagePack(byte(socket.MessageType.ResponseGroupCreated), responseNewGroup{
 		ID:         group.ID.String(),
-		Name:       group.Name,
+		GroupName:  group.Name,
 		OwnerName:  group.Owner.Username,
 		OwnerID:    group.OwnerID.String(),
 		PlayersMax: group.PlayersMax,
