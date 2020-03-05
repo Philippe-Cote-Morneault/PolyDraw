@@ -45,6 +45,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var hideShowMessagesFAB: CounterFab
     private lateinit var chatManager: ChatManager
     private lateinit var navigationController: NavController
+    private lateinit var navigationView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
@@ -84,7 +85,7 @@ open class MainActivity : AppCompatActivity() {
 
 
         drawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        navigationView = findViewById(R.id.nav_view)
         navigationController = findNavController(R.id.nav_host_fragment)
 
         appBarConfiguration = AppBarConfiguration(
@@ -96,41 +97,38 @@ open class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navigationController, appBarConfiguration)
 
-        navView.setupWithNavController(navigationController)
-        navView.menu.findItem(R.id.menu_item_activity_main_drawer_lobby).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_match_lobby_fragment)
+        navigationView.setupWithNavController(navigationController)
+        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_lobby).setOnMenuItemClickListener {
+            startNavigationFragment(R.id.navigation_main_match_lobby_fragment, it)
             true
         }
 
-        navView.menu.findItem(R.id.menu_item_activity_main_drawer_draw).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_draw_view_fragment)
+        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_draw).setOnMenuItemClickListener {
+            startNavigationFragment(R.id.navigation_main_draw_view_fragment, it)
             true
         }
 
-        navView.menu.findItem(R.id.menu_item_activity_main_drawer_logout).setOnMenuItemClickListener {
+        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_logout).setOnMenuItemClickListener {
             logout()
             true
         }
 
-        navView.menu.findItem(R.id.menu_item_activity_main_drawer_profile).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_profile_fragment)
+        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile).setOnMenuItemClickListener {
+            startNavigationFragment(R.id.navigation_main_profile_fragment, it)
             true
         }
 
         // Header
-        val header = navView.getHeaderView(0)
+        val header = navigationView.getHeaderView(0)
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
-            if (navigationController.currentDestination?.id != R.id.navigation_main_profile_fragment) {
-                navigationController.popBackStack(
-                    navigationController.currentDestination!!.id,
-                    true
-                )
-                navigationController.navigate(R.id.navigation_main_profile_fragment)
-            }
+            startNavigationFragment(
+                R.id.navigation_main_profile_fragment,
+                navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile)
+            )
         }
 
-        navView.setCheckedItem(R.id.menu_item_activity_main_drawer_lobby)
+        navigationView.setCheckedItem(R.id.menu_item_activity_main_drawer_lobby)
 
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
@@ -176,13 +174,14 @@ open class MainActivity : AppCompatActivity() {
         //logout()
     //}
 
-    private fun startNavigationFragment(destinationID: Int) {
+    private fun startNavigationFragment(destinationID: Int, menuItem: MenuItem) {
         if (navigationController.currentDestination?.id != destinationID) {
             navigationController.popBackStack(
                 navigationController.currentDestination!!.id,
                 true
             )
             navigationController.navigate(destinationID)
+            menuItem.setChecked(true)
         }
     }
 
