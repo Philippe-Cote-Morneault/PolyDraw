@@ -23,7 +23,7 @@ type PlayerDrawThis struct {
 	DrawingID string
 }
 
-//PlyaerTurnDraw used for message 57
+//PlayerTurnDraw used for message 57
 type PlayerTurnDraw struct {
 	UserID    string
 	Username  string
@@ -32,12 +32,14 @@ type PlayerTurnDraw struct {
 	Length    int
 }
 
+//PlayersDataPoint represent player and its data
 type PlayersDataPoint struct {
 	Username string
 	UserID   string
 	Point    int
 }
 
+//GameEnded message used when a game ends
 type GameEnded struct {
 	Players    []PlayersDataPoint
 	Winner     string
@@ -45,12 +47,14 @@ type GameEnded struct {
 	Time       int
 }
 
+//GuessResponse used when the player tries to guess a word
 type GuessResponse struct {
 	Valid       bool
 	Point       int
 	PointsTotal int
 }
 
+//WordFound used to broadcast to all other players that the word was discovered
 type WordFound struct {
 	Username    string
 	UserID      string
@@ -58,6 +62,7 @@ type WordFound struct {
 	PointsTotal int
 }
 
+//TimeUp message used to broadcast to other players that the time is up for finding the name
 type TimeUp struct {
 	Type int
 	Word string
