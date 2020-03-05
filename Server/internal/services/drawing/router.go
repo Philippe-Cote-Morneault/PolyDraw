@@ -44,7 +44,7 @@ func (r *Router) Init() {
 }
 
 //Route the message and broadcast it to every other clients
-func (r *Router) Route(message socket.RawMessageReceived) {
+func (r *Router) Route(message *socket.RawMessageReceived) {
 	var newMessageType byte
 	switch message.Payload.MessageType {
 	case 30:
