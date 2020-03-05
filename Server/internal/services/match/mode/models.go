@@ -44,3 +44,21 @@ type GameEnded struct {
 	WinnerName string
 	Time       int
 }
+
+type GuessResponse struct {
+	Valid       bool
+	Point       int
+	PointsTotal int
+}
+
+type WordFound struct {
+	Username    string
+	UserID      string
+	Point       int
+	PointsTotal int
+}
+
+type TimeUp struct {
+	Type int
+	Word string
+}
