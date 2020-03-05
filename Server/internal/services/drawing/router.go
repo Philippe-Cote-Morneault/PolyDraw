@@ -2,7 +2,7 @@ package drawing
 
 import (
 	"github.com/google/uuid"
-	"gitlab.com/jigsawcorp/log3900/internal/services/match"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"sync"
 )
@@ -10,19 +10,19 @@ import (
 var instanceRouter *Router
 
 //RegisterGame to the drawing service. This way the messages can be routed
-func RegisterGame(ptr *match.IMatch) {
-	connections := (*ptr).GetConnections()
+func RegisterGame(ptr match2.IMatch) {
+	connections := ptr.GetConnections()
 
 	instanceRouter.mutex.Lock()
 	for i := range connections {
-		instanceRouter.connections[connections[i]] = ptr
+		instanceRouter.connections[connections[i]] = &ptr
 	}
 	instanceRouter.mutex.Unlock()
 }
 
 //UnRegisterGame to the drawing service. This way the program can save memory.
-func UnRegisterGame(ptr *match.IMatch) {
-	connections := (*ptr).GetConnections()
+func UnRegisterGame(ptr match2.IMatch) {
+	connections := ptr.GetConnections()
 
 	instanceRouter.mutex.Lock()
 	for i := range connections {
@@ -34,13 +34,13 @@ func UnRegisterGame(ptr *match.IMatch) {
 //Router used to routes the various messages of the drawing
 type Router struct {
 	mutex       sync.RWMutex
-	connections map[uuid.UUID]*match.IMatch //socketUUID
+	connections map[uuid.UUID]*match2.IMatch //socketUUID
 }
 
 //Init initialize the router and it's pointer
 func (r *Router) Init() {
 	instanceRouter = r
-	r.connections = make(map[uuid.UUID]*match.IMatch)
+	r.connections = make(map[uuid.UUID]*match2.IMatch)
 }
 
 //Route the message and broadcast it to every other clients

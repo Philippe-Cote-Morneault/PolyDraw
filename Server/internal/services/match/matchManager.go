@@ -1,6 +1,7 @@
 package match
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/match"
 	"log"
 	"sync"
 
@@ -11,8 +12,8 @@ import (
 )
 
 type matchManager struct {
-	matches    map[uuid.UUID]IMatch    //group id
-	assignment map[uuid.UUID]uuid.UUID //socket id -> game id
+	matches    map[uuid.UUID]match.IMatch //group id
+	assignment map[uuid.UUID]uuid.UUID    //socket id -> game id
 }
 
 var matchManagerInstance *matchManager
@@ -28,13 +29,13 @@ func UpgradeGroup(groupID uuid.UUID, connections []uuid.UUID, gameInfo model.Gro
 func (m *matchManager) Init() {
 	matchManagerInstance = m
 
-	m.matches = make(map[uuid.UUID]IMatch)
+	m.matches = make(map[uuid.UUID]match.IMatch)
 	m.assignment = make(map[uuid.UUID]uuid.UUID)
 }
 
 //StartGame start the games with the current players in the group
 func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gameInfo model.Group) {
-	var match IMatch
+	var match match.IMatch
 	switch gameInfo.GameType {
 	case 0:
 		match = &mode.FFA{}

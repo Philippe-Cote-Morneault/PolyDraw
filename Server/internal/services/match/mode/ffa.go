@@ -3,6 +3,7 @@ package mode
 import (
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/sliceutils"
@@ -42,6 +43,8 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.isRunning = true
 	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
+
+	drawing.RegisterGame(f)
 }
 
 //Start the game mode
@@ -390,4 +393,5 @@ func (f *FFA) finish() {
 	})
 
 	f.broadcast(&message)
+	drawing.UnRegisterGame(f)
 }
