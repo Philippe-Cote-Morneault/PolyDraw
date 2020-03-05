@@ -153,7 +153,7 @@ object SocketHandler {
                 totalReadBytes += amountRead
             }
 
-            val type = Event.values().find { it.eventType == typeByte }
+            val type = Event.values().find { it.eventType == typeByte.toInt() }
                 ?: return
 
             val message = Message(type, values)
