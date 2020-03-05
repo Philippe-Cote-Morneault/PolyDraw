@@ -54,6 +54,7 @@ type messageType struct {
 	WordFound                int
 	TimeUp                   int
 	ResponseHintMatch        int
+	PlayerSync               int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -95,6 +96,7 @@ var MessageType = &messageType{
 	PlayerDrawingTurn:        57,
 	PlayerDrawThis:           69,
 	TimeUp:                   71,
+	PlayerSync:               73,
 	RequestGuessWordMatch:    74,
 	ResponseGuess:            75,
 	WordFound:                77,
