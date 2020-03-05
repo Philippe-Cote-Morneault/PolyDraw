@@ -181,6 +181,7 @@ class GroupRepository : Service() {
         )
 
         groupCache.addUserToGroup(groupID, player)
+        EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
     }
 
     private fun onUserLeftGroup(message: com.log3900.socket.Message) {
@@ -191,6 +192,7 @@ class GroupRepository : Service() {
         val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
 
         groupCache.removeUserFromGroup(groupID, userID)
+        EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
     }
 
     private fun onJoinGroupResponse(message: com.log3900.socket.Message) {
