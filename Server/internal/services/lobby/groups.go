@@ -154,9 +154,10 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 					})
 					g.mutex.Lock()
 					for i := range g.groups[groupID] {
-						if g.groups[groupID][i] != socketID {
-							go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
-						}
+						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
+					}
+					for k := range g.queue {
+						go socket.SendRawMessageToSocketID(newUser, k)
 					}
 					g.mutex.Unlock()
 
@@ -215,6 +216,9 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		socket.SendRawMessageToSocketID(message, socketID) //We inform the user that the request was received.
 		for i := range g.groups[groupID] {
 			go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
+		}
+		for k := range g.queue {
+			go socket.SendRawMessageToSocketID(message, k)
 		}
 		g.mutex.Unlock()
 

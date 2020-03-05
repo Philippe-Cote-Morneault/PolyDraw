@@ -5,6 +5,7 @@ type PlayersData struct {
 	UserID   string
 	Username string
 	IsCPU    bool
+	Points   int
 }
 
 //ResponseGameInfo represents the message for type 61
@@ -32,16 +33,9 @@ type PlayerTurnDraw struct {
 	Length    int
 }
 
-//PlayersDataPoint represent player and its data
-type PlayersDataPoint struct {
-	Username string
-	UserID   string
-	Points   int
-}
-
 //GameEnded message used when a game ends
 type GameEnded struct {
-	Players    []PlayersDataPoint
+	Players    []PlayersData
 	Winner     string
 	WinnerName string
 	Time       int64
@@ -76,7 +70,7 @@ type HintResponse struct {
 
 //PlayerSync used to sync all the players with a unique trusted time source
 type PlayerSync struct {
-	Players  []PlayersDataPoint
+	Players  []PlayersData
 	Laps     int
 	Time     int64
 	GameTime int

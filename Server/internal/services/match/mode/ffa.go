@@ -242,6 +242,7 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 		players = append(players, PlayersData{
 			UserID:   f.info.Users[i].ID.String(),
 			Username: f.info.Users[i].Username,
+			Points:   0,
 			IsCPU:    false,
 		})
 	}
@@ -299,12 +300,13 @@ func (f *FFA) resetGuess() {
 
 //syncPlayers message used to keep all the players in sync
 func (f *FFA) syncPlayers() {
-	players := make([]PlayersDataPoint, len(f.scores))
+	players := make([]PlayersData, len(f.scores))
 	for i := range f.scores {
-		players[i] = PlayersDataPoint{
+		players[i] = PlayersData{
 			Username: f.players[f.order[i]].Username,
 			UserID:   f.players[f.order[i]].userID.String(),
 			Points:   f.scores[i],
+			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
 	}
 
@@ -361,17 +363,18 @@ func (f *FFA) finish() {
 	//Identify the winner
 	bestPlayerOrder := -1
 	bestScore := -1
-	players := make([]PlayersDataPoint, len(f.scores))
+	players := make([]PlayersData, len(f.scores))
 
 	for i := range f.scores {
 		if bestScore < f.scores[i] {
 			bestPlayerOrder = i
 			bestScore = f.scores[i]
 		}
-		players[i] = PlayersDataPoint{
+		players[i] = PlayersData{
 			Username: f.players[f.order[i]].Username,
 			UserID:   f.players[f.order[i]].userID.String(),
 			Points:   f.scores[i],
+			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
