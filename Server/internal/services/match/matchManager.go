@@ -1,12 +1,13 @@
 package match
 
 import (
+	"log"
+	"sync"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match/mode"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
-	"log"
-	"sync"
 )
 
 type matchManager struct {
@@ -76,7 +77,7 @@ func (m *matchManager) Guess(message socket.RawMessageReceived) {
 	if groupID, ok := m.assignment[message.SocketID]; ok {
 		m.matches[groupID].TryWord(message.SocketID, string(message.Payload.Bytes))
 	} else {
-		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
+		log.Printf("[Match] -> Socket not registered to any game | %s", message.SocketID.String())
 	}
 }
 
