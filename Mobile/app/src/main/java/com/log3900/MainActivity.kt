@@ -98,24 +98,12 @@ open class MainActivity : AppCompatActivity() {
 
         navView.setupWithNavController(navigationController)
         navView.menu.findItem(R.id.menu_item_activity_main_drawer_lobby).setOnMenuItemClickListener {
-            if (navigationController.currentDestination?.id != R.id.navigation_main_match_lobby_fragment) {
-                navigationController.popBackStack(
-                    navigationController.currentDestination!!.id,
-                    true
-                )
-                navigationController.navigate(R.id.navigation_main_match_lobby_fragment)
-            }
+            startNavigationFragment(R.id.navigation_main_match_lobby_fragment)
             true
         }
 
         navView.menu.findItem(R.id.menu_item_activity_main_drawer_draw).setOnMenuItemClickListener {
-            if (navigationController.currentDestination?.id != R.id.navigation_main_draw_view_fragment) {
-                navigationController.popBackStack(
-                    navigationController.currentDestination!!.id,
-                    true
-                )
-                navigationController.navigate(R.id.navigation_main_draw_view_fragment)
-            }
+            startNavigationFragment(R.id.navigation_main_draw_view_fragment)
             true
         }
 
@@ -125,13 +113,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         navView.menu.findItem(R.id.menu_item_activity_main_drawer_profile).setOnMenuItemClickListener {
-            if (navigationController.currentDestination?.id != R.id.navigation_main_profile_fragment) {
-                navigationController.popBackStack(
-                    navigationController.currentDestination!!.id,
-                    true
-                )
-                navigationController.navigate(R.id.navigation_main_profile_fragment)
-            }
+            startNavigationFragment(R.id.navigation_main_profile_fragment)
             true
         }
 
@@ -139,7 +121,13 @@ open class MainActivity : AppCompatActivity() {
         val header = navView.getHeaderView(0)
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
         avatar.setOnClickListener {
-            startFragment("PROFILE_VIEW_FRAGMENT_TAG", ProfileFragment())
+            if (navigationController.currentDestination?.id != R.id.navigation_main_profile_fragment) {
+                navigationController.popBackStack(
+                    navigationController.currentDestination!!.id,
+                    true
+                )
+                navigationController.navigate(R.id.navigation_main_profile_fragment)
+            }
         }
 
         navView.setCheckedItem(R.id.menu_item_activity_main_drawer_lobby)
@@ -187,6 +175,16 @@ open class MainActivity : AppCompatActivity() {
     //    super.onBackPressed()
         //logout()
     //}
+
+    private fun startNavigationFragment(destinationID: Int) {
+        if (navigationController.currentDestination?.id != destinationID) {
+            navigationController.popBackStack(
+                navigationController.currentDestination!!.id,
+                true
+            )
+            navigationController.navigate(destinationID)
+        }
+    }
 
     private fun startFragment(tag: String, fragment: Fragment) {
         drawerLayout.closeDrawer(GravityCompat.START)
