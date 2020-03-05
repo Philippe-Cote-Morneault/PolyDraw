@@ -180,8 +180,10 @@ class GroupRepository : Service() {
             jsonObject.get("IsCPU").asBoolean
         )
 
-        groupCache.addUserToGroup(groupID, player)
-        EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
+        if (player.ID != AccountRepository.getInstance().getAccount().ID) {
+            groupCache.addUserToGroup(groupID, player)
+            EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
+        }
     }
 
     private fun onUserLeftGroup(message: com.log3900.socket.Message) {
