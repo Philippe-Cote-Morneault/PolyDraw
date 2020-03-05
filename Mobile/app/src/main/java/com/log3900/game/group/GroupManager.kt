@@ -4,13 +4,19 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class GroupManager : Service() {
     private val binder = GroupManagerBinder()
     private var groupRepository: GroupRepository? = null
+    var currentGroup: Group? = null
 
     companion object {
         private var isReady = false
@@ -57,6 +63,10 @@ class GroupManager : Service() {
 
     }
 
+    private fun onGroupJoined(group: Group) {
+
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -67,6 +77,8 @@ class GroupManager : Service() {
         instance = this
         groupRepository = GroupRepository.instance
 
+        EventBus.getDefault().register(this)
+
         setReadyState()
     }
 
@@ -76,10 +88,20 @@ class GroupManager : Service() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         instance = null
         isReady = false
         groupRepository = null
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.GROUP_JOINED -> {
+                onGroupJoined(event.data as Group)
+            }
+        }
     }
 
     inner class GroupManagerBinder : Binder() {
