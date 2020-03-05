@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.game.group.Group
 
-class MatchAdapter(var matches: ArrayList<Group>) : RecyclerView.Adapter<MatchViewHolder>() {
+class MatchAdapter(var matches: ArrayList<Group>, var listener: MatchViewHolder.Listener) : RecyclerView.Adapter<MatchViewHolder>() {
 
     override fun getItemCount(): Int {
         return matches.size
@@ -15,7 +15,7 @@ class MatchAdapter(var matches: ArrayList<Group>) : RecyclerView.Adapter<MatchVi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MatchViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_match, parent, false)
 
-        return MatchViewHolder(view)
+        return MatchViewHolder(view, listener)
     }
 
     override fun onBindViewHolder(holder: MatchViewHolder, position: Int) {
