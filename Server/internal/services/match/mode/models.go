@@ -36,7 +36,7 @@ type PlayerTurnDraw struct {
 type PlayersDataPoint struct {
 	Username string
 	UserID   string
-	Point    int
+	Points   int
 }
 
 //GameEnded message used when a game ends
@@ -44,13 +44,13 @@ type GameEnded struct {
 	Players    []PlayersDataPoint
 	Winner     string
 	WinnerName string
-	Time       int
+	Time       int64
 }
 
 //GuessResponse used when the player tries to guess a word
 type GuessResponse struct {
 	Valid       bool
-	Point       int
+	Points      int
 	PointsTotal int
 }
 
@@ -58,7 +58,7 @@ type GuessResponse struct {
 type WordFound struct {
 	Username    string
 	UserID      string
-	Point       int
+	Points      int
 	PointsTotal int
 }
 
