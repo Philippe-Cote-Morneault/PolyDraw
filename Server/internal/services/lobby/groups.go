@@ -158,6 +158,9 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 							go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
 						}
 					}
+					for k := range g.queue {
+						go socket.SendRawMessageToSocketID(newUser, k)
+					}
 					g.mutex.Unlock()
 
 				}
