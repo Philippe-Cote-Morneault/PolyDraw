@@ -219,6 +219,9 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		for i := range g.groups[groupID] {
 			go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
 		}
+		for k := range g.queue {
+			go socket.SendRawMessageToSocketID(message, k)
+		}
 		g.mutex.Unlock()
 
 		var groupDB model.Group
