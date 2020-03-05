@@ -14,15 +14,20 @@ import kotlin.collections.ArrayList
 class GroupAdapter {
     @FromJson
     fun fromJson(groupJson: JsonObject): Group {
+        Log.d("POTATO", "Converting $groupJson")
+        var matchType: MatchMode? = null
+        if (groupJson.has("Mode")) {
+            matchType = MatchMode.values()[groupJson.get("Mode").asInt]
+        } else {
+            matchType = MatchMode.values()[groupJson.get("GameType").asInt]
+        }
         return Group(
             UUID.fromString(groupJson.getAsJsonPrimitive("ID")!!.asString),
             groupJson.getAsJsonPrimitive("GroupName")!!.asString,
             groupJson.getAsJsonPrimitive("PlayersMax")!!.asInt,
-            groupJson.getAsJsonPrimitive("VirtualPlayers")!!.asInt,
-            MatchMode.values()[groupJson.getAsJsonPrimitive("GameType")!!.asInt],
+            matchType,
             Difficulty.values()[groupJson.getAsJsonPrimitive("Difficulty")!!.asInt],
-            groupJson.getAsJsonPrimitive("Status")!!.asInt,
-            UUID.fromString(groupJson.getAsJsonObject("Owner")!!.getAsJsonPrimitive("ID")!!.asString),
+            UUID.fromString(groupJson.getAsJsonPrimitive("OwnerID").asString),
             jsonArrayToUUID(groupJson.getAsJsonArray("Players")!!)
         )
     }
