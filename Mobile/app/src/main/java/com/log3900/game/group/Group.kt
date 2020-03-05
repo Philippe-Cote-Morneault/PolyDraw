@@ -34,6 +34,13 @@ enum class MatchMode {
                 SOLO -> return R.string.match_mode_solo_title
             }
         }
+        fun imageRes(item: MatchMode): Int {
+            when (item) {
+                FFA -> return R.drawable.ic_swords
+                SOLO -> return R.drawable.ic_solo_sprint_logo
+                COOP -> return R.drawable.ic_treasure
+            }
+        }
     }
 }
 
