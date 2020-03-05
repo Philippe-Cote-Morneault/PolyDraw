@@ -141,6 +141,10 @@ class GroupRepository : Service() {
         socketService?.sendMessage(Event.JOIN_GROUP_REQUEST, UUIDUtils.uuidToByteArray(groupID))
     }
 
+    fun leaveGroup(groupID: UUID) {
+        socketService?.sendMessage(Event.LEAVE_GROUP_REQUEST, byteArrayOf())
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
