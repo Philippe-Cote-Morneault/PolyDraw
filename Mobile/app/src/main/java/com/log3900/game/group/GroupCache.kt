@@ -19,4 +19,24 @@ class GroupCache {
     fun getAllGroups(): ArrayList<Group> {
         return groups
     }
+
+    fun addUserToGroup(groupID: UUID, userID: UUID, username: String) {
+        val group = groups.find {
+            it.ID == groupID
+        }
+
+        if (group != null) {
+            group.players.add(userID)
+        }
+    }
+
+    fun removeUserFromGroup(groupID: UUID, userID: UUID) {
+        val group = groups.find {
+            it.ID == groupID
+        }
+
+        if (group != null) {
+            group.players.remove(userID)
+        }
+    }
 }
