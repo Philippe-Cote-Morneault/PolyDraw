@@ -147,8 +147,6 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 				ConnectedAt: time.Now().Unix(),
 			})
 
-			model.AddJunk(userID)
-
 			sessionCache[messageReceived.SocketID] = userID //Set the value in the cache so pacquets are routed fast
 			userCache[userID] = messageReceived.SocketID
 			log.Printf("[Auth] -> Connection made %s", messageReceived.SocketID)
