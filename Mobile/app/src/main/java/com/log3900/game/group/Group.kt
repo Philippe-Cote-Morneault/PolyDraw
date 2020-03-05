@@ -38,9 +38,9 @@ enum class MatchMode {
 }
 
 class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var groupName: String,
-            @Json(name = "PlayersMax") var playersMax: Int, @Json(name = "VirtualPlayer") var virtualPlayers: Int,
+            @Json(name = "PlayersMax") var playersMax: Int,
             @Json(name = "GameType") var gameType: MatchMode, @Json(name = "Difficulty") var difficulty: Difficulty,
-            @Json(name = "Status") var status: Int, @Json(name = "Owner") var owner: UUID,
+            @Json(name = "Owner") var owner: UUID,
             @Json(name = "Players") var players: ArrayList<UUID>) {
 
 }
