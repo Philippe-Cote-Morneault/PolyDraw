@@ -45,6 +45,10 @@ class MatchLobbyPresenter : Presenter {
         groupManager?.createGroup(createdGroup)
     }
 
+    fun onJoinMatchClick(group: Group) {
+        groupManager?.joinGroup(group)
+    }
+
     override fun resume() {
     }
 
