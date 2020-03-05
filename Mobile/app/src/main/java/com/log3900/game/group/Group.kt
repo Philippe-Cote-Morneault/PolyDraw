@@ -23,8 +23,8 @@ enum class Difficulty {
 
 enum class MatchMode {
     FFA,
-    COOP,
-    SOLO;
+    SOLO,
+    COOP;
 
     companion object {
         fun stringRes(item: MatchMode): Int {
