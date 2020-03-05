@@ -158,7 +158,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 				Valid:       true,
-				Point:       pointsForWord,
+				Points:      pointsForWord,
 				PointsTotal: total,
 			})
 			socket.SendRawMessageToSocketID(response, socketID)
@@ -168,7 +168,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			response.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
 				Username:    players.Username,
 				UserID:      players.userID.String(),
-				Point:       pointsForWord,
+				Points:      pointsForWord,
 				PointsTotal: total,
 			})
 			f.broadcast(&broadcast)
@@ -183,7 +183,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		response := socket.RawMessage{}
 		response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 			Valid:       false,
-			Point:       0,
+			Points:      0,
 			PointsTotal: scoreTotal,
 		})
 		socket.SendRawMessageToSocketID(response, socketID)
@@ -305,22 +305,22 @@ func (f *FFA) waitTimeout() bool {
 	}()
 
 	select {
-	case <-c:
-		f.receiving.Lock()
-		f.receivingGuesses.UnSet()
-		return false // completed normally
+		case <-c:
+			f.receiving.Lock()
+			f.receivingGuesses.UnSet()
+			return false // completed normally
 	case <-time.After(time.Duration(f.timeImage)):
-		f.receiving.Lock()
-		f.receivingGuesses.UnSet()
-		//Make sure to clear the semaphore to avoid goroutine leakage
-		for k := range f.hasFoundit {
-			if !f.hasFoundit[k] {
-				f.waitingResponse.Done()
+			f.receiving.Lock()
+			f.receivingGuesses.UnSet()
+			//Make sure to clear the semaphore to avoid goroutine leakage
+			for k := range f.hasFoundit {
+				if !f.hasFoundit[k] {
+					f.waitingResponse.Done()
+				}
 			}
+			return true // timed out
 		}
-		return true // timed out
 	}
-}
 
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
@@ -338,7 +338,7 @@ func (f *FFA) finish() {
 		players[i] = PlayersDataPoint{
 			Username: f.players[f.order[i]].Username,
 			UserID:   f.players[f.order[i]].userID.String(),
-			Point:    f.scores[i],
+			Points:   f.scores[i],
 		}
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
