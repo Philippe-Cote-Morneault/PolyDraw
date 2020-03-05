@@ -213,7 +213,6 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 			GroupID:  groupID.String(),
 			IsCPU:    false,
 		})
-		socket.SendRawMessageToSocketID(message, socketID) //We inform the user that the request was received.
 		for i := range g.groups[groupID] {
 			go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
 		}
