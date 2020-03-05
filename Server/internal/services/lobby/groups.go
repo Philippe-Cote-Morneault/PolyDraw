@@ -154,9 +154,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 					})
 					g.mutex.Lock()
 					for i := range g.groups[groupID] {
-						if g.groups[groupID][i] != socketID {
-							go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
-						}
+						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
 					}
 					for k := range g.queue {
 						go socket.SendRawMessageToSocketID(newUser, k)
