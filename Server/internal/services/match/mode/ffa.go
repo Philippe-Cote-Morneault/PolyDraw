@@ -6,6 +6,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/sliceutils"
+	"log"
 	"math/rand"
 	"strings"
 	"sync"
@@ -185,6 +186,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 			Error: "Hints are not available for this player. The drawing player needs to be a virtual player.",
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
+		log.Printf("[Match] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
