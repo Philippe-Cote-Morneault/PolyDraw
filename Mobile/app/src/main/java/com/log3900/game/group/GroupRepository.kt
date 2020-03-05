@@ -172,8 +172,13 @@ class GroupRepository : Service() {
         val userID = UUID.fromString(jsonObject.get("UserID").asString)
         val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
         val username = jsonObject.get("Username").asString
+        val player = Player(
+            UUID.fromString(jsonObject.get("UserID").asString),
+            jsonObject.get("Username").asString,
+            jsonObject.get("IsCPU").asBoolean
+        )
 
-        groupCache.addUserToGroup(groupID, userID, username)
+        groupCache.addUserToGroup(groupID, player)
     }
 
     private fun onUserLeftGroup(message: com.log3900.socket.Message) {
