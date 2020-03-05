@@ -12,6 +12,11 @@ import (
 type Drawing struct {
 	preview cbroadcast.Channel
 
+	strokeChunk cbroadcast.Channel
+	drawStart   cbroadcast.Channel
+	drawEnd     cbroadcast.Channel
+	drawErase   cbroadcast.Channel
+
 	shutdown chan bool
 }
 
@@ -52,4 +57,8 @@ func (d *Drawing) listen() {
 
 func (d *Drawing) subscribe() {
 	d.preview, _, _ = cbroadcast.Subscribe(BPreview)
+	d.strokeChunk, _, _ = cbroadcast.Subscribe(BStrokeChunk)
+	d.drawStart, _, _ = cbroadcast.Subscribe(BDrawStart)
+	d.drawEnd, _, _ = cbroadcast.Subscribe(BDrawEnd)
+	d.drawErase, _, _ = cbroadcast.Subscribe(BDrawErase)
 }
