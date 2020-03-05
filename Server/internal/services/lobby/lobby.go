@@ -57,7 +57,7 @@ func (l *Lobby) CreateGroup(group *model.Group) {
 
 	if err == nil {
 		l.groups.JoinGroup(socketID, group.ID)
-
+		log.Printf("[Lobby] -> New group created %s", group.Name)
 	}
 }
 

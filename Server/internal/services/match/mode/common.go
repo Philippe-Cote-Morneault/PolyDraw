@@ -5,6 +5,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
+	"log"
 	"sync"
 )
 
@@ -53,13 +54,14 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 	for i := range b.players {
 		b.readyOnce[b.players[i].socketID] = false
 	}
-
+	log.Printf("[Match] -> Init match %s", b.info.ID)
 }
 
 func (b *base) broadcast(message *socket.RawMessage) {
 	for i := range b.players {
 		socket.SendRawMessageToSocketID(*message, b.players[i].socketID)
 	}
+	log.Printf("[Match] -> Message %d broadcasted to match %s", message.MessageType, b.info.ID)
 }
 
 //Wait for all the clients to be ready
