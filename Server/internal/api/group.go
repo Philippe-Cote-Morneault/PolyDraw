@@ -48,7 +48,7 @@ type responseGroup struct {
 	Players        []responsePlayer
 }
 
-const maxPlayer = 12
+const maxPlayer = 8
 
 //PostGroup used to create a new group
 func PostGroup(w http.ResponseWriter, r *http.Request) {
