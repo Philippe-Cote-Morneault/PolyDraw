@@ -183,6 +183,8 @@ class GroupRepository : Service() {
         if (player.ID != AccountRepository.getInstance().getAccount().ID) {
             groupCache.addUserToGroup(groupID, player)
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
+        } else {
+            EventBus.getDefault().post(MessageEvent(EventType.GROUP_JOINED, groupID))
         }
     }
 
@@ -195,6 +197,10 @@ class GroupRepository : Service() {
 
         groupCache.removeUserFromGroup(groupID, userID)
         EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
+
+        if (userID == AccountRepository.getInstance().getAccount().ID) {
+            EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, groupID))
+        }
     }
 
     private fun onJoinGroupResponse(message: com.log3900.socket.Message) {
