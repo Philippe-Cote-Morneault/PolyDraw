@@ -25,6 +25,7 @@ namespace ClientLourd.ViewModels
             SocketClient.LobbyCreated += OnLobbyCreated;
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
+            SocketClient.UserLeftLobby += OnUserLeftLobby;
             Lobbies = new ObservableCollection<Lobby>();
             Lobbies.Add(new Lobby("My nice lobby come join COOP", "0",  "TamereShortz", "0", new ObservableCollection<Player>(), GameModes.Coop, DifficultyLevel.Easy,0, 8));
             Lobbies.Add(new Lobby("My nice lobby come join SOLO", "0", "Tame2", "0", new ObservableCollection<Player>(), GameModes.Solo, DifficultyLevel.Hard,1, 1));
@@ -258,6 +259,11 @@ namespace ClientLourd.ViewModels
             {
                 if (joinLobbyArgs.Response)
                 {
+                if (!IsCreatedByUser(CurrentLobby.HostID))
+                {
+                    CurrentLobby.Players.Add(new Player(false, SessionInformations.User.ID, SessionInformations.User.Username));
+                }
+                    
                     ContainedView = Utilities.Enums.Views.Lobby.ToString();
                 }
                 else
@@ -274,8 +280,21 @@ namespace ClientLourd.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
-                lobbyModified.Players.Add(new Player(false, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
+                lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
                 lobbyModified.PlayersCount = lobbyModified.Players.Count;
+            });
+        }
+
+        private void OnUserLeftLobby(object sender, EventArgs e)
+        {
+            var userLeftLobbyArgs = (LobbyEventArgs)e;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
+                var userToRemove = lobbyModif.Players.Single(player => player.ID == userLeftLobbyArgs.UserID);
+                lobbyModif.Players.Remove(userToRemove);
+                lobbyModif.PlayersCount = lobbyModif.Players.Count;
             });
         }
     }

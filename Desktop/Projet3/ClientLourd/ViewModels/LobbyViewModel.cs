@@ -19,6 +19,7 @@ namespace ClientLourd.ViewModels
         public LobbyViewModel()
         {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
+            
         }
 
         public SocketClient SocketClient
@@ -82,9 +83,11 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    //Trigger NotifyProperty...
                     CurrentLobby = CurrentLobby;
                 });
             }
         }
+
     }
 }

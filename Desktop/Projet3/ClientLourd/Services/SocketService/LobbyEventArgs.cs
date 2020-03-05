@@ -57,7 +57,12 @@ namespace ClientLourd.Services.SocketService
             get { return _data["Error"]; }
         }
 
-        // UserJoinedLobby
+        // UserJoinedLobby and QuitLobbyResponse
+
+        public bool IsCPU
+        {
+            get { return _data["IsCPU"]; }
+        }
         public string UserID
         {
             get { return _data["UserID"]; }
@@ -70,5 +75,7 @@ namespace ClientLourd.Services.SocketService
         {
             get { return _data["GroupID"]; }
         }
+
+
     }
 }

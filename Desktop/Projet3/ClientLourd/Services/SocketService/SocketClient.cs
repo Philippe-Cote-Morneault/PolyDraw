@@ -195,7 +195,7 @@ namespace ClientLourd.Services.SocketService
                             OnUserJoinedLobby(this, new LobbyEventArgs(data));
                             break;
                         case SocketMessageTypes.QuitLobbyResponse:
-                            // TODO
+                            OnLeftLobby(this, new LobbyEventArgs(data));
                             break;
                         case SocketMessageTypes.LobbyCreated:
                             OnLobbyCreated(this, new LobbyEventArgs(data));
