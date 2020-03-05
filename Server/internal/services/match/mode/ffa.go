@@ -52,6 +52,7 @@ func (f *FFA) Start() {
 	f.setOrder()
 
 	//We can start the game loop
+	log.Printf("[Match] [FFA] -> Starting gameloop Match: %s", f.info.ID)
 	for f.isRunning {
 		f.GameLoop()
 	}
@@ -85,11 +86,16 @@ func (f *FFA) GameLoop() {
 		Length:    len(f.currentWord),
 	})
 	f.broadcast(&message)
+	log.Printf("[Match] [FFA] -> Word sent waiting for guesses, Match: %s", f.info.ID)
 	f.receivingGuesses.Set()
 
 	//Make him draw
 	//TODO register with the drawing service the drawing ID to route to the correct users drawing
-	f.waitTimeout()
+	if f.waitTimeout() {
+		log.Printf("[Match] [FFA] -> Time's up. Not all the players could guess the word, Match: %s", f.info.ID)
+	} else {
+		log.Printf("[Match] [FFA] -> All players could guess the word, Match: %s", f.info.ID)
+	}
 
 	//Send message that the current word have expired
 	timeUpMessage := socket.RawMessage{}
@@ -186,7 +192,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 			Error: "Hints are not available for this player. The drawing player needs to be a virtual player.",
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
-		log.Printf("[Match] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
+		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
@@ -240,6 +246,7 @@ func (f *FFA) findWord() string {
 	//TODO language
 	word, err := model.Redis().SRandMember("dict_words_en").Result()
 	if err != nil {
+		log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
 		f.Close()
 	}
 	return word
@@ -300,7 +307,7 @@ func (f *FFA) waitTimeout() bool {
 
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
-
+	log.Printf("[Match] [FFA] -> Game has ended. Match: %s", f.info.ID)
 	//Identify the winner
 	bestPlayerOrder := -1
 	bestScore := -1
@@ -318,6 +325,7 @@ func (f *FFA) finish() {
 		}
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
+	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
 
 	//Send a message to all the players to give them the details of the game and who is the winner
 	message := socket.RawMessage{}
