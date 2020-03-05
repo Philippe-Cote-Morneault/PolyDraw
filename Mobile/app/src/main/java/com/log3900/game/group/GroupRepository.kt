@@ -66,29 +66,28 @@ class GroupRepository : Service() {
         socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_DELETED, socketMessageHandler!!)
     }
 
-    fun getGroups(sessionToken: String): Single<ArrayList<Group>> {
+    fun getGroups(sessionToken: String, forceReload: Boolean = false): Single<ArrayList<Group>> {
         val single = Single.create<ArrayList<Group>> {
-            val call = GroupRestService.service.getGroups(sessionToken, "EN")
-            call.enqueue(object : Callback<JsonArray> {
-                override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                    val moshi = Moshi.Builder()
-                        .add(KotlinJsonAdapterFactory())
-                        .add(UUIDAdapter())
-                        .add(ArrayListUUIDAdapter())
-                        .build()
+            if (groupCache.needsReload || forceReload) {
+                val call = GroupRestService.service.getGroups(sessionToken, "EN")
+                call.enqueue(object : Callback<JsonArray> {
+                    override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
+                        val groups = arrayListOf<Group>()
 
-                    val groups = arrayListOf<Group>()
-
-                    response.body()?.forEach { group ->
-                        groups.add(GroupAdapter().fromJson(group.asJsonObject))
+                        response.body()?.forEach { group ->
+                            groups.add(GroupAdapter().fromJson(group.asJsonObject))
+                        }
+                        groupCache.needsReload = false
+                        it.onSuccess(groupCache.getAllGroups())
                     }
-                    it.onSuccess(groups)
-                }
 
-                override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-                    it.onError(t)
-                }
-            })
+                    override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+                        it.onError(t)
+                    }
+                })
+            } else {
+                it.onSuccess(groupCache.getAllGroups())
+            }
         }
 
         return single.subscribeOn(Schedulers.io())
@@ -211,7 +210,7 @@ class GroupRepository : Service() {
 
         val group = GroupAdapter().fromJson(jsonGson)
         groupCache.addGroup(group)
-        
+
         EventBus.getDefault().post(MessageEvent(EventType.GROUP_CREATED, group))
     }
 
