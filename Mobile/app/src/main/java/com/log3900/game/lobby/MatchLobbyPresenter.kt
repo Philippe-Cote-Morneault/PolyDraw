@@ -1,8 +1,8 @@
 package com.log3900.game.lobby
 
-import android.util.Log
 import com.log3900.game.group.Group
 import com.log3900.game.group.GroupCreated
+import com.log3900.game.group.GroupManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter

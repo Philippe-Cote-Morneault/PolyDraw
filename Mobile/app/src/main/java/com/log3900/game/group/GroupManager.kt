@@ -1,14 +1,9 @@
-package com.log3900.game.lobby
+package com.log3900.game.group
 
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.util.Log
-import com.log3900.chat.ChatManager
-import com.log3900.game.group.Group
-import com.log3900.game.group.GroupCreated
-import com.log3900.game.group.GroupRepository
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject

@@ -165,10 +165,12 @@ object SocketHandler {
                 socketHealthcheckTimer.cancel()
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
+                    Log.d("Healthcheck", "Timer expired")
                     handlerError()
                 }, 6000)
             }
             else if (messageReadListener != null) {
+                Log.d("POTATO", "New socket message of type ${message.type}")
                 val msg = android.os.Message()
                 msg.obj = message
                 messageReadListener?.sendMessage(msg)

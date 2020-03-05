@@ -11,20 +11,17 @@ import android.os.Message
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.log3900.MainApplication
-import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
-import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.game.group.GroupRepository
-import com.log3900.game.lobby.GroupManager
+import com.log3900.game.group.GroupManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.ui.dialogs.ErrorDialog
 import com.log3900.socket.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 class MonitoringService : Service() {
