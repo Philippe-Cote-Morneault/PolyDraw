@@ -20,13 +20,13 @@ class GroupCache {
         return groups
     }
 
-    fun addUserToGroup(groupID: UUID, userID: UUID, username: String) {
+    fun addUserToGroup(groupID: UUID, player: Player) {
         val group = groups.find {
             it.ID == groupID
         }
 
         if (group != null) {
-            group.players.add(userID)
+            group.players.add(player)
         }
     }
 
@@ -36,7 +36,9 @@ class GroupCache {
         }
 
         if (group != null) {
-            group.players.remove(userID)
+            group.players.removeIf {
+                it.ID == userID
+            }
         }
     }
 }
