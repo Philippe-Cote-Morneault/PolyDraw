@@ -6,7 +6,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.chat.Channel.GroupType
 import com.log3900.game.group.Group
+import com.log3900.game.group.MatchMode
 
 class MatchViewHolder : RecyclerView.ViewHolder {
     private lateinit var match: Group
@@ -33,10 +35,11 @@ class MatchViewHolder : RecyclerView.ViewHolder {
 
     fun bind(match: Group) {
         this.match = match
-        matchModeTextView.text = match.gameType.toString()
+        matchModeTextView.setText(MatchMode.stringRes(match.gameType))
         matchNameTextView.text = match.groupName
         matchHostTextView.text = match.ownerName
         matchPlayerCountTextView.text = "${match.players.size}/${match.playersMax}"
+        matchIconImageView.setImageResource(MatchMode.imageRes(match.gameType))
     }
 
     interface Listener {
