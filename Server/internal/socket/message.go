@@ -53,6 +53,7 @@ type messageType struct {
 	ResponseGuess            int
 	WordFound                int
 	TimeUp                   int
+	ResponseHintMatch        int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -99,6 +100,7 @@ var MessageType = &messageType{
 	WordFound:                77,
 	GameEnded:                81,
 	RequestHintMatch:         82,
+	ResponseHintMatch:        83,
 	ErrorResponse:            255,
 }
 

@@ -67,3 +67,9 @@ type TimeUp struct {
 	Type int
 	Word string
 }
+
+//HintResponse represents the response to a hint requested by a player
+type HintResponse struct {
+	Hint  string
+	Error string
+}
