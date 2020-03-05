@@ -14,6 +14,7 @@ type players struct {
 	userID   uuid.UUID
 	Username string
 	Order    int
+	IsCPU    bool
 }
 
 type base struct {
@@ -42,6 +43,7 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 				socketID: socketID,
 				userID:   userID,
 				Username: user.Username,
+				IsCPU:    false, //TODO replace this with virtual players
 			}
 			b.connections[socketID] = &b.players[i]
 		}
