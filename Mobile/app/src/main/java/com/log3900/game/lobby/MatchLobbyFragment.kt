@@ -78,6 +78,11 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
         matchesAdapter.notifyDataSetChanged()
     }
 
+    override fun groupUpdated(groupID: UUID) {
+        val updatedGroupIndex = matchesAdapter.matches.indexOfFirst { it.ID == groupID }
+        matchesAdapter.notifyItemChanged(updatedGroupIndex)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         matchLobbyPresenter?.destroy()

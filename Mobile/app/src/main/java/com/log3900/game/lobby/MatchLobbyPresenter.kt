@@ -33,7 +33,9 @@ class MatchLobbyPresenter : Presenter {
     }
 
     private fun init() {
-        groupManager?.getAvailableGroups()?.subscribe(
+        groupManager?.getAvailableGroups()
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(
             {
                 matchLobbyView?.setAvailableGroups(it)
             },
@@ -65,6 +67,10 @@ class MatchLobbyPresenter : Presenter {
         matchLobbyView?.notifyMatchesChanged()
     }
 
+    private fun onGroupUpdated(groupID: UUID) {
+        matchLobbyView?.groupUpdated(groupID)
+    }
+
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
@@ -77,6 +83,9 @@ class MatchLobbyPresenter : Presenter {
             }
             EventType.GROUP_DELETED -> {
                 onGroupDeleted(event.data as UUID)
+            }
+            EventType.GROUP_UPDATED -> {
+                onGroupUpdated(event.data as UUID)
             }
         }
     }
