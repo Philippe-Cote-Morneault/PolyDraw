@@ -87,7 +87,7 @@ func (f *FFA) GameLoop() {
 	f.receivingGuesses.Set()
 
 	//Make him draw
-	//TODO register with the drawing service the drawing ID to route to the correct users
+	//TODO register with the drawing service the drawing ID to route to the correct users drawing
 	f.waitTimeout()
 
 	//Send message that the current word have expired
