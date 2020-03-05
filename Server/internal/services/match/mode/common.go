@@ -12,17 +12,20 @@ type players struct {
 	socketID uuid.UUID
 	userID   uuid.UUID
 	Username string
+	Order    int
 }
 
 type base struct {
 	readyMatch  sync.WaitGroup
 	readyOnce   map[uuid.UUID]bool
-	connections []players
+	players     []players
+	connections map[uuid.UUID]*players
 	info        model.Group
 }
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
-	b.connections = make([]players, len(connections))
+	b.players = make([]players, len(connections))
+	b.connections = make(map[uuid.UUID]*players, len(connections))
 	for i := range connections {
 		socketID := connections[i]
 		userID, _ := auth.GetUserID(socketID)
@@ -34,27 +37,28 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 			}
 		}
 		if user != nil && userID != uuid.Nil {
-			b.connections[i] = players{
+			b.players[i] = players{
 				socketID: socketID,
 				userID:   userID,
 				Username: user.Username,
 			}
+			b.connections[socketID] = &b.players[i]
 		}
 	}
 
 	b.info = info
-	b.readyMatch.Add(len(b.connections))
+	b.readyMatch.Add(len(b.players))
 
 	b.readyOnce = make(map[uuid.UUID]bool)
-	for i := range b.connections {
-		b.readyOnce[b.connections[i].socketID] = false
+	for i := range b.players {
+		b.readyOnce[b.players[i].socketID] = false
 	}
 
 }
 
 func (b *base) broadcast(message *socket.RawMessage) {
-	for i := range b.connections {
-		socket.SendRawMessageToSocketID(*message, b.connections[i].socketID)
+	for i := range b.players {
+		socket.SendRawMessageToSocketID(*message, b.players[i].socketID)
 	}
 }
 
