@@ -74,6 +74,10 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
         matchesAdapter.notifyDataSetChanged()
     }
 
+    override fun notifyMatchesChanged() {
+        matchesAdapter.notifyDataSetChanged()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         matchLobbyPresenter?.destroy()
