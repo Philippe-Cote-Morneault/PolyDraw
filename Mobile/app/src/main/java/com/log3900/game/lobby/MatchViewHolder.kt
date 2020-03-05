@@ -35,7 +35,7 @@ class MatchViewHolder : RecyclerView.ViewHolder {
         this.match = match
         matchModeTextView.text = match.gameType.toString()
         matchNameTextView.text = match.groupName
-        matchHostTextView.text = match.owner.toString()
+        matchHostTextView.text = match.ownerName
         matchPlayerCountTextView.text = "${match.players.size}/${match.playersMax}"
     }
 
