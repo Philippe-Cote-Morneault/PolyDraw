@@ -99,12 +99,12 @@ open class MainActivity : AppCompatActivity() {
 
         navigationView.setupWithNavController(navigationController)
         navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_lobby).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_match_lobby_fragment, it)
+            startNavigationFragment(R.id.navigation_main_match_lobby_fragment, it, false)
             true
         }
 
         navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_draw).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_draw_view_fragment, it)
+            startNavigationFragment(R.id.navigation_main_draw_view_fragment, it, false)
             true
         }
 
@@ -114,7 +114,7 @@ open class MainActivity : AppCompatActivity() {
         }
 
         navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_profile_fragment, it)
+            startNavigationFragment(R.id.navigation_main_profile_fragment, it, false)
             true
         }
 
@@ -124,7 +124,8 @@ open class MainActivity : AppCompatActivity() {
         avatar.setOnClickListener {
             startNavigationFragment(
                 R.id.navigation_main_profile_fragment,
-                navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile)
+                navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile),
+                false
             )
         }
 
@@ -133,6 +134,8 @@ open class MainActivity : AppCompatActivity() {
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
         }
+
+        MainApplication.instance.registerMainActivity(this)
 
         EventBus.getDefault().register(this)
     }
@@ -174,27 +177,16 @@ open class MainActivity : AppCompatActivity() {
         //logout()
     //}
 
-    private fun startNavigationFragment(destinationID: Int, menuItem: MenuItem) {
+    fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
         if (navigationController.currentDestination?.id != destinationID) {
-            navigationController.popBackStack(
-                navigationController.currentDestination!!.id,
-                true
-            )
+            if (!keepBackstack) {
+                navigationController.popBackStack(
+                    navigationController.currentDestination!!.id,
+                    true
+                )
+            }
             navigationController.navigate(destinationID)
-            menuItem.setChecked(true)
-        }
-    }
-
-    private fun startFragment(tag: String, fragment: Fragment) {
-        drawerLayout.closeDrawer(GravityCompat.START)
-
-        val fragmentManager = supportFragmentManager
-        if (fragmentManager.findFragmentByTag(tag) != null)
-            return
-
-        fragmentManager.beginTransaction().apply {
-            replace(R.id.nav_host_fragment, fragment, tag)
-            commit()
+            menuItem?.setChecked(true)
         }
     }
 
@@ -213,6 +205,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         EventBus.getDefault().unregister(this)
+        MainApplication.instance.unregisterMainActivity()
         super.onDestroy()
     }
 }
