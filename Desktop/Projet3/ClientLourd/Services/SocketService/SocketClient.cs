@@ -227,8 +227,9 @@ namespace ClientLourd.Services.SocketService
                     return bytes;
                 case SocketMessageTypes.ServerEndsDrawing:
                     return bytes;
-
-                //Message pack
+                case SocketMessageTypes.LobbyErased:
+                    return bytes;
+                //Message pack;
                 default:
                      return MessagePackSerializer.Deserialize<dynamic>(bytes, ContractlessStandardResolver.Options);
             }

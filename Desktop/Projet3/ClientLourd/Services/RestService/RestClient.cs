@@ -241,6 +241,7 @@ namespace ClientLourd.Services.RestService
                     case HttpStatusCode.BadRequest:
                         throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     case HttpStatusCode.Conflict:
+                        
                         throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     case HttpStatusCode.Unauthorized:
                         throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);

@@ -20,7 +20,7 @@ namespace ClientLourd.Services.SocketService
         // Lobby created
         public string ID { get => _data["ID"]; }
 
-        public string Name { get => _data["Name"]; }
+        public string GroupName { get => _data["GroupName"]; }
 
         public string OwnerName { get => _data["OwnerName"]; }
 

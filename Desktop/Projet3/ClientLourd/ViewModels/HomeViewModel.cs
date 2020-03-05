@@ -20,6 +20,7 @@ namespace ClientLourd.ViewModels
     {
         private ObservableCollection<Lobby> _lobbies;
 
+        private int shitCode = 0;
         public HomeViewModel()
         {
             SocketClient.LobbyCreated += OnLobbyCreated;
@@ -105,7 +106,7 @@ namespace ClientLourd.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Lobby lobby = new Lobby(
-                    lobbyCreated.Name, 
+                    lobbyCreated.GroupName, 
                     lobbyCreated.ID,
                     lobbyCreated.OwnerName, 
                     lobbyCreated.OwnerID,
@@ -259,11 +260,10 @@ namespace ClientLourd.ViewModels
             {
                 if (joinLobbyArgs.Response)
                 {
-                if (!IsCreatedByUser(CurrentLobby.HostID))
-                {
-                    CurrentLobby.Players.Add(new Player(false, SessionInformations.User.ID, SessionInformations.User.Username));
-                }
-                    
+                    /*if (!IsCreatedByUser(CurrentLobby.HostID))
+                    {
+                        CurrentLobby.Players.Add(new Player(false, SessionInformations.User.ID, SessionInformations.User.Username));
+                    }*/
                     ContainedView = Utilities.Enums.Views.Lobby.ToString();
                 }
                 else
@@ -279,10 +279,32 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
+                killMe(userJoinedLobbyArgs);
+            });
+        }
+
+       void killMe(LobbyEventArgs userJoinedLobbyArgs)
+        {
+            var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
+
+            if (!LobbyContainsPlayer(lobbyModified, userJoinedLobbyArgs))
+            {
                 lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
                 lobbyModified.PlayersCount = lobbyModified.Players.Count;
-            });
+            }
+        }
+
+        private bool LobbyContainsPlayer(Lobby lobby,LobbyEventArgs userJoinedLobbyArgs)
+        {
+            foreach(Player player in lobby.Players)
+            {
+                if (player.ID == userJoinedLobbyArgs.UserID)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void OnUserLeftLobby(object sender, EventArgs e)
@@ -291,10 +313,15 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
+                shitCode++;
                 var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
-                var userToRemove = lobbyModif.Players.Single(player => player.ID == userLeftLobbyArgs.UserID);
-                lobbyModif.Players.Remove(userToRemove);
-                lobbyModif.PlayersCount = lobbyModif.Players.Count;
+                if (LobbyContainsPlayer(lobbyModif, userLeftLobbyArgs))
+                {
+                    var userToRemove = lobbyModif.Players.Single(player => player.ID == userLeftLobbyArgs.UserID);
+                    lobbyModif.Players.Remove(userToRemove);
+                    lobbyModif.PlayersCount = lobbyModif.Players.Count;
+                }   
+                
             });
         }
     }
