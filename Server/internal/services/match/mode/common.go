@@ -59,11 +59,20 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 	log.Printf("[Match] -> Init match %s", b.info.ID)
 }
 
+//broadcast messages to all users not in parallel
 func (b *base) broadcast(message *socket.RawMessage) {
 	for i := range b.players {
 		socket.SendRawMessageToSocketID(*message, b.players[i].socketID)
 	}
-	log.Printf("[Match] -> Message %d broadcasted to match %s", message.MessageType, b.info.ID)
+	log.Printf("[Match] -> Message %d broadcasted, Match: %s", message.MessageType, b.info.ID)
+}
+
+//pbroadcast use to broadcast to all users in parallel
+func (b *base) pbroadcast(message *socket.RawMessage) {
+	for i := range b.players {
+		go socket.SendRawMessageToSocketID(*message, b.players[i].socketID)
+	}
+	log.Printf("[Match] -> Message %d broadcasted in parallel, Match: %s", message.MessageType, b.info.ID)
 }
 
 //Wait for all the clients to be ready
