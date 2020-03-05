@@ -62,7 +62,7 @@ class GroupManager : Service() {
     }
 
     fun leaveGroup(group: Group) {
-
+        groupRepository?.leaveGroup(group.ID)
     }
 
     private fun onGroupJoined(group: Group) {
