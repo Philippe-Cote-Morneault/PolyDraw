@@ -9,6 +9,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
@@ -24,6 +26,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -208,10 +211,14 @@ class GroupRepository : Service() {
 
         val group = GroupAdapter().fromJson(jsonGson)
         groupCache.addGroup(group)
+        
+        EventBus.getDefault().post(MessageEvent(EventType.GROUP_CREATED, group))
     }
 
     private fun onGroupDeleted(message: com.log3900.socket.Message) {
-        groupCache.removeGroup(UUIDUtils.byteArrayToUUID(message.data))
+        val groupID = UUIDUtils.byteArrayToUUID(message.data)
+        groupCache.removeGroup(groupID)
+        EventBus.getDefault().post(MessageEvent(EventType.GROUP_CREATED, groupID))
     }
 
     override fun onDestroy() {
