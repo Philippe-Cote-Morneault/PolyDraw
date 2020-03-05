@@ -4,13 +4,18 @@ import android.app.Service
 import android.content.Intent
 import android.os.*
 import android.util.Log
+import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.ArrayListUUIDAdapter
 import com.log3900.utils.format.moshi.GroupAdapter
+import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -50,6 +55,12 @@ class GroupRepository : Service() {
 
             }
         )
+
+        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_LEFT_GROUP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.JOIN_GROUP_RESPONSE, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_CREATED, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_DELETED, socketMessageHandler!!)
     }
 
     fun getGroups(sessionToken: String): Single<ArrayList<Group>> {
@@ -61,7 +72,6 @@ class GroupRepository : Service() {
                         .add(KotlinJsonAdapterFactory())
                         .add(UUIDAdapter())
                         .add(ArrayListUUIDAdapter())
-                        .add(GroupAdapter())
                         .build()
 
                     val groups = arrayListOf<Group>()
@@ -125,6 +135,10 @@ class GroupRepository : Service() {
         }
     }
 
+    fun joinGroup(groupID: UUID) {
+        socketService?.sendMessage(Event.JOIN_GROUP_REQUEST, UUIDUtils.uuidToByteArray(groupID))
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -135,16 +149,11 @@ class GroupRepository : Service() {
             handleSocketMessage(it)
             true
         }
-        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
-        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_LEFT_GROUP, socketMessageHandler!!)
-        socketService?.subscribeToMessage(com.log3900.socket.Event.JOIN_GROUP_RESPONSE, socketMessageHandler!!)
-        socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_CREATED, socketMessageHandler!!)
-        socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_DELETED, socketMessageHandler!!)
         initializeRepository()
-
     }
 
     private fun handleSocketMessage(message: Message) {
+        Log.d("POTATO", "handleSocketMessage")
         val socketMessage = message.obj as com.log3900.socket.Message
 
         when (socketMessage.type) {
@@ -157,23 +166,47 @@ class GroupRepository : Service() {
     }
 
     private fun onUserJoinedGroup(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
 
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
+        val username = jsonObject.get("Username").asString
+
+        groupCache.addUserToGroup(groupID, userID, username)
     }
 
     private fun onUserLeftGroup(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
 
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
+
+        groupCache.removeUserFromGroup(groupID, userID)
     }
 
     private fun onJoinGroupResponse(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
 
+        val response = jsonObject.get("Response").asBoolean
+        if (!response) {
+            val error = jsonObject.get("Error").asString
+        }
     }
 
     private fun onGroupCreated(message: com.log3900.socket.Message) {
 
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonGson = JsonParser().parse(json).asJsonObject
+
+        val group = GroupAdapter().fromJson(jsonGson)
+        groupCache.addGroup(group)
     }
 
     private fun onGroupDeleted(message: com.log3900.socket.Message) {
-
+        groupCache.removeGroup(UUIDUtils.byteArrayToUUID(message.data))
     }
 
     override fun onDestroy() {
