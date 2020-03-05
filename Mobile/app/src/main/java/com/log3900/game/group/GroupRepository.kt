@@ -184,7 +184,7 @@ class GroupRepository : Service() {
             groupCache.addUserToGroup(groupID, player)
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
         } else {
-            EventBus.getDefault().post(MessageEvent(EventType.GROUP_JOINED, groupID))
+            EventBus.getDefault().post(MessageEvent(EventType.GROUP_JOINED, groupCache.getGroup(groupID)))
         }
     }
 
