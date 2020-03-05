@@ -12,10 +12,12 @@ import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.session.MonitoringService
+import com.log3900.session.NavigationManager
 import com.log3900.socket.SocketService
 
 class MainApplication : Application() {
     var mainActivity: MainActivity? = null
+    private var navigationManager: NavigationManager = NavigationManager()
     companion object {
         lateinit var instance: MainApplication
     }
@@ -43,9 +45,11 @@ class MainApplication : Application() {
 
     fun registerMainActivity(activity: MainActivity) {
         mainActivity = activity
+        navigationManager.currentActivity = activity
     }
 
     fun unregisterMainActivity() {
+        navigationManager.currentActivity = null
         mainActivity = null
     }
 
