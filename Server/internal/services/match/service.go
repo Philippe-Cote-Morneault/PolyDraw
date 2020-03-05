@@ -55,18 +55,22 @@ func (s *Service) listen() {
 			s.manager.Quit(id.(uuid.UUID))
 		case data := <-s.quit:
 			if message, ok := data.(socket.RawMessageReceived); ok {
+				log.Printf("[Match] -> received QUIT request socket id: %s", message.SocketID)
 				s.manager.Quit(message.SocketID)
 			}
 		case data := <-s.ready:
 			if message, ok := data.(socket.RawMessageReceived); ok {
+				log.Printf("[Match] -> received READY request socket id: %s", message.SocketID)
 				s.manager.Ready(message.SocketID)
 			}
 		case data := <-s.guess:
 			if message, ok := data.(socket.RawMessageReceived); ok {
+				log.Printf("[Match] -> received GUESS request socket id: %s", message.SocketID)
 				s.manager.Guess(message)
 			}
 		case data := <-s.hint:
 			if message, ok := data.(socket.RawMessageReceived); ok {
+				log.Printf("[Match] -> received HINT request socket id: %s", message.SocketID)
 				s.manager.Hint(message.SocketID)
 			}
 		case <-s.shutdown:
