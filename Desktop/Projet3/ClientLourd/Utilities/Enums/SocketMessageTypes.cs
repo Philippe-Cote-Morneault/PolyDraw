@@ -30,6 +30,7 @@
         UserDeletedStroke = 39,
         JoinLobbyRequest = 40,
         JoinLobbyResponse = 41,
+        UserJoinedLobby = 43,
         QuitLobbyRequest = 44,
         QuitLobbyResponse = 45,
         LobbyCreated = 51,

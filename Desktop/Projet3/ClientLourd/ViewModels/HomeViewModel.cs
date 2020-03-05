@@ -24,6 +24,7 @@ namespace ClientLourd.ViewModels
         {
             SocketClient.LobbyCreated += OnLobbyCreated;
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
+            SocketClient.UserJoinedLobby += OnUserJoinedLobby;
             Lobbies = new ObservableCollection<Lobby>();
             Lobbies.Add(new Lobby("My nice lobby come join COOP", "0",  "TamereShortz", "0", new ObservableCollection<Player>(), GameModes.Coop, DifficultyLevel.Easy,0, 8));
             Lobbies.Add(new Lobby("My nice lobby come join SOLO", "0", "Tame2", "0", new ObservableCollection<Player>(), GameModes.Solo, DifficultyLevel.Hard,1, 1));
@@ -245,6 +246,7 @@ namespace ClientLourd.ViewModels
 
         public void JoinLobby(Lobby lobby) 
         {
+            CurrentLobby = lobby;
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinLobbyRequest, new Guid(lobby.ID)));
         }
 
@@ -262,6 +264,18 @@ namespace ClientLourd.ViewModels
                 {
                     DialogHost.Show(new ClosableErrorDialog($"{joinLobbyArgs.Error}"), "Default");
                 }
+            });
+        }
+
+        private void OnUserJoinedLobby(object sender, EventArgs e)
+        {
+            var userJoinedLobbyArgs = (LobbyEventArgs)e;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
+                lobbyModified.Players.Add(new Player(false, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
+                lobbyModified.PlayersCount = lobbyModified.Players.Count;
             });
         }
     }

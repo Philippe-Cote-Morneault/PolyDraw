@@ -17,6 +17,7 @@ namespace ClientLourd.Services.SocketService
             
         }
 
+        // Lobby created
         public string ID { get => _data["ID"]; }
 
         public string Name { get => _data["Name"]; }
@@ -46,6 +47,7 @@ namespace ClientLourd.Services.SocketService
             }
         }
 
+        // Join Lobby Response
         public bool Response
         {
             get { return _data["Response"]; }
@@ -53,6 +55,20 @@ namespace ClientLourd.Services.SocketService
         public string Error
         {
             get { return _data["Error"]; }
+        }
+
+        // UserJoinedLobby
+        public string UserID
+        {
+            get { return _data["UserID"]; }
+        }
+        public string Username
+        {
+            get { return _data["Username"]; }
+        }
+        public string GroupID
+        {
+            get { return _data["GroupID"]; }
         }
     }
 }

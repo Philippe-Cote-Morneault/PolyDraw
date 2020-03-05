@@ -24,6 +24,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler DrawingPreviewResponse;
         public event SocketEventHandler LobbyCreated;
         public event SocketEventHandler JoinLobbyResponse;
+        public event SocketEventHandler UserJoinedLobby;
 
         protected virtual void OnServerMessage(object source, EventArgs e)
         {
@@ -112,6 +113,11 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnJoinLobbyResponse(object source, EventArgs e)
         {
             JoinLobbyResponse?.Invoke(source, e);
+        }
+
+        protected virtual void OnUserJoinedLobby(object source, EventArgs e)
+        {
+            UserJoinedLobby?.Invoke(source, e);
         }
     }
 }

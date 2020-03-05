@@ -191,6 +191,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.JoinLobbyResponse:
                             OnJoinLobbyResponse(this, new LobbyEventArgs(data));
                             break;
+                        case SocketMessageTypes.UserJoinedLobby:
+                            OnUserJoinedLobby(this, new LobbyEventArgs(data));
+                            break;
                         case SocketMessageTypes.QuitLobbyResponse:
                             // TODO
                             break;

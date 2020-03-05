@@ -115,7 +115,7 @@
                         <GridViewColumn>
                             <GridViewColumn.DisplayMemberBinding>
                                 <MultiBinding StringFormat="{}{0}/{1}">
-                                    <Binding Path="PlayersCount"></Binding>
+                                    <Binding Path="PlayersCount" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"></Binding>
                                     <Binding Path="PlayersMax"></Binding>
                                 </MultiBinding>
                             </GridViewColumn.DisplayMemberBinding>

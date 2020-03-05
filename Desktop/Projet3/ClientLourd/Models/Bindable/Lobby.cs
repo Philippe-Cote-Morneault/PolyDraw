@@ -38,7 +38,9 @@ namespace ClientLourd.Models.Bindable
 
 
         public int PlayersMax { get; set; }
-        public int PlayersCount { get; set; }
+
+        private int _playersCount;
+        public int PlayersCount { get => _playersCount; set { _playersCount = value; NotifyPropertyChanged(); } }
         public string GameName { get; set; }
 
         private string _host;
