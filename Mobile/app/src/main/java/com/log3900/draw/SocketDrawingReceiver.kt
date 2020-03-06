@@ -47,7 +47,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         drawStrokes(strokeInfo)
     }
 
-    // Probably a drawer class or something...
+    // Probably put into a drawer class or something...
     private fun drawStrokes(strokeInfo: StrokeInfo) {
         // TODO: Delai pour le chaque point?
         val (strokeID, userID, paintOptions, points) = strokeInfo
