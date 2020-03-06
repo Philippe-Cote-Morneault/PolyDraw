@@ -98,5 +98,6 @@ class MatchLobbyPresenter : Presenter {
 
     override fun destroy() {
         matchLobbyView = null
+        groupManager = null
     }
 }
