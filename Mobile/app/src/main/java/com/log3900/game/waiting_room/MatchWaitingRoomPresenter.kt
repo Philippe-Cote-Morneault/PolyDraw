@@ -59,12 +59,23 @@ class MatchWaitingRoomPresenter : Presenter {
         // Find something interesting to do here
     }
 
-    fun onGroupUpdated(groupID: UUID){
+    private fun onGroupUpdated(groupID: UUID){
         if (groupID == groupManager?.currentGroup?.ID) {
-            matchWaitingRoomView?.notifyPlayyersChanged()
+            matchWaitingRoomView?.notifyGroupUpdated()
         }
     }
 
+    private fun onPlayerJoined(groupID: UUID, playerID: UUID) {
+        if (groupID == groupManager?.currentGroup?.ID) {
+            matchWaitingRoomView?.notifyPlayerJoined(playerID)
+        }
+    }
+
+    private fun onPlayerLeft(groupID: UUID, playerID: UUID) {
+        if (groupID == groupManager?.currentGroup?.ID) {
+            matchWaitingRoomView?.notifyPlayerLeft(playerID)
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
@@ -72,7 +83,14 @@ class MatchWaitingRoomPresenter : Presenter {
             EventType.GROUP_UPDATED -> {
                 onGroupUpdated(event.data as UUID)
             }
-
+            EventType.PLAYER_JOINED_GROUP -> {
+                val eventData = event.data as Pair<UUID, UUID>
+                onPlayerJoined(eventData.first, eventData.second)
+            }
+            EventType.PLAYER_LEFT_GROUP -> {
+                val eventData = event.data as Pair<UUID, UUID>
+                onPlayerLeft(eventData.first, eventData.second)
+            }
         }
     }
 

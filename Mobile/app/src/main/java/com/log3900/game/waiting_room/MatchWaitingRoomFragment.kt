@@ -20,6 +20,8 @@ import com.log3900.shared.architecture.MessageEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private var matchWaitingRoomPresenter: MatchWaitingRoomPresenter? = null
@@ -67,7 +69,7 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     }
 
     private fun setupRecyclerView() {
-        playersAdapter = PlayerAdapter(arrayListOf(), object : PlayerViewHolder.Listener {
+        playersAdapter = PlayerAdapter(object : PlayerViewHolder.Listener {
             override fun playerClicked(player: Player) {
 
             }
@@ -83,11 +85,11 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
         matchNameTextView.text = group.groupName
         matchModeTextView.setText(MatchMode.stringRes(group.gameType))
         hostNameTextView.text = group.ownerName
+        playersAdapter.setGroup(group)
     }
 
     override fun setPlayers(players: ArrayList<Player>) {
-        playersAdapter.players = players
-        playersAdapter.notifyDataSetChanged()
+        playersAdapter.setPlayers(players)
     }
 
     override fun displayStartMatchButton(display: Boolean) {
@@ -102,8 +104,16 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
 
     }
 
-    override fun notifyPlayyersChanged() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun notifyGroupUpdated() {
+        playersAdapter.notifyDataSetChanged()
+    }
+
+    override fun notifyPlayerJoined(playerID: UUID) {
+        playersAdapter.playerAdded(playerID)
+    }
+
+    override fun notifyPlayerLeft(playerID: UUID) {
+        playersAdapter.playerRemoved(playerID)
     }
 
     override fun onDestroy() {
