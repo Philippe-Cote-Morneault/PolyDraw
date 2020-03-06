@@ -27,6 +27,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler JoinLobbyResponse;
         public event SocketEventHandler UserJoinedLobby;
         public event SocketEventHandler UserLeftLobby;
+        public event SocketEventHandler StartGameResponse;
 
         protected virtual void OnServerMessage(object source, EventArgs e)
         {
@@ -130,6 +131,11 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnLeftLobby(object source, EventArgs e)
         {
             UserLeftLobby?.Invoke(source, e);
+        }
+
+        protected virtual void OnStartGaneResponse(object source, EventArgs e)
+        {
+            StartGameResponse?.Invoke(source, e);
         }
     }
 }

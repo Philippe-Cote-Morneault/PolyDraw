@@ -197,6 +197,10 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.QuitLobbyResponse:
                             OnLeftLobby(this, new LobbyEventArgs(data));
                             break;
+
+                        case SocketMessageTypes.StartGameResponse:
+                            OnLeftLobby(this, new LobbyEventArgs(data));
+                            break;
                         case SocketMessageTypes.LobbyCreated:
                             OnLobbyCreated(this, new LobbyEventArgs(data));
                             break;

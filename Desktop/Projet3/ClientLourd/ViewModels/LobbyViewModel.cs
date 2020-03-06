@@ -22,6 +22,7 @@ namespace ClientLourd.ViewModels
         {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.LobbyDeleted += OnLobbyDeleted;
+            SocketClient.StartGameResponse += OnStartGameResponse;
         }
 
         public SocketClient SocketClient
@@ -119,8 +120,8 @@ namespace ClientLourd.ViewModels
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
 
 
-                
-                if (UserIsInLobby(lobbyDeletedID) && CurrentLobby.HostID != SessionInformations.User.ID)
+
+                if (UserIsInLobby(lobbyDeletedID) && !UserIsHost())
                 {
                     CurrentLobby = null;
                     HomeViewModel.FetchLobbies();
@@ -133,6 +134,69 @@ namespace ClientLourd.ViewModels
         private bool UserIsInLobby(string lobbyID)
         {
             return CurrentLobby != null && CurrentLobby.ID == lobbyID;
+        }
+
+        private bool UserIsHost()
+        {
+            return CurrentLobby.HostID == SessionInformations.User.ID;
+        }
+
+        private RelayCommand<object> _startGameCommand;
+
+        public ICommand StartGameCommand
+        {
+            get
+            {
+                return _startGameCommand ?? (_startGameCommand = new RelayCommand<object>(obj => StartGame(), obj => CanStartGame()));
+            }
+        }
+
+        private void StartGame()
+        {
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.StartGameRequest));
+        }
+
+
+        private bool CanStartGame()
+        {
+            if (CurrentLobby == null || !UserIsHost())
+            {
+                return false;
+            }
+
+            int nHumanPlayers = 0;
+
+            if (CurrentLobby != null)
+            {
+                
+                foreach (Player player in CurrentLobby.Players)
+                {
+                    if (!player.IsCPU)
+                    {
+                        nHumanPlayers++;
+                    }
+                }
+            }
+
+            return nHumanPlayers >= 2;
+        }
+
+
+        private void OnStartGameResponse(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var gameStartedArgs = (LobbyEventArgs)e;
+                if (gameStartedArgs.Response)
+                {
+                    DialogHost.Show(new ClosableErrorDialog($"It works"), "Default");
+                }
+                else
+                {
+                    DialogHost.Show(new ClosableErrorDialog($"{gameStartedArgs.Error}"), "Default");
+                }
+
+            });
         }
 
     }

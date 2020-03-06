@@ -33,6 +33,8 @@
         UserJoinedLobby = 43,
         QuitLobbyRequest = 44,
         QuitLobbyResponse = 45,
+        StartGameRequest = 48,
+        StartGameResponse = 49,
         LobbyCreated = 51,
         LobbyDeleted = 53,
         ServerMessage = 255,
