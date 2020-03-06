@@ -22,7 +22,9 @@ class NavigationManager {
     }
 
     private fun onGroupLeft() {
-        currentActivity?.navigateBack()
+        if (currentActivity?.navigationController?.currentDestination?.id == R.id.navigation_main_match_waiting_room_fragment) {
+            currentActivity?.navigateBack()
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
