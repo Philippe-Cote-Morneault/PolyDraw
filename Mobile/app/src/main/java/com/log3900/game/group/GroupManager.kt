@@ -3,9 +3,13 @@ package com.log3900.game.group
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
+import android.os.Handler
 import android.os.IBinder
+import android.os.Message
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.socket.Event
+import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -17,6 +21,8 @@ import java.util.*
 class GroupManager : Service() {
     private val binder = GroupManagerBinder()
     private var groupRepository: GroupRepository? = null
+    private var socketService: SocketService? = null
+    private var socketMessageHandler: Handler? = null
     var currentGroup: Group? = null
 
     companion object {
@@ -66,12 +72,20 @@ class GroupManager : Service() {
         }
     }
 
+    fun startMatch() {
+        socketService?.sendMessage(Event.START_MATCH, byteArrayOf())
+    }
+
     private fun onGroupJoined(group: Group) {
         currentGroup = group
     }
 
     private fun onGroupLeft(groupID: UUID) {
         currentGroup = null
+    }
+
+    private fun onMatchAboutToStart() {
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -83,10 +97,26 @@ class GroupManager : Service() {
 
         instance = this
         groupRepository = GroupRepository.instance
+        socketService = SocketService.instance
+
+        socketMessageHandler = Handler {
+            handleSocketMessage(it)
+            true
+        }
+
+        socketService?.subscribeToMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
 
         EventBus.getDefault().register(this)
 
         setReadyState()
+    }
+
+    private fun handleSocketMessage(message: Message) {
+        val socketMessage = message.obj as com.log3900.socket.Message
+
+        when (socketMessage.type) {
+            Event.MATCH_ABOUT_TO_START -> onMatchAboutToStart()
+        }
     }
 
     private fun setReadyState() {
@@ -98,6 +128,8 @@ class GroupManager : Service() {
         instance = null
         isReady = false
         groupRepository = null
+        socketService?.unsubscribeFromMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
+        socketService = null
         EventBus.getDefault().unregister(this)
         super.onDestroy()
     }
