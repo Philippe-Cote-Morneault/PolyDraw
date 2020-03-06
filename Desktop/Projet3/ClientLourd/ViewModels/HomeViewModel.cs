@@ -29,15 +29,6 @@ namespace ClientLourd.ViewModels
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             Lobbies = new ObservableCollection<Lobby>();
-            Lobbies.Add(new Lobby("My nice lobby come join COOP", "0",  "TamereShortz", "0", new ObservableCollection<Player>(), GameModes.Coop, DifficultyLevel.Easy,0, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "0", "Tame2", "0", new ObservableCollection<Player>(), GameModes.Solo, DifficultyLevel.Hard,1, 1));
-            Lobbies.Add(new Lobby("FFA", "0", "FFALover", "0", new ObservableCollection<Player>(), GameModes.FFA, DifficultyLevel.Easy,2, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join COOP", "0", "TamereShortz", "0", new ObservableCollection<Player>(), GameModes.Coop, DifficultyLevel.Medium, 3, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "0", "Tame2", "0", new ObservableCollection<Player>(), GameModes.Solo, DifficultyLevel.Medium,0, 1));
-            Lobbies.Add(new Lobby("FFA", "0", "FFALover", "0", new ObservableCollection<Player>(), GameModes.FFA, DifficultyLevel.Easy, 8, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join COOP", "0", "TamereShortz", "0", new ObservableCollection<Player>(), GameModes.Coop, DifficultyLevel.Hard, 1, 8));
-            Lobbies.Add(new Lobby("My nice lobby come join SOLO", "0", "Tame2", "0", new ObservableCollection<Player>(), GameModes.Solo, DifficultyLevel.Medium, 1, 1));
-            Lobbies.Add(new Lobby("FFA", "0", "FFALover", "0", new ObservableCollection<Player>(), GameModes.FFA, DifficultyLevel.Easy, 1, 8));
             _modeFilteredAscending = false;
             _lobbyFilteredAscending = false;
             _hostFilteredAscending = false;
@@ -267,10 +258,6 @@ namespace ClientLourd.ViewModels
             {
                 if (joinLobbyArgs.Response)
                 {
-                    /*if (!IsCreatedByUser(CurrentLobby.HostID))
-                    {
-                        CurrentLobby.Players.Add(new Player(false, SessionInformations.User.ID, SessionInformations.User.Username));
-                    }*/
                     ContainedView = Utilities.Enums.Views.Lobby.ToString();
                 }
                 else
@@ -286,19 +273,14 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                killMe(userJoinedLobbyArgs);
+                var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
+
+                if (!LobbyContainsPlayer(lobbyModified, userJoinedLobbyArgs))
+                {
+                    lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
+                    lobbyModified.PlayersCount = lobbyModified.Players.Count;
+                }
             });
-        }
-
-       void killMe(LobbyEventArgs userJoinedLobbyArgs)
-        {
-            var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
-
-            if (!LobbyContainsPlayer(lobbyModified, userJoinedLobbyArgs))
-            {
-                lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
-                lobbyModified.PlayersCount = lobbyModified.Players.Count;
-            }
         }
 
         private bool LobbyContainsPlayer(Lobby lobby,LobbyEventArgs userJoinedLobbyArgs)
