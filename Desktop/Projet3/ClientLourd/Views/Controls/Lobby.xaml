@@ -20,6 +20,7 @@
         </StackPanel>
         
         <ListView  ItemsSource="{Binding CurrentLobby.Players}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Username}" Header="Username"></GridViewColumn>

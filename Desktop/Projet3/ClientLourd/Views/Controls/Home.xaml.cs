@@ -47,7 +47,7 @@ namespace ClientLourd.Views.Controls
         private void OnLobbySelection(object sender, EventArgs e)
         {
 
-            Models.Bindable.Lobby lobbySelected = (Models.Bindable.Lobby)(sender as ListView).SelectedItem;
+            Models.Bindable.Lobby lobbySelected = (((ContentControl)sender).Content) as Models.Bindable.Lobby;
             if (lobbySelected != null)
             {
                 HomeViewModel.JoinLobby(lobbySelected);
