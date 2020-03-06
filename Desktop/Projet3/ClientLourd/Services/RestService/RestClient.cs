@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
+using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.Enums;
@@ -225,6 +226,7 @@ namespace ClientLourd.Services.RestService
             ObservableCollection<Lobby> groups = JsonConvert.DeserializeObject<ObservableCollection<Lobby>>(response.Content);
             for (int i = 0; i < groups.Count; i++)
             {
+                groups[i].Mode = (GameModes)tmpResponse[i]["GameType"];
                 groups[i].GameName= tmpResponse[i]["GroupName"];
                 groups[i].Host = tmpResponse[i]["OwnerName"];
                 groups[i].HostID = tmpResponse[i]["OwnerID"];
