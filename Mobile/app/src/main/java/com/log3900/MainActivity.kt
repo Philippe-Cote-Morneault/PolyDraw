@@ -1,5 +1,6 @@
 package com.log3900
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -7,29 +8,24 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.andremion.counterfab.CounterFab
 import com.google.android.material.navigation.NavigationView
 import com.log3900.chat.ChatManager
 import com.log3900.login.LoginActivity
-import com.log3900.profile.ProfileFragment
 import com.log3900.settings.SettingsActivity
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-
-
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.user.account.AccountRepository

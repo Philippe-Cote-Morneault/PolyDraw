@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
-import org.w3c.dom.Text
 
 class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private var matchWaitingRoomPresenter: MatchWaitingRoomPresenter? = null

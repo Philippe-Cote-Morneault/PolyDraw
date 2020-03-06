@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +17,6 @@ import com.log3900.R
 import com.log3900.shared.ui.SearchViewUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
-import kotlinx.android.synthetic.main.dialog_fragment_progress_dialog.*
-import kotlin.collections.ArrayList
 
 class ChannelListFragment : Fragment(), ChannelListView {
     // Services

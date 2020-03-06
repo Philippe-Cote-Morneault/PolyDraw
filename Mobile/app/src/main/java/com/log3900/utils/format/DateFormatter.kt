@@ -1,10 +1,6 @@
 package com.log3900.utils.format
 
-import android.app.Activity
 import android.text.format.DateUtils
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 

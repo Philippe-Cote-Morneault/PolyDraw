@@ -1,12 +1,7 @@
 package com.log3900.shared.ui
 
-import android.widget.SearchView
-import android.R
 import android.view.View
 import android.view.ViewGroup
-
-
-
 
 
 object SearchViewUtils {

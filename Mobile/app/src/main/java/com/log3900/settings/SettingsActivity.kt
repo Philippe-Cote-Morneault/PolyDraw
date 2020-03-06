@@ -1,15 +1,12 @@
 package com.log3900.settings
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.theme.ThemeManager
-import kotlinx.android.synthetic.main.activity_settings.view.*
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar

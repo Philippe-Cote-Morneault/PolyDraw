@@ -5,27 +5,14 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelManager
 import com.log3900.chat.Message.MessageManager
-import com.log3900.chat.Message.MessageRepository
-import com.log3900.chat.Message.ReceivedMessage
-import com.log3900.shared.architecture.EventType
-import com.log3900.shared.architecture.MessageEvent
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import java.lang.Exception
 import java.util.*
-import java.util.concurrent.CountDownLatch
 import kotlin.NoSuchElementException
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ChatManager : Service() {
     private var channelManager: ChannelManager? = null

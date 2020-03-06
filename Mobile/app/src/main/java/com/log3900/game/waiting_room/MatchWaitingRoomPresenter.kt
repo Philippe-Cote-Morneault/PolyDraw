@@ -1,6 +1,5 @@
 package com.log3900.game.waiting_room
 
-import com.log3900.chat.ChatManager
 import com.log3900.game.group.GroupManager
 import com.log3900.shared.architecture.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers

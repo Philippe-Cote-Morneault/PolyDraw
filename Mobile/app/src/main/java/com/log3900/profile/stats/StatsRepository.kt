@@ -6,7 +6,6 @@ import com.log3900.user.account.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import java.lang.Exception
 
 // Service?
 /**

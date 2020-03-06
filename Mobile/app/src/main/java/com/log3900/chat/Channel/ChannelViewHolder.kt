@@ -6,10 +6,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
 import com.log3900.R
 import com.log3900.shared.ui.ThemeUtils
-import org.w3c.dom.Text
 
 class ChannelViewHolder : RecyclerView.ViewHolder {
     private var rootView: ConstraintLayout

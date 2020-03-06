@@ -2,14 +2,14 @@ package com.log3900.socket
 
 import android.app.Service
 import android.content.Intent
-import android.os.*
+import android.os.Binder
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
-import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CountDownLatch
-import kotlin.collections.ArrayList
 
 enum class SocketEvent {
     CONNECTION_ERROR,

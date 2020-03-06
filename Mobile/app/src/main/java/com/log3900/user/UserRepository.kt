@@ -1,6 +1,5 @@
 package com.log3900.user
 
-import android.util.Log
 import com.google.gson.JsonObject
 import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -9,9 +8,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
 import retrofit2.Call
-import java.util.*
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import kotlin.collections.HashMap
 
 class UserRepository {

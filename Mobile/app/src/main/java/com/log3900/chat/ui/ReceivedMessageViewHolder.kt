@@ -1,7 +1,5 @@
 package com.log3900.chat.ui
 
-import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
@@ -10,7 +8,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip

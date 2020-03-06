@@ -1,7 +1,9 @@
 package com.log3900.profile.stats
 
-import kotlinx.coroutines.*
-import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileStatsPresenter(val statsView: ProfileStatsFragment) {
 

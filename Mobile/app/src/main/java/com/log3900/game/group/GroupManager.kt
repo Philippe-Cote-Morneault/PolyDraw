@@ -13,7 +13,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
 
 class GroupManager : Service() {
     private val binder = GroupManagerBinder()

@@ -1,12 +1,10 @@
 package com.log3900.chat.Message
 
 import android.os.Handler
-import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.ChatMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-import com.log3900.socket.Message
 import io.reactivex.Single
 import org.greenrobot.eventbus.EventBus
 import java.util.*

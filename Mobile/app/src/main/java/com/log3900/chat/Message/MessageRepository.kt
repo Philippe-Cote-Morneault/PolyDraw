@@ -6,7 +6,6 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
 import com.log3900.chat.ChatMessage
@@ -23,11 +22,11 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.collections.HashSet
 
 class MessageRepository : Service() {

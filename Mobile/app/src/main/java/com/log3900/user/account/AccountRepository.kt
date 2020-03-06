@@ -1,9 +1,6 @@
 package com.log3900.user.account
 
-import android.content.Context
-import android.util.Log
 import com.log3900.MainApplication
-import com.log3900.R
 import com.log3900.shared.database.AppDatabase
 import io.reactivex.Completable
 import io.reactivex.Single

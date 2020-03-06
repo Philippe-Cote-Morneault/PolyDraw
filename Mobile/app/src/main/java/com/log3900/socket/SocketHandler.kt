@@ -3,11 +3,10 @@ package com.log3900.socket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ProcessLifecycleOwner
 import java.io.*
-import java.lang.Exception
-import java.net.*
+import java.net.InetSocketAddress
+import java.net.Socket
+import java.net.SocketException
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean

@@ -1,10 +1,6 @@
 package com.log3900.settings.theme
 
 import android.app.Activity
-import android.content.Context
-import android.util.Log
-import androidx.core.content.edit
-import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable

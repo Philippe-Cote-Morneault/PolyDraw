@@ -1,7 +1,6 @@
 package com.log3900.game.group
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 class GroupCache {
     private var groups: ArrayList<Group> = arrayListOf()

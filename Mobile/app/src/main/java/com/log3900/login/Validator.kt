@@ -1,7 +1,5 @@
 package com.log3900.login
 
-import org.apache.commons.lang3.StringUtils
-
 object Validator {
     const val minUsernameLength = 4
     const val maxUsernameLength = 12

@@ -1,8 +1,6 @@
 package com.log3900.chat.Channel
 
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 enum class GroupType {
     AVAILABLE,

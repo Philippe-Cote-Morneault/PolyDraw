@@ -9,7 +9,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.lang.IllegalArgumentException
 import java.util.*
 
 class ChannelListPresenter : Presenter {

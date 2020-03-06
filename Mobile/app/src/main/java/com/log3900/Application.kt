@@ -1,16 +1,8 @@
 package com.log3900
 
 import android.app.Application
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.os.IBinder
 import android.view.MenuItem
-import androidx.fragment.app.Fragment
-import com.log3900.chat.Channel.ChannelRepository
-import com.log3900.chat.ChatManager
-import com.log3900.chat.Message.MessageRepository
 import com.log3900.session.MonitoringService
 import com.log3900.session.NavigationManager
 import com.log3900.socket.SocketService

@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.shared.ui.ThemeUtils
 

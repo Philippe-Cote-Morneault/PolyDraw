@@ -1,17 +1,13 @@
 package com.log3900.chat.Channel
 
-import android.util.Log
 import com.log3900.chat.ChatMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ChannelManager {
     var activeChannel: Channel? = null

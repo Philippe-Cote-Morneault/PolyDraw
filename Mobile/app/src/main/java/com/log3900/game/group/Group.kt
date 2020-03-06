@@ -3,7 +3,6 @@ package com.log3900.game.group
 import com.log3900.R
 import com.squareup.moshi.Json
 import java.util.*
-import kotlin.collections.ArrayList
 
 enum class Difficulty {
     EASY,

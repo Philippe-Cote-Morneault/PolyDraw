@@ -7,14 +7,11 @@ import com.google.gson.JsonObject
 import com.log3900.MainActivity
 import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.architecture.Presenter
-import com.log3900.shared.database.AppDatabase
 import com.log3900.shared.ui.dialogs.ProgressDialog
 import com.log3900.socket.*
 import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
-import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

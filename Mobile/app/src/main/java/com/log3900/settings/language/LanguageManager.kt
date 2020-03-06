@@ -2,13 +2,10 @@ package com.log3900.settings.language
 
 import android.content.Context
 import android.content.res.Resources
-import android.util.Log
-import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
 import java.util.*
-import kotlin.collections.ArrayList
 
 class LanguageManager {
     enum class LANGUAGE {

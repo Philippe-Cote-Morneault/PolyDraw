@@ -1,6 +1,5 @@
 package com.log3900.chat.Channel
 
-import com.log3900.user.User
 import com.squareup.moshi.Json
 import java.util.*
 

@@ -1,8 +1,6 @@
 package com.log3900.game.lobby
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
-import com.log3900.game.group.Difficulty
 import com.log3900.game.group.Group
 import com.log3900.game.group.GroupCreated
-import com.log3900.game.group.MatchMode
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MatchLobbyFragment : Fragment(), MatchLobbyView {
     private var matchLobbyPresenter: MatchLobbyPresenter? = null

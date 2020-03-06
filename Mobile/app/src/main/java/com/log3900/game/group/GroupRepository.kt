@@ -2,10 +2,11 @@ package com.log3900.game.group
 
 import android.app.Service
 import android.content.Intent
-import android.os.*
-import android.util.Log
+import android.os.Binder
+import android.os.Handler
+import android.os.IBinder
+import android.os.Message
 import com.daveanthonythomas.moshipack.MoshiPack
-import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -15,24 +16,18 @@ import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.UUIDUtils
-import com.log3900.utils.format.moshi.ArrayListUUIDAdapter
 import com.log3900.utils.format.moshi.GroupAdapter
-import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
 
 class GroupRepository : Service() {
     private val binder = GroupRepositoryBinder()

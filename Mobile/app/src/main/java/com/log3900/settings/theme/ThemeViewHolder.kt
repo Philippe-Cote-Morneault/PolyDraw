@@ -1,12 +1,9 @@
 package com.log3900.settings.theme
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 

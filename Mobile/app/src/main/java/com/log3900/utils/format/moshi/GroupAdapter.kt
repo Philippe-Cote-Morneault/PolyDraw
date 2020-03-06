@@ -8,9 +8,7 @@ import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.squareup.moshi.FromJson
-import com.squareup.moshi.ToJson
 import java.util.*
-import kotlin.collections.ArrayList
 
 class GroupAdapter {
     @FromJson

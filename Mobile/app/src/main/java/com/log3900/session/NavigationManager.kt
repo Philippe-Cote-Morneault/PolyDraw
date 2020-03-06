@@ -2,13 +2,11 @@ package com.log3900.session
 
 import com.log3900.MainActivity
 import com.log3900.R
-import com.log3900.game.group.Group
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 class NavigationManager {
     var currentActivity: MainActivity? = null

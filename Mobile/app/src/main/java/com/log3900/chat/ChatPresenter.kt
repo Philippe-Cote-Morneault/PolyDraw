@@ -1,6 +1,5 @@
 package com.log3900.chat
 
-import android.util.Log
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.chat.Message.ReceivedMessage

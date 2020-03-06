@@ -1,11 +1,9 @@
 package com.log3900.shared.ui.dialogs
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import androidx.fragment.app.DialogFragment
-import com.log3900.MainApplication
 
 class SimpleConfirmationDialog : DialogFragment {
     private var dialog: AlertDialog

@@ -1,9 +1,9 @@
 package com.log3900.shared.ui.dialogs
 
-import android.app.AlertDialog
-import android.os.Bundle
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
+import android.os.Bundle
 import com.log3900.login.LoginActivity
 import com.log3900.settings.theme.ThemeManager
 

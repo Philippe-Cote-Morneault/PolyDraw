@@ -3,7 +3,10 @@ package com.log3900.chat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
