@@ -34,6 +34,9 @@ class NavigationManager {
             EventType.GROUP_LEFT -> {
                 onGroupLeft()
             }
+            EventType.GROUP_DELETED -> {
+                onGroupLeft()
+            }
         }
     }
 
