@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.game.group.Player
 
 class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private var matchWaitingRoomPresenter: MatchWaitingRoomPresenter? = null
@@ -20,6 +22,7 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private lateinit var matchModeTextView: TextView
     private lateinit var hostNameTextView: TextView
     private lateinit var playersRecyclerView: RecyclerView
+    private lateinit var playersAdapter: PlayerAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_match_waiting_room, container, false)
@@ -51,9 +54,22 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     }
 
     private fun setupRecyclerView() {
+        playersAdapter = PlayerAdapter(arrayListOf(), object : PlayerViewHolder.Listener {
+            override fun playerClicked(player: Player) {
 
+            }
+        })
+        playersRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = playersAdapter
+        }
     }
 
+    override fun setPlayers(players: ArrayList<Player>) {
+        playersAdapter.players = players
+        playersAdapter.notifyDataSetChanged()
+    }
     override fun onDestroy() {
         matchWaitingRoomPresenter?.destroy()
         matchWaitingRoomPresenter = null
