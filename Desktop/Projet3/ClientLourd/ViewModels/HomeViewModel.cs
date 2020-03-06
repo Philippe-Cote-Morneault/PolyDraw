@@ -28,6 +28,7 @@ namespace ClientLourd.ViewModels
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
+            SocketClient.LobbyDeleted += OnLobbyDeleted;
             Lobbies = new ObservableCollection<Lobby>();
             _modeFilteredAscending = false;
             _lobbyFilteredAscending = false;
@@ -98,31 +99,6 @@ namespace ClientLourd.ViewModels
         }
 
 
-        private void OnLobbyCreated(object sender, EventArgs e)
-        {
-            var lobbyCreated = (LobbyEventArgs)e;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Lobby lobby = new Lobby(
-                    lobbyCreated.GroupName, 
-                    lobbyCreated.ID,
-                    lobbyCreated.OwnerName, 
-                    lobbyCreated.OwnerID,
-                    lobbyCreated.Players,
-                    (GameModes)lobbyCreated.Mode, 
-                    (DifficultyLevel)lobbyCreated.Difficulty, 
-                    lobbyCreated.Players.Count, 
-                    lobbyCreated.PlayersMax
-                    );
-                Lobbies.Insert(0, lobby);
-                if (IsCreatedByUser(lobbyCreated.OwnerID))
-                {
-                    CurrentLobby = lobby;
-                    CurrentLobby.Host = lobbyCreated.OwnerName;
-                }
-                    
-            });
-        }
 
         private bool IsCreatedByUser(string ownerID)
         {
@@ -250,6 +226,48 @@ namespace ClientLourd.ViewModels
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinLobbyRequest, new Guid(lobby.ID)));
         }
 
+        private void OnLobbyCreated(object sender, EventArgs e)
+        {
+            var lobbyCreated = (LobbyEventArgs)e;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Lobby lobby = new Lobby(
+                    lobbyCreated.GroupName,
+                    lobbyCreated.ID,
+                    lobbyCreated.OwnerName,
+                    lobbyCreated.OwnerID,
+                    lobbyCreated.Players,
+                    (GameModes)lobbyCreated.Mode,
+                    (DifficultyLevel)lobbyCreated.Difficulty,
+                    lobbyCreated.Players.Count,
+                    lobbyCreated.PlayersMax
+                    );
+                Lobbies.Insert(0, lobby);
+                if (IsCreatedByUser(lobbyCreated.OwnerID))
+                {
+                    CurrentLobby = lobby;
+                    CurrentLobby.Host = lobbyCreated.OwnerName;
+                }
+
+            });
+        }
+
+        private void OnLobbyDeleted(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                var lobbyDeletedArgs = (LobbyEventArgs)e;
+
+                string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
+
+                var lobbyDeleted = Lobbies.Single(lobby => lobby.ID == lobbyDeletedID);
+
+                Lobbies.Remove(lobbyDeleted); 
+            });
+        }
+
+
+
         private void OnJoinLobbyResponse(object sender, EventArgs e)
         {
             var joinLobbyArgs = (LobbyEventArgs)e;
@@ -282,6 +300,7 @@ namespace ClientLourd.ViewModels
                 }
             });
         }
+
 
         private bool LobbyContainsPlayer(Lobby lobby,LobbyEventArgs userJoinedLobbyArgs)
         {

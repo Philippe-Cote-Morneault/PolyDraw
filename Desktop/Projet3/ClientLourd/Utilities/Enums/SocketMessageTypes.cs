@@ -34,7 +34,7 @@
         QuitLobbyRequest = 44,
         QuitLobbyResponse = 45,
         LobbyCreated = 51,
-        LobbyErased = 53,
+        LobbyDeleted = 53,
         ServerMessage = 255,
     }
 }

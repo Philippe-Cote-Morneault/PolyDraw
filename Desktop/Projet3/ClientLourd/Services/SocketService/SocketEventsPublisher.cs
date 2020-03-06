@@ -23,6 +23,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler ServerEndsDrawing;
         public event SocketEventHandler DrawingPreviewResponse;
         public event SocketEventHandler LobbyCreated;
+        public event SocketEventHandler LobbyDeleted;
         public event SocketEventHandler JoinLobbyResponse;
         public event SocketEventHandler UserJoinedLobby;
         public event SocketEventHandler UserLeftLobby;
@@ -109,6 +110,11 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnLobbyCreated(object source, EventArgs e)
         {
             LobbyCreated?.Invoke(source, e);
+        }
+
+        protected virtual void OnLobbyDeleted(object source, EventArgs e)
+        {
+            LobbyDeleted?.Invoke(source, e);
         }
 
         protected virtual void OnJoinLobbyResponse(object source, EventArgs e)

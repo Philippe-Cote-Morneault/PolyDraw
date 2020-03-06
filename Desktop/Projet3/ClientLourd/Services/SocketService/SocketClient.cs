@@ -200,8 +200,8 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.LobbyCreated:
                             OnLobbyCreated(this, new LobbyEventArgs(data));
                             break;
-                        case SocketMessageTypes.LobbyErased:
-                            // TODO
+                        case SocketMessageTypes.LobbyDeleted:
+                            OnLobbyDeleted(this, new LobbyEventArgs(data));
                             break;
                         default:
                             throw new InvalidDataException();
@@ -227,7 +227,7 @@ namespace ClientLourd.Services.SocketService
                     return bytes;
                 case SocketMessageTypes.ServerEndsDrawing:
                     return bytes;
-                case SocketMessageTypes.LobbyErased:
+                case SocketMessageTypes.LobbyDeleted:
                     return bytes;
                 //Message pack;
                 default:

@@ -76,6 +76,20 @@ namespace ClientLourd.Services.SocketService
             get { return _data["GroupID"]; }
         }
 
+        // LobbyDeleted
+
+        public byte[] Bytes
+        {
+            get 
+            {
+                byte[] UUIBytes = _data.Clone() as byte[];
+                Array.Reverse(UUIBytes, 0, 4);
+                Array.Reverse(UUIBytes, 4, 2);
+                Array.Reverse(UUIBytes, 6, 2);
+
+                return UUIBytes; 
+            }
+        }
 
     }
 }

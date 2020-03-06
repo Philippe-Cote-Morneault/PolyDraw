@@ -11,6 +11,8 @@ using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Enums;
+using MaterialDesignThemes.Wpf;
+using ClientLourd.Views.Dialogs;
 
 namespace ClientLourd.ViewModels
 {
@@ -19,7 +21,7 @@ namespace ClientLourd.ViewModels
         public LobbyViewModel()
         {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
-            
+            SocketClient.LobbyDeleted += OnLobbyDeleted;
         }
 
         public SocketClient SocketClient
@@ -47,6 +49,14 @@ namespace ClientLourd.ViewModels
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
             set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; NotifyPropertyChanged(); }
+        }
+
+        public SessionInformations SessionInformations
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations;
+            }
         }
 
 
@@ -87,6 +97,29 @@ namespace ClientLourd.ViewModels
                     CurrentLobby = CurrentLobby;
                 });
             }
+        }
+
+        private void OnLobbyDeleted(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var lobbyDeletedArgs = (LobbyEventArgs)e;
+
+                string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
+
+
+                
+                if (IsInALobby() && lobbyDeletedID == CurrentLobby.ID && CurrentLobby.HostID != SessionInformations.User.ID)
+                {
+                    ContainedView = Utilities.Enums.Views.Home.ToString();
+                    DialogHost.Show(new ClosableErrorDialog($"The host has left the lobby!"), "Default");
+                }
+            });
+        }
+
+        private bool IsInALobby()
+        {
+            return CurrentLobby != null;
         }
 
     }
