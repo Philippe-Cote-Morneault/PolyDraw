@@ -49,4 +49,23 @@ class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var group
             @Json(name = "OwnerID") var ownerID: UUID, @Json(name = "OwnerName") var ownerName: String,
             @Json(name = "Players") var players: ArrayList<Player>) {
 
+
+    companion object {
+        fun minAmountOfPlayers(matchMode: MatchMode): Int {
+            when (matchMode) {
+                MatchMode.SOLO -> return 1
+                MatchMode.COOP -> return 2
+                MatchMode.FFA -> return 2
+            }
+        }
+
+        fun maxAmountOfPlayers(matchMode: MatchMode): Int {
+            when (matchMode) {
+                MatchMode.SOLO -> return 1
+                MatchMode.COOP -> return 4
+                MatchMode.FFA -> return 8
+            }
+        }
+    }
+
 }
