@@ -11,47 +11,47 @@ import kotlin.collections.ArrayList
 
 class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     private lateinit var players: ArrayList<Player>
-    private var displayedPlayers: ArrayList<Boolean>
+    private lateinit var playersCopy: ArrayList<Player?>
     private lateinit var group: Group
     private var listener: PlayerViewHolder.Listener
 
     constructor(listener: PlayerViewHolder.Listener) {
         this.listener = listener
-
-        displayedPlayers = arrayListOf()
+        playersCopy = arrayListOf()
     }
 
     fun setGroup(group: Group) {
         this.group = group
-        displayedPlayers = arrayListOf()
 
-        for (i in 1..group.playersMax) {
-            displayedPlayers.add(false)
+        for (i in 0..group.playersMax) {
+            playersCopy.add(null)
         }
     }
 
     fun setPlayers(players: ArrayList<Player>) {
         this.players = players
 
-        for (i in 0 until players.size) {
-            displayedPlayers[i] = true
-        }
-
-        notifyDataSetChanged()
+        refreshLists()
     }
 
     fun playerAdded(playerID: UUID) {
-        displayedPlayers[players.size - 1] = true
-        notifyDataSetChanged()
+        refreshLists()
     }
 
     fun playerRemoved(playerID: UUID) {
-        displayedPlayers[players.size] = false
+        refreshLists()
+    }
+
+    private fun refreshLists() {
+        playersCopy = players.clone() as ArrayList<Player?>
+        for (i in playersCopy.size - 1 until group.playersMax) {
+            playersCopy.add(null)
+        }
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return displayedPlayers.size
+        return playersCopy.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerViewHolder {
@@ -61,10 +61,6 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        if (displayedPlayers[position]) {
-            holder.bind(players[position], false)
-        } else {
-            holder.bind(null, true)
-        }
+        holder.bind(playersCopy[position], playersCopy[position] == null)
     }
 }
