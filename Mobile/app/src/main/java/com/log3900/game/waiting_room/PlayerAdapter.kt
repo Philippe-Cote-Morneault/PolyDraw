@@ -46,7 +46,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     }
 
     fun playerRemoved(playerID: UUID) {
-        displayedPlayers[players.size - 1] = false
+        displayedPlayers[players.size] = false
         notifyDataSetChanged()
     }
 
