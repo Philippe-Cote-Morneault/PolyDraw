@@ -19,6 +19,7 @@ enum class EventType {
     GROUP_LEFT,
     PLAYER_JOINED_GROUP,
     PLAYER_LEFT_GROUP,
+    LEAVE_GROUP,
     // Session
     LOGOUT,
 
