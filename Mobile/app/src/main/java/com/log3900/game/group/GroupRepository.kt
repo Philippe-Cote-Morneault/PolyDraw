@@ -159,7 +159,6 @@ class GroupRepository : Service() {
     }
 
     private fun handleSocketMessage(message: Message) {
-        Log.d("POTATO", "handleSocketMessage")
         val socketMessage = message.obj as com.log3900.socket.Message
 
         when (socketMessage.type) {
@@ -202,7 +201,7 @@ class GroupRepository : Service() {
         groupCache.removeUserFromGroup(groupID, userID)
         EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
 
-        if (userID == AccountRepository.getInstance().getAccount().ID) {
+        if (userID == AccountRepository.getInstance().getAccount().ID && groupCache.containsGroup(groupID)) {
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, groupID))
         }
     }
@@ -231,7 +230,7 @@ class GroupRepository : Service() {
     private fun onGroupDeleted(message: com.log3900.socket.Message) {
         val groupID = UUIDUtils.byteArrayToUUID(message.data)
         groupCache.removeGroup(groupID)
-        EventBus.getDefault().post(MessageEvent(EventType.GROUP_CREATED, groupID))
+        EventBus.getDefault().post(MessageEvent(EventType.GROUP_DELETED, groupID))
     }
 
     override fun onDestroy() {
