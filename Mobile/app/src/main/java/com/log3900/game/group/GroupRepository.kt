@@ -178,8 +178,9 @@ class GroupRepository : Service() {
             jsonObject.get("IsCPU").asBoolean
         )
 
+        groupCache.addUserToGroup(groupID, player)
+
         if (player.ID != AccountRepository.getInstance().getAccount().ID) {
-            groupCache.addUserToGroup(groupID, player)
             EventBus.getDefault().post(MessageEvent(EventType.PLAYER_JOINED_GROUP, Pair(groupID, player.ID)))
         } else {
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_JOINED, groupCache.getGroup(groupID)!!))
