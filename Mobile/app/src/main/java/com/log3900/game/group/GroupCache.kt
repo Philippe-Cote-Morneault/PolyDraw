@@ -25,6 +25,10 @@ class GroupCache {
         return groups.find { it.ID == groupID }
     }
 
+    fun containsGroup(groupID: UUID): Boolean {
+        return groups.find { it.ID == groupID} != null
+    }
+
     fun addUserToGroup(groupID: UUID, player: Player) {
         val group = groups.find {
             it.ID == groupID
