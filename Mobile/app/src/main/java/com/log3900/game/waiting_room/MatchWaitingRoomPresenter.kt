@@ -26,6 +26,7 @@ class MatchWaitingRoomPresenter : Presenter {
     }
 
     private fun init() {
+        matchWaitingRoomView?.setGroup(groupManager?.currentGroup!!)
         matchWaitingRoomView?.setPlayers(groupManager?.currentGroup?.players!!)
     }
 

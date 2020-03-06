@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.game.group.Group
+import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 
 class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
@@ -64,6 +66,12 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
             layoutManager = LinearLayoutManager(context)
             adapter = playersAdapter
         }
+    }
+
+    override fun setGroup(group: Group) {
+        matchNameTextView.text = group.groupName
+        matchModeTextView.setText(MatchMode.stringRes(group.gameType))
+        hostNameTextView.text = group.ownerName
     }
 
     override fun setPlayers(players: ArrayList<Player>) {
