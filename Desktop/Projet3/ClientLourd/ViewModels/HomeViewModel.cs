@@ -76,8 +76,7 @@ namespace ClientLourd.ViewModels
         public async override void AfterLogin()
         {
 
-            Lobbies = await RestClient.GetGroup();
-            
+            FetchLobbies();
         }
 
         public override void AfterLogOut()
@@ -98,6 +97,10 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public async void FetchLobbies()
+        {
+            Lobbies = await RestClient.GetGroup();
+        }
 
 
         private bool IsCreatedByUser(string ownerID)

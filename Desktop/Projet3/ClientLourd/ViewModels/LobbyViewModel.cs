@@ -45,6 +45,15 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public HomeViewModel HomeViewModel
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.Home?.DataContext as HomeViewModel);
+            }
+        }
+
+
         public Lobby CurrentLobby
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
@@ -82,7 +91,9 @@ namespace ClientLourd.ViewModels
 
         public void LeaveLobby()
         {
+            CurrentLobby = null;
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
+            HomeViewModel.FetchLobbies();
             ContainedView = Utilities.Enums.Views.Home.ToString();
         }
 
@@ -109,17 +120,19 @@ namespace ClientLourd.ViewModels
 
 
                 
-                if (IsInALobby() && lobbyDeletedID == CurrentLobby.ID && CurrentLobby.HostID != SessionInformations.User.ID)
+                if (UserIsInLobby(lobbyDeletedID) && CurrentLobby.HostID != SessionInformations.User.ID)
                 {
+                    CurrentLobby = null;
+                    HomeViewModel.FetchLobbies();
                     ContainedView = Utilities.Enums.Views.Home.ToString();
                     DialogHost.Show(new ClosableErrorDialog($"The host has left the lobby!"), "Default");
                 }
             });
         }
 
-        private bool IsInALobby()
+        private bool UserIsInLobby(string lobbyID)
         {
-            return CurrentLobby != null;
+            return CurrentLobby != null && CurrentLobby.ID == lobbyID;
         }
 
     }
