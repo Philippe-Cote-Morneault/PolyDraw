@@ -23,7 +23,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     fun setGroup(group: Group) {
         this.group = group
 
-        for (i in 0..group.playersMax) {
+        for (i in 1..group.playersMax) {
             playersCopy.add(null)
         }
     }
@@ -44,7 +44,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
 
     private fun refreshLists() {
         playersCopy = players.clone() as ArrayList<Player?>
-        for (i in playersCopy.size - 1 until group.playersMax) {
+        for (i in playersCopy.size until group.playersMax) {
             playersCopy.add(null)
         }
         notifyDataSetChanged()
