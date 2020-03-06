@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.game.group.Player
 
-class MatchAdapter(var players: ArrayList<Player>, var listener: PlayerViewHolder.Listener) : RecyclerView.Adapter<PlayerViewHolder>() {
+class PlayerAdapter(var players: ArrayList<Player>, var listener: PlayerViewHolder.Listener) : RecyclerView.Adapter<PlayerViewHolder>() {
 
     override fun getItemCount(): Int {
         return players.size
