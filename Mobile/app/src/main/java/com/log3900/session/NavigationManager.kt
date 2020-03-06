@@ -31,7 +31,7 @@ class NavigationManager {
             EventType.GROUP_JOINED -> {
                 onGroupJoined()
             }
-            EventType.GROUP_LEFT -> {
+            EventType.LEAVE_GROUP -> {
                 onGroupLeft()
             }
             EventType.GROUP_DELETED -> {
