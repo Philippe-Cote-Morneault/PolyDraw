@@ -72,7 +72,7 @@
                 <TextBlock FontSize="18" Margin="0 0 10 0" FontWeight="Bold">Maximum number of players (bots and humans):</TextBlock>
                 <TextBlock TextDecorations="Underline" FontSize="18" Text="{Binding PlayersMax}"></TextBlock>
                 </StackPanel>
-            <Button Margin="0 30 0 30" Width="300" Command="{Binding CreateLobbyCommand}" CommandParameter="{Binding ElementName=LobbyName, Path=Text}">Create lobby</Button>
+            <Button IsDefault="True" Margin="0 30 0 30" Width="300" Command="{Binding CreateLobbyCommand}" CommandParameter="{Binding ElementName=LobbyName, Path=Text}">Create lobby</Button>
             </StackPanel>
     </materialDesign:DialogHost>
 </UserControl>
