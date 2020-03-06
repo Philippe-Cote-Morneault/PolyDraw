@@ -15,7 +15,8 @@ import io.reactivex.schedulers.Schedulers
 import com.log3900.utils.ui.getAvatarID
 
 class PlayerViewHolder : RecyclerView.ViewHolder {
-    private lateinit var player: Player
+    private var player: Player? = null
+    private var isPlaceholder = true
 
     // UI
     private var rootView: View
@@ -28,26 +29,40 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         usernameTextView = itemView.findViewById(R.id.list_Item_match_waiting_room_player_text_view_player_name)
 
         rootView.setOnClickListener {
-            listener?.playerClicked(player)
+            if (isPlaceholder) {
+
+            } else {
+                listener?.playerClicked(player!!)
+            }
         }
     }
 
-    fun bind(player: Player) {
+    fun bind(player: Player?, isPlaceholder: Boolean) {
         this.player = player
-        if (!player.isCPU) {
-            UserRepository.getInstance().getUser(player.ID)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {
-                        avatarImageView.setImageResource(getAvatarID(it.pictureID))
-                    },
-                    {
+        this.isPlaceholder = isPlaceholder
 
-                    }
-                )
+        if (!isPlaceholder) {
+            usernameTextView.text = player?.username
+            if (!player!!.isCPU) {
+                UserRepository.getInstance().getUser(player.ID)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        {
+                            avatarImageView.setImageResource(getAvatarID(it.pictureID))
+                            avatarImageView.visibility = View.VISIBLE
+                        },
+                        {
+
+                        }
+                    )
+            } else {
+                avatarImageView.visibility = View.INVISIBLE
+            }
+        } else {
+            usernameTextView.text = "Empty Slot"
+            avatarImageView.visibility = View.INVISIBLE
         }
 
-        usernameTextView.text = player.username
     }
 
     interface Listener {
