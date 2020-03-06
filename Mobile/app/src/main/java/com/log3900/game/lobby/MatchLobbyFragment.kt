@@ -78,9 +78,14 @@ class MatchLobbyFragment : Fragment(), MatchLobbyView {
         matchesAdapter.notifyItemChanged(updatedGroupIndex)
     }
 
+    override fun onResume() {
+        super.onResume()
+        matchLobbyPresenter?.resume()
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         matchLobbyPresenter?.destroy()
         matchLobbyPresenter = null
+        super.onDestroy()
     }
 }
