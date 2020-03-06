@@ -101,10 +101,8 @@ class SocketService : Service() {
     }
 
     fun unsubscribeFromMessage(messageType: Event, handler: Handler) {
-        messageSubscribers[messageType]?.forEach {
-            if (it == handler) {
-                messageSubscribers[messageType]?.remove(it)
-            }
+        messageSubscribers[messageType]?.removeIf {
+            it == handler
         }
     }
 
