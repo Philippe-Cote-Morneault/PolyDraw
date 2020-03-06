@@ -21,12 +21,18 @@ class NavigationManager {
         currentActivity?.startNavigationFragment(R.id.navigation_main_match_waiting_room_fragment, null, true)
     }
 
+    private fun onGroupLeft() {
+        currentActivity?.navigateBack()
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
             EventType.GROUP_JOINED -> {
                 onGroupJoined()
+            }
+            EventType.GROUP_LEFT -> {
+                onGroupLeft()
             }
         }
     }
