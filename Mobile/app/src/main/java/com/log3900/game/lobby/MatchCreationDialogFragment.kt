@@ -2,16 +2,13 @@ package com.log3900.game.lobby
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
-import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
+import android.widget.*
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
@@ -23,8 +20,8 @@ import com.log3900.game.group.MatchMode
 class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragment() {
     // UI
     private lateinit var groupNameTextInput: TextInputEditText
-    private lateinit var maxPlayersTextInput: EditText
-    private lateinit var virtualPlayersTextInput: EditText
+    private lateinit var maxPlayersTextView: TextView
+    private lateinit var virtualPlayersTextView: TextView
     private lateinit var gameTypeSpinner: Spinner
     private lateinit var difficultySpinner: Spinner
     private lateinit var removeMaxPlayersButton: ImageView
@@ -32,14 +29,26 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     private lateinit var removeVirtualPlayersButton: ImageView
     private lateinit var addVirtualPlayersButton: ImageView
 
+    // Logic
+    private var maxPlayersCurrentValue = 4
+    private var virtualPlayersCurrentValye = 0
+    private var currentMatchMode = MatchMode.FFA
+    private var currentDifficulty = Difficulty.EASY
+
+    private var addMaxPlayersButtonEnable = true
+    private var removeMaxPlayersButtonEnable = true
+    private var addVirtualPlayersButtonEnable = true
+    private var removeVirtualPlayersButtonEnable = true
+
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(activity)
             .setTitle(resources.getString(R.string.create_match_dialog_title))
             .setPositiveButton("Create") { _, _ ->
                     listener?.onPositiveClick(GroupCreated(
                         groupNameTextInput.text.toString(),
-                        maxPlayersTextInput.text.toString().toInt(),
-                        virtualPlayersTextInput.text.toString().toInt(),
+                        maxPlayersTextView.text.toString().toInt(),
+                        virtualPlayersTextView.text.toString().toInt(),
                         MatchMode.values()[gameTypeSpinner.selectedItemPosition],
                         Difficulty.values()[difficultySpinner.selectedItemPosition]))
             }
@@ -57,8 +66,8 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
 
     private fun setupView(rootView: View) {
         groupNameTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_match_name)
-        maxPlayersTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_max_players)
-        virtualPlayersTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_virtual_players)
+        maxPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_max_players)
+        virtualPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_virtual_players)
         gameTypeSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_match_type)
         difficultySpinner = rootView.findViewById(R.id.dialog_create_match_spinner_difficulty)
         removeMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_remove_max_player)
@@ -82,6 +91,8 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
             onAddVirtualPlayersClick()
         }
 
+        matchModeChange(MatchMode.values()[0])
+
         setupSpinners()
     }
 
@@ -99,30 +110,155 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         val matchTypeAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, matchModeSpinnerItems)
         matchTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         gameTypeSpinner.adapter = matchTypeAdapter
+        gameTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                matchModeChange(MatchMode.values()[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
 
         val difficultyAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, difficultySpinnerItems)
         difficultyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         difficultySpinner.adapter = difficultyAdapter
+        difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                difficultyChange(Difficulty.values()[position])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
     }
 
     private fun onRemoveMaxPlayersClick() {
-        var newCount = maxPlayersTextInput.text.toString().toInt() - 1
-        maxPlayersTextInput.setText(newCount.toString())
+        var newCount = maxPlayersTextView.text.toString().toInt() - 1
+        maxPlayersChange(newCount)
     }
 
     private fun onAddMaxPlayersClick() {
-        val newCount = maxPlayersTextInput.text.toString().toInt() + 1
-        maxPlayersTextInput.setText(newCount.toString())
+        val newCount = maxPlayersTextView.text.toString().toInt() + 1
+        maxPlayersChange(newCount)
     }
 
     private fun onRemoveVirtualPlayersClick() {
-        val newCount = virtualPlayersTextInput.text.toString().toInt() - 1
-        virtualPlayersTextInput.setText(newCount.toString())
+        val newCount = virtualPlayersTextView.text.toString().toInt() - 1
+        virtualPlayersChange(newCount)
     }
 
     private fun onAddVirtualPlayersClick() {
-        val newCount = virtualPlayersTextInput.text.toString().toInt() + 1
-        virtualPlayersTextInput.setText(newCount.toString())
+        val newCount = virtualPlayersTextView.text.toString().toInt() + 1
+        virtualPlayersChange(newCount)
+    }
+
+    private fun maxPlayersChange(newValue: Int) {
+        if (newValue > Group.maxAmountOfPlayers(currentMatchMode) || newValue < Group.minAmountOfPlayers(currentMatchMode)) {
+            return
+        }
+
+        if (newValue == Group.maxAmountOfPlayers(currentMatchMode)) {
+            enableAddMaxPlayersButton(false)
+        } else {
+            enableAddMaxPlayersButton(true)
+        }
+
+        if (newValue == Group.minAmountOfPlayers(currentMatchMode)) {
+            enableRemoveMaxPlayersButton(false)
+        } else {
+            enableRemoveMaxPlayersButton(true)
+        }
+
+        maxPlayersTextView.setText(newValue.toString())
+        maxPlayersCurrentValue = newValue
+    }
+
+    private fun virtualPlayersChange(newValue: Int) {
+        if (currentMatchMode == MatchMode.COOP || currentMatchMode == MatchMode.SOLO) {
+            enableAddVirtualPlayersButton(false)
+            enableRemoveVirtualPlayersButton(false)
+            virtualPlayersTextView.setText(0.toString())
+            return
+        }
+
+        if (newValue > maxPlayersCurrentValue - 1) {
+            return
+        }
+
+        if (newValue == maxPlayersCurrentValue - 1) {
+            enableAddVirtualPlayersButton(false)
+        } else {
+            enableAddVirtualPlayersButton(true)
+        }
+
+        if (newValue == 0) {
+            enableRemoveVirtualPlayersButton(false)
+        } else {
+            enableRemoveVirtualPlayersButton(true)
+        }
+
+        virtualPlayersTextView.setText(newValue.toString())
+        virtualPlayersCurrentValye = newValue
+    }
+
+    private fun matchModeChange(newValue: MatchMode) {
+        currentMatchMode = newValue
+        when (newValue) {
+            MatchMode.SOLO -> {
+                maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
+                virtualPlayersChange(0)
+            }
+            MatchMode.FFA -> {
+                maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
+                virtualPlayersChange(0)
+            }
+            MatchMode.COOP -> {
+                maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
+                virtualPlayersChange(0)
+            }
+        }
+    }
+
+    private fun difficultyChange(newValue: Difficulty) {
+        currentDifficulty = newValue
+    }
+
+    private fun enableAddMaxPlayersButton(enable: Boolean) {
+        if (enable) {
+            addMaxPlayersButtonEnable = true
+            addMaxPlayersButton.colorFilter = null
+        } else {
+            addMaxPlayersButtonEnable = false
+            addMaxPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
+        }
+    }
+
+    private fun enableRemoveMaxPlayersButton(enable: Boolean) {
+        if (enable) {
+            removeMaxPlayersButtonEnable = true
+            removeMaxPlayersButton.colorFilter = null
+        } else {
+            removeMaxPlayersButtonEnable = false
+            removeMaxPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
+        }
+    }
+
+    private fun enableAddVirtualPlayersButton(enable: Boolean) {
+        if (enable) {
+            addVirtualPlayersButtonEnable = true
+            addVirtualPlayersButton.colorFilter = null
+        } else {
+            addVirtualPlayersButtonEnable = false
+            addVirtualPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
+        }
+    }
+
+    private fun enableRemoveVirtualPlayersButton(enable: Boolean) {
+        if (enable) {
+            removeVirtualPlayersButtonEnable = true
+            removeVirtualPlayersButton.colorFilter = null
+        } else {
+            removeVirtualPlayersButtonEnable = false
+            removeVirtualPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
+        }
     }
 
 
