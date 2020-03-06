@@ -57,6 +57,10 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     }
 
     private fun setupUIListeners() {
+        startMatchButton.setOnClickListener {
+            matchWaitingRoomPresenter?.onStartMatchClick()
+        }
+
         leaveMatchButton.setOnClickListener {
             matchWaitingRoomPresenter?.onLeaveMatchClick()
         }

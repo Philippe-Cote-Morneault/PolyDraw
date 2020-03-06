@@ -51,6 +51,10 @@ class MatchWaitingRoomPresenter : Presenter {
         groupManager?.leaveCurrentGroup()
     }
 
+    fun onStartMatchClick() {
+        groupManager?.startMatch()
+    }
+
     fun onPlayerClick(player: Player) {
         // Find something interesting to do here
     }
