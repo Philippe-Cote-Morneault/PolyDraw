@@ -31,7 +31,6 @@ namespace ClientLourd.ViewModels
         private StrokesReader _stokesReader;
         public GameViewModel()
         {
-            InitTimer();
             InitEventHandler();
             HealthPoint = 3;
             Guess = new char[20];
@@ -134,8 +133,6 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            if(_timer.Enabled)
-                _timer.Stop();
             Editor.Canvas.Strokes.Clear();
             //Round end
             if (e.Type == 1)
@@ -158,20 +155,6 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchStarted(object source, EventArgs args)
         {
-            _timer.Start();
-        }
-
-        private void InitTimer()
-        {
-            Time = DateTime.MinValue.AddMinutes(1);
-            _timer = new Timer(1000);
-            _timer.Elapsed += (sender, args) => { 
-                Time = Time.AddSeconds(-1);
-                if(Time == DateTime.MinValue)
-                {
-                    _timer.Stop();
-                }
-            };
         }
         
         public SessionInformations SessionInformations
@@ -298,16 +281,12 @@ namespace ClientLourd.ViewModels
 
         private void PrepareMatch()
         {
-            InitTimer();
             HealthPoint = 3;
             Guess = new char[20];
             Editor.Canvas.Strokes.Clear();
             _stokesReader = new StrokesReader(Editor, SocketClient);                        
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
         }
-        
-        
-        
 
 
     }
