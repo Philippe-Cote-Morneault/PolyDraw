@@ -71,6 +71,14 @@ class MatchLobbyPresenter : Presenter {
         matchLobbyView?.groupUpdated(groupID)
     }
 
+    private fun onPlayerJoinedGroup(groupID: UUID, playerID: UUID) {
+        matchLobbyView?.groupUpdated(groupID)
+    }
+
+    private fun onPlayerLeftGroup(groupID: UUID, playerID: UUID) {
+        matchLobbyView?.groupUpdated(groupID)
+    }
+
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
@@ -86,6 +94,14 @@ class MatchLobbyPresenter : Presenter {
             }
             EventType.GROUP_UPDATED -> {
                 onGroupUpdated(event.data as UUID)
+            }
+            EventType.PLAYER_JOINED_GROUP -> {
+                val eventData = event.data as Pair<UUID, UUID>
+                onPlayerJoinedGroup(eventData.first, eventData.second)
+            }
+            EventType.PLAYER_LEFT_GROUP -> {
+                val eventData = event.data as Pair<UUID, UUID>
+                onPlayerLeftGroup(eventData.first, eventData.second)
             }
         }
     }
