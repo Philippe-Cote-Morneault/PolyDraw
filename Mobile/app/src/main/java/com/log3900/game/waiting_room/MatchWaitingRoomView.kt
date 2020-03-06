@@ -8,4 +8,5 @@ interface MatchWaitingRoomView {
     fun setGroup(group: Group)
     fun displayStartMatchButton(display: Boolean)
     fun enableStartMatchButton(enable: Boolean)
+    fun notifyPlayyersChanged()
 }

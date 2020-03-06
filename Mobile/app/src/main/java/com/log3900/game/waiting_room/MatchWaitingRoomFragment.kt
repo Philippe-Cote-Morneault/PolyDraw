@@ -10,9 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.chat.Channel.Channel
+import com.log3900.chat.ChatMessage
 import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private var matchWaitingRoomPresenter: MatchWaitingRoomPresenter? = null
@@ -91,9 +98,14 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
 
     }
 
+    override fun notifyPlayyersChanged() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun onDestroy() {
         matchWaitingRoomPresenter?.destroy()
         matchWaitingRoomPresenter = null
+        EventBus.getDefault().unregister(this)
         super.onDestroy()
     }
 }
