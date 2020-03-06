@@ -124,6 +124,10 @@ class MonitoringService : Service() {
         shutdownServices()
     }
 
+    private fun onLeaveGroup() {
+        GroupRepository.instance?.refreshRepository()
+    }
+
     private fun shutdownServices() {
         MainApplication.instance.stopService(GroupManager::class.java)
         MainApplication.instance.stopService(GroupRepository::class.java)
@@ -131,6 +135,11 @@ class MonitoringService : Service() {
         MainApplication.instance.stopService(ChatManager::class.java)
         MainApplication.instance.stopService(ChannelRepository::class.java)
         MainApplication.instance.stopService(MessageRepository::class.java)
+    }
+
+    private fun restartService(service: Class<*>) {
+        MainApplication.instance.stopService(service)
+        MainApplication.instance.startService(service)
     }
 
     fun displayErro() {
@@ -142,6 +151,9 @@ class MonitoringService : Service() {
         when(event.type) {
             EventType.LOGOUT -> {
                 onLogout()
+            }
+            EventType.LEAVE_GROUP -> {
+                onLeaveGroup()
             }
         }
     }
