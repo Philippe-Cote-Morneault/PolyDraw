@@ -3,6 +3,7 @@ package com.log3900.game.waiting_room
 import com.log3900.game.group.GroupManager
 import com.log3900.game.group.Player
 import com.log3900.shared.architecture.Presenter
+import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class MatchWaitingRoomPresenter : Presenter {
@@ -28,6 +29,12 @@ class MatchWaitingRoomPresenter : Presenter {
     private fun init() {
         matchWaitingRoomView?.setGroup(groupManager?.currentGroup!!)
         matchWaitingRoomView?.setPlayers(groupManager?.currentGroup?.players!!)
+
+        if (groupManager?.currentGroup?.ownerID == AccountRepository.getInstance().getAccount().ID) {
+            matchWaitingRoomView?.displayStartMatchButton(true)
+        } else {
+            matchWaitingRoomView?.displayStartMatchButton(false)
+        }
     }
 
     fun onLeaveMatchClick() {

@@ -78,6 +78,19 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
         playersAdapter.players = players
         playersAdapter.notifyDataSetChanged()
     }
+
+    override fun displayStartMatchButton(display: Boolean) {
+        if (display) {
+            startMatchButton.visibility = View.VISIBLE
+        } else {
+            startMatchButton.visibility = View.INVISIBLE
+        }
+    }
+
+    override fun enableStartMatchButton(enable: Boolean) {
+
+    }
+
     override fun onDestroy() {
         matchWaitingRoomPresenter?.destroy()
         matchWaitingRoomPresenter = null

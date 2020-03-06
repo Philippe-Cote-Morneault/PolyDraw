@@ -6,4 +6,6 @@ import com.log3900.game.group.Player
 interface MatchWaitingRoomView {
     fun setPlayers(players: ArrayList<Player>)
     fun setGroup(group: Group)
+    fun displayStartMatchButton(display: Boolean)
+    fun enableStartMatchButton(enable: Boolean)
 }
