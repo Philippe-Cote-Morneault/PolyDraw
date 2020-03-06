@@ -98,6 +98,7 @@ class MonitoringService : Service() {
     }
 
     fun onConnectionError() {
+        shutdownServices()
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             val intent = Intent(this, ErrorDialog::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -120,6 +121,10 @@ class MonitoringService : Service() {
     }
 
     private fun onLogout(){
+        shutdownServices()
+    }
+
+    private fun shutdownServices() {
         MainApplication.instance.stopService(GroupManager::class.java)
         MainApplication.instance.stopService(GroupRepository::class.java)
 
