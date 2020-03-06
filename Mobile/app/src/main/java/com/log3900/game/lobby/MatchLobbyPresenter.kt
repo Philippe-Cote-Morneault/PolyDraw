@@ -1,5 +1,6 @@
 package com.log3900.game.lobby
 
+import android.util.Log
 import com.log3900.game.group.Group
 import com.log3900.game.group.GroupCreated
 import com.log3900.game.group.GroupManager
@@ -107,6 +108,17 @@ class MatchLobbyPresenter : Presenter {
     }
 
     override fun resume() {
+        Log.d("POTATO", "LobbyPresenter::onResume()")
+        groupManager?.getAvailableGroups()
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe(
+                {
+                    matchLobbyView?.setAvailableGroups(it)
+                },
+                {
+
+                }
+            )
     }
 
     override fun pause() {
