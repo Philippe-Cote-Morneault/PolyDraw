@@ -98,23 +98,9 @@ open class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navigationController, appBarConfiguration)
 
         navigationView.setupWithNavController(navigationController)
-        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_lobby).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_match_lobby_fragment, it, false)
-            true
-        }
-
-        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_draw).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_draw_view_fragment, it, false)
-            true
-        }
 
         navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_logout).setOnMenuItemClickListener {
             logout()
-            true
-        }
-
-        navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile).setOnMenuItemClickListener {
-            startNavigationFragment(R.id.navigation_main_profile_fragment, it, false)
             true
         }
 
@@ -124,12 +110,10 @@ open class MainActivity : AppCompatActivity() {
         avatar.setOnClickListener {
             startNavigationFragment(
                 R.id.navigation_main_profile_fragment,
-                navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_profile),
+                navigationView.menu.findItem(R.id.navigation_main_profile_fragment),
                 false
             )
         }
-
-        navigationView.setCheckedItem(R.id.menu_item_activity_main_drawer_lobby)
 
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
@@ -149,6 +133,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        Log.d("POTATO", "MainActivity::onSupportNavigationUp")
         return navigationController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
@@ -178,16 +163,21 @@ open class MainActivity : AppCompatActivity() {
     //}
 
     fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
-        if (navigationController.currentDestination?.id != destinationID) {
+        /*if (navigationController.currentDestination?.id != destinationID) {
             if (!keepBackstack) {
                 navigationController.popBackStack(
                     navigationController.currentDestination!!.id,
-                    true
+                    false
                 )
             }
             navigationController.navigate(destinationID)
             menuItem?.setChecked(true)
-        }
+        }*/
+        navigationController.navigate(destinationID)
+    }
+
+    fun navigateBack() {
+        navigationController.navigateUp()
     }
 
     private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {
