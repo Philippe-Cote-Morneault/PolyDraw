@@ -55,6 +55,10 @@ type messageType struct {
 	TimeUp                   int
 	ResponseHintMatch        int
 	PlayerSync               int
+	StrokeChunkClient        int
+	StartDrawingClient       int
+	EndDrawingClient         int
+	EraseStrokeClient        int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -75,11 +79,15 @@ var MessageType = &messageType{
 	UserCreateChannel:        27,
 	DestroyChannel:           28,
 	UserDestroyedChannel:     29,
+	StrokeChunkClient:        30,
 	StrokeChunkServer:        31,
+	StartDrawingClient:       32,
 	StartDrawingServer:       33,
+	EndDrawingClient:         34,
 	EndDrawingServer:         35,
 	PreviewDrawing:           36,
 	PreviewDrawingResponse:   37,
+	EraseStrokeClient:        38,
 	RequestJoinGroup:         40,
 	ResponseJoinGroup:        41,
 	UserJoinedGroup:          43,

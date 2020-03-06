@@ -318,8 +318,15 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 					Response: true,
 				})
 				socket.SendRawMessageToSocketID(rawMessage, socketID)
+				message := socket.RawMessage{}
+				uuidBytes, _ := groupDB.ID.MarshalBinary()
+				message.ParseMessage(byte(socket.MessageType.ResponseGroupRemoved), uint16(len(uuidBytes)), uuidBytes)
 
 				g.mutex.Lock()
+				//Broadcast a message to all the users in queue
+				for k := range g.queue {
+					go socket.SendRawMessageToSocketID(message, k)
+				}
 				connections := g.groups[groupID][:]
 				g.mutex.Unlock()
 
@@ -329,11 +336,13 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 
 				//change status and put all the users in the queue once they quit the game
 				//Remove all the data associated with the groups
+				g.mutex.Lock()
 				for _, v := range g.groups[groupDB.ID] {
 					delete(g.assignment, v)
 					g.queue[v] = true
 				}
 				delete(g.groups, groupDB.ID)
+				g.mutex.Unlock()
 			} else {
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
