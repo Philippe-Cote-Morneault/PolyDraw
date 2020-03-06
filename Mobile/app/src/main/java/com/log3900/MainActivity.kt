@@ -44,7 +44,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var hideShowMessagesFAB: CounterFab
     private lateinit var chatManager: ChatManager
-    private lateinit var navigationController: NavController
+    lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
