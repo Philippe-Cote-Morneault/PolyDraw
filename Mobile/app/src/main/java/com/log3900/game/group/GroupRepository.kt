@@ -6,6 +6,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
+import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -44,15 +45,8 @@ class GroupRepository : Service() {
     private fun initializeRepository() {
         instance = this
         socketService = SocketService.instance
-        groupCache = GroupCache()
-        getGroups(AccountRepository.getInstance().getAccount().sessionToken).subscribe(
-            {
-                isReady = true
-            },
-            {
 
-            }
-        )
+        refreshRepository()
 
         socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
         socketService?.subscribeToMessage(com.log3900.socket.Event.USER_LEFT_GROUP, socketMessageHandler!!)
@@ -73,6 +67,7 @@ class GroupRepository : Service() {
                             groups.add(GroupAdapter().fromJson(group.asJsonObject))
                         }
                         groupCache.needsReload = false
+                        groupCache.setGroups(groups)
                         it.onSuccess(groupCache.getAllGroups())
                     }
 
@@ -138,6 +133,18 @@ class GroupRepository : Service() {
 
     fun leaveGroup(groupID: UUID) {
         socketService?.sendMessage(Event.LEAVE_GROUP_REQUEST, byteArrayOf())
+    }
+
+    fun refreshRepository() {
+        groupCache = GroupCache()
+        getGroups(AccountRepository.getInstance().getAccount().sessionToken).subscribe(
+            {
+                isReady = true
+            },
+            {
+
+            }
+        )
     }
 
     override fun onBind(intent: Intent?): IBinder? {
