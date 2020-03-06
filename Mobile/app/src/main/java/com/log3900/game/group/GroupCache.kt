@@ -34,7 +34,9 @@ class GroupCache {
         }
 
         if (group != null) {
-            group.players.add(player)
+            if (group.players.find { it.ID == player.ID } == null) {
+                group.players.add(player)
+            }
         }
     }
 
