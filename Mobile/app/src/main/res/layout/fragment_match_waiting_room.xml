@@ -33,13 +33,26 @@
         app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_match_mode"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <TextView
+        android:id="@+id/fragment_match_waiting_room_text_view_header_players"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Players"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="@id/fragment_match_waiting_room_recycler_view_players"
+        app:layout_constraintEnd_toEndOf="@id/fragment_match_waiting_room_recycler_view_players"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_match_waiting_room_recycler_view_players"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_host_name"
-        app:layout_constraintBottom_toTopOf="@id/fragment_match_waiting_room_button_start_match"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_width="250dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="352dp"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_header_players"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fragment_match_waiting_room_button_start_match"
