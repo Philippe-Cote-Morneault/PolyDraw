@@ -40,6 +40,8 @@ class MatchWaitingRoomPresenter : Presenter {
     }
 
     override fun destroy() {
+        groupManager?.leaveCurrentGroup()
         matchWaitingRoomView = null
+        groupManager = null
     }
 }
