@@ -215,6 +215,24 @@ namespace ClientLourd.Services.RestService
             return deseralizer.Deserialize<dynamic>(response)["GroupID"];
         }
 
+        public async Task<ObservableCollection<Lobby>> GetGroup()
+        {
+            RestRequest request = new RestRequest($"/groups", Method.GET);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            List<dynamic> tmpResponse = deseralizer.Deserialize<List<dynamic>>(response);
+            ObservableCollection<Lobby> groups = JsonConvert.DeserializeObject<ObservableCollection<Lobby>>(response.Content);
+            for (int i = 0; i < groups.Count; i++)
+            {
+                groups[i].GameName= tmpResponse[i]["GroupName"];
+                groups[i].Host = tmpResponse[i]["OwnerName"];
+                groups[i].HostID = tmpResponse[i]["OwnerID"];
+                groups[i].PlayersCount = groups[i].Players.Count;
+            }
+            return groups;
+        }
+
         /*public async Task<object> GetGroup(string groupID)
         {
             RestRequest request = new RestRequest($"/groups/{groupID}", Method.GET);

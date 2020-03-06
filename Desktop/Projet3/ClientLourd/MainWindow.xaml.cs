@@ -53,6 +53,7 @@ namespace ClientLourd
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
             (Profile.DataContext as ProfileViewModel).AfterLogin();
+            (Home.DataContext as HomeViewModel).AfterLogin();
             DialogHost.Show(new Tutorial(), "Default");
         }
 

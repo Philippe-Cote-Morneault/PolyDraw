@@ -172,7 +172,7 @@
                         </DockPanel>
                         
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Home'}">
-                            <controls:Home/>
+                            <controls:Home x:Name="Home"/>
                         </DockPanel>
 
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">

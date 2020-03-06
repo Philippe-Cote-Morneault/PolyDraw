@@ -13,6 +13,7 @@ using ClientLourd.Utilities.Commands;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Views.Dialogs;
+using ClientLourd.Services.RestService;
 
 namespace ClientLourd.ViewModels
 {
@@ -61,6 +62,11 @@ namespace ClientLourd.ViewModels
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
+        public RestClient RestClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
+
         public SessionInformations SessionInformations
         {
             get
@@ -75,10 +81,11 @@ namespace ClientLourd.ViewModels
             set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; }
         }
 
-        public override void AfterLogin()
+        public async override void AfterLogin()
         {
 
-            // GET
+            Lobbies = await RestClient.GetGroup();
+            
         }
 
         public override void AfterLogOut()
