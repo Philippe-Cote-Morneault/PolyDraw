@@ -180,7 +180,7 @@ class GroupRepository : Service() {
 
         if (player.ID != AccountRepository.getInstance().getAccount().ID) {
             groupCache.addUserToGroup(groupID, player)
-            EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
+            EventBus.getDefault().post(MessageEvent(EventType.PLAYER_JOINED_GROUP, Pair(groupID, player.ID)))
         } else {
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_JOINED, groupCache.getGroup(groupID)!!))
         }
@@ -194,7 +194,7 @@ class GroupRepository : Service() {
         val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
 
         groupCache.removeUserFromGroup(groupID, userID)
-        EventBus.getDefault().post(MessageEvent(EventType.GROUP_UPDATED, groupID))
+        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_LEFT_GROUP, Pair(groupID, userID)))
 
         if (userID == AccountRepository.getInstance().getAccount().ID && groupCache.containsGroup(groupID)) {
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, groupID))
