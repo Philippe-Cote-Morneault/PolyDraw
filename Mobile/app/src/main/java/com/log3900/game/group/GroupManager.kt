@@ -61,8 +61,10 @@ class GroupManager : Service() {
         groupRepository?.joinGroup(group.ID)
     }
 
-    fun leaveGroup(group: Group) {
-        groupRepository?.leaveGroup(group.ID)
+    fun leaveCurrentGroup() {
+        if (currentGroup != null) {
+            groupRepository?.leaveGroup(currentGroup!!.ID)
+        }
     }
 
     private fun onGroupJoined(group: Group) {
