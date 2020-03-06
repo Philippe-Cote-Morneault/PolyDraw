@@ -1,10 +1,18 @@
 package com.log3900.game.group
 
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GroupCache {
     private var groups: ArrayList<Group> = arrayListOf()
     var needsReload: Boolean = true
+
+    fun setGroups(newGroups: ArrayList<Group>) {
+        groups.clear()
+        newGroups.forEach {
+            groups.add(it)
+        }
+    }
 
     fun addGroup(group: Group) {
         groups.add(group)
