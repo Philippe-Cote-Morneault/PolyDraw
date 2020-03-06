@@ -67,6 +67,7 @@ class GroupManager : Service() {
     }
 
     fun leaveCurrentGroup() {
+        EventBus.getDefault().post(MessageEvent(EventType.LEAVE_GROUP, null))
         if (currentGroup != null) {
             groupRepository?.leaveGroup(currentGroup!!.ID)
         }
