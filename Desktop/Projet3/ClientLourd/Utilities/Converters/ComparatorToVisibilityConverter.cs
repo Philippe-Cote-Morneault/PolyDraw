@@ -15,6 +15,10 @@ namespace ClientLourd.Utilities.Converters
     
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (parameter != null && parameter.ToString() == "1")
+            {
+                return (values.All(v => v.ToString() == values[0].ToString())) ? Visibility.Visible : Visibility.Collapsed;   
+            }
             return (values.All(v => v.ToString() == values[0].ToString())) ? Visibility.Collapsed : Visibility.Visible;   
         }
 

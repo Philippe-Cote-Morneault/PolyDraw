@@ -8,6 +8,7 @@
         xmlns:local="clr-namespace:ClientLourd"
         xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
         xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+        xmlns:game="clr-namespace:ClientLourd.Views.Controls.Game"
         xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
         Name="PolyDraw"
         mc:Ignorable="d"

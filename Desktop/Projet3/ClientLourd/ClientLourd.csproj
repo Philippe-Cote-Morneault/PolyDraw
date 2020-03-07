@@ -159,6 +159,7 @@
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
     <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
     <Compile Include="Services\SocketService\LobbyEventArgs.cs" />
+    <Compile Include="Services\SocketService\MatchEventArgs.cs" />
     <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
     <Compile Include="Utilities\Converters\GameModeToImageConverter.cs" />
+    <Compile Include="Utilities\Converters\HealthPointConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\LobbyCreationViewModel.cs" />
     <Compile Include="ViewModels\LobbyViewModel.cs" />
+    <Compile Include="ViewModels\GameViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Services\RestService\RestClient.cs" />
@@ -231,6 +234,18 @@
     </Compile>
     <Compile Include="Views\Controls\Lobby.xaml.cs">
       <DependentUpon>Lobby.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\EditorZone.xaml.cs">
+      <DependentUpon>EditorZone.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\GamePanel.xaml.cs">
+      <DependentUpon>GamePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\GameStatus.xaml.cs">
+      <DependentUpon>GameStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\TopBar.xaml.cs">
+      <DependentUpon>TopBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
@@ -310,6 +325,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Game\EditorZone.xaml" />
+    <Page Include="Views\Controls\Game\GamePanel.xaml" />
+    <Page Include="Views\Controls\Game\GameStatus.xaml" />
+    <Page Include="Views\Controls\Game\TopBar.xaml" />
     <Page Include="Views\Controls\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

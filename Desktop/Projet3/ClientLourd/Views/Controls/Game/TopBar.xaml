@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Game.TopBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls.Game"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             >
+    <UserControl.Resources>
+        <converter:HealthPointConverter x:Key="HealthPointConverter"/>
+    </UserControl.Resources>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0">
+            <materialDesign:PackIcon Foreground="Red" Visibility="{Binding Path=HealthPoint, Converter={StaticResource HealthPointConverter}, ConverterParameter=1}" Height="30" Width="30" Kind="Heart"/>
+            <materialDesign:PackIcon Foreground="Red" Visibility="{Binding Path=HealthPoint, Converter={StaticResource HealthPointConverter}, ConverterParameter=2}" Height="30" Width="30" Kind="Heart"/>
+            <materialDesign:PackIcon Foreground="Red" Visibility="{Binding Path=HealthPoint, Converter={StaticResource HealthPointConverter}, ConverterParameter=3}" Height="30" Width="30" Kind="Heart"/>
+        </StackPanel>
+        
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
+            <materialDesign:PackIcon Kind="Clock" HorizontalAlignment="Center"></materialDesign:PackIcon>
+            <TextBlock Text="{Binding Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black"/>
+        </StackPanel>
+        
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2">
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Draw" Width="24" Height="24"/>
+                <TextBlock FontSize="24" Text="Round 2/3"/>
+            </StackPanel>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24"/>
+                <TextBlock Text="Best score: 345" FontSize="24"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -76,6 +76,7 @@ namespace ClientLourd
             DevConfigButton.IsChecked = true;
         }
 
+
         /// <summary>
         /// Called when the chat is open or close
         /// </summary>
