@@ -133,7 +133,7 @@ namespace ClientLourd.Services.SocketService
             UserLeftLobby?.Invoke(source, e);
         }
 
-        protected virtual void OnStartGaneResponse(object source, EventArgs e)
+        protected virtual void OnStartGameResponse(object source, EventArgs e)
         {
             StartGameResponse?.Invoke(source, e);
         }

@@ -199,7 +199,7 @@ namespace ClientLourd.Services.SocketService
                             break;
 
                         case SocketMessageTypes.StartGameResponse:
-                            OnLeftLobby(this, new LobbyEventArgs(data));
+                            OnStartGameResponse(this, new LobbyEventArgs(data));
                             break;
                         case SocketMessageTypes.LobbyCreated:
                             OnLobbyCreated(this, new LobbyEventArgs(data));
