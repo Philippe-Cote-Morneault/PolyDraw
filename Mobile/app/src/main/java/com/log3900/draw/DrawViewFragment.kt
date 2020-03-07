@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.view_draw_color_palette.*
 // See https://github.com/divyanshub024/AndroidDraw
 // and https://android.jlelse.eu/a-guide-to-drawing-in-android-631237ab6e28
 
-class DrawViewFragment : Fragment() {
+class DrawViewFragment(private val canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
 
     override fun onCreateView(
@@ -36,23 +36,19 @@ class DrawViewFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setUpFab()
-        setUpToolButtons()
-        setUpWidthSeekbar()
-        setUpColorButtons()
+        if (canDraw) {
+            setUpFab()
+            setUpToolButtons()
+            setUpWidthSeekbar()
+            setUpColorButtons()
+        } else {
+            disableDrawFunctions()
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
-//        drawView.setOnTouchListener { view, motionEvent ->
-//            when(motionEvent.action) {
-//                MotionEvent.ACTION_DOWN -> println("ACTION: DOWN")
-//                MotionEvent.ACTION_UP -> println("ACTION: UP")
-//                MotionEvent.ACTION_MOVE -> println("ACTION: MOVE (${motionEvent.x}, ${motionEvent.y})")
-//            }
-//            true
-//        }
     }
 
     private fun setUpFab() {
@@ -107,11 +103,6 @@ class DrawViewFragment : Fragment() {
             updateTipButtonPressed(it)
             drawView.setCap(Paint.Cap.SQUARE)
         }
-
-//        adjust_width_button.setOnClickListener {
-//            // TODO: Change draw mode...
-//            drawView.setStrokeWidth(15f)
-//        }
     }
 
     private fun setUpWidthSeekbar() {
@@ -214,5 +205,11 @@ class DrawViewFragment : Fragment() {
 
     private fun changeDrawColor(color: Int) {
         drawView.setColor(color)
+    }
+
+    private fun disableDrawFunctions() {
+        draw_tools_view.visibility = View.GONE
+        draw_tools_fab.visibility = View.GONE
+        // TODO: Draw view can't be drawn on
     }
 }
