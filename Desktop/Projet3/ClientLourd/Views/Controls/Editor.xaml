@@ -119,6 +119,8 @@
         </Border>
 
             <InkCanvas ClipToBounds="True"  Name="Canvas"
+                       Width="1125"
+                       Height="750"
                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                        MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
                        Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"

@@ -27,6 +27,8 @@ namespace ClientLourd.Services.InkCanvas
         private const int MAX_y_OFFSET = 35;
         private const int BRUSH_SIZE_OFFSET = 33;
         private const int POINTS_OFFSET = 34;
+
+        private Guid _drawingID;
         private Editor _editor;
         private List<Point> _points;
         private Timer _timer;
@@ -36,9 +38,9 @@ namespace ClientLourd.Services.InkCanvas
 
         private EditorInformation _information;
         
-        public StrokesReader(Editor editor, SocketClient socket, EditorInformation information)
+        public StrokesReader(Editor editor, SocketClient socket)
         {
-            _information = information;
+            _information = ((EditorViewModel)_editor.DataContext).EditorInformation;
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
@@ -48,10 +50,10 @@ namespace ClientLourd.Services.InkCanvas
             _timer.Elapsed += TimerOnElapsed;
         }
         
-        public void Start()
+        public void Start(string drawingID)
         {
-            //TODO added the drawing id
-            _socket.SendMessage(new Tlv(SocketMessageTypes.StartDrawing));
+            _drawingID = new Guid(drawingID);
+            _socket.SendMessage(new Tlv(SocketMessageTypes.StartDrawing, _drawingID));
             _editor.Canvas.MouseMove += CanvasOnMouseMove;
             _editor.Canvas.MouseDown += CanvasOnMouseDown;
             _editor.StrokeDeleted += EditorOnStrokeDeleted;
@@ -63,13 +65,16 @@ namespace ClientLourd.Services.InkCanvas
 
         public void Stop()
         {
-            //TODO added the drawing id
-            _socket.SendMessage(new Tlv(SocketMessageTypes.EndDrawing));
-            _timer.Stop();
-            _editor.Canvas.MouseMove -= CanvasOnMouseMove;
-            _editor.Canvas.MouseDown -= CanvasOnMouseDown;
-            _editor.StrokeDeleted -= EditorOnStrokeDeleted;
-            _editor.StrokedAdded -= EditorOnStokeAdded;
+            if (_drawingID != Guid.Empty)
+            {
+                _socket.SendMessage(new Tlv(SocketMessageTypes.EndDrawing, _drawingID));
+                _timer.Stop();
+                _editor.Canvas.MouseMove -= CanvasOnMouseMove;
+                _editor.Canvas.MouseDown -= CanvasOnMouseDown;
+                _editor.StrokeDeleted -= EditorOnStrokeDeleted;
+                _editor.StrokedAdded -= EditorOnStokeAdded;
+                _drawingID = Guid.Empty;
+            }
         }
 
         private void EditorOnStokeAdded(object sender, EventArgs args)

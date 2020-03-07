@@ -21,7 +21,7 @@
             
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Username}" Header="Username"></GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding User.Username}" Header="Username"></GridViewColumn>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding IsCPU}" Header="IsCPU"></GridViewColumn>
                 </GridView>
             </ListView.View>

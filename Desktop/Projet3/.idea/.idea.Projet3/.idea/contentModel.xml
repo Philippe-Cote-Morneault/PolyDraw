@@ -16,8 +16,10 @@
           <e p="Bindable" t="Include">
             <e p="Channel.cs" t="Include" />
             <e p="EditorInformation.cs" t="Include" />
+            <e p="Lobby.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="ModelBase.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
             <e p="SessionInformations.cs" t="Include" />
             <e p="Stats.cs" t="Include" />
             <e p="StatsHistory.cs" t="Include" />
@@ -42,6 +44,14 @@
                 <e p="Chat.g.cs" t="Include" />
                 <e p="Conversation.g.cs" t="Include" />
                 <e p="Editor.g.cs" t="Include" />
+                <e p="Game" t="Include">
+                  <e p="EditorZone.g.cs" t="Include" />
+                  <e p="GamePanel.g.cs" t="Include" />
+                  <e p="GameStatus.g.cs" t="Include" />
+                  <e p="TopBar.g.cs" t="Include" />
+                </e>
+                <e p="Home.g.cs" t="Include" />
+                <e p="Lobby.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
                 <e p="Tutorial" t="Include">
@@ -58,6 +68,7 @@
                 <e p="GameCreationDialog.g.cs" t="Include" />
                 <e p="GamesPlayedHistoryDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
+                <e p="LobbyCreationDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
                 <e p="RegisterDialog.g.cs" t="Include" />
                 <e p="Tutorial.g.cs" t="Include" />
@@ -99,8 +110,14 @@
           <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
           <e p="LogoMakr_4YSBb4.png" t="Include" />
+          <e p="Message.wav" t="Include" />
+          <e p="MessageNotification.mp3" t="Include" />
+          <e p="MessageNotification.wav" t="Include" />
           <e p="PointEraser.cur" t="Include" />
           <e p="poly.png" t="Include" />
+          <e p="sword.png" t="Include" />
+          <e p="swords.png" t="Include" />
+          <e p="treasure.png" t="Include" />
           <e p="WhiteLogo.png" t="Include" />
         </e>
         <e p="Services" t="Include">
@@ -128,11 +145,16 @@
           </e>
           <e p="SocketService" t="Include">
             <e p="DrawingEventArgs.cs" t="Include" />
+            <e p="LobbyEventArgs.cs" t="Include" />
+            <e p="MatchEventArgs.cs" t="Include" />
             <e p="MessageReceivedEventArgs.cs" t="Include" />
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketErrorEventArgs.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
             <e p="StrokeSentEventArgs.cs" t="Include" />
+          </e>
+          <e p="SoundService" t="Include">
+            <e p="SoundService.cs" t="Include" />
           </e>
         </e>
         <e p="Utilities" t="Include">
@@ -151,6 +173,8 @@
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
             <e p="EditingModeConverter.cs" t="Include" />
+            <e p="GameModeToImageConverter.cs" t="Include" />
+            <e p="HealthPointConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
@@ -162,9 +186,11 @@
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
             <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
+            <e p="WidthToLeftMarginConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
             <e p="DifficultyLevel.cs" t="Include" />
+            <e p="GameModes.cs" t="Include" />
             <e p="PotraceMode.cs" t="Include" />
             <e p="SocketMessageTypes.cs" t="Include" />
             <e p="Views.cs" t="Include" />
@@ -177,6 +203,7 @@
           <e p="ValidationRules" t="Include">
             <e p="EmailRule.cs" t="Include" />
             <e p="HintRules.cs" t="Include" />
+            <e p="LobbyNameRule.cs" t="Include" />
             <e p="LoginInputRules.cs" t="Include" />
             <e p="NameRule.cs" t="Include" />
             <e p="UsernameRule.cs" t="Include" />
@@ -187,6 +214,10 @@
           <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
           <e p="GameCreationViewModel.cs" t="Include" />
+          <e p="GameViewModel.cs" t="Include" />
+          <e p="HomeViewModel.cs" t="Include" />
+          <e p="LobbyCreationViewModel.cs" t="Include" />
+          <e p="LobbyViewModel.cs" t="Include" />
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ProfileViewModel.cs" t="Include" />
@@ -202,6 +233,20 @@
             <e p="Conversation.xaml.cs" t="Include" />
             <e p="Editor.xaml" t="Include" />
             <e p="Editor.xaml.cs" t="Include" />
+            <e p="Game" t="Include">
+              <e p="EditorZone.xaml" t="Include" />
+              <e p="EditorZone.xaml.cs" t="Include" />
+              <e p="GamePanel.xaml" t="Include" />
+              <e p="GamePanel.xaml.cs" t="Include" />
+              <e p="GameStatus.xaml" t="Include" />
+              <e p="GameStatus.xaml.cs" t="Include" />
+              <e p="TopBar.xaml" t="Include" />
+              <e p="TopBar.xaml.cs" t="Include" />
+            </e>
+            <e p="Home.xaml" t="Include" />
+            <e p="Home.xaml.cs" t="Include" />
+            <e p="Lobby.xaml" t="Include" />
+            <e p="Lobby.xaml.cs" t="Include" />
             <e p="Login.xaml" t="Include" />
             <e p="Login.xaml.cs" t="Include" />
             <e p="Profile.xaml" t="Include" />
@@ -230,6 +275,8 @@
             <e p="GamesPlayedHistoryDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />
             <e p="InputDialog.xaml.cs" t="Include" />
+            <e p="LobbyCreationDialog.xaml" t="Include" />
+            <e p="LobbyCreationDialog.xaml.cs" t="Include" />
             <e p="MessageDialog.xaml" t="Include" />
             <e p="MessageDialog.xaml.cs" t="Include" />
             <e p="RegisterDialog.xaml" t="Include" />

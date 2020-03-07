@@ -310,7 +310,7 @@ namespace ClientLourd.ViewModels
         {
             foreach(Player player in lobby.Players)
             {
-                if (player.ID == userJoinedLobbyArgs.UserID)
+                if (player.User.ID == userJoinedLobbyArgs.UserID)
                 {
                     return true;
                 }
@@ -329,7 +329,7 @@ namespace ClientLourd.ViewModels
                 var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
                 if (LobbyContainsPlayer(lobbyModif, userLeftLobbyArgs))
                 {
-                    var userToRemove = lobbyModif.Players.Single(player => player.ID == userLeftLobbyArgs.UserID);
+                    var userToRemove = lobbyModif.Players.Single(player => player.User.ID == userLeftLobbyArgs.UserID);
                     lobbyModif.Players.Remove(userToRemove);
                     lobbyModif.PlayersCount = lobbyModif.Players.Count;
                 }   
