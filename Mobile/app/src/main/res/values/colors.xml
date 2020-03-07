@@ -7,6 +7,16 @@
     <color name="color_loss_text">#E91E63</color>
     <color name="color_border">@color/colorPrimaryBlueYellow</color>
 
+    <!-- DRAW COLORS -->
+    <color name="color_draw_black">#000000</color>
+    <color name="color_draw_white">#FFFFFF</color>
+    <color name="color_draw_red">#FF0000</color>
+    <color name="color_draw_green">#00FF00</color>
+    <color name="color_draw_blue">#0000FF</color>
+    <color name="color_draw_yellow">#FFFF00</color>
+    <color name="color_draw_cyan">#00FFFF</color>
+    <color name="color_draw_magenta">#FF00FF</color>
+
     <!--Blue/Yellow colors-->
     <color name="colorPrimaryBlueYellow">#2196F3</color>
     <color name="colorOnPrimaryBlueYellow">#000000</color>
@@ -134,6 +144,7 @@
     <color name="color_background">#ffffff</color>
     <color name="color_surface">#ffffff</color>
     <color name="color_error">#b00020</color>
+    <color name="color_background_half_transparent">#BFE4E4E4</color>
 
     <!--"On" colors define how text, icons and strokes are colored in relation to the surface-->
     <!--on which they appear.-->
