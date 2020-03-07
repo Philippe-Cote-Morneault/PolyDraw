@@ -226,6 +226,10 @@ namespace ClientLourd.Services.RestService
             ObservableCollection<Lobby> groups = JsonConvert.DeserializeObject<ObservableCollection<Lobby>>(response.Content);
             for (int i = 0; i < groups.Count; i++)
             {
+                for (int j = 0; j < groups[i].Players.Count; j++)
+                {
+                    groups[i].Players[j].User = new User((tmpResponse[i] as dynamic)["Players"][j]["Username"], (tmpResponse[i] as dynamic)["Players"][j]["ID"]);
+                }
                 groups[i].Mode = (GameModes)tmpResponse[i]["GameType"];
                 groups[i].GameName= tmpResponse[i]["GroupName"];
                 groups[i].Host = tmpResponse[i]["OwnerName"];

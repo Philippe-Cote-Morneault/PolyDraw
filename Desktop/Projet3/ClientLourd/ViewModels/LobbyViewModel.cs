@@ -121,7 +121,7 @@ namespace ClientLourd.ViewModels
 
 
 
-                if (UserIsInLobby(lobbyDeletedID) && !UserIsHost())
+                if (UserIsInLobby() && !UserIsHost())
                 {
                     CurrentLobby = null;
                     ContainedView = Utilities.Enums.Views.Home.ToString();
@@ -130,9 +130,22 @@ namespace ClientLourd.ViewModels
             });
         }
 
-        private bool UserIsInLobby(string lobbyID)
+        private bool UserIsInLobby()
         {
-            return CurrentLobby != null && CurrentLobby.ID == lobbyID;
+            if (CurrentLobby == null)
+            {
+                return false;
+            }
+
+            foreach (Player player in CurrentLobby.Players)
+            {
+                if (player.User.ID == SessionInformations.User.ID)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         private bool UserIsHost()
