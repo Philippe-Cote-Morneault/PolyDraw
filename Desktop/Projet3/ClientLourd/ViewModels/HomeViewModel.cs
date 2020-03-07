@@ -265,7 +265,8 @@ namespace ClientLourd.ViewModels
 
                 var lobbyDeleted = Lobbies.Single(lobby => lobby.ID == lobbyDeletedID);
 
-                Lobbies.Remove(lobbyDeleted); 
+                Lobbies.Remove(lobbyDeleted);
+                FetchLobbies();
             });
         }
 

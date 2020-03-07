@@ -124,7 +124,6 @@ namespace ClientLourd.ViewModels
                 if (UserIsInLobby(lobbyDeletedID) && !UserIsHost())
                 {
                     CurrentLobby = null;
-                    HomeViewModel.FetchLobbies();
                     ContainedView = Utilities.Enums.Views.Home.ToString();
                     DialogHost.Show(new ClosableErrorDialog($"The host has left the lobby!"), "Default");
                 }
