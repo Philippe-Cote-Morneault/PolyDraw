@@ -2,12 +2,10 @@ package com.log3900.draw
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.util.Log
 import com.log3900.draw.divyanshuwidget.DrawMode
 import com.log3900.draw.divyanshuwidget.PaintOptions
 import java.nio.ByteOrder
 import java.util.*
-import kotlin.experimental.or
 
 object DrawingMessageParser {
     private enum class Offset(val value: Int) {
@@ -79,8 +77,12 @@ object DrawingMessageParser {
         for (i in bytes.indices step 4) {
             val x = bytesToUnsignedShort(bytes[i], bytes[i + 1])
             val y = bytesToUnsignedShort(bytes[i + 2], bytes[i + 3])
-            Log.d("DRAW_BYTE", "[${bytes[i]}, ${bytes[i+1]}, ${bytes[i+2]}, ${bytes[i+3]}] -> ($x, $y)")
-            points.add(DrawPoint(x.toFloat(), y.toFloat()))
+
+            val point = if (isLittleEndianOrder())
+                DrawPoint(y.toFloat(), x.toFloat())
+            else
+                DrawPoint(x.toFloat(), y.toFloat())
+            points.add(point)
         }
 
         return points
