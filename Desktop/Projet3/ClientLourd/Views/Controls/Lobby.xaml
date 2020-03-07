@@ -4,19 +4,86 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
+        <converter:NumberToPlaceholder x:Key="NumberToPlaceholder"/>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:LobbyViewModel/>
     </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-
         
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"></ColumnDefinition>
+            <ColumnDefinition Width="4*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="30" Grid.Row="0" Grid.Column="0">
+            <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{Binding CurrentLobby.GameName}"></TextBlock>
+            <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}Mode: {0}}"></TextBlock>
+            <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
+
+
+            <ItemsControl ItemsSource="{Binding CurrentLobby.Players}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
+                                <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
+                                                   Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                   Text="{Binding User.Username}" />
+                                <materialDesign:Chip.Icon>
+                                    <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
+                                </materialDesign:Chip.Icon>
+                            </materialDesign:Chip>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
+            <ItemsControl ItemsSource="{Binding CurrentLobby, Converter={StaticResource NumberToPlaceholder}, UpdateSourceTrigger=PropertyChanged}" >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
+                                <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
+                                                   Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                   Text="{Binding Username}" />
+                                <materialDesign:Chip.Icon>
+                                    <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
+                                </materialDesign:Chip.Icon>
+                            </materialDesign:Chip>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+
+            <Grid Grid.Row="1" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"  Margin="30" Command="{Binding StartGameCommand}">Start Game</Button>
+                <Button Grid.Column="1" Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
+            </Grid>
+
+
+
+
+
+
+            <!--
         <ListView Grid.Row="0"  ItemsSource="{Binding CurrentLobby.Players}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             
             <ListView.View>
@@ -30,6 +97,6 @@
             <Button Command="{Binding StartGameCommand}">Start Game</Button>
             <Button Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
             
-        </StackPanel>
+        </StackPanel>-->
     </Grid>
 </UserControl>

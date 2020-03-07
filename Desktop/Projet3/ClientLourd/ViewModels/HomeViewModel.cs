@@ -21,7 +21,6 @@ namespace ClientLourd.ViewModels
     {
         private ObservableCollection<Lobby> _lobbies;
 
-        private int shitCode = 0;
         public HomeViewModel()
         {
             SocketClient.LobbyCreated += OnLobbyCreated;
@@ -232,7 +231,7 @@ namespace ClientLourd.ViewModels
         private void OnLobbyCreated(object sender, EventArgs e)
         {
             var lobbyCreated = (LobbyEventArgs)e;
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(async () =>
             {
                 Lobby lobby = new Lobby(
                     lobbyCreated.GroupName,
@@ -250,6 +249,7 @@ namespace ClientLourd.ViewModels
                 {
                     CurrentLobby = lobby;
                     CurrentLobby.Host = lobbyCreated.OwnerName;
+                   // CurrentLobby.Players[0].User = await RestClient.GetUserInfo(CurrentLobby.Players[0].User.ID);
                 }
 
             });
@@ -293,18 +293,31 @@ namespace ClientLourd.ViewModels
         {
             var userJoinedLobbyArgs = (LobbyEventArgs)e;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(async () =>
             {
                 var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
+
+
 
                 if (!LobbyContainsPlayer(lobbyModified, userJoinedLobbyArgs))
                 {
                     lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
                     lobbyModified.PlayersCount = lobbyModified.Players.Count;
                 }
+                GetUsersInfo(lobbyModified);
             });
         }
 
+        private async void GetUsersInfo(Lobby lobby)
+        {
+            foreach(Player player in lobby.Players)
+            {
+                if (player.User.Avatar == null)
+                {
+                    player.User = await RestClient.GetUserInfo(player.User.ID);
+                }
+            }
+        }
 
         private bool LobbyContainsPlayer(Lobby lobby,LobbyEventArgs userJoinedLobbyArgs)
         {
@@ -325,7 +338,6 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                shitCode++;
                 var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
                 if (LobbyContainsPlayer(lobbyModif, userLeftLobbyArgs))
                 {

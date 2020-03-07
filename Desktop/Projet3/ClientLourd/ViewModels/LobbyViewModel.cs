@@ -22,6 +22,8 @@ namespace ClientLourd.ViewModels
         {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.LobbyDeleted += OnLobbyDeleted;
+            SocketClient.UserJoinedLobby += OnUserJoinedLobby;
+            SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.StartGameResponse += OnStartGameResponse;
         }
 
@@ -119,8 +121,6 @@ namespace ClientLourd.ViewModels
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
 
-
-
                 if (UserIsInLobby() && !UserIsHost())
                 {
                     CurrentLobby = null;
@@ -198,16 +198,35 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                // This event is only sent to host... To talk with server
+
                 var gameStartedArgs = (LobbyEventArgs)e;
                 if (gameStartedArgs.Response)
                 {
-                    DialogHost.Show(new ClosableErrorDialog($"It works"), "Default");
+                    ContainedView = Utilities.Enums.Views.Game.ToString();
                 }
                 else
                 {
                     DialogHost.Show(new ClosableErrorDialog($"{gameStartedArgs.Error}"), "Default");
                 }
 
+            });
+        }
+
+        private void OnUserJoinedLobby(object sender, EventArgs e)
+        {
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                CurrentLobby = CurrentLobby;
+            });
+        }
+
+        private void OnUserLeftLobby(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                CurrentLobby = CurrentLobby;
             });
         }
 

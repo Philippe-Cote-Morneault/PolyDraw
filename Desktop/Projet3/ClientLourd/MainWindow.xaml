@@ -180,6 +180,11 @@
                             <controls:Lobby/>
                         </DockPanel>
 
+                        <DockPanel Width="{Binding ElementName=Drawer, Path=ActualWidth}" Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Game'}">
+                            <game:GamePanel x:Name="GameView"/>
+                        </DockPanel>
+
+
                     </Grid>
                     <!--Chat Drawer-->
                     <materialDesign:DrawerHost.RightDrawerContent>

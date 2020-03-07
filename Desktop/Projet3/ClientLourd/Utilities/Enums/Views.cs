@@ -5,6 +5,7 @@
         Editor,
         Profile,
         Home,
-        Lobby
+        Lobby,
+        Game
     }
 }
