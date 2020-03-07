@@ -3,12 +3,13 @@ package com.log3900.login.register
 import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.login.AuthenticationRestService
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.ui.ProfilePresenter
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
@@ -78,20 +79,25 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
             }
         })
 
-        AccountRepository.createAccount(Account(
-            UUID.randomUUID(),
-            username.toLowerCase(),
-            pictureID,
-            email,
-            firstName,
-            lastName,
-            tokenData.session,
-            tokenData.bearer ?: ""  // TODO: Actually handle the missing bearer token
-        ))
-
-        SocketService.instance?.sendMessage(
-            Event.SOCKET_CONNECTION,
-            tokenData.session.toByteArray(Charsets.UTF_8))
+        AccountRepository.getInstance().createAccount(
+            Account(
+                UUID.randomUUID(),
+                username.toLowerCase(),
+                pictureID,
+                email,
+                firstName,
+                lastName,
+                tokenData.session,
+                tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
+                0,
+                LanguageManager.LANGUAGE.SYSTEM.ordinal,
+                false
+            )
+        ).subscribe {
+            SocketService.instance?.sendMessage(
+                Event.SOCKET_CONNECTION,
+                tokenData.session.toByteArray(Charsets.UTF_8))
+        }
     }
 
 

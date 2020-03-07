@@ -15,9 +15,7 @@ import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.User
-import com.log3900.user.AccountRepository
-import com.log3900.user.UserRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
@@ -32,11 +30,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ChannelRepository : Service() {
     private val binder = ChannelRepositoryBinder()
     private var socketService: SocketService? = null
+    private var socketMessageHandler: Handler? = null
     private lateinit var channelCache: ChannelCache
 
     var isReady = false
@@ -49,7 +47,7 @@ class ChannelRepository : Service() {
         instance = this
         socketService = SocketService.instance
         channelCache = ChannelCache()
-        getChannels(AccountRepository.getAccount().sessionToken).subscribe(
+        getChannels(AccountRepository.getInstance().getAccount().sessionToken).subscribe(
             {
                 channelCache.reloadChannels(it)
                 isReady = true
@@ -172,6 +170,15 @@ class ChannelRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_DELETED, channelCreated.channelID))
     }
 
+    private fun handleSocketMessage(message: android.os.Message) {
+        val socketMessage = message.obj as Message
+
+        when (socketMessage.type) {
+            Event.CHANNEL_CREATED -> onChannelCreated(socketMessage)
+            Event.CHANNEL_DELETED -> onChannelDeleted(socketMessage)
+        }
+    }
+
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
@@ -183,22 +190,22 @@ class ChannelRepository : Service() {
 
         Thread(Runnable {
             Looper.prepare()
-            socketService?.subscribeToMessage(Event.CHANNEL_CREATED, Handler {
-                onChannelCreated(it.obj as Message)
+            socketMessageHandler = Handler {
+                handleSocketMessage(it)
                 true
-            })
-            socketService?.subscribeToMessage(Event.CHANNEL_DELETED, Handler {
-                onChannelDeleted(it.obj as Message)
-                true
-            })
+            }
+            socketService?.subscribeToMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        socketService?.unsubscribeFromMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
         socketService = null
         instance = null
+        super.onDestroy()
     }
 
 

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- GENERAL -->
     <color name="color_win_background">#804CAF50</color>
     <color name="color_win_text">#4CAF50</color>
     <color name="color_loss_background">#80E91E63</color>
     <color name="color_loss_text">#E91E63</color>
-    <color name="color_border">@color/color_primary_mid_brush</color>
-    
+    <color name="color_border">@color/colorPrimaryBlueYellow</color>
+
     <!-- DRAW COLORS -->
     <color name="color_draw_black">#000000</color>
     <color name="color_draw_white">#FFFFFF</color>
@@ -18,25 +17,125 @@
     <color name="color_draw_cyan">#00FFFF</color>
     <color name="color_draw_magenta">#FF00FF</color>
 
-    <color name="color_background_half_transparent">#BFE4E4E4</color>
+    <!--Blue/Yellow colors-->
+    <color name="colorPrimaryBlueYellow">#2196F3</color>
+    <color name="colorOnPrimaryBlueYellow">#000000</color>
+    <color name="colorPrimaryBlueYellowLight">#6EC6FF</color>
+    <color name="colorOnPrimaryBlueYellowLight">#000000</color>
+    <color name="colorPrimaryBlueYellowDark">#0069C0</color>
+    <color name="colorOnPrimaryBlueYellowDark">#FFFFFF</color>
 
-    <!-- MATERIAL COLORS -->
+    <color name="colorSecondaryBlueYellow">#FFEB3B</color>
+    <color name="colorOnSecondaryBlueYellow">#000000</color>
+    <color name="colorSecondaryBlueYellowLight">#FFFF72</color>
+    <color name="colorOnSecondaryBlueYellowLight">#000000</color>
+    <color name="colorSecondaryBlueYellowDark">#C8B900</color>
+    <color name="colorOnSecondaryBlueYellowDark">#000000</color>
 
-    <!--colorPrimary colors map to components and elements, such as app bars and buttons. -->
-    <!--colorSecondary colors are most often used as accents on components, such as FABs and -->
-    <!--selection controls.-->
-    <color name="color_primary_mid_brush">#3F51B5</color>
-    <color name="color_primary_mid_foreground">#ffffff</color>
-    <color name="color_primary_light_brush">#757DE8</color>
-    <color name="color_primary_light_foreground">#ffffff</color>
-    <color name="color_primary_dark_brush">#002984</color>
-    <color name="color_primary_dark_foreground">#ffffff</color>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <!--Brown/Green colors-->
+    <color name="colorPrimaryBrownGreen">#795548</color>
+    <color name="colorOnPrimaryBrownGreen">#FFFFFF</color>
+    <color name="colorPrimaryBrownGreenLight">#A98274</color>
+    <color name="colorOnPrimaryBrownGreenLight">#000000</color>
+    <color name="colorPrimaryBrownGreenDark">#4B2C20</color>
+    <color name="colorOnPrimaryBrownGreenDark">#FFFFFF</color>
 
-    <color name="color_secondary">#757DE8</color>
-    <color name="color_secondary_variant">#FFF64F</color>
+    <color name="colorSecondaryBrownGreen">#33C027</color>
+    <color name="colorOnSecondaryBrownGreen">#000000</color>
+    <color name="colorSecondaryBrownGreenLight">#71F45B</color>
+    <color name="colorOnSecondaryBrownGreenLight">#000000</color>
+    <color name="colorSecondaryBrownGreenDark">#008E00</color>
+    <color name="colorOnSecondaryBrownGreenDark">#000000</color>
+
+    <!--Green/Teal colors-->
+    <color name="colorPrimaryGreenTeal">#4CAF50</color>
+    <color name="colorOnPrimaryGreenTeal">#000000</color>
+    <color name="colorPrimaryGreenTealLight">#80E27E</color>
+    <color name="colorOnPrimaryGreenTealLight">#000000</color>
+    <color name="colorPrimaryGreenTealDark">#087F23</color>
+    <color name="colorOnPrimaryGreenTealDark">#FFFFFF</color>
+
+    <color name="colorSecondaryGreenTeal">#009688</color>
+    <color name="colorOnSecondaryGreenTeal">#000000</color>
+    <color name="colorSecondaryGreenTealLight">#52C7B8</color>
+    <color name="colorOnSecondaryGreenTealLight">#000000</color>
+    <color name="colorSecondaryGreenTealDark">#00675B</color>
+    <color name="colorOnSecondaryGreenTealDark">#FFFFFF</color>
+
+    <!--Indigo/Orange colors-->
+    <color name="colorPrimaryIndigoOrange">#3F51B5</color>
+    <color name="colorOnPrimaryIndigoOrange">#FFFFFF</color>
+    <color name="colorPrimaryIndigoOrangeLight">#757DE8</color>
+    <color name="colorOnPrimaryIndigoOrangeLight">#000000</color>
+    <color name="colorPrimaryIndigoOrangeDark">#002984</color>
+    <color name="colorOnPrimaryIndigoOrangeDark">#FFFFFF</color>
+
+    <color name="colorSecondaryIndigoOrange">#FF9100</color>
+    <color name="colorOnSecondaryIndigoOrange">#000000</color>
+    <color name="colorSecondaryIndigoOrangeLight">#FFC246</color>
+    <color name="colorOnSecondaryIndigoOrangeLight">#000000</color>
+    <color name="colorSecondaryIndigoOrangeDark">#C56200</color>
+    <color name="colorOnSecondaryIndigoOrangeDark">#000000</color>
+
+    <!--Orange/LightBlue theme colors-->
+    <color name="colorPrimaryOrangeLightBlue">#FF9900</color>
+    <color name="colorOnPrimaryOrangeLightBlue">#000000</color>
+    <color name="colorPrimaryOrangeLightBlueLight">#ffca47</color>
+    <color name="colorOnPrimaryOrangeLightBlueLight">#000000</color>
+    <color name="colorPrimaryOrangeLightBlueDark">#c66a00</color>
+    <color name="colorOnPrimaryOrangeLightBlueDark">#000000</color>
+
+    <color name="colorSecondaryOrangeLightBlue">#009dff</color>
+    <color name="colorOnSecondaryOrangeLightBlue">#000000</color>
+    <color name="colorSecondaryOrangeLightBlueLight">#69ceff</color>
+    <color name="colorOnSecondaryOrangeLightBlueLight">#000000</color>
+    <color name="colorSecondaryOrangeLightBlueDark">#006fcb</color>
+    <color name="colorOnSecondaryOrangeLightBlueDark">#FFFFFF</color>
+
+    <!--Purple/Green colors-->
+    <color name="colorPrimaryPurpleGreen">#9C27B0</color>
+    <color name="colorOnPrimaryPurpleGreen">#FFFFFF</color>
+    <color name="colorPrimaryPurpleGreenLight">#D05CE3</color>
+    <color name="colorOnPrimaryPurpleGreenLight">#000000</color>
+    <color name="colorPrimaryPurpleGreenDark">#6A0080</color>
+    <color name="colorOnPrimaryPurpleGreenDark">#FFFFFF</color>
+
+    <color name="colorSecondaryPurpleGreen">#33C027</color>
+    <color name="colorOnSecondaryPurpleGreen">#000000</color>
+    <color name="colorSecondaryPurpleGreenLight">#71F45B</color>
+    <color name="colorOnSecondaryPurpleGreenLight">#000000</color>
+    <color name="colorSecondaryPurpleGreenDark">#008E00</color>
+    <color name="colorOnSecondaryPurpleGreenDark">#000000</color>
+
+    <!--Red/Yellow colors-->
+    <color name="colorPrimaryRedYellow">#D63230</color>
+    <color name="colorOnPrimaryRedYellow">#000000</color>
+    <color name="colorPrimaryRedYellowLight">#FF685A</color>
+    <color name="colorOnPrimaryRedYellowLight">#000000</color>
+    <color name="colorPrimaryRedYellowDark">#9D0008</color>
+    <color name="colorOnPrimaryRedYellowDark">#FFFFFF</color>
+
+    <color name="colorSecondaryRedYellow">#FFCA3A</color>
+    <color name="colorOnSecondaryRedYellow">#000000</color>
+    <color name="colorSecondaryRedYellowLight">#FFFD6E</color>
+    <color name="colorOnSecondaryRedYellowLight">#000000</color>
+    <color name="colorSecondaryRedYellowDark">#C89A00</color>
+    <color name="colorOnSecondaryRedYellowDark">#000000</color>
+
+    <!--Teal/Lime colors-->
+    <color name="colorPrimaryTealLime">#009688</color>
+    <color name="colorOnPrimaryTealLime">#000000</color>
+    <color name="colorPrimaryTealLimeLight">#52C7B8</color>
+    <color name="colorOnPrimaryTealLimeLight">#000000</color>
+    <color name="colorPrimaryTealLimeDark">#00675B</color>
+    <color name="colorOnPrimaryTealLimeDark">#FFFFFF</color>
+
+    <color name="colorSecondaryTealLime">#CDDC39</color>
+    <color name="colorOnSecondaryTealLime">#000000</color>
+    <color name="colorSecondaryTealLimeLight">#FFFF6E</color>
+    <color name="colorOnSecondaryTealLimeLight">#000000</color>
+    <color name="colorSecondaryTealLimeDark">#99AA00</color>
+    <color name="colorOnSecondaryTealLimeDark">#000000</color>
 
     <!--colorBackground appears behind scrollable content and is used for the default window-->
     <!--background. colorSurface is mapped to the surface of components such as cards, sheets-->
@@ -45,6 +144,7 @@
     <color name="color_background">#ffffff</color>
     <color name="color_surface">#ffffff</color>
     <color name="color_error">#b00020</color>
+    <color name="color_background_half_transparent">#BFE4E4E4</color>
 
     <!--"On" colors define how text, icons and strokes are colored in relation to the surface-->
     <!--on which they appear.-->

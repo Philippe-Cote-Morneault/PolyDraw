@@ -6,15 +6,13 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import androidx.navigation.common.R
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.ChatRestService
-import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.Json
@@ -24,11 +22,11 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
-import retrofit2.Callback
-import retrofit2.Response
 import kotlin.collections.HashSet
 
 class MessageRepository : Service() {
@@ -40,7 +38,7 @@ class MessageRepository : Service() {
     private val binder = MessageRepositoryBinder()
     private var socketService: SocketService? = null
     private var subscribers: ConcurrentHashMap<Event, ArrayList<Handler>> = ConcurrentHashMap()
-    private lateinit var sessionToken: String
+    private var socketMessageHandler: Handler? = null
 
     // Data
     private val messageCache: MessageCache = MessageCache()
@@ -71,7 +69,7 @@ class MessageRepository : Service() {
     fun getChannelMessages(channelID: UUID, startIndex: Int, endIndex: Int): Single<LinkedList<ChatMessage>> {
         return Single.create {
                 val call = ChatRestService.service.getChannelMessages(
-                    AccountRepository.getAccount().sessionToken,
+                    AccountRepository.getInstance().getAccount().sessionToken,
                     "EN",
                     channelID.toString(),
                     startIndex,
@@ -147,12 +145,32 @@ class MessageRepository : Service() {
         }
     }
 
-    fun subscribe(event: Event, handler: Handler) {
+    fun subscribe(event: Event, handler: Handler): Handler {
         if (!subscribers.containsKey(event)) {
             subscribers[event] = ArrayList()
         }
 
         subscribers[event]?.add(handler)
+
+        return handler
+    }
+
+    fun unsubscribe(event: Event, handler: Handler) {
+        subscribers[event]?.forEach {
+            if (it == handler) {
+                subscribers[event]?.remove(it)
+            }
+        }
+    }
+
+    private fun handleSocketMessage(message: android.os.Message) {
+        val socketMessage = message.obj as Message
+
+        when (socketMessage.type) {
+            com.log3900.socket.Event.MESSAGE_RECEIVED -> receiveMessage(socketMessage)
+            com.log3900.socket.Event.JOINED_CHANNEL -> onUserJoinedChannel(socketMessage)
+            com.log3900.socket.Event.LEFT_CHANNEL -> onUserLeftChannel(socketMessage)
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -163,29 +181,28 @@ class MessageRepository : Service() {
         super.onCreate()
         instance = this
         socketService = SocketService.instance
-        sessionToken = AccountRepository.getAccount().sessionToken
 
         Thread(Runnable {
             Looper.prepare()
-            socketService?.subscribeToMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, Handler {
-                receiveMessage(it.obj as Message)
+            socketMessageHandler = Handler {
+                handleSocketMessage(it)
                 true
-            })
-            socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, Handler {
-                onUserJoinedChannel(it.obj as Message)
-                true
-            })
-            socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, Handler {
-                onUserLeftChannel(it.obj as Message)
-                true
-            })
+            }
+            socketService?.subscribeToMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
+            socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
+            socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
+        socketMessageHandler = null
         socketService = null
+        instance = null
+        super.onDestroy()
     }
 
     private fun receiveMessage(message: Message) {
@@ -225,12 +242,15 @@ class MessageRepository : Service() {
             add(KotlinJsonAdapterFactory())
         })
         val userJoinedChannelMessage = moshi.unpack(message.data) as UserJoinedChannelMessage
-        val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
-        val chatMessage = ChatMessage.fromEventMessage(messageEvent, userJoinedChannelMessage.channelID)
-        addMessageToCache(chatMessage)
-        val osMessage = android.os.Message()
-        osMessage.obj = chatMessage
-        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+
+        if (userJoinedChannelMessage.userID != AccountRepository.getInstance().getAccount().ID) {
+            val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
+            val chatMessage = ChatMessage.fromEventMessage(messageEvent, userJoinedChannelMessage.channelID)
+            addMessageToCache(chatMessage)
+            val osMessage = android.os.Message()
+            osMessage.obj = chatMessage
+            notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        }
     }
 
     private fun onUserLeftChannel(message: Message) {
@@ -240,12 +260,16 @@ class MessageRepository : Service() {
             add(KotlinJsonAdapterFactory())
         })
         val userLeftChannelMessage = moshi.unpack(message.data) as UserLeftChannelMessage
-        val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
-        val chatMessage = ChatMessage.fromEventMessage(messageEvent, userLeftChannelMessage.channelID)
-        addMessageToCache(chatMessage)
-        val osMessage = android.os.Message()
-        osMessage.obj = chatMessage
-        notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        if (userLeftChannelMessage.userID == AccountRepository.getInstance().getAccount().ID) {
+            messageCache.removeEntry(userLeftChannelMessage.channelID)
+        } else {
+            val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
+            val chatMessage = ChatMessage.fromEventMessage(messageEvent, userLeftChannelMessage.channelID)
+            addMessageToCache(chatMessage)
+            val osMessage = android.os.Message()
+            osMessage.obj = chatMessage
+            notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        }
     }
     
     inner class MessageRepositoryBinder : Binder() {

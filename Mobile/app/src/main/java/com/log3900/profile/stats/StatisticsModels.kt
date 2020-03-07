@@ -1,8 +1,6 @@
 package com.log3900.profile.stats
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-import java.util.*
 
 // TODO: use Dates?
 // TODO: Best score solo

@@ -1,27 +1,17 @@
 package com.log3900
 
 import android.app.Application
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.os.IBinder
-import com.log3900.chat.Channel.ChannelRepository
-import com.log3900.chat.ChatManager
-import com.log3900.chat.Message.MessageRepository
+import android.view.MenuItem
 import com.log3900.session.MonitoringService
+import com.log3900.session.NavigationManager
 import com.log3900.socket.SocketService
 
 class MainApplication : Application() {
+    var mainActivity: MainActivity? = null
+    private var navigationManager: NavigationManager = NavigationManager()
     companion object {
         lateinit var instance: MainApplication
-        val serviceConnection1 = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            }
-
-            override fun onServiceDisconnected(name: ComponentName?) {
-            }
-        }
     }
 
     override fun onCreate() {
@@ -29,12 +19,30 @@ class MainApplication : Application() {
 
         instance = this
 
-        bindService(Intent(this, SocketService::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
+        startService(SocketService::class.java)
+        startService(MonitoringService::class.java)
+    }
 
-        bindService(Intent(this, MonitoringService::class.java), serviceConnection1, Context.BIND_AUTO_CREATE)
+    fun startFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
+        mainActivity?.startNavigationFragment(destinationID, menuItem, keepBackstack)
     }
 
     fun startService(service: Class<*>) {
-        bindService(Intent(this, service), serviceConnection1, Context.BIND_AUTO_CREATE)
+        startService(Intent(this, service))
     }
+
+    fun stopService(service: Class<*>) {
+        stopService(Intent(this, service))
+    }
+
+    fun registerMainActivity(activity: MainActivity) {
+        mainActivity = activity
+        navigationManager.currentActivity = activity
+    }
+
+    fun unregisterMainActivity() {
+        navigationManager.currentActivity = null
+        mainActivity = null
+    }
+
 }

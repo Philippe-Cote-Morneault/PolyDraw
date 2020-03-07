@@ -5,21 +5,23 @@ import android.os.CountDownTimer
 import android.os.Handler
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.architecture.Presenter
-import com.log3900.shared.ui.ProgressDialog
+import com.log3900.shared.ui.dialogs.ProgressDialog
 import com.log3900.socket.*
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
+import io.reactivex.Completable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.util.*
 
-class LoginPresenter(var loginView: LoginView) : Presenter {
+class LoginPresenter(var loginView: LoginView?) : Presenter {
 
     fun authenticate(username: String, password: String) {
-        loginView.showProgresBar()
+        loginView?.showProgresBar()
 
         val authJson = JsonObject()
         authJson.addProperty("Username", username)
@@ -63,82 +65,117 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             }
         })
 
-        getUserInfo(session, bearer, userID)
-//        val account = getUserInfo(session, bearer, userID)
+        getUserInfo(session, bearer, userID).subscribe {
+            SocketService.instance?.sendMessage(
+                Event.SOCKET_CONNECTION,
+                session.toByteArray(Charsets.UTF_8))
+        }
+//        val account = getUserInfo(session, bearer, ID)
 //        if (account == null) {
 //            handleErrorAuth("Error while trying to get account information")
 //            return
 //        }
 //        storeUser(account, session, bearer)
-        SocketService.instance?.sendMessage(
-            Event.SOCKET_CONNECTION,
-            session.toByteArray(Charsets.UTF_8))
     }
 
-    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String) {
+    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String): Completable {
         println("Getting user info...")
-        val call = AuthenticationRestService.service.getUserInfo(sessionToken, userID)
-        call.enqueue(object: Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                when (response.code()) {
-                    200 -> {
-                        println("Sucessful user response")
-                        val account = parseJsonAccount(response.body()!!)
-                        storeUser(account, sessionToken, bearerToken)
-                    }
+        return Completable.create {
+            val call = AuthenticationRestService.service.getUserInfo(sessionToken, userID)
+            call.enqueue(object: Callback<JsonObject> {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    when (response.code()) {
+                        200 -> {
+                            println("Sucessful user response")
+                            val account = parseJsonAccount(response.body()!!)
+                            storeUser(account, sessionToken, bearerToken)
+                                .subscribe {
+                                    it.onComplete()
+                                }
+                        }
 
-                    else -> {
-                        handleErrorAuth("Error while getting account information.")
+                        else -> {
+                            handleErrorAuth("Error while getting account information.")
+                            it.onComplete()
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                handleErrorAuth(t.toString())
-            }
-        })
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    handleErrorAuth(t.toString())
+                }
+            })
+        }
     }
 
-    private fun storeUser(account: Account, sessionToken: String, bearerToken: String) {
-        AccountRepository.createAccount(account.copy(
-            sessionToken = sessionToken,
-            bearerToken = bearerToken
-        ))
+    private fun storeUser(account: Account, sessionToken: String, bearerToken: String): Completable {
+        return Completable.create {completable ->
+            AccountRepository.getInstance().getAccountByID(account.ID).subscribe(
+                {
+                    AccountRepository.getInstance().createAccount(
+                        account.copy(
+                            sessionToken = sessionToken,
+                            bearerToken = bearerToken,
+                            tutorialDone = it.tutorialDone,
+                            themeID = it.themeID,
+                            languageID =  it.languageID
+                        )
+                    ).subscribe {
+                        AccountRepository.getInstance().setCurrentAccount(account.ID)
+                            .subscribe{
+                                completable.onComplete()
+                            }
+                    }
+                },
+                {
+                    AccountRepository.getInstance().createAccount(
+                        account.copy(
+                            sessionToken = sessionToken,
+                            bearerToken = bearerToken
+                        )
+                    ).subscribe {
+                        AccountRepository.getInstance().setCurrentAccount(account.ID)
+                            .subscribe{
+                                completable.onComplete()
+                            }
+                    }
+                })
+        }
     }
 
     private fun handleErrorAuth(error: String) {
-        loginView.showErrorDialog("Authentication error", error, null, null)
-        loginView.hideProgressBar()
+        loginView?.showErrorDialog("Authentication error", error, null, null)
+        loginView?.hideProgressBar()
     }
 
     fun startMainActivity() {
-        loginView.navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        loginView?.navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 
     fun validateUsername(username: String) {
         if (!Validator.validateUsername(username)) {
-            loginView.setUsernameError("Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)")
+            loginView?.setUsernameError("Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)")
         } else {
-            loginView.clearUsernameError()
+            loginView?.clearUsernameError()
         }
     }
 
     fun validatePassword(password: String) {
         if (!Validator.validatePassword(password)) {
-            loginView.setPasswordError("Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)")
+            loginView?.setPasswordError("Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)")
         } else {
-            loginView.clearPasswordError()
+            loginView?.clearPasswordError()
         }
     }
 
     override fun destroy() {
-
+        loginView = null
     }
 
     override fun resume() {
         if (SocketService.instance?.getSocketState() != State.CONNECTED) {
             val socketConnectionDialog = ProgressDialog()
-            loginView.showProgressDialog(socketConnectionDialog)
+            loginView?.showProgressDialog(socketConnectionDialog)
             val timer = object: CountDownTimer(60000, 15000) {
                 override fun onTick(millisUntilFinished: Long) {
                     if (SocketService.instance?.getSocketState() != State.CONNECTED) {
@@ -147,12 +184,12 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
                 }
 
                 override fun onFinish() {
-                    loginView.hideProgressDialog(socketConnectionDialog)
-                    loginView.showErrorDialog("Connection Error",
+                    loginView?.hideProgressDialog(socketConnectionDialog)
+                    loginView?.showErrorDialog("Connection Error",
                         "Could not establish connection to server after 4 attempts. The application will now close.",
                         null,
                         {_, _ ->
-                            loginView.closeView()
+                            loginView?.closeView()
                         })
                 }
             }
@@ -178,7 +215,10 @@ class LoginPresenter(var loginView: LoginView) : Presenter {
             json.get("FirstName").asString,
             json.get("LastName").asString,
             "",     // Session token and bearer token are not important right now
-            ""
+            "",
+            0,
+            LanguageManager.LANGUAGE.SYSTEM.ordinal,
+            false
         )
     }
 }

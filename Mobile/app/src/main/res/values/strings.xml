@@ -79,6 +79,14 @@
     <string name="chat_user_joined_channel_message">%1$s has joined the channel</string>
     <string name="chat_user_left_channel_message">%1$s has left the channel</string>
 
+    <!--Tutorial-->
+    <string name="tutorial">Tutorial</string>
+    <string name="tutorial_button_previous">Previous</string>
+    <string name="tutorial_button_skip_tutorial">Skip Tutorial</string>
+    <string name="tutorial_button_next">Next</string>
+    <string name="tutorial_slide_welcome_01_title">Welcome</string>
+    <string name="tutorial_slide_chat_01_title">Chat 1</string>
+
     <!--misc-->
     <string name="preference_file_key">com.log3900.mobile.PREFERENCE_FILE_KEY</string>
     <string name="preference_file_userID_key">com.log3900.mobile.PREFERENCE_FILE_USERID_KEY</string>
@@ -89,6 +97,7 @@
     <string name="preference_file_lastname_key">com.log3900.mobile.PREFERENCE_FILE_LASTNAME_KEY</string>
     <string name="preference_file_session_token_key">com.log3900.mobile.PREFERENCE_FILE_SESSION_TOKEN_KEY</string>
     <string name="preference_file_bearer_token_key">com.log3900.mobile.PREFERENCE_FILE_BEARER_TOKEN_KEY</string>
+    <string name="preference_file_theme_key">com.log3900.mobile.PREFERENCE_FILE_THEME_KEY</string>
     <string name="title_activity_navigation_drawer">NavigationDrawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -103,4 +112,28 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="language_english_title">English</string>
+    <string name="language_french_title">French</string>
+    <string name="language_system_title">System</string>
+    <string name="theme_blue_yellow_title">Blue/Yellow</string>
+    <string name="theme_brown_green_title">Brown/Green</string>
+    <string name="theme_green_teal_title">Green/Teal</string>
+    <string name="theme_indigo_orange_title">Indigo/Orange</string>
+    <string name="theme_orange_light_blue_title">Orange/Light Blue</string>
+    <string name="theme_purple_green_title">Purple/Green</string>
+    <string name="theme_red_yellow_title">Red/Yellow</string>
+    <string name="theme_teal_lime_title">Teal/Lime</string>
+    <string name="fragment_match_lobby_title">Lobby</string>
+    <string name="logout">Logout</string>
+    <string name="create_match_button_title">Create match</string>
+    <string name="create_match_dialog_title">Create match</string>
+    <string name="create_match_dialog_match_name_hint">Match name</string>
+    <string name="join_match_button_title">Join</string>
+    <string name="difficulty_easy_title">Easy</string>
+    <string name="difficulty_medium_title">Medium</string>
+    <string name="difficulty_hard_title">Hard</string>
+    <string name="match_mode_ffa_title">Free for all</string>
+    <string name="match_mode_coop_title">Coop</string>
+    <string name="match_mode_solo_title">Solo</string>
 </resources>

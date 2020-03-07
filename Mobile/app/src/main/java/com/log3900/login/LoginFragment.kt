@@ -22,7 +22,7 @@ import com.log3900.utils.ui.KeyboardHelper
 
 class LoginFragment : Fragment(), LoginView {
     // Services
-    private val loginPresenter = LoginPresenter(this)
+    private var loginPresenter: LoginPresenter? = null
     // UI Elements
     private lateinit var loginButton: MaterialButton
     private lateinit var usernameTextInput: TextInputEditText
@@ -39,6 +39,9 @@ class LoginFragment : Fragment(), LoginView {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_login, container, false)
         setupUIElements(root)
+
+        loginPresenter = LoginPresenter(this)
+
         return root
     }
 
@@ -69,22 +72,22 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun onUsernameChange() {
-        loginPresenter.validateUsername(usernameTextInput.text.toString())
+        loginPresenter?.validateUsername(usernameTextInput.text.toString())
     }
 
     private fun onPasswordChange() {
-        loginPresenter.validatePassword(passwordTextInput.text.toString())
+        loginPresenter?.validatePassword(passwordTextInput.text.toString())
     }
 
     override fun onResume() {
         super.onResume()
-        loginPresenter.resume()
+        loginPresenter?.resume()
     }
 
     private fun onLoginButtonClick() {
         KeyboardHelper.hideKeyboard(activity as Activity)
 
-        loginPresenter.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
+        loginPresenter?.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
     }
 
     private fun onRegisterButtonClick() {
@@ -154,8 +157,9 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun onDestroy() {
-        loginPresenter.destroy()
+        loginPresenter?.destroy()
         super.onDestroy()
+        loginPresenter = null
     }
 
     override fun navigateTo(target: Class<*>, intentFlags: Int?) {

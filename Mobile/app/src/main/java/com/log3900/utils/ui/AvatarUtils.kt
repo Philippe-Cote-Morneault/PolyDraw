@@ -1,10 +1,7 @@
 package com.log3900.utils.ui
 
-import android.content.res.Resources
-import androidx.core.content.res.ResourcesCompat
 import com.log3900.R
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
 
 /**
  * Returns the ID of the pictureID from the corresponding index
@@ -24,11 +21,3 @@ fun getAvatarID(index: Int): Int {
  * @sample avatarView.setImageResource(getAccountAvatarID(myAccount))
  */
 fun getAccountAvatarID(account: Account): Int = getAvatarID(account.pictureID)
-
-/**
- * Returns the ID of the current [Account]'s avatar
- */
-fun getCurrentAccountAvatarID(): Int {
-    val current = AccountRepository.getAccount()
-    return getAccountAvatarID(current)
-}

@@ -1,6 +1,5 @@
 package com.log3900.profile.matchhistory
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View

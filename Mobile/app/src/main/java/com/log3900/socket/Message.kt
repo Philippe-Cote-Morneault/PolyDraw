@@ -1,9 +1,10 @@
 package com.log3900.socket
 
-enum class Event(var eventType: Byte) {
+enum class Event(var eventType: Int) {
     SOCKET_CONNECTION(0),
     SERVER_RESPONSE(1),
     CLIENT_DISCONNECT(2),
+    DISCONNEECTED_BY_SERVER(3),
     HEALTH_CHECK_SERVER(9),
     HEALTH_CHECK_CLIENT(10),
     MESSAGE_SENT(20),
@@ -21,6 +22,20 @@ enum class Event(var eventType: Byte) {
     DRAW_END_SERVER(35),
     DRAW_PREVIEW_REQUEST(36),   // TODO: Remove, test purposes only
     DRAW_PREVIEW_RESPONSE(37),  // TODO: Remove, test purposes only
+    JOIN_GROUP_REQUEST(40),
+    JOIN_GROUP_RESPONSE(41),
+    USER_JOINED_GROUP(43),
+    LEAVE_GROUP_REQUEST(44),
+    USER_LEFT_GROUP(45),
+    START_MATCH(48),
+    START_MATCH_RESPONSE(49),
+    GROUP_CREATED(51),
+    GROUP_DELETED(53),
+    MATCH_ABOUT_TO_START(61),
+    READY_TO_PLAY_MATCH(62),
+    MATCH_STARTING(63),
+    ACHIEVEMENT_RECEIVED(101),
+    SERVER_ERROR(255)
 }
 
 data class Message(var type: Event, var data: ByteArray)

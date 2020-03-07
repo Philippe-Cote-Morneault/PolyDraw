@@ -1,10 +1,12 @@
 package com.log3900.chat
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -15,13 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
-import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.chat.ui.MessageAdapter
+import com.log3900.user.account.AccountRepository
 import java.util.*
 
 class ChatFragment : Fragment(), ChatView {
     // Services
-    private lateinit var chatPresenter: ChatPresenter
+    private var chatPresenter: ChatPresenter? = null
     // UI elements
     private lateinit var messagesRecyclerView: RecyclerView
     private lateinit var messagesViewAdapter: MessageAdapter
@@ -63,10 +65,10 @@ class ChatFragment : Fragment(), ChatView {
             val heightDiff = rootView.rootView.height - rootView.height
             val pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200f, context?.resources?.displayMetrics)
             if (heightDiff > pixels) {
-                chatPresenter.onKeyboardChange(true)
+                chatPresenter?.onKeyboardChange(true)
             }
             else {
-                chatPresenter.onKeyboardChange(false)
+                chatPresenter?.onKeyboardChange(false)
             }
         }
 
@@ -76,12 +78,12 @@ class ChatFragment : Fragment(), ChatView {
         toolbar = rootView.findViewById(R.id.fragment_chat_top_layout)
         toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
 
-        toolbar.setNavigationOnClickListener {chatPresenter.handleNavigationDrawerClick()}
+        toolbar.setNavigationOnClickListener {chatPresenter?.handleNavigationDrawerClick()}
     }
 
     private fun setupMessagesRecyclerView(rootView: View) {
         messagesRecyclerView = rootView.findViewById(R.id.fragment_chat_message_recycler_view)
-        messagesViewAdapter = MessageAdapter(LinkedList(), activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)?.getString(getString(R.string.preference_file_username_key), "nil")!!)
+        messagesViewAdapter = MessageAdapter(LinkedList(), AccountRepository.getInstance().getAccount().username)
         messagesRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -91,7 +93,7 @@ class ChatFragment : Fragment(), ChatView {
         val scrollListener = object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                chatPresenter.scrolledToPositions(viewManager.findFirstVisibleItemPosition(), viewManager.findLastVisibleItemPosition(), dy)
+                chatPresenter?.scrolledToPositions(viewManager.findFirstVisibleItemPosition(), viewManager.findLastVisibleItemPosition(), dy)
             }
         }
 
@@ -104,17 +106,17 @@ class ChatFragment : Fragment(), ChatView {
         messageInput.text?.clear()
         if (messageText != "" && messageText.trim().length > 0)
         {
-            chatPresenter.sendMessage(messageText.trim())
+            chatPresenter?.sendMessage(messageText.trim())
         }
     }
 
     private fun onMessageTextInputClick(v: View) {
-        messagesViewAdapter.scrollToBottom()
+        messagesViewAdapter.smoothScrollToBottom()
     }
 
     override fun onResume() {
         super.onResume()
-        chatPresenter.resume()
+        chatPresenter?.resume()
     }
 
     override fun openNavigationDrawer() {
@@ -147,8 +149,12 @@ class ChatFragment : Fragment(), ChatView {
         musicPlayer.start()
     }
 
-    override fun scrollMessage() {
-        messagesViewAdapter.scrollToBottom()
+    override fun scrollMessage(smooth: Boolean) {
+        if (smooth) {
+            messagesViewAdapter.smoothScrollToBottom()
+        } else {
+            messagesViewAdapter.scrollToBottom()
+        }
     }
 
     override fun showProgressDialog(dialog: DialogFragment) {
@@ -162,4 +168,11 @@ class ChatFragment : Fragment(), ChatView {
     override fun notifyMessagesPrepended(count: Int) {
         messagesViewAdapter.prependMessages(count)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        chatPresenter?.destroy()
+        chatPresenter = null
+    }
+
 }

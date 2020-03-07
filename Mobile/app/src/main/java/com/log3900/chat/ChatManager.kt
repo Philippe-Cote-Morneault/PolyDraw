@@ -8,19 +8,11 @@ import android.os.Looper
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelManager
 import com.log3900.chat.Message.MessageManager
-import com.log3900.chat.Message.MessageRepository
-import com.log3900.chat.Message.ReceivedMessage
-import com.log3900.shared.architecture.EventType
-import com.log3900.shared.architecture.MessageEvent
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import org.greenrobot.eventbus.EventBus
-import java.lang.Exception
 import java.util.*
-import java.util.concurrent.CountDownLatch
-import kotlin.collections.ArrayList
+import kotlin.NoSuchElementException
 
 class ChatManager : Service() {
     private var channelManager: ChannelManager? = null
@@ -77,18 +69,54 @@ class ChatManager : Service() {
     override fun onDestroy() {
         super.onDestroy()
         instance = null
+        isReady = false
+        channelManager?.delete()
+        messageManager?.delete()
+        channelManager = null
+        messageManager = null
     }
 
-    fun setActiveChannel(channel: Channel) {
-        channelManager?.activeChannel = channel
-        EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, channel))
+    fun openChat() {
+        if (channelManager?.previousChannel != null) {
+            setActiveChannel(channelManager?.previousChannel)
+        } else {
+            setActiveChannel(channelManager?.getDefaultChannel())
+        }
     }
 
-    fun getActiveChannel(): Channel {
-        return channelManager?.activeChannel!!
+    fun closeChat() {
+        channelManager?.previousChannel = channelManager?.activeChannel
+        setActiveChannel(null)
     }
 
-    fun getCurrentChannelMessages(): Single<LinkedList<ChatMessage>> = messageManager?.getMessages(channelManager?.activeChannel!!)!!
+    fun setActiveChannel(channel: Channel?) {
+        if (channel != null) {
+            channelManager?.previousChannel = channel
+        }
+        channelManager?.changeActiveChannel(channel)
+    }
+
+    fun onChannelClicked(channel: Channel) {
+        if (channelManager?.joinedChannels?.contains(channel)!!) {
+            setActiveChannel(channel)
+        } else {
+            throw IllegalArgumentException("")
+        }
+    }
+
+    fun getActiveChannel(): Channel? {
+        return channelManager?.activeChannel
+    }
+
+    fun getCurrentChannelMessages(): Single<LinkedList<ChatMessage>>{
+        if (channelManager?.activeChannel != null) {
+            return messageManager?.getMessages(channelManager?.activeChannel!!)!!
+        } else {
+            return Single.create {
+                it.onError(NoSuchElementException())
+            }
+        }
+    }
 
     fun sendMessage(message: String) {
         messageManager?.sendMessage(channelManager?.activeChannel?.ID!!, message)
@@ -123,12 +151,14 @@ class ChatManager : Service() {
         channelManager?.deleteChannel(channel)
     }
 
+    fun getUnreadMessages(): HashMap<UUID, Int> {
+        return channelManager?.getUnreadMessage()!!
+    }
 
     private fun setReadyState() {
         isReady = true
         isReadySignal.onNext(true)
     }
-
 
     inner class ChatManagerBinder : Binder() {
         fun getService(): ChatManager = this@ChatManager

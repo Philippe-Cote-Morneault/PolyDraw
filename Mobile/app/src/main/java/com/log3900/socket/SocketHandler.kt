@@ -3,11 +3,10 @@ package com.log3900.socket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ProcessLifecycleOwner
 import java.io.*
-import java.lang.Exception
-import java.net.*
+import java.net.InetSocketAddress
+import java.net.Socket
+import java.net.SocketException
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -153,21 +152,25 @@ object SocketHandler {
                 totalReadBytes += amountRead
             }
 
-            val type = Event.values().find { it.eventType == typeByte }
+            val type = Event.values().find { it.eventType == typeByte.toInt() }
                 ?: return
 
             val message = Message(type, values)
 //            Log.d("DRAW", message.toString())
 
             if (message.type == Event.HEALTH_CHECK_SERVER) {
+                Log.d("Healthcheck", "Received server healthcheck")
                 onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
+                Log.d("Healthcheck", "Sent healthcheck response")
                 socketHealthcheckTimer.cancel()
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
+                    Log.d("Healthcheck", "Timer expired")
                     handlerError()
                 }, 6000)
             }
             else if (messageReadListener != null) {
+                Log.d("POTATO", "New socket message of type ${message.type}")
                 val msg = android.os.Message()
                 msg.obj = message
                 messageReadListener?.sendMessage(msg)
@@ -184,12 +187,15 @@ object SocketHandler {
     }
 
     private fun handlerError() {
+        Log.d("Healthcheck", "handlerError()")
         if (state.get() == State.DISCONNECTING) {
+            Log.d("Healthcheck", "State.Disconnecting")
             state.set(State.DISCONNECTED)
             readMessages.set(false)
             disconnectionErrorListener?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
         }
         else if (state.get() == State.CONNECTED) {
+            Log.d("Healthcheck", "State.conntected")
             state.set(State.ERROR)
             socketHealthcheckTimer.cancel()
             readMessages.set(false)
