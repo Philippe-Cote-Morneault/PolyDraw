@@ -48,6 +48,15 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public MainWindow MainWindow
+        {
+            get
+            {
+                return (MainWindow)Application.Current.MainWindow;
+            }
+        }
+
+
         public HomeViewModel HomeViewModel
         {
             get
@@ -71,7 +80,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-
         public override void AfterLogin()
         {
             throw new NotImplementedException();
@@ -94,6 +102,7 @@ namespace ClientLourd.ViewModels
 
         public void LeaveLobby()
         {
+            
             CurrentLobby = null;
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
             HomeViewModel.FetchLobbies();

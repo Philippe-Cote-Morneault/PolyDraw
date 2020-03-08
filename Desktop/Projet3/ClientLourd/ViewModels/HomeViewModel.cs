@@ -262,14 +262,31 @@ namespace ClientLourd.ViewModels
                 var lobbyDeletedArgs = (LobbyEventArgs)e;
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
+                //TODO
 
-                var lobbyDeleted = Lobbies.Single(lobby => lobby.ID == lobbyDeletedID);
+                var lobbyToDelete = FindLobby(lobbyDeletedID);
+                //var lobbyDeleted = Lobbies.Single(lobby => lobby.ID == lobbyDeletedID);
 
-                Lobbies.Remove(lobbyDeleted);
+                if (lobbyToDelete != null)
+                {
+                    Lobbies.Remove(lobbyToDelete);
+                }
                 FetchLobbies();
             });
         }
 
+
+        private Lobby FindLobby(string lobbyID)
+        {
+            foreach(Lobby lobby in Lobbies)
+            {
+                if (lobby.ID == lobbyID)
+                {
+                    return lobby;
+                }
+            }
+            return null;
+        }
 
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
