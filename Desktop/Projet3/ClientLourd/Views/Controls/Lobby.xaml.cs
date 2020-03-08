@@ -76,14 +76,15 @@ namespace ClientLourd.Views.Controls
             var userLeftLobbyArgs = (LobbyEventArgs)e;
 
             Application.Current.Dispatcher.Invoke(() =>
-            {
-                if (SessionInformations.User.ID == userLeftLobbyArgs.UserID || CurrentLobby.HostID == userLeftLobbyArgs.UserID)
+            {    
+                if (SessionInformations.User.ID == userLeftLobbyArgs.UserID || (CurrentLobby != null && CurrentLobby.HostID == userLeftLobbyArgs.UserID))
                 {
                    
                     ChatContainer.Child = null;
                     MainWindow.ChatToggleButton.IsEnabled = true;
                     MainWindow.RightDrawerContent.Children.Add(MainWindow.ChatBox);
                 }
+                
             });
         }
 
