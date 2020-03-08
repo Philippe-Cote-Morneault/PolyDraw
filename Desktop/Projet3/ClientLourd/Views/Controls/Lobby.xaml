@@ -47,15 +47,15 @@
                                     <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
                                 </materialDesign:Chip.Icon>
                             </materialDesign:Chip>
-                            <!--<materialDesign:PackIcon Foreground="Gold" ToolTip="Host" Width="40" Height="30" Kind="Crown">
+                            <materialDesign:PackIcon Foreground="Gold" ToolTip="Host" Width="40" Height="30" Kind="Crown">
                                 <materialDesign:PackIcon.Visibility>
-                                    <MultiBinding Converter="{StaticResource StringComparatorToVisibility}">
-                                        <Binding ElementName="DataContext" Path="SessionInformations.User.ID" ></Binding>
+                                    <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
+                                        <Binding Path="User.ID" ></Binding>
                                         <Binding ElementName="DataContext" Path="CurrentLobby.HostID" UpdateSourceTrigger="PropertyChanged"></Binding>
                                     </MultiBinding>
                                 </materialDesign:PackIcon.Visibility>
-                                
-                            </materialDesign:PackIcon>-->
+
+                            </materialDesign:PackIcon>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
