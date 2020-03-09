@@ -155,5 +155,11 @@ namespace ClientLourd
         {
             DialogHost.Show(new GameCreationDialog(), "Default");
         }
+
+        private void LeaveLobby(object sender, RoutedEventArgs e)
+        {
+            (Lobby.DataContext as LobbyViewModel).LeaveLobby();
+        }
+
     }
 }

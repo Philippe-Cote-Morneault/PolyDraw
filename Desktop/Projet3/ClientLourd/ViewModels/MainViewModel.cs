@@ -18,7 +18,7 @@ namespace ClientLourd.ViewModels
     class MainViewModel : ViewModelBase
     {
         string _containedView;
-       
+        
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
 
@@ -218,6 +218,22 @@ namespace ClientLourd.ViewModels
         {
             SoundService.ToggleSound();
         }
+
+        /*
+        private RelayCommand<object> _leaveLobbyCommand;
+
+        public ICommand LeaveLobbyCommand
+        {
+            get
+            {
+                return _leaveLobbyCommand ?? (_leaveLobbyCommand = new RelayCommand<object>(obj => LeaveLobby()));
+            }
+        }
+
+        private void LeaveLobby()
+        {
+            SocketClient.SendMessage();
+        }*/
 
     }
 }

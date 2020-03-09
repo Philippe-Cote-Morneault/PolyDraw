@@ -405,6 +405,8 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\WordGuessRight.wav" />
+    <None Include="Resources\WordGuessedWrong.wav" />
     <Resource Include="Resources\treasure.png" />
     <Resource Include="Resources\swords.png" />
     <Resource Include="Resources\sword.png" />

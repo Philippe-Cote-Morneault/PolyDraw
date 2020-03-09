@@ -45,11 +45,17 @@ namespace ClientLourd.Services.SoundService
 
         public void PlayWordGuessedRight() 
         {
-            //TODO
+            if (SoundIsOn)
+            {
+                new SoundPlayer(Properties.Resources.WordGuessedRight).Play();
+            }
         }
         public void PlayWordGuessedWrong()
         {
-            //TODO
+            if (SoundIsOn)
+            {
+                new SoundPlayer(Properties.Resources.WordGuessedWrong).Play();
+            }
         }
 
 

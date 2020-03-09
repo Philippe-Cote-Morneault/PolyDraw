@@ -21,7 +21,7 @@ namespace ClientLourd
         {
             e.Handled = true;
             try
-            {
+            {   
                 await DialogHost.Show(new ClosableErrorDialog($"{e.Exception.Message} The application will close."));
             }
             catch

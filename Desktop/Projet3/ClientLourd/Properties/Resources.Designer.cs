@@ -298,5 +298,23 @@ namespace ClientLourd.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream WordGuessedRight {
+            get {
+                return ResourceManager.GetStream("WordGuessedRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream WordGuessedWrong {
+            get {
+                return ResourceManager.GetStream("WordGuessedWrong", resourceCulture);
+            }
+        }
     }
 }

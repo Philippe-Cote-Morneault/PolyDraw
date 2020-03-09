@@ -13,6 +13,7 @@ using ClientLourd.Models.NonBindable;
 using ClientLourd.Utilities.Enums;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Views.Dialogs;
+using ClientLourd.Services.SoundService;
 
 namespace ClientLourd.ViewModels
 {
@@ -102,7 +103,6 @@ namespace ClientLourd.ViewModels
 
         public void LeaveLobby()
         {
-            
             CurrentLobby = null;
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
             HomeViewModel.FetchLobbies();

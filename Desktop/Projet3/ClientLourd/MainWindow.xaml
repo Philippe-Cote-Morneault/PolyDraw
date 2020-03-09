@@ -59,9 +59,29 @@
                     <DockPanel>
                         <!-- Hamburger menu toggle -->
                         <ToggleButton DockPanel.Dock="Left"
+                                      Visibility="{Binding ElementName=LeaveButton, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}"
                                       Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                       HorizontalAlignment="Right" Margin="16"
-                                      Name="MenuToggleButton" />
+                                      Name="MenuToggleButton">
+                        </ToggleButton>
+                        <!--Back arrow for lobbies and game-->
+                        <materialDesign:PackIcon
+                            Foreground="{StaticResource MaterialDesignDarkForeground}"
+                            Kind="ArrowLeft"
+                            Height="36"
+                            Width="36"
+                            Background="{StaticResource PrimaryHueMidBrush}"
+                            DockPanel.Dock="Left"
+                            Name="LeaveButton"
+                            Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}"
+                            ToolTip="Leave the lobby"
+                            Margin="16"
+                            Cursor="Hand"
+                            MouseUp="LeaveLobby"
+                       />
+
+
+
 
                         <!-- Use for hiding the button when the chat is export-->
                         <Grid DockPanel.Dock="Right"
@@ -177,7 +197,7 @@
                         </DockPanel>
 
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">
-                            <controls:Lobby/>
+                            <controls:Lobby x:Name="Lobby"/>
                         </DockPanel>
 
                         <DockPanel Width="{Binding ElementName=Drawer, Path=ActualWidth}" Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Game'}">
