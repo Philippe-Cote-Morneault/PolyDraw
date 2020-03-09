@@ -317,7 +317,9 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
 					Response: true,
 				})
-				socket.SendRawMessageToSocketID(rawMessage, socketID)
+				for _, v := range g.groups[groupDB.ID] {
+					go socket.SendRawMessageToSocketID(rawMessage, v)
+				}
 				message := socket.RawMessage{}
 				uuidBytes, _ := groupDB.ID.MarshalBinary()
 				message.ParseMessage(byte(socket.MessageType.ResponseGroupRemoved), uint16(len(uuidBytes)), uuidBytes)
