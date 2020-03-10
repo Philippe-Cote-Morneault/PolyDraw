@@ -46,6 +46,10 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 		match.Init(connections, gameInfo)
 		m.matches[groupID] = match
 
+		for i := range connections {
+			m.assignment[connections[i]] = groupID
+		}
+
 		m.sendWelcome(groupID) //Send welcome message to all the users
 
 		go match.Start() //Start the match in its own thread
