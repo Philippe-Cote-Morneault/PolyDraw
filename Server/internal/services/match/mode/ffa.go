@@ -43,8 +43,8 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.isRunning = true
 	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
-
-	drawing.RegisterGame(f)
+	f.scores = make([]int, len(f.players))
+	//drawing.RegisterGame(f)
 }
 
 //Start the game mode
@@ -53,7 +53,7 @@ func (f *FFA) Start() {
 	f.waitForPlayers()
 
 	//Generate players positions
-	f.setOrder()
+	f.SetOrder()
 
 	//We can start the game loop
 	log.Printf("[Match] [FFA] -> Starting gameloop Match: %s", f.info.ID)
@@ -275,14 +275,14 @@ func (f *FFA) findWord() string {
 	return word
 }
 
-func (f *FFA) setOrder() {
+func (f *FFA) SetOrder() {
 	choices := make([]int, len(f.players))
 	f.order = make([]int, 0, len(f.players))
 	for i := range f.players {
 		choices[i] = i
 	}
 
-	for i := len(choices) - 1; i <= 0; i-- {
+	for i := len(choices); i > 0; i-- {
 		choicePos := f.rand.Intn(i)
 		userPos := sliceutils.PopInt(&choices, choicePos)
 
