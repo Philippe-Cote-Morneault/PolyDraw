@@ -20,6 +20,8 @@ using ClientLourd.Utilities.Commands;
 using ClientLourd.ViewModels;
 using ClientLourd.Views.Dialogs;
 using ClientLourd.Views.Windows;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Services.EnumService;
 
 namespace ClientLourd
 {
@@ -33,6 +35,7 @@ namespace ClientLourd
             InitializeComponent();
             ((MainViewModel) DataContext).UserLogout += OnUserLogout;
             ((LoginViewModel) LoginScreen.DataContext).LoggedIn += OnLoggedIn;
+            SetLanguageDictionary();
         }
 
         private void OnLoggedIn(object source, EventArgs args)
@@ -159,6 +162,44 @@ namespace ClientLourd
         private void LeaveLobby(object sender, RoutedEventArgs e)
         {
             (Lobby.DataContext as LobbyViewModel).LeaveLobby();
+        }
+
+
+        private void SetLanguageDictionary()
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            switch (Thread.CurrentThread.CurrentCulture.ToString())
+            {
+                case "en-US":
+                    dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
+                    ((MainViewModel)DataContext).SelectedLanguage = Languages.EN.GetDescription();
+                    break;
+                case "fr-CA":
+                    dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
+                    ((MainViewModel)DataContext).SelectedLanguage = Languages.FR.GetDescription();
+                    break;
+                default:
+                    dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
+                    ((MainViewModel)DataContext).SelectedLanguage = Languages.EN.GetDescription();
+                    break;
+            }
+            Resources.MergedDictionaries.Add(dict);
+            LanguageSelector.SelectionChanged += ChangeLang;
+        }
+
+        public void ChangeLang(object sender, EventArgs e)
+        {
+            ComboBox cmb = sender as ComboBox;
+            string languageSelected = cmb.SelectedItem.ToString();
+            ResourceDictionary dict = new ResourceDictionary();
+
+            if (languageSelected == Languages.EN.GetDescription())
+                dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
+            
+            if (languageSelected == Languages.FR.GetDescription())
+                dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
+            
+            Resources.MergedDictionaries[0] = dict;
         }
 
     }

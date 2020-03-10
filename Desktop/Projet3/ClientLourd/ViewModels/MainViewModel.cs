@@ -12,6 +12,8 @@ using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Enums;
 using System.Media;
 using ClientLourd.Services.SoundService;
+using ClientLourd.Services.EnumService;
+using System.Collections.Generic;
 
 namespace ClientLourd.ViewModels
 {
@@ -219,21 +221,27 @@ namespace ClientLourd.ViewModels
             SoundService.ToggleSound();
         }
 
-        /*
-        private RelayCommand<object> _leaveLobbyCommand;
+        private Languages _selectedLanguage;
 
-        public ICommand LeaveLobbyCommand
+        public string SelectedLanguage
         {
             get
             {
-                return _leaveLobbyCommand ?? (_leaveLobbyCommand = new RelayCommand<object>(obj => LeaveLobby()));
+                return _selectedLanguage.GetDescription();
+            }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    _selectedLanguage = value.GetEnumFromDescription<Languages>();
+                    NotifyPropertyChanged();
+                }
             }
         }
 
-        private void LeaveLobby()
+        public List<string> Languages
         {
-            SocketClient.SendMessage();
-        }*/
-
+            get { return EnumManager.GetAllDescriptions<Languages>(); }
+        }
     }
 }
