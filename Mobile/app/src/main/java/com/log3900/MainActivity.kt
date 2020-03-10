@@ -129,7 +129,6 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        Log.d("POTATO", "MainActivity::onSupportNavigationUp")
         return navigationController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
@@ -158,17 +157,10 @@ open class MainActivity : AppCompatActivity() {
         //logout()
     //}
 
-    fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
-        /*if (navigationController.currentDestination?.id != destinationID) {
-            if (!keepBackstack) {
-                navigationController.popBackStack(
-                    navigationController.currentDestination!!.id,
-                    false
-                )
-            }
-            navigationController.navigate(destinationID)
-            menuItem?.setChecked(true)
-        }*/
+    fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean = true) {
+        if (!keepBackstack) {
+            navigationController.popBackStack()
+        }
         navigationController.navigate(destinationID)
     }
 
