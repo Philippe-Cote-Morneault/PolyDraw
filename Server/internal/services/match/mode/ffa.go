@@ -276,7 +276,7 @@ func (f *FFA) findWord() string {
 }
 
 func (f *FFA) setOrder() {
-	choices := make([]int, 0, len(f.players))
+	choices := make([]int, len(f.players))
 	f.order = make([]int, 0, len(f.players))
 	for i := range f.players {
 		choices[i] = i
