@@ -1,7 +1,6 @@
 package com.log3900.draw
 
 import android.os.Handler
-import android.util.Log
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
@@ -15,6 +14,7 @@ import java.util.*
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private val socketService: SocketService = SocketService.instance!!
     var isListening = true
+    val strokeMutex = Mutex()
 
     init {
         socketService.subscribeToMessage(Event.DRAW_START_SERVER, Handler {
@@ -41,13 +41,12 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
-    val mutex = Mutex()
     private fun parseMessageToStroke(data: ByteArray) {
         // Custom single threaded context to draw strokes in order, one by one
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeInfo = DrawingMessageParser.unpackStrokeInfo(data)
-                mutex.withLock {
+                strokeMutex.withLock {
                     drawStrokes(strokeInfo)
                 }
             }
