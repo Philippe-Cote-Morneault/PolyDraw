@@ -233,7 +233,7 @@ func (f *FFA) Close() {
 //GetConnections returns all the socketID of the match
 func (f *FFA) GetConnections() []uuid.UUID {
 	connections := make([]uuid.UUID, 0, len(f.players))
-	for i := range connections {
+	for i := range f.players {
 		connections = append(connections, f.players[i].socketID)
 	}
 	return connections
