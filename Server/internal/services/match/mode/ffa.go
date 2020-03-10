@@ -44,7 +44,8 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
 	f.scores = make([]int, len(f.players))
-	//drawing.RegisterGame(f)
+
+	drawing.RegisterGame(f)
 }
 
 //Start the game mode
