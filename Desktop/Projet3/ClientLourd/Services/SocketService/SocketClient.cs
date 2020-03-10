@@ -207,26 +207,37 @@ namespace ClientLourd.Services.SocketService
                             OnLobbyDeleted(this, new LobbyEventArgs(data));
                             break;
                         case SocketMessageTypes.ReadyToStart:
+                            OnMatchReadyToStart(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.MatchStarted:
+                            OnMatchStarted(this);
                             break;
                         case SocketMessageTypes.MatchEnd:
+                            OnMatchEnded(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.PlayerLeftMatch:
+                            OnPlayerLeftMatch(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.NewDrawer:
+                            OnNewPlayerIsDrawing(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.YourTurnToDraw:
+                            OnYourTurnToDraw(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.TimesUp:
+                            OnMatchTimesUp(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.MatchSync:
+                            OnMatchSync(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.GuessResponse:
+                            OnGuessResponse(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.PlayerGuessed:
+                            OnPlayerGuessedTheWord(this, new MatchEventArgs(data));
                             break;
                         case SocketMessageTypes.MatchCheckPoint:
+                            OnMatchCheckPoint(this, new MatchEventArgs(data));
                             break;
                         
                         
