@@ -2,5 +2,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="test">Salut</system:String>
-    
+
+    <!--Profile.xaml-->
+    <system:String x:Key="WelcomeProfile">Bienvenue sur votre profil!</system:String>
+    <system:String x:Key="EditProfile">Modifier mon profil</system:String>
+    <system:String x:Key="ViewConnections">Historique des connexions</system:String>
+    <system:String x:Key="ViewGamesPlayed">Historique des parties jouées</system:String>
+    <system:String x:Key="Statistics">Statistiques</system:String>
+    <system:String x:Key="NumberGamesPlayed">Nombre de parties jouées:</system:String>
+    <system:String x:Key="WinPercentage">Pourcentage de victoires:</system:String>
+    <system:String x:Key="TimePlayed">Temps joué:</system:String>
+    <system:String x:Key="AverageGameDuration">Temps moyen d'une partie:</system:String>
+    <system:String x:Key="BestSoloScore">Meilleur score solo:</system:String>
+    <system:String x:Key="Achievements">Trophés</system:String>
+
 </ResourceDictionary>

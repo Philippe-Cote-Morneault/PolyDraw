@@ -80,9 +80,6 @@
                             MouseUp="LeaveLobby"
                        />
 
-
-
-
                         <!-- Use for hiding the button when the chat is export-->
                         <Grid DockPanel.Dock="Right"
                               Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
