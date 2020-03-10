@@ -7,6 +7,7 @@ func PopInt(a *[]int, i int) int {
 	value := (*a)[i]
 	(*a)[i] = (*a)[lastElement]
 	(*a)[lastElement] = -1
+	*a = (*a)[:lastElement]
 
 	return value
 }
