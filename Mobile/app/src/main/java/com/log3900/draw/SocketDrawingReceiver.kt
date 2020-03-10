@@ -14,6 +14,7 @@ import java.util.*
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private val socketService: SocketService = SocketService.instance!!
+    var isListening = true
 
     init {
         socketService.subscribeToMessage(Event.DRAW_START_SERVER, Handler {
@@ -29,8 +30,10 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         })
 
         socketService.subscribeToMessage(Event.STROKE_DATA_SERVER, Handler {
-            val message = it.obj as Message
-            parseMessageToStroke(message.data)
+            if (isListening) {
+                val message = it.obj as Message
+                parseMessageToStroke(message.data)
+            }
             true
         })
 
@@ -38,7 +41,6 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
-    val strokeContext = newSingleThreadContext("StrokeContext")
     val mutex = Mutex()
     private fun parseMessageToStroke(data: ByteArray) {
         // Custom single threaded context to draw strokes in order, one by one
