@@ -20,6 +20,9 @@ enum class EventType {
     PLAYER_JOINED_GROUP,
     PLAYER_LEFT_GROUP,
     LEAVE_GROUP,
+    // Match
+    MATCH_ABOUT_TO_START,
+    MATCH_START_RESPONSE,
     // Session
     LOGOUT,
 
