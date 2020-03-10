@@ -7,6 +7,9 @@ import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.utils.format.UUIDUtils
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.lang.Long.max
 import java.util.*
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
@@ -35,11 +38,16 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
+    val strokeContext = newSingleThreadContext("StrokeContext")
+    val mutex = Mutex()
     private fun parseMessageToStroke(data: ByteArray) {
+        // Custom single threaded context to draw strokes in order, one by one
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeInfo = DrawingMessageParser.unpackStrokeInfo(data)
-                drawStrokes(strokeInfo)
+                mutex.withLock {
+                    drawStrokes(strokeInfo)
+                }
             }
         }
     }
@@ -48,7 +56,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         val (strokeID, userID, paintOptions, points) = strokeInfo
         drawView.setOptions(paintOptions)
 
-        val time = (20 / points.size).toLong()
+        val time = max((20 / points.size).toLong(), 1)  // TODO: Validate delay
         drawView.drawStart(points.first())
         delay(time)
 
