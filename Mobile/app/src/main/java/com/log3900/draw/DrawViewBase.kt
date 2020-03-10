@@ -75,14 +75,18 @@ class DrawViewBase @JvmOverloads constructor(
 //        }
     }
 
-    fun toggleCanDraw() {
-        canDraw = !canDraw
+    fun enableCanDraw(canDrawOnCanvas: Boolean) {
+        canDraw = canDrawOnCanvas
 
-        if (!::socketDrawingReceiver.isInitialized) {
-            socketDrawingReceiver = SocketDrawingReceiver(this)
+        if (canDraw) {
+            if (!::socketDrawingReceiver.isInitialized) {
+                socketDrawingReceiver = SocketDrawingReceiver(this)
+            }
+            // If we cannot draw, we want to receive strokes from the server
+            socketDrawingReceiver.isListening = !canDraw
+        } else {
+            // TODO: Set socketDrawingSender
         }
-        // If we cannot draw, we want to receive strokes from the server
-        socketDrawingReceiver.isListening = !canDraw
     }
 
     fun drawStart(start: DrawPoint) {

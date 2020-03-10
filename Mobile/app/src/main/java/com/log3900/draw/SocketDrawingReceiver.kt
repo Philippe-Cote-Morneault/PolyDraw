@@ -14,7 +14,7 @@ import java.util.*
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private val socketService: SocketService = SocketService.instance!!
     var isListening = true
-    val strokeMutex = Mutex()
+    private val strokeMutex = Mutex()
 
     init {
         socketService.subscribeToMessage(Event.DRAW_START_SERVER, Handler {
