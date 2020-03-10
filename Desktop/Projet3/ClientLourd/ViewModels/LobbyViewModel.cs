@@ -170,7 +170,12 @@ namespace ClientLourd.ViewModels
 
         private bool UserIsHost()
         {
-            return CurrentLobby.HostID == SessionInformations.User.ID;
+            if (SessionInformations != null && SessionInformations.User !=  null)
+            {
+                return CurrentLobby.HostID == SessionInformations.User.ID;
+            }
+            
+            return false;
         }
 
         private RelayCommand<object> _startGameCommand;
