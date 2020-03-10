@@ -80,7 +80,7 @@ namespace ClientLourd.Views.Controls
                 if (SessionInformations.User.ID == userLeftLobbyArgs.UserID || (CurrentLobby != null && CurrentLobby.HostID == userLeftLobbyArgs.UserID))
                 {
                    
-                    ChatContainer.Child = null;
+                    ChatContainer.Content = null;
                     MainWindow.ChatToggleButton.IsEnabled = true;
                     MainWindow.RightDrawerContent.Children.Add(MainWindow.ChatBox);
                 }
@@ -93,7 +93,7 @@ namespace ClientLourd.Views.Controls
             MainWindow.Drawer.IsRightDrawerOpen = false;
             MainWindow.ChatToggleButton.IsEnabled = false;
             MainWindow.RightDrawerContent.Children.Clear();
-            ChatContainer.Child = MainWindow.ChatBox;
+            ChatContainer.Content = MainWindow.ChatBox;
         }
     }
 }

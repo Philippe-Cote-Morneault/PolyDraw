@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:game="clr-namespace:ClientLourd.Views.Controls.Game"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d" 
              xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
@@ -29,7 +30,7 @@
             <ColumnDefinition Width="4*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Margin="30" Grid.Row="0" Grid.Column="0">
+        <StackPanel Margin="30" Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=IsGameStarted , Converter={StaticResource InverseBoolToVisConverter}}">
             <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{Binding CurrentLobby.GameName}"></TextBlock>
             <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}Mode: {0}}"></TextBlock>
             <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
@@ -80,12 +81,12 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
+        <Grid Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <game:GamePanel/>
+        </Grid>
+        <materialDesign:Card Grid.RowSpan="2" Grid.Row="0" Grid.Column="1" BorderBrush="LightGray" Margin="10" BorderThickness="1" Name="ChatContainer"/>
 
-        <Border Grid.RowSpan="2" Grid.Row="0" Grid.Column="1" BorderBrush="LightGray" Margin="10" BorderThickness="1" Name="ChatContainer">
-            
-        </Border>
-
-        <Grid Grid.Row="1" Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource InverseBoolToVisConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>

@@ -119,6 +119,8 @@
           <e p="swords.png" t="Include" />
           <e p="treasure.png" t="Include" />
           <e p="WhiteLogo.png" t="Include" />
+          <e p="WordGuessedWrong.wav" t="Include" />
+          <e p="WordGuessRight.wav" t="Include" />
         </e>
         <e p="Services" t="Include">
           <e p="CredentialsService" t="Include">
@@ -180,6 +182,7 @@
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
+            <e p="NumberToPlaceholder.cs" t="Include" />
             <e p="SecondsToTimeSpanConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />

@@ -142,7 +142,6 @@ namespace ClientLourd.ViewModels
             //Game end
             else if (e.Type == 2)
             {
-                
             }
         }
 

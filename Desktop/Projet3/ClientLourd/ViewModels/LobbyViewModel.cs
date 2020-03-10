@@ -26,8 +26,19 @@ namespace ClientLourd.ViewModels
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.StartGameResponse += OnStartGameResponse;
+            IsGameStarted = false;
         }
 
+        private bool _isGameStarted;
+        public bool IsGameStarted
+        {
+            get => _isGameStarted;
+            set
+            {
+                _isGameStarted = value;
+                NotifyPropertyChanged();
+            }
+        }
         public SocketClient SocketClient
         {
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
@@ -212,7 +223,7 @@ namespace ClientLourd.ViewModels
                 var gameStartedArgs = (LobbyEventArgs)e;
                 if (gameStartedArgs.Response)
                 {
-                    ContainedView = Utilities.Enums.Views.Game.ToString();
+                    IsGameStarted = true;
                 }
                 else
                 {
