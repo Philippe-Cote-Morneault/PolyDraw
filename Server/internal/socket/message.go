@@ -101,7 +101,7 @@ var MessageType = &messageType{
 	RequestReadyMatch:        62,
 	GameStarting:             63,
 	RequestQuitMatch:         64,
-	PlayerDrawingTurn:        57,
+	PlayerDrawingTurn:        67,
 	PlayerDrawThis:           69,
 	TimeUp:                   71,
 	PlayerSync:               73,
