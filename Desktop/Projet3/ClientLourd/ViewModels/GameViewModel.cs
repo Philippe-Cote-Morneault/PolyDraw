@@ -15,6 +15,7 @@ using ClientLourd.Utilities.Enums;
 using ClientLourd.Views.Controls;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using Lobby = ClientLourd.Models.Bindable.Lobby;
 
 namespace ClientLourd.ViewModels
 {
@@ -71,6 +72,16 @@ namespace ClientLourd.ViewModels
             SocketClient.YourTurnToDraw += SocketClientOnYourTurnToDraw;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+            SocketClient.StartGameResponse += SocketClientOnStartGameResponse;
+        }
+
+        private void SocketClientOnStartGameResponse(object source, EventArgs args)
+        {
+            var gameStartedArgs = (LobbyEventArgs)args;
+            if (gameStartedArgs.Response)
+            {
+                PrepareMatch();
+            }
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
@@ -120,6 +131,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        //TODO delete if never invoke
         private void SocketClientOnMatchReadyToStart(object source, EventArgs args)
         {
             PrepareMatch();
@@ -127,7 +139,7 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchCheckPoint(object source, EventArgs args)
         {
-            throw new NotImplementedException();
+            //TODO
         }
 
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
@@ -156,6 +168,17 @@ namespace ClientLourd.ViewModels
         {
         }
         
+        public Lobby Lobby
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                        ?.CurrentLobby;
+                });
+            }
+        }
         public SessionInformations SessionInformations
         {
             get
@@ -278,13 +301,24 @@ namespace ClientLourd.ViewModels
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.GuessTheWord, new string(Guess)));
         }
 
+        private void ClearCanvas()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Editor.Canvas.Strokes.Clear();
+            });
+        }
+
         private void PrepareMatch()
         {
-            HealthPoint = 3;
-            Guess = new char[20];
-            Editor.Canvas.Strokes.Clear();
-            _stokesReader = new StrokesReader(Editor, SocketClient);                        
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
+            ClearCanvas();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                HealthPoint = 3;
+                Players = Lobby.Players;
+                _stokesReader = new StrokesReader(Editor, SocketClient, ((EditorViewModel)Editor.DataContext).EditorInformation);
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
+            });
         }
 
 

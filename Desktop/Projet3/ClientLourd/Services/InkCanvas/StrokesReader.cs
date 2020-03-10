@@ -38,9 +38,9 @@ namespace ClientLourd.Services.InkCanvas
 
         private EditorInformation _information;
         
-        public StrokesReader(Editor editor, SocketClient socket)
+        public StrokesReader(Editor editor, SocketClient socket, EditorInformation information)
         {
-            _information = ((EditorViewModel)_editor.DataContext).EditorInformation;
+            _information = information;
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
@@ -81,7 +81,6 @@ namespace ClientLourd.Services.InkCanvas
         {
             Stroke stroke = (Stroke) sender;
             stroke.AddPropertyData(GUIDs.ID, _currentStrokeID.ToString());
-            Console.WriteLine(_currentStrokeID.ToString());
             SendStroke(true);
         }
         
