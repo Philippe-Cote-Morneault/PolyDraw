@@ -275,6 +275,7 @@ func (f *FFA) findWord() string {
 	return word
 }
 
+//SetOrder used to change the order
 func (f *FFA) SetOrder() {
 	choices := make([]int, len(f.players))
 	f.order = make([]int, 0, len(f.players))
