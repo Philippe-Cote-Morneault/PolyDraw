@@ -23,6 +23,7 @@ type FFA struct {
 	orderPos       int
 	curLap         int
 	lapsTotal      int
+	realPlayers    int
 	rand           *rand.Rand
 	timeImage      int64
 	isRunning      bool
@@ -45,6 +46,12 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.receivingGuesses = abool.New()
 	f.scores = make([]int, len(f.players))
 
+	f.realPlayers = 0
+	for i := range f.players {
+		if !f.players[i].IsCPU {
+			f.realPlayers++
+		}
+	}
 	drawing.RegisterGame(f)
 }
 
@@ -78,6 +85,8 @@ func (f *FFA) GameLoop() {
 	//Choose a user.
 	curDrawer := f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
+	f.waitingResponse.Add(f.realPlayers)
+
 	f.currentWord = f.findWord()
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawThis), PlayerDrawThis{
