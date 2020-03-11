@@ -2,7 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Timers;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
@@ -17,6 +18,7 @@ using ClientLourd.Views.Controls;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using Lobby = ClientLourd.Models.Bindable.Lobby;
+using Timer = System.Timers.Timer;
 
 namespace ClientLourd.ViewModels
 {
@@ -99,8 +101,14 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnMatchSync(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            _round = e.Laps;
+            Round = e.Laps;
             Time = e.Time;
+            var playersInfo = e.Players;
+            foreach (dynamic info in playersInfo)
+            {
+                var tmpPlayer = Players.First(p => p.User.ID == info["UserID"]);
+                tmpPlayer.Score = info["Points"];
+            }
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
@@ -114,8 +122,7 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-                Players.FirstOrDefault(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
-                //disable canvas
+                //TODO diplay message
             }
         }
 
@@ -131,15 +138,11 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
         {
+            PrepareNextRound();
             var e = (MatchEventArgs) args;
-            ChangeCanvasStatus(false);
-            ClearCanvas();
-            Word = "";
-            Round++;
             //Round end
             if (e.Type == 1)
             {
-                _stokesReader.Stop();    
             }
             //Game end
             else if (e.Type == 2)
@@ -269,7 +272,18 @@ namespace ClientLourd.ViewModels
                        (_sendGuessCommand = new RelayCommand<object>(channel => SendGuess()));
             }
         }
-
+        
+        private void PrepareNextRound()
+        {
+            ChangeCanvasStatus(false);
+            _stokesReader.Stop();
+            Word = "";
+            Task.Run(() =>
+            {
+                Thread.Sleep(100);
+                ClearCanvas();
+            });
+        }
         private void SendGuess()
         {
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.GuessTheWord, new string(Guess)));
