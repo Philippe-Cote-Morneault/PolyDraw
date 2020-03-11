@@ -16,7 +16,7 @@ func RegisterGame(ptr match2.IMatch) {
 
 	instanceRouter.mutex.Lock()
 	for i := range connections {
-		instanceRouter.connections[connections[i]] = &ptr
+		(*instanceRouter).connections[connections[i]] = &ptr
 	}
 	instanceRouter.mutex.Unlock()
 	log.Printf("[Drawing] Registered a match with the following connections %v", connections)
@@ -28,7 +28,7 @@ func UnRegisterGame(ptr match2.IMatch) {
 
 	instanceRouter.mutex.Lock()
 	for i := range connections {
-		delete(instanceRouter.connections, connections[i])
+		delete((*instanceRouter).connections, connections[i])
 	}
 	instanceRouter.mutex.Unlock()
 }
