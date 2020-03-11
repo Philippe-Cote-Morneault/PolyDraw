@@ -83,6 +83,8 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	//Choose a user.
+	f.waitingResponse.Wait()
+
 	curDrawer := f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
 	if curDrawer.IsCPU {
