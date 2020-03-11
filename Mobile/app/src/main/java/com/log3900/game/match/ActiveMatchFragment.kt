@@ -46,7 +46,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
         setupRecyclerView()
 
-        drawFragment = childFragmentManager?.findFragmentById(R.id.fragment_active_match_draw_container) as DrawViewFragment
+        drawFragment = childFragmentManager.findFragmentById(R.id.fragment_active_match_draw_container) as DrawViewFragment
     }
 
     private fun setupRecyclerView() {
