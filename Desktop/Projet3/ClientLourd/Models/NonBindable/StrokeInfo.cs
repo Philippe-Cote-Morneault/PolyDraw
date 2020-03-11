@@ -92,6 +92,7 @@ namespace ClientLourd.Models.NonBindable
                 Array.Reverse(strokeUID);
 
             StrokeID = new Guid(strokeUID);
+            System.Diagnostics.Debug.WriteLine($"Stroke id = {StrokeID}");
         }
 
         private void SetUserID(byte[] userUID)
@@ -113,6 +114,7 @@ namespace ClientLourd.Models.NonBindable
                 int yPoint = BitConverter.ToUInt16(points.Skip(i + 2).Take(2).ToArray(), 0);
                 // if littleEndiant, point X and Y and inversed
                 PointCollection.Add((BitConverter.IsLittleEndian) ? new StylusPoint(yPoint, xPoint) : new StylusPoint(xPoint, yPoint));   
+                System.Diagnostics.Debug.WriteLine($"points <--- [{yPoint}, {xPoint}]");
             }
         }
 

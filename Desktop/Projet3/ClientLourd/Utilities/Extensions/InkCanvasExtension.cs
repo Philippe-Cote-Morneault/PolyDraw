@@ -57,16 +57,10 @@ namespace ClientLourd.Utilities.Extensions
 
         private static void AddPointsToStroke(Stroke stroke, StrokeInfo strokeInfo)
         {
-            /*foreach (StylusPoint sp in strokeInfo.PointCollection.ToList())
+            foreach(var point in strokeInfo.PointCollection)
             {
-                stroke.StylusPoints.Add(sp);
-            }*/
-            for (int i = 0; i < 25; i++)
-            {
-                stroke.StylusPoints.Add(new StylusPoint(i, i));
+                stroke.StylusPoints.Add(new StylusPoint(point.X, point.Y));
             }
-
         }
-
     }
 }

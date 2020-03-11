@@ -109,17 +109,17 @@ namespace ClientLourd.Services.InkCanvas
                 message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
                 //TODO validate bytes order
                 _currentStrokeID.ToByteArray().CopyTo(message, 1);
-                //message[MAX_X_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Width);
-                //message[MAX_y_OFFSET] = (byte) Math.Ceiling(_editor.Canvas.Height);
+                System.Diagnostics.Debug.WriteLine($"stroke id send = {_currentStrokeID}");
                 message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
                 for (int i = 0; i < _points.Count; i++)
                 {
                     int x = (int) Math.Ceiling(_points[i].X);
                     int y = (int) Math.Ceiling(_points[i].Y);
+                    System.Diagnostics.Debug.WriteLine($"point ---> [{x},{y}]");
                     message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
-                    message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(2, x);
+                    message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(0, x);
                     message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
-                    message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(2, y);
+                    message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(0, y);
                 }
                 _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
                 if (startNewStroke)
