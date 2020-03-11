@@ -34,6 +34,16 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
     }
 
+    /*
+    private fun onWordGuessedSucessfully() {
+        activeMatchView?.setPlayerStatus()
+    } */
+
+    private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
+        activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+    }
+
+
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
         Log.d("POTATO", "Turn to draw word = ${turnToDraw.word}")
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
@@ -48,6 +58,7 @@ class ActiveMatchPresenter : Presenter {
         when(event.type) {
             EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
             EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
+            EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
         }
     }
 
@@ -58,6 +69,7 @@ class ActiveMatchPresenter : Presenter {
     }
 
     override fun destroy() {
+        matchManager.leaveMatch()
         EventBus.getDefault().unregister(this)
         activeMatchView = null
     }

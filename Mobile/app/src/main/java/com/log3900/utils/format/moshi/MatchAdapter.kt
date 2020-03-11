@@ -5,10 +5,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
-import com.log3900.game.match.FFAMatch
-import com.log3900.game.match.Match
-import com.log3900.game.match.PlayerTurnToDraw
-import com.log3900.game.match.TurnToDraw
+import com.log3900.game.match.*
 import com.squareup.moshi.FromJson
 import java.util.*
 
@@ -79,6 +76,21 @@ object MatchAdapter {
             word,
             time,
             drawingID
+        )
+    }
+
+    fun jsonToPlayerGuessedWord(jsonObject: JsonObject): PlayerGuessedWord {
+        Log.d("POTAOT", "MatchAdapter parsing PlayerGuessedWord = ${jsonObject}")
+        val username = jsonObject.get("Username").asString
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val points = jsonObject.get("Point").asInt
+        val pointsTotal = jsonObject.get("PointsTotal").asInt
+
+        return PlayerGuessedWord(
+            username,
+            userID,
+            points,
+            pointsTotal
         )
     }
 }

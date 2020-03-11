@@ -35,3 +35,10 @@ class TurnToDraw(
     var time: Int,
     var drawingID: UUID
 )
+
+class PlayerGuessedWord(
+    var username: String,
+    var userID: UUID,
+    var points: Int,
+    var pointsTotal: Int
+)
