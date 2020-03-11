@@ -7,6 +7,7 @@ import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.log3900.game.match.FFAMatch
 import com.log3900.game.match.Match
+import com.log3900.game.match.PlayerTurnToDraw
 import com.squareup.moshi.FromJson
 import java.util.*
 
@@ -50,5 +51,21 @@ object MatchAdapter {
         }
 
         return arrayList
+    }
+
+    fun jsonToPlayerTurnToDraw(jsonObject: JsonObject): PlayerTurnToDraw {
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val username = jsonObject.get("Username").asString
+        val time = jsonObject.get("Time").asInt
+        val drawingID = UUID.fromString(jsonObject.get("DrawingID").asString)
+        val wordLength = jsonObject.get("Length").asInt
+
+        return PlayerTurnToDraw(
+            userID,
+            username,
+            time,
+            drawingID,
+            wordLength
+        )
     }
 }
