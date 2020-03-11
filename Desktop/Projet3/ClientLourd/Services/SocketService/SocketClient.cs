@@ -70,7 +70,7 @@ namespace ClientLourd.Services.SocketService
         {
             try
             {
-                SendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
+                //SendMessage(new Tlv(SocketMessageTypes.ServerDisconnection));
                 _healthCheckTimer.Close();
             }
             catch

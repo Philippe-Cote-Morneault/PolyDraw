@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Services.SocketService
 {
@@ -72,6 +74,11 @@ namespace ClientLourd.Services.SocketService
         public long WordLength
         {
             get => _data["Length"];
+        }
+
+        public Object[] Players
+        {
+            get => _data["Players"];
         }
         
     }
