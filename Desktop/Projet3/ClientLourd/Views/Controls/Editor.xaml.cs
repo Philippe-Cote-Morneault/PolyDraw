@@ -47,7 +47,7 @@ namespace ClientLourd.Views.Controls
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             // Bubble inkCanvas event so we can capture it
-            Canvas.AddHandler(InkCanvas.MouseDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
+            Canvas.AddHandler(InkCanvas.MouseLeftButtonDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
         }
 
         private Button _selectedColor;

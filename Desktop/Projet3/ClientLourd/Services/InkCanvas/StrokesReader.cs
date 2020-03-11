@@ -44,7 +44,7 @@ namespace ClientLourd.Services.InkCanvas
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
-            _editor.Canvas.AddHandler(UIElement.MouseDownEvent, new MouseButtonEventHandler(CanvasOnMouseDown), true);
+            _editor.Canvas.AddHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(CanvasOnMouseDown), true);
             _points = new List<Point>();
             _timer = new Timer(SEND_RATE);
             _timer.Elapsed += TimerOnElapsed;
@@ -55,7 +55,7 @@ namespace ClientLourd.Services.InkCanvas
             _drawingID = new Guid(drawingID);
             _socket.SendMessage(new Tlv(SocketMessageTypes.StartDrawing, _drawingID));
             _editor.Canvas.MouseMove += CanvasOnMouseMove;
-            _editor.Canvas.MouseDown += CanvasOnMouseDown;
+            _editor.Canvas.MouseLeftButtonDown += CanvasOnMouseDown;
             _editor.StrokeDeleted += EditorOnStrokeDeleted;
             _editor.StrokedAdded += EditorOnStokeAdded;
             _timer.Start();
@@ -103,19 +103,17 @@ namespace ClientLourd.Services.InkCanvas
             if (_information.SelectedTool == InkCanvasEditingMode.EraseByStroke)
                 return;
             _mutex.WaitOne();
-            if(_currentStrokeID != Guid.Empty && _points.Count > 0)
+            if(_currentStrokeID != Guid.Empty)
             {
                 byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
                 message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
                 //TODO validate bytes order
                 _currentStrokeID.ToByteArray().CopyTo(message, 1);
-                System.Diagnostics.Debug.WriteLine($"stroke id send = {_currentStrokeID}");
                 message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
                 for (int i = 0; i < _points.Count; i++)
                 {
                     int x = (int) Math.Ceiling(_points[i].X);
                     int y = (int) Math.Ceiling(_points[i].Y);
-                    System.Diagnostics.Debug.WriteLine($"point ---> [{x},{y}]");
                     message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
                     message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(0, x);
                     message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
