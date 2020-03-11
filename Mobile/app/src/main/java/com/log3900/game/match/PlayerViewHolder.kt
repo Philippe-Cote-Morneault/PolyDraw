@@ -28,7 +28,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
     private var scoreTextView: TextView
 
 
-    constructor(itemView: View, listener: PlayerViewHolder.Listener? = null) : super(itemView) {
+    constructor(itemView: View) : super(itemView) {
         rootView = itemView
         positionTextView = itemView.findViewById(R.id.list_item_active_match_player_text_view_position)
         playerChip = itemView.findViewById(R.id.list_item_active_match_player_chip_player)
@@ -36,13 +36,20 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         scoreTextView = itemView.findViewById(R.id.list_item_active_match_player_text_view_score)
     }
 
-    fun bind(player: Player, position: Int, score: Int) {
+    fun bind(player: Player, position: Int, score: Int, statusRes: Int? = null) {
         this.player = player
         this.currentPosition = position
         this.score = score
 
         positionTextView.text = "#$position"
         playerChip.text = player.username
+        if (statusRes == null) {
+            playerStatusImageView.visibility = View.INVISIBLE
+        } else {
+            playerStatusImageView.setImageResource(statusRes)
+            playerStatusImageView.visibility = View.VISIBLE
+        }
+
         scoreTextView.text = "Score: $score"
 
         UserRepository.getInstance().getUser(player.ID)
