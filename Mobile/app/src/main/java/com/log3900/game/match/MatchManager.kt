@@ -14,4 +14,8 @@ class MatchManager {
     fun notifyReadyToPlay() {
         matchRepository.notifyReadyToPlay()
     }
+
+    fun makeGuess(text: String) {
+        matchRepository.makeGuess(text)
+    }
 }

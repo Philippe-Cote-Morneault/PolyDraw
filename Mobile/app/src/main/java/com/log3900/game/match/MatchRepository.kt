@@ -48,9 +48,11 @@ class MatchRepository : Service() {
         instance = this
         socketService = SocketService.instance
 
+        socketService?.subscribeToMessage(Event.GUESS_WORD_RESPONSE, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
-        socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
-        socketService?.subscribeToMessage(com.log3900.socket.Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.USER_JOINED_GROUP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -78,11 +80,17 @@ class MatchRepository : Service() {
             Event.MATCH_ABOUT_TO_START -> onMatchAboutToStart(socketMessage)
             Event.MATCH_STARTING -> onMatchStarting(socketMessage)
             Event.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(socketMessage)
+            Event.TURN_TO_DRAW -> onTurnToDraw(socketMessage)
+            Event.GUESS_WORD_RESPONSE -> onGuessWordResponse(socketMessage)
         }
     }
 
     fun notifyReadyToPlay() {
         socketService?.sendMessage(Event.READY_TO_PLAY_MATCH, byteArrayOf())
+    }
+
+    fun makeGuess(text: String) {
+        socketService?.sendMessage(Event.GUESS_WORD, text.toByteArray())
     }
 
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
@@ -97,6 +105,11 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_STARTING, null))
     }
 
+    private fun onGuessWordResponse(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        Log.d("POTATO", json)
+    }
+
     private fun onPlayerTurnToDraw(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
@@ -104,10 +117,19 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.PLAYER_TURN_TO_DRAW, playerTurnToDraw))
     }
 
+    private fun onTurnToDraw(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val turnToDraw = MatchAdapter.jsonToTurnToDraw(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TURN_TO_DRAW, turnToDraw))
+    }
+
     override fun onDestroy() {
-        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
-        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
-        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.START_MATCH_RESPONSE, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.GUESS_WORD_RESPONSE, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.TURN_TO_DRAW, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.START_MATCH_RESPONSE, socketMessageHandler!!)
         socketMessageHandler = null
         socketService = null
         instance = null
