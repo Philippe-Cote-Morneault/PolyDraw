@@ -45,10 +45,12 @@ func (r *Router) Init() {
 	r.connections = make(map[uuid.UUID]*match2.IMatch)
 }
 
+//AddSocket to add a socketid and a match to the router
 func (r *Router) AddSocket(socketID uuid.UUID, ptr *match2.IMatch) {
 	r.connections[socketID] = ptr
 }
 
+//RemoveSocket to remove a socket id to the router
 func (r *Router) RemoveSocket(socketID uuid.UUID) {
 	delete(r.connections, socketID)
 
