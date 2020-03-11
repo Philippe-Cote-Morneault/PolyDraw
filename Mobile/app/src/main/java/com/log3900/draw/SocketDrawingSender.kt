@@ -11,12 +11,13 @@ import java.util.*
 
 class SocketDrawingSender() {
     private val socketService = SocketService.instance!!
+    private lateinit var drawingID: UUID
     var isListening = true
-    var drawingID: UUID? = null
     var receiver: SocketDrawingReceiver? = null
 
-    fun sendStrokeStart() {
-//        socketService.sendMessage(Event.DRAW_START_CLIENT, UUIDUtils.uuidToByteArray(drawingID))
+    fun sendStrokeStart(drawingID: UUID) {
+        this.drawingID = drawingID
+        socketService.sendMessage(Event.DRAW_START_CLIENT, UUIDUtils.uuidToByteArray(drawingID))
     }
 
     fun sendStrokeDraw(strokeInfo: StrokeInfo) {
@@ -26,13 +27,13 @@ class SocketDrawingSender() {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
-//                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
-                receiver!!.parseMessageToStroke(strokeData)
+                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+//                receiver!!.parseMessageToStroke(strokeData)
             }
         }
     }
 
     fun sendStrokeEnd() {
-//        socketService.sendMessage(Event.DRAW_END_CLIENT, UUIDUtils.uuidToByteArray(drawingID))
+        socketService.sendMessage(Event.DRAW_END_CLIENT, UUIDUtils.uuidToByteArray(drawingID))
     }
 }

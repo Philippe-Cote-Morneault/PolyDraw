@@ -9,7 +9,6 @@ package com.log3900.draw
 
 import android.content.Context
 import android.graphics.*
-import android.os.Handler
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import android.util.AttributeSet
@@ -17,13 +16,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.log3900.draw.divyanshuwidget.*
-import com.log3900.socket.Event
-import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.pow
@@ -78,14 +71,14 @@ class DrawViewBase @JvmOverloads constructor(
             isAntiAlias = true
         }
 
-        if (canDraw) {
-            socketDrawingSender = SocketDrawingSender()
-        } else {
-            socketDrawingReceiver = SocketDrawingReceiver(this)
-        }
+//        if (canDraw) {
+//            socketDrawingSender = SocketDrawingSender()
+//        } else {
+//        }
+        socketDrawingReceiver = SocketDrawingReceiver(this)
     }
 
-    fun enableCanDraw(canDrawOnCanvas: Boolean, drawindID: UUID?) {
+    fun enableCanDraw(canDrawOnCanvas: Boolean, drawingID: UUID?) {
         canDraw = canDrawOnCanvas
 
         if (!canDraw) {
@@ -95,7 +88,9 @@ class DrawViewBase @JvmOverloads constructor(
         } else {
             if (socketDrawingSender == null) {
                 socketDrawingSender = SocketDrawingSender()
-//                socketDrawingSender.drawingID
+            }
+            if (drawingID != null) {
+                socketDrawingSender?.sendStrokeStart(drawingID)
             }
         }
         // If we cannot draw, we want to receive strokes from the server

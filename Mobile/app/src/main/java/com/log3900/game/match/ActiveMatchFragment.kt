@@ -76,6 +76,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         guessingView.setWordLength(length)
     }
 
+    override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?) {
+        drawFragment.enableDrawFunctions(enable, drawingID)
+    }
+
     override fun onDestroy() {
         activeMatchPresenter?.destroy()
         activeMatchPresenter = null
