@@ -192,8 +192,9 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				Points:      pointsForWord,
 				PointsTotal: total,
 			})
-			f.broadcast(&broadcast)
+			f.pbroadcast(&broadcast)
 		} else {
+			log.Printf("[Match] [FFA] -> Word is alredy guessed for socket %s", socketID)
 			f.receiving.Unlock()
 		}
 	} else {
