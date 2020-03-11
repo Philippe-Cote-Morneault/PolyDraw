@@ -19,6 +19,7 @@ func RegisterGame(ptr match2.IMatch) {
 		instanceRouter.connections[connections[i]] = &ptr
 	}
 	instanceRouter.mutex.Unlock()
+	log.Printf("[Drawing] Registered a match with the following connections %v", connections)
 }
 
 //UnRegisterGame to the drawing service. This way the program can save memory.
