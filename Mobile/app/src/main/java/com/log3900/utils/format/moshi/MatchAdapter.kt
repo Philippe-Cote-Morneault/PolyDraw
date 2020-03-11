@@ -7,6 +7,7 @@ import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.log3900.game.match.*
 import com.squareup.moshi.FromJson
+import java.lang.Exception
 import java.util.*
 
 object MatchAdapter {
@@ -92,5 +93,43 @@ object MatchAdapter {
             points,
             pointsTotal
         )
+    }
+
+    fun jsonToSynchronisation(jsonObject: JsonObject): Synchronisation {
+        val players = jsonObject.get("Players").asJsonArray
+        val playerScores = jsonToSynchronisationPlayers(players)
+        var laps: Int? = null
+        var gameTime: Int? = null
+        try {
+            laps = jsonObject.get("Laps").asInt
+        } catch (e: Exception) {
+            laps = null
+        }
+
+        try {
+            gameTime = jsonObject.get("GameTime").asInt
+        } catch (e: Exception) {
+            gameTime = null
+        }
+
+        val time = jsonObject.get("Time").asInt
+
+        return Synchronisation(
+            playerScores,
+            laps,
+            time,
+            gameTime
+        )
+    }
+
+    private fun jsonToSynchronisationPlayers(jsonArray: JsonArray): ArrayList<Pair<UUID, Int>> {
+        val playerScores = arrayListOf<Pair<UUID, Int>>()
+        jsonArray.forEach {
+            val playerID = UUID.fromString(it.asJsonObject.get("UserID").asString)
+            val score = it.asJsonObject.get("Points").asInt
+            playerScores.add(Pair(playerID, score))
+        }
+
+        return playerScores
     }
 }
