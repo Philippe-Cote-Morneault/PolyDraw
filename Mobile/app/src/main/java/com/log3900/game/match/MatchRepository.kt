@@ -80,6 +80,10 @@ class MatchRepository : Service() {
         }
     }
 
+    fun notifyReadyToPlay() {
+        socketService?.sendMessage(Event.READY_TO_PLAY_MATCH, byteArrayOf())
+    }
+
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject

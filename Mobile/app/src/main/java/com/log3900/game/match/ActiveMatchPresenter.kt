@@ -10,6 +10,7 @@ class ActiveMatchPresenter : Presenter {
         this.activeMatchView = activeMatchView
         this.matchManager = MatchManager()
         activeMatchView.setPlayers(matchManager.getCurrentMatch().players)
+        matchManager.notifyReadyToPlay()
     }
 
     override fun resume() {

@@ -6,7 +6,12 @@ class MatchManager {
     init {
         matchRepository = MatchRepository.instance!!
     }
+
     fun getCurrentMatch(): Match {
         return matchRepository.getCurrentMatch()!!
+    }
+
+    fun notifyReadyToPlay() {
+        matchRepository.notifyReadyToPlay()
     }
 }
