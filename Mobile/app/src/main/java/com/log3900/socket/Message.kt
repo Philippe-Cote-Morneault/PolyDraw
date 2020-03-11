@@ -17,8 +17,11 @@ enum class Event(var eventType: Int) {
     CHANNEL_CREATED(27),
     DELETE_CHANNEL(28),
     CHANNEL_DELETED(29),
+    STROKE_DATA_CLIENT(30),
     STROKE_DATA_SERVER(31),
+    DRAW_START_CLIENT(32),
     DRAW_START_SERVER(33),
+    DRAW_END_CLIENT(34),
     DRAW_END_SERVER(35),
     DRAW_PREVIEW_REQUEST(36),   // TODO: Remove, test purposes only
     DRAW_PREVIEW_RESPONSE(37),  // TODO: Remove, test purposes only
