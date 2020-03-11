@@ -26,6 +26,7 @@ class ActiveMatchPresenter : Presenter {
     private fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
+        activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
     }
 
     private fun subscribeToEvents() {
