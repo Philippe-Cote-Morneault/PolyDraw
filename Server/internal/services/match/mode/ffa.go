@@ -83,9 +83,16 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	//Choose a user.
+	f.waitingResponse.Wait()
+
 	curDrawer := f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
-	f.waitingResponse.Add(f.realPlayers)
+	if curDrawer.IsCPU {
+		f.waitingResponse.Add(f.realPlayers)
+	} else {
+		f.waitingResponse.Add(f.realPlayers - 1)
+		f.hasFoundit[curDrawer.socketID] = true
+	}
 
 	f.currentWord = f.findWord()
 	message := socket.RawMessage{}
@@ -300,6 +307,11 @@ func (f *FFA) SetOrder() {
 		f.order = append(f.order, userPos)
 	}
 
+	for i := range f.order {
+		playerPos := f.order[i]
+		f.players[playerPos].Order = playerPos
+	}
+
 	f.orderPos = 0
 
 }
@@ -342,7 +354,7 @@ func (f *FFA) waitTimeout() bool {
 		defer close(c)
 		f.waitingResponse.Wait()
 	}()
-	imageTimeout := time.After(time.Duration(f.timeImage))
+	imageTimeout := time.After(time.Millisecond * time.Duration(f.timeImage))
 	for {
 		select {
 		//Send the check up message every 1 second
