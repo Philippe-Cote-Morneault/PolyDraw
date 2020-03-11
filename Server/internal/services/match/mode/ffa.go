@@ -89,6 +89,7 @@ func (f *FFA) GameLoop() {
 		f.waitingResponse.Add(f.realPlayers)
 	} else {
 		f.waitingResponse.Add(f.realPlayers - 1)
+		f.hasFoundit[curDrawer.socketID] = true
 	}
 
 	f.currentWord = f.findWord()
