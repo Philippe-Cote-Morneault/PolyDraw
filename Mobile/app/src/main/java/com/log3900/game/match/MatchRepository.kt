@@ -56,6 +56,7 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.USER_JOINED_GROUP, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -86,6 +87,7 @@ class MatchRepository : Service() {
             Event.TURN_TO_DRAW -> onTurnToDraw(socketMessage)
             Event.GUESS_WORD_RESPONSE -> onGuessWordResponse(socketMessage)
             Event.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(socketMessage)
+            Event.PLAYER_SYNC -> onPlayerSync(socketMessage)
         }
     }
 
@@ -143,6 +145,13 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
     }
 
+    private fun onPlayerSync(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val synchronisation = MatchAdapter.jsonToSynchronisation(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_SYNCHRONISATION, synchronisation))
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
         playerScores[playerID] = newScore
         reorderPlayers()
@@ -155,6 +164,7 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.PLAYER_GUESSED_WORD, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.GUESS_WORD_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.TURN_TO_DRAW, socketMessageHandler!!)
