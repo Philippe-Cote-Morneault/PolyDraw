@@ -83,7 +83,7 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	//Choose a user.
-	f.waitingResponse.Wait()
+	f.waitingResponse = sync.WaitGroup{} //Reset the waitgroup
 
 	curDrawer := f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
