@@ -31,12 +31,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.HashMap
 
 class MatchRepository : Service() {
     private val binder = MatchRepositoryBinder()
     private var socketService: SocketService? = null
     private var socketMessageHandler: Handler? = null
     private var currentMatch: Match? = null
+    private var playerScores: HashMap<UUID, Int> = HashMap()
 
     var isReady = false
 
@@ -136,7 +138,20 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         val playerGuessedWord = MatchAdapter.jsonToPlayerGuessedWord(jsonObject)
+        updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
         EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
+    }
+
+    private fun updatePlayerScore(playerID: UUID, newScore: Int) {
+        playerScores[playerID] = newScore
+        reorderPlayers()
+    }
+
+    private fun reorderPlayers() {
+        currentMatch?.players?.sortByDescending {
+            playerScores[it.ID]
+        }
     }
 
     override fun onDestroy() {
