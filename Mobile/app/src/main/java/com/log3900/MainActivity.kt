@@ -191,6 +191,10 @@ open class MainActivity : AppCompatActivity() {
         val newToolbarView = layoutInflater.inflate(layout, null)
         newToolbarView.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         toolbarContainer.addView(newToolbarView)
+
+        if (layout == R.layout.toolbar_active_match) {
+            supportActionBar?.title = ""
+        }
     }
 
     private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {
