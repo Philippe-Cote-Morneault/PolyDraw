@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.game.group.Player
 import com.log3900.game.match.UI.WordGuessingView
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var activeMatchPresenter: ActiveMatchPresenter? = null
@@ -50,6 +52,15 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun setPlayers(players: ArrayList<Player>) {
         playersAdapter.setPlayers(players)
+        playersAdapter.notifyDataSetChanged()
+    }
+
+    override fun setPlayerStatus(playerID: UUID, statusImageRes: Int) {
+        playersAdapter.setPlayerStatusRes(playerID, statusImageRes)
+    }
+
+    override fun clearAllPlayerStatusRes() {
+        playersAdapter.resetAllImageRes()
         playersAdapter.notifyDataSetChanged()
     }
 
