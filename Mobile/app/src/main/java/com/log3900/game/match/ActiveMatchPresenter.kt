@@ -67,6 +67,7 @@ class ActiveMatchPresenter : Presenter {
     }
 
     override fun destroy() {
+        matchManager.leaveMatch()
         EventBus.getDefault().unregister(this)
         activeMatchView = null
     }

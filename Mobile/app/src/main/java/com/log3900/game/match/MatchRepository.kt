@@ -95,6 +95,10 @@ class MatchRepository : Service() {
         socketService?.sendMessage(Event.GUESS_WORD, text.toByteArray())
     }
 
+    fun leaveMatch() {
+        socketService?.sendMessage(Event.LEAVE_MATCH, byteArrayOf())
+    }
+
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
