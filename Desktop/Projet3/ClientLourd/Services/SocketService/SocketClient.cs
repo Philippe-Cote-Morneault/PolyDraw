@@ -21,11 +21,6 @@ namespace ClientLourd.Services.SocketService
 {
     public class SocketClient : SocketEventsPublisher
     {
-        // For local server usage
-        /*private const int PORT = 3001;
-        private const string HostName = "127.0.0.1";*/
-
-
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
@@ -40,23 +35,22 @@ namespace ClientLourd.Services.SocketService
 
         private void OnHealthCheck(object source, EventArgs args)
         {
-            Application.Current.Dispatcher.InvokeAsync(() =>
+          
+            //We stop the timer 
+            _healthCheckTimer.Stop();
+            try
             {
-                //We stop the timer 
-                _healthCheckTimer.Stop();
-                try
-                {
-                    //We send the healthCheck response to the server
-                    SendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
-                }
-                catch
-                {
-                    //If an error occured the health check Timer will handle it
-                }
+                //We send the healthCheck response to the server                    
+                SendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
+            }
+            catch
+            {
+                //If an error occured the health check Timer will handle it
+            }
 
-                //Restart the timer
-                _healthCheckTimer.Start();
-            }, DispatcherPriority.Send);
+            //Restart the timer
+            _healthCheckTimer.Start();
+            
         }
 
         /// <summary>
@@ -65,6 +59,7 @@ namespace ClientLourd.Services.SocketService
         /// <param name="tlv"></param>
         public void SendMessage(Tlv tlv)
         {
+            Console.WriteLine($"Socket ---> [{(SocketMessageTypes)tlv.Type}]");
             _socket.Send(tlv.GetBytes());
         }
 
@@ -96,7 +91,6 @@ namespace ClientLourd.Services.SocketService
                     _socket = new Socket(_networkInformations.IP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                     //Connect the socket to the end point
                     _socket.Connect(new IPEndPoint(_networkInformations.IP, _networkInformations.SocketPort));
-                    //_socket.Connect(new IPEndPoint(ip, 3001));
                     _stream = new NetworkStream(_socket);
 
                     InitializeTimer();
@@ -145,7 +139,10 @@ namespace ClientLourd.Services.SocketService
                             count += _stream.Read(bytes, count, length - count);
                         }
                         data = RetreiveData(type, bytes);
+                        
                     }
+                    Console.WriteLine($"Socket <---- {type}");
+
 
                     switch (type)
                     {
@@ -228,11 +225,10 @@ namespace ClientLourd.Services.SocketService
                             break;
                         case SocketMessageTypes.MatchCheckPoint:
                             break;
-                        
-                        
+
                         default:
                             throw new InvalidDataException();
-                    }
+                    }                    
                 }
                 catch
                 {
@@ -272,7 +268,10 @@ namespace ClientLourd.Services.SocketService
 
         private void TriggerConnectionLost(object sender, ElapsedEventArgs e)
         {
+
+            Console.WriteLine("Triggered disconnection");
             OnConnectionLost(this);
+            
         }
     }
 }

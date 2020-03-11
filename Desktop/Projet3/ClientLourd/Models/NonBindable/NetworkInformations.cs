@@ -18,7 +18,9 @@ namespace ClientLourd.Models.NonBindable
         public NetworkInformations()
         {
             //Dev as default
+            //Config = 2;
             Config = 1;
+
         }
 
         public int Config { get; set; }
@@ -34,6 +36,7 @@ namespace ClientLourd.Models.NonBindable
                         return Dns.GetHostAddresses(HOST_NAME)[0];
                     case 2:
                         return IPAddress.Parse("127.0.0.1");
+                        
                     default:
                         throw new InvalidDataException("Invalid network configuration");
                 }    

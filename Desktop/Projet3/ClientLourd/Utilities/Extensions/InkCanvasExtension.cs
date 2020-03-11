@@ -23,28 +23,10 @@ namespace ClientLourd.Utilities.Extensions
                 return;
             }
 
-            
-            foreach(StylusPoint sp in strokeInfo.PointCollection)
-            {
-                caca(inkCanvas, sp, strokeInfo);
-            }
+            inkCanvas.Strokes.Add(CreateStroke(strokeInfo));
         }
 
-        private static void caca(InkCanvas inkCanvas, StylusPoint sp, StrokeInfo strokeInfo)
-        {
-            StylusPointCollection pc = new StylusPointCollection();
-            pc.Add(sp);
-            Stroke newStroke = new Stroke(pc);
-            newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
-            newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
-            newStroke.DrawingAttributes.Height = strokeInfo.BrushSize;
-            newStroke.DrawingAttributes.Width = strokeInfo.BrushSize;
-            newStroke.AddPropertyData(GUIDs.ID, strokeInfo.StrokeID.ToString());
-            inkCanvas.Strokes.Add(newStroke);
-        }
-        
-
-
+       
         public static void RemoveStroke(this InkCanvas inkCanvas, Guid strokeID)
         {
             inkCanvas.Strokes.Remove(FindStroke(inkCanvas, strokeID));
@@ -64,7 +46,7 @@ namespace ClientLourd.Utilities.Extensions
 
         private static Stroke CreateStroke(StrokeInfo strokeInfo)
         {
-
+            Console.WriteLine("Created a new stroke");
             Stroke newStroke = new Stroke(strokeInfo.PointCollection);
             newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
             newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
@@ -77,10 +59,40 @@ namespace ClientLourd.Utilities.Extensions
 
         private static void AddPointsToStroke(Stroke stroke, StrokeInfo strokeInfo)
         {
+            Console.WriteLine("Added points to an existing stroke");
             foreach (StylusPoint sp in strokeInfo.PointCollection.ToList())
             {
                 stroke.StylusPoints.Add(sp);
             }
+        }
+
+
+        /// <summary>
+        /// For the preview, the points arent in order. To avoid bugs, we create 1 stroke per point.
+        /// </summary>
+        /// <param name="inkCanvas"></param>
+        /// <param name="strokeInfo"></param>
+        public static void AddStrokePreview(this InkCanvas inkCanvas, StrokeInfo strokeInfo)
+        {
+            foreach (StylusPoint sp in strokeInfo.PointCollection)
+            {
+                inkCanvas.Strokes.Add(CreateStrokeSinglePoint(sp, strokeInfo));
+            }
+        }
+
+
+        private static Stroke CreateStrokeSinglePoint(StylusPoint sp, StrokeInfo strokeInfo)
+        {
+            StylusPointCollection pc = new StylusPointCollection();
+            pc.Add(sp);
+            Stroke newStroke = new Stroke(pc);
+            newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
+            newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
+            newStroke.DrawingAttributes.Height = strokeInfo.BrushSize;
+            newStroke.DrawingAttributes.Width = strokeInfo.BrushSize;
+            newStroke.AddPropertyData(GUIDs.ID, strokeInfo.StrokeID.ToString());
+
+            return newStroke;
         }
 
     }

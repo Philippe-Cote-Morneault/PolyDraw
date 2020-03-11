@@ -174,6 +174,7 @@ namespace ClientLourd.Services.RestService
 
         public async Task PutGameInformations(string gameID, PotraceMode mode,double blackLevel, int brushSize)
         {
+            Console.WriteLine(mode.ToString());
             RestRequest request = new RestRequest( $"games/{gameID}/image", Method.PUT);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new

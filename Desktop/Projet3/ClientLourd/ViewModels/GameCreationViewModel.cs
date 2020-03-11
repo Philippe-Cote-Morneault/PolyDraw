@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,7 +25,11 @@ namespace ClientLourd.ViewModels
 {
     public class GameCreationViewModel : ViewModelBase
     {
+        
         public int counter = 0;
+        private ConcurrentQueue<StrokeInfo> _strokeInfoQueue;
+        private System.Timers.Timer _drawTimer;
+        
         public GameCreationViewModel()
         {
             PreviewGUIEnabled = true;
@@ -35,8 +41,33 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
             SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
+            
+            _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
+            _drawTimer = new System.Timers.Timer(5);
+            _drawTimer.Elapsed += Draw;
+            _drawTimer.Start();
+    }
+
+        private void Draw(object source, EventArgs args)
+        {
+            _drawTimer.Stop();
+            if (_strokeInfoQueue.Count != 0)
+            {
+
+                Application.Current.Dispatcher.Invoke(delegate
+                {
+                    StrokeInfo strokeInfo;
+                    _strokeInfoQueue.TryDequeue(out strokeInfo);
+                    if (strokeInfo != null)
+                    {
+                        CurrentCanvas.AddStrokePreview(strokeInfo);
+                    }
+                });
+                
+            }
+            _drawTimer.Start();
         }
-        
+
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
             PreviewGUIEnabled = false;
@@ -47,7 +78,7 @@ namespace ClientLourd.ViewModels
             PreviewGUIEnabled = true;
         }
         
-        private async void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
+        private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -62,14 +93,7 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
-            
-            Application.Current.Dispatcher.Invoke(delegate 
-            {
-                counter++;
-
-                CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
-
-            });
+            _strokeInfoQueue.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
@@ -307,6 +331,7 @@ namespace ClientLourd.ViewModels
             {
                 CurrentCanvas.Strokes.Clear();
                 await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
+                Console.WriteLine($"Played preview mode: {_selectedMode}");
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
             }
             catch (Exception e)
