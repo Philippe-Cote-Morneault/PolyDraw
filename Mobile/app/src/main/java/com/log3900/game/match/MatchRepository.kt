@@ -19,6 +19,7 @@ import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.UUIDUtils
 import com.log3900.utils.format.moshi.GroupAdapter
+import com.log3900.utils.format.moshi.MatchAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -82,14 +83,8 @@ class MatchRepository : Service() {
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
-        val response = jsonObject.get("Response").asBoolean
-        Log.d("POTATO", "Start match response = $json")
-        if (response) {
-            EventBus.getDefault().post(MessageEvent(EventType.MATCH_ABOUT_TO_START, null))
-        } else {
-            EventBus.getDefault().post(MessageEvent(EventType.MATCH_START_RESPONSE, Pair(response, jsonObject.get("Error"))))
-            EventBus.getDefault().post(MessageEvent(EventType.MATCH_ABOUT_TO_START, null))
-        }
+        val match = MatchAdapter.fromJson(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_ABOUT_TO_START, match))
     }
 
     private fun onMatchStarting(message: com.log3900.socket.Message) {
