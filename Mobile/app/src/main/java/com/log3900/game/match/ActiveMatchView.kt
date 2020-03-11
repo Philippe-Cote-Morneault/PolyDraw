@@ -1,5 +1,7 @@
 package com.log3900.game.match
 
-interface ActiveMatchView {
+import com.log3900.game.group.Player
 
+interface ActiveMatchView {
+    fun setPlayers(players: ArrayList<Player>)
 }
