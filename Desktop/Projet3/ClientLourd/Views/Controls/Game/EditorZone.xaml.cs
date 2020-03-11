@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls.Game
@@ -16,6 +17,7 @@ namespace ClientLourd.Views.Controls.Game
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             ((GameViewModel) DataContext).Editor = DrawingEditor;
+            ((GameViewModel)DataContext).StrokeDrawerService = new ServerStrokeDrawerService(DrawingEditor.Canvas, false);
         }
 
         private GameViewModel ViewModel

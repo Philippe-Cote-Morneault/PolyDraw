@@ -10,6 +10,7 @@ using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.InkCanvas;
 using ClientLourd.Services.RestService;
+using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
@@ -33,6 +34,8 @@ namespace ClientLourd.ViewModels
         private ObservableCollection<Player> _players;
         private long _round;
         private StrokesReader _stokesReader;
+        public ServerStrokeDrawerService StrokeDrawerService { get; set; }
+
         public GameViewModel()
         {
             _players = new ObservableCollection<Player>();
@@ -67,10 +70,13 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
-            Application.Current.Dispatcher.Invoke(delegate 
-            {
-                Editor.Canvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
-            });
+
+            StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
+
+            //      Application.Current.Dispatcher.Invoke(delegate 
+            //      {
+            //          Editor.Canvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
+            //     });
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)

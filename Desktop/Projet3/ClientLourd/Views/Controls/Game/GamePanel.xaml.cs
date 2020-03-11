@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using ClientLourd.ViewModels;
+using System.Windows.Controls;
 
 namespace ClientLourd.Views.Controls.Game
 {
