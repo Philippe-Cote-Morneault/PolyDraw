@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
+import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
 import com.log3900.game.match.UI.WordGuessingView
 import java.util.*
@@ -16,6 +17,7 @@ import kotlin.collections.ArrayList
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var activeMatchPresenter: ActiveMatchPresenter? = null
     private lateinit var playersAdapter: PlayerAdapter
+    private lateinit var drawFragment: DrawViewFragment
 
     // UI
     private lateinit var guessingView: WordGuessingView
@@ -43,6 +45,8 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         }
 
         setupRecyclerView()
+
+        drawFragment = childFragmentManager?.findFragmentById(R.id.fragment_active_match_draw_container) as DrawViewFragment
     }
 
     private fun setupRecyclerView() {
