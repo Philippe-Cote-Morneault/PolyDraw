@@ -63,7 +63,6 @@ class MatchRepository : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d("POTATO", "MatchRepository::onCreate()")
         socketMessageHandler = Handler {
             handleSocketMessage(it)
             true
