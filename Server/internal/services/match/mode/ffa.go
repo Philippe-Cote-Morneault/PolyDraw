@@ -187,7 +187,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
-			response.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
+			broadcast.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
 				Username:    players.Username,
 				UserID:      players.userID.String(),
 				Points:      pointsForWord,
