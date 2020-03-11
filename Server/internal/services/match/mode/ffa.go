@@ -100,7 +100,6 @@ func (f *FFA) GameLoop() {
 	f.receivingGuesses.Set()
 
 	//Make him draw
-	//TODO register with the drawing service the drawing ID to route to the correct users drawing
 	if f.waitTimeout() {
 		log.Printf("[Match] [FFA] -> Time's up. Not all the players could guess the word, Match: %s", f.info.ID)
 	} else {
