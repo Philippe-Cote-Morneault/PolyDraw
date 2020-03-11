@@ -13,16 +13,26 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
+import com.google.android.material.button.MaterialButton
 import com.log3900.R
 
 class WordGuessingView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
     private var layout: ConstraintLayout
     private var editTextContainer: LinearLayout
+    private var guessButton: MaterialButton
     private var letterEditTexts: ArrayList<EditText> = ArrayList()
+    var listener: Listener? = null
 
     init {
         layout = View.inflate(context, R.layout.view_word_guessing, this) as ConstraintLayout
         editTextContainer = layout.findViewById(R.id.view_word_guessing_edit_text_container)
+        guessButton = layout.findViewById(R.id.view_word_guessing_button_guess)
+        guessButton.setOnClickListener {
+            if (listener != null) {
+                listener?.onGuessPressed(getText())
+            }
+        }
+
     }
 
     fun setWordLength(wordLength: Int) {
@@ -82,5 +92,9 @@ class WordGuessingView(context: Context, attrs: AttributeSet) : ConstraintLayout
             }
             false
         }
+    }
+
+    interface Listener {
+        fun onGuessPressed(text: String)
     }
 }
