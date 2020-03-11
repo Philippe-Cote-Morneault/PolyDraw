@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.game.group.Group
 import com.log3900.game.group.Player
-import com.log3900.game.waiting_room.PlayerViewHolder
 import java.util.*
 import kotlin.collections.ArrayList
 
