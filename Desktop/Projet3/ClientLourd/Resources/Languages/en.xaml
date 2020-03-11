@@ -2,6 +2,19 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="test">Hi</system:String>
+    <!--Hamburger menu-->
+    <system:String x:Key="Home">Home</system:String>
+    <system:String x:Key="MyProfile">My profile</system:String>
+    <system:String x:Key="Editor">Editor</system:String>
+    <system:String x:Key="Logout">Logout</system:String>
+
+    <!--Home.xaml-->
+    <system:String x:Key="Mode">Mode</system:String>
+    <system:String x:Key="LobbyName">Lobby name</system:String>
+    <system:String x:Key="Difficulty">Difficulty</system:String>
+    <system:String x:Key="Host">Host</system:String>
+    <system:String x:Key="CreateLobby">Create a lobby</system:String>
+    <system:String x:Key="CreateGame">Create a game</system:String>
     
     <!--Profile.xaml-->
     <system:String x:Key="WelcomeProfile">Welcome to your profile!</system:String>
