@@ -9,7 +9,7 @@ import com.log3900.settings.theme.ThemeManager
 
 class ErrorDialog : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
-        ThemeManager.applyTheme(this)
+        //ThemeManager.applyTheme(this)
         super.onCreate(savedInstanceState)
 
         AlertDialog.Builder(this)

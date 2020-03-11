@@ -53,6 +53,7 @@ class GroupRepository : Service() {
         socketService?.subscribeToMessage(com.log3900.socket.Event.JOIN_GROUP_RESPONSE, socketMessageHandler!!)
         socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_CREATED, socketMessageHandler!!)
         socketService?.subscribeToMessage(com.log3900.socket.Event.GROUP_DELETED, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.START_MATCH_RESPONSE, socketMessageHandler!!)
     }
 
     fun getGroups(sessionToken: String, forceReload: Boolean = false): Single<ArrayList<Group>> {
@@ -169,6 +170,18 @@ class GroupRepository : Service() {
             com.log3900.socket.Event.JOIN_GROUP_RESPONSE -> onJoinGroupResponse(socketMessage)
             com.log3900.socket.Event.GROUP_CREATED -> onGroupCreated(socketMessage)
             com.log3900.socket.Event.GROUP_DELETED-> onGroupDeleted(socketMessage)
+            Event.START_MATCH_RESPONSE -> onMatchStartResponse(socketMessage)
+        }
+    }
+
+    private fun onMatchStartResponse(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val response = jsonObject.get("Response").asBoolean
+        if (response) {
+            EventBus.getDefault().post(MessageEvent(EventType.MATCH_START_RESPONSE, Pair(response, "")))
+        } else {
+            EventBus.getDefault().post(MessageEvent(EventType.MATCH_START_RESPONSE, Pair(response, jsonObject.get("Error"))))
         }
     }
 
@@ -237,6 +250,7 @@ class GroupRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.START_MATCH_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.USER_LEFT_GROUP, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.JOIN_GROUP_RESPONSE, socketMessageHandler!!)

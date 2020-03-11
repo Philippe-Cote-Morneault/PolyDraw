@@ -7,9 +7,13 @@ import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -42,6 +46,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var chatManager: ChatManager
     lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
+    private lateinit var toolbarContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
@@ -59,10 +64,27 @@ open class MainActivity : AppCompatActivity() {
                 }
             )
 
-        setupUI()
-
-        val toolbar:Toolbar = findViewById(R.id.toolbar)
+        val toolbar= findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
+
+        toolbarContainer = findViewById<LinearLayout>(R.id.app_bar_main_toolbar_content_container)
+
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        navigationController = findNavController(R.id.nav_host_fragment)
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_main_match_lobby_fragment,
+                R.id.navigation_main_profile_fragment,
+                R.id.navigation_main_draw_view_fragment
+            ), drawerLayout)
+
+        setupActionBarWithNavController(navigationController, appBarConfiguration)
+
+        navigationView.setupWithNavController(navigationController)
+
+        switchToolbar(R.layout.toolbar_activity_main)
 
         hideShowMessagesFAB = findViewById(R.id.hideShowMessage)
         hideShowMessagesFAB.setOnClickListener{
@@ -80,20 +102,16 @@ open class MainActivity : AppCompatActivity() {
         }
 
 
-        drawerLayout = findViewById(R.id.drawer_layout)
-        navigationView = findViewById(R.id.nav_view)
-        navigationController = findNavController(R.id.nav_host_fragment)
 
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_main_match_lobby_fragment,
-                R.id.navigation_main_profile_fragment,
-                R.id.navigation_main_draw_view_fragment
-            ), drawerLayout)
+        setupUI()
 
-        setupActionBarWithNavController(navigationController, appBarConfiguration)
-
-        navigationView.setupWithNavController(navigationController)
+        navigationController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id == R.id.navigation_main_active_match_fragment) {
+                switchToolbar(R.layout.toolbar_active_match)
+            } else {
+                switchToolbar(R.layout.toolbar_activity_main)
+            }
+        }
 
         navigationView.menu.findItem(R.id.menu_item_activity_main_drawer_logout).setOnMenuItemClickListener {
             logout()
@@ -129,7 +147,6 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        Log.d("POTATO", "MainActivity::onSupportNavigationUp")
         return navigationController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
@@ -158,22 +175,28 @@ open class MainActivity : AppCompatActivity() {
         //logout()
     //}
 
-    fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
-        /*if (navigationController.currentDestination?.id != destinationID) {
-            if (!keepBackstack) {
-                navigationController.popBackStack(
-                    navigationController.currentDestination!!.id,
-                    false
-                )
-            }
-            navigationController.navigate(destinationID)
-            menuItem?.setChecked(true)
-        }*/
+    fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean = true) {
+        if (!keepBackstack) {
+            navigationController.popBackStack()
+        }
         navigationController.navigate(destinationID)
     }
 
     fun navigateBack() {
         navigationController.navigateUp()
+    }
+
+    fun switchToolbar(layout: Int) {
+        toolbarContainer.removeAllViews()
+        val newToolbarView = layoutInflater.inflate(layout, null)
+        newToolbarView.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        toolbarContainer.addView(newToolbarView)
+
+        if (layout == R.layout.toolbar_active_match) {
+            supportActionBar?.title = ""
+        } else {
+            setupUI()
+        }
     }
 
     private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {

@@ -25,6 +25,12 @@ class NavigationManager {
         }
     }
 
+    private fun onMatchAboutToStart() {
+        if (currentActivity?.navigationController?.currentDestination?.id == R.id.navigation_main_match_waiting_room_fragment) {
+            currentActivity?.startNavigationFragment(R.id.navigation_main_active_match_fragment, null, false)
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
@@ -36,6 +42,9 @@ class NavigationManager {
             }
             EventType.GROUP_DELETED -> {
                 onGroupLeft()
+            }
+            EventType.MATCH_ABOUT_TO_START -> {
+                onMatchAboutToStart()
             }
         }
     }

@@ -12,6 +12,7 @@ import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.game.group.GroupManager
 import com.log3900.game.group.GroupRepository
+import com.log3900.game.match.MatchRepository
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.ui.dialogs.ErrorDialog
@@ -128,6 +129,14 @@ class MonitoringService : Service() {
         GroupRepository.instance?.refreshRepository()
     }
 
+    private fun onGroupJoined() {
+        MainApplication.instance.startService(MatchRepository::class.java)
+    }
+
+    private fun onGroupLeft() {
+        MainApplication.instance.stopService(MatchRepository::class.java)
+    }
+
     private fun shutdownServices() {
         MainApplication.instance.stopService(GroupManager::class.java)
         MainApplication.instance.stopService(GroupRepository::class.java)
@@ -154,6 +163,12 @@ class MonitoringService : Service() {
             }
             EventType.LEAVE_GROUP -> {
                 onLeaveGroup()
+            }
+            EventType.GROUP_JOINED -> {
+                onGroupJoined()
+            }
+            EventType.GROUP_LEFT -> {
+                onGroupLeft()
             }
         }
     }
