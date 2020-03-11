@@ -36,6 +36,12 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         guessingView = rootView.findViewById(R.id.fragment_active_match_guess_container)
         playersRecyclerView = rootView.findViewById(R.id.fragment_active_match_recycler_view_player_list)
 
+        guessingView.listener = object : WordGuessingView.Listener {
+            override fun onGuessPressed(text: String) {
+                activeMatchPresenter?.guessPressed(text)
+            }
+        }
+
         setupRecyclerView()
     }
 

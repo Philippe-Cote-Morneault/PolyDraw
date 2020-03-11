@@ -23,10 +23,18 @@ class ActiveMatchPresenter : Presenter {
         matchManager.notifyReadyToPlay()
     }
 
+    fun guessPressed(text: String) {
+        matchManager.makeGuess(text)
+    }
+
     private fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
+    }
+
+    private fun onTurnToDraw(turnToDraw: TurnToDraw) {
+        Log.d("POTATO", "Turn to draw word = ${turnToDraw.word}")
     }
 
     private fun subscribeToEvents() {
@@ -37,6 +45,7 @@ class ActiveMatchPresenter : Presenter {
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
             EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
+            EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
         }
     }
 
