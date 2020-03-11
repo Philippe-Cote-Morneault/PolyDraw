@@ -33,6 +33,6 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        holder.bind(players[position])
+        holder.bind(players[position], position + 1, 0)
     }
 }
