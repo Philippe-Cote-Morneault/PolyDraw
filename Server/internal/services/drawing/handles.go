@@ -104,10 +104,10 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
-		log.Printf("[Drawing] Number of points is : %v", len(stroke.points))
-		// s := stroke.clone()
-		// splitPointsIntoPayloads(&payloads, &stroke.points, &s, path.Time)
-		payloads = append(payloads, stroke.Marshall())
+		// log.Printf("[Drawing] Number of points in stroke : %v", len(stroke.points))
+		s := stroke.clone()
+		splitPointsIntoPayloads(&payloads, &stroke.points, &s, path.Time)
+		// payloads = append(payloads, stroke.Marshall())
 	}
 	for _, payload := range payloads {
 		packet := socket.RawMessage{
@@ -115,7 +115,9 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 			Length:      uint16(len(payload)),
 			Bytes:       payload,
 		}
+
 		socket.SendRawMessageToSocketID(packet, socketID)
+		// log.Printf("[Drawing] %v | Length of current paquet : %v.", time.Now(), packet.Length)
 		//Wait 20ms between strokes
 		time.Sleep(delayDrawSending * time.Millisecond)
 	}
@@ -125,25 +127,37 @@ func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, strok
 
 	nbPoints := (delayDrawSending * len(*points)) / time
 
-	if nbPoints >= maxPointsperPacket {
+	if nbPoints == 0 {
+		nbPoints = 1
+	} else if nbPoints >= maxPointsperPacket {
 		for nbPoints >= maxPointsperPacket {
 			nbPoints /= 2
 		}
 	}
 
+	// log.Printf("[Drawing] %v points per %v ms is (with total time of %v ms).", nbPoints, delayDrawSending, time)
+
 	index := 0
-	iterations := len(*points)%nbPoints + 1
+	// TODO a supprimer et faire boucle infinie apres debug
+	iterations := len(*points)/nbPoints + 1
+	// log.Printf("[Drawing] iterations : %v", iterations)
+
 	for i := 0; i < iterations; i++ {
-		if nbPoints+index >= len(stroke.points) {
+		if nbPoints+index >= len(*points) {
 			stroke.points = (*points)[index:]
+			// log.Printf("[Drawing] nb Points in payload (final) : %v", len(stroke.points))
 			*payloads = append(*payloads, stroke.Marshall())
 			break
 		}
 
-		stroke.points = (*points)[index:nbPoints]
+		stroke.points = (*points)[index : index+nbPoints]
+
+		// log.Printf("[Drawing] nb Points in payload : %v", len(stroke.points))
+		// log.Println(stroke.points)
 
 		*payloads = append(*payloads, stroke.Marshall())
 		index += nbPoints
+		stroke.points = nil
 	}
 }
 
