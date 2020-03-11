@@ -29,3 +29,9 @@ class PlayerTurnToDraw(
     var drawingID: UUID,
     var wordLength: Int
 )
+
+class TurnToDraw(
+    var word: String,
+    var time: Int,
+    var drawingID: UUID
+)
