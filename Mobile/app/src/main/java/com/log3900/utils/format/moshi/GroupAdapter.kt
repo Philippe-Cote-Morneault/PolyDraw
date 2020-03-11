@@ -32,7 +32,7 @@ class GroupAdapter {
         )
     }
 
-    private fun jsonArrayToPlayers(ids: JsonArray): ArrayList<Player> {
+    fun jsonArrayToPlayers(ids: JsonArray): ArrayList<Player> {
         var arrayList = arrayListOf<Player>()
 
         ids.forEach {
