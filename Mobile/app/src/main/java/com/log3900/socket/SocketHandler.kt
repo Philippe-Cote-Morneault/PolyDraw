@@ -156,6 +156,7 @@ object SocketHandler {
                 ?: return
 
             val message = Message(type, values)
+//            Log.d("DRAW", message.toString())
 
             if (message.type == Event.HEALTH_CHECK_SERVER) {
                 Log.d("Healthcheck", "Received server healthcheck")
