@@ -27,8 +27,6 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
         setupUI(rootView)
 
-        guessingView.setWordLength(5)
-
         activeMatchPresenter = ActiveMatchPresenter(this)
 
         return rootView
@@ -62,6 +60,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     override fun clearAllPlayerStatusRes() {
         playersAdapter.resetAllImageRes()
         playersAdapter.notifyDataSetChanged()
+    }
+
+    override fun setWordToGuessLength(length: Int) {
+        guessingView.setWordLength(length)
     }
 
     override fun onDestroy() {

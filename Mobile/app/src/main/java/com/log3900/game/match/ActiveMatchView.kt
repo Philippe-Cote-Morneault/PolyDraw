@@ -8,4 +8,5 @@ interface ActiveMatchView {
     fun setPlayers(players: ArrayList<Player>)
     fun setPlayerStatus(playerID: UUID, statusImageRes: Int)
     fun clearAllPlayerStatusRes()
+    fun setWordToGuessLength(length: Int)
 }
