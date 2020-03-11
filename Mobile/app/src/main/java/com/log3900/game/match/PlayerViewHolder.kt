@@ -17,6 +17,8 @@ import io.reactivex.schedulers.Schedulers
 
 class PlayerViewHolder : RecyclerView.ViewHolder {
     private lateinit var player: Player
+    private var currentPosition: Int = 0
+    private var score: Int = 0
 
     // UI
     private var rootView: View
@@ -34,10 +36,14 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         scoreTextView = itemView.findViewById(R.id.list_item_active_match_player_text_view_score)
     }
 
-    fun bind(player: Player) {
+    fun bind(player: Player, position: Int, score: Int) {
         this.player = player
+        this.currentPosition = position
+        this.score = score
 
+        positionTextView.text = "#$position"
         playerChip.text = player.username
+        scoreTextView.text = "Score: $score"
 
         UserRepository.getInstance().getUser(player.ID)
             .subscribeOn(Schedulers.io())
