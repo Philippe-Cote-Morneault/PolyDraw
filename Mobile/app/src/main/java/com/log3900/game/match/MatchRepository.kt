@@ -48,6 +48,7 @@ class MatchRepository : Service() {
         instance = this
         socketService = SocketService.instance
 
+        socketService?.subscribeToMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
         socketService?.subscribeToMessage(com.log3900.socket.Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
     }
@@ -104,6 +105,7 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.START_MATCH_RESPONSE, socketMessageHandler!!)
         socketMessageHandler = null
