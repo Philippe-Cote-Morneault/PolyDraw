@@ -49,6 +49,7 @@ class MatchRepository : Service() {
         socketService = SocketService.instance
 
         socketService?.subscribeToMessage(com.log3900.socket.Event.USER_JOINED_GROUP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(com.log3900.socket.Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -84,6 +85,7 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         val match = MatchAdapter.fromJson(jsonObject)
+        currentMatch = match
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_ABOUT_TO_START, match))
     }
 
@@ -92,6 +94,7 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.START_MATCH_RESPONSE, socketMessageHandler!!)
         socketMessageHandler = null
         socketService = null
