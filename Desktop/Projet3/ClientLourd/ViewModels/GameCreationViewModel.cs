@@ -44,11 +44,13 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
+            StrokeDrawerService.Start();
             PreviewGUIEnabled = false;
         }
 
         private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
         {
+            StrokeDrawerService.ReceivedAllPreviewStrokes = true;
             PreviewGUIEnabled = true;
         }
         

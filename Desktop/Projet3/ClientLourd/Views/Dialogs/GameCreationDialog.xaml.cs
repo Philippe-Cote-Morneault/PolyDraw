@@ -32,7 +32,7 @@ namespace ClientLourd.Views.Dialogs
             InitializeComponent();
             Loaded += (sender, args) => { 
                 ViewModel.CurrentCanvas = PreviewCanvas;
-                ViewModel.StrokeDrawerService = new ServerStrokeDrawerService(PreviewCanvas, false);
+                ViewModel.StrokeDrawerService = new ServerStrokeDrawerService(PreviewCanvas, true);
             };
         }
 

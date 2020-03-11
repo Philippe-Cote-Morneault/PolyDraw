@@ -72,17 +72,16 @@ namespace ClientLourd.ViewModels
         {
 
             StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
-
-            //      Application.Current.Dispatcher.Invoke(delegate 
-            //      {
-            //          Editor.Canvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
-            //     });
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
             Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
+            if (e.UserID == SessionInformations.User.ID)
+            {
+                StrokeDrawerService.Stop();
+            }
         }
 
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
@@ -161,11 +160,13 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             Player Winner = Players.FirstOrDefault(p => p.User.ID == e.WinnerID);
             MessageBox.Show($"game end, {Winner.User.Username}");
+            StrokeDrawerService.Stop();
             //DialogHost.Show(new MessageDialog("Game ended", $"The winner is {Winner.User.Username}"));
         }
 
         private void SocketClientOnMatchStarted(object source, EventArgs args)
         {
+            StrokeDrawerService.Start();
         }
         
         public Lobby Lobby

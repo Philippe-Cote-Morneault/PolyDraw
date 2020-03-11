@@ -18,6 +18,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
         private System.Timers.Timer _drawTimer;
         private System.Windows.Controls.InkCanvas _canvas;
         private bool _isPreview;
+        public bool ReceivedAllPreviewStrokes { get; set; }
 
         public ServerStrokeDrawerService(System.Windows.Controls.InkCanvas canvas, bool IsPreview)
         {
@@ -26,14 +27,36 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
             _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
             _drawTimer = new System.Timers.Timer(5);
             _drawTimer.Elapsed += Draw;
-            _drawTimer.Start();
+            _drawTimer.Stop();
+            ReceivedAllPreviewStrokes = false;
         }
 
+        public void Start()
+        {
+            if (!_drawTimer.Enabled)
+            {
+                _drawTimer.Start();
+            }
+        }
+
+        public void Stop()
+        {
+            if (_drawTimer.Enabled)
+            {
+                _drawTimer.Stop();
+            }
+        }
 
         private void Draw(object source, EventArgs args)
         {
-            _drawTimer.Stop();
-            if (_strokeInfoQueue.Count != 0)
+            Stop();
+
+            if (_strokeInfoQueue.IsEmpty && ReceivedAllPreviewStrokes)
+            {
+                return;
+            }
+
+            if (!_strokeInfoQueue.IsEmpty)
             {
 
                 Application.Current.Dispatcher.Invoke(delegate
@@ -54,7 +77,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
                 });
 
             }
-            _drawTimer.Start();
+            Start();
         }
 
         public void Enqueue(StrokeInfo strokeInfo)
