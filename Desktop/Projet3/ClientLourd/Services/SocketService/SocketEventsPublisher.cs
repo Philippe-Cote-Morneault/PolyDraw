@@ -123,6 +123,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler MatchEnded;
         public event SocketEventHandler MatchStarted;
         public event SocketEventHandler AreYouReady;
+        public event SocketEventHandler UserDeleteStroke;
 
 
         protected virtual void OnMatchStarted(object source)
@@ -178,6 +179,11 @@ namespace ClientLourd.Services.SocketService
         {
             PlayerGuessedTheWord?.Invoke(source, e);
         }
+        
+        protected virtual void OnUserDeleteStroke(object source, EventArgs e)
+        {
+            UserDeleteStroke?.Invoke(source, e);
+        }
 
 
 
@@ -218,5 +224,6 @@ namespace ClientLourd.Services.SocketService
         {
             StartGameResponse?.Invoke(source, e);
         }
+
     }
 }

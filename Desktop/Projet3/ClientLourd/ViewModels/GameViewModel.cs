@@ -51,7 +51,18 @@ namespace ClientLourd.ViewModels
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
+            SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
         }
+
+        private void SocketClientOnUserDeleteStroke(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(delegate 
+            {
+                var e = (DrawingEventArgs) args;
+                Editor.Canvas.RemoveStroke(new Guid(e.Data));
+            });
+        }
+
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
             Application.Current.Dispatcher.Invoke(delegate 
@@ -80,6 +91,7 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             //Enable the canvas
             Word = e.Word;
+            ChangeCanvasStatus(true);
             _drawingID = e.DrawingID;
             _stokesReader.Start(_drawingID);
         }
@@ -120,8 +132,10 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
+            ChangeCanvasStatus(false);
             ClearCanvas();
             Word = "";
+            Round++;
             //Round end
             if (e.Type == 1)
             {
@@ -269,8 +283,14 @@ namespace ClientLourd.ViewModels
             });
         }
 
+        private void ChangeCanvasStatus(bool isEnable)
+        {
+            Application.Current.Dispatcher.Invoke(() => { Editor.IsEnabled = isEnable; });
+        }
+
         private void PrepareMatch()
         {
+            ChangeCanvasStatus(false);
             ClearCanvas();
             Application.Current.Dispatcher.Invoke(() =>
             {

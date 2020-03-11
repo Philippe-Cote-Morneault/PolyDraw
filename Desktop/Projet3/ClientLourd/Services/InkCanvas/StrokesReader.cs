@@ -88,8 +88,6 @@ namespace ClientLourd.Services.InkCanvas
         {
             Stroke stroke = (Stroke) sender;
             _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, new Guid(stroke.GetPropertyData(GUIDs.ID).ToString())));
-            Console.WriteLine(new Guid(stroke.GetPropertyData(GUIDs.ID).ToString()));
-            
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)

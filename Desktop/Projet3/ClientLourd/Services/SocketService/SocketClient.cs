@@ -235,6 +235,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.AreYouReady:
                             OnAreYouReady(this, new MatchEventArgs(data));
                             break;
+                        case SocketMessageTypes.UserDeletedStroke:
+                            OnUserDeleteStroke(this, new DrawingEventArgs(data));
+                            break;
                         
                         default:
                             throw new InvalidDataException();
@@ -253,15 +256,13 @@ namespace ClientLourd.Services.SocketService
             {
                 //Raw bytes
                 case SocketMessageTypes.ServerConnectionResponse:
-                    return bytes;
                 case SocketMessageTypes.ServerStrokeSent:
-                    return bytes;
                 case SocketMessageTypes.ServerStartsDrawing:
-                    return bytes;
                 case SocketMessageTypes.ServerEndsDrawing:
-                    return bytes;
                 case SocketMessageTypes.LobbyDeleted:
+                case SocketMessageTypes.UserDeletedStroke:
                     return bytes;
+                    
                 //Message pack;
                 default:
                      return MessagePackSerializer.Deserialize<dynamic>(bytes, ContractlessStandardResolver.Options);
