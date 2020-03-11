@@ -54,6 +54,7 @@ class AccountRepository {
     }
 
     fun createAccount(account: Account): Completable {
+        currentAccount = account
         return Completable.create {
             AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
                 .insertAccount(account)
