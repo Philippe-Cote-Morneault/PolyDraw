@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.view_draw_color_palette.*
 // See https://github.com/divyanshub024/AndroidDraw
 // and https://android.jlelse.eu/a-guide-to-drawing-in-android-631237ab6e28
 
-class DrawViewFragment(private var canDraw: Boolean = false) : Fragment() {
+class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
 
     override fun onCreateView(

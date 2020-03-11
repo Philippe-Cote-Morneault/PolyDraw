@@ -46,7 +46,7 @@ class DrawViewBase @JvmOverloads constructor(
     private var mIsSaving = false
     private var mIsStrokeWidthBarEnabled = false
 
-    private lateinit var socketDrawingReceiver: SocketDrawingReceiver
+    private var socketDrawingReceiver: SocketDrawingReceiver? = null
 
     init {
         mPaint.apply {
@@ -78,15 +78,16 @@ class DrawViewBase @JvmOverloads constructor(
     fun enableCanDraw(canDrawOnCanvas: Boolean) {
         canDraw = canDrawOnCanvas
 
-        if (canDraw) {
-            if (!::socketDrawingReceiver.isInitialized) {
+        if (!canDraw) {
+            if (socketDrawingReceiver == null) {
                 socketDrawingReceiver = SocketDrawingReceiver(this)
             }
-            // If we cannot draw, we want to receive strokes from the server
-            socketDrawingReceiver.isListening = !canDraw
         } else {
             // TODO: Set socketDrawingSender
         }
+        // If we cannot draw, we want to receive strokes from the server
+        socketDrawingReceiver?.isListening = !canDraw
+        socketDrawingReceiver?.sendPreviewRequest()
     }
 
     fun drawStart(start: DrawPoint) {

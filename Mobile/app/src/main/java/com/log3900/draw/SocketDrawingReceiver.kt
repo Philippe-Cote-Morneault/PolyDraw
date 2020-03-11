@@ -37,12 +37,16 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             true
         })
 
+        sendPreviewRequest()
+    }
+
+    @Deprecated("Test purposes only")
+    fun sendPreviewRequest() {
         val gameUUID = UUID.fromString("61db7e41-1cb2-4d88-a834-29c59dbcd389")  // TODO: Remove
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
     private fun parseMessageToStroke(data: ByteArray) {
-        // Custom single threaded context to draw strokes in order, one by one
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeInfo = DrawingMessageParser.unpackStrokeInfo(data)
