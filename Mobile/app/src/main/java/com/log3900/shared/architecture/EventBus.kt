@@ -23,6 +23,7 @@ enum class EventType {
     // Match
     MATCH_ABOUT_TO_START,
     MATCH_START_RESPONSE,
+    MATCH_STARTING,
     // Session
     LOGOUT,
 
