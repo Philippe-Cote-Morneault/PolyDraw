@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/docker/docker v1.13.1 // indirect
+	github.com/docker/docker v1.13.1
 	github.com/go-redis/redis/v7 v7.1.0
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/context v1.1.1

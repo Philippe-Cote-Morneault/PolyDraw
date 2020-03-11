@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
+	"log"
 	"sync"
 )
 
@@ -68,14 +69,17 @@ func (r *Router) Route(message *socket.RawMessageReceived) {
 		Bytes:       message.Payload.Bytes,
 	}
 	r.mutex.RLock()
-	matchPtr := r.connections[message.SocketID]
+	matchPtr, ok := r.connections[message.SocketID]
 	r.mutex.RUnlock()
-
-	connections := (*matchPtr).GetConnections()
-	for i := range connections {
-		if connections[i] != message.SocketID {
-			go socket.SendRawMessageToSocketID(newMessage, connections[i])
+	if ok {
+		connections := (*matchPtr).GetConnections()
+		for i := range connections {
+			if connections[i] != message.SocketID {
+				go socket.SendRawMessageToSocketID(newMessage, connections[i])
+			}
 		}
+	} else {
+		log.Printf("[Drawing] cannot find match associated with socket id %s", message.SocketID)
 	}
 
 }
