@@ -27,8 +27,9 @@ import java.util.LinkedHashMap
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-open class DrawViewBase @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+class DrawViewBase @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0,
+    var canDraw: Boolean = true
 ) : View(context, attrs, defStyleAttr) {
     private var mPaths = LinkedHashMap<MyPath, PaintOptions>()
 
@@ -45,7 +46,7 @@ open class DrawViewBase @JvmOverloads constructor(
     private var mIsSaving = false
     private var mIsStrokeWidthBarEnabled = false
 
-    val socketDrawingReceiver = SocketDrawingReceiver(this)
+    private var socketDrawingReceiver: SocketDrawingReceiver? = null
 
     init {
         mPaint.apply {
@@ -57,6 +58,9 @@ open class DrawViewBase @JvmOverloads constructor(
             isAntiAlias = true
         }
 
+        if (canDraw) {
+            socketDrawingReceiver = SocketDrawingReceiver(this)
+        }
 //        GlobalScope.launch {
 //            mStartX = 200f
 //            mStartY = 200f
@@ -69,6 +73,21 @@ open class DrawViewBase @JvmOverloads constructor(
 //            drawEnd()
 //            invalidate()
 //        }
+    }
+
+    fun enableCanDraw(canDrawOnCanvas: Boolean) {
+        canDraw = canDrawOnCanvas
+
+        if (!canDraw) {
+            if (socketDrawingReceiver == null) {
+                socketDrawingReceiver = SocketDrawingReceiver(this)
+            }
+        } else {
+            // TODO: Set socketDrawingSender
+        }
+        // If we cannot draw, we want to receive strokes from the server
+        socketDrawingReceiver?.isListening = !canDraw
+        socketDrawingReceiver?.sendPreviewRequest()
     }
 
     fun drawStart(start: DrawPoint) {
@@ -169,7 +188,8 @@ open class DrawViewBase @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-//        return true
+        if (!canDraw)
+            return true
 
         // TODO: REmove when done testing
         val x = event.x

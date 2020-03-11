@@ -9,20 +9,20 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.log3900.draw.divyanshuwidget.DrawView
 import com.log3900.R
 import com.log3900.draw.divyanshuwidget.DrawMode
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
-import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_fab
-import kotlinx.android.synthetic.main.fragment_draw_view.draw_tools_view
+import kotlinx.android.synthetic.main.fragment_draw_view.*
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
 
 // See https://github.com/divyanshub024/AndroidDraw
 // and https://android.jlelse.eu/a-guide-to-drawing-in-android-631237ab6e28
 
-class DrawViewFragment : Fragment() {
+class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
 
     override fun onCreateView(
@@ -40,19 +40,22 @@ class DrawViewFragment : Fragment() {
         setUpToolButtons()
         setUpWidthSeekbar()
         setUpColorButtons()
+
+        enableDrawFunctions(canDraw)
+
+        val toggleBtn = Button(context).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            text = "Toggle canDraw"
+            setOnClickListener {
+                enableDrawFunctions(!canDraw)
+            }
+        }
+        draw_view_fragment_layout.addView(toggleBtn)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
-//        drawView.setOnTouchListener { view, motionEvent ->
-//            when(motionEvent.action) {
-//                MotionEvent.ACTION_DOWN -> println("ACTION: DOWN")
-//                MotionEvent.ACTION_UP -> println("ACTION: UP")
-//                MotionEvent.ACTION_MOVE -> println("ACTION: MOVE (${motionEvent.x}, ${motionEvent.y})")
-//            }
-//            true
-//        }
     }
 
     private fun setUpFab() {
@@ -107,11 +110,6 @@ class DrawViewFragment : Fragment() {
             updateTipButtonPressed(it)
             drawView.setCap(Paint.Cap.SQUARE)
         }
-
-//        adjust_width_button.setOnClickListener {
-//            // TODO: Change draw mode...
-//            drawView.setStrokeWidth(15f)
-//        }
     }
 
     private fun setUpWidthSeekbar() {
@@ -214,5 +212,21 @@ class DrawViewFragment : Fragment() {
 
     private fun changeDrawColor(color: Int) {
         drawView.setColor(color)
+    }
+
+    fun enableDrawFunctions(enable: Boolean) {
+        canDraw = enable
+        if (canDraw) {
+            setDrawToolsVisibility(View.VISIBLE)
+        } else {
+            setDrawToolsVisibility(View.GONE)
+        }
+
+        drawView.enableCanDraw(canDraw)
+    }
+
+    private fun setDrawToolsVisibility(visibility: Int) {
+        draw_tools_view.visibility = visibility
+        draw_tools_fab.visibility = visibility
     }
 }
