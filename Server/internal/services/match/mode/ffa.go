@@ -162,6 +162,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 //TryWord endpoint for when a user tries to guess a word
 func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 	f.receiving.Lock()
+	log.Printf("[Match] [FFA] Guessing the word for the socket id %s", socketID)
 	if strings.ToLower(strings.TrimSpace(word)) == f.currentWord && f.currentWord != "" {
 
 		//The word was found
