@@ -21,6 +21,7 @@ using System.Windows.Input;
 using ClientLourd.Utilities.Extensions;
 using ClientLourd.Services.RestService;
 using MaterialDesignThemes.Wpf;
+using ClientLourd.Services.ServerStrokeDrawerService;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -29,7 +30,10 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
-            Loaded += (sender, args) => { ViewModel.CurrentCanvas = PreviewCanvas; };
+            Loaded += (sender, args) => { 
+                ViewModel.CurrentCanvas = PreviewCanvas;
+                ViewModel.StrokeDrawerService = new ServerStrokeDrawerService(PreviewCanvas);
+            };
         }
 
         private GameCreationViewModel ViewModel

@@ -85,7 +85,7 @@ namespace ClientLourd.Views.Dialogs
                 //TODO: Dont load messages if messageIndex is greater than the array length 
 
                 StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
-                if (sh.MatchesPlayedHistory.Count > 0)
+                if (sh.MatchesPlayedHistory != null && sh.MatchesPlayedHistory.Count > 0)
                 {
                     _lastMessageIndex += 20;
                     AddStatsHistory(sh);

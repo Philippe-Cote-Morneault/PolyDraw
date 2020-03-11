@@ -21,7 +21,6 @@ namespace ClientLourd.Services.SocketService
 {
     public class SocketClient : SocketEventsPublisher
     {
-
         private Socket _socket;
         private NetworkStream _stream;
         private Task _receiver;
@@ -36,23 +35,22 @@ namespace ClientLourd.Services.SocketService
 
         private void OnHealthCheck(object source, EventArgs args)
         {
-            Application.Current.Dispatcher.InvokeAsync(() =>
+          
+            //We stop the timer 
+            _healthCheckTimer.Stop();
+            try
             {
-                //We stop the timer 
-                _healthCheckTimer.Stop();
-                try
-                {
-                    //We send the healthCheck response to the server
-                    SendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
-                }
-                catch
-                {
-                    //If an error occured the health check Timer will handle it
-                }
+                //We send the healthCheck response to the server                    
+                SendMessage(new Tlv(SocketMessageTypes.HealthCheckResponse));
+            }
+            catch
+            {
+                //If an error occured the health check Timer will handle it
+            }
 
-                //Restart the timer
-                _healthCheckTimer.Start();
-            }, DispatcherPriority.Send);
+            //Restart the timer
+            _healthCheckTimer.Start();
+            
         }
 
         /// <summary>
@@ -141,6 +139,7 @@ namespace ClientLourd.Services.SocketService
                             count += _stream.Read(bytes, count, length - count);
                         }
                         data = RetreiveData(type, bytes);
+                        
                     }
                     System.Diagnostics.Debug.WriteLine($"socket <--- [{type}]");
                     switch (type)
@@ -241,7 +240,7 @@ namespace ClientLourd.Services.SocketService
                         
                         default:
                             throw new InvalidDataException();
-                    }
+                    }                    
                 }
                 catch
                 {
@@ -281,6 +280,7 @@ namespace ClientLourd.Services.SocketService
         {
             Console.WriteLine($"Connection lost");
             OnConnectionLost(this);
+            
         }
     }
 }

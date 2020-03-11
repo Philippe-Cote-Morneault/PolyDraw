@@ -157,6 +157,7 @@
     <Compile Include="Services\RestService\Exceptions\RestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
+    <Compile Include="Services\ServerStrokeDrawerService\ServerStrokeDrawerService.cs" />
     <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
     <Compile Include="Services\SocketService\LobbyEventArgs.cs" />
     <Compile Include="Services\SocketService\MatchEventArgs.cs" />

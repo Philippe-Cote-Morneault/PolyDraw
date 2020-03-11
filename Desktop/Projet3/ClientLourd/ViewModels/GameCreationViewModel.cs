@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,12 +20,14 @@ using ClientLourd.Utilities.Extensions;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
+using ClientLourd.Services.ServerStrokeDrawerService;
 
 namespace ClientLourd.ViewModels
 {
     public class GameCreationViewModel : ViewModelBase
-    {
-        public int counter = 0;
+    {        
+        public ServerStrokeDrawerService StrokeDrawerService { get; set; }
+        
         public GameCreationViewModel()
         {
             PreviewGUIEnabled = true;
@@ -36,7 +40,8 @@ namespace ClientLourd.ViewModels
             SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
         }
-        
+
+
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
             PreviewGUIEnabled = false;
@@ -47,7 +52,7 @@ namespace ClientLourd.ViewModels
             PreviewGUIEnabled = true;
         }
         
-        private async void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
+        private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
@@ -61,15 +66,8 @@ namespace ClientLourd.ViewModels
         }
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
-        {
-            
-            Application.Current.Dispatcher.Invoke(delegate 
-            {
-                counter++;
-
-                CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
-
-            });
+        {    
+            StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);   
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
@@ -307,6 +305,7 @@ namespace ClientLourd.ViewModels
             {
                 CurrentCanvas.Strokes.Clear();
                 await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
+                Console.WriteLine($"Played preview mode: {_selectedMode}");
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
             }
             catch (Exception e)
