@@ -23,8 +23,27 @@ namespace ClientLourd.Utilities.Extensions
                 return;
             }
 
-            inkCanvas.Strokes.Add(CreateStroke(strokeInfo));
+            
+            foreach(StylusPoint sp in strokeInfo.PointCollection)
+            {
+                caca(inkCanvas, sp, strokeInfo);
+            }
         }
+
+        private static void caca(InkCanvas inkCanvas, StylusPoint sp, StrokeInfo strokeInfo)
+        {
+            StylusPointCollection pc = new StylusPointCollection();
+            pc.Add(sp);
+            Stroke newStroke = new Stroke(pc);
+            newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
+            newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
+            newStroke.DrawingAttributes.Height = strokeInfo.BrushSize;
+            newStroke.DrawingAttributes.Width = strokeInfo.BrushSize;
+            newStroke.AddPropertyData(GUIDs.ID, strokeInfo.StrokeID.ToString());
+            inkCanvas.Strokes.Add(newStroke);
+        }
+        
+
 
         public static void RemoveStroke(this InkCanvas inkCanvas, Guid strokeID)
         {
@@ -45,6 +64,7 @@ namespace ClientLourd.Utilities.Extensions
 
         private static Stroke CreateStroke(StrokeInfo strokeInfo)
         {
+
             Stroke newStroke = new Stroke(strokeInfo.PointCollection);
             newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
             newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
@@ -57,9 +77,9 @@ namespace ClientLourd.Utilities.Extensions
 
         private static void AddPointsToStroke(Stroke stroke, StrokeInfo strokeInfo)
         {
-            foreach(var point in strokeInfo.PointCollection)
+            foreach (StylusPoint sp in strokeInfo.PointCollection.ToList())
             {
-                stroke.StylusPoints.Add(new StylusPoint(point.X, point.Y));
+                stroke.StylusPoints.Add(sp);
             }
         }
     }

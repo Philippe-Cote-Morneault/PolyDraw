@@ -181,6 +181,7 @@
     <Compile Include="Utilities\Converters\WidthToLeftMarginConverter.cs" />
     <Compile Include="Utilities\Enums\DifficultyLevel.cs" />
     <Compile Include="Utilities\Enums\GameModes.cs" />
+    <Compile Include="Utilities\Enums\Languages.cs" />
     <Compile Include="Utilities\Enums\PotraceMode.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
@@ -311,6 +312,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Languages\en.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Languages\fr.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\ChannelSection.xaml" />
     <Page Include="Views\Controls\Chat.xaml" />
     <Page Include="Views\Controls\Conversation.xaml" />

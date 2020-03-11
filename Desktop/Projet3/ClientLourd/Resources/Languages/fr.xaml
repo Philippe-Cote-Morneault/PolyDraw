@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="test">Salut</system:String>
+    
+    <!--Common-->
+    <system:String x:Key="Username">Nom d'utilisateur</system:String>
+    <system:String x:Key="Password">Mot de passe</system:String>
+    <system:String x:Key="Email">Courriel</system:String>
+    <system:String x:Key="FirstName">Prénom</system:String>
+    <system:String x:Key="LastName">Nom</system:String>
+    <system:String x:Key="Close">Fermer</system:String>
+    
+    <!--Hamburger menu-->
+    <system:String x:Key="Home">Accueil</system:String>
+    <system:String x:Key="MyProfile">Mon profil</system:String>
+    <system:String x:Key="Editor">Editeur</system:String>
+    <system:String x:Key="Logout">Déconnexion</system:String>
+    
+    <!--Home.xaml-->
+    <system:String x:Key="Mode">Mode</system:String>
+    <system:String x:Key="LobbyName">Nom de la salle d'attente</system:String>
+    <system:String x:Key="Difficulty">Difficulté</system:String>
+    <system:String x:Key="Host">Hôte</system:String>
+    <system:String x:Key="CreateLobby">Créer une salle d'attente</system:String>
+    <system:String x:Key="CreateGame">Créer une partie</system:String>
+
+    <!--Profile-->
+    <system:String x:Key="WelcomeProfile">Bienvenue sur votre profil!</system:String>
+    <system:String x:Key="EditProfile">Modifier mon profil</system:String>
+    <system:String x:Key="ViewConnections">Historique des connexions</system:String>
+    <system:String x:Key="ViewGamesPlayed">Historique des parties jouées</system:String>
+    <system:String x:Key="Statistics">Statistiques</system:String>
+    <system:String x:Key="NumberGamesPlayed">Nombre de parties jouées:</system:String>
+    <system:String x:Key="WinPercentage">Pourcentage de victoires:</system:String>
+    <system:String x:Key="TimePlayed">Temps joué:</system:String>
+    <system:String x:Key="AverageGameDuration">Temps moyen d'une partie:</system:String>
+    <system:String x:Key="BestSoloScore">Meilleur score solo:</system:String>
+    <system:String x:Key="Achievements">Trophés</system:String>
+
+    <!--Edit Profile-->
+    <system:String x:Key="EditProfileTitle">Modifier mon profil</system:String>
+    <system:String x:Key="ChangeAvatar">Changer mon avatar</system:String>
+    <system:String x:Key="Update">Modifier</system:String>
+    <system:String x:Key="RevertOriginal">[Retourner à l'original]</system:String>
+    <system:String x:Key="PasswordValidator">Au moins 8 caractères</system:String>
+
+</ResourceDictionary>

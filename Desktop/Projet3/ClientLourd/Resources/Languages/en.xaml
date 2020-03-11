@@ -1,0 +1,47 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="test">Hi</system:String>
+    <!--Common-->
+    <system:String x:Key="Username">Username</system:String>
+    <system:String x:Key="Password">Password</system:String>
+    <system:String x:Key="Email">Email</system:String>
+    <system:String x:Key="FirstName">First name</system:String>
+    <system:String x:Key="LastName">Last name</system:String>
+    <system:String x:Key="Close">Close</system:String>
+    
+    <!--Hamburger menu-->
+    <system:String x:Key="Home">Home</system:String>
+    <system:String x:Key="MyProfile">My profile</system:String>
+    <system:String x:Key="Editor">Editor</system:String>
+    <system:String x:Key="Logout">Logout</system:String>
+
+    <!--Home.xaml-->
+    <system:String x:Key="Mode">Mode</system:String>
+    <system:String x:Key="LobbyName">Lobby name</system:String>
+    <system:String x:Key="Difficulty">Difficulty</system:String>
+    <system:String x:Key="Host">Host</system:String>
+    <system:String x:Key="CreateLobby">Create a lobby</system:String>
+    <system:String x:Key="CreateGame">Create a game</system:String>
+    
+    <!--Profile-->
+    <system:String x:Key="WelcomeProfile">Welcome to your profile!</system:String>
+    <system:String x:Key="EditProfile">Edit my profile</system:String>
+    <system:String x:Key="ViewConnections">View connection history</system:String>
+    <system:String x:Key="ViewGamesPlayed">View games played history</system:String>
+    <system:String x:Key="Statistics">Statistics</system:String>
+    <system:String x:Key="NumberGamesPlayed">Number of games played:</system:String>
+    <system:String x:Key="WinPercentage">Win percentage:</system:String>
+    <system:String x:Key="TimePlayed">Time played:</system:String>
+    <system:String x:Key="AverageGameDuration">Average game duration:</system:String>
+    <system:String x:Key="BestSoloScore">Best solo mode score:</system:String>
+    <system:String x:Key="Achievements">Achievements</system:String>
+    
+    <!--Edit Profile-->
+    <system:String x:Key="EditProfileTitle">Edit my profile</system:String>
+    <system:String x:Key="ChangeAvatar">Change avatar</system:String>
+    <system:String x:Key="Update">Update</system:String>
+    <system:String x:Key="RevertOriginal">[Revert to original]</system:String>
+    <system:String x:Key="PasswordValidator">At least 8 characters</system:String>
+    
+</ResourceDictionary>

@@ -109,6 +109,10 @@
           </e>
           <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
+          <e p="Languages" t="Include">
+            <e p="en.xaml" t="Include" />
+            <e p="fr.xaml" t="Include" />
+          </e>
           <e p="LogoMakr_4YSBb4.png" t="Include" />
           <e p="Message.wav" t="Include" />
           <e p="MessageNotification.mp3" t="Include" />
@@ -194,6 +198,7 @@
           <e p="Enums" t="Include">
             <e p="DifficultyLevel.cs" t="Include" />
             <e p="GameModes.cs" t="Include" />
+            <e p="Languages.cs" t="Include" />
             <e p="PotraceMode.cs" t="Include" />
             <e p="SocketMessageTypes.cs" t="Include" />
             <e p="Views.cs" t="Include" />

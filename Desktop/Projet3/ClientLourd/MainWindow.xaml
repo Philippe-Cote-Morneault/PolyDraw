@@ -80,9 +80,6 @@
                             MouseUp="LeaveLobby"
                        />
 
-
-
-
                         <!-- Use for hiding the button when the chat is export-->
                         <Grid DockPanel.Dock="Right"
                               Visibility="{Binding ElementName=ChatToggleButton, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -130,44 +127,56 @@
 
                         <!--Sound button-->
                         <Grid DockPanel.Dock="Right">
-                            <materialDesign:PackIcon
-                                Visibility="{Binding Path=SoundService.SoundIsOn, Converter={StaticResource VisibleIfTrueConverter}}"
-                                Cursor="Hand"
-                                Background="{StaticResource PrimaryHueMidBrush}"
-                                Margin="0 0 20 0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                Foreground="{StaticResource MaterialDesignDarkForeground}"
-                                Kind="VolumeHigh"
-                                Height="24"
-                                Width="24">
-                                <materialDesign:PackIcon.InputBindings>
-                                    <MouseBinding Gesture="LeftClick" 
-                                    Command="{Binding Path=ToggleSoundCommand}"/>
-                                    <MouseBinding Gesture="LeftDoubleClick" 
-                                    Command="{Binding Path=ToggleSoundCommand}"/>
-                                    
-                                </materialDesign:PackIcon.InputBindings>
-                            </materialDesign:PackIcon>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox 
+                                    x:Name="LanguageSelector" 
+                                    FontSize="17"
+                                    ItemsSource="{Binding Languages}"  
+                                    SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}"
+                                    Margin="0 0 20 0">
+                                </ComboBox>
 
-                            <materialDesign:PackIcon
-                                Visibility="{Binding Path=SoundService.SoundIsOn, Converter={StaticResource VisibleIfFalseConverter}}"
-                                Margin="0 0 20 0"
-                                Cursor="Hand"
-                                Background="{StaticResource PrimaryHueMidBrush}"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"
-                                Foreground="{StaticResource MaterialDesignDarkForeground}"
-                                Kind="VolumeOff"
-                                Height="24"
-                                Width="24">
-                                <materialDesign:PackIcon.InputBindings>
-                                    <MouseBinding Gesture="LeftClick" 
-                                    Command="{Binding Path=ToggleSoundCommand}"/>
-                                    <MouseBinding Gesture="LeftDoubleClick" 
-                                    Command="{Binding Path=ToggleSoundCommand}"/>
-                                </materialDesign:PackIcon.InputBindings>
-                            </materialDesign:PackIcon>
+
+                                <materialDesign:PackIcon
+                                    Visibility="{Binding Path=SoundService.SoundIsOn, Converter={StaticResource VisibleIfTrueConverter}}"
+                                    Cursor="Hand"
+                                    Background="{StaticResource PrimaryHueMidBrush}"
+                                    Margin="0 0 20 0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                    Kind="VolumeHigh"
+                                    Height="24"
+                                    Width="24">
+                                    <materialDesign:PackIcon.InputBindings>
+                                        <MouseBinding Gesture="LeftClick" 
+                                        Command="{Binding Path=ToggleSoundCommand}"/>
+                                        <MouseBinding Gesture="LeftDoubleClick" 
+                                        Command="{Binding Path=ToggleSoundCommand}"/>
+
+                                    </materialDesign:PackIcon.InputBindings>
+                                </materialDesign:PackIcon>
+
+
+                                <materialDesign:PackIcon
+                                    Visibility="{Binding Path=SoundService.SoundIsOn, Converter={StaticResource VisibleIfFalseConverter}}"
+                                    Margin="0 0 20 0"
+                                    Cursor="Hand"
+                                    Background="{StaticResource PrimaryHueMidBrush}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                    Kind="VolumeOff"
+                                    Height="24"
+                                    Width="24">
+                                    <materialDesign:PackIcon.InputBindings>
+                                        <MouseBinding Gesture="LeftClick" 
+                                        Command="{Binding Path=ToggleSoundCommand}"/>
+                                        <MouseBinding Gesture="LeftDoubleClick" 
+                                        Command="{Binding Path=ToggleSoundCommand}"/>
+                                    </materialDesign:PackIcon.InputBindings>
+                                </materialDesign:PackIcon>
+                            </StackPanel>
                         </Grid>
 
                         <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
@@ -229,7 +238,7 @@
                                             Command="{Binding Path=HomeCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="House" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="Home"/>
+                                            <TextBlock Text="{DynamicResource Home}"/>
                                         </StackPanel>
                                     </Button>
                                 </ListViewItem>
@@ -238,7 +247,7 @@
                                             Command="{Binding Path=MyProfileCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="My profile"/>
+                                            <TextBlock Text="{DynamicResource MyProfile}"/>
                                         </StackPanel>
                                     </Button>
                                 </ListViewItem>
@@ -247,7 +256,7 @@
                                             Command="{Binding Path=EditorCommand}">
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Meditation" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="Editor"/>
+                                            <TextBlock Text="{DynamicResource Editor}"/>
                                         </StackPanel>
                                     </Button>
                                 </ListViewItem>
@@ -261,7 +270,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <materialDesign:PackIcon Kind="Power" Height="15" Width="15"
                                                                      VerticalAlignment="Center" />
-                                            <TextBlock Text="Logout" />
+                                            <TextBlock Text="{DynamicResource Logout}" />
                                         </StackPanel>
                                     </Button>
                                 </ListViewItem>

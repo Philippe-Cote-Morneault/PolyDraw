@@ -126,7 +126,7 @@ namespace ClientLourd.Services.SocketService
                     int count = 0;
                     while (count < 3)
                     {
-                        count += _stream.Read(typeAndLength, count, 3 - count);
+                       count += _stream.Read(typeAndLength, count, 3 - count);
                     }
 
                     SocketMessageTypes type = (SocketMessageTypes) typeAndLength[0];

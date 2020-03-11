@@ -67,7 +67,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Mode}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand" Content="Mode">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand" Content="{DynamicResource Mode}">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Mode"/>
                                         </Label.InputBindings>
@@ -80,7 +80,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding GameName}" Width="{Binding ElementName=gameName, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Game Name" Cursor="Hand">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource LobbyName}" Cursor="Hand">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="LobbyName"/>
                                         </Label.InputBindings>
@@ -92,7 +92,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Difficulty}" Width="{Binding ElementName=difficulty, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Difficulty" Cursor="Hand">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Difficulty}" Cursor="Hand">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Difficulty"/>
                                         </Label.InputBindings>
@@ -105,7 +105,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=host, Path=ActualWidth}" Header="Host">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="Host" Cursor="Hand">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Host}" Cursor="Hand">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Host"/>
                                         </Label.InputBindings>
@@ -145,8 +145,8 @@
             
         </Border>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-            <Button Click="CreateLobby" Width="300" Margin="0 0 20 0" Content="Create a lobby"/>
-            <Button Click="CreateGame" Width="300" Margin="20 0 0 0" Content="Create a game"/>
+            <Button Click="CreateLobby" Width="300" Margin="0 0 20 0" Content="{DynamicResource CreateLobby}"/>
+            <Button Click="CreateGame" Width="300" Margin="20 0 0 0" Content="{DynamicResource CreateGame}"/>
         </StackPanel>
     </Grid>
 </UserControl>

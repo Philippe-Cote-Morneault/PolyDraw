@@ -23,6 +23,7 @@ namespace ClientLourd.ViewModels
 {
     public class GameCreationViewModel : ViewModelBase
     {
+        public int counter = 0;
         public GameCreationViewModel()
         {
             PreviewGUIEnabled = true;
@@ -61,8 +62,10 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
+            
             Application.Current.Dispatcher.Invoke(delegate 
             {
+                counter++;
 
                 CurrentCanvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
 
