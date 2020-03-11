@@ -342,7 +342,7 @@ func (f *FFA) waitTimeout() bool {
 		defer close(c)
 		f.waitingResponse.Wait()
 	}()
-	imageTimeout := time.After(time.Duration(f.timeImage))
+	imageTimeout := time.After(time.Millisecond * time.Duration(f.timeImage))
 	for {
 		select {
 		//Send the check up message every 1 second
