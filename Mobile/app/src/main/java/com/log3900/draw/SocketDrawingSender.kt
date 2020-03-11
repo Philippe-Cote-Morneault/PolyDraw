@@ -12,7 +12,7 @@ import java.util.*
 class SocketDrawingSender() {
     private val socketService = SocketService.instance!!
     var isListening = true
-    var drawingID = UUID.randomUUID()
+    var drawingID: UUID? = null
     var receiver: SocketDrawingReceiver? = null
 
     fun sendStrokeStart() {

@@ -19,6 +19,7 @@ import android.view.View
 import com.log3900.draw.divyanshuwidget.*
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
+import com.log3900.user.account.AccountRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -27,8 +28,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.pow
 import kotlin.math.sqrt
-
-val userID = UUID.randomUUID()
 
 fun MyPath.toPoints(): List<DrawPoint> {
     val points = mutableListOf<DrawPoint>()
@@ -84,21 +83,9 @@ class DrawViewBase @JvmOverloads constructor(
         } else {
             socketDrawingReceiver = SocketDrawingReceiver(this)
         }
-//        GlobalScope.launch {
-//            mStartX = 200f
-//            mStartY = 200f
-//
-//            drawStart(DrawPoint(200f, 200f))
-//            for (i in 1..300) {
-//                drawMove(DrawPoint(200f + i.toFloat(), 200f + i.toFloat()))
-//                delay(10)
-//            }
-//            drawEnd()
-//            invalidate()
-//        }
     }
 
-    fun enableCanDraw(canDrawOnCanvas: Boolean) {
+    fun enableCanDraw(canDrawOnCanvas: Boolean, drawindID: UUID?) {
         canDraw = canDrawOnCanvas
 
         if (!canDraw) {
@@ -108,6 +95,7 @@ class DrawViewBase @JvmOverloads constructor(
         } else {
             if (socketDrawingSender == null) {
                 socketDrawingSender = SocketDrawingSender()
+//                socketDrawingSender.drawingID
             }
         }
         // If we cannot draw, we want to receive strokes from the server
@@ -123,6 +111,8 @@ class DrawViewBase @JvmOverloads constructor(
         mCurX = start.x
         mCurY = start.y
         invalidate()
+//        if (canDraw)
+//            sendStrokeInfo()
     }
 
     fun drawMove(point: DrawPoint) {
@@ -130,6 +120,8 @@ class DrawViewBase @JvmOverloads constructor(
         mCurX = point.x
         mCurY = point.y
         invalidate()
+//        if (canDraw)
+//            sendStrokeInfo()
     }
 
     fun drawEnd() {
@@ -153,6 +145,9 @@ class DrawViewBase @JvmOverloads constructor(
             mPaintOptions.strokeCap
         )
         invalidate()
+
+//        if (canDraw)
+//            sendStrokeInfo()
     }
 
     fun setOptions(options: PaintOptions) {
@@ -203,15 +198,18 @@ class DrawViewBase @JvmOverloads constructor(
         // Send stroke info
         if (canDraw) {
             Log.d("DRAW", "in onDraw...")
-            val points = mPath.toPoints()
-            socketDrawingSender!!.sendStrokeDraw(StrokeInfo(
-                mPath.id,
-                userID,
-                mPaintOptions,
-                points
-            )
-            )
+            sendStrokeInfo()
         }
+    }
+
+    private fun sendStrokeInfo() {
+        val points = mPath.toPoints()
+        socketDrawingSender!!.sendStrokeDraw(StrokeInfo(
+            mPath.id,
+            AccountRepository.getInstance().getAccount().ID,
+            mPaintOptions,
+            points
+        ))
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
@@ -221,10 +219,10 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun clearCanvas() {
-/*        mLastPaths = mPaths.() as ConcurrentHashMap<MyPath, PaintOptions>
+        mLastPaths = ConcurrentHashMap(mPaths) // as ConcurrentHashMap<MyPath, PaintOptions>
         mPath.reset()
         mPaths.clear()
-        invalidate()*/
+        invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

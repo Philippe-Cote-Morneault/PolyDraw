@@ -222,7 +222,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
             setDrawToolsVisibility(View.GONE)
         }
 
-        drawView.enableCanDraw(canDraw)
+        drawView.enableCanDraw(canDraw, null)
     }
 
     private fun setDrawToolsVisibility(visibility: Int) {
