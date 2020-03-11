@@ -38,7 +38,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             true
         })
 
-        sendPreviewRequest()
+//        sendPreviewRequest()
     }
 
     @Deprecated("Test purposes only")

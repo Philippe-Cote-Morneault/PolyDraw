@@ -95,7 +95,7 @@ class DrawViewBase @JvmOverloads constructor(
         }
         // If we cannot draw, we want to receive strokes from the server
         socketDrawingReceiver?.isListening = !canDraw
-        socketDrawingReceiver?.sendPreviewRequest()
+//        socketDrawingReceiver?.sendPreviewRequest()
 
         socketDrawingSender?.isListening = canDraw
     }
