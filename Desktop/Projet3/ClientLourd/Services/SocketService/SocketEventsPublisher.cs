@@ -166,17 +166,17 @@ namespace ClientLourd.Services.SocketService
 
         protected virtual void OnMatchSync(object source, EventArgs e)
         {
-            MatchSync?.Invoke(source, EventArgs.Empty);
+            MatchSync?.Invoke(source, e);
         }
 
         protected virtual void OnGuessResponse(object source, EventArgs e)
         {
-            GuessResponse?.Invoke(source, EventArgs.Empty);
+            GuessResponse?.Invoke(source, e);
         }
 
         protected virtual void OnPlayerGuessedTheWord(object source, EventArgs e)
         {
-            PlayerGuessedTheWord?.Invoke(source, EventArgs.Empty);
+            PlayerGuessedTheWord?.Invoke(source, e);
         }
 
 

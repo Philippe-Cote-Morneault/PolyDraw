@@ -12,6 +12,7 @@ using ClientLourd.Services.RestService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
+using ClientLourd.Utilities.Extensions;
 using ClientLourd.Views.Controls;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
@@ -28,35 +29,12 @@ namespace ClientLourd.ViewModels
         private Timer _timer;
         private int _healthPoint;
         private ObservableCollection<Player> _players;
-        private int _round;
+        private long _round;
         private StrokesReader _stokesReader;
         public GameViewModel()
         {
+            _players = new ObservableCollection<Player>();
             InitEventHandler();
-            HealthPoint = 3;
-            Guess = new char[20];
-            Word = "test";
-            Players = new ObservableCollection<Player>()
-            {
-                new Player()
-                {
-                    User = new User("test1", "1"),
-                    GuessedTheWord = true,
-                },
-                new Player()
-                {
-                    User = new User("test2", "2"),
-                    IsDrawing = true,
-                },
-                new Player()
-                {
-                    User = new User("test3", "3"),
-                },
-                new Player()
-                {
-                    User = new User("test4", "4"),
-                },
-            };
         }
 
         private void InitEventHandler()
@@ -72,6 +50,14 @@ namespace ClientLourd.ViewModels
             SocketClient.YourTurnToDraw += SocketClientOnYourTurnToDraw;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+            SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
+        }
+        private void SocketClientOnServerStrokeSent(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(delegate 
+            {
+                Editor.Canvas.AddStroke((args as StrokeSentEventArgs).StrokeInfo);
+            });
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
@@ -83,9 +69,10 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
+            Time = e.Time;
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
-            //Disable the canvas
+            Guess = new char[e.WordLength];
         }
 
         private void SocketClientOnYourTurnToDraw(object source, EventArgs args)
@@ -93,7 +80,6 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             //Enable the canvas
             Word = e.Word;
-            Time = e.Time;
             _drawingID = e.DrawingID;
             _stokesReader.Start(_drawingID);
         }
@@ -134,7 +120,8 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Editor.Canvas.Strokes.Clear();
+            ClearCanvas();
+            Word = "";
             //Round end
             if (e.Type == 1)
             {
@@ -150,8 +137,8 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Player Winner = Players.FirstOrDefault(p => p.User.ID == e.WinnerID);
-            MessageBox.Show("game end");
-            DialogHost.Show(new MessageDialog("Game ended", $"The winner is {Winner.User.Username}"));
+            MessageBox.Show($"game end, {Winner.User.Username}");
+            //DialogHost.Show(new MessageDialog("Game ended", $"The winner is {Winner.User.Username}"));
         }
 
         private void SocketClientOnMatchStarted(object source, EventArgs args)
@@ -193,23 +180,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public RestClient RestClient
-        {
-            get
-            {
-                return Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
-                            ?.RestClient;
-                    });
-            }
-        }
-
-        public Player Artist
-        {
-            get => Players.FirstOrDefault(p => p.IsDrawing);
-        }
-
         public ObservableCollection<Player> Players
         {
             get => new ObservableCollection<Player>(_players.OrderByDescending(p => p.Score)); 
@@ -245,7 +215,7 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged(nameof(IsYourTurn));
             }
         }
-        public int Round
+        public long Round
         {
             get => _round;
             set

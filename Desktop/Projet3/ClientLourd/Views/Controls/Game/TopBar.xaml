@@ -32,7 +32,7 @@
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2">
             <StackPanel Margin="10" Orientation="Horizontal">
                 <materialDesign:PackIcon VerticalAlignment="Center" Kind="Draw" Width="24" Height="24"/>
-                <TextBlock FontSize="24" Text="Round 2/3"/>
+                <TextBlock FontSize="24" Text="{Binding Round, StringFormat={}Round {0}/3}"/>
             </StackPanel>
             <StackPanel Margin="10" Orientation="Horizontal">
                 <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24"/>

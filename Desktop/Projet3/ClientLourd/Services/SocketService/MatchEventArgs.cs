@@ -38,15 +38,15 @@ namespace ClientLourd.Services.SocketService
         {
             get  => _data["Type"]; 
         } 
-        public int Points
+        public long Points
         {
             get  => _data["Points"]; 
         } 
-        public int PointsTotal
+        public long PointsTotal
         {
             get  => _data["PointsTotal"]; 
         } 
-        public int Laps
+        public long Laps
         {
             get  =>_data["Laps"]; 
         } 
@@ -59,7 +59,7 @@ namespace ClientLourd.Services.SocketService
             get  => _data["Valid"]; 
         }
 
-        public int Type
+        public long Type
         {
             get => _data["Type"];
         }
@@ -67,6 +67,11 @@ namespace ClientLourd.Services.SocketService
         public string WinnerID
         {
             get => _data["Winner"];
+        }
+        
+        public long WordLength
+        {
+            get => _data["Length"];
         }
         
     }

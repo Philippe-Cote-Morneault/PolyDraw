@@ -11,7 +11,7 @@ using System.Threading.Tasks;
         private User _user;
         private bool _isDrawing;
         private bool _guessedTheWord;
-        private int _score;
+        private long _score;
         private bool _isCPU;
 
 
@@ -52,7 +52,7 @@ using System.Threading.Tasks;
             }
         }
 
-        public int Score
+        public long Score
         {
             get => _score;
             set
