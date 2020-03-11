@@ -25,6 +25,8 @@ enum class Event(var eventType: Int) {
     DRAW_END_SERVER(35),
     DRAW_PREVIEW_REQUEST(36),   // TODO: Remove, test purposes only
     DRAW_PREVIEW_RESPONSE(37),  // TODO: Remove, test purposes only
+    STROKE_ERASE_CLIENT(38),
+    STROKE_ERASE_SERVER(39),
     JOIN_GROUP_REQUEST(40),
     JOIN_GROUP_RESPONSE(41),
     USER_JOINED_GROUP(43),

@@ -46,7 +46,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
-    private fun parseMessageToStroke(data: ByteArray) {
+    fun parseMessageToStroke(data: ByteArray) {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
