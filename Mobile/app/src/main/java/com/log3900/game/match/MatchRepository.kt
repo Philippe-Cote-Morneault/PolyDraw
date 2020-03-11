@@ -74,9 +74,9 @@ class MatchRepository : Service() {
         val socketMessage = message.obj as com.log3900.socket.Message
 
         when (socketMessage.type) {
-            //Event.START_MATCH_RESPONSE -> onMatchStartResponse(socketMessage)
             Event.MATCH_ABOUT_TO_START -> onMatchAboutToStart(socketMessage)
             Event.MATCH_STARTING -> onMatchStarting(socketMessage)
+            Event.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(socketMessage)
         }
     }
 
@@ -94,6 +94,13 @@ class MatchRepository : Service() {
 
     private fun onMatchStarting(message: com.log3900.socket.Message) {
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_STARTING, null))
+    }
+
+    private fun onPlayerTurnToDraw(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val playerTurnToDraw = MatchAdapter.jsonToPlayerTurnToDraw(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_TURN_TO_DRAW, playerTurnToDraw))
     }
 
     override fun onDestroy() {
