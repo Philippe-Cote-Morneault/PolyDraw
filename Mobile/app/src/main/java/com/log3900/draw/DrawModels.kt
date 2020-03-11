@@ -3,6 +3,7 @@ package com.log3900.draw
 import com.log3900.draw.divyanshuwidget.PaintOptions
 import java.util.*
 
+// TODO: Replace with short
 data class DrawPoint(val x: Float, val y: Float)
 
 data class StrokeInfo(

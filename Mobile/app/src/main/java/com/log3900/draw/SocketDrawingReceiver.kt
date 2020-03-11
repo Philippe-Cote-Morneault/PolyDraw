@@ -49,7 +49,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private fun parseMessageToStroke(data: ByteArray) {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
-                val strokeInfo = DrawingMessageParser.unpackStrokeInfo(data)
+                val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
                 strokeMutex.withLock {
                     drawStrokes(strokeInfo)
                 }

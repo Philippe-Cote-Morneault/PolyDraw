@@ -2,19 +2,22 @@ package com.log3900.draw
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import com.log3900.draw.divyanshuwidget.DrawMode
 import com.log3900.draw.divyanshuwidget.PaintOptions
+import com.log3900.utils.format.UUIDUtils
+import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
 
-object DrawingMessageParser {
-    private enum class Offset(val value: Int) {
-        STROKE_ID(1),
-        USER_ID(17),
-        BRUSH_SIZE(33),
-        POINTS(34)
-    }
+private enum class Offset(val value: Int) {
+    STROKE_ID(1),
+    USER_ID(17),
+    BRUSH_SIZE(33),
+    POINTS(34)
+}
 
+object BytesToStrokeConverter {
     fun unpackStrokeInfo(data: ByteArray): StrokeInfo {
         val isEraser = data[0].toIsEraser()
         val color = data[0].toColor()
@@ -30,7 +33,7 @@ object DrawingMessageParser {
             strokeWidth = brushSize.toFloat(),
             drawMode = if (isEraser) DrawMode.ERASE else DrawMode.DRAW
         )
-
+        Log.d("DRAW_BYTES", "data size: ${data.size}, points size: ${points.size}")
         return StrokeInfo(
             strokeID,
             userID,
@@ -56,7 +59,7 @@ object DrawingMessageParser {
     }
 
     private fun Byte.toBrushType(): Paint.Cap {
-        return if ((this.toInt() and 0x40) == 0)
+        return if ((this.toInt() and 0x40) shr 6 == 0)
             Paint.Cap.ROUND
         else
             Paint.Cap.SQUARE
@@ -98,4 +101,67 @@ object DrawingMessageParser {
     }
 
     private fun isLittleEndianOrder(): Boolean = (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN)
+}
+
+@ExperimentalUnsignedTypes
+object StrokeToBytesConverter {
+    fun packStrokeInfo(strokeInfo: StrokeInfo): ByteArray {
+        val (strokeID, userID, paintOptions, points) = strokeInfo
+        val (color, strokeWidth, _, drawMode, strokeCap) = paintOptions
+        var data = UByteArray(1)
+
+        data[0] = setEraserBit(drawMode)
+        data[0] = data[0] or setColorBits(color)
+        data[0] = data[0] or setBrushBit(strokeCap)
+
+        data += UUIDUtils.uuidToByteArray(strokeID).toUByteArray()
+        data += UUIDUtils.uuidToByteArray(userID).toUByteArray()
+        data += ubyteArrayOf(strokeWidth.toInt().toUByte())
+        data += pointsToBytes(points)
+
+        return data.toByteArray()
+    }
+
+    private fun setEraserBit(drawMode: DrawMode): UByte {
+        return when (drawMode) {
+            DrawMode.DRAW -> 0
+            else -> 1 shl 7
+        }.toUByte()
+    }
+
+    private fun setColorBits(color: Int): UByte {
+        val colorVal = when (color) {
+            Color.BLACK     -> 0x0
+            Color.WHITE     -> 0x1
+            Color.RED       -> 0x2
+            Color.GREEN     -> 0x3
+            Color.BLUE      -> 0x4
+            Color.YELLOW    -> 0x5
+            Color.CYAN      -> 0x6
+            Color.MAGENTA   -> 0x7
+            else            -> 0x0
+        }
+        return (colorVal and 0x0F).toUByte()
+    }
+
+    private fun setBrushBit(strokeCap: Paint.Cap): UByte {
+        val capValue = if (strokeCap == Paint.Cap.SQUARE) 1 else 0
+        return (capValue shl 6).toUByte()
+    }
+
+    private fun pointsToBytes(points: List<DrawPoint>): UByteArray {
+        var bytes = ubyteArrayOf()
+        for (point in points) {
+            bytes += shortToUBytes(point.x.toShort())
+            bytes += shortToUBytes(point.y.toShort())
+        }
+        return bytes
+    }
+
+    private fun shortToUBytes(short: Short): UByteArray {
+        return ubyteArrayOf(
+            (short.toInt() and 0xFF).toUByte(),
+            ((short.toInt() shr 8) and 0xFF).toUByte()
+        )
+    }
 }
