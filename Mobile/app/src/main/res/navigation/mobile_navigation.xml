@@ -63,7 +63,15 @@
     <fragment
         android:id="@+id/navigation_main_match_waiting_room_fragment"
         android:name="com.log3900.game.waiting_room.MatchWaitingRoomFragment"
-        android:label="Match Waiting Room" />
+        android:label="Match Waiting Room" >
+        <action
+            android:id="@+id/action_navigation_main_match_waiting_room_fragment_to_activeMatchFragment"
+            app:destination="@id/navigation_main_active_match_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_main_active_match_fragment"
+        android:name="com.log3900.game.match.ActiveMatchFragment"
+        android:label="ActiveMatchFragment" />
 
 
 </navigation>

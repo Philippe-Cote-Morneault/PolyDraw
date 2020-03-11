@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.log3900">
 
@@ -40,7 +41,10 @@
 
         <activity android:name=".settings.SettingsActivity"/>
 
-        <activity android:name=".tutorial.TutorialActivity"/>
+        <activity
+            android:name=".tutorial.TutorialActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
 
         <service android:name=".socket.SocketService"/>
         <service android:name=".session.MonitoringService"/>
@@ -49,5 +53,6 @@
         <service android:name=".chat.ChatManager"/>
         <service android:name=".game.group.GroupRepository"/>
         <service android:name=".game.group.GroupManager"/>
+        <service android:name=".game.match.MatchRepository"/>
     </application>
 </manifest>
