@@ -20,15 +20,13 @@ using ClientLourd.Utilities.Extensions;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignThemes.Wpf.Transitions;
+using ClientLourd.Services.ServerStrokeDrawerService;
 
 namespace ClientLourd.ViewModels
 {
     public class GameCreationViewModel : ViewModelBase
-    {
-        
-        public int counter = 0;
-        private ConcurrentQueue<StrokeInfo> _strokeInfoQueue;
-        private System.Timers.Timer _drawTimer;
+    {        
+        public ServerStrokeDrawerService StrokeDrawerService { get; set; }
         
         public GameCreationViewModel()
         {
@@ -41,32 +39,8 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
             SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
-            
-            _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
-            _drawTimer = new System.Timers.Timer(5);
-            _drawTimer.Elapsed += Draw;
-            _drawTimer.Start();
-    }
-
-        private void Draw(object source, EventArgs args)
-        {
-            _drawTimer.Stop();
-            if (_strokeInfoQueue.Count != 0)
-            {
-
-                Application.Current.Dispatcher.Invoke(delegate
-                {
-                    StrokeInfo strokeInfo;
-                    _strokeInfoQueue.TryDequeue(out strokeInfo);
-                    if (strokeInfo != null)
-                    {
-                        CurrentCanvas.AddStrokePreview(strokeInfo);
-                    }
-                });
-                
-            }
-            _drawTimer.Start();
         }
+
 
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
@@ -92,8 +66,8 @@ namespace ClientLourd.ViewModels
         }
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
-        {
-            _strokeInfoQueue.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
+        {    
+            StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);   
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }

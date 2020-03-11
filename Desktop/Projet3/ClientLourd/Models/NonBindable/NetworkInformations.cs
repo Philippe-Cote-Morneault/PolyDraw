@@ -18,7 +18,6 @@ namespace ClientLourd.Models.NonBindable
         public NetworkInformations()
         {
             //Dev as default
-            //Config = 2;
             Config = 1;
 
         }
