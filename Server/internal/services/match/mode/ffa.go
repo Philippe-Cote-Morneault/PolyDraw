@@ -85,7 +85,11 @@ func (f *FFA) GameLoop() {
 	//Choose a user.
 	curDrawer := f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
-	f.waitingResponse.Add(f.realPlayers)
+	if curDrawer.IsCPU {
+		f.waitingResponse.Add(f.realPlayers)
+	} else {
+		f.waitingResponse.Add(f.realPlayers - 1)
+	}
 
 	f.currentWord = f.findWord()
 	message := socket.RawMessage{}
