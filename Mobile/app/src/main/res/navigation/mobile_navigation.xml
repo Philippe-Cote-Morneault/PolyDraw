@@ -44,8 +44,9 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_main_draw_view_fragment"
-        android:name="com.log3900.draw.DrawViewFragment"
+        android:name="com.log3900.draw.temp.DoubleDrawViewFragment"
         android:label="DrawViewFragment" >
+        <!--        android:name="com.log3900.draw.DrawViewFragment"-->
         <action
             android:id="@+id/action_drawViewFragment_to_profileFragment"
             app:destination="@id/navigation_main_profile_fragment"
