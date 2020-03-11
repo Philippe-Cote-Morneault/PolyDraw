@@ -23,17 +23,37 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.LinkedHashMap
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.pow
 import kotlin.math.sqrt
+
+val userID = UUID.randomUUID()
+
+fun MyPath.toPoints(): List<DrawPoint> {
+    val points = mutableListOf<DrawPoint>()
+    for (action in this.actions) {
+        when (action) {
+            is Move -> points.add(DrawPoint(action.x, action.y))
+            is Line -> points.add(DrawPoint(action.x, action.y))
+            is Quad -> {
+                points.add(DrawPoint(action.x1, action.y1))
+                points.add(DrawPoint(action.x2, action.y2))
+            }
+        }
+    }
+//    Log.d("DRAW", "$points")
+
+    return points
+}
 
 class DrawViewBase @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0,
     var canDraw: Boolean = true
 ) : View(context, attrs, defStyleAttr) {
-    private var mPaths = LinkedHashMap<MyPath, PaintOptions>()
+    private var mPaths = ConcurrentHashMap<MyPath, PaintOptions>()
 
-    private var mLastPaths = LinkedHashMap<MyPath, PaintOptions>()
+    private var mLastPaths = ConcurrentHashMap<MyPath, PaintOptions>()
 
     private var mPaint = Paint()
     private var mPath = MyPath()
@@ -46,7 +66,8 @@ class DrawViewBase @JvmOverloads constructor(
     private var mIsSaving = false
     private var mIsStrokeWidthBarEnabled = false
 
-    private var socketDrawingReceiver: SocketDrawingReceiver? = null
+    var socketDrawingReceiver: SocketDrawingReceiver? = null
+    var socketDrawingSender: SocketDrawingSender? = null
 
     init {
         mPaint.apply {
@@ -59,6 +80,8 @@ class DrawViewBase @JvmOverloads constructor(
         }
 
         if (canDraw) {
+            socketDrawingSender = SocketDrawingSender()
+        } else {
             socketDrawingReceiver = SocketDrawingReceiver(this)
         }
 //        GlobalScope.launch {
@@ -83,11 +106,15 @@ class DrawViewBase @JvmOverloads constructor(
                 socketDrawingReceiver = SocketDrawingReceiver(this)
             }
         } else {
-            // TODO: Set socketDrawingSender
+            if (socketDrawingSender == null) {
+                socketDrawingSender = SocketDrawingSender()
+            }
         }
         // If we cannot draw, we want to receive strokes from the server
         socketDrawingReceiver?.isListening = !canDraw
         socketDrawingReceiver?.sendPreviewRequest()
+
+        socketDrawingSender?.isListening = canDraw
     }
 
     fun drawStart(start: DrawPoint) {
@@ -172,6 +199,19 @@ class DrawViewBase @JvmOverloads constructor(
 
         changePaint(mPaintOptions)
         canvas.drawPath(mPath, mPaint)
+
+        // Send stroke info
+        if (canDraw) {
+            Log.d("DRAW", "in onDraw...")
+            val points = mPath.toPoints()
+            socketDrawingSender!!.sendStrokeDraw(StrokeInfo(
+                mPath.id,
+                userID,
+                mPaintOptions,
+                points
+            )
+            )
+        }
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
@@ -181,10 +221,10 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun clearCanvas() {
-        mLastPaths = mPaths.clone() as LinkedHashMap<MyPath, PaintOptions>
+/*        mLastPaths = mPaths.() as ConcurrentHashMap<MyPath, PaintOptions>
         mPath.reset()
         mPaths.clear()
-        invalidate()
+        invalidate()*/
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

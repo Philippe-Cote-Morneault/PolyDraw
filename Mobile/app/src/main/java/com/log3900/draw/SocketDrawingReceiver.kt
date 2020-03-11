@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.lang.Long.max
+import java.lang.Long.min
 import java.util.*
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
@@ -59,9 +60,12 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
 
     private suspend fun drawStrokes(strokeInfo: StrokeInfo) {
         val (strokeID, userID, paintOptions, points) = strokeInfo
+        if (points.isEmpty())
+            return
+
         drawView.setOptions(paintOptions)
 
-        val time = max((20 / points.size).toLong(), 1)  // TODO: Validate delay
+        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
         drawView.drawStart(points.first())
         delay(time)
 

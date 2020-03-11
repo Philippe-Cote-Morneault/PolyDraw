@@ -33,7 +33,9 @@ object BytesToStrokeConverter {
             strokeWidth = brushSize.toFloat(),
             drawMode = if (isEraser) DrawMode.ERASE else DrawMode.DRAW
         )
-        Log.d("DRAW_BYTES", "data size: ${data.size}, points size: ${points.size}")
+//        Log.d("DRAW_BYTES", "data size: ${data.size}, points size: ${points.size}")
+//        Log.d("DRAW_BYTES", "$points")
+
         return StrokeInfo(
             strokeID,
             userID,
@@ -160,8 +162,8 @@ object StrokeToBytesConverter {
 
     private fun shortToUBytes(short: Short): UByteArray {
         return ubyteArrayOf(
-            (short.toInt() and 0xFF).toUByte(),
-            ((short.toInt() shr 8) and 0xFF).toUByte()
+            ((short.toInt() shr 8) and 0xFF).toUByte(),
+            (short.toInt() and 0xFF).toUByte()
         )
     }
 }

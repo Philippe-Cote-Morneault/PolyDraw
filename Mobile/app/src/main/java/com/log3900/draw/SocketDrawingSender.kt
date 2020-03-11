@@ -13,16 +13,21 @@ class SocketDrawingSender() {
     private val socketService = SocketService.instance!!
     var isListening = true
     var drawingID = UUID.randomUUID()
+    var receiver: SocketDrawingReceiver? = null
 
     fun sendStrokeStart() {
 //        socketService.sendMessage(Event.DRAW_START_CLIENT, UUIDUtils.uuidToByteArray(drawingID))
     }
 
     fun sendStrokeDraw(strokeInfo: StrokeInfo) {
+        if (!isListening)
+            return
+
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
 //                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+                receiver!!.parseMessageToStroke(strokeData)
             }
         }
     }
