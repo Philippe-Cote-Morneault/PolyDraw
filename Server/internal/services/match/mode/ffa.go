@@ -300,6 +300,11 @@ func (f *FFA) SetOrder() {
 		f.order = append(f.order, userPos)
 	}
 
+	for i := range f.order {
+		playerPos := f.order[i]
+		f.players[playerPos].Order = playerPos
+	}
+
 	f.orderPos = 0
 
 }
