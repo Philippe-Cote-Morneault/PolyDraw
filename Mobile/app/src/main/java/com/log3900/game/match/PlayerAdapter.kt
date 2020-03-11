@@ -8,9 +8,11 @@ import com.log3900.game.group.Group
 import com.log3900.game.group.Player
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     private var players: ArrayList<Player> = arrayListOf()
+    private var statusImageRes: HashMap<UUID, Int?> = HashMap()
     private lateinit var group: Group
 
 
@@ -20,6 +22,16 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
 
     fun setPlayers(players: ArrayList<Player>) {
         this.players = players
+    }
+
+    fun setPlayerStatusRes(playerID: UUID, statusRes: Int?) {
+        statusImageRes[playerID] = statusRes
+        val player = players.find { it.ID == playerID }
+        notifyItemChanged(players.indexOf(player))
+    }
+
+    fun resetAllImageRes() {
+        statusImageRes = HashMap()
     }
 
     override fun getItemCount(): Int {
@@ -33,6 +45,6 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        holder.bind(players[position], position + 1, 0)
+        holder.bind(players[position], position + 1, 0, statusImageRes[players[position].ID])
     }
 }
