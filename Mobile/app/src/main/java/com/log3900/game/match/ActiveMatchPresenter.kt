@@ -6,6 +6,7 @@ import com.log3900.game.group.Group
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
+import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -46,6 +47,7 @@ class ActiveMatchPresenter : Presenter {
 
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
         Log.d("POTATO", "Turn to draw word = ${turnToDraw.word}")
+        activeMatchView?.setPlayerStatus(AccountRepository.getInstance().getAccount().ID, R.drawable.ic_edit_black)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
     }
 
