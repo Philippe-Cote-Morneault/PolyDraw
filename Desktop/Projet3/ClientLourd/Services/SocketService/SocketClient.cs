@@ -202,9 +202,6 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.LobbyDeleted:
                             OnLobbyDeleted(this, new LobbyEventArgs(data));
                             break;
-                        case SocketMessageTypes.ReadyToStart:
-                            OnMatchReadyToStart(this, new MatchEventArgs(data));
-                            break;
                         case SocketMessageTypes.MatchStarted:
                             OnMatchStarted(this);
                             break;
@@ -235,7 +232,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.MatchCheckPoint:
                             OnMatchCheckPoint(this, new MatchEventArgs(data));
                             break;
-                        
+                        case SocketMessageTypes.AreYouReady:
+                            OnAreYouReady(this, new MatchEventArgs(data));
+                            break;
                         
                         default:
                             throw new InvalidDataException();

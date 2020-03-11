@@ -65,23 +65,13 @@ namespace ClientLourd.ViewModels
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
             SocketClient.MatchCheckPoint += SocketClientOnMatchCheckPoint;
-            SocketClient.MatchReadyToStart += SocketClientOnMatchReadyToStart;
+            SocketClient.AreYouReady += SocketClientOnAreYouReady;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.PlayerGuessedTheWord += SocketClientOnPlayerGuessedTheWord;
             SocketClient.MatchSync += SocketClientOnMatchSync;
             SocketClient.YourTurnToDraw += SocketClientOnYourTurnToDraw;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
-            SocketClient.StartGameResponse += SocketClientOnStartGameResponse;
-        }
-
-        private void SocketClientOnStartGameResponse(object source, EventArgs args)
-        {
-            var gameStartedArgs = (LobbyEventArgs)args;
-            if (gameStartedArgs.Response)
-            {
-                PrepareMatch();
-            }
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
@@ -131,8 +121,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        //TODO delete if never invoke
-        private void SocketClientOnMatchReadyToStart(object source, EventArgs args)
+        private void SocketClientOnAreYouReady(object source, EventArgs args)
         {
             PrepareMatch();
         }
@@ -161,6 +150,7 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Player Winner = Players.FirstOrDefault(p => p.User.ID == e.WinnerID);
+            MessageBox.Show("game end");
             DialogHost.Show(new MessageDialog("Game ended", $"The winner is {Winner.User.Username}"));
         }
 

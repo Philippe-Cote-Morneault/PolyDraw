@@ -112,7 +112,6 @@ namespace ClientLourd.Services.SocketService
         
         
         //Match relate event
-        public event SocketEventHandler MatchReadyToStart;
         public event SocketEventHandler PlayerLeftMatch;
         public event SocketEventHandler NewPlayerIsDrawing;
         public event SocketEventHandler YourTurnToDraw;
@@ -123,21 +122,21 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler MatchCheckPoint;
         public event SocketEventHandler MatchEnded;
         public event SocketEventHandler MatchStarted;
+        public event SocketEventHandler AreYouReady;
 
 
         protected virtual void OnMatchStarted(object source)
         {
             MatchStarted?.Invoke(source, EventArgs.Empty);
         }
-
+        protected virtual void OnAreYouReady(object source, EventArgs e)
+        {
+            AreYouReady?.Invoke(source, e);
+        }
+        
         protected virtual void OnMatchEnded(object source, EventArgs e)
         {
             MatchEnded?.Invoke(source, e);
-        }
-
-        protected virtual void OnMatchReadyToStart(object source, EventArgs e)
-        {
-            MatchReadyToStart?.Invoke(source, e);
         }
 
         protected virtual void OnMatchCheckPoint(object source, EventArgs e)

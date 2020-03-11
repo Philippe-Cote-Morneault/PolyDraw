@@ -37,6 +37,7 @@
         StartGameResponse = 49,
         LobbyCreated = 51,
         LobbyDeleted = 53,
+        AreYouReady = 61,
         ReadyToStart = 62,
         MatchStarted = 63,
         LeaveMatch = 64,

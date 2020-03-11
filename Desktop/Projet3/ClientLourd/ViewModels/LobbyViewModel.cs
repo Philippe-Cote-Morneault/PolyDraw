@@ -26,6 +26,12 @@ namespace ClientLourd.ViewModels
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.StartGameResponse += OnStartGameResponse;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
+            IsGameStarted = false;
+        }
+
+        private void SocketClientOnMatchEnded(object source, EventArgs args)
+        {
             IsGameStarted = false;
         }
 
