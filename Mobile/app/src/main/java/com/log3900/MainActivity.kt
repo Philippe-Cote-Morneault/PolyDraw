@@ -67,7 +67,7 @@ open class MainActivity : AppCompatActivity() {
         val toolbar= findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        toolbarContainer = findViewById(R.id.app_bar_main_toolbar_content_container)
+        toolbarContainer = findViewById<LinearLayout>(R.id.app_bar_main_toolbar_content_container)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
@@ -194,6 +194,8 @@ open class MainActivity : AppCompatActivity() {
 
         if (layout == R.layout.toolbar_active_match) {
             supportActionBar?.title = ""
+        } else {
+            setupUI()
         }
     }
 
