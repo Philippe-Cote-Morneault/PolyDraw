@@ -1,12 +1,13 @@
 package lobby
 
 import (
+	"sync"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
-	"sync"
 )
 
 type responseGen struct {
@@ -348,7 +349,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 			} else {
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
-					Response: true,
+					Response: false,
 					Error:    "There are not enough users to start the game.",
 				})
 				socket.SendRawMessageToSocketID(rawMessage, socketID)
