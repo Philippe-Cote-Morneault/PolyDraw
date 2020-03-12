@@ -1,9 +1,12 @@
 package com.log3900.game.match
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +25,8 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     // UI
     private lateinit var guessingView: WordGuessingView
     private lateinit var playersRecyclerView: RecyclerView
+    private lateinit var toolbar: ConstraintLayout
+    private lateinit var remainingTimeTextView: TextView
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,6 +52,9 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         setupRecyclerView()
 
         drawFragment = childFragmentManager.findFragmentById(R.id.fragment_active_match_draw_container) as DrawViewFragment
+
+        toolbar = activity?.findViewById(R.id.toolbar_active_match_outer_container)!!
+        remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
     }
 
     private fun setupRecyclerView() {
@@ -78,6 +86,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?) {
         drawFragment.enableDrawFunctions(enable, drawingID)
+    }
+
+    override fun setTimeValue(time: String) {
+        remainingTimeTextView.text = time
     }
 
     override fun clearCanvas() {

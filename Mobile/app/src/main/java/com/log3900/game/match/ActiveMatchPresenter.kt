@@ -7,6 +7,7 @@ import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.DateFormatter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -54,6 +55,11 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
     }
 
+    private fun onMatchSynchronisation(synchronisation: Synchronisation) {
+        Log.d("POTATO", "onMatchSync, time = ${synchronisation.time}")
+        activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
+    }
+
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
@@ -64,6 +70,7 @@ class ActiveMatchPresenter : Presenter {
             EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
             EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
             EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
+            EventType.MATCH_SYNCHRONISATION -> onMatchSynchronisation(event.data as Synchronisation)
         }
     }
 
