@@ -100,6 +100,7 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             Time = e.Time;
             Players.ToList().ForEach(p => p.IsDrawing = false);
+            Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
             Guess = new char[e.WordLength];
         }
