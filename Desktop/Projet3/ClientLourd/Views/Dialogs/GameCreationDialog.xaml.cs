@@ -30,9 +30,11 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
-            Loaded += (sender, args) => { 
+            Loaded += (sender, args) => {
+                ViewModel.AddSocketListeners();
                 ViewModel.CurrentCanvas = PreviewCanvas;
                 ViewModel.StrokeDrawerService = new ServerStrokeDrawerService(PreviewCanvas, true);
+                ViewModel.StrokeDrawerService.PreviewDrawingDoneEvent += ViewModel.OnPreviewDrawingDone;
             };
         }
 
@@ -92,6 +94,14 @@ namespace ClientLourd.Views.Dialogs
         public void ClearPreviewCanvas(object sender,EventArgs arg)
         {
             PreviewCanvas.Strokes.Clear();
+        }
+
+        public void OnClose(object sender, EventArgs arg)
+        {
+            // Make sure its stopped although it should already be.
+            ViewModel.StrokeDrawerService.Stop();
+            ViewModel.RemoveSocketListeners();
+            DialogHost.CloseDialogCommand.Execute(null, null);
         }
 
     }
