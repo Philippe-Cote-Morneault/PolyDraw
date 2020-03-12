@@ -33,19 +33,21 @@ namespace ClientLourd.Utilities.Extensions
        
         public static void RemoveStroke(this InkCanvas inkCanvas, Guid strokeID)
         {
-            inkCanvas.Strokes.Remove(FindStroke(inkCanvas, strokeID));
+            FindStrokes(inkCanvas, strokeID).ForEach(s => inkCanvas.Strokes.Remove(s));
         }
 
-        private static Stroke FindStroke(InkCanvas inkCanvas, Guid strokeID)       
+        private static List<Stroke> FindStrokes(InkCanvas inkCanvas, Guid strokeID)
         {
+            List<Stroke> findstrokes = new List<Stroke>();
             foreach (Stroke stroke in inkCanvas.Strokes)
             {
-                if ((string)stroke.GetPropertyData(GUIDs.ID) == strokeID.ToString())
+                if(stroke.GetPropertyData(GUIDs.ID).ToString() == strokeID.ToString())
                 {
-                    return stroke;
+                    findstrokes.Add(stroke);
                 }
             }
-            return null;
+            
+            return findstrokes;
         }
 
         private static Stroke CreateStroke(StrokeInfo strokeInfo)

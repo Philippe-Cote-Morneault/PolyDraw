@@ -71,7 +71,9 @@ namespace ClientLourd.ViewModels
                 Array.Reverse(idTodelete, 0, 4);
                 Array.Reverse(idTodelete, 4, 2);
                 Array.Reverse(idTodelete, 6, 2);
-                Array.Reverse(idTodelete);
+
+                if(BitConverter.IsLittleEndian)
+                    Array.Reverse(idTodelete);
 
                 Editor.Canvas.RemoveStroke(new Guid(idTodelete));
             });
