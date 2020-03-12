@@ -16,12 +16,11 @@ namespace ClientLourd.Utilities.Extensions
         public static Stroke AddStroke(this InkCanvas inkCanvas, StrokeInfo strokeInfo, Stroke lastStroke = null)
         {
 
-            if (lastStroke != null)
+            if (lastStroke != null && lastStroke.StylusPoints.Count <= 500)
             {
                 if ((string) lastStroke.GetPropertyData(GUIDs.ID) == strokeInfo.StrokeID.ToString())
                 {
                     AddPointsToStroke(lastStroke, strokeInfo);
-
                     return lastStroke;
                 }
             }
