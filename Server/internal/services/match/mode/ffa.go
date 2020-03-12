@@ -197,8 +197,18 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			})
 			f.pbroadcast(&broadcast)
 		} else {
-			log.Printf("[Match] [FFA] -> Word is alredy guessed for socket %s", socketID)
+			log.Printf("[Match] [FFA] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
+			players := f.connections[socketID]
+			scoreTotal := f.scores[players.Order]
 			f.receiving.Unlock()
+
+			response := socket.RawMessage{}
+			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
+				Valid:       false,
+				Points:      0,
+				PointsTotal: scoreTotal,
+			})
+			socket.SendRawMessageToSocketID(response, socketID)
 		}
 	} else {
 		players := f.connections[socketID]
