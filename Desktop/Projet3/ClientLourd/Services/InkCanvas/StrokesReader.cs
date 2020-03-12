@@ -136,6 +136,7 @@ namespace ClientLourd.Services.InkCanvas
         {
             _mutex.WaitOne();
             _currentStrokeID = Guid.NewGuid();
+            _points.Add(e.GetPosition(_editor.Canvas));
             _mutex.ReleaseMutex();
         }
 
