@@ -29,6 +29,7 @@ class ActiveMatchPresenter : Presenter {
     }
 
     private fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
+        activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
@@ -47,6 +48,7 @@ class ActiveMatchPresenter : Presenter {
 
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
         Log.d("POTATO", "Turn to draw word = ${turnToDraw.word}")
+        activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(AccountRepository.getInstance().getAccount().ID, R.drawable.ic_edit_black)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)

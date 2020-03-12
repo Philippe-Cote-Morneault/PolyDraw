@@ -230,4 +230,8 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         draw_tools_view.visibility = visibility
         draw_tools_fab.visibility = visibility
     }
+
+    fun clearCanvas() {
+        drawView.clearCanvas()
+    }
 }

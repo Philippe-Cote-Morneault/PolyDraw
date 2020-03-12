@@ -80,6 +80,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         drawFragment.enableDrawFunctions(enable, drawingID)
     }
 
+    override fun clearCanvas() {
+        drawFragment.clearCanvas()
+    }
+
     override fun onDestroy() {
         activeMatchPresenter?.destroy()
         activeMatchPresenter = null
