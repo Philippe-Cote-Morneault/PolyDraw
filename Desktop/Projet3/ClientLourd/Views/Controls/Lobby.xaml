@@ -91,7 +91,8 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"  Margin="30" Command="{Binding StartGameCommand}">Start Game</Button>
+            <!--<Button Grid.Column="0"  Margin="30" Command="{Binding StartGameCommand}" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>-->
+            <Button Grid.Column="0"  Margin="30" Command="{Binding StartGameCommand}" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>
             <Button Grid.Column="1" Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
         </Grid>
     </Grid>

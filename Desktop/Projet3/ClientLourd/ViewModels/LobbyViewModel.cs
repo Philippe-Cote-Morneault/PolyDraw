@@ -30,6 +30,20 @@ namespace ClientLourd.ViewModels
             IsGameStarted = false;
         }
 
+        private bool _canStart;
+        public bool CanStart
+        {
+            get 
+            { 
+                return _canStart;
+            }
+            set
+            {
+                _canStart = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
             IsGameStarted = false;
@@ -135,6 +149,7 @@ namespace ClientLourd.ViewModels
                 {
                     //Trigger NotifyProperty...
                     CurrentLobby = CurrentLobby;
+                    CanStart = CanStartGame();
                 });
             }
         }
@@ -190,7 +205,7 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _startGameCommand ?? (_startGameCommand = new RelayCommand<object>(obj => StartGame(), obj => CanStartGame()));
+                return _startGameCommand ?? (_startGameCommand = new RelayCommand<object>(obj => StartGame()));
             }
         }
 
@@ -207,6 +222,14 @@ namespace ClientLourd.ViewModels
                 return false;
             }
 
+            // If solo
+            if (CurrentLobby.Mode == GameModes.Solo && CurrentLobby.PlayersCount == 1)
+            {
+                return true;
+            }
+
+
+            // Count number of players if FFA or coop
             int nHumanPlayers = 0;
 
             if (CurrentLobby != null)
@@ -229,8 +252,6 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                // This event is only sent to host... To talk with server
-
                 var gameStartedArgs = (LobbyEventArgs)e;
                 if (gameStartedArgs.Response)
                 {
@@ -250,6 +271,7 @@ namespace ClientLourd.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 CurrentLobby = CurrentLobby;
+                CanStart = CanStartGame();
             });
         }
 
@@ -258,6 +280,7 @@ namespace ClientLourd.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 CurrentLobby = CurrentLobby;
+                CanStart = CanStartGame();
             });
         }
 
