@@ -153,6 +153,8 @@ func (f *FFA) GameLoop() {
 	f.currentWord = ""
 	f.resetGuess()
 	f.receiving.Unlock()
+
+	time.Sleep(time.Second * 5)
 }
 
 //Disconnect endpoint for when a user exits
