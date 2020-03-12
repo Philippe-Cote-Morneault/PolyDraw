@@ -34,6 +34,7 @@ namespace ClientLourd.ViewModels
         private ObservableCollection<Player> _players;
         private long _round;
         private StrokesReader _stokesReader;
+        private string _canvasMessage;
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
 
         public GameViewModel()
@@ -102,6 +103,10 @@ namespace ClientLourd.ViewModels
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
+            if (SessionInformations.User.ID != e.UserID)
+            {
+                ShowCanvasMessage($"{e.Username} is drawing the next word !");
+            }
             Guess = new char[e.WordLength];
         }
 
@@ -109,7 +114,8 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             //Enable the canvas
-            Word = e.Word;
+            Word = e.Word; 
+            ShowCanvasMessage($"It is your turn to draw to word {e.Word}");
             ChangeCanvasStatus(true);
             _drawingID = e.DrawingID;
             _stokesReader.Start(_drawingID);
@@ -139,7 +145,8 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-                //TODO diplay message
+                ShowCanvasMessage($"+ {e.Points}");
+                Players.First(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
             }
         }
 
@@ -160,6 +167,7 @@ namespace ClientLourd.ViewModels
             //Round end
             if (e.Type == 1)
             {
+                ShowCanvasMessage($"The word was {e.Word}");
             }
             //Game end
             else if (e.Type == 2)
@@ -279,6 +287,17 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        public string CanvasMessage
+        {
+            get => _canvasMessage;
+            set
+            {
+               _canvasMessage = value;  
+               NotifyPropertyChanged();
+            } 
+        }
+
         public Editor Editor { get; set; }
         
         RelayCommand<object> _sendGuessCommand;
@@ -331,6 +350,16 @@ namespace ClientLourd.ViewModels
                 Players = Lobby.Players;
                 _stokesReader = new StrokesReader(Editor, SocketClient, ((EditorViewModel)Editor.DataContext).EditorInformation);
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
+            });
+        }
+
+        private void ShowCanvasMessage(string message)
+        {
+            Task.Run(() =>
+            {
+                CanvasMessage = message;
+                Thread.Sleep(2000);
+                CanvasMessage = "";
             });
         }
 

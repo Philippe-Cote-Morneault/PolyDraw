@@ -38,6 +38,13 @@
                 Guess
             </Button>
         </StackPanel>
-        <control:Editor x:Name="DrawingEditor"/>
+        <Grid>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
+                <TextBlock FontSize="20" Text="{Binding CanvasMessage}"/>
+            </Grid>
+            <Grid>
+                <control:Editor x:Name="DrawingEditor"/>
+            </Grid>
+        </Grid>
     </DockPanel>
 </UserControl>
