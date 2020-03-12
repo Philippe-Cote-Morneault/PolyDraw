@@ -27,20 +27,42 @@ namespace ClientLourd.ViewModels
     public class GameCreationViewModel : ViewModelBase
     {        
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
-        
+        private int _numberStrokesReceived;
+
         public GameCreationViewModel()
         {
+            _numberStrokesReceived = 0;
             PreviewGUIEnabled = true;
             Hints = new ObservableCollection<string>(new string[3]);
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
             BrushSize = 12;
+        }
+
+
+        public void OnPreviewDrawingDone(object source, EventArgs e)
+        {
+            StrokeDrawerService.Stop();
+            PreviewGUIEnabled = true;
+            _numberStrokesReceived = 0;
+        }
+
+
+        public void AddSocketListeners()
+        {
             SocketClient.ServerStartsDrawing += SocketClientOnServerStartsDrawing;
             SocketClient.ServerEndsDrawing += SocketClientOnServerEndsDrawing;
             SocketClient.DrawingPreviewResponse += SocketClientOnDrawingPreviewResponse;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
         }
 
+        public void RemoveSocketListeners()
+        {
+            SocketClient.ServerStartsDrawing -= SocketClientOnServerStartsDrawing;
+            SocketClient.ServerEndsDrawing -= SocketClientOnServerEndsDrawing;
+            SocketClient.DrawingPreviewResponse -= SocketClientOnDrawingPreviewResponse;
+            SocketClient.ServerStrokeSent -= SocketClientOnServerStrokeSent;
+        }
 
         private void SocketClientOnServerStartsDrawing(object source, EventArgs args)
         {
@@ -49,9 +71,8 @@ namespace ClientLourd.ViewModels
         }
 
         private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
-        {
-            StrokeDrawerService.ReceivedAllPreviewStrokes = true;
-            PreviewGUIEnabled = true;
+        { 
+            StrokeDrawerService.TotalMessagesSent = _numberStrokesReceived;
         }
         
         private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
@@ -68,8 +89,13 @@ namespace ClientLourd.ViewModels
         }
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
-        {    
-            StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);   
+        {
+            if (StrokeDrawerService != null)
+            {
+                _numberStrokesReceived++;
+                StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
+            }
+            
         }
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }

@@ -14,21 +14,34 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
 {
     public class ServerStrokeDrawerService
     {
+        // Used to know when all the strokes sent from the server were drawn
+        public delegate void PreviewDrawingDoneHandler(object source, EventArgs args);
+        public event PreviewDrawingDoneHandler PreviewDrawingDoneEvent;
+        private int _messageDequeuedCounter;
+        public int TotalMessagesSent { get; set; }
+
         private ConcurrentQueue<StrokeInfo> _strokeInfoQueue;
         private System.Timers.Timer _drawTimer;
         private System.Windows.Controls.InkCanvas _canvas;
         private bool _isPreview;
-        public bool ReceivedAllPreviewStrokes { get; set; }
+        
+        
 
         public ServerStrokeDrawerService(System.Windows.Controls.InkCanvas canvas, bool IsPreview)
-        {
+        {   
             _canvas = canvas;
             _isPreview = IsPreview;
             _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
             _drawTimer = new System.Timers.Timer(5);
             _drawTimer.Elapsed += Draw;
             _drawTimer.Stop();
-            ReceivedAllPreviewStrokes = false;
+
+
+            if (IsPreview)
+            {
+                TotalMessagesSent = -1;
+                _messageDequeuedCounter = 0;
+            }
         }
 
         public void Start()
@@ -51,11 +64,6 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
         {
             Stop();
 
-            if (_strokeInfoQueue.IsEmpty && ReceivedAllPreviewStrokes)
-            {
-                return;
-            }
-
             if (!_strokeInfoQueue.IsEmpty)
             {
 
@@ -68,6 +76,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
                         if (_isPreview)
                         {
                             _canvas.AddStrokePreview(strokeInfo);
+                            _messageDequeuedCounter++;
                         }
                         else
                         { 
@@ -77,7 +86,24 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
                 });
 
             }
+            if (_isPreview && AllStrokesWereDrawn())
+            {
+                PreviewDrawingDoneEvent.Invoke(source, EventArgs.Empty);
+                ResetPreviewCounters();
+                return;
+            }
             Start();
+        }
+
+        private void ResetPreviewCounters()
+        {
+            TotalMessagesSent = -1;
+            _messageDequeuedCounter = 0;
+        }
+
+        private bool AllStrokesWereDrawn()
+        {
+            return (TotalMessagesSent != -1 && _messageDequeuedCounter == TotalMessagesSent);
         }
 
         public void Enqueue(StrokeInfo strokeInfo)
