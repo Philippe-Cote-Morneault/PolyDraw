@@ -19,5 +19,10 @@ class DateFormatter {
             return dateString
         }
 
+        fun formatDateToTime(date: Date): String {
+            var dateFormat: SimpleDateFormat = SimpleDateFormat("mm::ss")
+            return dateFormat.format(date)
+        }
+
     }
 }
