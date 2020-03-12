@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-
+using System.Windows.Ink;
 
 
 namespace ClientLourd.Services.ServerStrokeDrawerService
@@ -18,6 +18,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
         private System.Timers.Timer _drawTimer;
         private System.Windows.Controls.InkCanvas _canvas;
         private bool _isPreview;
+        private Stroke _lastStroke;
         public bool ReceivedAllPreviewStrokes { get; set; }
 
         public ServerStrokeDrawerService(System.Windows.Controls.InkCanvas canvas, bool IsPreview)
@@ -71,7 +72,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
                         }
                         else
                         { 
-                            _canvas.AddStroke(strokeInfo);
+                            _lastStroke = _canvas.AddStroke(strokeInfo, _lastStroke);
                         }
                     }
                 });

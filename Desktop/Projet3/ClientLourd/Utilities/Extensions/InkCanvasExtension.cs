@@ -13,17 +13,22 @@ namespace ClientLourd.Utilities.Extensions
 {
     public static class InkCanvasExtension
     {
-        public static void AddStroke(this InkCanvas inkCanvas, StrokeInfo strokeInfo)
+        public static Stroke AddStroke(this InkCanvas inkCanvas, StrokeInfo strokeInfo, Stroke lastStroke = null)
         {
 
-            Stroke stroke = FindStroke(inkCanvas, strokeInfo.StrokeID);
-            if (stroke != null)
+            if (lastStroke != null)
             {
-                AddPointsToStroke(stroke, strokeInfo);
-                return;
-            }
+                if ((string) lastStroke.GetPropertyData(GUIDs.ID) == strokeInfo.StrokeID.ToString())
+                {
+                    AddPointsToStroke(lastStroke, strokeInfo);
 
-            inkCanvas.Strokes.Add(CreateStroke(strokeInfo));
+                    return lastStroke;
+                }
+            }
+            Stroke stroke = CreateStroke(strokeInfo);
+            inkCanvas.Strokes.Add(stroke);
+            
+            return stroke;
         }
 
        
@@ -46,7 +51,7 @@ namespace ClientLourd.Utilities.Extensions
 
         private static Stroke CreateStroke(StrokeInfo strokeInfo)
         {
-            Console.WriteLine("Created a new stroke");
+            //Console.WriteLine("Created a new stroke");
             Stroke newStroke = new Stroke(strokeInfo.PointCollection);
             newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
             newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
@@ -59,8 +64,8 @@ namespace ClientLourd.Utilities.Extensions
 
         private static void AddPointsToStroke(Stroke stroke, StrokeInfo strokeInfo)
         {
-            Console.WriteLine("Added points to an existing stroke");
-            foreach (StylusPoint sp in strokeInfo.PointCollection.ToList())
+            //Console.WriteLine("Added points to an existing stroke");
+            foreach (StylusPoint sp in strokeInfo.PointCollection)
             {
                 stroke.StylusPoints.Add(sp);
             }
