@@ -201,6 +201,7 @@ namespace ClientLourd.ViewModels
             return (loginInputValidator.UsernameLengthIsOk(username) &&
                     loginInputValidator.PasswordLengthIsOk(password) &&
                     !loginInputValidator.StringIsWhiteSpace(username) &&
+                    loginInputValidator.IsAlphaNumeric(username) &&
                     !loginInputValidator.StringIsWhiteSpace(password));
         }
 
