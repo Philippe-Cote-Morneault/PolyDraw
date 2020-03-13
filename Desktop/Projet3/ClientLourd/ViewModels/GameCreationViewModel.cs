@@ -288,6 +288,7 @@ namespace ClientLourd.ViewModels
                     SelectedMode = PotraceMode.LeftToRight.GetDescription();
                     await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
                 }
+
                 else
                 {
                     SelectedMode = PotraceMode.Classic.GetDescription();

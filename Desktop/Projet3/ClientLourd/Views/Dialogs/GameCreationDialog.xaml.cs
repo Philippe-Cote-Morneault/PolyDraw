@@ -65,19 +65,36 @@ namespace ClientLourd.Views.Dialogs
 
         private void UploadImageClick(object sender, RoutedEventArgs e)
         {
-            // Bug here: if we use the erase by point eraser, there will be white strokes in the canvas.
-            if (EditorView.Canvas.Strokes.Count > 0)
+            if (string.IsNullOrWhiteSpace(ViewModel.Image) && CanvasIsEmpty())
             {
-                try
+                DialogHost.Show(new ClosableErrorDialog("The image uploaded and the canvas cannot be empty"), "Dialog");
+                return;
+            }
+
+            try
+            {
+                CreateSVGFile(EditorView.GenerateXMLDoc());
+            }
+            catch(Exception ex)
+            {
+                DialogHost.Show(new ClosableErrorDialog(ex), "Dialog");
+            }
+                
+            ViewModel.UploadImageCommand.Execute(null);
+            
+        }
+
+        private bool CanvasIsEmpty() 
+        {
+            foreach(Stroke stroke in EditorView.Canvas.Strokes)
+            {
+                if ((stroke.GetPropertyData(GUIDs.eraser) as string) == "False")
                 {
-                    CreateSVGFile(EditorView.GenerateXMLDoc());
-                }
-                catch(Exception ex)
-                {
-                    DialogHost.Show(new ClosableErrorDialog(ex), "Dialog");
+                    return false;
                 }
             }
-            ViewModel.UploadImageCommand.Execute(null);
+
+            return true;
         }
 
         private void CreateSVGFile(XmlDocument xmlDoc)

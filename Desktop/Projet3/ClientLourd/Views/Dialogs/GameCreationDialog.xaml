@@ -144,7 +144,7 @@
                                            Text="Upload an image " />
                                 <Button Click="AddImageClick" Content="Upload"></Button>
                             </StackPanel>
-                            <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center"   Visibility="{Binding ElementName=EditorGrid, Path=IsEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
+                            <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=EditorGrid, Path=IsEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
                                 <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
                                 <Button Command="{Binding RemoveImageCommand}"   Style="{StaticResource MaterialDesignFlatButton}" Content="{materialDesign:PackIcon Kind=Delete}" />
                             </StackPanel>
