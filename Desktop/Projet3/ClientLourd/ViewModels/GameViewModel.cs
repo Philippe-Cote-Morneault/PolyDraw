@@ -12,6 +12,7 @@ using ClientLourd.Services.InkCanvas;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
+using ClientLourd.Services.SoundService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Utilities.Extensions;
@@ -58,6 +59,11 @@ namespace ClientLourd.ViewModels
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
+        }
+
+        public SoundService SoundService
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
         private void SocketClientOnUserDeleteStroke(object source, EventArgs args)
@@ -147,6 +153,17 @@ namespace ClientLourd.ViewModels
             {
                 ShowCanvasMessage($"+ {e.Points}");
                 Players.First(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
+                Application.Current.Dispatcher.Invoke(() => 
+                {
+                    SoundService.PlayWordGuessedRight();
+                });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SoundService.PlayWordGuessedWrong();
+                });
             }
         }
 

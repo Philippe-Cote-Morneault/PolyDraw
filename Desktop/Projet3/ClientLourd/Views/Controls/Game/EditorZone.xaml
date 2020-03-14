@@ -9,6 +9,15 @@
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Storyboard x:Key="StoryBoard" AutoReverse="True" RepeatBehavior="2x">
+            <DoubleAnimation Storyboard.TargetProperty="Height"
+                            From="10" To="60"/>
+            <ColorAnimation AutoReverse="true" Duration="0:0:1" From="Black" To="Green"
+                    AccelerationRatio="1"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+        </Storyboard>
+    </UserControl.Resources>
     <DockPanel Margin="10">
         <StackPanel 
             DockPanel.Dock="Bottom"
@@ -20,7 +29,8 @@
         </StackPanel>
         <StackPanel Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}" DockPanel.Dock="Bottom" Orientation="Horizontal">
             <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
-            <ItemsControl  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+            <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+                
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5"></StackPanel>
@@ -28,9 +38,11 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBox FontSize="24" Tag="{Binding 
+                        
+                        <TextBox  x:Name="textbox" FontSize="24" Tag="{Binding 
                                  Path=(ItemsControl.AlternationIndex), 
-                                 RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                                 RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1" Foreground="Black">
+                        </TextBox>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

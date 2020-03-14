@@ -349,20 +349,36 @@ namespace ClientLourd.ViewModels
             return false;
         }
 
+        private bool LobbyExists(string lobbyID)
+        {
+            foreach(Lobby lobby in Lobbies)
+            {
+                if (lobby.ID == lobbyID)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
         private void OnUserLeftLobby(object sender, EventArgs e)
         {
             var userLeftLobbyArgs = (LobbyEventArgs)e;
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
-                if (LobbyContainsPlayer(lobbyModif, userLeftLobbyArgs))
-                {
-                    var userToRemove = lobbyModif.Players.Single(player => player.User.ID == userLeftLobbyArgs.UserID);
-                    lobbyModif.Players.Remove(userToRemove);
-                    lobbyModif.PlayersCount = lobbyModif.Players.Count;
-                }   
                 
+                if (LobbyExists(userLeftLobbyArgs.GroupID))
+                {
+                    var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
+                    if (LobbyContainsPlayer(lobbyModif, userLeftLobbyArgs))
+                    {
+                        var userToRemove = lobbyModif.Players.Single(player => player.User.ID == userLeftLobbyArgs.UserID);
+                        lobbyModif.Players.Remove(userToRemove);
+                        lobbyModif.PlayersCount = lobbyModif.Players.Count;
+                    }
+                }
             });
         }
     }
