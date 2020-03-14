@@ -100,7 +100,7 @@ namespace ClientLourd.Views.Controls.Game
 
                     for (int j = 0; j < sb.Children.Count; j++)
                     {
-                        Storyboard.SetTarget(sb.Children[j], tb);
+                         Storyboard.SetTarget(sb.Children[j], tb);   
                     }
                     
                     /*DoubleAnimation anim1 = new DoubleAnimation(0, 10, new Duration(TimeSpan.FromSeconds(2)));
