@@ -1,6 +1,7 @@
 package com.log3900.login.register
 
 import android.os.Handler
+import android.util.Log
 import com.google.gson.JsonObject
 import com.log3900.login.AuthenticationRestService
 import com.log3900.settings.language.LanguageManager
@@ -17,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-data class TokenData(val session: String, val bearer: String?)
+data class TokenData(val session: String, val bearer: String?, val userID: UUID)
 
 class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(registerFragment) {
     override val profileView = registerFragment
@@ -54,6 +55,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     if (response.isSuccessful && response.body() != null) {
+                        Log.d("REGISTER", response.body()!!.toString())
                         it.onSuccess(parseResponseJson(response.body()!!))
                     } else {
                         it.onError(Throwable("(${response.code()}) ${response.errorBody()?.string()}"))
@@ -81,7 +83,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
 
         AccountRepository.getInstance().createAccount(
             Account(
-                UUID.randomUUID(),
+                tokenData.userID,
                 username.toLowerCase(),
                 pictureID,
                 email,
@@ -104,13 +106,14 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
 
     private fun parseResponseJson(json: JsonObject): TokenData {
         val bearer =
-            if (json.has("BearerToken"))
-                json.get("BearerToken").asString
+            if (json.has("Bearer"))
+                json.get("Bearer").asString
             else
                 null
         return TokenData(
             json.get("SessionToken").asString,
-            bearer
+            bearer,
+            UUID.fromString(json.get("UserID").asString)
         )
     }
 

@@ -1,5 +1,6 @@
 package com.log3900.user.account
 
+import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.shared.database.AppDatabase
 import io.reactivex.Completable
@@ -50,10 +51,12 @@ class AccountRepository {
     }
 
     fun getAccount(): Account {
+        Log.d("SESSION_TOKEN", "Session token: ${currentAccount!!.sessionToken}")
         return currentAccount!!
     }
 
     fun createAccount(account: Account): Completable {
+        currentAccount = account
         return Completable.create {
             AppDatabase.getInstance(MainApplication.instance.applicationContext).accountDAO()
                 .insertAccount(account)

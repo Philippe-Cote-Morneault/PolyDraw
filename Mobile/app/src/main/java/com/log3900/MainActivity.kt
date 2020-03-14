@@ -27,6 +27,7 @@ import com.google.android.material.navigation.NavigationView
 import com.log3900.chat.ChatManager
 import com.log3900.login.LoginActivity
 import com.log3900.settings.SettingsActivity
+import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -50,6 +51,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
+        LanguageManager.applySavedLanguage(baseContext)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -67,7 +69,7 @@ open class MainActivity : AppCompatActivity() {
         val toolbar= findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        toolbarContainer = findViewById(R.id.app_bar_main_toolbar_content_container)
+        toolbarContainer = findViewById<LinearLayout>(R.id.app_bar_main_toolbar_content_container)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
@@ -194,6 +196,8 @@ open class MainActivity : AppCompatActivity() {
 
         if (layout == R.layout.toolbar_active_match) {
             supportActionBar?.title = ""
+        } else {
+            setupUI()
         }
     }
 

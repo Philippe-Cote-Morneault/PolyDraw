@@ -18,6 +18,7 @@ import com.log3900.draw.divyanshuwidget.DrawMode
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.*
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
+import java.util.*
 
 // See https://github.com/divyanshub024/AndroidDraw
 // and https://android.jlelse.eu/a-guide-to-drawing-in-android-631237ab6e28
@@ -214,7 +215,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         drawView.setColor(color)
     }
 
-    fun enableDrawFunctions(enable: Boolean) {
+    fun enableDrawFunctions(enable: Boolean, drawingID: UUID? = null) {
         canDraw = enable
         if (canDraw) {
             setDrawToolsVisibility(View.VISIBLE)
@@ -222,11 +223,15 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
             setDrawToolsVisibility(View.GONE)
         }
 
-        drawView.enableCanDraw(canDraw)
+        drawView.enableCanDraw(canDraw, drawingID)
     }
 
     private fun setDrawToolsVisibility(visibility: Int) {
         draw_tools_view.visibility = visibility
         draw_tools_fab.visibility = visibility
+    }
+
+    fun clearCanvas() {
+        drawView.clearCanvas()
     }
 }

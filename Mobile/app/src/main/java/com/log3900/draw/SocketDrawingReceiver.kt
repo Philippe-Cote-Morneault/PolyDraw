@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.lang.Long.max
+import java.lang.Long.min
 import java.util.*
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
@@ -37,7 +38,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             true
         })
 
-        sendPreviewRequest()
+//        sendPreviewRequest()
     }
 
     @Deprecated("Test purposes only")
@@ -46,10 +47,10 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
-    private fun parseMessageToStroke(data: ByteArray) {
+    fun parseMessageToStroke(data: ByteArray) {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
-                val strokeInfo = DrawingMessageParser.unpackStrokeInfo(data)
+                val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
                 strokeMutex.withLock {
                     drawStrokes(strokeInfo)
                 }
@@ -59,9 +60,12 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
 
     private suspend fun drawStrokes(strokeInfo: StrokeInfo) {
         val (strokeID, userID, paintOptions, points) = strokeInfo
+        if (points.isEmpty())
+            return
+
         drawView.setOptions(paintOptions)
 
-        val time = max((20 / points.size).toLong(), 1)  // TODO: Validate delay
+        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
         drawView.drawStart(points.first())
         delay(time)
 

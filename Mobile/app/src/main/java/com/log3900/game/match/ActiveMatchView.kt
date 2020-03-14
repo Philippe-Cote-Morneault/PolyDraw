@@ -9,4 +9,7 @@ interface ActiveMatchView {
     fun setPlayerStatus(playerID: UUID, statusImageRes: Int)
     fun clearAllPlayerStatusRes()
     fun setWordToGuessLength(length: Int)
+    fun enableDrawFunctions(enable: Boolean, drawingID: UUID?)
+    fun clearCanvas()
+    fun setTimeValue(time: String)
 }

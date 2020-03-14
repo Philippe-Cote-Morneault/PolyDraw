@@ -18,4 +18,8 @@ class MatchManager {
     fun makeGuess(text: String) {
         matchRepository.makeGuess(text)
     }
+
+    fun leaveMatch() {
+        matchRepository.leaveMatch()
+    }
 }

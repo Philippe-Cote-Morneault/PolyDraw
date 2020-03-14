@@ -1,5 +1,7 @@
 package com.log3900.chat.Channel
 
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.ChatManager
 import com.log3900.chat.ChatMessage
 import com.log3900.shared.architecture.EventType
@@ -82,8 +84,8 @@ class ChannelListPresenter : Presenter {
         try {
             chatManager.onChannelClicked(channel)
         } catch (e: IllegalArgumentException) {
-            channelListView.showConfirmationDialog("Unsubscribed channel",
-                "You are not subscribed to channel ${channel.name}. Would you like to subscribe to it?",
+            channelListView.showConfirmationDialog(MainApplication.instance.getContext().getString(R.string.unsubscribed_channel),
+                MainApplication.instance.getContext().getString(R.string.subscribe_to_channel_confirmation_text, channel.name),
                 { _, _ ->
                     chatManager.changeSubscriptionStatus(channel)
                     chatManager.setActiveChannel(channel)
@@ -99,7 +101,9 @@ class ChannelListPresenter : Presenter {
     }
 
     fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
-        channelListView.showConfirmationDialog("Delete message", "Are you sure you want to delete channel ${channel.name}?",
+        channelListView.showConfirmationDialog(
+            MainApplication.instance.getContext().getString(R.string.delete_channel_title),
+            MainApplication.instance.getContext().getString(R.string.delete_channel_confirmation, channel.name),
             { _, _ ->
                 chatManager.deleteChannel(channel)
             },

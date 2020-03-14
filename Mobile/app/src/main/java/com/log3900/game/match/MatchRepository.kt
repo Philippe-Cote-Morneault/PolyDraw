@@ -31,12 +31,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.collections.HashMap
 
 class MatchRepository : Service() {
     private val binder = MatchRepositoryBinder()
     private var socketService: SocketService? = null
     private var socketMessageHandler: Handler? = null
     private var currentMatch: Match? = null
+    private var playerScores: HashMap<UUID, Int> = HashMap()
 
     var isReady = false
 
@@ -48,11 +50,13 @@ class MatchRepository : Service() {
         instance = this
         socketService = SocketService.instance
 
+        socketService?.subscribeToMessage(Event.PLAYER_GUESSED_WORD, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.GUESS_WORD_RESPONSE, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.USER_JOINED_GROUP, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -82,6 +86,8 @@ class MatchRepository : Service() {
             Event.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(socketMessage)
             Event.TURN_TO_DRAW -> onTurnToDraw(socketMessage)
             Event.GUESS_WORD_RESPONSE -> onGuessWordResponse(socketMessage)
+            Event.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(socketMessage)
+            Event.PLAYER_SYNC -> onPlayerSync(socketMessage)
         }
     }
 
@@ -91,6 +97,10 @@ class MatchRepository : Service() {
 
     fun makeGuess(text: String) {
         socketService?.sendMessage(Event.GUESS_WORD, text.toByteArray())
+    }
+
+    fun leaveMatch() {
+        socketService?.sendMessage(Event.LEAVE_MATCH, byteArrayOf())
     }
 
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
@@ -114,7 +124,9 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         val playerTurnToDraw = MatchAdapter.jsonToPlayerTurnToDraw(jsonObject)
-        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_TURN_TO_DRAW, playerTurnToDraw))
+        if (playerTurnToDraw.userID != AccountRepository.getInstance().getAccount().ID) {
+            EventBus.getDefault().post(MessageEvent(EventType.PLAYER_TURN_TO_DRAW, playerTurnToDraw))
+        }
     }
 
     private fun onTurnToDraw(message: com.log3900.socket.Message) {
@@ -124,7 +136,36 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.TURN_TO_DRAW, turnToDraw))
     }
 
+    private fun onPlayerGuessedWord(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val playerGuessedWord = MatchAdapter.jsonToPlayerGuessedWord(jsonObject)
+        updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
+        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
+    }
+
+    private fun onPlayerSync(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val synchronisation = MatchAdapter.jsonToSynchronisation(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_SYNCHRONISATION, synchronisation))
+    }
+
+    private fun updatePlayerScore(playerID: UUID, newScore: Int) {
+        playerScores[playerID] = newScore
+        reorderPlayers()
+    }
+
+    private fun reorderPlayers() {
+        currentMatch?.players?.sortByDescending {
+            playerScores[it.ID]
+        }
+    }
+
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.PLAYER_GUESSED_WORD, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.GUESS_WORD_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)

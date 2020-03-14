@@ -52,7 +52,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="0.7"
                     android:background="@drawable/rounded_shape"
                     android:gravity="center">
@@ -61,7 +61,7 @@
                         android:id="@+id/fragment_chat_new_message_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Type your message..."/>
+                        android:hint="@string/chat_box_enter_message_title"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
