@@ -13,6 +13,7 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.shared.ui.SearchViewUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
@@ -127,14 +128,14 @@ class ChannelListFragment : Fragment(), ChannelListView {
 
     override fun showChannelCreationDialog(positiveCallback: (channelName: String) -> Unit) {
         val editText = EditText(this.context)
-        editText.setHint("Channel Name")
+        editText.setHint(resources.getString(R.string.create_channel_name_hint))
         channelCreationDialog = AlertDialog.Builder(this.context)
-            .setTitle("Create Channel")
+            .setTitle(resources.getString(R.string.create_channel_dialog_title))
             .setView(editText)
-            .setPositiveButton("Create") { _, _ ->
+            .setPositiveButton(resources.getString(R.string.create)) { _, _ ->
                 positiveCallback(editText.text.toString())
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
