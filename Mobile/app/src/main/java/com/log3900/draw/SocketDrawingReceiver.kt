@@ -8,7 +8,6 @@ import com.log3900.utils.format.UUIDUtils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.lang.Long.max
 import java.lang.Long.min
 import java.util.*
 
@@ -33,7 +32,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.subscribeToMessage(Event.STROKE_DATA_SERVER, Handler {
             if (isListening) {
                 val message = it.obj as Message
-                parseMessageToStroke(message.data)
+                drawStrokeData(message.data)
             }
             true
         })
@@ -47,7 +46,11 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
-    fun parseMessageToStroke(data: ByteArray) {
+    fun onStrokeStart(data: ByteArray) {
+        // Drawing id...
+    }
+
+    fun drawStrokeData(data: ByteArray) {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
@@ -66,7 +69,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         drawView.setOptions(paintOptions)
 
         val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
-        drawView.drawStart(points.first())
+        drawView.drawStart(points.first(), strokeID)
         delay(time)
 
         for (point in points.drop(1)) {
