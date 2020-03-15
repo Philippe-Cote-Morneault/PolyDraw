@@ -10,6 +10,49 @@
              >
     <UserControl.Resources>
         <converter:HealthPointConverter x:Key="HealthPointConverter"/>
+        <Storyboard x:Key="TimerCloseToEnd" >
+            <ColorAnimation  Duration="0:0:1" From="Black" To="Red"
+                    AutoReverse="True"
+                    AccelerationRatio="1"
+                    Storyboard.TargetName="TimeText"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+            
+            <ColorAnimation  Duration="0:0:1" From="Black" To="Red"
+                    AutoReverse="True"
+                    AccelerationRatio="1"
+                    Storyboard.TargetName="TimeIcon"
+                    Storyboard.TargetProperty="(Foreground).Color"/>
+
+            <DoubleAnimation AutoReverse="True"
+                           Storyboard.TargetName="TimeText"  
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeText"
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                           Storyboard.TargetName="TimeIcon"  
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeIcon"
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeIcon"
+                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                From="0" To="-2" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeText"
+                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                From="0" To="-15" Duration="0:0:0.2" />
+        </Storyboard>
     </UserControl.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
@@ -25,8 +68,22 @@
         </StackPanel>
         
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
-            <materialDesign:PackIcon Kind="Clock" HorizontalAlignment="Center"></materialDesign:PackIcon>
-            <TextBlock Text="{Binding Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black"/>
+            <materialDesign:PackIcon Name="TimeIcon" Kind="Clock" HorizontalAlignment="Center">
+                <materialDesign:PackIcon.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </materialDesign:PackIcon.RenderTransform>
+            </materialDesign:PackIcon>
+            <TextBlock Name="TimeText" Text="{Binding Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black">
+                <TextBlock.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </TextBlock.RenderTransform>
+            </TextBlock>
         </StackPanel>
         
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2">
