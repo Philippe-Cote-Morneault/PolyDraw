@@ -42,3 +42,11 @@ class PlayerGuessedWord(
     var points: Int,
     var pointsTotal: Int
 )
+
+class Synchronisation(
+    var players: ArrayList<Pair<UUID, Int>>,
+    var laps: Int?,
+    var time: Int,
+    var gameTime: Int?
+
+)

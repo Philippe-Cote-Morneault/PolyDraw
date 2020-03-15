@@ -7,6 +7,7 @@ import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.DateFormatter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -20,6 +21,7 @@ class ActiveMatchPresenter : Presenter {
         this.activeMatchView = activeMatchView
         this.matchManager = MatchManager()
         activeMatchView.setPlayers(matchManager.getCurrentMatch().players)
+        activeMatchView.setPlayerScores(matchManager.getPlayerScores())
         subscribeToEvents()
         matchManager.notifyReadyToPlay()
     }
@@ -32,14 +34,14 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
+        activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
     }
 
-    /*
     private fun onWordGuessedSucessfully() {
-        activeMatchView?.setPlayerStatus()
-    } */
+       // activeMatchView?.setPlayerStatus()
+    }
 
     private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
         activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
@@ -47,11 +49,20 @@ class ActiveMatchPresenter : Presenter {
 
 
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
-        Log.d("POTATO", "Turn to draw word = ${turnToDraw.word}")
         activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(AccountRepository.getInstance().getAccount().ID, R.drawable.ic_edit_black)
+        activeMatchView?.showWordToDrawView()
+        activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
+    }
+
+    private fun onMatchSynchronisation(synchronisation: Synchronisation) {
+        activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
+    }
+
+    private fun onMatchPlayersUpdated() {
+        activeMatchView?.notifyPlayersChanged()
     }
 
     private fun subscribeToEvents() {
@@ -64,6 +75,8 @@ class ActiveMatchPresenter : Presenter {
             EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
             EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
             EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
+            EventType.MATCH_SYNCHRONISATION -> onMatchSynchronisation(event.data as Synchronisation)
+            EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
         }
     }
 

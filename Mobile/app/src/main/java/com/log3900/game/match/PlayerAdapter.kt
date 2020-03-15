@@ -13,6 +13,7 @@ import kotlin.collections.HashMap
 class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     private var players: ArrayList<Player> = arrayListOf()
     private var statusImageRes: HashMap<UUID, Int?> = HashMap()
+    private var playerScores: HashMap<UUID, Int> = HashMap()
     private lateinit var group: Group
 
 
@@ -30,6 +31,10 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
         notifyItemChanged(players.indexOf(player))
     }
 
+    fun setPlayerScores(playerScores: HashMap<UUID, Int>) {
+        this.playerScores = playerScores
+    }
+
     fun resetAllImageRes() {
         statusImageRes = HashMap()
     }
@@ -45,6 +50,6 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        holder.bind(players[position], position + 1, 0, statusImageRes[players[position].ID])
+        holder.bind(players[position], position + 1, playerScores.getOrDefault(players[position].ID, 0), statusImageRes[players[position].ID])
     }
 }

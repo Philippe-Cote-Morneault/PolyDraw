@@ -27,6 +27,7 @@ import com.google.android.material.navigation.NavigationView
 import com.log3900.chat.ChatManager
 import com.log3900.login.LoginActivity
 import com.log3900.settings.SettingsActivity
+import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -50,6 +51,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
+        LanguageManager.applySavedLanguage(baseContext)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

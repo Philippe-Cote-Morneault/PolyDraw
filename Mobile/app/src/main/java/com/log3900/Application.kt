@@ -1,10 +1,13 @@
 package com.log3900
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
 import com.log3900.session.MonitoringService
 import com.log3900.session.NavigationManager
+import com.log3900.settings.language.LanguageManager
+import com.log3900.settings.theme.ThemeManager
 import com.log3900.socket.SocketService
 
 class MainApplication : Application() {
@@ -43,6 +46,14 @@ class MainApplication : Application() {
     fun unregisterMainActivity() {
         navigationManager.currentActivity = null
         mainActivity = null
+    }
+
+    fun getContext(): Context {
+        val currentContext = baseContext
+
+        LanguageManager.applySavedLanguage(currentContext)
+
+        return currentContext
     }
 
 }
