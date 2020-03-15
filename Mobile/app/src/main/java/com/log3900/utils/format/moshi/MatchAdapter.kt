@@ -81,10 +81,10 @@ object MatchAdapter {
     }
 
     fun jsonToPlayerGuessedWord(jsonObject: JsonObject): PlayerGuessedWord {
-        Log.d("POTAOT", "MatchAdapter parsing PlayerGuessedWord = ${jsonObject}")
+        Log.d("POTATO", "MatchAdapter parsing PlayerGuessedWord = ${jsonObject}")
         val username = jsonObject.get("Username").asString
         val userID = UUID.fromString(jsonObject.get("UserID").asString)
-        val points = jsonObject.get("Point").asInt
+        val points = jsonObject.get("Points").asInt
         val pointsTotal = jsonObject.get("PointsTotal").asInt
 
         return PlayerGuessedWord(
