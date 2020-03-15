@@ -30,6 +30,7 @@ enum class EventType {
     PLAYER_TURN_TO_DRAW,
     PLAYER_GUESSED_WORD,
     PLAYER_LEFT_GAME,
+    POINTS_GAINED,
     // Session
     LOGOUT,
 

@@ -63,6 +63,9 @@ class MatchRepository : Service() {
         return currentMatch
     }
 
+    fun getPlayerScores(): HashMap<UUID, Int> {
+        return playerScores
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return binder
@@ -117,7 +120,7 @@ class MatchRepository : Service() {
 
     private fun onGuessWordResponse(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
-        Log.d("POTATO", json)
+        Log.d("POTATO", "guessWordResponse = $json")
     }
 
     private fun onPlayerTurnToDraw(message: com.log3900.socket.Message) {
@@ -141,6 +144,9 @@ class MatchRepository : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         val playerGuessedWord = MatchAdapter.jsonToPlayerGuessedWord(jsonObject)
         updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal)
+        if (playerGuessedWord.userID == AccountRepository.getInstance().getAccount().ID) {
+            EventBus.getDefault().post(MessageEvent(EventType.POINTS_GAINED, playerGuessedWord.points))
+        }
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
         EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
     }

@@ -19,6 +19,7 @@ import com.log3900.game.match.UI.WordGuessingView
 import com.log3900.game.match.UI.WordToDrawView
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var activeMatchPresenter: ActiveMatchPresenter? = null
@@ -72,6 +73,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun setPlayerStatus(playerID: UUID, statusImageRes: Int) {
         playersAdapter.setPlayerStatusRes(playerID, statusImageRes)
+    }
+
+    override fun setPlayerScores(playerScores: HashMap<UUID, Int>) {
+        playersAdapter.setPlayerScores(playerScores)
     }
 
     override fun clearAllPlayerStatusRes() {
@@ -132,6 +137,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
             wordToDrawView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(wordToDrawView)
         }
+    }
+
+    override fun notifyPlayersChanged() {
+        playersAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroy() {

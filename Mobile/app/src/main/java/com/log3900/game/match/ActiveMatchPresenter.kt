@@ -21,6 +21,7 @@ class ActiveMatchPresenter : Presenter {
         this.activeMatchView = activeMatchView
         this.matchManager = MatchManager()
         activeMatchView.setPlayers(matchManager.getCurrentMatch().players)
+        activeMatchView.setPlayerScores(matchManager.getPlayerScores())
         subscribeToEvents()
         matchManager.notifyReadyToPlay()
     }
@@ -60,6 +61,10 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
     }
 
+    private fun onMatchPlayersUpdated() {
+        activeMatchView?.notifyPlayersChanged()
+    }
+
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
@@ -71,6 +76,7 @@ class ActiveMatchPresenter : Presenter {
             EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
             EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
             EventType.MATCH_SYNCHRONISATION -> onMatchSynchronisation(event.data as Synchronisation)
+            EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
         }
     }
 
