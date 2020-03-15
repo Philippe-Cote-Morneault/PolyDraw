@@ -117,19 +117,20 @@
                 <TextBlock Name="textBlockPosition" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </StackPanel>
         </Border>
-
-            <InkCanvas ClipToBounds="True"  Name="Canvas"
-                       Width="1125"
-                       Height="750"
-                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                       MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
-                       Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
-                       MouseDown="SaveDrawDebutTime"
-                       StrokeCollected="OnStrokeAdded"
-                       StrokeErasing="OnStrokeErase"
-                       PreviewMouseMove="Canvas_OnPreviewMouseMove"
-                       EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                       DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}" />
+            <Grid Background="WhiteSmoke">
+                <InkCanvas  ClipToBounds="True"  Name="Canvas"
+                   Width="1125"
+                   Height="750"
+                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
+                   Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
+                   MouseDown="SaveDrawDebutTime"
+                   StrokeCollected="OnStrokeAdded"
+                   StrokeErasing="OnStrokeErase"
+                   PreviewMouseMove="Canvas_OnPreviewMouseMove"
+                   EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                   DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}" />
+            </Grid>
     </DockPanel>
     </materialDesign:Card>
 </UserControl>

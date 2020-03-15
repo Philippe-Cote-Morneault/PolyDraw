@@ -39,7 +39,14 @@
         </KeyBinding>
     </Window.InputBindings>
 
-    <materialDesign:DialogHost Identifier="Default" x:Name="MainWindowDialogHost" CloseOnClickAway="False">
+    <materialDesign:DialogHost Identifier="Default" x:Name="MainWindowDialogHost" CloseOnClickAway="False" SizeChanged="MainGrid_SizeChanged">
+            <materialDesign:DialogHost.LayoutTransform>
+                    <ScaleTransform 
+                                    CenterX="0"
+                                    CenterY="0"
+                                    ScaleX="{Binding ElementName=PolyDraw, Path=ScaleValue}"
+                                    ScaleY="{Binding ElementName=PolyDraw, Path=ScaleValue}" />
+            </materialDesign:DialogHost.LayoutTransform>
         <Grid>
             <WrapPanel ZIndex="1"
                        Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -297,8 +304,6 @@
                                 IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </Grid>
-
-
     </materialDesign:DialogHost>
 
 
