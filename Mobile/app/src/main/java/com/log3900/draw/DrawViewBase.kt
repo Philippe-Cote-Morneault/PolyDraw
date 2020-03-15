@@ -268,8 +268,7 @@ class DrawViewBase @JvmOverloads constructor(
 
     private fun removePathIfIntersection(x: Float, y: Float) {
         val sortedMap = mPaths
-        var keyToRemove = MyPath()
-        var found = false
+        var keyToRemove: MyPath? = null
         for ((key, value) in sortedMap) {
             for (action in key.actions) {
                 var width = 30
@@ -280,22 +279,21 @@ class DrawViewBase @JvmOverloads constructor(
                     val distance1 = sqrt((q.x1.toDouble() - x.toDouble()).pow(2.0) + (q.y1.toDouble() - y.toDouble()).pow(2.0))
                     val distance2 = sqrt((q.x2.toDouble() - x.toDouble()).pow(2.0) + (q.y2.toDouble() - y.toDouble()).pow(2.0))
                     if (value.color != 0xFFFFFFFF.toInt() && (distance1 <= width || distance2 <= width)) {
-                        found = true
                         keyToRemove = key
                     }
                 } else if (action is Line) {
                     val q: Line = action
                     val distance = sqrt((q.x.toDouble() - x.toDouble()).pow(2.0) + (q.y.toDouble() - y.toDouble()).pow(2.0))
                     if (distance <= width && value.color != 0xFFFFFFFF.toInt()) {
-                        found = true
                         keyToRemove = key
                     }
                 }
             }
         }
-        if(found) {
+        if (keyToRemove != null) {
+            Log.d("DRAW_CANVAS", "Removing ${keyToRemove.toString()}")
             mPaths.remove(keyToRemove)
-            invalidate()
+            keyToRemove.reset()
         }
 //        val point = FloatPoint(x, y)
 //        println("Checking point: $point")
@@ -320,7 +318,7 @@ class DrawViewBase @JvmOverloads constructor(
             DrawMode.DRAW -> {}
             DrawMode.REMOVE -> {}
             DrawMode.ERASE -> {
-                invalidate()
+//                invalidate()
             }
         }
     }
