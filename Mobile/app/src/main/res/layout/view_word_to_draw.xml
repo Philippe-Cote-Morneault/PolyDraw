@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:text="@string/word_to_draw_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -20,6 +21,7 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/color_black"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/view_word_to_draw_text_view_word_title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
