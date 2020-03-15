@@ -105,7 +105,6 @@ namespace ClientLourd.Services.InkCanvas
             {
                 byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
                 message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
-                //TODO validate bytes order
                 _currentStrokeID.ToByteArray().CopyTo(message, 1);
                 message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
                 for (int i = 0; i < _points.Count; i++)
