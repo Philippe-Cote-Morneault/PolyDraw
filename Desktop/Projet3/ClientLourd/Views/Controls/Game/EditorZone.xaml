@@ -56,32 +56,34 @@
         </Storyboard>
 
 
-        <Storyboard x:Key="NextRound" >
+        <Storyboard x:Key="NextRoundBegin" >
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
                 Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
-                From="0" To="180" Duration="0:0:1" />
+                From="0" To="180" Duration="0:0:0.5" />
 
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
                 Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
-                From="0" To="3000" Duration="0:0:1" />
+                From="0" To="3000" Duration="0:0:0.5" />
+        </Storyboard>
+
+        <Storyboard x:Key="NextRoundEnd" >
 
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
-                             BeginTime="0:0:1"
+                             BeginTime="0:0:0.5"
                 Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
-                From="270" To="0" Duration="0:0:1" />
+                From="270" To="0" Duration="0:0:0.5" />
 
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
-                             BeginTime="0:0:1"
+                             BeginTime="0:0:0.5"
                 Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
-                From="-3000" To="0" Duration="0:0:1" />
-
-
+                From="-3000" To="0" Duration="0:0:0.5" />
         </Storyboard>
     </UserControl.Resources>
+    
     <DockPanel Margin="10">
         <StackPanel 
             DockPanel.Dock="Bottom"

@@ -23,9 +23,9 @@ namespace ClientLourd.Views.Controls.Game
             InitializeComponent();
             Loaded += OnLoaded;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
-            SocketClient.NewPlayerIsDrawing += SocketClientOnMatchTimesUp;
+            SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
             
-            //SocketClient.NewPlayerIsDrawing += SocketClientOnMatchTimesUp;
+            SocketClient.NewPlayerIsDrawing += SocketClientNewDrawer;
         }
 
         public SocketClient SocketClient
@@ -168,14 +168,27 @@ namespace ClientLourd.Views.Controls.Game
             
             Application.Current.Dispatcher.Invoke(() =>
             {
-
-                if ((DataContext as GameViewModel).Round != 0)
-                {
-                    Storyboard sb = (Storyboard)FindResource("NextRound");
-                    sb.Begin();
-                }
+                Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
+                sb.Begin();
             });
             
         }
+
+        private void SocketClientNewDrawer(object sender, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+            
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                //if ((DataContext as GameViewModel).Round > 1)
+                //{
+                    Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
+                    sb.Begin();
+                //}
+                
+            });
+            
+        }
+
     }
 }
