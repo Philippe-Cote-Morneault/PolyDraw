@@ -54,6 +54,33 @@
                              />
 
         </Storyboard>
+
+
+        <Storyboard x:Key="NextRound" >
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
+                From="0" To="180" Duration="0:0:1" />
+
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                From="0" To="3000" Duration="0:0:1" />
+
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                             BeginTime="0:0:1"
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
+                From="270" To="0" Duration="0:0:1" />
+
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                             BeginTime="0:0:1"
+                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                From="-3000" To="0" Duration="0:0:1" />
+
+
+        </Storyboard>
     </UserControl.Resources>
     <DockPanel Margin="10">
         <StackPanel 
@@ -99,9 +126,16 @@
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
                 <TextBlock FontSize="20" Text="{Binding CanvasMessage}"/>
             </Grid>
-            <Grid>
+            <Grid Name="CanvasContainer" RenderTransformOrigin=".5,.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
                 <control:Editor x:Name="DrawingEditor"/>
             </Grid>
+            
         </Grid>
     </DockPanel>
 </UserControl>

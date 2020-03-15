@@ -128,7 +128,7 @@
                        StrokeCollected="OnStrokeAdded"
                        StrokeErasing="OnStrokeErase"
                        EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                       DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}" />
-    </DockPanel>
+                       DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}"/>
+        </DockPanel>
     </materialDesign:Card>
 </UserControl>
