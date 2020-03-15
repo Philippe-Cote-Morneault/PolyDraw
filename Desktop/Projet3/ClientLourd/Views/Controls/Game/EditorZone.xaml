@@ -10,24 +10,49 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Storyboard x:Key="StoryBoard" AutoReverse="True">
-            <!--<DoubleAnimation Storyboard.TargetProperty="Height"
-                            From="10" To="60"/>-->
+        <Storyboard x:Key="GuessRight" >
             <ColorAnimation  Duration="0:0:1" From="Black" To="Green"
+                    AutoReverse="False"
                     AccelerationRatio="1"
                     Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                From="-5.0" To="5" Duration="0:0:0.5" />
 
-            <DoubleAnimation
-                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                From="1" To="1.5" Duration="0:0:1" />
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
+                From="0" To="-10" Duration="0:0:0.1" />
+            
+            <DoubleAnimation AutoReverse="True"
 
-            <DoubleAnimation
-                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                From="1" To="1.5" Duration="0:0:1" />
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
+                From="0" To="10" Duration="0:0:0.1" BeginTime="0:0:0.2" />
+            
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+        </Storyboard>
+
+        <Storyboard x:Key="GuessWrong" >
+            <ColorAnimation  Duration="0:0:0.5" From="Black" To="Red"
+                    AutoReverse="True"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+
+            <DoubleAnimation AutoReverse="True"
+
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
+                From="0" To="-10" Duration="0:0:0.1" />
+
+            <DoubleAnimation AutoReverse="True"
+
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
+                From="0" To="10" Duration="0:0:0.1" 
+                BeginTime="0:0:0.2"
+                             />
+
         </Storyboard>
     </UserControl.Resources>
     <DockPanel Margin="10">
@@ -55,7 +80,12 @@
                                  Path=(ItemsControl.AlternationIndex), 
                                  RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1" Foreground="Black">
                             <TextBox.RenderTransform>
-                                <ScaleTransform/>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                                
                             </TextBox.RenderTransform>
                         </TextBox>
                     </DataTemplate>
