@@ -133,6 +133,7 @@ namespace ClientLourd.ViewModels
                 var tmpPlayer = Players.First(p => p.User.ID == info["UserID"]);
                 tmpPlayer.Score = info["Points"];
             }
+            NotifyPropertyChanged(nameof(Players));
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
@@ -148,6 +149,11 @@ namespace ClientLourd.ViewModels
             {
                 ShowCanvasMessage($"+ {e.Points}");
                 Players.First(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
+                NotifyPropertyChanged(nameof(Players));
+            }
+            else
+            {
+                ShowCanvasMessage($"Try again !");
             }
         }
 
@@ -165,6 +171,7 @@ namespace ClientLourd.ViewModels
         {
             PrepareNextRound();
             var e = (MatchEventArgs) args;
+            Time = DateTime.MinValue;
             //Round end
             if (e.Type == 1)
             {
@@ -180,9 +187,8 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Player Winner = Players.FirstOrDefault(p => p.User.ID == e.WinnerID);
-            MessageBox.Show($"game end, {Winner.User.Username}");
+            ShowCanvasMessage($"The winner is {Winner.User.Username}");
             StrokeDrawerService.Stop();
-            //DialogHost.Show(new MessageDialog("Game ended", $"The winner is {Winner.User.Username}"));
         }
 
         private void SocketClientOnMatchStarted(object source, EventArgs args)
