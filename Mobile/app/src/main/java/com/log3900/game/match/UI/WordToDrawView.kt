@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.log3900.R
 
-class WordToDrawView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class WordToDrawView(context: Context) : ConstraintLayout(context) {
     private var layout: ConstraintLayout
     private var wordTitleTextView: TextView
     private var wordTextView: TextView

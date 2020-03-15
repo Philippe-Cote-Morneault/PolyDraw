@@ -16,7 +16,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
 
-class WordGuessingView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class WordGuessingView(context: Context) : ConstraintLayout(context) {
     private var layout: ConstraintLayout
     private var editTextContainer: LinearLayout
     private var guessButton: MaterialButton
