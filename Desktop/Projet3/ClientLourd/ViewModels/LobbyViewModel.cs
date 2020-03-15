@@ -46,6 +46,8 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
+            CurrentLobby = null;
+            ContainedView = Utilities.Enums.Views.Home.ToString();
             IsGameStarted = false;
         }
 
