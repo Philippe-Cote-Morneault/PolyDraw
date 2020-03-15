@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class MessageCache {
     val chatMessages: ConcurrentHashMap<UUID, LinkedList<ChatMessage>> = ConcurrentHashMap()
+    private val loadedHistory: ConcurrentHashMap<UUID, Boolean> = ConcurrentHashMap()
 
     fun createArrayForChannel(channelID: UUID) {
         if (!chatMessages.containsKey(channelID)) {
@@ -40,5 +41,18 @@ class MessageCache {
 
     fun removeEntry(channelID: UUID) {
         chatMessages.remove(channelID)
+        loadedHistory.remove(channelID)
+    }
+
+    fun isHistoryFetched(channelID: UUID): Boolean {
+        if (!loadedHistory.containsKey(channelID)) {
+            loadedHistory[channelID] = false
+        }
+
+        return loadedHistory[channelID]!!
+    }
+
+    fun setHistoryFetchedState(channelID: UUID, isLoaded: Boolean) {
+        loadedHistory[channelID] = isLoaded
     }
 }

@@ -50,7 +50,7 @@ class MessageRepository : Service() {
 
     fun getChannelMessages(channelID: UUID): Single<LinkedList<ChatMessage>> {
         return Single.create {
-            if (messageCache.getMessages(channelID).size == 0) {
+            if (!messageCache.isHistoryFetched(channelID)) {
                 getChannelMessages(channelID, 0, 50).subscribe(
                     { messages ->
                         messageCache.prependMessage(channelID, LinkedList(messages))
