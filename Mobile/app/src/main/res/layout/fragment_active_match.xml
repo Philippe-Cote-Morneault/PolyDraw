@@ -12,10 +12,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <com.log3900.game.match.UI.WordGuessingView
-        android:id="@+id/fragment_active_match_guess_container"
+    <LinearLayout
+        android:id="@+id/fragment_active_match_footer_container"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:orientation="horizontal"
         android:layout_marginEnd="352dp"
         app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +29,7 @@
         android:name="com.log3900.draw.DrawViewFragment"
         android:layout_marginEnd="352dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_guess_container"
+        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
         app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
         app:layout_constraintEnd_toEndOf="parent"/>
 

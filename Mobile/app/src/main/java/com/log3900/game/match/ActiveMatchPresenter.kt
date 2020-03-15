@@ -33,14 +33,14 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
+        activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
     }
 
-    /*
     private fun onWordGuessedSucessfully() {
-        activeMatchView?.setPlayerStatus()
-    } */
+       // activeMatchView?.setPlayerStatus()
+    }
 
     private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
         activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
@@ -48,15 +48,15 @@ class ActiveMatchPresenter : Presenter {
 
 
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
-        Log.d("POTATO", "Turn to draw word = ${turnToDraw.word}")
         activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()
         activeMatchView?.setPlayerStatus(AccountRepository.getInstance().getAccount().ID, R.drawable.ic_edit_black)
+        activeMatchView?.showWordToDrawView()
+        activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
-        Log.d("POTATO", "onMatchSync, time = ${synchronisation.time}")
         activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
     }
 

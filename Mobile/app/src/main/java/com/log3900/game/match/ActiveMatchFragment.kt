@@ -1,10 +1,12 @@
 package com.log3900.game.match
 
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -14,6 +16,7 @@ import com.log3900.R
 import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
 import com.log3900.game.match.UI.WordGuessingView
+import com.log3900.game.match.UI.WordToDrawView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -23,10 +26,12 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private lateinit var drawFragment: DrawViewFragment
 
     // UI
-    private lateinit var guessingView: WordGuessingView
+    private lateinit var footer: LinearLayout
     private lateinit var playersRecyclerView: RecyclerView
     private lateinit var toolbar: ConstraintLayout
     private lateinit var remainingTimeTextView: TextView
+    private var guessingView: WordGuessingView? = null
+    private var wordToDrawView: WordToDrawView? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,14 +45,8 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     private fun setupUI(rootView: View) {
-        guessingView = rootView.findViewById(R.id.fragment_active_match_guess_container)
+        footer = rootView.findViewById(R.id.fragment_active_match_footer_container)
         playersRecyclerView = rootView.findViewById(R.id.fragment_active_match_recycler_view_player_list)
-
-        guessingView.listener = object : WordGuessingView.Listener {
-            override fun onGuessPressed(text: String) {
-                activeMatchPresenter?.guessPressed(text)
-            }
-        }
 
         setupRecyclerView()
 
@@ -81,7 +80,11 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun setWordToGuessLength(length: Int) {
-        guessingView.setWordLength(length)
+        guessingView?.setWordLength(length)
+    }
+
+    override fun setWordToDraw(word: String) {
+        wordToDrawView?.setWordToGuess(word)
     }
 
     override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?) {
@@ -94,6 +97,41 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun clearCanvas() {
         drawFragment.clearCanvas()
+    }
+
+    override fun showWordGuessingView() {
+        Log.d("POTATO", "showWordGuessingView()")
+        if (wordToDrawView != null) {
+            footer.removeAllViews()
+            wordToDrawView = null
+        }
+
+        if (guessingView == null) {
+            Log.d("POTATO", "guessingView is null")
+            guessingView = WordGuessingView(context!!)
+            guessingView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            footer.addView(guessingView)
+            guessingView?.listener = object : WordGuessingView.Listener {
+                override fun onGuessPressed(text: String) {
+                    activeMatchPresenter?.guessPressed(text)
+                }
+            }
+        }
+    }
+
+    override fun showWordToDrawView() {
+        Log.d("POTATO", "showWordToDrawView()")
+        if (guessingView != null) {
+            footer.removeAllViews()
+            guessingView = null
+        }
+
+        if (wordToDrawView == null) {
+            Log.d("POTATO", "wordToDrawView is null")
+            wordToDrawView = WordToDrawView(context!!)
+            wordToDrawView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            footer.addView(wordToDrawView)
+        }
     }
 
     override fun onDestroy() {
