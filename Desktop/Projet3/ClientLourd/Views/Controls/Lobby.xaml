@@ -19,81 +19,77 @@
     <UserControl.DataContext>
         <viewModels:LobbyViewModel x:Name="DataContext"/>
     </UserControl.DataContext>
-    <Grid x:Name="LobbyGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="6*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+    <DockPanel x:Name="LobbyGrid">
+        <DockPanel DockPanel.Dock="Left" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource InverseBoolToVisConverter}}">
+            
+            <UniformGrid Columns="2" DockPanel.Dock="Bottom" >
+                <Button Margin="30" Command="{Binding StartGameCommand}" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>
+                <Button Margin="30" Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
+            </UniformGrid>
+            
+            
+            <StackPanel Margin="30" >
+                <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{Binding CurrentLobby.GameName}"></TextBlock>
+                <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}Mode: {0}}"></TextBlock>
+                <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
+
+                <!-- Players -->
+                <ItemsControl ItemsSource="{Binding CurrentLobby.Players}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
+                                    <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
+                                                       Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                       Text="{Binding User.Username}" />
+                                    <materialDesign:Chip.Icon>
+                                        <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
+                                    </materialDesign:Chip.Icon>
+                                </materialDesign:Chip>
+                                <materialDesign:PackIcon Foreground="Gold" ToolTip="Host" Width="40" Height="30" Kind="Crown">
+                                    <materialDesign:PackIcon.Visibility>
+                                        <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
+                                            <Binding Path="User.ID" ></Binding>
+                                            <Binding ElementName="DataContext" Path="CurrentLobby.HostID" UpdateSourceTrigger="PropertyChanged"></Binding>
+                                        </MultiBinding>
+                                    </materialDesign:PackIcon.Visibility>
+
+                                </materialDesign:PackIcon>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+
+                <!-- Placeholders (empty slots) -->
+                <ItemsControl ItemsSource="{Binding CurrentLobby, Converter={StaticResource NumberToPlaceholder}, UpdateSourceTrigger=PropertyChanged}" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
+                                    <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
+                                                       Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                       Text="{Binding Username}" />
+                                    <materialDesign:Chip.Icon>
+                                        <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
+                                    </materialDesign:Chip.Icon>
+                                </materialDesign:Chip>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"></ColumnDefinition>
-            <ColumnDefinition Width="4*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-
-        <StackPanel Margin="30" Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=IsGameStarted , Converter={StaticResource InverseBoolToVisConverter}}">
-            <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{Binding CurrentLobby.GameName}"></TextBlock>
-            <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}Mode: {0}}"></TextBlock>
-            <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
-
-            <!-- Players -->
-            <ItemsControl ItemsSource="{Binding CurrentLobby.Players}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
-                                <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
-                                                   Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                                   Text="{Binding User.Username}" />
-                                <materialDesign:Chip.Icon>
-                                    <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
-                                </materialDesign:Chip.Icon>
-                            </materialDesign:Chip>
-                            <materialDesign:PackIcon Foreground="Gold" ToolTip="Host" Width="40" Height="30" Kind="Crown">
-                                <materialDesign:PackIcon.Visibility>
-                                    <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
-                                        <Binding Path="User.ID" ></Binding>
-                                        <Binding ElementName="DataContext" Path="CurrentLobby.HostID" UpdateSourceTrigger="PropertyChanged"></Binding>
-                                    </MultiBinding>
-                                </materialDesign:PackIcon.Visibility>
-
-                            </materialDesign:PackIcon>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-
-            <!-- Placeholders (empty slots) -->
-            <ItemsControl ItemsSource="{Binding CurrentLobby, Converter={StaticResource NumberToPlaceholder}, UpdateSourceTrigger=PropertyChanged}" >
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
-                                <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
-                                                   Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                                   Text="{Binding Username}" />
-                                <materialDesign:Chip.Icon>
-                                    <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
-                                </materialDesign:Chip.Icon>
-                            </materialDesign:Chip>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
-        <Grid Grid.Row="0" Grid.Column="0" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
+            
+        </DockPanel>
+        
+        <Grid DockPanel.Dock="Left" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
             <game:GamePanel/>
         </Grid>
-        <materialDesign:Card Grid.RowSpan="2" Grid.Row="0" Grid.Column="1" BorderBrush="LightGray" Margin="10" BorderThickness="1" Name="ChatContainer"/>
+        
+        <materialDesign:Card Name="ChatContainer"/>
 
-        <Grid Grid.Row="1" Grid.Column="0" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource InverseBoolToVisConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <!--<Button Grid.Column="0"  Margin="30" Command="{Binding StartGameCommand}" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>-->
-            <Button Grid.Column="0"  Margin="30" Command="{Binding StartGameCommand}" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>
-            <Button Grid.Column="1" Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
-        </Grid>
-    </Grid>
+    </DockPanel>
+
+        
 </UserControl>
