@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,11 +35,6 @@ namespace ClientLourd.Views.Controls.Game
                         ?.SocketClient;
                 });
             }
-        }
-
-        public SoundService SoundService
-        {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -99,54 +95,68 @@ namespace ClientLourd.Views.Controls.Game
             if (e.Valid)
             {
                 Task.Run(() =>
-                {
-                    for (int i = 0; i < GuessTextBoxes.Items.Count; i++)
-                    {
-                        ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
-                        TextBox tb;
-
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            tb = c.ContentTemplate.FindName("textbox", c) as TextBox;
-                            Storyboard sb = (Storyboard)FindResource("GuessRight");
-
-                            for (int j = 0; j < sb.Children.Count; j++)
-                            {
-                                Storyboard.SetTarget(sb.Children[j], tb);
-                            }
-
-
-                            sb.Begin();
-                        });
-                        System.Threading.Thread.Sleep(200);
-                    }
+                {   
+                    PlayRightGuessAnimation(GetTextBoxes());        
                 });
             }
             else
             {
                 Task.Run(() =>
                 {
-                    for (int i = 0; i < GuessTextBoxes.Items.Count; i++)
-                    {
-                        ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
-                        TextBox tb;
-
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            tb = c.ContentTemplate.FindName("textbox", c) as TextBox;
-                            Storyboard sb = (Storyboard)FindResource("GuessWrong");
-
-                            for (int j = 0; j < sb.Children.Count; j++)
-                            {
-                                Storyboard.SetTarget(sb.Children[j], tb);
-                            }
-
-                            sb.Begin();
-                        });
-                    }
+                    PlayWrongGuessAnimation(GetTextBoxes());
                 });
             }
         }
 
+        private List<TextBox> GetTextBoxes() 
+        {
+            List<TextBox> textBoxes = new List<TextBox>();
+
+            for (int i = 0; i < GuessTextBoxes.Items.Count; i++)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
+                    textBoxes.Add(c.ContentTemplate.FindName("textbox", c) as TextBox);
+                });
+            }
+
+            return textBoxes;
+        }
+
+        private void PlayRightGuessAnimation(List<TextBox> textBoxes) 
+        {
+            for (int i = 0; i < textBoxes.Count; i++)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Storyboard sb = (Storyboard)FindResource("GuessRight");
+                    for (int j = 0; j < sb.Children.Count; j++)
+                    {
+                        Storyboard.SetTarget(sb.Children[j], textBoxes[i]);
+                    }
+                    sb.Begin();
+                });
+                System.Threading.Thread.Sleep(200);
+            }
+        }
+
+        private void PlayWrongGuessAnimation(List<TextBox> textBoxes)
+        {
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Storyboard sb = (Storyboard)FindResource("GuessWrong");
+
+                for (int i = 0; i < textBoxes.Count; i++)
+                {
+                    for (int j = 0; j < sb.Children.Count; j++)
+                    {
+                        Storyboard.SetTarget(sb.Children[j], textBoxes[i]);
+                    }
+                    sb.Begin();
+                }
+            });
+        }
     }
 }
