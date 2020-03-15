@@ -27,8 +27,8 @@ class SocketDrawingSender() {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
-                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
-//                receiver!!.parseMessageToStroke(strokeData)
+//                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+                receiver!!.drawStrokeData(strokeData)   // TODO: Switch back
             }
         }
     }
