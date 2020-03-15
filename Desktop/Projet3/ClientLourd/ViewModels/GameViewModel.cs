@@ -35,6 +35,7 @@ namespace ClientLourd.ViewModels
         private long _round;
         private StrokesReader _stokesReader;
         private string _canvasMessage;
+        private GameModes _mode;
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
 
         public GameViewModel()
@@ -344,9 +345,16 @@ namespace ClientLourd.ViewModels
         {
             ChangeCanvasStatus(false);
             ClearCanvas();
-            Application.Current.Dispatcher.Invoke(() =>
+            _mode = Lobby.Mode;
+            if (_mode == GameModes.FFA)
+            {
+            }
+            else
             {
                 HealthPoint = 3;
+            }
+            Application.Current.Dispatcher.Invoke(() =>
+            {
                 Players = Lobby.Players;
                 _stokesReader = new StrokesReader(Editor, SocketClient, ((EditorViewModel)Editor.DataContext).EditorInformation);
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));

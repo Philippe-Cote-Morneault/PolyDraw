@@ -280,17 +280,19 @@ namespace ClientLourd.Views.Controls
 
             return svgPath;
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
+
+        private void Canvas_OnPreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var p = e.GetPosition(Canvas);
+                if (p.X < 0 || p.X > Canvas.Width || p.Y < 0|| p.Y > Canvas.Height)
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+        
     }
 }

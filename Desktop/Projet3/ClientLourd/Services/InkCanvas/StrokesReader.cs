@@ -109,8 +109,8 @@ namespace ClientLourd.Services.InkCanvas
                 message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
                 for (int i = 0; i < _points.Count; i++)
                 {
-                    int x = (int) Math.Ceiling(_points[i].X);
-                    int y = (int) Math.Ceiling(_points[i].Y);
+                    int x = _points[i].X < 0? 0 : (int) _points[i].X;
+                    int y = _points[i].Y < 0? 0 : (int) _points[i].Y;
                     message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
                     message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(0, x);
                     message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
