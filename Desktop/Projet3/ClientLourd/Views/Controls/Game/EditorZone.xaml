@@ -9,6 +9,79 @@
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Storyboard x:Key="GuessRight" >
+            <ColorAnimation  Duration="0:0:1" From="Black" To="Green"
+                    AutoReverse="False"
+                    AccelerationRatio="1"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+
+            <DoubleAnimation AutoReverse="True"
+
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
+                From="0" To="-10" Duration="0:0:0.1" />
+            
+            <DoubleAnimation AutoReverse="True"
+
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
+                From="0" To="10" Duration="0:0:0.1" BeginTime="0:0:0.2" />
+            
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.5" Duration="0:0:0.2" />
+        </Storyboard>
+
+        <Storyboard x:Key="GuessWrong" >
+            <ColorAnimation  Duration="0:0:0.5" From="Black" To="Red"
+                    AutoReverse="True"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+
+            <DoubleAnimation AutoReverse="True"
+
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
+                From="0" To="-10" Duration="0:0:0.1" />
+
+            <DoubleAnimation AutoReverse="True"
+
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
+                From="0" To="10" Duration="0:0:0.1" 
+                BeginTime="0:0:0.2"
+                             />
+
+        </Storyboard>
+
+
+        <Storyboard x:Key="NextRoundBegin" >
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
+                From="0" To="180" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                From="0" To="3000" Duration="0:0:2" />
+        </Storyboard>
+
+        <Storyboard x:Key="NextRoundEnd" >
+
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
+                From="270" To="0" Duration="0:0:0.5" />
+
+            <DoubleAnimation AutoReverse="False"
+                             Storyboard.TargetName="CanvasContainer"
+                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                From="-3000" To="0" Duration="0:0:0.5" />
+        </Storyboard>
+    </UserControl.Resources>
+    
     <DockPanel Margin="10">
         <StackPanel 
             DockPanel.Dock="Bottom"
@@ -20,7 +93,8 @@
         </StackPanel>
         <StackPanel Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}" DockPanel.Dock="Bottom" Orientation="Horizontal">
             <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
-            <ItemsControl  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+            <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+                
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5"></StackPanel>
@@ -28,13 +102,23 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBox FontSize="24" Tag="{Binding 
+                        
+                        <TextBox  x:Name="textbox" FontSize="24" Tag="{Binding 
                                  Path=(ItemsControl.AlternationIndex), 
-                                 RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1"/>
+                                 RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1" Foreground="Black">
+                            <TextBox.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                                
+                            </TextBox.RenderTransform>
+                        </TextBox>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Button Command="{Binding SendGuessCommand}" IsDefault="True">
+            <Button Command="{Binding SendGuessCommand}" IsDefault="True" IsEnabled="{Binding CanStillGuess}">
                 Guess
             </Button>
         </StackPanel>
@@ -42,9 +126,17 @@
             <Grid Height="750" Width="1125" Background="Black" Opacity="0.2" Visibility="{Binding Path=IsMessageDisplay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontWeight="Black" Foreground="White" Text="{Binding CanvasMessage}"/>
             </Grid>
-            <Grid>
+            
+            <Grid Name="CanvasContainer"  RenderTransformOrigin=".5,.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
                 <control:Editor x:Name="DrawingEditor"/>
             </Grid>
+
         </Grid>
     </DockPanel>
 </UserControl>

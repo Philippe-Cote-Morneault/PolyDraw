@@ -142,5 +142,18 @@
             </Canvas>
         </Grid>
     </DockPanel>
+
+           <!-- <InkCanvas ClipToBounds="True"  Name="Canvas"
+                       Width="1125"
+                       Height="750"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                       MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
+                       Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
+                       MouseDown="SaveDrawDebutTime"
+                       StrokeCollected="OnStrokeAdded"
+                       StrokeErasing="OnStrokeErase"
+                       EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                       DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}"/>
+        </DockPanel>-->
     </materialDesign:Card>
 </UserControl>

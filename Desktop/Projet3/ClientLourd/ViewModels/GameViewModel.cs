@@ -12,6 +12,7 @@ using ClientLourd.Services.InkCanvas;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
+using ClientLourd.Services.SoundService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Utilities.Extensions;
@@ -43,6 +44,7 @@ namespace ClientLourd.ViewModels
         {
             _players = new ObservableCollection<Player>();
             InitEventHandler();
+            CanStillGuess = true;
         }
 
         private void InitEventHandler()
@@ -60,6 +62,11 @@ namespace ClientLourd.ViewModels
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
+        }
+
+        public SoundService SoundService
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
         private void SocketClientOnUserDeleteStroke(object source, EventArgs args)
@@ -102,6 +109,7 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Time = e.Time;
+            CanStillGuess = true;
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
@@ -149,13 +157,24 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
+
                 ShowCanvasMessage($"+ {e.Points}");
                 Players.First(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
                 NotifyPropertyChanged(nameof(Players));
+
+                Application.Current.Dispatcher.Invoke(() => 
+                {
+                    CanStillGuess = false;
+                    SoundService.PlayWordGuessedRight();
+                });
             }
             else
             {
                 ShowCanvasMessage($"Try again !");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SoundService.PlayWordGuessedWrong();
+                });
             }
         }
 
@@ -255,6 +274,17 @@ namespace ClientLourd.ViewModels
         public bool IsYourTurn
         {
             get => !string.IsNullOrEmpty(Word);
+        }
+
+        private bool _canStillGuess;
+        public bool CanStillGuess
+        {
+            get => _canStillGuess;
+            set
+            {
+                _canStillGuess = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public string Word

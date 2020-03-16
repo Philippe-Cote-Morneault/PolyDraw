@@ -58,6 +58,14 @@ namespace ClientLourd.Services.SoundService
             }
         }
 
+        public void PlayTimerWarning()
+        {
+            if (SoundIsOn)
+            {
+                new SoundPlayer(Properties.Resources.TimerWarning).Play();
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

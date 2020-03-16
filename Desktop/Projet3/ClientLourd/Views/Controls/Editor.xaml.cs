@@ -16,6 +16,8 @@ using System.Windows.Ink;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Extensions;
 using ClientLourd.Utilities.Constants;
+using ClientLourd.Services.SocketService;
+using System.Windows.Media.Animation;
 
 namespace ClientLourd.Views.Controls
 {

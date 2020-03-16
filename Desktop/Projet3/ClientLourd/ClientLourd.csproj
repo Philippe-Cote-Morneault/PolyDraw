@@ -232,6 +232,9 @@
     <Compile Include="Views\Controls\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Game\Confetti.xaml.cs">
+      <DependentUpon>Confetti.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
@@ -328,6 +331,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Game\Confetti.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -415,6 +422,7 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\TimerWarning.wav" />
     <None Include="Resources\WordGuessRight.wav" />
     <None Include="Resources\WordGuessedWrong.wav" />
     <Resource Include="Resources\treasure.png" />
