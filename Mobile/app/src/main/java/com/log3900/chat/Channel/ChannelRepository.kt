@@ -6,10 +6,14 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.log3900.chat.ChatRestService
+import com.log3900.chat.Message.UserJoinedChannelMessage
+import com.log3900.chat.Message.UserLeftChannelMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
@@ -63,14 +67,8 @@ class ChannelRepository : Service() {
             val call = ChatRestService.service.getChannels(sessionToken, "EN")
             call.enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                    val moshi = Moshi.Builder()
-                        .add(KotlinJsonAdapterFactory())
-                        .add(UUIDAdapter())
-                        .build()
-
-                    val adapter: JsonAdapter<List<Channel>> = moshi.adapter(Types.newParameterizedType(List::class.java, Channel::class.java))
-                    val res = adapter.fromJson(response.body().toString())
-                    it.onSuccess(res as ArrayList<Channel>)
+                    val channels = com.log3900.chat.Channel.JsonAdapter.jsonToChannels(response.body()!!)
+                    it.onSuccess(channels)
                 }
 
                 override fun onFailure(call: Call<JsonArray>, t: Throwable) {
@@ -128,14 +126,10 @@ class ChannelRepository : Service() {
     }
 
     fun subscribeToChannel(channel: Channel) {
-        channelCache.removeAvailableChannel(channel)
-        channelCache.addJoinedChannel(channel)
         socketService?.sendMessage(Event.JOIN_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
     }
 
     fun unsubscribeFromChannel(channel: Channel) {
-        channelCache.removeJoinedChannel(channel)
-        channelCache.addAvailableChannel(channel)
         socketService?.sendMessage(Event.LEAVE_CHANNEL, UUIDUtils.uuidToByteArray(channel.ID))
     }
 
@@ -155,7 +149,7 @@ class ChannelRepository : Service() {
             add(UUIDAdapter())
         })
         val channelCreated = moshi.unpack<ChannelCreatedMessage>(message.data)
-        val channel = Channel(channelCreated.channelID, channelCreated.name, arrayOf(ChannelUser(channelCreated.username, channelCreated.userID)))
+        val channel = Channel(channelCreated.channelID, channelCreated.name, channelCreated.isGame, arrayListOf(ChannelUser(channelCreated.username, channelCreated.userID)))
         channelCache.addAvailableChannel(channel)
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_CREATED, channel))
     }
@@ -170,12 +164,46 @@ class ChannelRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_DELETED, channelCreated.channelID))
     }
 
+    private fun onChannelJoined(message: Message) {
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+            add(KotlinJsonAdapterFactory())
+        })
+        val userJoinedChannelMessage = moshi.unpack(message.data) as UserJoinedChannelMessage
+
+        if (userJoinedChannelMessage.userID == AccountRepository.getInstance().getAccount().ID) {
+            val channel = channelCache.getChannel(userJoinedChannelMessage.channelID)!!
+            channelCache.removeAvailableChannel(channel)
+            channelCache.addJoinedChannel(channel)
+            EventBus.getDefault().post(MessageEvent(EventType.SUBSCRIBED_TO_CHANNEL, channel))
+        }
+    }
+
+    private fun onChannelLeft(message: Message) {
+        val moshi = MoshiPack({
+            add(TimeStampAdapter())
+            add(UUIDAdapter())
+            add(KotlinJsonAdapterFactory())
+        })
+        val userLeftChannelMessage = moshi.unpack(message.data) as UserLeftChannelMessage
+
+        if (userLeftChannelMessage.userID == AccountRepository.getInstance().getAccount().ID) {
+            val channel = channelCache.getChannel(userLeftChannelMessage.channelID)!!
+            channelCache.removeJoinedChannel(channel)
+            channelCache.addAvailableChannel(channel)
+            EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
+        }
+    }
+
     private fun handleSocketMessage(message: android.os.Message) {
         val socketMessage = message.obj as Message
 
         when (socketMessage.type) {
             Event.CHANNEL_CREATED -> onChannelCreated(socketMessage)
             Event.CHANNEL_DELETED -> onChannelDeleted(socketMessage)
+            Event.JOINED_CHANNEL -> onChannelJoined(socketMessage)
+            Event.LEFT_CHANNEL -> onChannelLeft(socketMessage)
         }
     }
 
@@ -196,11 +224,15 @@ class ChannelRepository : Service() {
             }
             socketService?.subscribeToMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
             socketService?.subscribeToMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.JOINED_CHANNEL, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.LEFT_CHANNEL, socketMessageHandler!!)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.LEFT_CHANNEL, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.JOINED_CHANNEL, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
         socketService = null
@@ -215,8 +247,8 @@ class ChannelRepository : Service() {
 }
 
 class ChannelCreatedMessage(@Json(name = "ChannelName") var name: String, @Json(name = "ChannelID") var channelID: UUID,
-                                  @Json(name = "Username") var username: String, @Json(name = "UserID") var userID: UUID,
-                                  @Json(name = "Timestamp") var timestamp: Date) {}
+                            @Json(name = "Username") var username: String, @Json(name = "UserID") var userID: UUID,
+                            @Json(name = "IsGame") var isGame: Boolean, @Json(name = "Timestamp") var timestamp: Date) {}
 
 class ChannelDeletedMessage(@Json(name = "ChannelID") var channelID: UUID,
                             @Json(name = "Username") var username: String, @Json(name = "UserID") var userID: UUID,
