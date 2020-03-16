@@ -109,5 +109,13 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
         {
             _strokeInfoQueue.Enqueue(strokeInfo);
         }
+
+        public void Close()
+        {
+            _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
+            Stop();
+            TotalMessagesSent = -1;
+            _messageDequeuedCounter = 0;
+        }
     }
 }
