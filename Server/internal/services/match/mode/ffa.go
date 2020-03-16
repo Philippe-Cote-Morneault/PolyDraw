@@ -34,11 +34,12 @@ type FFA struct {
 	timeStart      time.Time
 	timeStartImage time.Time
 
-	receiving         sync.Mutex
-	receivingGuesses  *abool.AtomicBool
-	hasFoundit        map[uuid.UUID]bool
-	waitingResponse   *semaphore.Weighted
-	nbWaitingResponse int64
+	receiving          sync.Mutex
+	receivingGuesses   *abool.AtomicBool
+	hasFoundit         map[uuid.UUID]bool
+	clientGuess        int
+	waitingResponse    *semaphore.Weighted
+	nbWaitingResponses int64
 }
 
 //Init initialize the game mode
@@ -91,13 +92,13 @@ func (f *FFA) GameLoop() {
 	drawingID := uuid.New()
 
 	if curDrawer.IsCPU {
-		f.nbWaitingResponse = int64(f.realPlayers)
+		f.nbWaitingResponses = int64(f.realPlayers)
 	} else {
-		f.nbWaitingResponse = int64(f.realPlayers - 1)
+		f.nbWaitingResponses = int64(f.realPlayers - 1)
 		f.hasFoundit[curDrawer.socketID] = true
 	}
-	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponse)
-	f.waitingResponse.TryAcquire(f.nbWaitingResponse)
+	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
+	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
 	f.currentWord = f.findWord()
 
 	message := socket.RawMessage{}
@@ -176,8 +177,10 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		if f.receivingGuesses.IsSet() && !f.hasFoundit[socketID] {
 			f.hasFoundit[socketID] = true
 			f.waitingResponse.Release(1)
+			f.clientGuess++
 			players := f.connections[socketID]
-			pointsForWord := 100 //TODO change the point system based with time
+
+			pointsForWord := f.calculateScore()
 			f.scores[players.Order] += pointsForWord
 			total := f.scores[players.Order]
 
@@ -338,6 +341,8 @@ func (f *FFA) resetGuess() {
 		f.hasFoundit[f.players[i].socketID] = false
 	}
 
+	f.clientGuess = 0
+
 }
 
 //syncPlayers message used to keep all the players in sync
@@ -386,7 +391,7 @@ func (f *FFA) waitTimeout() bool {
 
 	cnt := context.Background()
 	cnt, _ = context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
-	err := f.waitingResponse.Acquire(cnt, f.nbWaitingResponse)
+	err := f.waitingResponse.Acquire(cnt, f.nbWaitingResponses)
 
 	if err == nil {
 		f.receiving.Lock()
@@ -397,6 +402,19 @@ func (f *FFA) waitTimeout() bool {
 	f.receiving.Lock()
 	f.receivingGuesses.UnSet()
 	return true // timed out
+}
+
+//calculateScore based on the number of seconds of remaining and the time associated with the score
+func (f *FFA) calculateScore() int {
+	const baseScore = 1000
+	const minimum = 100
+	imageDuration := time.Now().Sub(f.timeStartImage)
+	remaining := int((f.timeImage - imageDuration.Milliseconds()) / 10000)
+	score := (baseScore / f.clientGuess) - (remaining * 10)
+	if score < minimum {
+		return minimum
+	}
+	return score
 }
 
 //finish when the match terminates announce winner
