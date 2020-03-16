@@ -4,6 +4,7 @@ import com.log3900.user.account.AccountRepository
 import java.util.*
 
 class ChannelCache {
+    private var gameChannel: Channel? = null
     var joinedChannels: ArrayList<Channel> = arrayListOf()
     var availableChannels: ArrayList<Channel> = arrayListOf()
 
@@ -22,6 +23,21 @@ class ChannelCache {
         }
     }
 
+    fun getChannel(channelID: UUID): Channel? {
+        var channel = availableChannels.find {
+            it.ID == channelID
+        }
+
+        if (channel == null) {
+            channel = joinedChannels.find {
+                it.ID == channelID
+            }
+
+        }
+
+        return channel
+    }
+
     fun addJoinedChannel(channel: Channel) {
         if (!joinedChannels.contains(channel)) {
             var index = Collections.binarySearch(joinedChannels, channel, ChannelAlphabeticalComparator())
@@ -30,9 +46,17 @@ class ChannelCache {
             }
             joinedChannels.add(index, channel)
         }
+
+        if (channel.isGame) {
+            gameChannel = channel
+        }
     }
 
     fun removeJoinedChannel(channel: Channel) {
+        if (hasGameChannel() && gameChannel?.ID == channel.ID) {
+            gameChannel = null
+        }
+
         joinedChannels.remove(channel)
     }
 
@@ -44,9 +68,17 @@ class ChannelCache {
             }
             availableChannels.add(index, channel)
         }
+
+        if (channel.isGame) {
+            gameChannel = channel
+        }
     }
 
     fun removeAvailableChannel(channel: Channel) {
+        if (hasGameChannel() && gameChannel?.ID == channel.ID) {
+            gameChannel = null
+        }
+
         availableChannels.remove(channel)
     }
 
@@ -68,6 +100,14 @@ class ChannelCache {
             removeJoinedChannel(channelToRemove)
             return
         }
+    }
+
+    fun hasGameChannel(): Boolean {
+        return gameChannel != null
+    }
+
+    fun getGameChannel(): Channel? {
+        return gameChannel
     }
 
     inner class ChannelAlphabeticalComparator : Comparator<Channel> {
