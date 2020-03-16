@@ -37,6 +37,7 @@ type responseNewGroup struct {
 	PlayersMax int
 	Mode       int
 	Players    []responsePlayer
+	Language   int
 	Difficulty int
 }
 
@@ -106,6 +107,7 @@ func (g *groups) AddGroup(group *model.Group) {
 		PlayersMax: group.PlayersMax,
 		Mode:       group.GameType,
 		Players:    players,
+		Language:   group.Language,
 		Difficulty: group.Difficulty,
 	})
 	messenger.RegisterGroup(group)

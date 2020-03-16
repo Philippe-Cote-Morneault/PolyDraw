@@ -97,6 +97,10 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
+	if (len(f.players)) <= 0 {
+		log.Printf("[Match] [FFA] No players will exit the game loop.")
+		return
+	}
 	//Choose a user.
 	f.curDrawer = &f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
@@ -222,11 +226,11 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			f.hasFoundit[socketID] = true
 			f.waitingResponse.Release(1)
 			f.clientGuess++
-			players := f.connections[socketID]
+			player := f.connections[socketID]
 
 			pointsForWord := f.calculateScore()
-			f.scores[players.Order] += pointsForWord
-			total := f.scores[players.Order]
+			f.scores[player.Order] += pointsForWord
+			total := f.scores[player.Order]
 
 			f.receiving.Unlock()
 
@@ -241,8 +245,8 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
 			broadcast.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
-				Username:    players.Username,
-				UserID:      players.userID.String(),
+				Username:    player.Username,
+				UserID:      player.userID.String(),
 				Points:      pointsForWord,
 				PointsTotal: total,
 			})
@@ -396,12 +400,13 @@ func (f *FFA) resetGuess() {
 func (f *FFA) syncPlayers() {
 	f.receiving.Lock()
 	players := make([]PlayersData, len(f.scores))
-	for i := range f.scores {
+	for i := range f.players {
+		player := &f.players[i]
 		players[i] = PlayersData{
-			Username: f.players[f.order[i]].Username,
-			UserID:   f.players[f.order[i]].userID.String(),
-			Points:   f.scores[i],
-			IsCPU:    f.players[f.order[i]].IsCPU,
+			Username: player.Username,
+			UserID:   player.userID.String(),
+			Points:   f.scores[player.Order],
+			IsCPU:    player.IsCPU,
 		}
 	}
 	f.receiving.Unlock()
@@ -486,6 +491,11 @@ func (f *FFA) finish() {
 			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
 	}
+	if bestPlayerOrder == -1 {
+		drawing.UnRegisterGame(f)
+		log.Printf("[Match] [FFA] No more players in the match. Will not send finish packet")
+		return
+	}
 	winner := f.players[f.order[bestPlayerOrder]]
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
 
@@ -506,6 +516,7 @@ func (f *FFA) finish() {
 func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 	//Remove the indexing for the players
 	delete(f.connections, socketID)
+	delete(f.hasFoundit, socketID)
 	for i := range f.players {
 		if p.userID == f.players[i].userID {
 			currentPos := f.orderPos
@@ -566,6 +577,7 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 				f.orderPos = decrement
 				return
 			}
+			return
 		}
 	}
 }
