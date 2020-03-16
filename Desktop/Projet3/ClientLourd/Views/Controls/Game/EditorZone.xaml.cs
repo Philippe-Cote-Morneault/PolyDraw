@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Services.SoundService;
@@ -94,7 +95,11 @@ namespace ClientLourd.Views.Controls.Game
         {
             var e = (MatchEventArgs)args;
 
-            
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                StartConfetti();
+            });
+
             if (e.Valid)
             {
                 Task.Run(() =>
@@ -180,15 +185,81 @@ namespace ClientLourd.Views.Controls.Game
             
             Application.Current.Dispatcher.Invoke(() =>
             {
+                //TODO: Uncomment if statement when Martin fixed this
                 //if ((DataContext as GameViewModel).Round > 1)
                 //{
                     Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
                     sb.Begin();
-                //}
-                
+                //}                
             });
             
         }
+
+        Random _random = new Random((int)DateTime.Now.Ticks);
+
+        private void StartConfetti()
+        {
+            var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
+            t.Tick += (s, arg) => Confetti();
+            t.Start();
+        }
+       
+
+        private void Confetti() 
+        {
+            var x = _random.Next(-500, (int)CanvasContainer.ActualWidth - 100);
+            //var y = -100;
+            //TODO change to -100
+            var y = -100;
+            var s = _random.Next(5, 15) * .1;
+            var r = _random.Next(0, 270);
+
+            var transformGroup = new TransformGroup();
+            transformGroup.Children.Add(new ScaleTransform(s, s));
+            transformGroup.Children.Add(new RotateTransform(r));
+            transformGroup.Children.Add(new TranslateTransform(x,y));
+
+            var flake = new Confetti()
+            {
+                RenderTransform = transformGroup,
+            };
+
+            CanvasContainer.Children.Add(flake);
+
+            var d = TimeSpan.FromSeconds(_random.Next(1, 4));
+            var story = new Storyboard();
+            x += _random.Next(100, 500);
+            var ax = new DoubleAnimation { To = x, Duration = d };
+            Storyboard.SetTarget(ax, flake.RenderTransform);
+            //Storyboard.SetTargetProperty(ax, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.X)"));
+            Storyboard.SetTargetProperty(ax, new PropertyPath("(TranslateTransform.X)"));
+
+            y += (int)(CanvasContainer.ActualHeight + 200);
+            var ay = new DoubleAnimation { To = y, Duration = d };
+            Storyboard.SetTarget(ax, flake.RenderTransform);
+            //Storyboard.SetTargetProperty(ax, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.Y)"));
+            Storyboard.SetTargetProperty(ax, new PropertyPath("(TranslateTransform.Y)"));
+
+            r += _random.Next(90, 360);
+            var ar = new DoubleAnimation { To = r, Duration = d };
+            Storyboard.SetTarget(ar, flake.RenderTransform);
+           // Storyboard.SetTargetProperty(ar, new PropertyPath("RenderTransform.Children[1].Angle"));
+            //Storyboard.SetTargetProperty(ar, new PropertyPath("(RenderTransform).Children[1].(RotateTransform.Angle)"));
+            //Storyboard.SetTargetProperty(ar, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(RotateTransform.Angle)"));
+
+            // Storyboard.SetTargetProperty(ar, new PropertyPath("(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"));
+             Storyboard.SetTargetProperty(ar, new PropertyPath("(RotateTransform.Angle)"));
+
+            //(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)
+            //(RenderTransform).Children[0].(ScaleTransform.ScaleX)
+
+            story.Children.Add(ax);
+            story.Children.Add(ay);
+            story.Children.Add(ar);
+            story.Begin();
+        }
+
+
 
     }
 }

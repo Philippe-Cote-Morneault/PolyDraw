@@ -128,7 +128,8 @@
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
                 <TextBlock FontSize="20" Text="{Binding CanvasMessage}"/>
             </Grid>
-            <Grid Name="CanvasContainer" RenderTransformOrigin=".5,.5">
+            <Border Background="Red">
+            <Grid Name="CanvasContainer"  RenderTransformOrigin=".5,.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
                         <RotateTransform/>
@@ -137,7 +138,8 @@
                 </Grid.RenderTransform>
                 <control:Editor x:Name="DrawingEditor"/>
             </Grid>
-            
+            </Border>
+
         </Grid>
     </DockPanel>
 </UserControl>

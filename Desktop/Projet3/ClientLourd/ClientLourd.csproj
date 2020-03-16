@@ -232,6 +232,9 @@
     <Compile Include="Views\Controls\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Game\Confetti.xaml.cs">
+      <DependentUpon>Confetti.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
@@ -325,6 +328,10 @@
     <Page Include="Views\Controls\Chat.xaml" />
     <Page Include="Views\Controls\Conversation.xaml" />
     <Page Include="Views\Controls\Editor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Game\Confetti.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
