@@ -52,8 +52,8 @@ namespace ClientLourd.ViewModels
                 Thread.Sleep(5000);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var e = (MatchEventArgs) args;
                     CurrentLobby = null;
+                    HomeViewModel.FetchLobbies();
                     ContainedView = Utilities.Enums.Views.Home.ToString();
                     IsGameStarted = false;
                 });
