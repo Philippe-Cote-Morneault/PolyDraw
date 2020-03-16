@@ -39,7 +39,7 @@ func GetChatChannel(w http.ResponseWriter, r *http.Request) {
 	var channels []model.ChatChannel
 	var channelsResponse []channelResponse
 	model.DB().Model(&channels).Related(&model.User{}, "Users")
-	model.DB().Preload("Users").Find(&channels)
+	model.DB().Preload("Users").Where("is_game_chat = false").Find(&channels)
 
 	for _, channel := range channels {
 		if channel.ID != uuid.Nil {

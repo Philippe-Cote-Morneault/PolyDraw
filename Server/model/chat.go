@@ -5,8 +5,9 @@ import "github.com/google/uuid"
 //ChatChannel represents a chat channel in the database
 type ChatChannel struct {
 	Base
-	Name  string
-	Users []*User `gorm:"many2many:chat_channel_membership"`
+	Name       string
+	IsGameChat bool    `gorm:"default:'false'"`
+	Users      []*User `gorm:"many2many:chat_channel_membership"`
 }
 
 //ChatMessage represents a message from a client to the channel.
