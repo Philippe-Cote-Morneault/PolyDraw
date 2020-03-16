@@ -25,6 +25,7 @@ type FFA struct {
 	//We can get the position with the field order
 	orderPos       int
 	curLap         int
+	curDrawer      *players
 	lapsTotal      int
 	realPlayers    int
 	rand           *rand.Rand
@@ -88,14 +89,14 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	//Choose a user.
-	curDrawer := f.players[f.order[f.orderPos]]
+	f.curDrawer = &f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
 
-	if curDrawer.IsCPU {
+	if f.curDrawer.IsCPU {
 		f.nbWaitingResponses = int64(f.realPlayers)
 	} else {
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
-		f.hasFoundit[curDrawer.socketID] = true
+		f.hasFoundit[f.curDrawer.socketID] = true
 	}
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
 	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
@@ -107,11 +108,11 @@ func (f *FFA) GameLoop() {
 		Time:      f.timeImage,
 		DrawingID: drawingID.String(),
 	})
-	socket.SendRawMessageToSocketID(message, curDrawer.socketID)
+	socket.SendRawMessageToSocketID(message, f.curDrawer.socketID)
 
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawingTurn), PlayerTurnDraw{
-		UserID:    curDrawer.userID.String(),
-		Username:  curDrawer.Username,
+		UserID:    f.curDrawer.userID.String(),
+		Username:  f.curDrawer.Username,
 		Time:      f.timeImage,
 		DrawingID: drawingID.String(),
 		Length:    len(f.currentWord),
