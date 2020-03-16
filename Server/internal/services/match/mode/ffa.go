@@ -390,8 +390,9 @@ func (f *FFA) waitTimeout() bool {
 	}()
 
 	cnt := context.Background()
-	cnt, _ = context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
+	cnt, cancel := context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
 	err := f.waitingResponse.Acquire(cnt, f.nbWaitingResponses)
+	cancel()
 
 	if err == nil {
 		f.receiving.Lock()
