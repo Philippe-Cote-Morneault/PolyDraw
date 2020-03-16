@@ -206,8 +206,9 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 
 	f.removePlayer(f.connections[socketID], socketID)
 	f.lapsTotal -= numberOfTurns
-	f.syncPlayers()
 	f.receiving.Unlock()
+
+	f.syncPlayers()
 }
 
 //TryWord endpoint for when a user tries to guess a word
@@ -393,6 +394,7 @@ func (f *FFA) resetGuess() {
 
 //syncPlayers message used to keep all the players in sync
 func (f *FFA) syncPlayers() {
+	f.receiving.Lock()
 	players := make([]PlayersData, len(f.scores))
 	for i := range f.scores {
 		players[i] = PlayersData{
@@ -402,6 +404,7 @@ func (f *FFA) syncPlayers() {
 			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
 	}
+	f.receiving.Unlock()
 
 	message := socket.RawMessage{}
 	imageDuration := time.Now().Sub(f.timeStartImage)
