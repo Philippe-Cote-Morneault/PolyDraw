@@ -33,6 +33,7 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 		Username:    "",
 		UserID:      uuid.Nil.String(),
 		Timestamp:   time.Now().Unix(),
+		IsGame:      true,
 	}
 	rawMessage := socket.RawMessage{}
 	if rawMessage.ParseMessagePack(byte(socket.MessageType.UserCreateChannel), response) != nil {
@@ -230,6 +231,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 						ChannelID:   channel.ID.String(),
 						Username:    user.Username,
 						UserID:      user.ID.String(),
+						IsGame:      false,
 						Timestamp:   timestamp,
 					}
 					rawMessage := socket.RawMessage{}
