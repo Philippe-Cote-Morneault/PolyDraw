@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"sync"
 
 	"github.com/google/uuid"
@@ -107,6 +108,7 @@ func (g *groups) AddGroup(group *model.Group) {
 		Players:    players,
 		Difficulty: group.Difficulty,
 	})
+	messenger.RegisterGroup(group)
 	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	//TODO only if not solo
 	g.mutex.Lock()
@@ -161,6 +163,8 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 						go socket.SendRawMessageToSocketID(newUser, k)
 					}
 					g.mutex.Unlock()
+
+					messenger.HandleJoinGroup(&groupDB, socketID)
 
 				}
 				return
@@ -233,6 +237,8 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		}
 		g.mutex.Unlock()
 
+		messenger.HandleQuitGroup(&groupDB, socketID)
+
 	} else {
 		g.mutex.Unlock()
 		go socket.SendErrorToSocketID(44, 404, "The user does not belong to this group", socketID)
@@ -280,6 +286,7 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 		go socket.SendRawMessageToSocketID(message, v)
 	}
 
+	messenger.UnRegisterGroup(groupDB, []uuid.UUID{})
 	//Remove all the data associated with the groups
 	for _, v := range g.groups[groupDB.ID] {
 		delete(g.assignment, v)
