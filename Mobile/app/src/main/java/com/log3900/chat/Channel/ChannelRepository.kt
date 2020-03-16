@@ -191,7 +191,9 @@ class ChannelRepository : Service() {
         if (userLeftChannelMessage.userID == AccountRepository.getInstance().getAccount().ID) {
             val channel = channelCache.getChannel(userLeftChannelMessage.channelID)!!
             channelCache.removeJoinedChannel(channel)
-            channelCache.addAvailableChannel(channel)
+            if (!channel.isGame) {
+                channelCache.addAvailableChannel(channel)
+            }
             EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
         }
     }
