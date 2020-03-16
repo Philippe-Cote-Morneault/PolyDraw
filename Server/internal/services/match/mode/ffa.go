@@ -19,6 +19,8 @@ import (
 )
 
 const numberOfTurns = 3
+const imageDuration = 60000
+
 //FFA Free for all game mode
 type FFA struct {
 	base
@@ -56,8 +58,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.scores = make([]int, len(f.players))
 
 	f.curLap = 1
-	f.timeImage = 60000
-	f.lapsTotal = len(f.players) * 3
+	f.timeImage = imageDuration
 	f.lapsTotal = len(f.players) * numberOfTurns
 
 	f.realPlayers = 0
