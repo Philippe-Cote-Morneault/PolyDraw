@@ -54,6 +54,10 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.receivingGuesses = abool.New()
 	f.scores = make([]int, len(f.players))
 
+	f.curLap = 1
+	f.timeImage = 60000
+	f.lapsTotal = len(f.players) * 3
+
 	f.realPlayers = 0
 	for i := range f.players {
 		if !f.players[i].IsCPU {
@@ -147,7 +151,7 @@ func (f *FFA) GameLoop() {
 	}
 
 	//Is the game finished ?
-	if f.curLap > f.lapsTotal-1 {
+	if f.curLap > f.lapsTotal {
 		f.isRunning = false
 		timeUpMessage := socket.RawMessage{}
 		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
@@ -326,8 +330,6 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 			IsCPU:    false,
 		})
 	}
-	f.timeImage = 60000
-	f.lapsTotal = len(f.players) * 3
 	welcome := ResponseGameInfo{
 		Players:   players,
 		GameType:  0,
