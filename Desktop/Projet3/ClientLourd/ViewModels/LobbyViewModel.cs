@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -46,9 +47,17 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
-            CurrentLobby = null;
-            ContainedView = Utilities.Enums.Views.Home.ToString();
-            IsGameStarted = false;
+            Task.Run(() =>
+            {
+                Thread.Sleep(5000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var e = (MatchEventArgs) args;
+                    CurrentLobby = null;
+                    ContainedView = Utilities.Enums.Views.Home.ToString();
+                    IsGameStarted = false;
+                });
+            });
         }
 
         private bool _isGameStarted;

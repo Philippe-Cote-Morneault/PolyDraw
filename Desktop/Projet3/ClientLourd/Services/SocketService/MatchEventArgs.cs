@@ -80,6 +80,11 @@ namespace ClientLourd.Services.SocketService
         {
             get => _data["Players"];
         }
+
+        public string WinnerName
+        {
+            get => _data["WinnerName"];
+        }
         
     }
 }

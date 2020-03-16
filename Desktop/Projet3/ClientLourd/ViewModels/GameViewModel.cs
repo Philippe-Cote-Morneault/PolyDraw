@@ -186,8 +186,7 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Player Winner = Players.FirstOrDefault(p => p.User.ID == e.WinnerID);
-            ShowCanvasMessage($"The winner is {Winner.User.Username}");
+            //TODO show leaderboard
             StrokeDrawerService.Stop();
         }
 
