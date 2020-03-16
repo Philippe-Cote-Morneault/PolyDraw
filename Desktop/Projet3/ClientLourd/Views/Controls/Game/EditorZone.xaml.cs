@@ -62,7 +62,7 @@ namespace ClientLourd.Views.Controls.Game
 
         private GameViewModel ViewModel
         {
-            get => (GameViewModel) DataContext;
+            get => Application.Current.Dispatcher.Invoke(() => { return (GameViewModel) DataContext; });
         }
 
         private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -179,21 +179,24 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            Task.Run(() =>
+            if (ViewModel.Round != ViewModel.TotalRound)
             {
-                Thread.Sleep(2000);
-                Application.Current.Dispatcher.Invoke(() =>
+                Task.Run(() =>
                 {
-                    Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
-                    sb.Begin();
+                    Thread.Sleep(2000);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
+                        sb.Begin();
+                    });
+                    Thread.Sleep(1000);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
+                        sb.Begin();
+                    });
                 });
-                Thread.Sleep(1000);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
-                    sb.Begin();
-                });
-            });
+            }
         }
 
 
