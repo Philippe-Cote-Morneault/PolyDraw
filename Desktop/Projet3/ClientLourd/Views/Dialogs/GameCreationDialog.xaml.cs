@@ -116,7 +116,7 @@ namespace ClientLourd.Views.Dialogs
         public void OnClose(object sender, EventArgs arg)
         {
             // Make sure its stopped although it should already be.
-            ViewModel.StrokeDrawerService.Stop();
+            ViewModel.StrokeDrawerService.Close();
             ViewModel.RemoveSocketListeners();
             DialogHost.CloseDialogCommand.Execute(null, null);
         }

@@ -21,7 +21,7 @@
     <materialDesign:DialogHost Identifier="Dialog">
 
         <DockPanel>
-            <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
+            <Button DockPanel.Dock="Top" HorizontalAlignment="Right" IsEnabled="{Binding PreviewGUIEnabled}" Click="OnClose">
             <materialDesign:PackIcon Kind="Close" />
         </Button>
         <materialDesign:Transitioner SelectedIndex="0">
