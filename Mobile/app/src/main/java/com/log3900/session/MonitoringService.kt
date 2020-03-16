@@ -137,6 +137,10 @@ class MonitoringService : Service() {
         MainApplication.instance.stopService(MatchRepository::class.java)
     }
 
+    private fun onMatchEnded() {
+        MainApplication.instance.stopService(MatchRepository::class.java)
+    }
+
     private fun shutdownServices() {
         MainApplication.instance.stopService(GroupManager::class.java)
         MainApplication.instance.stopService(GroupRepository::class.java)
@@ -169,6 +173,9 @@ class MonitoringService : Service() {
             }
             EventType.GROUP_LEFT -> {
                 onGroupLeft()
+            }
+            EventType.MATCH_ENDED -> {
+                onMatchEnded()
             }
         }
     }
