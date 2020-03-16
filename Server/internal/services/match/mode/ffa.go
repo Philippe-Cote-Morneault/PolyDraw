@@ -138,22 +138,22 @@ func (f *FFA) GameLoop() {
 
 	f.receiving.Lock()
 	f.orderPos++
+	f.curLap++
 	if f.orderPos > len(f.players)-1 {
 		f.orderPos = 0
-		f.curLap++
+	}
 
-		//Is the game finished ?
-		if f.curLap > f.lapsTotal-1 {
-			f.isRunning = false
-			timeUpMessage := socket.RawMessage{}
-			timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
-				Type: 2,
-				Word: f.currentWord,
-			})
-			f.pbroadcast(&timeUpMessage)
-			f.receiving.Unlock()
-			return
-		}
+	//Is the game finished ?
+	if f.curLap > f.lapsTotal-1 {
+		f.isRunning = false
+		timeUpMessage := socket.RawMessage{}
+		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+			Type: 2,
+			Word: f.currentWord,
+		})
+		f.pbroadcast(&timeUpMessage)
+		f.receiving.Unlock()
+		return
 	}
 
 	f.currentWord = ""
@@ -284,9 +284,8 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 			IsCPU:    false,
 		})
 	}
-	//TODO parameters ??
-	f.timeImage = 30000
-	f.lapsTotal = 3
+	f.timeImage = 60000
+	f.lapsTotal = len(f.players) * 3
 	welcome := ResponseGameInfo{
 		Players:   players,
 		GameType:  0,
