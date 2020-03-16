@@ -313,7 +313,13 @@ namespace ClientLourd.ViewModels
             {
                _canvasMessage = value;  
                NotifyPropertyChanged();
+               NotifyPropertyChanged(nameof(IsMessageDisplay));
             } 
+        }
+
+        public bool IsMessageDisplay
+        {
+            get => !String.IsNullOrWhiteSpace(CanvasMessage);
         }
 
         public Editor Editor { get; set; }

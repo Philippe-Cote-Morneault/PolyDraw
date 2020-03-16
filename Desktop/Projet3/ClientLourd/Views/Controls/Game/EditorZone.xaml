@@ -39,8 +39,8 @@
             </Button>
         </StackPanel>
         <Grid>
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
-                <TextBlock FontSize="20" Text="{Binding CanvasMessage}"/>
+            <Grid Height="750" Width="1125" Background="Black" Opacity="0.2" Visibility="{Binding Path=IsMessageDisplay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontWeight="Black" Foreground="White" Text="{Binding CanvasMessage}"/>
             </Grid>
             <Grid>
                 <control:Editor x:Name="DrawingEditor"/>
