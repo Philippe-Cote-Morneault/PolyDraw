@@ -2,6 +2,12 @@ package mode
 
 import (
 	"context"
+	"log"
+	"math/rand"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
@@ -9,11 +15,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/sliceutils"
 	"golang.org/x/sync/semaphore"
-	"log"
-	"math/rand"
-	"strings"
-	"sync"
-	"time"
 )
 
 //FFA Free for all game mode
@@ -393,11 +394,11 @@ func (f *FFA) waitTimeout() bool {
 		f.receiving.Lock()
 		f.receivingGuesses.UnSet()
 		return false // completed normally
-	} else {
-		f.receiving.Lock()
-		f.receivingGuesses.UnSet()
-		return true // timed out
 	}
+
+	f.receiving.Lock()
+	f.receivingGuesses.UnSet()
+	return true // timed out
 }
 
 //finish when the match terminates announce winner
