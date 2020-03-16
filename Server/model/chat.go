@@ -6,7 +6,8 @@ import "github.com/google/uuid"
 type ChatChannel struct {
 	Base
 	Name       string
-	IsGameChat bool    `gorm:"default:'false'"`
+	IsGameChat bool `gorm:"default:'false'"`
+	GroupID    uuid.UUID
 	Users      []*User `gorm:"many2many:chat_channel_membership"`
 }
 
