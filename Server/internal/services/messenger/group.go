@@ -41,7 +41,7 @@ func HandleQuitGroup(group *model.Group, socketID uuid.UUID) {
 	instance.quitChannel(socketID, channelID)
 }
 
-//UnregisterGame remove a channel for each group
+//UnRegisterGroup remove a channel for each group
 func UnRegisterGroup(group *model.Group, connections []uuid.UUID) {
 	channelID := channelCache[group.Name].channelID
 	for i := range connections {
