@@ -533,6 +533,11 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 
 			//Check if the order has changed
 			maxPos := len(f.order) - 1
+			if maxPos <= 0 {
+				f.orderPos = 0
+				return
+			}
+
 			same := currentPos % maxPos
 
 			if f.players[same].userID == currentUser {
