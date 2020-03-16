@@ -84,6 +84,7 @@
     
     <DockPanel Margin="10">
         <StackPanel 
+            Height="50"
             DockPanel.Dock="Bottom"
             Orientation="Horizontal"
             Visibility="{Binding Path=IsYourTurn, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -91,7 +92,7 @@
             <TextBlock FontWeight="Medium" FontSize="24" Text="The word is " VerticalAlignment="Center"/>
             <TextBlock FontWeight="Medium" FontSize="24" Text="{Binding Word}" Foreground="Red" VerticalAlignment="Center"/>
         </StackPanel>
-        <StackPanel Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}" DockPanel.Dock="Bottom" Orientation="Horizontal">
+        <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}" DockPanel.Dock="Bottom" Orientation="Horizontal">
             <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
             <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
                 
