@@ -90,6 +90,7 @@ namespace ClientLourd.Views.Controls
 
         public void ExportChat()
         {
+            MainWindow.ChatWindow.Close();
             MainWindow.Drawer.IsRightDrawerOpen = false;
             MainWindow.ChatToggleButton.IsEnabled = false;
             MainWindow.RightDrawerContent.Children.Clear();

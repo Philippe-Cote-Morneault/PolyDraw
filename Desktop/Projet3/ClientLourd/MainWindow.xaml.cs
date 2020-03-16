@@ -77,7 +77,7 @@ namespace ClientLourd
             ((ViewModelBase) DataContext).AfterLogOut();
             MenuToggleButton.IsChecked = false;
             ChatToggleButton.IsChecked = false;
-            _chatWindow?.Close();
+            ChatWindow?.Close();
             DevConfigButton.IsChecked = true;
         }
 
@@ -102,7 +102,7 @@ namespace ClientLourd
 
 
 
-        private ChatWindow _chatWindow;
+        public ChatWindow ChatWindow { get; set; }
 
         RelayCommand<object> _exportChatCommand;
 
@@ -132,13 +132,13 @@ namespace ClientLourd
                 Thread.Sleep(100);
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    _chatWindow = new ChatWindow(ChatBox)
+                    ChatWindow = new ChatWindow(ChatBox)
                     {
                         Title = "Chat",
                         DataContext = DataContext,
                         Owner = this,
                     };
-                    _chatWindow.Show();
+                    ChatWindow.Show();
                 });
             });
         }
