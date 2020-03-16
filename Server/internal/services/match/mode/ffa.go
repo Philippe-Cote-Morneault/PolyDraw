@@ -506,6 +506,7 @@ func (f *FFA) finish() {
 func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 	//Remove the indexing for the players
 	delete(f.connections, socketID)
+	delete(f.hasFoundit, socketID)
 	for i := range f.players {
 		if p.userID == f.players[i].userID {
 			currentPos := f.orderPos
@@ -566,6 +567,7 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 				f.orderPos = decrement
 				return
 			}
+			return
 		}
 	}
 }
