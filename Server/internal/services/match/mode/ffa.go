@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"math/rand"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -40,6 +41,7 @@ type FFA struct {
 	hasFoundit         map[uuid.UUID]bool
 	clientGuess        int
 	waitingResponse    *semaphore.Weighted
+	cancelWait         func()
 	nbWaitingResponses int64
 }
 
@@ -166,6 +168,37 @@ func (f *FFA) GameLoop() {
 
 //Disconnect endpoint for when a user exits
 func (f *FFA) Disconnect(socketID uuid.UUID) {
+	defer f.receiving.Unlock()
+
+	f.receiving.Lock()
+	leaveMessage := socket.RawMessage{}
+	leaveMessage.ParseMessagePack(byte(socket.MessageType.PlayerHasLeftGame), PlayerHasLeft{
+		UserID:   f.connections[socketID].userID.String(),
+		Username: f.connections[socketID].Username,
+	})
+	f.pbroadcast(&leaveMessage)
+
+	//Check if drawing
+	if f.curDrawer.socketID == socketID {
+		f.cancelWait() //We cancel the wait and finish the drawing for the client to see
+
+		//Finish the end of the drawing for the clients
+		bytes, _ := uuid.Nil.MarshalBinary()
+		endDrawing := socket.RawMessage{
+			MessageType: byte(socket.MessageType.EndDrawingServer),
+			Length:      uint16(len(bytes)),
+			Bytes:       bytes,
+		}
+		f.pbroadcast(&endDrawing)
+	}
+	//Check the state of the game if there are enough players to finish the game
+	if f.realPlayers-1 <= 0 {
+		f.Close()
+		return
+	}
+
+	f.removePlayer(f.connections[socketID], socketID)
+	f.syncPlayers()
 }
 
 //TryWord endpoint for when a user tries to guess a word
@@ -371,10 +404,7 @@ func (f *FFA) syncPlayers() {
 
 func (f *FFA) waitTimeout() bool {
 	c := make(chan struct{})
-	defer func() {
-		close(c)
-		f.receiving.Unlock()
-	}()
+	defer f.receiving.Unlock()
 
 	go func() {
 		for {
@@ -391,9 +421,11 @@ func (f *FFA) waitTimeout() bool {
 	}()
 
 	cnt := context.Background()
-	cnt, cancel := context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
+	cnt, f.cancelWait = context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
 	err := f.waitingResponse.Acquire(cnt, f.nbWaitingResponses)
-	cancel()
+	f.cancelWait()
+
+	close(c)
 
 	if err == nil {
 		f.receiving.Lock()
@@ -454,4 +486,59 @@ func (f *FFA) finish() {
 
 	f.broadcast(&message)
 	drawing.UnRegisterGame(f)
+}
+
+//removePlayer remove the player and set the order
+func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
+	//Remove the indexing for the players
+	delete(f.connections, socketID)
+	for i := range f.players {
+		if p.userID == f.players[i].userID {
+			currentPos := f.orderPos
+			currentUser := f.players[f.order[currentPos]].userID
+
+			//Remove the player
+			f.players[i] = f.players[len(f.players)-1] // Copy last element to index i.
+			f.players[len(f.players)-1] = players{}    // Erase last element (write zero value).
+			f.players = f.players[:len(f.players)-1]   // Truncate slice.
+
+			//Remove the number from the player
+			f.order[i] = f.order[len(f.order)-1]
+			f.order[len(f.order)-1] = -1
+			f.order = f.order[:len(f.order)-1]
+
+			//Recompute the order and the order
+			sort.Slice(f.players, func(i, j int) bool {
+				return (f.players)[i].Order < (f.players)[j].Order
+			})
+			//We can recompute the order
+			for i := 0; i < len(f.players); i++ {
+				f.order[i] = i
+				f.players[i].Order = i
+				f.connections[f.players[i].socketID] = &f.players[i]
+			}
+
+			//Check if the order has changed
+			maxPos := len(f.order) - 1
+			same := currentPos % maxPos
+
+			if f.players[same].userID == currentUser {
+				f.orderPos = same
+				return
+			}
+
+			//Try increment or decrement
+			increment := (currentPos + 1) % maxPos
+			if f.players[increment].userID == currentUser {
+				f.orderPos = increment
+				return
+			}
+
+			decrement := (currentPos - 1) % maxPos
+			if f.players[decrement].userID == currentUser {
+				f.orderPos = decrement
+				return
+			}
+		}
+	}
 }
