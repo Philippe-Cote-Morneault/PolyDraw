@@ -99,6 +99,7 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 func (f *FFA) GameLoop() {
 	if (len(f.players)) <= 0 {
 		log.Printf("[Match] [FFA] No players will exit the game loop.")
+		f.isRunning = false
 		return
 	}
 	//Choose a user.
