@@ -427,9 +427,7 @@ func (f *FFA) waitTimeout() bool {
 			select {
 			case <-time.After(time.Second):
 				//Send an update to the clients
-				f.receiving.Lock()
 				f.syncPlayers()
-				f.receiving.Unlock()
 			case <-c:
 				return
 			}
