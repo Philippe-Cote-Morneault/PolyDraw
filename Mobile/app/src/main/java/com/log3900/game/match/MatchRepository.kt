@@ -57,6 +57,7 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.USER_JOINED_GROUP, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.MATCH_ENDED, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -91,6 +92,7 @@ class MatchRepository : Service() {
             Event.GUESS_WORD_RESPONSE -> onGuessWordResponse(socketMessage)
             Event.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(socketMessage)
             Event.PLAYER_SYNC -> onPlayerSync(socketMessage)
+            Event.MATCH_ENDED -> onMatchEnded(socketMessage)
         }
     }
 
@@ -147,6 +149,7 @@ class MatchRepository : Service() {
         if (playerGuessedWord.userID == AccountRepository.getInstance().getAccount().ID) {
             EventBus.getDefault().post(MessageEvent(EventType.POINTS_GAINED, playerGuessedWord.points))
         }
+        Log.d("POTATO", "Posting MATCH_PLAYER_UPDATED")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
         EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
     }
@@ -155,7 +158,28 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         val synchronisation = MatchAdapter.jsonToSynchronisation(jsonObject)
+        Log.d("POTATO", "Sync = $json")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_SYNCHRONISATION, synchronisation))
+
+        var playerScoresChanged = false
+        synchronisation.players.forEach {
+            if (playerScores[it.first] != it.second && playerScores.getOrDefault(it.first, 0) < it.second) {
+                playerScores[it.first] = it.second
+                playerScoresChanged = true
+            }
+        }
+
+        if (playerScoresChanged) {
+            EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
+        }
+    }
+
+    private fun onMatchEnded(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val matchEnded = MatchAdapter.jsonToMatchEnded(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
+        //EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, matchEnded))
     }
 
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
@@ -177,6 +201,7 @@ class MatchRepository : Service() {
         socketService?.unsubscribeFromMessage(Event.PLAYER_TURN_TO_DRAW, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.START_MATCH_RESPONSE, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.MATCH_ENDED, socketMessageHandler!!)
         socketMessageHandler = null
         socketService = null
         instance = null
