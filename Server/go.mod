@@ -17,4 +17,5 @@ require (
 	github.com/vmihailenco/msgpack/v4 v4.3.5
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 	golang.org/x/lint v0.0.0-20200130185559-910be7a94367 // indirect
+	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 )

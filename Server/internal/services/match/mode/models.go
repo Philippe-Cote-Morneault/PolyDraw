@@ -74,4 +74,11 @@ type PlayerSync struct {
 	Laps     int
 	Time     int64
 	GameTime int
+	LapTotal int
+}
+
+//PlayerHasLeft used to notify all the clients that a player has left a game
+type PlayerHasLeft struct {
+	UserID   string
+	Username string
 }

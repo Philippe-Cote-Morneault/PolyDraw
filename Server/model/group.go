@@ -16,6 +16,7 @@ type Group struct {
 	Name           string
 	Owner          User `gorm:"foreignkey:OwnerID"`
 	OwnerID        uuid.UUID
+	Language       int `gorm:"default:0"` // 0 -> EN | 1 -> FR
 	PlayersMax     int
 	VirtualPlayers int
 	GameType       int
