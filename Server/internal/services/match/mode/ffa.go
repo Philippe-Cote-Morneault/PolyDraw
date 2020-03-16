@@ -525,10 +525,10 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 				return (f.players)[i].Order < (f.players)[j].Order
 			})
 			//We can recompute the order
-			for i := 0; i < len(f.players); i++ {
-				f.order[i] = i
-				f.players[i].Order = i
-				f.connections[f.players[i].socketID] = &f.players[i]
+			for j := 0; j < len(f.players); j++ {
+				f.order[j] = j
+				f.players[j].Order = j
+				f.connections[f.players[j].socketID] = &f.players[j]
 			}
 
 			//Check if the order has changed
