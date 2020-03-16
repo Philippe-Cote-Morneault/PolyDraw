@@ -51,7 +51,12 @@ namespace ClientLourd.Services.SocketService
         public long Laps
         {
             get  =>_data["Laps"]; 
-        } 
+        }
+
+        public long LapTotal
+        {
+            get => _data["LapTotal"];
+        }
         public string GameTime
         {
             get  => _data["GameTime"]; 

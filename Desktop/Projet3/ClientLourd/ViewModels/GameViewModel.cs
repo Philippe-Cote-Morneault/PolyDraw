@@ -33,6 +33,7 @@ namespace ClientLourd.ViewModels
         private int _healthPoint;
         private ObservableCollection<Player> _players;
         private long _round;
+        private long _totalRound;
         private StrokesReader _stokesReader;
         private string _canvasMessage;
         private GameModes _mode;
@@ -126,6 +127,7 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Round = e.Laps;
+            TotalRound = e.LapTotal;
             Time = e.Time;
             var playersInfo = e.Players;
             foreach (dynamic info in playersInfo)
@@ -263,6 +265,16 @@ namespace ClientLourd.ViewModels
                 _word = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(IsYourTurn));
+            }
+        }
+        
+        public long TotalRound
+        {
+            get => _totalRound;
+            set
+            {
+                _totalRound = value;
+                NotifyPropertyChanged();
             }
         }
         public long Round
