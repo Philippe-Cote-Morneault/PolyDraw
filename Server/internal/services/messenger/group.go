@@ -7,7 +7,7 @@ import (
 )
 
 var instance *handler
-var channelCache map[string]channelGroup
+var channelCache map[uuid.UUID]channelGroup
 
 type channelGroup struct {
 	channelID      uuid.UUID
@@ -16,13 +16,13 @@ type channelGroup struct {
 
 func setInstance(handle *handler) {
 	instance = handle
-	channelCache = make(map[string]channelGroup)
+	channelCache = make(map[uuid.UUID]channelGroup)
 }
 
 //RegisterGroup create a channel for each group
 func RegisterGroup(group *model.Group) {
 	channelID, response := instance.createGroupChannel(group)
-	channelCache[group.Name] = channelGroup{
+	channelCache[group.ID] = channelGroup{
 		channelID:      channelID,
 		createResponse: response,
 	}
@@ -30,22 +30,23 @@ func RegisterGroup(group *model.Group) {
 
 //HandleJoinGroup join a group chat
 func HandleJoinGroup(group *model.Group, socketID uuid.UUID) {
-	channel := channelCache[group.Name]
+	channel := channelCache[group.ID]
 	socket.SendRawMessageToSocketID(channel.createResponse, socketID)
 	instance.joinChannel(socketID, channel.channelID)
 }
 
 //HandleQuitGroup leave a group chat
 func HandleQuitGroup(group *model.Group, socketID uuid.UUID) {
-	channelID := channelCache[group.Name].channelID
+	channelID := channelCache[group.ID].channelID
 	instance.quitChannel(socketID, channelID)
 }
 
 //UnRegisterGroup remove a channel for each group
 func UnRegisterGroup(group *model.Group, connections []uuid.UUID) {
-	channelID := channelCache[group.Name].channelID
+	channelID := channelCache[group.ID].channelID
 	for i := range connections {
 		instance.quitChannel(connections[i], channelID)
 	}
 	instance.deleteGroupChannel(group)
+	delete(channelCache, group.ID)
 }
