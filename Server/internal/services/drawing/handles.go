@@ -127,6 +127,10 @@ func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, strok
 
 	nbPoints := (delayDrawSending * len(*points)) / time
 
+	if time == 0 {
+		return
+	}
+
 	if nbPoints == 0 {
 		nbPoints = 1
 	} else if nbPoints >= maxPointsperPacket {
