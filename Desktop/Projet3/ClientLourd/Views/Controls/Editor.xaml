@@ -9,6 +9,7 @@
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             MouseWheel="Editor_OnMouseWheel"
              mc:Ignorable="d">
     <UserControl.DataContext>
         <viewModels:EditorViewModel/>

@@ -298,5 +298,14 @@ namespace ClientLourd.Views.Controls
             
         }
 
+        private void Editor_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0 && BrushSizeSlider.Value + 5 < BrushSizeSlider.Maximum)
+                BrushSizeSlider.Value += 5;
+            else if(e.Delta < 0 && BrushSizeSlider.Value -5 > BrushSizeSlider.Minimum)
+            {
+                BrushSizeSlider.Value -= 5;
+            }
+        }
     }
 }
