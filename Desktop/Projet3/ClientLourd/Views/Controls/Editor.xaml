@@ -15,6 +15,7 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <converter:EditingModeConverter x:Key="EditorModeConverter"/>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
     </UserControl.Resources>
     <materialDesign:Card   materialDesign:ShadowAssist.ShadowDepth="Depth4">
     <DockPanel >
@@ -104,6 +105,7 @@
                     <Separator />
                     <Slider Width="100" Minimum="1" Maximum="100"
                             ToolTip="Brush size"
+                            Name="BrushSizeSlider"
                             TickFrequency="10"
                             Value="{Binding Path=EditorInformation.BrushSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </ToolBar>
@@ -117,20 +119,22 @@
                 <TextBlock Name="textBlockPosition" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </StackPanel>
         </Border>
-            <Grid Background="WhiteSmoke">
+            <Canvas Background="WhiteSmoke">
                 <InkCanvas  ClipToBounds="True"  Name="Canvas"
-                   Width="1125"
-                   Height="750"
-                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                   MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
-                   Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
-                   MouseDown="SaveDrawDebutTime"
-                   StrokeCollected="OnStrokeAdded"
-                   StrokeErasing="OnStrokeErase"
-                   PreviewMouseMove="Canvas_OnPreviewMouseMove"
-                   EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                   DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}" />
-            </Grid>
+                            Width="1125"
+                            Height="750"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
+                            Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
+                            MouseDown="SaveDrawDebutTime"
+                            StrokeCollected="OnStrokeAdded"
+                            StrokeErasing="OnStrokeErase"
+                            PreviewMouseMove="Canvas_OnPreviewMouseMove"
+                            EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                            DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}">
+                    </InkCanvas>
+                    <Ellipse Visibility="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static InkCanvasEditingMode.EraseByPoint}}"  Name="Ellipse"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
+            </Canvas>
     </DockPanel>
     </materialDesign:Card>
 </UserControl>

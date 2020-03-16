@@ -284,15 +284,19 @@ namespace ClientLourd.Views.Controls
 
         private void Canvas_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
+            var p = e.GetPosition(Canvas);
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var p = e.GetPosition(Canvas);
                 if (p.X < 0 || p.X > Canvas.Width || p.Y < 0|| p.Y > Canvas.Height)
                 {
                     e.Handled = true;
                 }
             }
+            System.Windows.Controls.Canvas.SetTop(Ellipse,p.Y - BrushSizeSlider.Value/2);
+            System.Windows.Controls.Canvas.SetLeft(Ellipse,p.X - BrushSizeSlider.Value/2);
+ 
+            
         }
-        
+
     }
 }
