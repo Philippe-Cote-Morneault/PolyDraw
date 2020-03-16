@@ -168,7 +168,6 @@ func (f *FFA) GameLoop() {
 
 //Disconnect endpoint for when a user exits
 func (f *FFA) Disconnect(socketID uuid.UUID) {
-	defer f.receiving.Unlock()
 
 	f.receiving.Lock()
 	leaveMessage := socket.RawMessage{}
@@ -193,12 +192,14 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	}
 	//Check the state of the game if there are enough players to finish the game
 	if f.realPlayers-1 <= 0 {
+		f.receiving.Unlock()
 		f.Close()
 		return
 	}
 
 	f.removePlayer(f.connections[socketID], socketID)
 	f.syncPlayers()
+	f.receiving.Unlock()
 }
 
 //TryWord endpoint for when a user tries to guess a word
@@ -298,6 +299,11 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 
 //Close forces the game to stop completely. Graceful shutdown
 func (f *FFA) Close() {
+	defer f.receiving.Unlock()
+	f.receiving.Lock()
+	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
+	f.isRunning = false
+	f.cancelWait()
 }
 
 //GetConnections returns all the socketID of the match
