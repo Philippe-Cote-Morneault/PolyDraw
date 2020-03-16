@@ -77,6 +77,9 @@ class ChannelManager {
             EventType.RECEIVED_MESSAGE -> {
                 onMessageReceived(event.data as ChatMessage)
             }
+            EventType.SUBSCRIBED_TO_CHANNEL -> {
+                onSubscribedToChannel(event.data as Channel)
+            }
             EventType.UNSUBSCRIBED_FROM_CHANNEL -> {
                 onUnsubscribedFromChannel(event.data as Channel)
             }
@@ -142,6 +145,12 @@ class ChannelManager {
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         } else {
             EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED, message))
+        }
+    }
+
+    private fun onSubscribedToChannel(channel: Channel) {
+        if (channel.isGame) {
+            changeActiveChannel(channel)
         }
     }
 
