@@ -21,20 +21,6 @@ namespace ClientLourd.ViewModels
     {
         private ObservableCollection<Lobby> _lobbies;
 
-        public HomeViewModel()
-        {
-            SocketClient.LobbyCreated += OnLobbyCreated;
-            SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
-            SocketClient.UserJoinedLobby += OnUserJoinedLobby;
-            SocketClient.UserLeftLobby += OnUserLeftLobby;
-            SocketClient.LobbyDeleted += OnLobbyDeleted;
-            Lobbies = new ObservableCollection<Lobby>();
-            _modeFilteredAscending = false;
-            _lobbyFilteredAscending = false;
-            _hostFilteredAscending = false;
-            _playerCountFilteredAscending = false;
-            
-        }
         public string ContainedView
         {
             get
@@ -76,11 +62,26 @@ namespace ClientLourd.ViewModels
         {
 
             FetchLobbies();
+
+            SocketClient.LobbyCreated += OnLobbyCreated;
+            SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
+            SocketClient.UserJoinedLobby += OnUserJoinedLobby;
+            SocketClient.UserLeftLobby += OnUserLeftLobby;
+            SocketClient.LobbyDeleted += OnLobbyDeleted;
+            Lobbies = new ObservableCollection<Lobby>();
+            _modeFilteredAscending = false;
+            _lobbyFilteredAscending = false;
+            _hostFilteredAscending = false;
+            _playerCountFilteredAscending = false;
+
+
         }
 
         public override void AfterLogOut()
         {
             //??
+
+           
         }
 
         public ObservableCollection<Lobby> Lobbies

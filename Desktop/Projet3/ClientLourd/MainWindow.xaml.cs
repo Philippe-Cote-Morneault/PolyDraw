@@ -57,6 +57,7 @@ namespace ClientLourd
             mainViewModel.AfterLogin();
             (Profile.DataContext as ProfileViewModel).AfterLogin();
             (Home.DataContext as HomeViewModel).AfterLogin();
+            (Lobby.DataContext as LobbyViewModel).AfterLogin();
             //TODO: Remove this comment
             //DialogHost.Show(new Tutorial(), "Default");
         }

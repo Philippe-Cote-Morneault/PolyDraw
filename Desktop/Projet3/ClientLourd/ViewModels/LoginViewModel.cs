@@ -87,6 +87,7 @@ namespace ClientLourd.ViewModels
 
             set
             {
+                Console.WriteLine((value as TokenPair).SessionToken);
                 if (value != _tokens)
                 {
                     _tokens = value;

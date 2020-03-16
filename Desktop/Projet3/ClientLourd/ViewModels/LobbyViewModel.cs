@@ -20,17 +20,6 @@ namespace ClientLourd.ViewModels
 {
     class LobbyViewModel : ViewModelBase
     {
-        public LobbyViewModel()
-        {
-            SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
-            SocketClient.LobbyDeleted += OnLobbyDeleted;
-            SocketClient.UserJoinedLobby += OnUserJoinedLobby;
-            SocketClient.UserLeftLobby += OnUserLeftLobby;
-            SocketClient.StartGameResponse += OnStartGameResponse;
-            SocketClient.MatchEnded += SocketClientOnMatchEnded;
-            IsGameStarted = false;
-        }
-
         private bool _canStart;
         public bool CanStart
         {
@@ -125,7 +114,13 @@ namespace ClientLourd.ViewModels
 
         public override void AfterLogin()
         {
-            throw new NotImplementedException();
+            SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
+            SocketClient.LobbyDeleted += OnLobbyDeleted;
+            SocketClient.UserJoinedLobby += OnUserJoinedLobby;
+            SocketClient.UserLeftLobby += OnUserLeftLobby;
+            SocketClient.StartGameResponse += OnStartGameResponse;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
+            IsGameStarted = false;
         }
 
         public override void AfterLogOut()
