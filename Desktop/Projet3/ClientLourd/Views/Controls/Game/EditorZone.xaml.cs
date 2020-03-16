@@ -26,9 +26,20 @@ namespace ClientLourd.Views.Controls.Game
             Loaded += OnLoaded;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
             _random = new Random((int)DateTime.Now.Ticks);
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             _timer.Tick += (s, arg) => Confetti();
+        }
+
+        private void SocketClientOnMatchEnded(object source, EventArgs args)
+        {
+            Task.Run(() =>
+            {
+                StartConfetti();
+                Thread.Sleep(5000);
+                StopConfetti();
+            });
         }
 
         public SocketClient SocketClient
