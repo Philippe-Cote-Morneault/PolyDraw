@@ -59,6 +59,7 @@ type messageType struct {
 	StartDrawingClient       int
 	EndDrawingClient         int
 	EraseStrokeClient        int
+	PlayerHasLeftGame        int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -101,6 +102,7 @@ var MessageType = &messageType{
 	RequestReadyMatch:        62,
 	GameStarting:             63,
 	RequestQuitMatch:         64,
+	PlayerHasLeftGame:        65,
 	PlayerDrawingTurn:        67,
 	PlayerDrawThis:           69,
 	TimeUp:                   71,
