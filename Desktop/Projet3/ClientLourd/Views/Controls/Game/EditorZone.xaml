@@ -98,7 +98,7 @@
                 
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="5"></StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5 0 5 0"></StackPanel>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
