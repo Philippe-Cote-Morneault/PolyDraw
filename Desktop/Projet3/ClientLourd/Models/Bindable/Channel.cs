@@ -16,6 +16,7 @@ namespace ClientLourd.Models.Bindable
             InitTimer();
             Name = name;
             ID = id;
+            IsFullyLoaded = true;
             Users = new ObservableCollection<User>();
             Messages = new ObservableCollection<Message>();
         }
