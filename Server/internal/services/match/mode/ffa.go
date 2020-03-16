@@ -18,6 +18,7 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
+const numberOfTurns = 3
 //FFA Free for all game mode
 type FFA struct {
 	base
@@ -57,6 +58,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.curLap = 1
 	f.timeImage = 60000
 	f.lapsTotal = len(f.players) * 3
+	f.lapsTotal = len(f.players) * numberOfTurns
 
 	f.realPlayers = 0
 	for i := range f.players {
@@ -202,6 +204,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	}
 
 	f.removePlayer(f.connections[socketID], socketID)
+	f.lapsTotal -= numberOfTurns
 	f.syncPlayers()
 	f.receiving.Unlock()
 }
@@ -404,6 +407,7 @@ func (f *FFA) syncPlayers() {
 	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
 		Players:  players,
 		Laps:     f.curLap,
+		LapTotal: f.lapsTotal,
 		Time:     f.timeImage - imageDuration.Milliseconds(),
 		GameTime: 0,
 	})
