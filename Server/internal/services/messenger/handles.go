@@ -17,7 +17,8 @@ type handler struct {
 
 func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawMessage) {
 	channel := model.ChatChannel{
-		Name:       group.Name,
+		Name:       "Game",
+		GroupID:    group.ID,
 		IsGameChat: true,
 	}
 	model.DB().Create(&channel)
@@ -45,7 +46,7 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 
 func (h *handler) deleteGroupChannel(group *model.Group) {
 	var channel model.ChatChannel
-	model.DB().Where("name = ?", group.Name).First(&channel)
+	model.DB().Where("group_id = ?", group.ID).First(&channel)
 
 	//Create a destroy message
 	destroyMessage := ChannelDestroyResponse{
@@ -208,7 +209,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 	timestamp := time.Now().Unix()
 	if message.Payload.DecodeMessagePack(&channelParsed) == nil {
 		name := channelParsed.ChannelName
-		if strings.TrimSpace(name) != "" && name != "General" {
+		if strings.TrimSpace(name) != "" && name != "General" && name != "Game" {
 			user, err := auth.GetUser(message.SocketID)
 			if err == nil {
 				//Check if channel already exists
