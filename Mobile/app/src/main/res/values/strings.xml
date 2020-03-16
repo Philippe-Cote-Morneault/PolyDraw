@@ -165,4 +165,5 @@
     <string name="match_waiting_room_title">Match waiting room</string>
     <string name="word_to_draw_title">Word to draw:</string>
     <string name="guess">Guess</string>
+    <string name="Round">Round</string>
 </resources>

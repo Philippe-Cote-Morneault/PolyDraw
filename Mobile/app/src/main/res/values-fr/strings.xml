@@ -135,4 +135,5 @@
     <string name="match_waiting_room_title">Salle d\'attente</string>
     <string name="word_to_draw_title">Mot à dessiner:</string>
     <string name="guess">Deviner</string>
+    <string name="Round">Ronde</string>
 </resources>

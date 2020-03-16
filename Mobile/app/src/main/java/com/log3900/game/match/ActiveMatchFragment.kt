@@ -17,6 +17,7 @@ import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
 import com.log3900.game.match.UI.WordGuessingView
 import com.log3900.game.match.UI.WordToDrawView
+import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -31,6 +32,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private lateinit var playersRecyclerView: RecyclerView
     private lateinit var toolbar: ConstraintLayout
     private lateinit var remainingTimeTextView: TextView
+    private lateinit var roundsTextView: TextView
     private var guessingView: WordGuessingView? = null
     private var wordToDrawView: WordToDrawView? = null
 
@@ -55,6 +57,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
         toolbar = activity?.findViewById(R.id.toolbar_active_match_outer_container)!!
         remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
+        roundsTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_rounds)
     }
 
     private fun setupRecyclerView() {
@@ -98,6 +101,10 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun setTimeValue(time: String) {
         remainingTimeTextView.text = time
+    }
+
+    override fun setRoundsValue(rounds: String) {
+        roundsTextView.text = rounds
     }
 
     override fun clearCanvas() {

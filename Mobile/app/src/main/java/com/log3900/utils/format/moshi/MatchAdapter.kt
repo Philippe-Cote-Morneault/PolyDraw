@@ -15,7 +15,7 @@ object MatchAdapter {
     @FromJson
     fun fromJson(matchJson: JsonObject): Match {
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
-        val matchType = MatchMode.values()[matchJson.get("GameType").asInt + 1]
+        val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
 
         when (matchType) {
