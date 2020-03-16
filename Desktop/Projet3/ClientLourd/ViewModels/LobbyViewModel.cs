@@ -41,10 +41,7 @@ namespace ClientLourd.ViewModels
                 Thread.Sleep(5000);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    CurrentLobby = null;
-                    HomeViewModel.FetchLobbies();
-                    ContainedView = Utilities.Enums.Views.Home.ToString();
-                    IsGameStarted = false;
+                    LeaveLobby();
                 });
             });
         }
@@ -141,7 +138,10 @@ namespace ClientLourd.ViewModels
         public void LeaveLobby()
         {
             CurrentLobby = null;
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
+            if (!IsGameStarted)
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
+            else
+                IsGameStarted = false;
             HomeViewModel.FetchLobbies();
             ContainedView = Utilities.Enums.Views.Home.ToString();
         }
