@@ -17,10 +17,12 @@ var files map[string]string
 //LoadList loads all the word list in memory.
 func LoadList() {
 	files = map[string]string{
-		"dict_fr":     "dict/fr_QC.txt",
-		"dict_en":     "dict/en_US.txt",
-		"dict_bad_fr": "dict/fr_QC_bad.txt",
-		"dict_bad_en": "dict/en_US_bad.txt",
+		"dict_fr":       "dict/fr_QC.txt",
+		"dict_en":       "dict/en_US.txt",
+		"dict_bad_fr":   "dict/fr_QC_bad.txt",
+		"dict_bad_en":   "dict/en_US_bad.txt",
+		"dict_words_fr": "dict/fr_QC_words.txt",
+		"dict_words_en": "dict/en_US_words.txt",
 	}
 	notLoaded = false
 	result, err := model.Redis().Get("dict_loaded").Result()

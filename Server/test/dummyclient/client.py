@@ -133,6 +133,28 @@ def handle(typeVal, valBytes):
     if typeVal == 37:
         printType("-> Preview drawing response")
         printBool(valBytes)
+    if typeVal == 41:
+         printType("-> Response group join")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 43:
+         printType("-> New user joined")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 45:
+         printType("-> User quit")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 49:
+         printType("-> Game creation response")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 51:
+        printType("-> Group created")
+        printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 61:
+         printType("-> Game about to start")
+         printMsgPack(msgpack.unpackb(valBytes))
+    if typeVal == 63:
+         printType("-> Game STARTED!")
+    if typeVal == 53:
+        printType("-> Group Erased")
     if typeVal == 255:
         printType("-> [[ERROR]]")
         printMsgPack(msgpack.unpackb(valBytes))

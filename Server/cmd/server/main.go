@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
+	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
+	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
 	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
@@ -71,4 +73,6 @@ func registerServices() {
 	service.Add(&redisservice.RedisService{})
 	service.Add(&potrace.Potrace{})
 	service.Add(&drawing.Drawing{})
+	service.Add(&lobby.Lobby{})
+	service.Add(&match.Service{})
 }

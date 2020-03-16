@@ -1,11 +1,12 @@
 package svgparser
 
 import (
-	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
-	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 	"log"
 	"strconv"
 	"unicode"
+
+	"gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
+	"gitlab.com/jigsawcorp/log3900/pkg/strbuilder"
 )
 
 const (
@@ -88,7 +89,7 @@ func (f *fsm) isSpace(char rune) bool {
 }
 
 func (f *fsm) isNumber(char rune) bool {
-	return unicode.IsDigit(char) || char == '-' || char == '.'
+	return unicode.IsDigit(char) || char == '-' || char == '.' || char == 'E' || char == 'e'
 }
 
 //parseLetter add the letter to the state
@@ -115,14 +116,14 @@ func (f *fsm) endCommand() {
 		if cmdLength > 1 {
 			f.Commands[cmdLength-1].Parse(&f.Commands[cmdLength-2].EndPos, f.transform)
 		} else {
-			startPos := geometry.Point{}
+			startPos := model.Point{}
 			f.Commands[cmdLength-1].Parse(&startPos, f.transform)
 		}
 
 		f.curCommand = ' '
 		f.numbers = make([]float32, 0, 16)
 	} else {
-		log.Printf("[Potrace] -> Invalid command \"%c\" in d attribute.", f.curCommand)
+		log.Printf("[SvgParser] -> Invalid command \"%c\" in d attribute.", f.curCommand)
 	}
 }
 
@@ -134,13 +135,13 @@ func (f *fsm) endNumber() {
 	if f.isDecimal {
 		number, err := strconv.ParseFloat(numStr, 32)
 		if err != nil {
-			log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+			log.Printf("[SvgParser] -> Invalid number \"%s\" in d attribute.", numStr)
 		}
 		f.numbers = append(f.numbers, float32(number))
 	} else {
 		number, err := strconv.Atoi(numStr)
 		if err != nil {
-			log.Printf("[Potrace] -> Invalid number \"%s\" in d attribute.", numStr)
+			log.Printf("[SvgParser] -> Invalid number \"%s\" in d attribute.", numStr)
 		}
 		f.numbers = append(f.numbers, float32(number))
 	}
@@ -151,6 +152,10 @@ func (f *fsm) endNumber() {
 
 //end of the state machine
 func (f *fsm) End() {
+
+	if f.state == 2 {
+		f.endNumber()
+	}
 	if f.state == 1 || f.state == 2 {
 		f.endCommand()
 	}

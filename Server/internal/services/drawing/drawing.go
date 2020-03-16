@@ -12,6 +12,13 @@ import (
 type Drawing struct {
 	preview cbroadcast.Channel
 
+	strokeChunk cbroadcast.Channel
+	drawStart   cbroadcast.Channel
+	drawEnd     cbroadcast.Channel
+	drawErase   cbroadcast.Channel
+
+	router Router
+
 	shutdown chan bool
 }
 
@@ -19,6 +26,8 @@ type Drawing struct {
 func (d *Drawing) Init() {
 	d.shutdown = make(chan bool)
 	d.subscribe()
+
+	d.router.Init()
 }
 
 //Start the drawing service
@@ -43,6 +52,22 @@ func (d *Drawing) listen() {
 				//Start a new function to handle the connection
 				go d.handlePreview(message)
 			}
+		case data := <-d.strokeChunk:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				go d.router.Route(&message)
+			}
+		case data := <-d.drawStart:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				go d.router.Route(&message)
+			}
+		case data := <-d.drawEnd:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				go d.router.Route(&message)
+			}
+		case data := <-d.drawErase:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				go d.router.Route(&message)
+			}
 		case <-d.shutdown:
 			return
 		}
@@ -52,4 +77,8 @@ func (d *Drawing) listen() {
 
 func (d *Drawing) subscribe() {
 	d.preview, _, _ = cbroadcast.Subscribe(BPreview)
+	d.strokeChunk, _, _ = cbroadcast.Subscribe(BStrokeChunk)
+	d.drawStart, _, _ = cbroadcast.Subscribe(BDrawStart)
+	d.drawEnd, _, _ = cbroadcast.Subscribe(BDrawEnd)
+	d.drawErase, _, _ = cbroadcast.Subscribe(BDrawErase)
 }

@@ -2,10 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -75,7 +76,7 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if request.Difficulty < 0 || request.Difficulty > 3 {
-		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be betwene 0 and 3.")
+		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 3.")
 		return
 	}
 
@@ -96,6 +97,14 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 		if strings.Contains(hintLower, wordLower) {
 			rbody.JSONError(w, http.StatusBadRequest, "The hint cannot contain the word.")
 			return
+		}
+		currentHint := strings.TrimSpace(hintLower)
+		for j, hint := range request.Hints {
+			hintLower := strings.TrimSpace(strings.ToLower(hint))
+			if hintLower == currentHint && j != i {
+				rbody.JSONError(w, http.StatusBadRequest, "The hint cannot be the same.")
+				return
+			}
 		}
 
 		hints = append(hints, &model.GameHint{
@@ -181,6 +190,24 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 		image := model.GameImage{}
 		image.Mode = modeInt
+
+		brushsizeStr := r.FormValue("brushsize")
+		brushsize, err := strconv.Atoi(brushsizeStr)
+		if brushsizeStr == "" {
+			rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be set when uploading a non vector image.")
+			return
+		}
+		if err != nil {
+			rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be a integer number.")
+		}
+
+		if brushsize > 100 || brushsize < 1 {
+			rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be between 1 and 100.")
+			return
+		}
+
+		image.BrushSize = brushsize
+
 		if mime == "text/xml; charset=utf-8" {
 			//Load svg
 			image.SVGFile = keyFile
@@ -205,21 +232,6 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			brushsizeStr := r.FormValue("brushsize")
-			brushsize, err := strconv.Atoi(brushsizeStr)
-			if brushsizeStr == "" {
-				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be set when uploading a non vector image.")
-				return
-			}
-			if err != nil {
-				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be a integer number.")
-			}
-
-			if brushsize > 100 || brushsize < 1 {
-				rbody.JSONError(w, http.StatusBadRequest, "The brushsize must be between 1 and 100.")
-				return
-			}
-			image.BrushSize = brushsize
 			image.BlackLevel = blackLevel
 
 			svgKey, err := potrace.Trace(keyFile, blackLevel)

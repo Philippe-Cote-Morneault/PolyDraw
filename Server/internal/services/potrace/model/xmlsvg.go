@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/xml"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/svgparser"
 )
@@ -29,7 +30,7 @@ type XMLPath struct {
 	D         string    `xml:"d,attr"`
 	Time      int       `xml:"http://example.org/polydraw time,attr"`
 	Order     int       `xml:"http://example.org/polydraw order,attr"`
-	Color     int       `xml:"http://example.org/polydraw color,attr"`
+	Color     byte      `xml:"http://example.org/polydraw color,attr"`
 	Eraser    bool      `xml:"http://example.org/polydraw eraser,attr"`
 	Brush     string    `xml:"http://example.org/polydraw brush,attr"`
 	BrushSize int       `xml:"http://example.org/polydraw brushsize,attr"`

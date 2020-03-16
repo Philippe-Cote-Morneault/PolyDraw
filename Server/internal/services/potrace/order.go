@@ -1,12 +1,13 @@
 package potrace
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
-	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 	"math"
 	"math/rand"
 	"sort"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
+	geometry "gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
 )
 
 //ChangeOrder update the order of the svg file
@@ -39,6 +40,10 @@ func random(paths *[]model.XMLPath) {
 
 		remaining--
 	}
+
+	sort.Slice(*paths, func(i, j int) bool {
+		return (*paths)[i].Order < (*paths)[j].Order
+	})
 }
 
 //pano changes the order according to the panoramic order

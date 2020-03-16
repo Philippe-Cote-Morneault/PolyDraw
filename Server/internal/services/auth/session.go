@@ -58,17 +58,8 @@ func UnRegisterSocket(socketID uuid.UUID) {
 	model.DB().Where("socket_id = ?", socketID).First(&session)
 
 	if session.ID != uuid.Nil {
-		token := session.SessionToken
-
-		delete(tokenAvailable, token)
-		delete(sessionCache, socketID)
-		delete(userCache, session.UserID)
-
-		model.DB().Delete(&session) //Remove the session
-
-		var user model.User
-		model.DB().Model(&session).Related(&user)
-		model.UpdateDeconnection(user.ID)
+		go delayUnregister(&session)
+		model.UpdateDeconnection(session.UserID)
 
 	}
 }
@@ -85,15 +76,24 @@ func UnRegisterUser(userID uuid.UUID) {
 	model.DB().Where("user_id = ?", userID).First(&session)
 
 	if session.ID != uuid.Nil {
-		token := session.SessionToken
-
-		delete(tokenAvailable, token)
-		delete(sessionCache, session.SocketID)
-		delete(userCache, session.UserID)
-
-		model.DB().Delete(&session) //Remove the session
+		go delayUnregister(&session)
 		model.UpdateDeconnection(userID)
 	}
+}
+
+//delayUnregister is used to delete the trace in the system 120 seconds after the connection was closed. It gives time
+//for the services that needs this data to
+func delayUnregister(session *model.Session) {
+	time.Sleep(time.Second * 5)
+	//TODO do something better perhaps a seperate queue for the messages that will be deleted.
+	defer mutex.Unlock()
+	mutex.Lock()
+
+	delete(tokenAvailable, session.SessionToken)
+	delete(sessionCache, session.SocketID)
+	delete(userCache, session.UserID)
+	model.DB().Delete(session) //Remove the session
+
 }
 
 //GetUserIDFromToken returns the userID based on the session token
@@ -147,13 +147,10 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 				ConnectedAt: time.Now().Unix(),
 			})
 
-			model.AddJunk(userID)
-
 			sessionCache[messageReceived.SocketID] = userID //Set the value in the cache so pacquets are routed fast
 			userCache[userID] = messageReceived.SocketID
-			log.Printf("[Auth] -> Connection made %s", messageReceived.SocketID)
+			log.Printf("[Auth] -> Connection made socket:%s userid:%s", messageReceived.SocketID, userID)
 			sendAuthResponse(true, messageReceived.SocketID)
-
 			cbroadcast.Broadcast(socket.BSocketAuthConnected, messageReceived.SocketID) //Broadcast only when the auth is connected
 			return true
 		}

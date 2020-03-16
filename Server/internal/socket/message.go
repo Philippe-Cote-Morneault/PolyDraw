@@ -8,7 +8,7 @@ import (
 	"github.com/vmihailenco/msgpack/v4"
 )
 
-// Quick implementation of enum to represent different message types
+// Quick implementation of enum to represent different message mode
 type messageType struct {
 	ServerConnection         int
 	ServerConnectionResponse int
@@ -31,10 +31,37 @@ type messageType struct {
 	EndDrawingServer         int
 	PreviewDrawing           int
 	PreviewDrawingResponse   int
+	ResponseGroupCreated     int
+	RequestJoinGroup         int
+	ResponseJoinGroup        int
+	RequestLeaveGroup        int
+	ResponseLeaveGroup       int
 	ErrorResponse            int
+	UserJoinedGroup          int
+	ResponseGroupRemoved     int
+	RequestGameStart         int
+	GameStarting             int
+	RequestReadyMatch        int
+	RequestQuitMatch         int
+	RequestGuessWordMatch    int
+	RequestHintMatch         int
+	ResponseGameStart        int
+	GameWelcome              int
+	PlayerDrawingTurn        int
+	PlayerDrawThis           int
+	GameEnded                int
+	ResponseGuess            int
+	WordFound                int
+	TimeUp                   int
+	ResponseHintMatch        int
+	PlayerSync               int
+	StrokeChunkClient        int
+	StartDrawingClient       int
+	EndDrawingClient         int
+	EraseStrokeClient        int
 }
 
-// MessageType represents the available message types to send to clients.
+// MessageType represents the available message mode to send to clients.
 var MessageType = &messageType{
 	ServerConnection:         0,
 	ServerConnectionResponse: 1,
@@ -52,11 +79,38 @@ var MessageType = &messageType{
 	UserCreateChannel:        27,
 	DestroyChannel:           28,
 	UserDestroyedChannel:     29,
+	StrokeChunkClient:        30,
 	StrokeChunkServer:        31,
+	StartDrawingClient:       32,
 	StartDrawingServer:       33,
+	EndDrawingClient:         34,
 	EndDrawingServer:         35,
 	PreviewDrawing:           36,
 	PreviewDrawingResponse:   37,
+	EraseStrokeClient:        38,
+	RequestJoinGroup:         40,
+	ResponseJoinGroup:        41,
+	UserJoinedGroup:          43,
+	RequestLeaveGroup:        44,
+	ResponseLeaveGroup:       45,
+	RequestGameStart:         48,
+	ResponseGameStart:        49,
+	ResponseGroupCreated:     51,
+	ResponseGroupRemoved:     53,
+	GameWelcome:              61,
+	RequestReadyMatch:        62,
+	GameStarting:             63,
+	RequestQuitMatch:         64,
+	PlayerDrawingTurn:        67,
+	PlayerDrawThis:           69,
+	TimeUp:                   71,
+	PlayerSync:               73,
+	RequestGuessWordMatch:    74,
+	ResponseGuess:            75,
+	WordFound:                77,
+	GameEnded:                81,
+	RequestHintMatch:         82,
+	ResponseHintMatch:        83,
 	ErrorResponse:            255,
 }
 
