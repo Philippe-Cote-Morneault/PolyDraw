@@ -48,5 +48,16 @@ class Synchronisation(
     var laps: Int?,
     var time: Int,
     var gameTime: Int?
+)
 
+class MatchEnded(
+    var players: ArrayList<com.log3900.game.match.Player>,
+    var winner: String,
+    var time: Int
+)
+
+class Player(
+    var username: String,
+    var userID: UUID,
+    var points: Int
 )
