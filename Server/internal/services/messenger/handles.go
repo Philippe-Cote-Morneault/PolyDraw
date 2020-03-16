@@ -30,7 +30,7 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 	response := ChannelCreateResponse{
 		ChannelName: channel.Name,
 		ChannelID:   channel.ID.String(),
-		Username:    "",
+		Username:    "host",
 		UserID:      uuid.Nil.String(),
 		Timestamp:   time.Now().Unix(),
 		IsGame:      true,
@@ -52,7 +52,7 @@ func (h *handler) deleteGroupChannel(group *model.Group) {
 	//Create a destroy message
 	destroyMessage := ChannelDestroyResponse{
 		UserID:    uuid.Nil.String(),
-		Username:  "",
+		Username:  "host",
 		ChannelID: channel.ID.String(),
 		Timestamp: time.Now().Unix(),
 	}
