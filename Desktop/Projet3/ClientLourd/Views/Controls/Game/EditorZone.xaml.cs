@@ -95,11 +95,7 @@ namespace ClientLourd.Views.Controls.Game
         {
             var e = (MatchEventArgs)args;
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                StartConfetti();
-            });
-
+            
             if (e.Valid)
             {
                 Task.Run(() =>
@@ -207,11 +203,16 @@ namespace ClientLourd.Views.Controls.Game
 
         private void Confetti() 
         {
-            var x = _random.Next(-500, (int)CanvasContainer.ActualWidth - 100);
-            //var y = -100;
+            //var x = _random.Next(-500, (int)CanvasContainer.ActualWidth - 100);
+            var x = _random.Next(-(int)CanvasContainer.ActualWidth/2, (int)CanvasContainer.ActualWidth / 2);
+            //var x = 0;
+
             //TODO change to -100
-            var y = -100;
-            var s = _random.Next(5, 15) * .1;
+            //var y = -100;
+
+            var y = -(int)(CanvasContainer.ActualHeight / 2) + 60;
+
+            var s = _random.Next(2, 5) * .1;
             var r = _random.Next(0, 270);
 
             var transformGroup = new TransformGroup();
@@ -221,44 +222,57 @@ namespace ClientLourd.Views.Controls.Game
 
             var flake = new Confetti()
             {
+                
+                RenderTransformOrigin = new Point(0.5, 0.5),
                 RenderTransform = transformGroup,
             };
-
+            
             CanvasContainer.Children.Add(flake);
 
-            var d = TimeSpan.FromSeconds(_random.Next(1, 4));
+            Duration d = new Duration(TimeSpan.FromSeconds(_random.Next(1, 4)));
+
+            //x += _random.Next(100, 500);
+
+            int endX = x + 50;
+            var ax = new DoubleAnimation { From=x, To = endX, Duration = d };
+            //Storyboard.SetTarget(ax, flake.RenderTransform);
+            //Storyboard.SetTargetProperty(ax, new PropertyPath("(TranslateTransform.X)"));
+            Storyboard.SetTarget(ax, flake);
+            Storyboard.SetTargetProperty(ax, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.X)"));
+
+
+            //y += (int)(CanvasContainer.ActualHeight + 200);
+            int endY = (int)(CanvasContainer.ActualHeight / 2);
+            var ay = new DoubleAnimation {From=y, To = endY, Duration = d };
+            //Storyboard.SetTarget(ay, flake.RenderTransform);
+            //Storyboard.SetTargetProperty(ay, new PropertyPath("(TranslateTransform.Y)"));
+            Storyboard.SetTarget(ay, flake);
+            Storyboard.SetTargetProperty(ay, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.Y)"));
+
+            //r += _random.Next(90, 360);
+            int endR = r + _random.Next(90, 360);
+            var ar = new DoubleAnimation {From=r, To = endR, Duration = d };
+            //Storyboard.SetTarget(ar, flake.RenderTransform);
+            //Storyboard.SetTargetProperty(ar, new PropertyPath("(TransformGroup.Children[1]).(RotateTransform.Angle)"));
+            Storyboard.SetTarget(ar, flake);
+            Storyboard.SetTargetProperty(ar, new PropertyPath("(RenderTransform).Children[1].(RotateTransform.Angle)"));
+            
             var story = new Storyboard();
-            x += _random.Next(100, 500);
-            var ax = new DoubleAnimation { To = x, Duration = d };
-            Storyboard.SetTarget(ax, flake.RenderTransform);
-            //Storyboard.SetTargetProperty(ax, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.X)"));
-            Storyboard.SetTargetProperty(ax, new PropertyPath("(TranslateTransform.X)"));
-
-            y += (int)(CanvasContainer.ActualHeight + 200);
-            var ay = new DoubleAnimation { To = y, Duration = d };
-            Storyboard.SetTarget(ax, flake.RenderTransform);
-            //Storyboard.SetTargetProperty(ax, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.Y)"));
-            Storyboard.SetTargetProperty(ax, new PropertyPath("(TranslateTransform.Y)"));
-
-            r += _random.Next(90, 360);
-            var ar = new DoubleAnimation { To = r, Duration = d };
-            Storyboard.SetTarget(ar, flake.RenderTransform);
-           // Storyboard.SetTargetProperty(ar, new PropertyPath("RenderTransform.Children[1].Angle"));
-            //Storyboard.SetTargetProperty(ar, new PropertyPath("(RenderTransform).Children[1].(RotateTransform.Angle)"));
-            //Storyboard.SetTargetProperty(ar, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[1].(RotateTransform.Angle)"));
-
-            // Storyboard.SetTargetProperty(ar, new PropertyPath("(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"));
-             Storyboard.SetTargetProperty(ar, new PropertyPath("(RotateTransform.Angle)"));
-
-            //(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)
-            //(RenderTransform).Children[0].(ScaleTransform.ScaleX)
-
-            story.Children.Add(ax);
+            story.Completed += (sender, e) => CanvasContainer.Children.Remove(flake);
+            //story.Children.Add(ax);
             story.Children.Add(ay);
             story.Children.Add(ar);
             story.Begin();
         }
 
+        public void StartConfettiEv(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                StartConfetti();
+            });
+
+        }
 
 
     }

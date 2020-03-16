@@ -120,7 +120,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Button Command="{Binding SendGuessCommand}" IsDefault="True">
+            <Button Command="{Binding SendGuessCommand}" IsDefault="True" Click="StartConfettiEv">
                 Guess
             </Button>
         </StackPanel>

@@ -23,6 +23,31 @@ namespace ClientLourd.Views.Controls.Game
         public Confetti()
         {
             InitializeComponent();
+            SetColor();
+        }
+
+        private void SetColor()
+        {
+            Random random = new Random();
+            int color = random.Next(1, 5);
+
+            switch (color)
+            {
+                case 1:
+                    Path.Fill = Brushes.Red;
+                    break;
+                case 2:
+                    Path.Fill = Brushes.Yellow;
+                    break;
+                case 3:
+                    Path.Fill = Brushes.LimeGreen;
+                    break;
+                case 4:
+                    Path.Fill = Brushes.Blue;
+                    break;
+                default:
+                    throw new Exception("No confetti color associated to number");
+            }
         }
     }
 }
