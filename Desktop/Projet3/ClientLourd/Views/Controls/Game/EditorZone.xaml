@@ -120,7 +120,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Button Command="{Binding SendGuessCommand}" IsDefault="True" Click="StartConfettiEv">
+            <Button Command="{Binding SendGuessCommand}" IsDefault="True" Click="StartConfettiEv" IsEnabled="{Binding CanStillGuess}">
                 Guess
             </Button>
         </StackPanel>
@@ -128,7 +128,7 @@
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
                 <TextBlock FontSize="20" Text="{Binding CanvasMessage}"/>
             </Grid>
-            <Border Background="Red">
+            
             <Grid Name="CanvasContainer"  RenderTransformOrigin=".5,.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
@@ -138,7 +138,6 @@
                 </Grid.RenderTransform>
                 <control:Editor x:Name="DrawingEditor"/>
             </Grid>
-            </Border>
 
         </Grid>
     </DockPanel>

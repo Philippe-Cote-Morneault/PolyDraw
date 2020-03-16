@@ -42,6 +42,7 @@ namespace ClientLourd.ViewModels
         {
             _players = new ObservableCollection<Player>();
             InitEventHandler();
+            CanStillGuess = true;
         }
 
         private void InitEventHandler()
@@ -106,6 +107,7 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Time = e.Time;
+            CanStillGuess = true;
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
@@ -151,10 +153,12 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
+
                 ShowCanvasMessage($"+ {e.Points}");
                 Players.First(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
                 Application.Current.Dispatcher.Invoke(() => 
                 {
+                    CanStillGuess = false;
                     SoundService.PlayWordGuessedRight();
                 });
             }
@@ -264,6 +268,17 @@ namespace ClientLourd.ViewModels
         public bool IsYourTurn
         {
             get => !string.IsNullOrEmpty(Word);
+        }
+
+        private bool _canStillGuess;
+        public bool CanStillGuess
+        {
+            get => _canStillGuess;
+            set
+            {
+                _canStillGuess = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public string Word

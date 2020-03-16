@@ -16,8 +16,8 @@ namespace ClientLourd.Views.Controls.Game
 {
     public partial class EditorZone : UserControl
     {
-
-
+        private Random _random;
+        private DispatcherTimer _timer;
 
         public EditorZone()
         {
@@ -25,8 +25,10 @@ namespace ClientLourd.Views.Controls.Game
             Loaded += OnLoaded;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
-            
             SocketClient.NewPlayerIsDrawing += SocketClientNewDrawer;
+            _random = new Random((int)DateTime.Now.Ticks);
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
+            _timer.Tick += (s, arg) => Confetti();
         }
 
         public SocketClient SocketClient
@@ -181,85 +183,66 @@ namespace ClientLourd.Views.Controls.Game
             
             Application.Current.Dispatcher.Invoke(() =>
             {
-                //TODO: Uncomment if statement when Martin fixed this
-                //if ((DataContext as GameViewModel).Round > 1)
-                //{
+                if ((DataContext as GameViewModel).Round + 1 > 1)
+                {
                     Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
                     sb.Begin();
-                //}                
+                }                
             });
             
         }
 
-        Random _random = new Random((int)DateTime.Now.Ticks);
-
         private void StartConfetti()
         {
-            var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
-            t.Tick += (s, arg) => Confetti();
-            t.Start();
+            _timer.Start();
+        }
+
+        private void StopConfetti()
+        {
+            _timer.Stop();
         }
        
 
         private void Confetti() 
         {
-            //var x = _random.Next(-500, (int)CanvasContainer.ActualWidth - 100);
-            var x = _random.Next(-(int)CanvasContainer.ActualWidth/2, (int)CanvasContainer.ActualWidth / 2);
-            //var x = 0;
 
-            //TODO change to -100
-            //var y = -100;
+            int canvasTop = -(int)(CanvasContainer.ActualHeight / 2) + 60;
+            int canvasBottom = (int)(CanvasContainer.ActualHeight / 2);
+            int canvasTopLeft = -(int)CanvasContainer.ActualWidth / 2;
+            int canvasTopRight = (int)CanvasContainer.ActualWidth / 2;
 
-            var y = -(int)(CanvasContainer.ActualHeight / 2) + 60;
+            int x = _random.Next(canvasTopLeft, canvasTopRight);
+            int y = canvasTop;
+            double s = _random.Next(2, 5) * .1;
+            int r = _random.Next(0, 270);
 
-            var s = _random.Next(2, 5) * .1;
-            var r = _random.Next(0, 270);
-
-            var transformGroup = new TransformGroup();
+            TransformGroup transformGroup = new TransformGroup();
             transformGroup.Children.Add(new ScaleTransform(s, s));
             transformGroup.Children.Add(new RotateTransform(r));
             transformGroup.Children.Add(new TranslateTransform(x,y));
 
-            var flake = new Confetti()
-            {
-                
+            Confetti confetti = new Confetti()
+            {   
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 RenderTransform = transformGroup,
             };
             
-            CanvasContainer.Children.Add(flake);
+            CanvasContainer.Children.Add(confetti);
 
             Duration d = new Duration(TimeSpan.FromSeconds(_random.Next(1, 4)));
 
-            //x += _random.Next(100, 500);
-
-            int endX = x + 50;
-            var ax = new DoubleAnimation { From=x, To = endX, Duration = d };
-            //Storyboard.SetTarget(ax, flake.RenderTransform);
-            //Storyboard.SetTargetProperty(ax, new PropertyPath("(TranslateTransform.X)"));
-            Storyboard.SetTarget(ax, flake);
-            Storyboard.SetTargetProperty(ax, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.X)"));
-
-
-            //y += (int)(CanvasContainer.ActualHeight + 200);
-            int endY = (int)(CanvasContainer.ActualHeight / 2);
-            var ay = new DoubleAnimation {From=y, To = endY, Duration = d };
-            //Storyboard.SetTarget(ay, flake.RenderTransform);
-            //Storyboard.SetTargetProperty(ay, new PropertyPath("(TranslateTransform.Y)"));
-            Storyboard.SetTarget(ay, flake);
+            int endY = canvasBottom;
+            DoubleAnimation ay = new DoubleAnimation {From=y, To = endY, Duration = d };
+            Storyboard.SetTarget(ay, confetti);
             Storyboard.SetTargetProperty(ay, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.Y)"));
 
-            //r += _random.Next(90, 360);
             int endR = r + _random.Next(90, 360);
-            var ar = new DoubleAnimation {From=r, To = endR, Duration = d };
-            //Storyboard.SetTarget(ar, flake.RenderTransform);
-            //Storyboard.SetTargetProperty(ar, new PropertyPath("(TransformGroup.Children[1]).(RotateTransform.Angle)"));
-            Storyboard.SetTarget(ar, flake);
+            DoubleAnimation ar = new DoubleAnimation {From=r, To = endR, Duration = d };
+            Storyboard.SetTarget(ar, confetti);
             Storyboard.SetTargetProperty(ar, new PropertyPath("(RenderTransform).Children[1].(RotateTransform.Angle)"));
             
-            var story = new Storyboard();
-            story.Completed += (sender, e) => CanvasContainer.Children.Remove(flake);
-            //story.Children.Add(ax);
+            Storyboard story = new Storyboard();
+            story.Completed += (sender, e) => CanvasContainer.Children.Remove(confetti);
             story.Children.Add(ay);
             story.Children.Add(ar);
             story.Begin();
@@ -267,13 +250,15 @@ namespace ClientLourd.Views.Controls.Game
 
         public void StartConfettiEv(object sender, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (!_timer.IsEnabled)
             {
                 StartConfetti();
-            });
-
+            }
+            else
+            {
+                StopConfetti();
+            }
+                
         }
-
-
     }
 }
