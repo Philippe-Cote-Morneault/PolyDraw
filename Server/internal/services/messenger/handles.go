@@ -393,6 +393,8 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 
 	//Update the cache
 	for _, channel := range channels {
-		delete(h.channelsConnections[channel.ID], socketID)
+		if !channel.IsGameChat {
+			delete(h.channelsConnections[channel.ID], socketID)
+		}
 	}
 }
