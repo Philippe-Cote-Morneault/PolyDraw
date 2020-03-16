@@ -164,7 +164,7 @@ namespace ClientLourd.ViewModels
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
 
-                if (UserIsInLobby() && !UserIsHost())
+                if (UserIsInLobby(lobbyDeletedID) && !UserIsHost())
                 {
                     CurrentLobby = null;
                     ContainedView = Utilities.Enums.Views.Home.ToString();
@@ -173,9 +173,14 @@ namespace ClientLourd.ViewModels
             });
         }
 
-        private bool UserIsInLobby()
+        private bool UserIsInLobby(string lobbyID)
         {
             if (CurrentLobby == null)
+            {
+                return false;
+            }
+
+            if (CurrentLobby.ID != lobbyID)
             {
                 return false;
             }
