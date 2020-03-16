@@ -1,12 +1,14 @@
 package mode
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/sliceutils"
+	"golang.org/x/sync/semaphore"
 	"log"
 	"math/rand"
 	"strings"
@@ -31,10 +33,11 @@ type FFA struct {
 	timeStart      time.Time
 	timeStartImage time.Time
 
-	receiving        sync.Mutex
-	receivingGuesses *abool.AtomicBool
-	hasFoundit       map[uuid.UUID]bool
-	waitingResponse  sync.WaitGroup
+	receiving         sync.Mutex
+	receivingGuesses  *abool.AtomicBool
+	hasFoundit        map[uuid.UUID]bool
+	waitingResponse   *semaphore.Weighted
+	nbWaitingResponse int64
 }
 
 //Init initialize the game mode
@@ -83,18 +86,20 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	//Choose a user.
-	f.waitingResponse = sync.WaitGroup{} //Reset the waitgroup
-
 	curDrawer := f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
+
 	if curDrawer.IsCPU {
-		f.waitingResponse.Add(f.realPlayers)
+		f.nbWaitingResponse = int64(f.realPlayers)
 	} else {
-		f.waitingResponse.Add(f.realPlayers - 1)
+		f.nbWaitingResponse = int64(f.realPlayers - 1)
+		//TODO remove this maybe
 		f.hasFoundit[curDrawer.socketID] = true
 	}
-
+	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponse)
+	f.waitingResponse.TryAcquire(f.nbWaitingResponse)
 	f.currentWord = f.findWord()
+
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawThis), PlayerDrawThis{
 		Word:      f.currentWord,
@@ -170,8 +175,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		//The word was found
 		if f.receivingGuesses.IsSet() && !f.hasFoundit[socketID] {
 			f.hasFoundit[socketID] = true
-			f.waitingResponse.Done()
-
+			f.waitingResponse.Release(1)
 			players := f.connections[socketID]
 			pointsForWord := 100 //TODO change the point system based with time
 			f.scores[players.Order] += pointsForWord
@@ -361,37 +365,38 @@ func (f *FFA) syncPlayers() {
 }
 
 func (f *FFA) waitTimeout() bool {
-	defer f.receiving.Unlock() //Mutex prevents from having a negative semaphore upon cleanup
-
 	c := make(chan struct{})
-	go func() {
-		defer close(c)
-		f.waitingResponse.Wait()
+	defer func() {
+		close(c)
+		f.receiving.Unlock()
 	}()
-	imageTimeout := time.After(time.Millisecond * time.Duration(f.timeImage))
-	for {
-		select {
-		//Send the check up message every 1 second
-		case <-time.After(time.Second):
-			//Send an update to the client
-			f.receiving.Lock()
-			f.syncPlayers()
-			f.receiving.Unlock()
-		case <-c:
-			f.receiving.Lock()
-			f.receivingGuesses.UnSet()
-			return false // completed normally
-		case <-imageTimeout:
-			f.receiving.Lock()
-			f.receivingGuesses.UnSet()
-			//Make sure to clear the semaphore to avoid goroutine leakage
-			for k := range f.hasFoundit {
-				if !f.hasFoundit[k] {
-					f.waitingResponse.Done()
-				}
+
+	go func() {
+		for {
+			select {
+			case <-time.After(time.Second):
+				//Send an update to the clients
+				f.receiving.Lock()
+				f.syncPlayers()
+				f.receiving.Unlock()
+			case <-c:
+				return
 			}
-			return true // timed out
 		}
+	}()
+
+	cnt := context.Background()
+	cnt, _ = context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
+	err := f.waitingResponse.Acquire(cnt, f.nbWaitingResponse)
+
+	if err == nil {
+		f.receiving.Lock()
+		f.receivingGuesses.UnSet()
+		return false // completed normally
+	} else {
+		f.receiving.Lock()
+		f.receivingGuesses.UnSet()
+		return true // timed out
 	}
 }
 
