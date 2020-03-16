@@ -119,7 +119,12 @@
                 <TextBlock Name="textBlockPosition" VerticalAlignment="Center" HorizontalAlignment="Left" />
             </StackPanel>
         </Border>
-            <Canvas Background="WhiteSmoke">
+        <Grid Background="WhiteSmoke">
+            
+            <Canvas  
+                Width="1125"
+                Height="750"
+                >
                 <InkCanvas  ClipToBounds="True"  Name="Canvas"
                             Width="1125"
                             Height="750"
@@ -135,6 +140,7 @@
                     </InkCanvas>
                     <Ellipse Visibility="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static InkCanvasEditingMode.EraseByPoint}}"  Name="Ellipse"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
             </Canvas>
+        </Grid>
     </DockPanel>
     </materialDesign:Card>
 </UserControl>
