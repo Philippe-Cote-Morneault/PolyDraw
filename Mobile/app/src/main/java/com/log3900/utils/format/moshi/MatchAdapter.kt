@@ -9,6 +9,7 @@ import com.log3900.game.match.*
 import com.squareup.moshi.FromJson
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
 
 object MatchAdapter {
     @FromJson
@@ -131,5 +132,25 @@ object MatchAdapter {
         }
 
         return playerScores
+    }
+
+    fun jsonToMatchEnded(jsonObject: JsonObject): MatchEnded {
+        val players = jsonToPlayers(jsonObject.get("Players").asJsonArray)
+        val winner = jsonObject.get("Winner").asString
+        val time = jsonObject.get("Time").asInt
+
+        return MatchEnded(players, winner, time)
+    }
+
+    private fun jsonToPlayers(jsonArray: JsonArray): ArrayList<com.log3900.game.match.Player> {
+        val players = arrayListOf<com.log3900.game.match.Player>()
+        jsonArray.forEach {
+            val username = it.asJsonObject.get("Username").asString
+            val userID = UUID.fromString(it.asJsonObject.get("UserID").asString)
+            val points = it.asJsonObject.get("Points").asInt
+            players.add(com.log3900.game.match.Player(username, userID, points))
+        }
+
+        return players
     }
 }
