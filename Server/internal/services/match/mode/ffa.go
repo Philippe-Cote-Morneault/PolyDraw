@@ -513,6 +513,10 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 			currentPos := f.orderPos
 			currentUser := f.players[f.order[currentPos]].userID
 
+			scoreMap := make(map[uuid.UUID]int)
+			for j := range f.players {
+				scoreMap[f.players[j].userID] = f.scores[f.players[j].Order]
+			}
 			//Remove the player
 			f.players[i] = f.players[len(f.players)-1] // Copy last element to index i.
 			f.players[len(f.players)-1] = players{}    // Erase last element (write zero value).
@@ -523,6 +527,9 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 			f.order[len(f.order)-1] = -1
 			f.order = f.order[:len(f.order)-1]
 
+			//Shrunk the score array
+			f.scores = f.scores[:len(f.scores)-1]
+
 			//Recompute the order and the order
 			sort.Slice(f.players, func(i, j int) bool {
 				return (f.players)[i].Order < (f.players)[j].Order
@@ -532,6 +539,7 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 				f.order[j] = j
 				f.players[j].Order = j
 				f.connections[f.players[j].socketID] = &f.players[j]
+				f.scores[j] = scoreMap[f.players[j].userID]
 			}
 
 			//Check if the order has changed
