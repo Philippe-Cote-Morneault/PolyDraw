@@ -15,7 +15,7 @@ type handler struct {
 	channelsConnections map[uuid.UUID]map[uuid.UUID]bool //channelID - socketID
 }
 
-func (h *handler) createGroupChannel(group *model.Group, connections []uuid.UUID) uuid.UUID {
+func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawMessage) {
 	channel := model.ChatChannel{
 		Name:       group.Name,
 		IsGameChat: true,
@@ -36,16 +36,11 @@ func (h *handler) createGroupChannel(group *model.Group, connections []uuid.UUID
 	rawMessage := socket.RawMessage{}
 	if rawMessage.ParseMessagePack(byte(socket.MessageType.UserCreateChannel), response) != nil {
 		log.Printf("[Messenger] -> Create: Can't pack message. Dropping packet!")
-		return channel.ID
-	}
-
-	for i := range connections {
-		//Check if the user has a session
-		go socket.SendRawMessageToSocketID(rawMessage, connections[i])
+		return channel.ID, socket.RawMessage{}
 	}
 	log.Printf("[Messenger] -> Create: channel %s created", channel.Name)
 
-	return channel.ID
+	return channel.ID, rawMessage
 }
 
 func (h *handler) deleteGroupChannel(group *model.Group) {
