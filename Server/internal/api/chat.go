@@ -12,9 +12,10 @@ import (
 )
 
 type channelResponse struct {
-	ID    string
-	Name  string
-	Users []userResponse
+	ID     string
+	Name   string
+	Users  []userResponse
+	IsGame bool
 }
 
 type userResponse struct {
@@ -44,8 +45,9 @@ func GetChatChannel(w http.ResponseWriter, r *http.Request) {
 	for _, channel := range channels {
 		if channel.ID != uuid.Nil {
 			channelResponse := channelResponse{
-				ID:   channel.ID.String(),
-				Name: channel.Name,
+				ID:     channel.ID.String(),
+				Name:   channel.Name,
+				IsGame: channel.IsGameChat,
 			}
 
 			users := []userResponse{}
@@ -76,8 +78,9 @@ func GetChatChannelID(w http.ResponseWriter, r *http.Request) {
 			//Simplify user output
 			users := []userResponse{}
 			channelResponse := channelResponse{
-				ID:   channel.ID.String(),
-				Name: channel.Name,
+				ID:     channel.ID.String(),
+				Name:   channel.Name,
+				IsGame: channel.IsGameChat,
 			}
 
 			for _, user := range channel.Users {
@@ -182,9 +185,10 @@ func getChatGeneralChannel() channelResponse {
 	}
 
 	channel := channelResponse{
-		ID:    uuid.Nil.String(),
-		Name:  "General",
-		Users: users,
+		ID:     uuid.Nil.String(),
+		Name:   "General",
+		IsGame: false,
+		Users:  users,
 	}
 	return channel
 }
