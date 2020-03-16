@@ -97,6 +97,10 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
+	if (len(f.players)) <= 0 {
+		log.Printf("[Match] [FFA] No players will exit the game loop.")
+		return
+	}
 	//Choose a user.
 	f.curDrawer = &f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
@@ -485,6 +489,11 @@ func (f *FFA) finish() {
 			Points:   f.scores[i],
 			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
+	}
+	if bestPlayerOrder == -1 {
+		drawing.UnRegisterGame(f)
+		log.Printf("[Match] [FFA] No more players in the match. Will not send finish packet")
+		return
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
