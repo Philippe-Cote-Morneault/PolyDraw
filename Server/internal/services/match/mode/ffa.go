@@ -94,7 +94,6 @@ func (f *FFA) GameLoop() {
 		f.nbWaitingResponse = int64(f.realPlayers)
 	} else {
 		f.nbWaitingResponse = int64(f.realPlayers - 1)
-		//TODO remove this maybe
 		f.hasFoundit[curDrawer.socketID] = true
 	}
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponse)
