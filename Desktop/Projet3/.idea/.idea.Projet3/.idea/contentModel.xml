@@ -45,6 +45,7 @@
                 <e p="Conversation.g.cs" t="Include" />
                 <e p="Editor.g.cs" t="Include" />
                 <e p="Game" t="Include">
+                  <e p="Confetti.g.cs" t="Include" />
                   <e p="EditorZone.g.cs" t="Include" />
                   <e p="GamePanel.g.cs" t="Include" />
                   <e p="GameStatus.g.cs" t="Include" />
@@ -121,6 +122,7 @@
           <e p="poly.png" t="Include" />
           <e p="sword.png" t="Include" />
           <e p="swords.png" t="Include" />
+          <e p="TimerWarning.wav" t="Include" />
           <e p="treasure.png" t="Include" />
           <e p="WhiteLogo.png" t="Include" />
           <e p="WordGuessedWrong.wav" t="Include" />
@@ -245,6 +247,8 @@
             <e p="Editor.xaml" t="Include" />
             <e p="Editor.xaml.cs" t="Include" />
             <e p="Game" t="Include">
+              <e p="Confetti.xaml" t="Include" />
+              <e p="Confetti.xaml.cs" t="Include" />
               <e p="EditorZone.xaml" t="Include" />
               <e p="EditorZone.xaml.cs" t="Include" />
               <e p="GamePanel.xaml" t="Include" />

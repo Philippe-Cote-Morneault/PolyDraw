@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,7 +26,6 @@ namespace ClientLourd.Views.Controls.Game
             Loaded += OnLoaded;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
-            SocketClient.NewPlayerIsDrawing += SocketClientNewDrawer;
             _random = new Random((int)DateTime.Now.Ticks);
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             _timer.Tick += (s, arg) => Confetti();
@@ -168,29 +168,24 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            
-            Application.Current.Dispatcher.Invoke(() =>
+            Task.Run(() =>
             {
-                Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
-                sb.Begin();
-            });
-            
-        }
-
-        private void SocketClientNewDrawer(object sender, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                if ((DataContext as GameViewModel).Round + 1 > 1)
+                Thread.Sleep(2000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
+                    sb.Begin();
+                });
+                Thread.Sleep(1000);
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
                     sb.Begin();
-                }                
+                });
             });
-            
         }
+
+
 
         private void StartConfetti()
         {
