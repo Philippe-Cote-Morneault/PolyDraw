@@ -155,6 +155,7 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 func (h *handler) init() {
 	h.channelsConnections = map[uuid.UUID]map[uuid.UUID]bool{}
 	h.channelsConnections[uuid.Nil] = make(map[uuid.UUID]bool)
+	setInstance(h)
 
 	var channels []model.ChatChannel
 	model.DB().Find(&channels)
