@@ -104,6 +104,7 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
+		OrderPoints(&stroke.points, path.Order)
 		// log.Printf("[Drawing] Number of points in stroke : %v", len(stroke.points))
 		s := stroke.clone()
 		splitPointsIntoPayloads(&payloads, &stroke.points, &s, path.Time)
