@@ -12,8 +12,8 @@ func (s *score) init() {
 
 //commit add the current score to the total
 func (s *score) commit(ptsToAdd int) {
-	s.current = ptsToAdd
-	s.total += s.current
+	s.current += ptsToAdd
+	s.total += ptsToAdd
 }
 
 //Reset the current score

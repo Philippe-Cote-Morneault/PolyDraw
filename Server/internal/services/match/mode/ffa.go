@@ -238,6 +238,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 
 			pointsForWord := f.calculateScore()
 			f.scores[player.Order].commit(pointsForWord)
+			f.scores[f.curDrawer.Order].commit(50)
 			total := f.scores[player.Order].total
 
 			f.receiving.Unlock()
