@@ -28,6 +28,7 @@ import com.log3900.chat.ChatManager
 import com.log3900.login.LoginActivity
 import com.log3900.settings.SettingsActivity
 import com.log3900.settings.language.LanguageManager
+import com.log3900.settings.sound.SoundManager
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -44,6 +45,8 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var hideShowMessagesFAB: CounterFab
+    private lateinit var toggleSoundEffectsButton: ImageView
+    private lateinit var toggleMusicButton: ImageView
     private lateinit var chatManager: ChatManager
     lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
@@ -103,6 +106,23 @@ open class MainActivity : AppCompatActivity() {
             }
         }
 
+        toggleSoundEffectsButton = findViewById(R.id.app_bar_main_image_view_volume)
+        toggleSoundEffectsButton.setOnClickListener {
+            SoundManager.toggleSoundEffect(!SoundManager.areSoundEffectsEnabled()).subscribe {
+                setSoundEffectsIcon(SoundManager.areSoundEffectsEnabled())
+            }
+        }
+
+        setSoundEffectsIcon(SoundManager.areSoundEffectsEnabled())
+
+        toggleMusicButton = findViewById(R.id.app_bar_main_image_view_music)
+        toggleMusicButton.setOnClickListener {
+            SoundManager.toggleMusic(!SoundManager.isMusicEnabled()).subscribe {
+                setMusicIcon(SoundManager.isMusicEnabled())
+            }
+        }
+
+        setMusicIcon(SoundManager.isMusicEnabled())
 
 
         setupUI()
@@ -203,6 +223,22 @@ open class MainActivity : AppCompatActivity() {
 
     private fun onUnreadMessagesChanged(unreadMessagesCount: Int) {
         hideShowMessagesFAB.count = unreadMessagesCount
+    }
+
+    private fun setSoundEffectsIcon(enabled: Boolean) {
+        if (enabled) {
+            toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_up_black)
+        } else {
+            toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_off_black)
+        }
+    }
+
+    private fun setMusicIcon(enabled: Boolean) {
+        if (enabled) {
+            toggleMusicButton.setImageResource(R.drawable.ic_music_note_black)
+        } else {
+            toggleMusicButton.setImageResource(R.drawable.ic_music_off_black)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
