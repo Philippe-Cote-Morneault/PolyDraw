@@ -8,6 +8,12 @@ type PlayersData struct {
 	Points   int
 }
 
+//PlayersRoundSum represent players with all the information for the round
+type PlayersRoundSum struct {
+	PlayersData
+	PointsTotal int
+}
+
 //ResponseGameInfo represents the message for type 61
 type ResponseGameInfo struct {
 	Players   []PlayersData
@@ -81,4 +87,15 @@ type PlayerSync struct {
 type PlayerHasLeft struct {
 	UserID   string
 	Username string
+}
+
+type AchievementData struct {
+	Name   string
+	UserID string
+}
+
+//RoundSummary used to tell the details about a round
+type RoundSummary struct {
+	Players      []PlayersRoundSum
+	Achievements []AchievementData
 }
