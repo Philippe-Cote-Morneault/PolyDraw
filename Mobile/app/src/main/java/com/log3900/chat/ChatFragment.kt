@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
 import com.log3900.chat.ui.MessageAdapter
+import com.log3900.settings.sound.SoundManager
 import com.log3900.user.account.AccountRepository
 import java.util.*
 
@@ -145,8 +146,7 @@ class ChatFragment : Fragment(), ChatView {
     }
 
     override fun playNewMessageNotification() {
-        val musicPlayer = MediaPlayer.create(this.context, R.raw.audio_notification_new_message)
-        musicPlayer.start()
+        SoundManager.playSoundEffect(context!!, R.raw.audio_notification_new_message)
     }
 
     override fun scrollMessage(smooth: Boolean) {
