@@ -142,7 +142,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (ThemeManager.hasActivityThemeChanged(this)) {
+        if (ThemeManager.hasActivityThemeChanged(this) || LanguageManager.hasContextLanguageChanged(baseContext)) {
             this.recreate()
             chatManager.openChat()
         }
