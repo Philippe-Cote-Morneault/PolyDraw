@@ -34,6 +34,9 @@ enum class EventType {
     MATCH_ENDED,
     // Session
     LOGOUT,
+    // Settings
+    LANGUAGE_CHANGED,
+    THEME_CHANGED
 
 }
 data class MessageEvent(var type: EventType, var data: Any?)
