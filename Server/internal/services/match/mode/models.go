@@ -89,6 +89,7 @@ type PlayerHasLeft struct {
 	Username string
 }
 
+//AchievementData represents data for an achievement
 type AchievementData struct {
 	Name   string
 	UserID string
