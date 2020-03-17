@@ -526,6 +526,7 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 		if p.userID == f.players[i].userID {
 			currentPos := f.orderPos
 			currentUser := f.players[f.order[currentPos]].userID
+			isCurrentUser := p.userID == currentUser
 
 			scoreMap := make(map[uuid.UUID]int)
 			for j := range f.players {
@@ -557,31 +558,31 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 			}
 
 			//Check if the order has changed
-			maxPos := len(f.order) - 1
+			maxPos := len(f.order)
 			if maxPos <= 0 {
 				f.orderPos = 0
 				return
 			}
 
-			same := currentPos % maxPos
+			if !isCurrentUser {
+				//Find the current drawer in the list
+				same := currentPos % maxPos
+				if f.players[same].userID == currentUser {
+					f.orderPos = same
+					return
+				}
 
-			if f.players[same].userID == currentUser {
-				f.orderPos = same
+				//Look in all the players to find its current position.
+				for j := range f.players {
+					if f.players[j].userID == currentUser {
+						f.orderPos = j
+						break
+					}
+				}
 				return
 			}
 
-			//Try increment or decrement
-			increment := (currentPos + 1) % maxPos
-			if f.players[increment].userID == currentUser {
-				f.orderPos = increment
-				return
-			}
-
-			decrement := (currentPos - 1) % maxPos
-			if f.players[decrement].userID == currentUser {
-				f.orderPos = decrement
-				return
-			}
+			f.orderPos = (currentPos + 1) % maxPos
 			return
 		}
 	}
