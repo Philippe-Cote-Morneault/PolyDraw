@@ -143,9 +143,6 @@ class ChatPresenter : Presenter {
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {
         chatView?.notifyNewMessage()
-        if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && account.username != (message.message as ReceivedMessage).username) {
-            chatView?.playNewMessageNotification()
-        }
     }
 
     override fun resume() {

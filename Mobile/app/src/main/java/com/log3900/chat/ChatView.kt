@@ -10,7 +10,6 @@ interface ChatView {
     fun notifyNewMessage()
     fun setChatMessages(messages: LinkedList<ChatMessage>)
     fun setCurrentChannnelName(name: String)
-    fun playNewMessageNotification()
     fun scrollMessage(smooth: Boolean)
     fun showProgressDialog(dialog: DialogFragment)
     fun hideProgressDialog(dialog: DialogFragment)
