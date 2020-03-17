@@ -176,7 +176,7 @@ func (f *FFA) GameLoop() {
 		return
 	}
 
-	//TODO send the packet of the end of round
+	f.sendRoundSummary()
 
 	f.currentWord = ""
 	f.resetGuess()
@@ -597,4 +597,27 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 			return
 		}
 	}
+}
+
+//sendRoundSummary used to send a summary of the round
+func (f *FFA) sendRoundSummary() {
+	roundEnd := socket.RawMessage{}
+	playersDetails := make([]PlayersRoundSum, len(f.players))
+	for i := range f.players {
+		player := &f.players[i]
+		playersDetails[i] = PlayersRoundSum{
+			PlayersData: PlayersData{
+				UserID:   player.userID.String(),
+				Username: player.Username,
+				IsCPU:    player.IsCPU,
+				Points:   f.scores[player.Order].current,
+			},
+			PointsTotal: f.scores[player.Order].total,
+		}
+	}
+	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
+		Players:      playersDetails,
+		Achievements: nil,
+	})
+	f.pbroadcast(&roundEnd)
 }
