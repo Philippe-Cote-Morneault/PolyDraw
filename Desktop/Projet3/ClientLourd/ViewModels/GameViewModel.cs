@@ -39,6 +39,7 @@ namespace ClientLourd.ViewModels
         private StrokesReader _stokesReader;
         private string _canvasMessage;
         private GameModes _mode;
+        private bool _roundStarted;
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
 
         public GameViewModel()
@@ -106,8 +107,10 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
         {
-
-            StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
+            if (_roundStarted)
+            {
+                StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
+            }
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
@@ -124,6 +127,7 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             Time = e.Time;
+            _roundStarted = true;
             CanStillGuess = true;
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
@@ -141,10 +145,9 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             //Enable the canvas
             Word = e.Word; 
+            _drawingID = e.DrawingID;
             ShowCanvasMessage($"It is your turn to draw to word {e.Word}");
             ChangeCanvasStatus(true);
-            _drawingID = e.DrawingID;
-            _stokesReader.Start(_drawingID);
         }
 
         private void SocketClientOnMatchSync(object source, EventArgs args)
@@ -373,6 +376,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
+
         public bool DrawerIsCPU
         {
             get => Players.First(p => p.IsDrawing).IsCPU;
@@ -415,13 +419,8 @@ namespace ClientLourd.ViewModels
         private void PrepareNextRound()
         {
             ChangeCanvasStatus(false);
-            _stokesReader.Stop();
+            _roundStarted = false;
             Word = "";
-            Task.Run(() =>
-            {
-                Thread.Sleep(100);
-                ClearCanvas();
-            });
         }
         private void SendGuess()
         {
@@ -440,12 +439,25 @@ namespace ClientLourd.ViewModels
         private void ChangeCanvasStatus(bool isEnable)
         {
             Application.Current.Dispatcher.Invoke(() => { Editor.IsEnabled = isEnable; });
+            if (isEnable)
+            {
+                _stokesReader.Start(_drawingID);
+            }
+            else
+            {
+                _stokesReader.Stop();
+                
+            }
+
+            Task.Run(() =>
+            {
+                Thread.Sleep(100);
+                ClearCanvas();
+            });
         }
 
         private void PrepareMatch()
         {
-            ChangeCanvasStatus(false);
-            ClearCanvas();
             _mode = Lobby.Mode;
             if (_mode == GameModes.FFA)
             {
@@ -458,6 +470,7 @@ namespace ClientLourd.ViewModels
             {
                 Players = Lobby.Players;
                 _stokesReader = new StrokesReader(Editor, SocketClient, ((EditorViewModel)Editor.DataContext).EditorInformation);
+                ChangeCanvasStatus(false);
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
             });
         }
