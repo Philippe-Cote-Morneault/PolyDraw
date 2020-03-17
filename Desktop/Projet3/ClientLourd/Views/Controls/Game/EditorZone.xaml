@@ -132,7 +132,7 @@
             </StackPanel>
         </StackPanel>
         <Grid>
-            <Grid Height="750" Width="1125" Background="Black" Opacity="0.2" Visibility="{Binding Path=IsMessageDisplay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
+            <Grid Height="750" Width="1125" Background="Black" Opacity="0.5" Visibility="{Binding Path=IsMessageDisplay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontWeight="Black" Foreground="White" Text="{Binding CanvasMessage}"/>
             </Grid>
             
