@@ -232,14 +232,14 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		model.DB().Model(&groupDB).Association("Users").Delete(&user)
 
+		messenger.HandleQuitGroup(&groupDB, socketID)
+
 		g.mutex.Lock()
 		if user.ID == groupDB.OwnerID {
 			//The owner has left the group
 			g.safeDeleteGroup(&groupDB)
 		}
 		g.mutex.Unlock()
-
-		messenger.HandleQuitGroup(&groupDB, socketID)
 
 	} else {
 		g.mutex.Unlock()
