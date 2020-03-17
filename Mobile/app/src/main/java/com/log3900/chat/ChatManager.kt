@@ -5,12 +5,20 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelManager
 import com.log3900.chat.Message.MessageManager
+import com.log3900.settings.sound.SoundManager
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import kotlin.NoSuchElementException
 
@@ -61,6 +69,7 @@ class ChatManager : Service() {
             channelManager?.init()
             messageManager?.init()
             setActiveChannel(channelManager?.activeChannel!!)
+            EventBus.getDefault().register(this)
             setReadyState()
             Looper.loop()
         }).start()
@@ -68,6 +77,7 @@ class ChatManager : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        EventBus.getDefault().unregister(this)
         instance = null
         isReady = false
         channelManager?.delete()
@@ -158,6 +168,19 @@ class ChatManager : Service() {
     private fun setReadyState() {
         isReady = true
         isReadySignal.onNext(true)
+    }
+
+    private fun onReceivedMessage(chatMessage: ChatMessage) {
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.audio_notification_new_message)
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.RECEIVED_MESSAGE -> {
+                onReceivedMessage(event.data as ChatMessage)
+            }
+        }
     }
 
     inner class ChatManagerBinder : Binder() {
