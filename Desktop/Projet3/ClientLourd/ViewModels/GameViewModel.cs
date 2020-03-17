@@ -363,6 +363,16 @@ namespace ClientLourd.ViewModels
             } 
         }
 
+        public GameModes Mode
+        {
+            get => _mode;
+            set
+            {
+                _mode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public bool DrawerIsCPU
         {
             get => Players.First(p => p.IsDrawing).IsCPU;

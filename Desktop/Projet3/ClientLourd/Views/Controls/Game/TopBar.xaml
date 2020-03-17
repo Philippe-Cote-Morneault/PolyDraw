@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Controls.Game"
+             xmlns:enum="clr-namespace:ClientLourd.Utilities.Enums"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              >
     <UserControl.Resources>
         <converter:HealthPointConverter x:Key="HealthPointConverter"/>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
         <Storyboard x:Key="TimerCloseToEnd" >
             <ColorAnimation  Duration="0:0:1" From="Black" To="Red"
                     AutoReverse="True"
@@ -96,7 +98,7 @@
                     <Run Text="{Binding TotalRound}"/>
                 </TextBlock>
             </StackPanel>
-            <StackPanel Margin="10" Orientation="Horizontal">
+            <StackPanel Visibility="{Binding Path=Mode, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static enum:GameModes.Solo}}" Margin="10" Orientation="Horizontal">
                 <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24"/>
                 <TextBlock Text="Best score: 345" FontSize="24"/>
             </StackPanel>
