@@ -97,6 +97,7 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 			//Make sure that we are the owner
 			currentUserID, _ := auth.GetUserID(socketID)
 			if groupDB.OwnerID == currentUserID {
+				//TODO handle virtual players
 				socketKickUser, err := auth.GetSocketID(userID)
 				if err == nil {
 					g.mutex.Unlock()
