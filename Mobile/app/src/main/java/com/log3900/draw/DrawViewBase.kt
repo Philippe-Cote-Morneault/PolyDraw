@@ -118,7 +118,6 @@ class DrawViewBase @JvmOverloads constructor(
         invalidate()
 //        if (canDraw)
 //            sendStrokeInfo()
-        Log.d("DRAW_VIEW", "START")
         if (canDraw)
             sendStrokeInfo()
     }
@@ -130,7 +129,6 @@ class DrawViewBase @JvmOverloads constructor(
         invalidate()
         if (canDraw)
             sendStrokeInfo()
-        Log.d("DRAW_VIEW", "MOVE")
     }
 
     fun drawEnd() {
@@ -157,7 +155,6 @@ class DrawViewBase @JvmOverloads constructor(
             mPaintOptions.strokeCap
         )
         invalidate()
-        Log.d("DRAW_VIEW", "END")
         if (canDraw)
             sendStrokeInfo()
     }
