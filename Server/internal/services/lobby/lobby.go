@@ -20,6 +20,7 @@ type Lobby struct {
 	join       cbroadcast.Channel
 	leave      cbroadcast.Channel
 	startMatch cbroadcast.Channel
+	kick       cbroadcast.Channel
 
 	groups   *groups
 	shutdown chan bool
@@ -85,6 +86,9 @@ func (l *Lobby) listen() {
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
 			l.groups.QuitGroup(rawMessage.SocketID)
+		case message := <-l.kick:
+			rawMessage := message.(socket.RawMessageReceived)
+			l.groups.QuitGroup(rawMessage.SocketID)
 		case message := <-l.startMatch:
 			rawMessage := message.(socket.RawMessageReceived)
 			l.groups.StartMatch(rawMessage.SocketID)
@@ -100,5 +104,5 @@ func (l *Lobby) subscribe() {
 	l.join, _, _ = cbroadcast.Subscribe(BJoinGroup)
 	l.leave, _, _ = cbroadcast.Subscribe(BLeaveGroup)
 	l.startMatch, _, _ = cbroadcast.Subscribe(BStartMatch)
-
+	l.kick, _, _ = cbroadcast.Subscribe(BKickUser)
 }
