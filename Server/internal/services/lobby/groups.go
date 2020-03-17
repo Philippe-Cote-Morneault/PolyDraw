@@ -78,7 +78,7 @@ func (g *groups) UnRegisterSession(socketID uuid.UUID) {
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		if groupDB.ID != uuid.Nil && err == nil {
 			model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
-
+			messenger.HandleQuitGroup(&groupDB, socketID)
 			//If user is owner we delete the group
 			if groupDB.OwnerID == userID {
 				g.safeDeleteGroup(&groupDB)
@@ -288,7 +288,7 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 		go socket.SendRawMessageToSocketID(message, v)
 	}
 
-	messenger.UnRegisterGroup(groupDB, []uuid.UUID{})
+	messenger.UnRegisterGroup(groupDB, g.groups[groupDB.ID])
 	//Remove all the data associated with the groups
 	for _, v := range g.groups[groupDB.ID] {
 		delete(g.assignment, v)
