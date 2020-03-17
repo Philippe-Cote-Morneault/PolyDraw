@@ -37,6 +37,14 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             true
         })
 
+        socketService.subscribeToMessage(Event.STROKE_ERASE_SERVER, Handler {
+            if (isListening) {
+                val message = it.obj as Message
+                onStrokeRemove(UUIDUtils.byteArrayToUUID(message.data))
+            }
+            true
+        })
+
 //        sendPreviewRequest()
     }
 
@@ -77,5 +85,9 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             delay(time)
         }
         drawView.drawEnd()
+    }
+
+    fun onStrokeRemove(strokeID: UUID) {
+        drawView.removeStroke(strokeID)
     }
 }

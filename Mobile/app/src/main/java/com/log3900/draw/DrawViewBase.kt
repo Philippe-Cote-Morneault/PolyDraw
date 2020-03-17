@@ -173,6 +173,16 @@ class DrawViewBase @JvmOverloads constructor(
         socketDrawingSender!!.sendStrokeDraw(strokeInfo)
     }
 
+    fun removeStroke(strokeID: UUID) {
+        mPaths.keys
+            .find { it.id == strokeID }
+            ?.let {
+                mPaths.remove(it)
+                it.reset()
+                invalidate()
+            }
+    }
+
     fun setOptions(options: PaintOptions) {
         mPaintOptions = options
     }
@@ -293,6 +303,9 @@ class DrawViewBase @JvmOverloads constructor(
         if (keyToRemove != null) {
             Log.d("DRAW_CANVAS", "Removing ${keyToRemove.toString()}")
             mPaths.remove(keyToRemove)
+            if (canDraw) {
+                socketDrawingSender?.sendStrokeRemove(keyToRemove.id)
+            }
             keyToRemove.reset()
         }
 //        val point = FloatPoint(x, y)

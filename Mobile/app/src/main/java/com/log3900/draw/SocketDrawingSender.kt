@@ -1,5 +1,6 @@
 package com.log3900.draw
 
+import android.util.Log
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.utils.format.UUIDUtils
@@ -35,5 +36,10 @@ class SocketDrawingSender() {
 
     fun sendStrokeEnd() {
         socketService.sendMessage(Event.DRAW_END_CLIENT, UUIDUtils.uuidToByteArray(drawingID))
+    }
+
+    fun sendStrokeRemove(strokeID: UUID) {
+        receiver!!.onStrokeRemove(strokeID)
+//        socketService.sendMessage(Event.STROKE_ERASE_CLIENT, UUIDUtils.uuidToByteArray((strokeID)))
     }
 }
