@@ -24,7 +24,7 @@
         <local:ChannelSection DockPanel.Dock="Left" />
         <!--Chat bottom section-->
         <DockPanel Background="White" DockPanel.Dock="Bottom"
-                   FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
+                   >
 
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <!--send button-->

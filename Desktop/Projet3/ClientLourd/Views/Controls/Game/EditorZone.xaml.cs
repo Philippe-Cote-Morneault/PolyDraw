@@ -27,6 +27,7 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
+            SocketClient.NewPlayerIsDrawing += SocketClientNewPlayerDrawing;
             _random = new Random((int)DateTime.Now.Ticks);
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             _timer.Tick += (s, arg) => Confetti();
@@ -267,5 +268,19 @@ namespace ClientLourd.Views.Controls.Game
             (DataContext as GameViewModel).GuessButtonIsDefault = true;
         }
 
+        private void SocketClientNewPlayerDrawing(object sender, EventArgs e)
+        {
+            FocusFirstTextBox();
+        }
+
+        private void FocusFirstTextBox()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
+                TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
+                textBox.Focus();
+            });
+        }
     }
 }
