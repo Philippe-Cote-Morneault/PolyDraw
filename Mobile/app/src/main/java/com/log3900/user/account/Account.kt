@@ -16,5 +16,7 @@ data class Account(
     var bearerToken:    String,
     var themeID:        Int,
     var languageID:     Int,
-    var tutorialDone: Boolean
+    var tutorialDone: Boolean,
+    var soundEffectsOn: Boolean,
+    var musicOn: Boolean
 )

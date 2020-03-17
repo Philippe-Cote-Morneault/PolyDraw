@@ -51,7 +51,6 @@ class AccountRepository {
     }
 
     fun getAccount(): Account {
-        Log.d("SESSION_TOKEN", "Session token: ${currentAccount!!.sessionToken}")
         return currentAccount!!
     }
 

@@ -97,7 +97,9 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
             originalAccount.bearerToken,
             originalAccount.themeID,
             originalAccount.languageID,
-            originalAccount.tutorialDone
+            originalAccount.tutorialDone,
+            originalAccount.soundEffectsOn,
+            originalAccount.musicOn
         )
         modifyProfilePresenter.updateAccountInfo(updatedAccount, password)
     }
