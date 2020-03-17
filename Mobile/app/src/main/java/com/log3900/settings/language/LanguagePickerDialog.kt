@@ -5,6 +5,9 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.log3900.MainApplication
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
+import org.greenrobot.eventbus.EventBus
 
 class LanguagePickerDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -14,6 +17,7 @@ class LanguagePickerDialog : DialogFragment() {
             .setPositiveButton("Save") { _, _ ->
                 LanguageManager.changeLanguage(selectedLanguage).subscribe {
                     LanguageManager.applySavedLanguage(MainApplication.instance.baseContext)
+                    EventBus.getDefault().post(MessageEvent(EventType.LANGUAGE_CHANGED, null))
                 }
             }
             .setNegativeButton("Cancel") { _, _ ->
