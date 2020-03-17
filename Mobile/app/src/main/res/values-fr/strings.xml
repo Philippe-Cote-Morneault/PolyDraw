@@ -136,4 +136,6 @@
     <string name="word_to_draw_title">Mot à dessiner:</string>
     <string name="guess">Deviner</string>
     <string name="Round">Ronde</string>
+    <string name="game_channel_name">Match Actif</string>
+    <string name="general_channel_name">Général</string>
 </resources>

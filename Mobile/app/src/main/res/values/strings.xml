@@ -166,4 +166,6 @@
     <string name="word_to_draw_title">Word to draw:</string>
     <string name="guess">Guess</string>
     <string name="Round">Round</string>
+    <string name="general_channel_name">General</string>
+    <string name="game_channel_name">Active Match</string>
 </resources>
