@@ -97,9 +97,11 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
+	f.receiving.Lock()
 	if (len(f.players)) <= 0 {
 		log.Printf("[Match] [FFA] No players will exit the game loop.")
 		f.isRunning = false
+		f.receiving.Unlock()
 		return
 	}
 	//Choose a user.
@@ -134,6 +136,8 @@ func (f *FFA) GameLoop() {
 	f.pbroadcast(&message)
 	f.timeStartImage = time.Now()
 	log.Printf("[Match] [FFA] -> Word sent waiting for guesses, Match: %s", f.info.ID)
+	f.receiving.Unlock()
+
 	f.receivingGuesses.Set()
 
 	//Make him draw
@@ -190,7 +194,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.pbroadcast(&leaveMessage)
 
 	//Check if drawing
-	if f.curDrawer.socketID == socketID {
+	if f.curDrawer != nil && f.curDrawer.socketID == socketID {
 		f.cancelWait() //We cancel the wait and finish the drawing for the client to see
 
 		//Finish the end of the drawing for the clients
