@@ -525,6 +525,10 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 	for i := range f.players {
 		if p.userID == f.players[i].userID {
 			currentPos := f.orderPos
+			if currentPos > len(f.order)-1 {
+				f.orderPos = 0
+				log.Printf("[Match] [FFA] -> Incorrect position relayed. %d in %v saved the server from crash (panic)", currentPos, f.order)
+			}
 			currentUser := f.players[f.order[currentPos]].userID
 			isCurrentUser := p.userID == currentUser
 
