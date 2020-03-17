@@ -306,11 +306,8 @@ func (g *groups) removeSocketGroup(socketID uuid.UUID, groupID uuid.UUID) {
 func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 	//We remove the group
 	uuidBytes, _ := groupDB.ID.MarshalBinary()
-	message := socket.RawMessage{
-		MessageType: byte(socket.MessageType.ResponseGroupRemoved),
-		Length:      uint16(len(uuidBytes)),
-		Bytes:       uuidBytes,
-	}
+	message := socket.RawMessage{}
+	message.ParseMessage(byte(socket.MessageType.ResponseGroupRemoved), uint16(len(uuidBytes)), uuidBytes)
 	//Broadcast a message to all the users in queue
 	for k := range g.queue {
 		go socket.SendRawMessageToSocketID(message, k)
