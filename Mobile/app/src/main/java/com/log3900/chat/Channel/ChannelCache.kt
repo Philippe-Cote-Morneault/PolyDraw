@@ -1,5 +1,7 @@
 package com.log3900.chat.Channel
 
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.user.account.AccountRepository
 import java.util.*
 
@@ -49,6 +51,10 @@ class ChannelCache {
 
         if (channel.isGame) {
             gameChannel = channel
+        }
+        
+        if (channel.ID == Channel.GENERAL_CHANNEL_ID) {
+            channel.name = MainApplication.instance.resources.getString(R.string.general_channel_name)
         }
     }
 
