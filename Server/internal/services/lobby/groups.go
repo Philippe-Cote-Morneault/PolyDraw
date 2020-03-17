@@ -87,6 +87,38 @@ func (g *groups) UnRegisterSession(socketID uuid.UUID) {
 	}
 }
 
+func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
+	g.mutex.Lock()
+	//Find the group and find the user socket id
+	if groupID, ok := g.assignment[socketID]; ok {
+		var groupDB model.Group
+		model.DB().Where("id = ?", groupID).First(&groupDB)
+		if groupDB.ID != uuid.Nil {
+			//Make sure that we are the owner
+			currentUserID, _ := auth.GetUserID(socketID)
+			if groupDB.OwnerID == currentUserID {
+				socketKickUser, err := auth.GetSocketID(userID)
+				if err == nil {
+					g.mutex.Unlock()
+					g.QuitGroup(socketKickUser)
+				} else {
+					g.mutex.Unlock()
+					go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user", socketID)
+				}
+			} else {
+				g.mutex.Unlock()
+				go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "Only the group owner can kick people out", socketID)
+			}
+		} else {
+			g.mutex.Unlock()
+			go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "The group could not be found", socketID)
+		}
+	} else {
+		g.mutex.Unlock()
+		go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "The user does not belong to a group", socketID)
+	}
+}
+
 //AddGroup add the group and send the message to all the users in queue
 func (g *groups) AddGroup(group *model.Group) {
 	defer g.mutex.Unlock()

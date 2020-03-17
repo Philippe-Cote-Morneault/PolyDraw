@@ -70,11 +70,13 @@ func (l *Lobby) listen() {
 		case id := <-l.connected:
 			log.Printf("[Lobby] -> New session id: %s", id)
 			l.groups.RegisterSession(id.(uuid.UUID))
+
 		case id := <-l.close:
 			log.Printf("[Lobby] -> Session disconnected id: %s", id)
 			socketID := id.(uuid.UUID)
 			l.groups.QuitGroup(socketID)
 			l.groups.UnRegisterSession(socketID)
+
 		case message := <-l.join:
 			rawMessage := message.(socket.RawMessageReceived)
 			groupID, err := uuid.FromBytes(rawMessage.Payload.Bytes)
@@ -83,15 +85,24 @@ func (l *Lobby) listen() {
 			} else {
 				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
 			}
+
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
 			l.groups.QuitGroup(rawMessage.SocketID)
+
 		case message := <-l.kick:
 			rawMessage := message.(socket.RawMessageReceived)
-			l.groups.QuitGroup(rawMessage.SocketID)
+			userID, err := uuid.FromBytes(rawMessage.Payload.Bytes)
+			if err == nil {
+				l.groups.KickUser(rawMessage.SocketID, userID)
+			} else {
+				socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "The uuid is invalid", rawMessage.SocketID)
+			}
+
 		case message := <-l.startMatch:
 			rawMessage := message.(socket.RawMessageReceived)
 			l.groups.StartMatch(rawMessage.SocketID)
+
 		case <-l.shutdown:
 			return
 		}
