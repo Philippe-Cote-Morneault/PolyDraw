@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import com.log3900.R
 import com.log3900.user.account.AccountRepository
+import io.reactivex.Completable
 
 class SoundManager {
     companion object {
@@ -19,6 +20,26 @@ class SoundManager {
                 val musicPlayer = MediaPlayer.create(context, audioRes)
                 musicPlayer.start()
             }
+        }
+
+        fun toggleSoundEffect(enabled: Boolean): Completable {
+            val account = AccountRepository.getInstance().getAccount()
+            account.soundEffectsOn = enabled
+            return AccountRepository.getInstance().updateAccount(account)
+        }
+
+        fun toggleMusic(enabled: Boolean): Completable {
+            val account = AccountRepository.getInstance().getAccount()
+            account.musicOn = enabled
+            return AccountRepository.getInstance().updateAccount(account)
+        }
+
+        fun areSoundEffectsEnabled(): Boolean {
+            return AccountRepository.getInstance().getAccount().soundEffectsOn
+        }
+
+        fun isMusicEnabled(): Boolean {
+            return AccountRepository.getInstance().getAccount().musicOn
         }
     }
 }
