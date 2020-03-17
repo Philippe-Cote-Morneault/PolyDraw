@@ -2,6 +2,7 @@
 using ClientLourd.Services.SocketService;
 using ClientLourd.ViewModels;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -84,6 +85,13 @@ namespace ClientLourd.Views.Controls
             MainWindow.ChatToggleButton.IsEnabled = false;
             MainWindow.RightDrawerContent.Children.Clear();
             ChatContainer.Content = MainWindow.ChatBox;
+            Task.Delay(50).ContinueWith(_ =>
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    (ChatContainer.Content as Chat).MessageTextBox.Focus();
+                }));
+            });
         }
     }
 }
