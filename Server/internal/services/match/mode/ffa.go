@@ -25,7 +25,7 @@ const imageDuration = 60000
 type FFA struct {
 	base
 	order  []int
-	scores []int //Scores data are in the order of the match so the first user to draw is the first one in the score board
+	scores []score //Scores data are in the order of the match so the first user to draw is the first one in the score board
 	//We can get the position with the field order
 	orderPos       int
 	curLap         int
@@ -55,7 +55,8 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.isRunning = true
 	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
-	f.scores = make([]int, len(f.players))
+
+	f.scores = make([]score, len(f.players))
 
 	f.curLap = 1
 	f.timeImage = imageDuration
@@ -175,6 +176,8 @@ func (f *FFA) GameLoop() {
 		return
 	}
 
+	//TODO send the packet of the end of round
+
 	f.currentWord = ""
 	f.resetGuess()
 	f.receiving.Unlock()
@@ -234,8 +237,8 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			player := f.connections[socketID]
 
 			pointsForWord := f.calculateScore()
-			f.scores[player.Order] += pointsForWord
-			total := f.scores[player.Order]
+			f.scores[player.Order].commit(pointsForWord)
+			total := f.scores[player.Order].total
 
 			f.receiving.Unlock()
 
@@ -259,7 +262,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		} else {
 			log.Printf("[Match] [FFA] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			players := f.connections[socketID]
-			scoreTotal := f.scores[players.Order]
+			scoreTotal := f.scores[players.Order].total
 			f.receiving.Unlock()
 
 			response := socket.RawMessage{}
@@ -272,7 +275,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		}
 	} else {
 		players := f.connections[socketID]
-		scoreTotal := f.scores[players.Order]
+		scoreTotal := f.scores[players.Order].total
 		f.receiving.Unlock()
 
 		response := socket.RawMessage{}
@@ -395,6 +398,7 @@ func (f *FFA) SetOrder() {
 func (f *FFA) resetGuess() {
 	for i := range f.players {
 		f.hasFoundit[f.players[i].socketID] = false
+		f.scores[f.players[i].Order].reset()
 	}
 
 	f.clientGuess = 0
@@ -410,7 +414,7 @@ func (f *FFA) syncPlayers() {
 		players[i] = PlayersData{
 			Username: player.Username,
 			UserID:   player.userID.String(),
-			Points:   f.scores[player.Order],
+			Points:   f.scores[player.Order].total,
 			IsCPU:    player.IsCPU,
 		}
 	}
@@ -485,14 +489,14 @@ func (f *FFA) finish() {
 	players := make([]PlayersData, len(f.scores))
 
 	for i := range f.scores {
-		if bestScore < f.scores[i] {
+		if bestScore < f.scores[i].total {
 			bestPlayerOrder = i
-			bestScore = f.scores[i]
+			bestScore = f.scores[i].total
 		}
 		players[i] = PlayersData{
 			Username: f.players[f.order[i]].Username,
 			UserID:   f.players[f.order[i]].userID.String(),
-			Points:   f.scores[i],
+			Points:   f.scores[i].total,
 			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
 	}
@@ -533,7 +537,7 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 			currentUser := f.players[f.order[currentPos]].userID
 			isCurrentUser := p.userID == currentUser
 
-			scoreMap := make(map[uuid.UUID]int)
+			scoreMap := make(map[uuid.UUID]score)
 			for j := range f.players {
 				scoreMap[f.players[j].userID] = f.scores[f.players[j].Order]
 			}
