@@ -11,6 +11,8 @@ import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.ChatRestService
 import com.log3900.chat.Message.UserJoinedChannelMessage
 import com.log3900.chat.Message.UserLeftChannelMessage
@@ -30,6 +32,8 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -150,6 +154,11 @@ class ChannelRepository : Service() {
         })
         val channelCreated = moshi.unpack<ChannelCreatedMessage>(message.data)
         val channel = Channel(channelCreated.channelID, channelCreated.name, channelCreated.isGame, arrayListOf(ChannelUser(channelCreated.username, channelCreated.userID)))
+
+        if (channel.isGame) {
+            channel.name = MainApplication.instance.resources.getString(R.string.game_channel_name)
+        }
+
         channelCache.addAvailableChannel(channel)
         EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_CREATED, channel))
     }
@@ -198,6 +207,13 @@ class ChannelRepository : Service() {
         }
     }
 
+    private fun onLanguageChanged() {
+        val generalChannel = channelCache.getChannel(Channel.GENERAL_CHANNEL_ID)
+        if (generalChannel != null) {
+            generalChannel.name = MainApplication.instance.resources.getString(R.string.general_channel_name)
+        }
+    }
+
     private fun handleSocketMessage(message: android.os.Message) {
         val socketMessage = message.obj as Message
 
@@ -228,6 +244,7 @@ class ChannelRepository : Service() {
             socketService?.subscribeToMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
             socketService?.subscribeToMessage(Event.JOINED_CHANNEL, socketMessageHandler!!)
             socketService?.subscribeToMessage(Event.LEFT_CHANNEL, socketMessageHandler!!)
+            EventBus.getDefault().register(this)
             Looper.loop()
         }).start()
     }
@@ -237,9 +254,19 @@ class ChannelRepository : Service() {
         socketService?.unsubscribeFromMessage(Event.JOINED_CHANNEL, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHANNEL_CREATED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHANNEL_DELETED, socketMessageHandler!!)
+        EventBus.getDefault().unregister(this)
         socketService = null
         instance = null
         super.onDestroy()
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.LANGUAGE_CHANGED -> {
+                onLanguageChanged()
+            }
+        }
     }
 
 
