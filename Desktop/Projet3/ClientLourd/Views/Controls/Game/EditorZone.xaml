@@ -84,44 +84,52 @@
     
     <DockPanel Margin="10">
         <StackPanel 
-            Height="50"
-            DockPanel.Dock="Bottom"
             Orientation="Horizontal"
-            Visibility="{Binding Path=IsYourTurn, Converter={StaticResource BooleanToVisibilityConverter}}">
-            
-            <TextBlock FontWeight="Medium" FontSize="24" Text="The word is " VerticalAlignment="Center"/>
-            <TextBlock FontWeight="Medium" FontSize="24" Text="{Binding Word}" Foreground="Red" VerticalAlignment="Center"/>
-        </StackPanel>
-        <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}" DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
-            <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+                DockPanel.Dock="Bottom">
+            <StackPanel 
+                Height="50"
+                Orientation="Horizontal"
+                Visibility="{Binding Path=IsYourTurn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="5 0 5 0"></StackPanel>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        
-                        <TextBox  x:Name="textbox" FontSize="24" Tag="{Binding 
-                                 Path=(ItemsControl.AlternationIndex), 
-                                 RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1" Foreground="Black">
-                            <TextBox.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                                
-                            </TextBox.RenderTransform>
-                        </TextBox>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <Button Command="{Binding SendGuessCommand}" IsDefault="True" IsEnabled="{Binding CanStillGuess}">
-                Guess
-            </Button>
+                <TextBlock FontWeight="Medium" FontSize="24" Text="The word is " VerticalAlignment="Center"/>
+                <TextBlock FontWeight="Medium" FontSize="24" Text="{Binding Word}" Foreground="Red" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}"  Orientation="Horizontal">
+                <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
+                <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+                    
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="5 0 5 0"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            
+                            <TextBox  x:Name="textbox" FontSize="24" Tag="{Binding 
+                                     Path=(ItemsControl.AlternationIndex), 
+                                     RelativeSource={RelativeSource Mode=TemplatedParent}}" PreviewKeyDown="UIElement_OnKeyDown" TextChanged="TextBoxBase_OnTextChanged" FontWeight="Bold" Margin="3" Width="20" MaxLength="1" Foreground="Black">
+                                <TextBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                    
+                                </TextBox.RenderTransform>
+                            </TextBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Command="{Binding SendGuessCommand}" IsDefault="True" IsEnabled="{Binding CanStillGuess}">
+                    Guess
+                </Button>
+                
+                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{materialDesign:PackIcon Kind=QuestionMark}" 
+                     Style="{StaticResource MaterialDesignIconButton}" 
+                     Command="{Binding Path=AskHintCommand}"
+                    Margin="10 0 10 0"/>
+            </StackPanel>
         </StackPanel>
         <Grid>
             <Grid Height="750" Width="1125" Background="Black" Opacity="0.2" Visibility="{Binding Path=IsMessageDisplay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">

@@ -62,6 +62,20 @@ namespace ClientLourd.ViewModels
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
+            SocketClient.HintResponse += SocketClientOnHintResponse;
+        }
+
+        private void SocketClientOnHintResponse(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+            if (e.HasHint)
+            {
+                DialogHost.Show(((MatchEventArgs) args).Hint);
+            }
+            else
+            {
+                DialogHost.Show(((MatchEventArgs) args).Error);
+            }
         }
 
         public SoundService SoundService
@@ -113,6 +127,7 @@ namespace ClientLourd.ViewModels
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
+            NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID)
             {
                 ShowCanvasMessage($"{e.Username} is drawing the next word !");
@@ -347,12 +362,30 @@ namespace ClientLourd.ViewModels
             } 
         }
 
+        public bool DrawerIsCPU
+        {
+            get => Players.First(p => p.IsDrawing).IsCPU;
+        }
+
         public bool IsMessageDisplay
         {
             get => !String.IsNullOrWhiteSpace(CanvasMessage);
         }
 
         public Editor Editor { get; set; }
+        
+        RelayCommand<object> _askHintCommand;
+
+        public ICommand AskHintCommand
+        {
+            get
+            {
+                return _askHintCommand ??
+                       (_askHintCommand = new RelayCommand<object>(channel => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint))));
+            }
+        }
+        
+        
         
         RelayCommand<object> _sendGuessCommand;
 
@@ -364,6 +397,8 @@ namespace ClientLourd.ViewModels
                        (_sendGuessCommand = new RelayCommand<object>(channel => SendGuess()));
             }
         }
+        
+        
         
         private void PrepareNextRound()
         {

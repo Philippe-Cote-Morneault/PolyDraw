@@ -237,7 +237,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.UserDeletedStroke:
                             OnUserDeleteStroke(this, new DrawingEventArgs(data));
                             break;
-                        
+                        case SocketMessageTypes.HintResponse:
+                            OnHintResponse(this, new MatchEventArgs(data));
+                            break;
                         default:
                             throw new InvalidDataException();
                     }                    

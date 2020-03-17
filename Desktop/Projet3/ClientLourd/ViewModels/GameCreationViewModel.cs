@@ -31,6 +31,7 @@ namespace ClientLourd.ViewModels
 
         public GameCreationViewModel()
         {
+            Word = "";
             _numberStrokesReceived = 0;
             PreviewGUIEnabled = true;
             Hints = new ObservableCollection<string>(new string[3]);

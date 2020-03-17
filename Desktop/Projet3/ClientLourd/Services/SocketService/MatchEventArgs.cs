@@ -90,6 +90,20 @@ namespace ClientLourd.Services.SocketService
         {
             get => _data["WinnerName"];
         }
+
+        public bool HasHint
+        {
+            get => ((Dictionary<string,string>)_data).ContainsKey("Hint");
+        }
+        public string Hint
+        {
+            get => _data["Hint"];
+        }
+        
+        public string Error
+        {
+            get => _data["Error"];
+        }
         
     }
 }

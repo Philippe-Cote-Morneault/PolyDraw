@@ -124,6 +124,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler MatchStarted;
         public event SocketEventHandler AreYouReady;
         public event SocketEventHandler UserDeleteStroke;
+        public event SocketEventHandler HintResponse;
 
 
         protected virtual void OnMatchStarted(object source)
@@ -185,6 +186,10 @@ namespace ClientLourd.Services.SocketService
             UserDeleteStroke?.Invoke(source, e);
         }
 
+        protected virtual void OnHintResponse(object source, EventArgs e)
+        {
+            HintResponse?.Invoke(source, e);
+        }
 
 
         //Lobby relate

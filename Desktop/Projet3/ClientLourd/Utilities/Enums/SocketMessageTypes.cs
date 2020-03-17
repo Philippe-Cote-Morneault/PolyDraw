@@ -51,6 +51,8 @@
         PlayerGuessed = 77,
         MatchCheckPoint = 79,
         MatchEnd = 81,
+        AskForHint = 82,
+        HintResponse = 83,
         ServerMessage = 255,
     }
 }
