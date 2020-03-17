@@ -134,8 +134,11 @@ namespace ClientLourd.Services.InkCanvas
         private void CanvasOnMouseDown(object sender, MouseButtonEventArgs e)
         {
             _mutex.WaitOne();
-            _currentStrokeID = Guid.NewGuid();
-            _points.Add(e.GetPosition(_editor.Canvas));
+            if (((EditorViewModel) _editor.DataContext).EditorInformation.SelectedTool != InkCanvasEditingMode.EraseByStroke)
+            {
+                _currentStrokeID = Guid.NewGuid();
+                _points.Add(e.GetPosition(_editor.Canvas));
+            }
             _mutex.ReleaseMutex();
         }
 
