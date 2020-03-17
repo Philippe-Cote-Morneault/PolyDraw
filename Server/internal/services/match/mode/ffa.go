@@ -390,6 +390,7 @@ func (f *FFA) SetOrder() {
 	for i := range f.order {
 		playerPos := f.order[i]
 		f.players[playerPos].Order = playerPos
+		f.scores[playerPos].init() //Init the score to make sure they are at zero
 	}
 
 	f.orderPos = 0
