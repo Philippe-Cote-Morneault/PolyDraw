@@ -66,6 +66,7 @@ namespace ClientLourd.ViewModels
                        (_changeColorCommand = new RelayCommand<Color>(color =>
                        {
                            EditorInformation.SelectedColor = color;
+                           OnSelectPen();
                        }));
             }
         }
@@ -77,6 +78,15 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             //TODO 
+        }
+
+        public delegate void EditorEventHandler(object sender, EventArgs args);
+
+        public event EditorEventHandler SelectPen;
+
+        protected virtual void OnSelectPen()
+        {
+            SelectPen?.Invoke(this, EventArgs.Empty);
         }
     }
 }

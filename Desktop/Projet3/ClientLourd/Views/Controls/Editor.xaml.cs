@@ -51,6 +51,7 @@ namespace ClientLourd.Views.Controls
         {
             // Bubble inkCanvas event so we can capture it
             Canvas.AddHandler(InkCanvas.MouseLeftButtonDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
+            ViewModel.SelectPen += (o, args) => { SelectPen(); };
         }
 
         private Button _selectedColor;
@@ -170,11 +171,6 @@ namespace ClientLourd.Views.Controls
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.EditorInformation.IsAnEraser)
-            {
-                return;
-            }
-
             if (_selectedColor != null)
             {
                 _selectedColor.Background = Brushes.Transparent;
