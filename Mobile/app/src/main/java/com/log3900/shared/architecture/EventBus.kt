@@ -31,8 +31,12 @@ enum class EventType {
     PLAYER_GUESSED_WORD,
     PLAYER_LEFT_GAME,
     POINTS_GAINED,
+    MATCH_ENDED,
     // Session
     LOGOUT,
+    // Settings
+    LANGUAGE_CHANGED,
+    THEME_CHANGED
 
 }
 data class MessageEvent(var type: EventType, var data: Any?)

@@ -15,6 +15,7 @@ interface ActiveMatchView {
     fun enableDrawFunctions(enable: Boolean, drawingID: UUID?)
     fun clearCanvas()
     fun setTimeValue(time: String)
+    fun setRoundsValue(rounds: String)
     fun showWordGuessingView()
     fun showWordToDrawView()
     fun notifyPlayersChanged()

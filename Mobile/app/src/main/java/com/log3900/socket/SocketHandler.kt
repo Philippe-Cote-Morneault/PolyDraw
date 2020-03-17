@@ -177,11 +177,13 @@ object SocketHandler {
             }
 
         } catch (e: SocketException){
+            Log.d("POTATO", "Caught socket exception when reading = $e")
             val sw = StringWriter()
             val pw = PrintWriter(sw)
             e.printStackTrace(pw)
             handlerError()
         } catch (e: EOFException) {
+            Log.d("POTATO", "Caught socket exception when reading = $e")
             handlerError()
         }
     }

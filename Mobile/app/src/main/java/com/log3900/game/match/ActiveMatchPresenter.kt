@@ -1,8 +1,10 @@
 package com.log3900.game.match
 
 import android.util.Log
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.group.Group
+import com.log3900.game.group.MatchMode
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
@@ -58,7 +60,13 @@ class ActiveMatchPresenter : Presenter {
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
+        val currentMatch = matchManager.getCurrentMatch()
         activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
+        
+        if (currentMatch.matchType == MatchMode.FFA) {
+            val totalRounds = (currentMatch as FFAMatch).laps
+            activeMatchView?.setRoundsValue(MainApplication.instance.getString(R.string.Round) + " ${synchronisation.laps}/${totalRounds}")
+        }
     }
 
     private fun onMatchPlayersUpdated() {

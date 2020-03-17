@@ -36,18 +36,8 @@ class ChannelManager {
 
         if (availableChannels.contains(channel)) {
             ChannelRepository.instance?.subscribeToChannel(channel)
-            EventBus.getDefault().post(MessageEvent(EventType.SUBSCRIBED_TO_CHANNEL, channel))
         } else if (joinedChannels.contains(channel)){
-            if (activeChannel == channel) {
-                val newActiveChannel = joinedChannels.find {
-                    it.ID.toString() == "00000000-0000-0000-0000-000000000000"
-                }!!
-                changeActiveChannel(newActiveChannel)
-                previousChannel = newActiveChannel
-            }
             ChannelRepository.instance?.unsubscribeFromChannel(channel)
-
-            EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
         } else {
             // TODO: Handle this incoherent state
         }
@@ -86,6 +76,12 @@ class ChannelManager {
             }
             EventType.RECEIVED_MESSAGE -> {
                 onMessageReceived(event.data as ChatMessage)
+            }
+            EventType.SUBSCRIBED_TO_CHANNEL -> {
+                onSubscribedToChannel(event.data as Channel)
+            }
+            EventType.UNSUBSCRIBED_FROM_CHANNEL -> {
+                onUnsubscribedFromChannel(event.data as Channel)
             }
         }
     }
@@ -149,6 +145,22 @@ class ChannelManager {
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         } else {
             EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED, message))
+        }
+    }
+
+    private fun onSubscribedToChannel(channel: Channel) {
+        if (channel.isGame) {
+            changeActiveChannel(channel)
+        }
+    }
+
+    private fun onUnsubscribedFromChannel(channel: Channel) {
+        if (activeChannel == channel) {
+            val newActiveChannel = joinedChannels.find {
+                it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+            }!!
+            changeActiveChannel(newActiveChannel)
+            previousChannel = newActiveChannel
         }
     }
 

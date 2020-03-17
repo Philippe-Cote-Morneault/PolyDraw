@@ -2,9 +2,13 @@ package com.log3900.settings.language
 
 import android.content.Context
 import android.content.res.Resources
+import com.log3900.MainApplication
 import com.log3900.R
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class LanguageManager {
@@ -15,6 +19,7 @@ class LanguageManager {
     }
 
     companion object {
+        private val registeredContexes: HashMap<Context, Int> = HashMap()
         private val languages: ArrayList<Language> = arrayListOf(
             Language(LANGUAGE.SYSTEM.ordinal, "", R.string.language_system_title),
             Language(LANGUAGE.ENGLISH.ordinal, "en", R.string.language_english_title),
@@ -43,6 +48,11 @@ class LanguageManager {
                 configuration.setLocale(Resources.getSystem().configuration.locales[0])
             }
             res.updateConfiguration(configuration, displayMetric)
+            registeredContexes[context] = getCurrentLanguage().index
+        }
+
+        fun hasContextLanguageChanged(context: Context): Boolean {
+            return registeredContexes[context] != getCurrentLanguage().index
         }
     }
 }

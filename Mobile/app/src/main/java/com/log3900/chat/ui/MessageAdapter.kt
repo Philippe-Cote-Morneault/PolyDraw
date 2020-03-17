@@ -78,10 +78,14 @@ class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String
     }
 
     fun smoothScrollToBottom() {
-        recyclerView.smoothScrollToPosition(messages.size - 1)
+        if (messages.size > 0) {
+            recyclerView.smoothScrollToPosition(messages.size - 1)
+        }
     }
 
     fun scrollToBottom() {
-        recyclerView.scrollToPosition(messages.size - 1)
+        if (messages.size > 0) {
+            recyclerView.scrollToPosition(messages.size - 1)
+        }
     }
 }
