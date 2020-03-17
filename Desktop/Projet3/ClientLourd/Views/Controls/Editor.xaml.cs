@@ -18,6 +18,7 @@ using ClientLourd.Utilities.Extensions;
 using ClientLourd.Utilities.Constants;
 using ClientLourd.Services.SocketService;
 using System.Windows.Media.Animation;
+using GongSolutions.Wpf.DragDrop.Utilities;
 
 namespace ClientLourd.Views.Controls
 {
@@ -117,8 +118,12 @@ namespace ClientLourd.Views.Controls
             textBlockPosition.Text = Math.Round(p.X) + ", " + Math.Round(p.Y) + "px";
         }
 
+        public void SelectPen()
+        {
+            ToolsList.SetSelectedItem(PencilTool);
+        }
 
-        public void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
                 if(Canvas != null)
                 {

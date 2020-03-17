@@ -431,7 +431,7 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Editor.ToolsList_OnSelectionChanged(Editor.PencilTool, null);
+                Editor.SelectPen();
                 Editor.Canvas.Strokes.Clear();
             });
         }
