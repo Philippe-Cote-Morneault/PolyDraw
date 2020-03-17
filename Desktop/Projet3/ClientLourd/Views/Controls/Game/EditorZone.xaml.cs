@@ -275,11 +275,14 @@ namespace ClientLourd.Views.Controls.Game
 
         private void FocusFirstTextBox()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Task.Delay(50).ContinueWith(_ =>
             {
-                ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
-                TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
-                textBox.Focus();
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
+                    TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
+                    textBox.Focus();
+                }));
             });
         }
     }
