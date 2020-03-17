@@ -19,6 +19,7 @@
         <viewModels:ChatViewModel />
     </UserControl.DataContext>
     <DockPanel>
+           
         <!-- ChannelSection -->
         <local:ChannelSection DockPanel.Dock="Left" />
         <!--Chat bottom section-->
@@ -28,7 +29,7 @@
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <!--send button-->
                 <Button Margin="5"
-                        IsDefault="True"
+                        IsDefault="{Binding ElementName=MessageTextBox, Path=IsFocused}"
                         ToolTip="Send the message"
                         Style="{DynamicResource MaterialDesignToolForegroundButton}"
 

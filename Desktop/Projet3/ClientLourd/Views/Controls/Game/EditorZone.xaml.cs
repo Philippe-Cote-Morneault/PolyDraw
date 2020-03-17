@@ -257,5 +257,15 @@ namespace ClientLourd.Views.Controls.Game
             story.Begin();
         }
 
+        public void OnFocusLost(object sender, EventArgs e)
+        {
+            (DataContext as GameViewModel).GuessButtonIsDefault = false;
+        }
+
+        public void OnFocus(object sender, EventArgs e)
+        {
+            (DataContext as GameViewModel).GuessButtonIsDefault = true;
+        }
+
     }
 }

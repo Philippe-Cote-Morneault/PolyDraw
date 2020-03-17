@@ -506,5 +506,6 @@ namespace ClientLourd.ViewModels
         }
 
         private List<Channel> _channels;
+  
     }
 }

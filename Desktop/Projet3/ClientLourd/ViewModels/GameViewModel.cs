@@ -376,6 +376,7 @@ namespace ClientLourd.ViewModels
         public bool DrawerIsCPU
         {
             get => Players.First(p => p.IsDrawing).IsCPU;
+            
         }
 
         public bool IsMessageDisplay
@@ -469,6 +470,18 @@ namespace ClientLourd.ViewModels
                 Thread.Sleep(2000);
                 CanvasMessage = "";
             });
+        }
+
+
+        private bool _guessButtonIsDefault;
+        public bool GuessButtonIsDefault
+        {
+            get => _guessButtonIsDefault;
+            set
+            {
+                _guessButtonIsDefault = value;
+                NotifyPropertyChanged();
+            }
         }
 
 

@@ -23,7 +23,6 @@ namespace ClientLourd.Views.Controls
             get { return (bool) GetValue(IsWaitingProperty); }
             set { SetValue(IsWaitingProperty, value); }
         }
-        
 
         public void OnChatToggle(bool isOpen)
         {

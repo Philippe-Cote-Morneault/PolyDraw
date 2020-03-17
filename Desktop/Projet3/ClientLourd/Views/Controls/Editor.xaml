@@ -19,117 +19,117 @@
         <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
     </UserControl.Resources>
     <materialDesign:Card   materialDesign:ShadowAssist.ShadowDepth="Depth4">
-    <DockPanel >
-        <Border DockPanel.Dock="Top" BorderThickness="0,0.5,0,0.5" BorderBrush="#77000000">
-            <ToolBarTray>
-                <ToolBar Style="{DynamicResource MaterialDesignToolBar}"
+        <DockPanel >
+            <Border DockPanel.Dock="Top" BorderThickness="0,0.5,0,0.5" BorderBrush="#77000000">
+                <ToolBarTray>
+                    <ToolBar Style="{DynamicResource MaterialDesignToolBar}"
                          ClipToBounds="False">
-                    <ListBox
+                        <ListBox
                         x:Name="ToolsList"
                         SelectionChanged="ToolsList_OnSelectionChanged"
                         Style="{StaticResource MaterialDesignToolToggleListBox}"
                         SelectedIndex="0">
-                        <ListBoxItem
+                            <ListBoxItem
                             ToolTip="Pencil"
                             Name="PencilTool"
                             Tag="{x:Static InkCanvasEditingMode.Ink}">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                 Kind="Pencil" />
-                        </ListBoxItem>
-                        <ListBoxItem
+                            </ListBoxItem>
+                            <ListBoxItem
                             Name="EraseByPointTool"
                             ToolTip="Erase by point"
                             Tag="{x:Static InkCanvasEditingMode.EraseByPoint}">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                 Kind="PencilRemove" />
-                        </ListBoxItem>
-                        <ListBoxItem
+                            </ListBoxItem>
+                            <ListBoxItem
                             Name="EraseByStroke"
                             ToolTip="Erase by stroke"
                             Tag="{x:Static InkCanvasEditingMode.EraseByStroke}">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                 Kind="Eraser" />
-                        </ListBoxItem>
-                    </ListBox>
-                    <Separator />
+                            </ListBoxItem>
+                        </ListBox>
+                        <Separator />
 
-                    <ListBox
+                        <ListBox
                         x:Name="TipsList"
                         SelectionChanged="TipsList_OnSelectionChanged"
                         Style="{StaticResource MaterialDesignToolToggleListBox}"
                         SelectedIndex="0">
-                        <ListBoxItem
+                            <ListBoxItem
                             ToolTip="Circle tip"
                             Tag="{x:Static StylusTip.Ellipse}">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                 Kind="Circle" />
-                        </ListBoxItem>
-                        <ListBoxItem
+                            </ListBoxItem>
+                            <ListBoxItem
                             ToolTip="Square tip"
                             Tag="{x:Static StylusTip.Rectangle}">
-                            <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                 Kind="Square" />
-                        </ListBoxItem>
-                    </ListBox>
-                    <Separator />
+                            </ListBoxItem>
+                        </ListBox>
+                        <Separator />
                         <ItemsControl>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel Width="80" Height="40" />
-                                    
+
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Items>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Black" Tag="{x:Static Colors.Black}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Black" Tag="{x:Static Colors.Black}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="White" Tag="{x:Static Colors.White}"/>
+                                    <Ellipse Width="15" Height="15" Fill="White" Tag="{x:Static Colors.White}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Red" Tag="{x:Static Colors.Red}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Red" Tag="{x:Static Colors.Red}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Green" Tag="{x:Static Colors.Green}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Green" Tag="{x:Static Colors.Green}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Blue" Tag="{x:Static Colors.Blue}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Blue" Tag="{x:Static Colors.Blue}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Yellow" Tag="{x:Static Colors.Yellow}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Yellow" Tag="{x:Static Colors.Yellow}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Cyan" Tag="{x:Static Colors.Cyan}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Cyan" Tag="{x:Static Colors.Cyan}"/>
                                 </Button>
                                 <Button Padding="0" Margin="0" Click="ButtonBase_OnClick"  Style="{StaticResource MaterialDesignFlatButton}" Width="20" Height="20">
-                                        <Ellipse Width="15" Height="15" Fill="Magenta" Tag="{x:Static Colors.Magenta}"/>
+                                    <Ellipse Width="15" Height="15" Fill="Magenta" Tag="{x:Static Colors.Magenta}"/>
                                 </Button>
                             </ItemsControl.Items>
                         </ItemsControl>
-                    <Separator />
-                    <Slider Width="100" Minimum="1" Maximum="100"
+                        <Separator />
+                        <Slider Width="100" Minimum="1" Maximum="100"
                             ToolTip="Brush size"
                             Name="BrushSizeSlider"
                             TickFrequency="10"
                             Value="{Binding Path=EditorInformation.BrushSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                </ToolBar>
-            </ToolBarTray>
+                    </ToolBar>
+                </ToolBarTray>
 
-        </Border>
+            </Border>
 
-        <Border DockPanel.Dock="Bottom" Height="25" BorderThickness="0,0.75,0,0.75" BorderBrush="#77000000">
-            <StackPanel Orientation="Horizontal" Background="#FFF0F0F0">
-                <Image Source="Resources/position.png" Margin="5,5,5,5" VerticalAlignment="Center" />
-                <TextBlock Name="textBlockPosition" VerticalAlignment="Center" HorizontalAlignment="Left" />
-            </StackPanel>
-        </Border>
-        <Grid Background="WhiteSmoke">
-            
-            <Canvas  
+            <Border DockPanel.Dock="Bottom" Height="25" BorderThickness="0,0.75,0,0.75" BorderBrush="#77000000">
+                <StackPanel Orientation="Horizontal" Background="#FFF0F0F0">
+                    <Image Source="Resources/position.png" Margin="5,5,5,5" VerticalAlignment="Center" />
+                    <TextBlock Name="textBlockPosition" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+            <Grid Background="WhiteSmoke">
+
+                <Canvas  
                 Width="1125"
                 Height="750"
                 >
-                <InkCanvas  ClipToBounds="True"  Name="Canvas"
+                    <InkCanvas  ClipToBounds="True"  Name="Canvas"
                             Width="1125"
                             Height="750"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
@@ -146,21 +146,8 @@
                         <Ellipse Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Ellipse}}"   Name="Ellipse"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
                         <Rectangle Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Rectangle}}"   Name="Rectangle"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
                     </Grid>
-            </Canvas>
-        </Grid>
-    </DockPanel>
-
-           <!-- <InkCanvas ClipToBounds="True"  Name="Canvas"
-                       Width="1125"
-                       Height="750"
-                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                       MouseLeave="surfaceDessin_MouseLeave" MouseMove="surfaceDessin_MouseMove"
-                       Strokes="{Binding Path=EditorInformation.Strokes, Mode=OneTime}"
-                       MouseDown="SaveDrawDebutTime"
-                       StrokeCollected="OnStrokeAdded"
-                       StrokeErasing="OnStrokeErase"
-                       EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                       DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}"/>
-        </DockPanel>-->
+                </Canvas>
+            </Grid>
+        </DockPanel>
     </materialDesign:Card>
 </UserControl>

@@ -96,7 +96,7 @@
             </StackPanel>
             <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}"  Orientation="Horizontal">
                 <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
-                <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}">
+                <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}" LostFocus="OnFocusLost" GotFocus="OnFocus">
                     
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -121,7 +121,7 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <Button Command="{Binding SendGuessCommand}" IsDefault="True" IsEnabled="{Binding CanStillGuess}">
+                <Button Command="{Binding SendGuessCommand}" IsDefault="{Binding GuessButtonIsDefault}" IsEnabled="{Binding CanStillGuess}">
                     Guess
                 </Button>
                 

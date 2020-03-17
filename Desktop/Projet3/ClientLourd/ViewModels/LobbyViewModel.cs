@@ -23,8 +23,8 @@ namespace ClientLourd.ViewModels
         private bool _canStart;
         public bool CanStart
         {
-            get 
-            { 
+            get
+            {
                 return _canStart;
             }
             set
@@ -196,17 +196,17 @@ namespace ClientLourd.ViewModels
                     return true;
                 }
             }
-            
+
             return false;
         }
 
         private bool UserIsHost()
         {
-            if (SessionInformations != null && SessionInformations.User !=  null)
+            if (SessionInformations != null && SessionInformations.User != null)
             {
                 return CurrentLobby.HostID == SessionInformations.User.ID;
             }
-            
+
             return false;
         }
 
@@ -245,7 +245,7 @@ namespace ClientLourd.ViewModels
 
             if (CurrentLobby != null)
             {
-                
+
                 foreach (Player player in CurrentLobby.Players)
                 {
                     if (!player.IsCPU)
@@ -294,6 +294,5 @@ namespace ClientLourd.ViewModels
                 CanStart = CanStartGame();
             });
         }
-
     }
 }

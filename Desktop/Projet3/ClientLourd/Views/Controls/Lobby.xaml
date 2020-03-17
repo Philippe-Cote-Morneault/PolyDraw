@@ -86,7 +86,7 @@
         <Grid DockPanel.Dock="Left" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
             <game:GamePanel/>
         </Grid>
-        
+
         <materialDesign:Card Name="ChatContainer"/>
 
     </DockPanel>
