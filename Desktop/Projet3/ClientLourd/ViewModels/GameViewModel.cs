@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
@@ -420,6 +421,7 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                Editor.ToolsList_OnSelectionChanged(Editor.PencilTool, null);
                 Editor.Canvas.Strokes.Clear();
             });
         }

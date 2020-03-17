@@ -118,7 +118,7 @@ namespace ClientLourd.Views.Controls
         }
 
 
-        private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
                 if(Canvas != null)
                 {
@@ -294,8 +294,8 @@ namespace ClientLourd.Views.Controls
                     e.Handled = true;
                 }
             }
-            System.Windows.Controls.Canvas.SetTop(Ellipse,p.Y - BrushSizeSlider.Value/2);
-            System.Windows.Controls.Canvas.SetLeft(Ellipse,p.X - BrushSizeSlider.Value/2);
+            System.Windows.Controls.Canvas.SetTop(EraserIndicator,p.Y - BrushSizeSlider.Value/2);
+            System.Windows.Controls.Canvas.SetLeft(EraserIndicator,p.X - BrushSizeSlider.Value/2);
  
             
         }
@@ -305,9 +305,7 @@ namespace ClientLourd.Views.Controls
             if (e.Delta > 0 && BrushSizeSlider.Value + 5 < BrushSizeSlider.Maximum)
                 BrushSizeSlider.Value += 5;
             else if(e.Delta < 0 && BrushSizeSlider.Value -5 > BrushSizeSlider.Minimum)
-            {
                 BrushSizeSlider.Value -= 5;
-            }
         }
     }
 }
