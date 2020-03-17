@@ -13,6 +13,7 @@ import com.log3900.chat.Message.MessageRepository
 import com.log3900.game.group.GroupManager
 import com.log3900.game.group.GroupRepository
 import com.log3900.game.match.MatchRepository
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.ui.dialogs.ErrorDialog
@@ -113,6 +114,7 @@ class MonitoringService : Service() {
     }
 
     fun onAuthentication() {
+        LanguageManager.applySavedLanguage(MainApplication.instance.baseContext)
         MainApplication.instance.startService(MessageRepository::class.java)
         MainApplication.instance.startService(ChannelRepository::class.java)
         MainApplication.instance.startService(ChatManager::class.java)
