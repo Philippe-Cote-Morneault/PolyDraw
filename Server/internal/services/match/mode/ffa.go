@@ -293,7 +293,7 @@ func (f *FFA) IsDrawing(socketID uuid.UUID) {
 func (f *FFA) HintRequested(socketID uuid.UUID) {
 	//Hint is not available in ffa
 	f.receiving.Lock()
-	if !f.players[f.order[f.orderPos]].IsCPU {
+	if len(f.players) > 0 && !f.players[f.order[f.orderPos]].IsCPU {
 		f.receiving.Unlock()
 
 		message := socket.RawMessage{}
