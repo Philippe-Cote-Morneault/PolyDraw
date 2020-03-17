@@ -38,7 +38,9 @@ func HandleJoinGroup(group *model.Group, socketID uuid.UUID) {
 //HandleQuitGroup leave a group chat
 func HandleQuitGroup(group *model.Group, socketID uuid.UUID) {
 	channelID := channelCache[group.ID].channelID
-	instance.quitChannel(socketID, channelID)
+	if channelID != uuid.Nil {
+		instance.quitChannel(socketID, channelID)
+	}
 }
 
 //UnRegisterGroup remove a channel for each group
