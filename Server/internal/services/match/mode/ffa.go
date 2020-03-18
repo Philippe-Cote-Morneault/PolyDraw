@@ -38,6 +38,7 @@ type FFA struct {
 	currentWord    string
 	timeStart      time.Time
 	timeStartImage time.Time
+	wordHistory    map[string]bool
 
 	receiving          sync.Mutex
 	receivingGuesses   *abool.AtomicBool
@@ -53,6 +54,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.init(connections, info)
 	f.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	f.isRunning = true
+	f.wordHistory = make(map[string]bool)
 	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
 
@@ -361,12 +363,26 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 
 }
 
+//findWord used to the find the word that must be drawn
 func (f *FFA) findWord() string {
 	//TODO language
-	word, err := model.Redis().SRandMember("dict_words_en").Result()
-	if err != nil {
-		log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
-		f.Close()
+	word := ""
+	for word == "" {
+
+		var err error
+		word, err = model.Redis().SRandMember("dict_words_en").Result()
+		if err != nil {
+			log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
+			f.Close()
+			return ""
+		}
+
+		if _, inList := f.wordHistory[word]; inList {
+			word = ""
+		} else {
+			//Add the word to the list so it does not come up again.
+			f.wordHistory[word] = true
+		}
 	}
 	return word
 }
