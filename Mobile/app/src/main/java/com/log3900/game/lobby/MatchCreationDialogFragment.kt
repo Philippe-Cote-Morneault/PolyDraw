@@ -210,7 +210,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
             return
         }
 
-        if (newValue > maxPlayersCurrentValue - 1) {
+        if (newValue > maxPlayersCurrentValue - 1 || newValue < 0) {
             return
         }
 
