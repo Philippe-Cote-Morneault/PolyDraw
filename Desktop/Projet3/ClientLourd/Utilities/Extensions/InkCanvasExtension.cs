@@ -15,19 +15,25 @@ namespace ClientLourd.Utilities.Extensions
     {
         public static Stroke AddStroke(this InkCanvas inkCanvas, StrokeInfo strokeInfo, Stroke lastStroke = null)
         {
-
-            if (lastStroke != null && lastStroke.StylusPoints.Count <= 500)
+            try
             {
-                if ((string) lastStroke.GetPropertyData(GUIDs.ID) == strokeInfo.StrokeID.ToString())
+                
+                if (lastStroke != null && lastStroke.StylusPoints.Count <= 500)
                 {
-                    AddPointsToStroke(lastStroke, strokeInfo);
-                    return lastStroke;
+                    if ((string) lastStroke.GetPropertyData(GUIDs.ID) == strokeInfo.StrokeID.ToString())
+                    {
+                        AddPointsToStroke(lastStroke, strokeInfo);
+                        return lastStroke;
+                    }
                 }
+                Stroke stroke = CreateStroke(strokeInfo);
+                inkCanvas.Strokes.Add(stroke);
+                return stroke;
             }
-            Stroke stroke = CreateStroke(strokeInfo);
-            inkCanvas.Strokes.Add(stroke);
-            
-            return stroke;
+            catch
+            {
+                return null;
+            }
         }
 
        
@@ -52,7 +58,6 @@ namespace ClientLourd.Utilities.Extensions
 
         private static Stroke CreateStroke(StrokeInfo strokeInfo)
         {
-            //Console.WriteLine("Created a new stroke");
             Stroke newStroke = new Stroke(strokeInfo.PointCollection);
             newStroke.DrawingAttributes.Color = strokeInfo.StrokeColor;
             newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;

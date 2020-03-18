@@ -379,7 +379,15 @@ namespace ClientLourd.ViewModels
 
         public bool DrawerIsCPU
         {
-            get => Players.First(p => p.IsDrawing).IsCPU;
+            get
+            {
+                var player = Players.FirstOrDefault(p => p.IsDrawing);
+                if(player != null)
+                {
+                    return player.IsCPU;
+                }
+                return false;
+            } 
             
         }
 
