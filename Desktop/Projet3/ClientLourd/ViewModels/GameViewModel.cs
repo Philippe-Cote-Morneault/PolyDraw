@@ -94,9 +94,6 @@ namespace ClientLourd.ViewModels
 
                 byte[] idTodelete = e.Data.Clone();
                 
-                Array.Reverse(idTodelete, 0, 4);
-                Array.Reverse(idTodelete, 4, 2);
-                Array.Reverse(idTodelete, 6, 2);
 
                 if(BitConverter.IsLittleEndian)
                     Array.Reverse(idTodelete);
