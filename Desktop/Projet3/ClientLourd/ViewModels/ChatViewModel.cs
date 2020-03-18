@@ -21,24 +21,32 @@ namespace ClientLourd.ViewModels
     public class ChatViewModel : ViewModelBase
     {
         private const string GLOBAL_CHANNEL_ID = "00000000-0000-0000-0000-000000000000";
-        private int _newMessages;
         private readonly Mutex _mutex = new Mutex();
-
+        private List<User> _users;
+        private readonly User _admin = new User("Admin", "-1");
 
         /// <summary>
         /// New message counter
         /// </summary>
         public int NewMessages
         {
-            get
+            get { return Channels.Sum(c => c.Notification); }
+        }
+
+        private async Task<User> GetUser(string username, string id)
+        {
+            User user = _users.FirstOrDefault(u => u.ID == id);
+            if (user == null)
             {
-                return Channels.Sum(c => c.Notification);
+                user = (await RestClient.GetUserInfo(id));
+                _users.Add(user);
             }
+            return user;
         }
 
         public void OnChatToggle(bool isOpen)
         {
-            NotifyPropertyChanged("NewMessages");
+            NotifyPropertyChanged(nameof(NewMessages));
             if (isOpen)
             {
                 SelectedChannel.IsSelected = true;
@@ -89,7 +97,7 @@ namespace ClientLourd.ViewModels
                         _selectedChannel.IsSelected = true;
                         if (_selectedChannel.Messages.Count < 10)
                         {
-                            LoadHistory(50);
+                            LoadHistory(25);
                         }
                     }
                     NotifyPropertyChanged();
@@ -119,6 +127,8 @@ namespace ClientLourd.ViewModels
 
         public override void AfterLogOut()
         {
+            ChannelFilter = "";
+            _users = new List<User>();
             SocketClient.MessageReceived += SocketClientOnMessageReceived;
             SocketClient.UserCreatedChannel += SocketClientOnUserCreatedChannel;
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
@@ -162,7 +172,7 @@ namespace ClientLourd.ViewModels
                 {
                         var e = (MessageReceivedEventArgs) args;
                         Channel channel = Channels.First(c => c.ID == e.ChannelId);
-                        Message m = new Message(e.Date, new User("admin", "-1"), $"{e.Username} left the channel");
+                        Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
                         channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
                         Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
                         UpdateChannels();
@@ -178,14 +188,18 @@ namespace ClientLourd.ViewModels
             _mutex.WaitOne();
             try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(async () =>
                 {
                         var e = (MessageReceivedEventArgs) args;
                         Channel channel = Channels.First(c => c.ID == e.ChannelId);
-                        Message m = new Message(e.Date, new User("admin", "-1"), $"{e.Username} joined the channel");
-                        // TODO Cache user
-                        channel.Users.Add(new User(e.Username, e.UserID));
-                        Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
+                        Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
+                        channel.Users.Add(await GetUser(e.Username, e.UserID));
+                        channel.Messages.Add(m);
+                        // Select this channel if I am the user concern
+                        if (e.UserID == SessionInformations.User.ID)
+                        {
+                            SelectedChannel = channel;
+                        }
                         UpdateChannels();
                 });
             }
@@ -205,6 +219,10 @@ namespace ClientLourd.ViewModels
                     MessageReceivedEventArgs e = (MessageReceivedEventArgs) args;
                     var newChannel = new Channel(e.ChannelName, e.ChannelId);
                     Channels.Add(newChannel);
+                    if (e.UserID == SessionInformations.User.ID)
+                    {
+                        JoinChannel(newChannel);
+                    }
                     UpdateChannels();
                 });
             }
@@ -214,11 +232,11 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private void SocketClientOnMessageReceived(object source, EventArgs e)
+        private async void SocketClientOnMessageReceived(object source, EventArgs e)
         {
             var args = (MessageReceivedEventArgs) e;
             //TODO cache user 
-            Message m = new Message(args.Date, new User(args.SenderName, args.SenderID), args.Message);
+            Message m = new Message(args.Date,await GetUser(args.Username, args.UserID), args.Message);
             App.Current.Dispatcher.Invoke(() => { Channels.First(c => c.ID == args.ChannelId).Messages.Add(m); });
             NotifyPropertyChanged("NewMessages");
         }
@@ -239,11 +257,14 @@ namespace ClientLourd.ViewModels
         {
             if (SelectedChannel != null)
             {
-                var messages = await RestClient.GetChannelMessages(SelectedChannel.ID, SelectedChannel.Messages.Count,
+                var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
+                    SelectedChannel.Messages.Count,
                     SelectedChannel.Messages.Count + numberOfMessages);
                 // TODO Change for a linkedList
                 for (int i = messages.Count-1; i >= 0; i--)
                 {
+                    User u = messages[i].User;
+                    messages[i].User = (await GetUser(u.Username, u.ID));
                     SelectedChannel.Messages.Add(messages[i]);
                 }
             }
@@ -342,11 +363,13 @@ namespace ClientLourd.ViewModels
 
         private void UpdateChannels()
         {
-            NotifyPropertyChanged("Channels");
-            NotifyPropertyChanged("JoinedChannels");
-            NotifyPropertyChanged("AvailableChannels");
-            NotifyPropertyChanged("NewMessages");
-            if (SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
+            NotifyPropertyChanged(nameof(Channels));
+            NotifyPropertyChanged(nameof(JoinedChannels));
+            NotifyPropertyChanged(nameof(AvailableChannels));
+            NotifyPropertyChanged(nameof(NewMessages));
+
+            if (SelectedChannel == null || SessionInformations.User == null) return;
+            if(SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
             {
                 SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
             }
@@ -402,13 +425,32 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        private string _channelFilter;
+        public string ChannelFilter
+        {
+            get { return _channelFilter.ToLower(); }
+            set
+            {
+                if (value != _channelFilter)
+                {
+                    _channelFilter = value;
+                    UpdateChannels();
+                }
+            }
+        }
 
         public ObservableCollection<Channel> JoinedChannels
         {
             get
             {
-                return new ObservableCollection<Channel>(_channels.Where(c =>
-                    c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)));
+                var channels =  new ObservableCollection<Channel>(_channels.Where(c =>
+                   c.Name.ToLower().Contains(ChannelFilter) && c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                var globalChannel = channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
+                if (globalChannel != null)
+                {
+                    channels.Move(channels.IndexOf(globalChannel), 0);
+                }
+                return channels;
             }
         }
 
@@ -416,8 +458,14 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return new ObservableCollection<Channel>(_channels.Where(c =>
-                    !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)));
+                var channels =  new ObservableCollection<Channel>(_channels.Where(c =>
+                   c.Name.ToLower().Contains(ChannelFilter) && !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                var globalChannel = channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
+                if (globalChannel != null)
+                {
+                    channels.Move(channels.IndexOf(globalChannel), 0);
+                }
+                return channels;
             }
         }
 
@@ -429,9 +477,7 @@ namespace ClientLourd.ViewModels
                 if (value != _channels)
                 {
                     _channels = value;
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged("JoinedChannels");
-                    NotifyPropertyChanged("AvailableChannels");
+                    UpdateChannels();
                 }
             }
         }

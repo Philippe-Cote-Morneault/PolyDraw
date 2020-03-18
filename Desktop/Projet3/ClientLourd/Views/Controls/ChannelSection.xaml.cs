@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using ClientLourd.Models.Bindable;
 using ClientLourd.ViewModels;
@@ -19,12 +20,18 @@ namespace ClientLourd.Views.Controls
             ((ChatViewModel) DataContext).JoinChannelCommand.Execute(((MenuItem) sender).Tag);
         }
 
-        private void LeaveChannelClick(object sender, RoutedEventArgs e)
+        private async void LeaveChannelClick(object sender, RoutedEventArgs e)
         {
-            ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(((MenuItem) sender).Tag);
+
+            Channel channel = (Channel)((MenuItem) sender).Tag;
+            var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"Are you sure you want to leave {channel.Name}"));
+            if (bool.Parse(result.ToString()))
+            {
+                ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(channel);
+            }
         }
 
-        private void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private async void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             //TODO check if the channel is available or joined
             try
@@ -35,7 +42,11 @@ namespace ClientLourd.Views.Controls
                 {
                     if (AvailableTree.Items.Contains(channel))
                     {
-                        DialogHost.Show(new MessageDialog("Warning", "You have to join the channel first !"));
+                        var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"You have to join the {channel.Name} first !"));
+                        if (bool.Parse(result.ToString()))
+                        {
+                            ((ChatViewModel) DataContext).JoinChannelCommand.Execute(channel);
+                        }
                     }
                     else
                     {
@@ -49,9 +60,22 @@ namespace ClientLourd.Views.Controls
             }
         }
 
-        private void DeleteChannelClick(object sender, RoutedEventArgs e)
+        private async void DeleteChannelClick(object sender, RoutedEventArgs e)
         {
-            ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(((MenuItem) sender).Tag);
+            Channel channel = (Channel)((MenuItem) sender).Tag;
+            var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"Are you sure you want to delete {channel.Name}"));
+            if (bool.Parse(result.ToString()))
+            {
+                ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(channel);
+            }
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+            Grid grid = (Grid)((Button) sender).Tag;
+            grid.ContextMenu.PlacementTarget = sender as UIElement;
+            grid.ContextMenu.IsOpen = true;
         }
     }
 }

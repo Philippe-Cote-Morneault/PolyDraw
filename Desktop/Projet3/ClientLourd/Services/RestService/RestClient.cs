@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Constants;
 using Newtonsoft.Json;
@@ -19,16 +20,12 @@ namespace ClientLourd.Services.RestService
     {
         private RestSharp.RestClient _client;
         private string _sessionToken;
+        private NetworkInformations _networkInformations;
 
-        public RestClient()
+        public RestClient(NetworkInformations informations)
         {
-            // For local server usage
-            /*_client = new RestSharp.RestClient("http://127.0.0.1:3000")
-            {
-                Timeout = 10000,
-            };*/
-
-            _client = new RestSharp.RestClient($"http://{Networks.HOST_NAME}:{Networks.REST_PORT}")
+            _networkInformations = informations;
+            _client = new RestSharp.RestClient()
             {
                 Timeout = 10000,
             };
@@ -45,9 +42,56 @@ namespace ClientLourd.Services.RestService
         /// <exception cref="RestException"></exception>
         public async Task<Dictionary<string, object>> Login(string username, string password)
         {
+            _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth", Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username});
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    _sessionToken = data["SessionToken"];
+                    return data;
+                case HttpStatusCode.Conflict:
+                    throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.BadRequest:
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+        
+        public async Task<Dictionary<string, object>> Bearer(string username, string bearer)
+        {
+            _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
+            RestRequest request = new RestRequest("auth/bearer", Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(new {username = username, Bearer=bearer});
+            var response = await Execute(request);
+            var deseralizer = new JsonDeserializer();
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    dynamic data = deseralizer.Deserialize<dynamic>(response);
+                    _sessionToken = data["SessionToken"];
+                    return data;
+                case HttpStatusCode.Conflict:
+                    throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                case HttpStatusCode.BadRequest:
+                    throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
+                default:
+                    throw new RestException(response.ErrorMessage);
+            }
+        }
+
+        public async Task<Dictionary<string, object>> Register(User user, string password)
+        {
+            _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
+            RestRequest request = new RestRequest("auth/register", Method.POST);
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(new {Username = user.Username, FirstName=user.FirstName, LastName= user.LastName, Email=user.Email, Password = password, PictureID=user.PictureID});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
@@ -162,7 +206,7 @@ namespace ClientLourd.Services.RestService
             }
         }
 
-        public async Task<object> GetStats()
+        public async Task<Stats> GetStats()
         {
             RestRequest request = new RestRequest("stats");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
@@ -171,8 +215,7 @@ namespace ClientLourd.Services.RestService
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    dynamic data = deseralizer.Deserialize<dynamic>(response);
-                    return data;
+                    return JsonConvert.DeserializeObject<Stats>(response.Content); 
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:
@@ -185,9 +228,9 @@ namespace ClientLourd.Services.RestService
         }
 
 
-        public async Task<object> GetStats(int start, int end)
+        public async Task<StatsHistory> GetStats(int start, int end)
         {
-            RestRequest request = new RestRequest("stats");
+            RestRequest request = new RestRequest("stats//history");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddParameter("start", start, ParameterType.QueryString);
             request.AddParameter("end", end, ParameterType.QueryString);
@@ -195,9 +238,8 @@ namespace ClientLourd.Services.RestService
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
             {
-                case HttpStatusCode.OK:
-                    dynamic data= deseralizer.Deserialize<dynamic>(response);
-                    return data;
+                case HttpStatusCode.OK:                 
+                    return JsonConvert.DeserializeObject<StatsHistory>(response.Content);
                 case HttpStatusCode.BadRequest:
                     throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:
@@ -211,17 +253,16 @@ namespace ClientLourd.Services.RestService
 
 
 
-        public async Task<PrivateProfileInfo> GetUserInfo(string userID)
+        public async Task<User> GetUserInfo(string userID)
         {
             RestRequest request = new RestRequest($"users/{userID}", Method.GET);
-            //request.AddParameter("userid", userID);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    return JsonConvert.DeserializeObject<PrivateProfileInfo>(response.Content);
+                    return JsonConvert.DeserializeObject<User>(response.Content);
                 case HttpStatusCode.BadRequest:
                     throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                 case HttpStatusCode.Unauthorized:

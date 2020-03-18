@@ -4,9 +4,56 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center">Games Played History Works!</TextBlock>
+    <UserControl.Resources>
+        <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
+        <converter:SecondsToTimeSpanConverter x:Key="SecondsToTimeSpanConverter"/>
+    </UserControl.Resources>
+
+    <Grid Height="700" Width="1200">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="80*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match Type</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Winner's name</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Players</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="3" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Match duration</TextBlock>
+
+        <Separator Grid.Row="1" Grid.ColumnSpan="4" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
+
+
+
+
+        <ScrollViewer Grid.ColumnSpan="4" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
+            <ListView ItemsSource="{Binding Path=StatsHistory.MatchesPlayedHistory, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
+                <ListView.Resources>
+                    <Style TargetType="GridViewColumnHeader">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchType}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding PlayersName}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource SecondsToTimeSpanConverter}}" />
+                        
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ScrollViewer>
     </Grid>
 </UserControl>

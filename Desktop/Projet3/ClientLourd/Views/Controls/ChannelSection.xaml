@@ -14,19 +14,43 @@
         <converters:NotificationConverter x:Key="NotificationConverter"/>
     </UserControl.Resources>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
-            <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
-            <Button
-                Margin="10 0 0 0"
-                Command="{Binding CreateChannelCommand}"
-                Style="{StaticResource MaterialDesignIconForegroundButton}"
-                ToolTip="Create a new channel">
-                <materialDesign:PackIcon
-                    Kind="Plus"
-                    FontWeight="Medium"
-                    Height="20"
-                    Width="20" />
-            </Button>
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Channels"/>
+                <Button
+                    Margin="10 0 0 0"
+                    Command="{Binding CreateChannelCommand}"
+                    Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    ToolTip="Create a new channel">
+                    <materialDesign:PackIcon
+                        Kind="Plus"
+                        FontWeight="Medium"
+                        Height="20"
+                        Width="20" />
+                </Button>
+            </StackPanel>
+             <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                          Width="Auto" />
+                        <ColumnDefinition
+                          Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <Button
+                        Style="{DynamicResource MaterialDesignToolButton}">
+                        <materialDesign:PackIcon
+                          Kind="Magnify"
+                          Opacity=".56" />
+                      </Button>
+                      <TextBox
+                        Grid.Column="1"
+                        Margin="8 0 0 0"
+                        Text="{Binding ChannelFilter, UpdateSourceTrigger=PropertyChanged}"
+                        materialDesign:HintAssist.Hint="Search a channel"
+                        materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                        BorderThickness="0"
+                        VerticalAlignment="Center" />
+                    </Grid>
         </StackPanel>
         <TreeView  Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
             <TreeViewItem Name="JoindedTree" IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
@@ -39,8 +63,9 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Name="ParentGrid">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
@@ -55,6 +80,9 @@
                             </Grid.ContextMenu>
                             <materialDesign:Badged Grid.Column="0" Badge="{Binding Notification, Converter={StaticResource NotificationConverter}}" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
                             <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Grid.Column="1" />
+                            <Button Grid.Column="2"     Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
+                                <materialDesign:PackIcon Kind="MoreHoriz"/>
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
@@ -69,7 +97,11 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                            <Grid>
+                            <Grid Name="ParentGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
                                 <Grid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Tag="{Binding}" Click="JoinChannelClick" Header="Join">
@@ -84,7 +116,10 @@
                                         </MenuItem>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
+                                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Name}" />
+                                <Button Grid.Column="1"     Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
+                                    <materialDesign:PackIcon Kind="MoreHoriz"/>
+                                </Button>
                             </Grid>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>

@@ -18,6 +18,7 @@ using ClientLourd.Views;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.ViewModels;
+using ClientLourd.Views.Dialogs;
 using ClientLourd.Views.Windows;
 
 namespace ClientLourd
@@ -52,6 +53,7 @@ namespace ClientLourd
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
             (Profile.DataContext as ProfileViewModel).AfterLogin();
+            DialogHost.Show(new Tutorial(), "Default");
         }
 
         private void OnUserLogout(object source, EventArgs args)
@@ -70,6 +72,7 @@ namespace ClientLourd
             MenuToggleButton.IsChecked = false;
             ChatToggleButton.IsChecked = false;
             _chatWindow?.Close();
+            DevConfigButton.IsChecked = true;
         }
 
         /// <summary>
@@ -109,6 +112,8 @@ namespace ClientLourd
             }
         }
 
+        public object MainDialogHost { get; internal set; }
+
         private void ExportChat(object sender, RoutedEventArgs e)
         {
             Drawer.IsRightDrawerOpen = false;
@@ -129,9 +134,19 @@ namespace ClientLourd
                     _chatWindow.Show();
                 });
             });
+        }
 
-
-
+        private void ConfigButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (NetworkConfig.Visibility == Visibility.Hidden)
+            {
+                NetworkConfig.Visibility = Visibility.Visible;
+                ConfigButton.Click -= ConfigButton_OnClick;
+            }
+            else
+            {
+                NetworkConfig.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

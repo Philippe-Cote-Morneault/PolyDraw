@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using ClientLourd.Models.Bindable;
+using ClientLourd.Services.CredentialsService;
 using ClientLourd.Services.RestService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.ViewModels;
 using MaterialDesignThemes.Wpf;
@@ -22,23 +25,19 @@ namespace ClientLourd.Views.Dialogs
     {
         private const string JUNK = "$#%@!&*)";
 
-        PrivateProfileInfo _pvInfo;
-        PrivateProfileInfo _pvInfoClone;
+        User _userClone;
         string _passwordJunk;
 
-        public EditProfileDialog(PrivateProfileInfo pvInfo)
+        public EditProfileDialog()
         {
             PasswordJunk = JUNK;
             NewPassword = JUNK;
 
-            // Info before modif
-            PrivateProfileInfo = pvInfo;
 
             // Info after modif
-            PrivateProfileInfoClone = new PrivateProfileInfo(pvInfo);
+            UserClone = new User(User);
 
             InitializeComponent();
-            DataContext = this;
 
             // Password junk
             (PasswordField as PasswordBox).Password = PasswordJunk;
@@ -69,6 +68,25 @@ namespace ClientLourd.Views.Dialogs
         {
             get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj), obj => CanUpdateProfile(obj))); }
         }
+        
+        RelayCommand<Channel> _changeAvatarCommand;
+
+        public ICommand ChangeAvatarCommand
+        {
+            get
+            {
+                return _changeAvatarCommand ??
+                       (_changeAvatarCommand = new RelayCommand<Channel>(channel => ChangeAvatar()));
+            }
+        }
+
+        private async void ChangeAvatar()
+        {
+            var result = await DialogHost.Show(new AvatarSelectionDialog(), "EditProfileHost");
+            UserClone.Avatar = (BitmapImage) result;
+        }
+        
+        
 
         private bool CanUpdateProfile(object obj)
         {
@@ -77,7 +95,7 @@ namespace ClientLourd.Views.Dialogs
 
         private bool HasUpdatedProfile()
         {
-            return (PrivateProfileInfo != PrivateProfileInfoClone || NewPassword != PasswordJunk);
+            return (User != UserClone || NewPassword != PasswordJunk);
         }
 
         private async Task EditProfile(object obj)
@@ -86,12 +104,17 @@ namespace ClientLourd.Views.Dialogs
             {
                 await RestClient.PutProfile(GetModifiedObj());
                 // Update infos
-                PrivateProfileInfo.Username = PrivateProfileInfoClone.Username;
-                PrivateProfileInfo.FirstName = PrivateProfileInfoClone.FirstName;
-                PrivateProfileInfo.LastName = PrivateProfileInfoClone.LastName;
-                PrivateProfileInfo.Email = PrivateProfileInfoClone.Email;
-                PrivateProfileInfo = PrivateProfileInfoClone;
-
+                User.Username = UserClone.Username;
+                User.Avatar = UserClone.Avatar;
+                User.FirstName = UserClone.FirstName;
+                User.LastName = UserClone.LastName;
+                User.Email = UserClone.Email;
+                User = UserClone;
+                // Update de credentials store
+                if (CredentialManager.ReadCredential(ApplicationInformations.Name) != null)
+                {
+                    CredentialManager.WriteCredential(ApplicationInformations.Name, User.Username, NewPassword);
+                }
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
@@ -110,28 +133,33 @@ namespace ClientLourd.Views.Dialogs
 
             if (UsernameHasChanged())
             {
-                obj.Username = PrivateProfileInfoClone.Username;
+                obj.Username = UserClone.Username;
             }
 
             if (EmailHasChanged())
             {
-                obj.Email = PrivateProfileInfoClone.Email;
+                obj.Email = UserClone.Email;
             }
 
             if (LastNameHasChanged())
             {
-                obj.LastName = PrivateProfileInfoClone.LastName;
+                obj.LastName = UserClone.LastName;
             }
 
             if (FirstNameHasChanged())
             {
-                obj.FirstName = PrivateProfileInfoClone.FirstName;
+                obj.FirstName = UserClone.FirstName;
             }
 
             if (PasswordHasChanged())
             {
                 obj.Password = NewPassword;
-            }            
+            }
+
+            if (AvatarHasChanged())
+            {
+                obj.PictureID = UserClone.PictureID;
+            }
 
             return obj;
         }
@@ -150,16 +178,16 @@ namespace ClientLourd.Views.Dialogs
             switch (fieldType)
             {
                 case "Username":
-                    PrivateProfileInfoClone.Username = PrivateProfileInfo.Username;
+                    UserClone.Username = User.Username;
                     break;
                 case "Email":
-                    PrivateProfileInfoClone.Email = PrivateProfileInfo.Email;
+                    UserClone.Email = User.Email;
                     break;
                 case "FirstName":
-                    PrivateProfileInfoClone.FirstName = PrivateProfileInfo.FirstName;
+                    UserClone.FirstName = User.FirstName;
                     break;
                 case "LastName":
-                    PrivateProfileInfoClone.LastName = PrivateProfileInfo.LastName;
+                    UserClone.LastName = User.LastName;
                     break;
                 case "Password":
                     (PasswordField as PasswordBox).Password = PasswordJunk;
@@ -170,30 +198,29 @@ namespace ClientLourd.Views.Dialogs
             }            
         }
 
-        public PrivateProfileInfo PrivateProfileInfo
+        public User User
         {
-            get { return _pvInfo; }
+            get
+            {
+                return (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SessionInformations.User;
+            }
             set
             {
-                if (value != _pvInfo)
-                {
-                    _pvInfo = value;
+                (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SessionInformations.User =
+                    value;
                     NotifyPropertyChanged();
-                }
-                    
-                
             }
         }
 
 
-        public PrivateProfileInfo PrivateProfileInfoClone
+        public User UserClone
         {
-            get { return _pvInfoClone; }
+            get { return _userClone; }
             set
             {
-                if (value != _pvInfoClone) 
+                if (value != _userClone) 
                 { 
-                    _pvInfoClone = value;
+                    _userClone = value;
                     NotifyPropertyChanged();
                 }
 
@@ -202,22 +229,27 @@ namespace ClientLourd.Views.Dialogs
 
         private bool UsernameHasChanged()
         {
-            return PrivateProfileInfo.Username != PrivateProfileInfoClone.Username;
+            return User.Username != UserClone.Username;
         }
 
         private bool EmailHasChanged()
         {
-            return PrivateProfileInfo.Email != PrivateProfileInfoClone.Email;
+            return User.Email != UserClone.Email;
         }
 
         private bool LastNameHasChanged()
         {
-            return PrivateProfileInfo.LastName != PrivateProfileInfoClone.LastName;
+            return User.LastName != UserClone.LastName;
         }
 
         private bool FirstNameHasChanged()
         {
-            return PrivateProfileInfo.FirstName != PrivateProfileInfoClone.FirstName;
+            return User.FirstName != UserClone.FirstName;
+        }
+        
+        private bool AvatarHasChanged()
+        {
+            return User.Avatar != UserClone.Avatar;
         }
 
         private bool PasswordHasChanged()
@@ -252,5 +284,17 @@ namespace ClientLourd.Views.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private void PasswordField_OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordField.Password = "";
+        }
+
+        private void PasswordField_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (PasswordField.Password == "")
+            {
+                PasswordField.Password = JUNK;
+            }
+        }
     }
 }

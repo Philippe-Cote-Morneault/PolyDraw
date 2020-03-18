@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls
@@ -37,7 +38,7 @@ namespace ClientLourd.Views.Controls
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
                 ((ChatViewModel) DataContext).LoadHistoryCommand.Execute(10);
-                scroll.ScrollToVerticalOffset(scroll.ScrollableHeight/10); 
+                scroll.ScrollToVerticalOffset(scroll.ViewportHeight);
             }
  
         }

@@ -14,19 +14,6 @@ class ProgressDialog : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
-
-        /*
-        dialog.setOnKeyListener(DialogInterface.OnKeyListener{ v, actionID, event ->
-            if (actionID == android.view.KeyEvent.KEYCODE_BACK) {
-                activity?.finish()
-                true
-            }
-            else {
-                false
-            }
-        })
-
-*/
         isCancelable = false
         return dialog
     }

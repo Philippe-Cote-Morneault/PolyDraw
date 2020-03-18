@@ -17,22 +17,34 @@
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
     </UserControl.Resources>
     
-    <materialDesign:DialogHost x:Name="EditProfileHost" CloseOnClickAway="False">
+    <materialDesign:DialogHost Identifier="EditProfileHost" x:Name="EditProfileHost" CloseOnClickAway="False">
         <Grid>
         
-        <StackPanel x:Name="StackPanel" Height="600" Width="500" Margin="10">
+        <StackPanel x:Name="StackPanel" Height="700" Width="500" Margin="10">
             
             
             <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Edit my profile </TextBlock>
-
+            
+            <StackPanel Margin="0 20 0 20">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
+                    <Image Source="{Binding UserClone.Avatar}"/>
+                </materialDesign:Card>
+                <TextBlock HorizontalAlignment="Center">
+                    <Hyperlink Command="{Binding ChangeAvatarCommand}">
+                        Change avatar
+                    </Hyperlink>
+                </TextBlock>                
+            </StackPanel>
+            
+            
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Username</TextBlock>
                     <TextBlock Margin="10 0 0 0">
                         <TextBlock.Visibility>
                             <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
-                                <Binding Path="PrivateProfileInfoClone.Username"></Binding>
-                                <Binding Path="PrivateProfileInfo.Username"></Binding>
+                                <Binding Path="UserClone.Username"></Binding>
+                                <Binding Path="User.Username"></Binding>
                             </MultiBinding>
                         </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Username" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
@@ -40,7 +52,7 @@
                 </StackPanel>
                 <TextBox x:Name="UsernameField" MaxLength="12">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfoClone.Username" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="UserClone.Username" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:UsernameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -48,31 +60,8 @@
                     </TextBox.Text>
                 </TextBox>
             </StackPanel>
-
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Email</TextBlock>
-                    <TextBlock Margin="10 0 0 0">
-                        <TextBlock.Visibility>
-                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
-                                <Binding Path="PrivateProfileInfoClone.Email"></Binding>
-                                <Binding Path="PrivateProfileInfo.Email"></Binding>
-                            </MultiBinding>
-                        </TextBlock.Visibility>
-                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Email" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-                <TextBox x:Name="EmailField" MaxLength="60">
-                    <TextBox.Text>
-                        <Binding Path="PrivateProfileInfoClone.Email" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
-
+            
+            
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontWeight="Bold">Password</TextBlock>
@@ -87,12 +76,37 @@
                     </TextBlock>
                 </StackPanel>
 
-                <PasswordBox x:Name="PasswordField"
+                <PasswordBox GotFocus="PasswordField_OnGotFocus" LostFocus="PasswordField_OnLostFocus" x:Name="PasswordField"
                              materialDesign:HintAssist.HelperText="At least 8 characters"
                              MaxLength="64" PasswordChanged="OnPasswordChanged">
                              
                 </PasswordBox>
             </StackPanel>
+
+            <StackPanel Margin="0 20 0 20">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold">Email</TextBlock>
+                    <TextBlock Margin="10 0 0 0">
+                        <TextBlock.Visibility>
+                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
+                                <Binding Path="UserClone.Email"></Binding>
+                                <Binding Path="User.Email"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Visibility>
+                        <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="Email" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <TextBox x:Name="EmailField" MaxLength="60">
+                    <TextBox.Text>
+                        <Binding Path="UserClone.Email" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
+
 
 
             <StackPanel Margin="0 20 0 20">
@@ -101,8 +115,8 @@
                     <TextBlock Margin="10 0 0 0">
                             <TextBlock.Visibility>
                                 <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" UpdateSourceTrigger="LostFocus">
-                                    <Binding Path="PrivateProfileInfoClone.FirstName"></Binding>
-                                    <Binding Path="PrivateProfileInfo.FirstName"></Binding>
+                                    <Binding Path="UserClone.FirstName"></Binding>
+                                    <Binding Path="User.FirstName"></Binding>
                                 </MultiBinding>
                             </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="FirstName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
@@ -110,7 +124,7 @@
                 </StackPanel>
                 <TextBox x:Name="FirstNameField" MaxLength="64">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfoClone.FirstName" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="UserClone.FirstName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:NameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -126,8 +140,8 @@
                     <TextBlock Margin="10 0 0 0">
                         <TextBlock.Visibility>
                             <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}">
-                                <Binding Path="PrivateProfileInfoClone.LastName"></Binding>
-                                <Binding Path="PrivateProfileInfo.LastName"></Binding>
+                                <Binding Path="UserClone.LastName"></Binding>
+                                <Binding Path="User.LastName"></Binding>
                             </MultiBinding>
                         </TextBlock.Visibility>
                         <Hyperlink Command="{Binding RevertToOriginalCommand}" CommandParameter="LastName" TextDecorations="None" Foreground="Black">[Revert to original]</Hyperlink>
@@ -135,7 +149,7 @@
                 </StackPanel>
                 <TextBox x:Name="LastNameField" MaxLength="64">
                     <TextBox.Text>
-                        <Binding Path="PrivateProfileInfoClone.LastName" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="UserClone.LastName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <rules:NameRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>

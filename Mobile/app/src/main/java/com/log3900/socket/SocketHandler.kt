@@ -44,7 +44,7 @@ object SocketHandler {
 
     fun connect() {
         socket = Socket()
-        socket.connect(InetSocketAddress("log3900.fsae.polymtl.ca", 5001), 10000)
+        socket.connect(InetSocketAddress("log3900.fsae.polymtl.ca", 5011), 10000)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
         state.set(State.CONNECTED)
@@ -86,8 +86,7 @@ object SocketHandler {
             outputStream.writeByte(message.type.eventType.toInt())
             outputStream.writeShort(message.data.size)
             outputStream.write(message.data)
-        } catch (e: IOException) {
-            Log.d("POTATO", "SOCKETHANDLER: IOException in onWriteMessage() = " + e.toString() + ", state = " + state.get())
+        } catch (e: Exception) {
             handlerError()
         }
     }
@@ -97,6 +96,8 @@ object SocketHandler {
             state.set(State.DISCONNECTING)
             socketHealthcheckTimer.cancel()
             socket.close()
+            outputStream.close()
+            inputStream.close()
         }
     }
 
@@ -143,9 +144,6 @@ object SocketHandler {
         try {
             val typeByte = inputStream.readByte()
 
-            val type = Event.values().find { it.eventType == typeByte }
-                ?: throw IllegalArgumentException("Invalid message type")
-
             val length = inputStream.readShort()
 
             var values = ByteArray(length.toInt())
@@ -155,15 +153,16 @@ object SocketHandler {
                 totalReadBytes += amountRead
             }
 
+            val type = Event.values().find { it.eventType == typeByte }
+                ?: return
+
             val message = Message(type, values)
 
             if (message.type == Event.HEALTH_CHECK_SERVER) {
-                Log.d("POTATO", "Received server healthcheck")
                 onWriteMessage(Message(Event.HEALTH_CHECK_CLIENT, byteArrayOf()))
                 socketHealthcheckTimer.cancel()
                 socketHealthcheckTimer = Timer()
                 socketHealthcheckTimer.schedule( timerTask {
-                    Log.d("POTATO", "Did not received server healtcheck")
                     handlerError()
                 }, 6000)
             }
@@ -177,23 +176,19 @@ object SocketHandler {
             val sw = StringWriter()
             val pw = PrintWriter(sw)
             e.printStackTrace(pw)
-            Log.d("POTATO", "SOCKETHANDLER: SocketException in readMessage() = " + e.toString() + ", state = " + state.get() + " " + sw.toString())
             handlerError()
         } catch (e: EOFException) {
-            Log.d("POTATO", "SOCKETHANDLER: EOFException in readMessage() = " + e.toString() + ", state = " + state.get())
             handlerError()
         }
     }
 
     private fun handlerError() {
         if (state.get() == State.DISCONNECTING) {
-            Log.d("POTATO", "handlerError(), state is disconnecting so not doing anything")
             state.set(State.DISCONNECTED)
             readMessages.set(false)
             disconnectionErrorListener?.sendEmptyMessage(SocketEvent.DISCONNECTED.ordinal)
         }
         else if (state.get() == State.CONNECTED) {
-            Log.d("POTATO", "handlerError(), state is not error")
             state.set(State.ERROR)
             socketHealthcheckTimer.cancel()
             readMessages.set(false)

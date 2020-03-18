@@ -7,9 +7,11 @@ import android.os.Message
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -20,13 +22,15 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.log3900.login.LoginActivity
+import com.log3900.profile.ProfileActivity
+import com.log3900.profile.ProfileFragment
 import com.log3900.socket.Event
 import com.log3900.socket.SocketEvent
 
 
 import com.log3900.socket.SocketService
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -42,8 +46,8 @@ class MainActivity : AppCompatActivity() {
 
             var chatView = (supportFragmentManager.findFragmentById(R.id.fragment) as Fragment).view
             when(chatView!!.visibility){
-                View.INVISIBLE -> chatView!!.visibility = View.VISIBLE
-                View.VISIBLE -> chatView!!.visibility = View.INVISIBLE
+                View.INVISIBLE -> chatView.visibility = View.VISIBLE
+                View.VISIBLE -> chatView.visibility = View.INVISIBLE
             }
         }
 
@@ -67,12 +71,32 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+        // Header
+        val header = navView.getHeaderView(0)
+        val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
+        avatar.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            startProfileFragment()
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
 
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun startProfileFragment() {
+        val PROFILE_TAG = "PROFILE_VIEW_FRAGMENT_TAG"
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.findFragmentByTag(PROFILE_TAG) != null)
+            return
+
+        val fragment = ProfileFragment()
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.nav_host_fragment, fragment, PROFILE_TAG)
+        fragmentTransaction.commit()
     }
 
     private fun logout() {

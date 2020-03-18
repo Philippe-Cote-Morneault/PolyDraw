@@ -14,7 +14,11 @@ object Validator {
 
     fun validatePassword(password: String) = password.isNotEmpty() && password.isValidPasswordLen()
 
-    private fun String.isAlphanumeric(): Boolean = StringUtils.isAlphanumeric(this)
+    private fun String.isAlphanumeric(): Boolean = this.matches("^[a-z0-9_]{4,12}\$".toRegex())
     private fun String.isValidUsernameLen(): Boolean = this.length in minUsernameLength..maxUsernameLength
     private fun String.isValidPasswordLen(): Boolean = this.length in minPasswordLength..maxPasswordLength
+
+    fun validateEmail(email: String) = email.isNotEmpty() && email.matches(
+        Regex("^[\\w!#\$%&'*+\\-/=?\\^_`{|}~]+(\\.[\\w!#\$%&'*+\\-/=?\\^_`{|}~]+)*@((([\\-\\w]+\\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\\.){3}[0-9]{1,3}))\\z")
+    )
 }

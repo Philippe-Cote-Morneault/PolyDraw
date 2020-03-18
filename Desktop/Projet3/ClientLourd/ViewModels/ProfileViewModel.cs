@@ -1,6 +1,6 @@
 ﻿using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
-using ClientLourd.Utilities.Constants;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,22 +17,44 @@ namespace ClientLourd.ViewModels
     class ProfileViewModel: ViewModelBase
     {
         private SessionInformations _sessionInformations;
-        private PrivateProfileInfo _profileInfo;
+        private User _user;
+        private Stats _stats;
+        private StatsHistory _statsHistory;
+        private int _end;
+
+        public ProfileViewModel()
+        {
+            _end = 20;
+        }
 
         public override void AfterLogOut()
         {
         
         }
 
+
         public override void AfterLogin()
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
-            Task task = GetUserInfo(_sessionInformations.User.ID);
+            Task task1 = GetUserInfo(_sessionInformations.User.ID);
+            Task task2 = GetUserStats();
+            Task task3 = GetUserStats(0, _end);
         }
 
         private async Task GetUserInfo(string userID)
         {
-            ProfileInfo = await RestClient.GetUserInfo(userID);
+            //TODO maybe it should be in mainviewmodel ?
+            User = await RestClient.GetUserInfo(userID);
+        }
+
+        private async Task GetUserStats()
+        {
+            Stats = await RestClient.GetStats();
+        }
+
+        private async Task GetUserStats(int start, int end)
+        {
+            _statsHistory = await RestClient.GetStats(start, end);
         }
 
         public RestClient RestClient
@@ -45,14 +67,24 @@ namespace ClientLourd.ViewModels
             get { return _sessionInformations; }
         }
 
-        public PrivateProfileInfo ProfileInfo
+        public User User
         {
-            get { return _profileInfo; }
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations.User; }
+            set 
+            { 
+                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).SessionInformations.User = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Stats Stats
+        {
+            get { return _stats; }
             set
             {
-                if (value != _profileInfo)
+                if (value != _stats)
                 {
-                    _profileInfo = value;
+                    _stats = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -67,9 +99,7 @@ namespace ClientLourd.ViewModels
 
         private async Task CloseProfile(object obj)
         {
-            //(((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
-            //await DialogHost.Show(new EditProfileDialog());
-            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Enums.Views.Editor.ToString();
+            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
 
         private RelayCommand<object> _editProfileCommand;
@@ -81,7 +111,7 @@ namespace ClientLourd.ViewModels
 
         private async Task EditProfile(object obj)
         {
-            await DialogHost.Show(new EditProfileDialog(ProfileInfo));
+            await DialogHost.Show(new EditProfileDialog());
         }
 
         private RelayCommand<object> _openConnectionsCommand;
@@ -93,7 +123,13 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            await DialogHost.Show(new ConnectionHistoryDialog());
+                        
+            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(_statsHistory, _end);
+
+            await DialogHost.Show(connectionDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
+                {
+                    (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+                });
         }
 
 
@@ -107,7 +143,11 @@ namespace ClientLourd.ViewModels
         private async Task OpenGamesPlayedHistory(object obj)
         {
 
-            await DialogHost.Show(new GamesPlayedHistoryDialog());
+            await DialogHost.Show(new GamesPlayedHistoryDialog(_statsHistory, _end), (object o, DialogClosingEventArgs closingEventHandler) =>
+            {
+                            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+            });
+
         }
 
 
