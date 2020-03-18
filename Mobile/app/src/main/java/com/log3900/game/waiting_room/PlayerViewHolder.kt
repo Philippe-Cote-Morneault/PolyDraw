@@ -65,6 +65,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
 
         if (!isPlaceholder) {
+            crownRemoveImageView.visibility = View.VISIBLE
             addImageView.visibility = View.INVISIBLE
             playerChip.text = player?.username
             if (!player!!.isCPU) {
