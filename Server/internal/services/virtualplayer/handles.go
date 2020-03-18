@@ -2,11 +2,17 @@ package virtualplayer
 
 import (
 	"log"
+	"math/rand"
 
+	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 )
 
-type player struct {
+var personnalities []string = []string{"angry", "funny", "mean", "nice", "supportive"}
+var currentPlayers map[uuid.UUID]uuid.UUID //channelID -> playerID
+var currentGames map[uuid.UUID]uuid.UUID   //gameID -> channelID
+
+type virtualPlayerInfos struct {
 	Personnality      string
 	DrawingTime       int
 	LastStartLine     byte
@@ -19,8 +25,17 @@ type player struct {
 func (v *VirtualPlayer) addVirtualPlayer(message socket.RawMessageReceived) {
 	log.Println("In addVirtualPlayer")
 }
+
 func (v *VirtualPlayer) kickVirtualPlayer(message socket.RawMessageReceived) {
 	log.Println("In kickVirtualPlayer")
+}
+
+func generateVirtualPlayer() *virtualPlayerInfos {
+	return &virtualPlayerInfos{Personnality: personnalities[rand.Intn(len(personnalities))], DrawingTime: -1, LastStartLine: 0,
+		LastEndLine: 0, LastReferenceLine: 0, LastRatioLine: 0, LastHintLine: 0}
+}
+
+func speak(line string) {
 
 }
 
