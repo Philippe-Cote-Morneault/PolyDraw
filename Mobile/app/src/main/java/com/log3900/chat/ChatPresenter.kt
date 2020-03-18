@@ -26,7 +26,7 @@ class ChatPresenter : Presenter {
 
     constructor(chatView: ChatView) {
         this.chatView = chatView
-        loadingMessages = false
+        loadingMessages = true
         account = AccountRepository.getInstance().getAccount()
 
         ChatManager.getInstance()
@@ -51,6 +51,7 @@ class ChatPresenter : Presenter {
                 {
                     chatView?.setChatMessages(it)
                     chatView?.scrollMessage(false)
+                    loadingMessages = false
                 },
                 {
 
@@ -128,12 +129,14 @@ class ChatPresenter : Presenter {
 
     private fun onChannelChanged(channel: Channel?) {
         if (channel != null) {
+            loadingMessages = true
             chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { messages ->
                         chatView?.setCurrentChannnelName(channel.name)
                         chatView?.setChatMessages(messages)
                         chatView?.scrollMessage(false)
+                        loadingMessages = false
                     },
                     { error ->
                     }
@@ -142,9 +145,8 @@ class ChatPresenter : Presenter {
     }
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {
-        chatView?.notifyNewMessage()
-        if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && account.username != (message.message as ReceivedMessage).username) {
-            chatView?.playNewMessageNotification()
+        if (!loadingMessages) {
+            chatView?.notifyNewMessage()
         }
     }
 

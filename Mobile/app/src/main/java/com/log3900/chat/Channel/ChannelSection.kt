@@ -52,7 +52,7 @@ class ChannelSection : Section, Filterable {
         itemHolder.buttonAction2.setOnClickListener {
             listener.onChannelActionButton2Click(this.channelGroup.filteredChannels.get(position), channelGroup.type)
         }
-        if (this.channelGroup.filteredChannels.get(position).ID.toString() == "00000000-0000-0000-0000-000000000000") {
+        if (this.channelGroup.filteredChannels.get(position).ID == Channel.GENERAL_CHANNEL_ID || channelGroup.filteredChannels[position].isGame) {
             itemHolder.buttonAction1.visibility = View.GONE
             itemHolder.buttonAction2.visibility = View.GONE
         } else {

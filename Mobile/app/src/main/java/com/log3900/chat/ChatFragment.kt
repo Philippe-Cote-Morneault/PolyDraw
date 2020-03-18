@@ -2,6 +2,7 @@ package com.log3900.chat
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -16,8 +17,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.chat.ui.MessageAdapter
+import com.log3900.settings.sound.SoundManager
 import com.log3900.user.account.AccountRepository
 import java.util.*
 
@@ -142,11 +145,6 @@ class ChatFragment : Fragment(), ChatView {
 
     override fun setCurrentChannnelName(name: String) {
         toolbar.setTitle(name)
-    }
-
-    override fun playNewMessageNotification() {
-        val musicPlayer = MediaPlayer.create(this.context, R.raw.audio_notification_new_message)
-        musicPlayer.start()
     }
 
     override fun scrollMessage(smooth: Boolean) {

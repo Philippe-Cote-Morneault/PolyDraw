@@ -118,7 +118,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                             bearerToken = bearerToken,
                             tutorialDone = it.tutorialDone,
                             themeID = it.themeID,
-                            languageID =  it.languageID
+                            languageID =  it.languageID,
+                            soundEffectsOn = it.soundEffectsOn,
+                            musicOn = it.musicOn
                         )
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
@@ -218,7 +220,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             "",
             0,
             LanguageManager.LANGUAGE.SYSTEM.ordinal,
-            false
+            false,
+            true,
+            true
         )
     }
 }

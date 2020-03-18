@@ -8,20 +8,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/list_item_match_waiting_room_player_image_view_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/list_item_match_waiting_room_player_image_view_add"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="#32CD32"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <TextView
-        android:id="@+id/list_Item_match_waiting_room_player_text_view_player_name"
-        android:layout_width="wrap_content"
+    <com.google.android.material.chip.Chip
+        android:id="@+id/list_item_match_waiting_room_player_chip_player"
+        app:chipIconSize="30dp"
+        android:textColor="@color/color_black"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginStart="40dp"
-        app:layout_constraintStart_toEndOf="@id/list_item_match_waiting_room_player_image_view_avatar"
+        app:chipIcon="@mipmap/ic_person_colored_round"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toEndOf="@id/list_item_match_waiting_room_player_image_view_add"
+        app:layout_constraintEnd_toStartOf="@id/list_item_match_waiting_room_player_image_view_host_crown_remove"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/list_item_match_waiting_room_player_image_view_host_crown_remove"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

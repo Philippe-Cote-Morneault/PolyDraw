@@ -71,7 +71,15 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private fun setupRecyclerView() {
         playersAdapter = PlayerAdapter(object : PlayerViewHolder.Listener {
             override fun playerClicked(player: Player) {
+                //TODO: Open player dialog info
+            }
 
+            override fun addClicked() {
+                matchWaitingRoomPresenter?.onPlayerAddClick()
+            }
+
+            override fun removedClicked(player: Player) {
+                matchWaitingRoomPresenter?.onPlayerRemoveClick(player)
             }
         })
         playersRecyclerView.apply {

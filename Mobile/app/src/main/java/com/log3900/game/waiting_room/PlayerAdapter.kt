@@ -61,6 +61,6 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-        holder.bind(playersCopy[position], playersCopy[position] == null)
+        holder.bind(playersCopy[position], playersCopy[position] == null, group.ownerID == playersCopy[position]?.ID)
     }
 }

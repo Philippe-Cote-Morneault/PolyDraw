@@ -24,13 +24,13 @@ class ChannelManager {
         joinedChannels = ChannelRepository.instance?.getJoinedChannels(AccountRepository.getInstance().getAccount().sessionToken)?.blockingGet()!!
         availableChannels = ChannelRepository.instance?.getAvailableChannels(AccountRepository.getInstance().getAccount().sessionToken)?.blockingGet()!!
         activeChannel = joinedChannels.find {
-            it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+            it.ID == Channel.GENERAL_CHANNEL_ID
         }!!
         EventBus.getDefault().register(this)
     }
 
     fun changeSubscriptionStatus(channel: Channel) {
-        if (channel.ID.toString() == "00000000-0000-0000-0000-000000000000") {
+        if (channel.ID == Channel.GENERAL_CHANNEL_ID) {
             return
         }
 
@@ -96,10 +96,14 @@ class ChannelManager {
     fun onChannelDeleted(channelID: UUID) {
         if (activeChannel?.ID == channelID) {
             val newActiveChannel = joinedChannels.find {
-                it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+                it.ID == Channel.GENERAL_CHANNEL_ID
             }!!
             previousChannel = newActiveChannel
             changeActiveChannel(newActiveChannel)
+        } else if (activeChannel == null && previousChannel?.ID == channelID) {
+            previousChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
         }
 
         if (unreadMessages.containsKey(channelID)) {
@@ -150,17 +154,32 @@ class ChannelManager {
 
     private fun onSubscribedToChannel(channel: Channel) {
         if (channel.isGame) {
-            changeActiveChannel(channel)
+            if (activeChannel != null) {
+                changeActiveChannel(channel)
+            } else {
+                previousChannel = channel
+            }
         }
     }
 
     private fun onUnsubscribedFromChannel(channel: Channel) {
         if (activeChannel == channel) {
             val newActiveChannel = joinedChannels.find {
-                it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+                it.ID == Channel.GENERAL_CHANNEL_ID
             }!!
             changeActiveChannel(newActiveChannel)
             previousChannel = newActiveChannel
+        } else if (activeChannel == null && previousChannel?.ID == channel.ID) {
+            previousChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
+        }
+
+        if (unreadMessages.containsKey(channel.ID)) {
+            unreadMessagesTotal -= unreadMessages.get(channel.ID)!!
+            unreadMessages[channel.ID] = 0
+
+            EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         }
     }
 

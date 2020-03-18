@@ -93,7 +93,9 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
                 0,
                 LanguageManager.LANGUAGE.SYSTEM.ordinal,
-                false
+                false,
+                true,
+                true
             )
         ).subscribe {
             SocketService.instance?.sendMessage(
