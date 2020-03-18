@@ -36,6 +36,7 @@ enum class Event(var eventType: Int) {
     START_MATCH_RESPONSE(49),
     GROUP_CREATED(51),
     GROUP_DELETED(53),
+    KICK_PLAYER(54),
     MATCH_ABOUT_TO_START(61),
     READY_TO_PLAY_MATCH(62),
     MATCH_STARTING(63),
