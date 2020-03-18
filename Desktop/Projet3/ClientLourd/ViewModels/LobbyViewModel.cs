@@ -144,8 +144,8 @@ namespace ClientLourd.ViewModels
             else
                 IsGameStarted = false;
 
-            //HomeViewModel.FetchLobbies();
-            //ContainedView = Utilities.Enums.Views.Home.ToString();
+            HomeViewModel.FetchLobbies();
+            ContainedView = Utilities.Enums.Views.Home.ToString();
         }
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
