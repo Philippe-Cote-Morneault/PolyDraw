@@ -162,6 +162,13 @@ class ChannelManager {
             changeActiveChannel(newActiveChannel)
             previousChannel = newActiveChannel
         }
+
+        if (unreadMessages.containsKey(channel.ID)) {
+            unreadMessagesTotal -= unreadMessages.get(channel.ID)!!
+            unreadMessages[channel.ID] = 0
+
+            EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
+        }
     }
 
 
