@@ -275,10 +275,11 @@ namespace ClientLourd.Views.Controls.Game
 
         private void FocusFirstTextBox()
         {
-            Task.Delay(70).ContinueWith(_ =>
+            Task.Delay(100).ContinueWith(_ =>
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
+                    Console.WriteLine("focus called !!!!!!!!!!!!!!!!!!!!");
                     ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
                     TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
                     textBox.Focus();
