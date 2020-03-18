@@ -138,4 +138,7 @@
     <string name="Round">Round</string>
     <string name="game_channel_name">Active Match</string>
     <string name="general_channel_name">General</string>
+    <string name="french">French</string>
+    <string name="english">English</string>
+    <string name="dialog_create_match_language_title">Language</string>
 </resources>
