@@ -2,6 +2,7 @@ package mode
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"log"
 	"math/rand"
 	"sort"
@@ -222,6 +223,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.lapsTotal -= numberOfTurns
 	f.receiving.Unlock()
 
+	messenger.HandleQuitGroup(&f.info, socketID)
 	f.syncPlayers()
 }
 
@@ -328,6 +330,9 @@ func (f *FFA) Close() {
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
 	f.cancelWait()
+
+	drawing.UnRegisterGame(f)
+	messenger.UnRegisterGroup(&f.info, f.GetConnections())
 }
 
 //GetConnections returns all the socketID of the match
@@ -539,6 +544,7 @@ func (f *FFA) finish() {
 
 	f.broadcast(&message)
 	drawing.UnRegisterGame(f)
+	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 }
 
 //removePlayer remove the player and set the order
