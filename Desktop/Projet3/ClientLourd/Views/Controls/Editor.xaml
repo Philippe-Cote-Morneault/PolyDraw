@@ -37,16 +37,16 @@
                                 Kind="Pencil" />
                             </ListBoxItem>
                             <ListBoxItem
-                            Name="EraseByPointTool"
-                            ToolTip="Erase by point"
-                            Tag="{x:Static InkCanvasEditingMode.EraseByPoint}">
+                            Name="EraseByStroke"
+                            ToolTip="Erase by stroke"
+                            Tag="{x:Static InkCanvasEditingMode.EraseByStroke}">
                                 <materialDesign:PackIcon
                                 Kind="PencilRemove" />
                             </ListBoxItem>
                             <ListBoxItem
-                            Name="EraseByStroke"
-                            ToolTip="Erase by stroke"
-                            Tag="{x:Static InkCanvasEditingMode.EraseByStroke}">
+                            Name="EraseByPointTool"
+                            ToolTip="Erase by point"
+                            Tag="{x:Static InkCanvasEditingMode.EraseByPoint}">
                                 <materialDesign:PackIcon
                                 Kind="Eraser" />
                             </ListBoxItem>
