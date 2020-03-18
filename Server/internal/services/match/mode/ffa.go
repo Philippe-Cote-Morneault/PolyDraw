@@ -367,6 +367,7 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 func (f *FFA) findWord() string {
 	//TODO language
 	word := ""
+	watchDog := 0
 	for word == "" {
 
 		var err error
@@ -377,12 +378,13 @@ func (f *FFA) findWord() string {
 			return ""
 		}
 
-		if _, inList := f.wordHistory[word]; inList {
+		if _, inList := f.wordHistory[word]; inList && watchDog < 100 {
 			word = ""
 		} else {
 			//Add the word to the list so it does not come up again.
 			f.wordHistory[word] = true
 		}
+		watchDog++
 	}
 	return word
 }
