@@ -11,6 +11,19 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
+        <Storyboard x:Key="PointsGainedAnimations" >
+            <DoubleAnimation 
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.4" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.4" Duration="0:0:2" />
+        </Storyboard>
     </UserControl.Resources>
     <Grid Margin="10">
         <materialDesign:Card>
@@ -45,9 +58,15 @@
                                     <!-- Icon -->
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"  VerticalAlignment="Center" Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <TextBlock>+200</TextBlock>
+                                    <TextBlock x:Name="PointsGainedTextBlock" Opacity="0" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained, StringFormat={}+{0}}">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
                                 </StackPanel>
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding Score, StringFormat={}Score: {0}}"></TextBlock>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Score, StringFormat={}Score: {0}}" RenderTransformOrigin=".5,.5"></TextBlock>
                                 <Separator/>
                             </StackPanel>
                         </DataTemplate>     

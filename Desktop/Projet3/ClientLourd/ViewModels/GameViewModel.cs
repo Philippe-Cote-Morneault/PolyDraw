@@ -156,12 +156,6 @@ namespace ClientLourd.ViewModels
             Round = e.Laps;
             TotalRound = e.LapTotal;
             Time = e.Time;
-            var playersInfo = e.Players;
-            foreach (dynamic info in playersInfo)
-            {
-                var tmpPlayer = Players.First(p => p.User.ID == info["UserID"]);
-                tmpPlayer.Score = info["Points"];
-            }
             NotifyPropertyChanged(nameof(Players));
         }
 
@@ -176,9 +170,12 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-
+                
                 ShowCanvasMessage($"+ {e.Points}");
-                Players.First(p => p.User.ID == SessionInformations.User.ID).Score = e.PointsTotal;
+                Player player = Players.First(p => p.User.ID == SessionInformations.User.ID);
+                player.PointsRecentlyGained = e.PointsTotal - player.Score;
+                player.Score = e.PointsTotal;
+
                 NotifyPropertyChanged(nameof(Players));
 
                 Application.Current.Dispatcher.Invoke(() => 
@@ -270,9 +267,15 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public void OrderPlayers()
+        {
+            Players = new ObservableCollection<Player>(_players.OrderByDescending(p => p.Score));
+        }
+
         public ObservableCollection<Player> Players
         {
-            get => new ObservableCollection<Player>(_players.OrderByDescending(p => p.Score)); 
+            get => _players;
+            
             set
             {
                 _players = value;

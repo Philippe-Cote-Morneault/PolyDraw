@@ -13,6 +13,7 @@ using System.Threading.Tasks;
         private bool _guessedTheWord;
         private long _score;
         private bool _isCPU;
+        private long _pointsRecentlyGained;
 
 
         public Player(bool isCPU, string id, string username)
@@ -88,6 +89,19 @@ using System.Threading.Tasks;
                     _isDrawing = value;
                     NotifyPropertyChanged();
                     
+                }
+            }
+        }
+
+        public long PointsRecentlyGained
+        {
+            get => _pointsRecentlyGained;
+            set
+            {
+                if (value != _score)
+                {
+                    _pointsRecentlyGained = value;
+                    NotifyPropertyChanged();
                 }
             }
         }
