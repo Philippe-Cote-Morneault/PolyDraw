@@ -14,6 +14,7 @@ using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Views.Dialogs;
 using ClientLourd.Services.RestService;
+using System.Windows.Media.Imaging;
 
 namespace ClientLourd.ViewModels
 {
@@ -322,17 +323,25 @@ namespace ClientLourd.ViewModels
                     lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
                     lobbyModified.PlayersCount = lobbyModified.Players.Count;
                 }
-                GetUsersInfo(lobbyModified);
+                SetUsersInfo(lobbyModified);
             });
         }
 
-        private async void GetUsersInfo(Lobby lobby)
+        private async void SetUsersInfo(Lobby lobby)
         {
             foreach(Player player in lobby.Players)
             {
                 if (player.User.Avatar == null)
                 {
-                    player.User = await RestClient.GetUserInfo(player.User.ID);
+                    if (!player.IsCPU)
+                    {
+                        player.User = await RestClient.GetUserInfo(player.User.ID);
+                    }
+                    else
+                    {
+                        player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png", UriKind.Relative));
+                    }
+                    
                 }
             }
         }

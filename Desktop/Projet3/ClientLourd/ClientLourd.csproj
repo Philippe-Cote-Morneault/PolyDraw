@@ -422,6 +422,7 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\robot.png" />
     <None Include="Resources\TimerWarning.wav" />
     <None Include="Resources\WordGuessRight.wav" />
     <None Include="Resources\WordGuessedWrong.wav" />

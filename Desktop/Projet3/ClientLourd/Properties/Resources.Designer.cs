@@ -272,6 +272,16 @@ namespace ClientLourd.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap robot {
+            get {
+                object obj = ResourceManager.GetObject("robot", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap sword {
             get {
                 object obj = ResourceManager.GetObject("sword", resourceCulture);
