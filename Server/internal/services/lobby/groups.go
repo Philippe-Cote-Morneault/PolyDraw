@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"sync"
 
 	"github.com/google/uuid"
@@ -77,12 +78,45 @@ func (g *groups) UnRegisterSession(socketID uuid.UUID) {
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		if groupDB.ID != uuid.Nil && err == nil {
 			model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
-
+			messenger.HandleQuitGroup(&groupDB, socketID)
 			//If user is owner we delete the group
 			if groupDB.OwnerID == userID {
 				g.safeDeleteGroup(&groupDB)
 			}
 		}
+	}
+}
+
+func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
+	g.mutex.Lock()
+	//Find the group and find the user socket id
+	if groupID, ok := g.assignment[socketID]; ok {
+		var groupDB model.Group
+		model.DB().Where("id = ?", groupID).First(&groupDB)
+		if groupDB.ID != uuid.Nil {
+			//Make sure that we are the owner
+			currentUserID, _ := auth.GetUserID(socketID)
+			if groupDB.OwnerID == currentUserID {
+				//TODO handle virtual players
+				socketKickUser, err := auth.GetSocketID(userID)
+				if err == nil {
+					g.mutex.Unlock()
+					g.QuitGroup(socketKickUser)
+				} else {
+					g.mutex.Unlock()
+					go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user", socketID)
+				}
+			} else {
+				g.mutex.Unlock()
+				go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "Only the group owner can kick people out", socketID)
+			}
+		} else {
+			g.mutex.Unlock()
+			go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "The group could not be found", socketID)
+		}
+	} else {
+		g.mutex.Unlock()
+		go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "The user does not belong to a group", socketID)
 	}
 }
 
@@ -109,6 +143,7 @@ func (g *groups) AddGroup(group *model.Group) {
 		Language:   group.Language,
 		Difficulty: group.Difficulty,
 	})
+	messenger.RegisterGroup(group)
 	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	//TODO only if not solo
 	g.mutex.Lock()
@@ -163,6 +198,8 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 						go socket.SendRawMessageToSocketID(newUser, k)
 					}
 					g.mutex.Unlock()
+
+					messenger.HandleJoinGroup(&groupDB, socketID)
 
 				}
 				return
@@ -228,6 +265,8 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		model.DB().Model(&groupDB).Association("Users").Delete(&user)
 
+		messenger.HandleQuitGroup(&groupDB, socketID)
+
 		g.mutex.Lock()
 		if user.ID == groupDB.OwnerID {
 			//The owner has left the group
@@ -282,6 +321,7 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 		go socket.SendRawMessageToSocketID(message, v)
 	}
 
+	messenger.UnRegisterGroup(groupDB, g.groups[groupDB.ID])
 	//Remove all the data associated with the groups
 	for _, v := range g.groups[groupDB.ID] {
 		delete(g.assignment, v)
@@ -323,9 +363,12 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				for _, v := range g.groups[groupDB.ID] {
 					go socket.SendRawMessageToSocketID(rawMessage, v)
 				}
-				message := socket.RawMessage{}
 				uuidBytes, _ := groupDB.ID.MarshalBinary()
-				message.ParseMessage(byte(socket.MessageType.ResponseGroupRemoved), uint16(len(uuidBytes)), uuidBytes)
+				message := socket.RawMessage{
+					MessageType: byte(socket.MessageType.ResponseGroupRemoved),
+					Length:      uint16(len(uuidBytes)),
+					Bytes:       uuidBytes,
+				}
 
 				g.mutex.Lock()
 				//Broadcast a message to all the users in queue

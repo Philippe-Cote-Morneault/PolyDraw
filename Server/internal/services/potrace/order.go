@@ -59,11 +59,11 @@ func pano(paths *[]model.XMLPath, mode int) {
 		})
 	case 4:
 		sort.Slice(*paths, func(i, j int) bool {
-			return (*paths)[i].FirstCommand.EndPos.Y > (*paths)[j].FirstCommand.EndPos.Y
+			return (*paths)[i].FirstCommand.EndPos.Y < (*paths)[j].FirstCommand.EndPos.Y
 		})
 	case 5:
 		sort.Slice(*paths, func(i, j int) bool {
-			return (*paths)[i].FirstCommand.EndPos.Y < (*paths)[j].FirstCommand.EndPos.Y
+			return (*paths)[i].FirstCommand.EndPos.Y > (*paths)[j].FirstCommand.EndPos.Y
 		})
 	}
 	applyOrder(paths)

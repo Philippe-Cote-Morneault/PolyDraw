@@ -2,6 +2,7 @@ package mode
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"log"
 	"math/rand"
 	"sort"
@@ -25,7 +26,7 @@ const imageDuration = 60000
 type FFA struct {
 	base
 	order  []int
-	scores []int //Scores data are in the order of the match so the first user to draw is the first one in the score board
+	scores []score //Scores data are in the order of the match so the first user to draw is the first one in the score board
 	//We can get the position with the field order
 	orderPos       int
 	curLap         int
@@ -38,10 +39,11 @@ type FFA struct {
 	currentWord    string
 	timeStart      time.Time
 	timeStartImage time.Time
+	wordHistory    map[string]bool
 
 	receiving          sync.Mutex
 	receivingGuesses   *abool.AtomicBool
-	hasFoundit         map[uuid.UUID]bool
+	hasFoundIt         map[uuid.UUID]bool
 	clientGuess        int
 	waitingResponse    *semaphore.Weighted
 	cancelWait         func()
@@ -53,9 +55,11 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.init(connections, info)
 	f.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	f.isRunning = true
-	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
+	f.wordHistory = make(map[string]bool)
+	f.hasFoundIt = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
-	f.scores = make([]int, len(f.players))
+
+	f.scores = make([]score, len(f.players))
 
 	f.curLap = 1
 	f.timeImage = imageDuration
@@ -97,6 +101,13 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
+	f.receiving.Lock()
+	if (len(f.players)) <= 0 {
+		log.Printf("[Match] [FFA] No players will exit the game loop.")
+		f.isRunning = false
+		f.receiving.Unlock()
+		return
+	}
 	//Choose a user.
 	f.curDrawer = &f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
@@ -105,7 +116,7 @@ func (f *FFA) GameLoop() {
 		f.nbWaitingResponses = int64(f.realPlayers)
 	} else {
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
-		f.hasFoundit[f.curDrawer.socketID] = true
+		f.hasFoundIt[f.curDrawer.socketID] = true
 	}
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
 	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
@@ -129,6 +140,8 @@ func (f *FFA) GameLoop() {
 	f.pbroadcast(&message)
 	f.timeStartImage = time.Now()
 	log.Printf("[Match] [FFA] -> Word sent waiting for guesses, Match: %s", f.info.ID)
+	f.receiving.Unlock()
+
 	f.receivingGuesses.Set()
 
 	//Make him draw
@@ -166,6 +179,8 @@ func (f *FFA) GameLoop() {
 		return
 	}
 
+	f.sendRoundSummary()
+
 	f.currentWord = ""
 	f.resetGuess()
 	f.receiving.Unlock()
@@ -185,7 +200,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.pbroadcast(&leaveMessage)
 
 	//Check if drawing
-	if f.curDrawer.socketID == socketID {
+	if f.curDrawer != nil && f.curDrawer.socketID == socketID {
 		f.cancelWait() //We cancel the wait and finish the drawing for the client to see
 
 		//Finish the end of the drawing for the clients
@@ -208,6 +223,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.lapsTotal -= numberOfTurns
 	f.receiving.Unlock()
 
+	messenger.HandleQuitGroup(&f.info, socketID)
 	f.syncPlayers()
 }
 
@@ -218,15 +234,16 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 	if strings.ToLower(strings.TrimSpace(word)) == f.currentWord && f.currentWord != "" {
 
 		//The word was found
-		if f.receivingGuesses.IsSet() && !f.hasFoundit[socketID] {
-			f.hasFoundit[socketID] = true
+		if f.receivingGuesses.IsSet() && !f.hasFoundIt[socketID] {
+			f.hasFoundIt[socketID] = true
 			f.waitingResponse.Release(1)
 			f.clientGuess++
-			players := f.connections[socketID]
+			player := f.connections[socketID]
 
 			pointsForWord := f.calculateScore()
-			f.scores[players.Order] += pointsForWord
-			total := f.scores[players.Order]
+			f.scores[player.Order].commit(pointsForWord)
+			f.scores[f.curDrawer.Order].commit(50)
+			total := f.scores[player.Order].total
 
 			f.receiving.Unlock()
 
@@ -241,8 +258,8 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
 			broadcast.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
-				Username:    players.Username,
-				UserID:      players.userID.String(),
+				Username:    player.Username,
+				UserID:      player.userID.String(),
 				Points:      pointsForWord,
 				PointsTotal: total,
 			})
@@ -250,7 +267,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		} else {
 			log.Printf("[Match] [FFA] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			players := f.connections[socketID]
-			scoreTotal := f.scores[players.Order]
+			scoreTotal := f.scores[players.Order].total
 			f.receiving.Unlock()
 
 			response := socket.RawMessage{}
@@ -263,7 +280,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 		}
 	} else {
 		players := f.connections[socketID]
-		scoreTotal := f.scores[players.Order]
+		scoreTotal := f.scores[players.Order].total
 		f.receiving.Unlock()
 
 		response := socket.RawMessage{}
@@ -284,7 +301,7 @@ func (f *FFA) IsDrawing(socketID uuid.UUID) {
 func (f *FFA) HintRequested(socketID uuid.UUID) {
 	//Hint is not available in ffa
 	f.receiving.Lock()
-	if !f.players[f.order[f.orderPos]].IsCPU {
+	if len(f.players) > 0 && !f.players[f.order[f.orderPos]].IsCPU {
 		f.receiving.Unlock()
 
 		message := socket.RawMessage{}
@@ -313,6 +330,9 @@ func (f *FFA) Close() {
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
 	f.cancelWait()
+
+	drawing.UnRegisterGame(f)
+	messenger.UnRegisterGroup(&f.info, f.GetConnections())
 }
 
 //GetConnections returns all the socketID of the match
@@ -348,12 +368,28 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 
 }
 
+//findWord used to the find the word that must be drawn
 func (f *FFA) findWord() string {
 	//TODO language
-	word, err := model.Redis().SRandMember("dict_words_en").Result()
-	if err != nil {
-		log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
-		f.Close()
+	word := ""
+	watchDog := 0
+	for word == "" {
+
+		var err error
+		word, err = model.Redis().SRandMember("dict_words_en").Result()
+		if err != nil {
+			log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
+			f.Close()
+			return ""
+		}
+
+		if _, inList := f.wordHistory[word]; inList && watchDog < 100 {
+			word = ""
+		} else {
+			//Add the word to the list so it does not come up again.
+			f.wordHistory[word] = true
+		}
+		watchDog++
 	}
 	return word
 }
@@ -377,6 +413,7 @@ func (f *FFA) SetOrder() {
 	for i := range f.order {
 		playerPos := f.order[i]
 		f.players[playerPos].Order = playerPos
+		f.scores[playerPos].init() //Init the score to make sure they are at zero
 	}
 
 	f.orderPos = 0
@@ -385,7 +422,8 @@ func (f *FFA) SetOrder() {
 
 func (f *FFA) resetGuess() {
 	for i := range f.players {
-		f.hasFoundit[f.players[i].socketID] = false
+		f.hasFoundIt[f.players[i].socketID] = false
+		f.scores[f.players[i].Order].reset()
 	}
 
 	f.clientGuess = 0
@@ -396,12 +434,13 @@ func (f *FFA) resetGuess() {
 func (f *FFA) syncPlayers() {
 	f.receiving.Lock()
 	players := make([]PlayersData, len(f.scores))
-	for i := range f.scores {
+	for i := range f.players {
+		player := &f.players[i]
 		players[i] = PlayersData{
-			Username: f.players[f.order[i]].Username,
-			UserID:   f.players[f.order[i]].userID.String(),
-			Points:   f.scores[i],
-			IsCPU:    f.players[f.order[i]].IsCPU,
+			Username: player.Username,
+			UserID:   player.userID.String(),
+			Points:   f.scores[player.Order].total,
+			IsCPU:    player.IsCPU,
 		}
 	}
 	f.receiving.Unlock()
@@ -475,16 +514,21 @@ func (f *FFA) finish() {
 	players := make([]PlayersData, len(f.scores))
 
 	for i := range f.scores {
-		if bestScore < f.scores[i] {
+		if bestScore < f.scores[i].total {
 			bestPlayerOrder = i
-			bestScore = f.scores[i]
+			bestScore = f.scores[i].total
 		}
 		players[i] = PlayersData{
 			Username: f.players[f.order[i]].Username,
 			UserID:   f.players[f.order[i]].userID.String(),
-			Points:   f.scores[i],
+			Points:   f.scores[i].total,
 			IsCPU:    f.players[f.order[i]].IsCPU,
 		}
+	}
+	if bestPlayerOrder == -1 {
+		drawing.UnRegisterGame(f)
+		log.Printf("[Match] [FFA] No more players in the match. Will not send finish packet")
+		return
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
@@ -500,19 +544,26 @@ func (f *FFA) finish() {
 
 	f.broadcast(&message)
 	drawing.UnRegisterGame(f)
+	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 }
 
 //removePlayer remove the player and set the order
 func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 	//Remove the indexing for the players
 	delete(f.connections, socketID)
-	delete(f.hasFoundit, socketID)
+	delete(f.hasFoundIt, socketID)
 	for i := range f.players {
 		if p.userID == f.players[i].userID {
 			currentPos := f.orderPos
-			currentUser := f.players[f.order[currentPos]].userID
 
-			scoreMap := make(map[uuid.UUID]int)
+			if len(f.order) <= 0 {
+				log.Printf("[Match] [FFA] -> Remove player there are no more players in the game. (f:order %v, f:players: %v)")
+				return
+			}
+			currentUser := f.players[f.order[currentPos]].userID
+			isCurrentUser := p.userID == currentUser
+
+			scoreMap := make(map[uuid.UUID]score)
 			for j := range f.players {
 				scoreMap[f.players[j].userID] = f.scores[f.players[j].Order]
 			}
@@ -542,32 +593,55 @@ func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 			}
 
 			//Check if the order has changed
-			maxPos := len(f.order) - 1
+			maxPos := len(f.order)
 			if maxPos <= 0 {
 				f.orderPos = 0
 				return
 			}
 
-			same := currentPos % maxPos
+			if !isCurrentUser {
+				//Find the current drawer in the list
+				same := currentPos % maxPos
+				if f.players[same].userID == currentUser {
+					f.orderPos = same
+					return
+				}
 
-			if f.players[same].userID == currentUser {
-				f.orderPos = same
+				//Look in all the players to find its current position.
+				for j := range f.players {
+					if f.players[j].userID == currentUser {
+						f.orderPos = j
+						break
+					}
+				}
 				return
 			}
 
-			//Try increment or decrement
-			increment := (currentPos + 1) % maxPos
-			if f.players[increment].userID == currentUser {
-				f.orderPos = increment
-				return
-			}
-
-			decrement := (currentPos - 1) % maxPos
-			if f.players[decrement].userID == currentUser {
-				f.orderPos = decrement
-				return
-			}
+			f.orderPos = (currentPos + 1) % maxPos
 			return
 		}
 	}
+}
+
+//sendRoundSummary used to send a summary of the round
+func (f *FFA) sendRoundSummary() {
+	roundEnd := socket.RawMessage{}
+	playersDetails := make([]PlayersRoundSum, len(f.players))
+	for i := range f.players {
+		player := &f.players[i]
+		playersDetails[i] = PlayersRoundSum{
+			PlayersData: PlayersData{
+				UserID:   player.userID.String(),
+				Username: player.Username,
+				IsCPU:    player.IsCPU,
+				Points:   f.scores[player.Order].current,
+			},
+			PointsTotal: f.scores[player.Order].total,
+		}
+	}
+	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
+		Players:      playersDetails,
+		Achievements: nil,
+	})
+	f.pbroadcast(&roundEnd)
 }

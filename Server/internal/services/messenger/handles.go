@@ -15,9 +15,144 @@ type handler struct {
 	channelsConnections map[uuid.UUID]map[uuid.UUID]bool //channelID - socketID
 }
 
+func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawMessage) {
+	channel := model.ChatChannel{
+		Name:       "Game",
+		GroupID:    group.ID,
+		IsGameChat: true,
+	}
+	model.DB().Create(&channel)
+
+	//Init the hashmap for the connections
+	h.channelsConnections[channel.ID] = make(map[uuid.UUID]bool)
+
+	//Create request
+	response := ChannelCreateResponse{
+		ChannelName: channel.Name,
+		ChannelID:   channel.ID.String(),
+		Username:    "host",
+		UserID:      uuid.Nil.String(),
+		Timestamp:   time.Now().Unix(),
+		IsGame:      true,
+	}
+	rawMessage := socket.RawMessage{}
+	if rawMessage.ParseMessagePack(byte(socket.MessageType.UserCreateChannel), response) != nil {
+		log.Printf("[Messenger] -> Create: Can't pack message. Dropping packet!")
+		return channel.ID, socket.RawMessage{}
+	}
+	log.Printf("[Messenger] -> Create: channel %s created", channel.Name)
+
+	return channel.ID, rawMessage
+}
+
+func (h *handler) deleteGroupChannel(group *model.Group) {
+	var channel model.ChatChannel
+	model.DB().Where("group_id = ?", group.ID).First(&channel)
+
+	//Create a destroy message
+	destroyMessage := ChannelDestroyResponse{
+		UserID:    uuid.Nil.String(),
+		Username:  "host",
+		ChannelID: channel.ID.String(),
+		Timestamp: time.Now().Unix(),
+	}
+	rawMessage := socket.RawMessage{}
+	if rawMessage.ParseMessagePack(byte(socket.MessageType.UserDestroyedChannel), destroyMessage) != nil {
+		log.Printf("[Messenger] -> Destroy: Can't pack message. Dropping packet!")
+		return
+	}
+
+	for socketID := range h.channelsConnections[channel.ID] {
+		go socket.SendRawMessageToSocketID(rawMessage, socketID)
+	}
+
+	delete(h.channelsConnections, channel.ID)
+	model.DB().Delete(&channel)
+
+	return
+}
+
+func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {
+	//Check if channel exists
+	channel := model.ChatChannel{}
+	model.DB().Model(&channel).Related(&model.User{}, "Users")
+	model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
+	if channel.ID != uuid.Nil {
+		user, _ := auth.GetUser(socketID)
+		if _, ok := h.channelsConnections[channel.ID][socketID]; ok {
+			model.DB().Model(&channel).Association("Users").Delete(user)
+
+			//Create a quit message
+			quitResponse := ChannelLeaveResponse{
+				UserID:    user.ID.String(),
+				Username:  user.Username,
+				ChannelID: channel.ID.String(),
+				Timestamp: time.Now().Unix(),
+			}
+			rawMessage := socket.RawMessage{}
+			if rawMessage.ParseMessagePack(byte(socket.MessageType.UserLeftChannel), quitResponse) != nil {
+				log.Printf("[Messenger] -> Quit: Can't pack message. Dropping packet!")
+				return
+			}
+
+			for socketID := range h.channelsConnections[channel.ID] {
+				go socket.SendRawMessageToSocketID(rawMessage, socketID)
+			}
+			delete(h.channelsConnections[channelID], socketID)
+			log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
+		} else {
+			log.Printf("[Messenger] -> Quit: User is not in the channel")
+			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "User is not in the channel.", socketID)
+		}
+	} else {
+		log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
+		socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 404, "Invalid channel UUID, not found.", socketID)
+	}
+}
+
+func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
+	channel := model.ChatChannel{}
+	model.DB().Model(&channel).Related(&model.User{}, "Users")
+	model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
+
+	if channel.ID != uuid.Nil {
+		user, _ := auth.GetUser(socketID)
+		if _, ok := h.channelsConnections[channel.ID][socketID]; !ok {
+			joinServer := ChannelJoin{
+				UserID:    user.ID.String(),
+				Username:  user.Username,
+				ChannelID: channel.ID.String(),
+				Timestamp: time.Now().Unix(),
+			}
+
+			rawMessage := socket.RawMessage{}
+			if rawMessage.ParseMessagePack(byte(socket.MessageType.UserJoinedChannel), joinServer) != nil {
+				log.Printf("[Messenger] -> Join: Can't pack message. Dropping packet!")
+				return
+			}
+
+			//We can join the channel
+			model.DB().Model(&channel).Association("Users").Append(user)
+			h.channelsConnections[channel.ID][socketID] = true
+
+			for socketID := range h.channelsConnections[channel.ID] {
+				go socket.SendRawMessageToSocketID(rawMessage, socketID)
+			}
+			log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
+		} else {
+			log.Printf("[Messenger] -> Join: User is already joined to the channel")
+			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 409, "User is already joined to the channel.", socketID)
+		}
+	} else {
+		log.Printf("[Messenger] -> Join: Channel UUID not found, %s", channelID.String())
+		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 404, "Channel UUID not found.", socketID)
+	}
+}
+
 func (h *handler) init() {
 	h.channelsConnections = map[uuid.UUID]map[uuid.UUID]bool{}
 	h.channelsConnections[uuid.Nil] = make(map[uuid.UUID]bool)
+	setInstance(h)
 
 	var channels []model.ChatChannel
 	model.DB().Find(&channels)
@@ -75,7 +210,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 	timestamp := time.Now().Unix()
 	if message.Payload.DecodeMessagePack(&channelParsed) == nil {
 		name := channelParsed.ChannelName
-		if strings.TrimSpace(name) != "" && name != "General" {
+		if strings.TrimSpace(name) != "" && name != "General" && name != "Game" {
 			user, err := auth.GetUser(message.SocketID)
 			if err == nil {
 				//Check if channel already exists
@@ -96,6 +231,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 						ChannelID:   channel.ID.String(),
 						Username:    user.Username,
 						UserID:      user.ID.String(),
+						IsGame:      false,
 						Timestamp:   timestamp,
 					}
 					rawMessage := socket.RawMessage{}
@@ -131,42 +267,7 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 	if message.Payload.Length == 16 {
 		channelID, err := uuid.FromBytes(message.Payload.Bytes)
 		if err == nil {
-			channel := model.ChatChannel{}
-			model.DB().Model(&channel).Related(&model.User{}, "Users")
-			model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
-
-			if channel.ID != uuid.Nil {
-				user, _ := auth.GetUser(message.SocketID)
-				if _, ok := h.channelsConnections[channel.ID][message.SocketID]; !ok {
-					joinServer := ChannelJoin{
-						UserID:    user.ID.String(),
-						Username:  user.Username,
-						ChannelID: channel.ID.String(),
-						Timestamp: time.Now().Unix(),
-					}
-
-					rawMessage := socket.RawMessage{}
-					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserJoinedChannel), joinServer) != nil {
-						log.Printf("[Messenger] -> Join: Can't pack message. Dropping packet!")
-						return
-					}
-
-					//We can join the channel
-					model.DB().Model(&channel).Association("Users").Append(user)
-					h.channelsConnections[channel.ID][message.SocketID] = true
-
-					for socketID := range h.channelsConnections[channel.ID] {
-						go socket.SendRawMessageToSocketID(rawMessage, socketID)
-					}
-					log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
-				} else {
-					log.Printf("[Messenger] -> Join: User is already joined to the channel")
-					socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 409, "User is already joined to the channel.", message.SocketID)
-				}
-			} else {
-				log.Printf("[Messenger] -> Join: Channel UUID not found, %s", channelID.String())
-				socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 404, "Channel UUID not found.", message.SocketID)
-			}
+			h.joinChannel(message.SocketID, channelID)
 		} else {
 			log.Printf("[Messenger] -> Join: Invalid channel UUID")
 			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, "Invalid channel UUID.", message.SocketID)
@@ -181,41 +282,7 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 	if message.Payload.Length == 16 {
 		channelID, err := uuid.FromBytes(message.Payload.Bytes)
 		if err == nil {
-			//Check if channel exists
-			channel := model.ChatChannel{}
-			model.DB().Model(&channel).Related(&model.User{}, "Users")
-			model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
-			if channel.ID != uuid.Nil {
-				user, _ := auth.GetUser(message.SocketID)
-				if _, ok := h.channelsConnections[channel.ID][message.SocketID]; ok {
-					model.DB().Model(&channel).Association("Users").Delete(user)
-
-					//Create a quit message
-					quitResponse := ChannelLeaveResponse{
-						UserID:    user.ID.String(),
-						Username:  user.Username,
-						ChannelID: channel.ID.String(),
-						Timestamp: time.Now().Unix(),
-					}
-					rawMessage := socket.RawMessage{}
-					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserLeftChannel), quitResponse) != nil {
-						log.Printf("[Messenger] -> Quit: Can't pack message. Dropping packet!")
-						return
-					}
-
-					for socketID := range h.channelsConnections[channel.ID] {
-						go socket.SendRawMessageToSocketID(rawMessage, socketID)
-					}
-					delete(h.channelsConnections[channelID], message.SocketID)
-					log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
-				} else {
-					log.Printf("[Messenger] -> Quit: User is not in the channel")
-					socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "User is not in the channel.", message.SocketID)
-				}
-			} else {
-				log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
-				socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 404, "Invalid channel UUID, not found.", message.SocketID)
-			}
+			h.quitChannel(message.SocketID, channelID)
 		} else {
 			log.Printf("[Messenger] -> Quit: Invalid channel UUID")
 			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "Invalid channel UUID.", message.SocketID)
@@ -326,6 +393,8 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 
 	//Update the cache
 	for _, channel := range channels {
-		delete(h.channelsConnections[channel.ID], socketID)
+		if !channel.IsGameChat {
+			delete(h.channelsConnections[channel.ID], socketID)
+		}
 	}
 }

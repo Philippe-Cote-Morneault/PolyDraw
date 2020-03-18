@@ -34,6 +34,7 @@ type ChannelCreateResponse struct {
 	ChannelID   string
 	Username    string
 	UserID      string
+	IsGame      bool
 	Timestamp   int64
 }
 
