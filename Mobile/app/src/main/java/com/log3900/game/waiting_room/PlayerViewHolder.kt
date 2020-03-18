@@ -1,10 +1,12 @@
 package com.log3900.game.waiting_room
 
+import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.log3900.R
 import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
@@ -21,15 +23,15 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
 
     // UI
     private var rootView: View
-    private var avatarImageView: ImageView
-    private var usernameTextView: TextView
-    private var crownImageView: ImageView
+    private var playerChip: Chip
+    private var crownRemoveImageView: ImageView
+    private var addImageView: ImageView
 
     constructor(itemView: View, listener: Listener? = null) : super(itemView) {
         rootView = itemView.findViewById(R.id.list_item_match_waiting_room_player_root_view)
-        avatarImageView = itemView.findViewById(R.id.list_item_match_waiting_room_player_image_view_avatar)
-        usernameTextView = itemView.findViewById(R.id.list_Item_match_waiting_room_player_text_view_player_name)
-        crownImageView = itemView.findViewById(R.id.list_item_match_waiting_room_player_image_view_host_crown)
+        playerChip = itemView.findViewById(R.id.list_item_match_waiting_room_player_chip_player)
+        crownRemoveImageView = itemView.findViewById(R.id.list_item_match_waiting_room_player_image_view_host_crown_remove)
+        addImageView = itemView.findViewById(R.id.list_item_match_waiting_room_player_image_view_add)
 
         rootView.setOnClickListener {
             if (isPlaceholder) {
@@ -45,31 +47,35 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         this.isPlaceholder = isPlaceholder
 
         if (isHost) {
-            crownImageView.visibility = View.VISIBLE
+            crownRemoveImageView.setImageResource(R.drawable.ic_crown_black)
+            crownRemoveImageView.setColorFilter(Color.parseColor("#FFD700"))
         } else {
-            crownImageView.visibility = View.GONE
+            crownRemoveImageView.setImageResource(R.drawable.ic_remove_black_24dp)
+            crownRemoveImageView.setColorFilter(Color.parseColor("#FF0000"))
         }
 
         if (!isPlaceholder) {
-            usernameTextView.text = player?.username
+            addImageView.visibility = View.INVISIBLE
+            playerChip.text = player?.username
             if (!player!!.isCPU) {
                 UserRepository.getInstance().getUser(player.ID)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         {
-                            avatarImageView.setImageResource(getAvatarID(it.pictureID))
-                            avatarImageView.visibility = View.VISIBLE
+                            playerChip.setChipIconResource(getAvatarID(it.pictureID))
                         },
                         {
 
                         }
                     )
             } else {
-                avatarImageView.visibility = View.INVISIBLE
+                playerChip.setChipIconResource(R.drawable.ic_person)
             }
         } else {
-            usernameTextView.text = "Empty Slot"
-            avatarImageView.visibility = View.INVISIBLE
+            playerChip.text = "Empty Slot"
+            playerChip.setChipIconResource(R.drawable.ic_person_colored_foreground)
+            addImageView.visibility = View.VISIBLE
+            crownRemoveImageView.visibility = View.INVISIBLE
         }
 
     }
