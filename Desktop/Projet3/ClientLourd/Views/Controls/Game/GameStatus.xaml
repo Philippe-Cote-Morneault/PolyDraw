@@ -45,6 +45,7 @@
                                     <!-- Icon -->
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"  VerticalAlignment="Center" Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <TextBlock>+200</TextBlock>
                                 </StackPanel>
                                 <TextBlock HorizontalAlignment="Center" Text="{Binding Score, StringFormat={}Score: {0}}"></TextBlock>
                                 <Separator/>

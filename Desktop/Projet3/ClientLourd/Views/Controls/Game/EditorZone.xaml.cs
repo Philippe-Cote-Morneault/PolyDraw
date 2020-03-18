@@ -275,7 +275,7 @@ namespace ClientLourd.Views.Controls.Game
 
         private void FocusFirstTextBox()
         {
-            Task.Delay(50).ContinueWith(_ =>
+            Task.Delay(70).ContinueWith(_ =>
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
