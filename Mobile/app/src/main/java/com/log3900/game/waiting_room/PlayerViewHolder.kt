@@ -17,16 +17,19 @@ import com.log3900.utils.ui.getAvatarID
 class PlayerViewHolder : RecyclerView.ViewHolder {
     private var player: Player? = null
     private var isPlaceholder = true
+    private var isHost = false
 
     // UI
     private var rootView: View
     private var avatarImageView: ImageView
     private var usernameTextView: TextView
+    private var crownImageView: ImageView
 
     constructor(itemView: View, listener: Listener? = null) : super(itemView) {
         rootView = itemView.findViewById(R.id.list_item_match_waiting_room_player_root_view)
         avatarImageView = itemView.findViewById(R.id.list_item_match_waiting_room_player_image_view_avatar)
         usernameTextView = itemView.findViewById(R.id.list_Item_match_waiting_room_player_text_view_player_name)
+        crownImageView = itemView.findViewById(R.id.list_item_match_waiting_room_player_image_view_host_crown)
 
         rootView.setOnClickListener {
             if (isPlaceholder) {
@@ -37,9 +40,15 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
     }
 
-    fun bind(player: Player?, isPlaceholder: Boolean) {
+    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean) {
         this.player = player
         this.isPlaceholder = isPlaceholder
+
+        if (isHost) {
+            crownImageView.visibility = View.VISIBLE
+        } else {
+            crownImageView.visibility = View.GONE
+        }
 
         if (!isPlaceholder) {
             usernameTextView.text = player?.username
