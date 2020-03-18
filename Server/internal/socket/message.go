@@ -39,6 +39,7 @@ type messageType struct {
 	ErrorResponse            int
 	UserJoinedGroup          int
 	ResponseGroupRemoved     int
+	AddVirtualPlayer         int
 	RequestGameStart         int
 	GameStarting             int
 	RequestReadyMatch        int
@@ -98,6 +99,7 @@ var MessageType = &messageType{
 	ResponseGameStart:        49,
 	ResponseGroupCreated:     51,
 	ResponseGroupRemoved:     53,
+	AddVirtualPlayer:         56,
 	GameWelcome:              61,
 	RequestReadyMatch:        62,
 	GameStarting:             63,
