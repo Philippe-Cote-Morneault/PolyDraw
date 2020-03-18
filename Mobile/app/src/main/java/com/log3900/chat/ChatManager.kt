@@ -1,5 +1,6 @@
 package com.log3900.chat
 
+import android.accounts.Account
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
@@ -10,9 +11,11 @@ import com.log3900.R
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.Channel.ChannelManager
 import com.log3900.chat.Message.MessageManager
+import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.settings.sound.SoundManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -171,6 +174,10 @@ class ChatManager : Service() {
     }
 
     private fun onReceivedMessage(chatMessage: ChatMessage) {
+        if (chatMessage.type == ChatMessage.Type.RECEIVED_MESSAGE && (chatMessage.message as ReceivedMessage).userID == AccountRepository.getInstance().getAccount().ID) {
+            return
+        }
+
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.audio_notification_new_message)
     }
 
