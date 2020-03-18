@@ -15,6 +15,6 @@
                     Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false"/>
         </UniformGrid>
         <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"  Style="{StaticResource MaterialDesignHeadline4TextBlock}"></TextBlock>
-        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" TextAlignment="Center"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
+        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
     </DockPanel>
 </UserControl>

@@ -44,5 +44,9 @@
     <system:String x:Key="Update">Modifier</system:String>
     <system:String x:Key="RevertOriginal">[Retourner à l'original]</system:String>
     <system:String x:Key="PasswordValidator">Au moins 8 caractères</system:String>
-
+    
+    <!-- Waiting room -->
+    <system:String x:Key="AddVirtualPlayer">Ajouter un joueur virtuel</system:String>
+    <system:String x:Key="RemovePlayer">Retirer le joueur</system:String>
+    
 </ResourceDictionary>

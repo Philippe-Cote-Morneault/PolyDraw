@@ -294,5 +294,28 @@ namespace ClientLourd.ViewModels
                 CanStart = CanStartGame();
             });
         }
+
+
+        private RelayCommand<Player> _kickPlayerCommand;
+
+        public ICommand KickPlayerCommand
+        {
+            get
+            {
+                return _kickPlayerCommand ?? (_kickPlayerCommand = new RelayCommand<Player>(obj => KickPlayer(obj)));
+            }
+        }
+
+        public async void  KickPlayer(Player player)
+        {
+            ConfirmationDialog confirmationDialog = new ConfirmationDialog($"Remove player", $"Are you sure you want to remove the player {player.User.Username}?");
+            confirmationDialog.Height = 300;
+            confirmationDialog.MessageTextBlock.Margin = new Thickness(30, 0, 30, 0);
+            var response = await DialogHost.Show(confirmationDialog, "Default");
+            if (bool.Parse(response.ToString()))
+            {
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.KickPlayer, new Guid(player.User.ID)));
+            }
+        }
     }
 }
