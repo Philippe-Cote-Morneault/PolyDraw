@@ -42,7 +42,7 @@ type FFA struct {
 
 	receiving          sync.Mutex
 	receivingGuesses   *abool.AtomicBool
-	hasFoundit         map[uuid.UUID]bool
+	hasFoundIt         map[uuid.UUID]bool
 	clientGuess        int
 	waitingResponse    *semaphore.Weighted
 	cancelWait         func()
@@ -55,7 +55,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	f.isRunning = true
 	f.wordHistory = make(map[string]bool)
-	f.hasFoundit = make(map[uuid.UUID]bool, len(connections))
+	f.hasFoundIt = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
 
 	f.scores = make([]score, len(f.players))
@@ -115,7 +115,7 @@ func (f *FFA) GameLoop() {
 		f.nbWaitingResponses = int64(f.realPlayers)
 	} else {
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
-		f.hasFoundit[f.curDrawer.socketID] = true
+		f.hasFoundIt[f.curDrawer.socketID] = true
 	}
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
 	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
@@ -232,8 +232,8 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 	if strings.ToLower(strings.TrimSpace(word)) == f.currentWord && f.currentWord != "" {
 
 		//The word was found
-		if f.receivingGuesses.IsSet() && !f.hasFoundit[socketID] {
-			f.hasFoundit[socketID] = true
+		if f.receivingGuesses.IsSet() && !f.hasFoundIt[socketID] {
+			f.hasFoundIt[socketID] = true
 			f.waitingResponse.Release(1)
 			f.clientGuess++
 			player := f.connections[socketID]
@@ -417,7 +417,7 @@ func (f *FFA) SetOrder() {
 
 func (f *FFA) resetGuess() {
 	for i := range f.players {
-		f.hasFoundit[f.players[i].socketID] = false
+		f.hasFoundIt[f.players[i].socketID] = false
 		f.scores[f.players[i].Order].reset()
 	}
 
@@ -545,7 +545,7 @@ func (f *FFA) finish() {
 func (f *FFA) removePlayer(p *players, socketID uuid.UUID) {
 	//Remove the indexing for the players
 	delete(f.connections, socketID)
-	delete(f.hasFoundit, socketID)
+	delete(f.hasFoundIt, socketID)
 	for i := range f.players {
 		if p.userID == f.players[i].userID {
 			currentPos := f.orderPos
