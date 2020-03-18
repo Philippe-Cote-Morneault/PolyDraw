@@ -3,10 +3,7 @@ package com.log3900.utils.format.moshi
 import android.util.Log
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.log3900.game.group.Difficulty
-import com.log3900.game.group.Group
-import com.log3900.game.group.MatchMode
-import com.log3900.game.group.Player
+import com.log3900.game.group.*
 import com.squareup.moshi.FromJson
 import java.util.*
 
@@ -20,6 +17,15 @@ class GroupAdapter {
         } else {
             matchType = MatchMode.values()[groupJson.get("GameType").asInt]
         }
+
+        var language: Language? = null
+
+        if (groupJson.has("Language")) {
+            language = Language.values()[groupJson.get("Language").asInt]
+        } else {
+            language = Language.ENGLISH
+        }
+
         return Group(
             UUID.fromString(groupJson.getAsJsonPrimitive("ID")!!.asString),
             groupJson.getAsJsonPrimitive("GroupName")!!.asString,
@@ -28,6 +34,7 @@ class GroupAdapter {
             Difficulty.values()[groupJson.getAsJsonPrimitive("Difficulty")!!.asInt],
             UUID.fromString(groupJson.getAsJsonPrimitive("OwnerID").asString),
             groupJson.getAsJsonPrimitive("OwnerName").asString,
+            language,
             jsonArrayToPlayers(groupJson.getAsJsonArray("Players")!!)
         )
     }
