@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
-	"log"
 
 	"github.com/spf13/viper"
 	"gitlab.com/jigsawcorp/log3900/internal/config"
@@ -75,4 +77,5 @@ func registerServices() {
 	service.Add(&drawing.Drawing{})
 	service.Add(&lobby.Lobby{})
 	service.Add(&match.Service{})
+	service.Add(&virtualplayer.VirtualPlayer{})
 }
