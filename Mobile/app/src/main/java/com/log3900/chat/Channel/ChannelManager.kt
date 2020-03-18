@@ -100,6 +100,10 @@ class ChannelManager {
             }!!
             previousChannel = newActiveChannel
             changeActiveChannel(newActiveChannel)
+        } else if (activeChannel == null && previousChannel?.ID == channelID) {
+            previousChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
         }
 
         if (unreadMessages.containsKey(channelID)) {
@@ -150,7 +154,11 @@ class ChannelManager {
 
     private fun onSubscribedToChannel(channel: Channel) {
         if (channel.isGame) {
-            changeActiveChannel(channel)
+            if (activeChannel != null) {
+                changeActiveChannel(channel)
+            } else {
+                previousChannel = channel
+            }
         }
     }
 
@@ -161,6 +169,10 @@ class ChannelManager {
             }!!
             changeActiveChannel(newActiveChannel)
             previousChannel = newActiveChannel
+        } else if (activeChannel == null && previousChannel?.ID == channel.ID) {
+            previousChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
         }
 
         if (unreadMessages.containsKey(channel.ID)) {
