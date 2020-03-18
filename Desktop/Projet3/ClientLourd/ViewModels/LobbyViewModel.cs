@@ -142,8 +142,8 @@ namespace ClientLourd.ViewModels
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
             else
                 IsGameStarted = false;
-            HomeViewModel.FetchLobbies();
-            ContainedView = Utilities.Enums.Views.Home.ToString();
+            //HomeViewModel.FetchLobbies();
+            //ContainedView = Utilities.Enums.Views.Home.ToString();
         }
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
@@ -290,6 +290,13 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                LobbyEventArgs lobbyEventArgs = (LobbyEventArgs)e;
+                if (SessionInformations.User.ID == lobbyEventArgs.UserID)
+                {
+                    HomeViewModel.FetchLobbies();
+                    ContainedView = Utilities.Enums.Views.Home.ToString();
+                }
+
                 CurrentLobby = CurrentLobby;
                 CanStart = CanStartGame();
             });
@@ -316,6 +323,21 @@ namespace ClientLourd.ViewModels
             {
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.KickPlayer, new Guid(player.User.ID)));
             }
+        }
+
+        private RelayCommand<Player> _addVirtualPlayerCommand;
+
+        public ICommand AdVirtualPlayerCommand
+        {
+            get
+            {
+                return _addVirtualPlayerCommand ?? (_addVirtualPlayerCommand = new RelayCommand<Player>(obj => AddVirtualPlayer()));
+            }
+        }
+
+        public void AddVirtualPlayer()
+        {
+
         }
     }
 }

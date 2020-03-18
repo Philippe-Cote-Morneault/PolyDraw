@@ -369,7 +369,6 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                
                 if (LobbyExists(userLeftLobbyArgs.GroupID))
                 {
                     var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);

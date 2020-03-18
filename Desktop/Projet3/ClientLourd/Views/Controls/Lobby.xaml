@@ -65,12 +65,12 @@
                                     <materialDesign:PackIcon Kind="Remove" ToolTip="{DynamicResource RemovePlayer}" Margin="10 8 0 0" Foreground="Red" Background="White" Cursor="Hand">
                                         <materialDesign:PackIcon.InputBindings>
                                             <MouseBinding Gesture="LeftClick" 
-                                        Command="{Binding ElementName=DataContext, Path=KickPlayerCommand}"
-                                        CommandParameter="{Binding}"
+                                                        Command="{Binding ElementName=DataContext, Path=KickPlayerCommand}"
+                                                        CommandParameter="{Binding}"
                                                       />
                                             <MouseBinding Gesture="LeftDoubleClick" 
-                                        Command="{Binding ElementName=DataContext, Path=KickPlayerCommand}"
-                                        CommandParameter="{Binding}"/>
+                                                        Command="{Binding ElementName=DataContext, Path=KickPlayerCommand}"
+                                                        CommandParameter="{Binding}"/>
 
                                         </materialDesign:PackIcon.InputBindings>
                                         <materialDesign:PackIcon.Visibility>
@@ -101,7 +101,13 @@
                                     </materialDesign:Chip.Icon>
                                 </materialDesign:Chip>
                                 <materialDesign:PackIcon Kind="Add"  ToolTip="{DynamicResource AddVirtualPlayer}" Margin="10 8 0 0" Foreground="Green" Background="White" Cursor="Hand">
-                                    
+                                    <materialDesign:PackIcon.InputBindings>
+                                        <MouseBinding Gesture="LeftClick" 
+                                                        Command="{Binding ElementName=DataContext, Path=AddVirtualPlayerCommand}"/>
+                                        <MouseBinding Gesture="LeftDoubleClick" 
+                                                        Command="{Binding ElementName=DataContext, Path=AddVirtualPlayerCommand}"/>
+
+                                    </materialDesign:PackIcon.InputBindings>
                                     <materialDesign:PackIcon.Visibility>
                                         <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
                                             <Binding ElementName="DataContext" Path="CurrentLobby.HostID" UpdateSourceTrigger="PropertyChanged"></Binding>
