@@ -12,10 +12,9 @@ import android.widget.*
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
-import com.log3900.game.group.Difficulty
-import com.log3900.game.group.Group
-import com.log3900.game.group.GroupCreated
-import com.log3900.game.group.MatchMode
+import com.log3900.game.group.*
+import com.log3900.settings.language.LanguageManager
+import com.log3900.user.account.AccountRepository
 
 class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragment() {
     // UI
@@ -24,6 +23,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     private lateinit var virtualPlayersTextView: TextView
     private lateinit var gameTypeSpinner: Spinner
     private lateinit var difficultySpinner: Spinner
+    private lateinit var languageSpinner: Spinner
     private lateinit var removeMaxPlayersButton: ImageView
     private lateinit var addMaxPlayersButton: ImageView
     private lateinit var removeVirtualPlayersButton: ImageView
@@ -34,6 +34,8 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     private var virtualPlayersCurrentValye = 0
     private var currentMatchMode = MatchMode.FFA
     private var currentDifficulty = Difficulty.EASY
+    private var currentLanguage: Language? = null
+    private var availableLanguages: ArrayList<Language> = arrayListOf()
 
     private var addMaxPlayersButtonEnable = true
     private var removeMaxPlayersButtonEnable = true
@@ -50,7 +52,8 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
                         maxPlayersTextView.text.toString().toInt(),
                         virtualPlayersTextView.text.toString().toInt(),
                         MatchMode.values()[gameTypeSpinner.selectedItemPosition],
-                        Difficulty.values()[difficultySpinner.selectedItemPosition]))
+                        Difficulty.values()[difficultySpinner.selectedItemPosition],
+                        availableLanguages[languageSpinner.selectedItemPosition]))
             }
             .setNegativeButton("Cancel") { _, _ ->
                 listener?.onNegativeClick()
@@ -70,6 +73,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         virtualPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_virtual_players)
         gameTypeSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_match_type)
         difficultySpinner = rootView.findViewById(R.id.dialog_create_match_spinner_difficulty)
+        languageSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_language)
         removeMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_remove_max_player)
         addMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_add_max_player)
         removeVirtualPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_remove_virtual_player)
@@ -107,6 +111,21 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
             difficultySpinnerItems.add(resources.getString(Difficulty.stringRes(it)))
         }
 
+        val languageSpinnerItems = ArrayList<String>()
+        if (resources.configuration.locale.language == "en") {
+            availableLanguages = arrayListOf(Language.ENGLISH, Language.FRENCH)
+            currentLanguage = Language.ENGLISH
+            languageSpinnerItems.add(resources.getString(Language.stringRes(Language.ENGLISH)))
+            languageSpinnerItems.add(resources.getString(Language.stringRes(Language.FRENCH)))
+        } else {
+            availableLanguages = arrayListOf(Language.FRENCH, Language.ENGLISH)
+            currentLanguage = Language.FRENCH
+            languageSpinnerItems.add(resources.getString(Language.stringRes(Language.FRENCH)))
+            languageSpinnerItems.add(resources.getString(Language.stringRes(Language.ENGLISH)))
+        }
+
+
+
         val matchTypeAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, matchModeSpinnerItems)
         matchTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         gameTypeSpinner.adapter = matchTypeAdapter
@@ -128,6 +147,18 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+
+        val languageAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_item, languageSpinnerItems)
+        languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        languageSpinner.adapter = languageAdapter
+        languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
     }
 
     private fun onRemoveMaxPlayersClick() {

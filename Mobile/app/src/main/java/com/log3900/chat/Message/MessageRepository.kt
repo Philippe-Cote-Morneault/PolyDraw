@@ -52,7 +52,7 @@ class MessageRepository : Service() {
         return Single.create {
             if (!messageCache.isHistoryFetched(channelID)) {
                 messageCache.setHistoryFetchedState(channelID, true)
-                getChannelMessages(channelID, 0, 50).subscribe(
+                getChannelMessages(channelID, messageCache.getMessages(channelID).size,  messageCache.getMessages(channelID).size + 50).subscribe(
                     { messages ->
                         messageCache.prependMessage(channelID, LinkedList(messages))
                         it.onSuccess(messageCache.getMessages(channelID))

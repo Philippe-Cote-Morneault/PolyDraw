@@ -12,6 +12,7 @@ import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.log3900.user.UserRepository
+import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import com.log3900.utils.ui.getAvatarID
@@ -52,7 +53,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
     }
 
-    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean) {
+    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean) {
         this.player = player
         this.isPlaceholder = isPlaceholder
 
@@ -65,8 +66,14 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
 
         if (!isPlaceholder) {
-            crownRemoveImageView.visibility = View.VISIBLE
+            if (showKickOptions) {
+                crownRemoveImageView.visibility = View.VISIBLE
+            } else {
+                crownRemoveImageView.visibility = View.INVISIBLE
+            }
+
             addImageView.visibility = View.INVISIBLE
+
             playerChip.text = player?.username
             if (!player!!.isCPU) {
                 UserRepository.getInstance().getUser(player.ID)
@@ -80,14 +87,26 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
                         }
                     )
             } else {
+                if (showKickOptions) {
+                    addImageView.visibility = View.VISIBLE
+                } else {
+                    addImageView.visibility = View.INVISIBLE
+                }
+                addImageView.visibility = View.INVISIBLE
                 playerChip.setChipIconResource(R.drawable.ic_person)
             }
         } else {
             playerChip.text = "Empty Slot"
             playerChip.setChipIconResource(R.drawable.ic_person_colored_foreground)
-            addImageView.visibility = View.VISIBLE
+            if (showKickOptions) {
+                addImageView.visibility = View.VISIBLE
+
+            } else {
+                addImageView.visibility = View.INVISIBLE
+            }
             crownRemoveImageView.visibility = View.INVISIBLE
         }
+
 
     }
 
