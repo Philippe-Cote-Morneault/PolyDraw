@@ -171,9 +171,9 @@ namespace ClientLourd.ViewModels
             if (e.Valid)
             {
                 
-                ShowCanvasMessage($"+ {e.Points}");
+                //ShowCanvasMessage($"+ {e.Points}");
                 Player player = Players.First(p => p.User.ID == SessionInformations.User.ID);
-                player.PointsRecentlyGained = e.PointsTotal - player.Score;
+                player.PointsRecentlyGained = e.Points;
                 player.Score = e.PointsTotal;
 
                 NotifyPropertyChanged(nameof(Players));
