@@ -73,6 +73,10 @@ class GroupManager : Service() {
         }
     }
 
+    fun kickPlayer(player: Player) {
+        groupRepository?.kickPlayer(player)
+    }
+
     fun startMatch() {
         socketService?.sendMessage(Event.START_MATCH, byteArrayOf())
     }

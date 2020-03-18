@@ -136,6 +136,10 @@ class GroupRepository : Service() {
         socketService?.sendMessage(Event.LEAVE_GROUP_REQUEST, byteArrayOf())
     }
 
+    fun kickPlayer(player: Player) {
+        socketService?.sendMessage(Event.KICK_PLAYER, UUIDUtils.uuidToByteArray(player.ID))
+    }
+
     fun refreshRepository() {
         groupCache = GroupCache()
         getGroups(AccountRepository.getInstance().getAccount().sessionToken).subscribe(

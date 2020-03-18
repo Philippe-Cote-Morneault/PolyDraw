@@ -64,7 +64,7 @@ class MatchWaitingRoomPresenter : Presenter {
     }
 
     fun onPlayerRemoveClick(player: Player) {
-
+        groupManager?.kickPlayer(player)
     }
 
     private fun onGroupUpdated(groupID: UUID){
