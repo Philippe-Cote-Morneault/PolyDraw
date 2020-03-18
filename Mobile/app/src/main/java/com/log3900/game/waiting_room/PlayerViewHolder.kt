@@ -40,6 +40,16 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
                 listener?.playerClicked(player!!)
             }
         }
+
+        addImageView.setOnClickListener {
+            listener?.addClicked()
+        }
+
+        crownRemoveImageView.setOnClickListener {
+            if (!isHost) {
+                listener?.removedClicked(player!!)
+            }
+        }
     }
 
     fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean) {
@@ -82,5 +92,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
 
     interface Listener {
         fun playerClicked(player: Player)
+        fun addClicked()
+        fun removedClicked(player: Player)
     }
 }

@@ -59,6 +59,14 @@ class MatchWaitingRoomPresenter : Presenter {
         // Find something interesting to do here
     }
 
+    fun onPlayerAddClick() {
+
+    }
+
+    fun onPlayerRemoveClick(player: Player) {
+
+    }
+
     private fun onGroupUpdated(groupID: UUID){
         if (groupID == groupManager?.currentGroup?.ID) {
             matchWaitingRoomView?.notifyGroupUpdated()
