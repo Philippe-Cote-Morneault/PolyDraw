@@ -391,13 +391,20 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 
 //findWord used to the find the word that must be drawn
 func (f *FFA) findWord() string {
-	//TODO language
+	key := ""
+	switch f.info.Language {
+	case language.EN:
+		key = "dict_words_en"
+	case language.FR:
+		key = "dict_words_fr"
+	}
+
 	word := ""
 	watchDog := 0
 	for word == "" {
 
 		var err error
-		word, err = model.Redis().SRandMember("dict_words_en").Result()
+		word, err = model.Redis().SRandMember(key).Result()
 		if err != nil {
 			log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
 			f.Close()
