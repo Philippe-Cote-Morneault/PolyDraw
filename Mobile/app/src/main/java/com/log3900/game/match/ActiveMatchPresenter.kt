@@ -1,10 +1,9 @@
 package com.log3900.game.match
 
-import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
-import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
+import com.log3900.settings.sound.SoundManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
@@ -73,6 +72,15 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.notifyPlayersChanged()
     }
 
+    private fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
+        activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
+    }
+
+    private fun onGuessedWordWrong() {
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
+    }
+
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
@@ -85,6 +93,8 @@ class ActiveMatchPresenter : Presenter {
             EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
             EventType.MATCH_SYNCHRONISATION -> onMatchSynchronisation(event.data as Synchronisation)
             EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
+            EventType.GUESSED_WORD_RIGHT -> onGuessedWordRight(event.data as PlayerGuessedWord)
+            EventType.GUESSED_WORD_WRONG -> onGuessedWordWrong()
         }
     }
 

@@ -8,28 +8,14 @@ import android.os.IBinder
 import android.os.Message
 import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.log3900.game.group.*
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
-import com.log3900.utils.format.UUIDUtils
-import com.log3900.utils.format.moshi.GroupAdapter
 import com.log3900.utils.format.moshi.MatchAdapter
-import com.log3900.utils.format.moshi.UUIDAdapter
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -122,7 +108,11 @@ class MatchRepository : Service() {
 
     private fun onGuessWordResponse(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
-        Log.d("POTATO", "guessWordResponse = $json")
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val validGuess = jsonObject.get("Valid").asBoolean
+        if (!validGuess) {
+            EventBus.getDefault().post(MessageEvent(EventType.GUESSED_WORD_WRONG, null))
+        }
     }
 
     private fun onPlayerTurnToDraw(message: com.log3900.socket.Message) {
@@ -147,11 +137,12 @@ class MatchRepository : Service() {
         val playerGuessedWord = MatchAdapter.jsonToPlayerGuessedWord(jsonObject)
         updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal)
         if (playerGuessedWord.userID == AccountRepository.getInstance().getAccount().ID) {
-            EventBus.getDefault().post(MessageEvent(EventType.POINTS_GAINED, playerGuessedWord.points))
+            EventBus.getDefault().post(MessageEvent(EventType.GUESSED_WORD_RIGHT, playerGuessedWord))
+            //EventBus.getDefault().post(MessageEvent(EventType.POINTS_GAINED, playerGuessedWord.points))
+        } else {
+            EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
         }
-        Log.d("POTATO", "Posting MATCH_PLAYER_UPDATED")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
-        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
     }
 
     private fun onPlayerSync(message: com.log3900.socket.Message) {
