@@ -152,8 +152,10 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                        var e = (MessageReceivedEventArgs) args;
-                        Channel channel = Channels.First(c => c.ID == e.ChannelId);
+                        var e = (ChatEventArgs) args;
+                        Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                        if (channel == null)
+                            return;
                         Channels.Remove(channel);
                         if (SelectedChannel == channel)
                         {
@@ -179,12 +181,18 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                        var e = (MessageReceivedEventArgs) args;
-                        Channel channel = Channels.First(c => c.ID == e.ChannelId);
-                        Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
-                        channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
-                        Channels.First(c => c.ID == e.ChannelId).Messages.Add(m);
-                        UpdateChannels();
+                    var e = (ChatEventArgs) args;
+                    Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                    if (channel == null)
+                        return;
+                    Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
+                    channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
+                    channel.Messages.Add(m);
+                    if (channel.IsGame)
+                    {
+                        Channels.Remove(channel);
+                    }
+                    UpdateChannels();
                 });
             }
             finally{
@@ -199,8 +207,11 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(async () =>
                 {
-                        var e = (MessageReceivedEventArgs) args;
-                        Channel channel = Channels.First(c => c.ID == e.ChannelId);
+                        var e = (ChatEventArgs) args;
+                        Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                       if(channel == null){ 
+                           return;
+                       } 
                         Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
                         channel.Users.Add(await GetUser(e.Username, e.UserID));
                         channel.Messages.Add(m);
@@ -225,8 +236,8 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    MessageReceivedEventArgs e = (MessageReceivedEventArgs) args;
-                    var newChannel = new Channel(e.ChannelName, e.ChannelId);
+                    ChatEventArgs e = (ChatEventArgs) args;
+                    var newChannel = new Channel(e.ChannelName, e.ChannelId, e.IsGame);
                     Channels.Add(newChannel);
                     if (e.UserID == SessionInformations.User.ID)
                     {
@@ -243,7 +254,7 @@ namespace ClientLourd.ViewModels
 
         private async void SocketClientOnMessageReceived(object source, EventArgs e)
         {
-            var args = (MessageReceivedEventArgs) e;
+            var args = (ChatEventArgs) e;
             //TODO cache user 
             await App.Current.Dispatcher.InvokeAsync(async() =>
             {

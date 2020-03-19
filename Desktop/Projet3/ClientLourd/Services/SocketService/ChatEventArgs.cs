@@ -3,11 +3,16 @@ using ClientLourd.Services.DateService;
 
 namespace ClientLourd.Services.SocketService
 {
-    public class MessageReceivedEventArgs : EventArgs
+    public class ChatEventArgs : EventArgs
     {
-        public MessageReceivedEventArgs(dynamic data)
+        public ChatEventArgs(dynamic data)
         {
             _data = data;
+        }
+
+        public bool IsGame
+        {
+            get => _data["IsGame"];
         }
 
         private dynamic _data;

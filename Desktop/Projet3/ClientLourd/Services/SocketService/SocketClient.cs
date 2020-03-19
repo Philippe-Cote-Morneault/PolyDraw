@@ -154,19 +154,19 @@ namespace ClientLourd.Services.SocketService
                             OnHealthCheck(this);
                             break;
                         case SocketMessageTypes.MessageReceived:
-                            OnMessageReceived(this, new MessageReceivedEventArgs(data));
+                            OnMessageReceived(this, new ChatEventArgs(data));
                             break;
                         case SocketMessageTypes.UserJoinedChannel:
-                            OnUserJoinedChannel(this, new MessageReceivedEventArgs(data));
+                            OnUserJoinedChannel(this, new ChatEventArgs(data));
                             break;
                         case SocketMessageTypes.UserLeftChannel:
-                            OnUserLeftChannel(this, new MessageReceivedEventArgs(data));
+                            OnUserLeftChannel(this, new ChatEventArgs(data));
                             break;
                         case SocketMessageTypes.UserCreatedChannel:
-                            OnUserCreatedChannel(this, new MessageReceivedEventArgs(data));
+                            OnUserCreatedChannel(this, new ChatEventArgs(data));
                             break;
                         case SocketMessageTypes.UserDeletedChannel:
-                            OnUserDeletedChannel(this, new MessageReceivedEventArgs(data));
+                            OnUserDeletedChannel(this, new ChatEventArgs(data));
                             break;
                         case SocketMessageTypes.ServerStrokeSent:
                             OnServerStrokeSent(this, new StrokeSentEventArgs(data));

@@ -161,7 +161,7 @@
     <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
     <Compile Include="Services\SocketService\LobbyEventArgs.cs" />
     <Compile Include="Services\SocketService\MatchEventArgs.cs" />
-    <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
+    <Compile Include="Services\SocketService\ChatEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
     <Compile Include="Services\SoundService\SoundService.cs" />

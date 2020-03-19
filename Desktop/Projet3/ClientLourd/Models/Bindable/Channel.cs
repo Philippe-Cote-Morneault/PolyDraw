@@ -11,11 +11,12 @@ namespace ClientLourd.Models.Bindable
         {
             InitTimer();
         }
-        public Channel(string name, string id)
+        public Channel(string name, string id, bool isGame)
         {
             InitTimer();
             Name = name;
             ID = id;
+            IsGame = isGame;
             IsFullyLoaded = true;
             Users = new ObservableCollection<User>();
             Messages = new ObservableCollection<Message>();
@@ -156,7 +157,23 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
         private bool _isSelected;
+
+        public bool IsGame
+        {
+            get => _isGame;
+            set
+            {
+                if(value != _isGame)
+                {
+                    _isGame = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isGame;
 
     }
 }

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\Users\ced\.Rider2019.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\ced\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Projet3.2040247890.00" t="ExcludeRecursive" />
-    <e p="C:\Users\ced\Desktop\Projet3\log3900\Desktop\Projet3" t="IncludeFlat">
+    <e p="C:\Users\ced\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Projet3.-690729273.00" t="ExcludeRecursive" />
+    <e p="C:\Users\ced\Desktop\log3900\Desktop\Projet3" t="IncludeFlat">
       <e p="ClientLourd" t="IncludeRecursive">
         <e p="App.config" t="Include" />
         <e p="App.xaml" t="Include" />
@@ -120,6 +120,7 @@
           <e p="MessageNotification.wav" t="Include" />
           <e p="PointEraser.cur" t="Include" />
           <e p="poly.png" t="Include" />
+          <e p="robot.png" t="Include" />
           <e p="sword.png" t="Include" />
           <e p="swords.png" t="Include" />
           <e p="TimerWarning.wav" t="Include" />
@@ -155,10 +156,10 @@
             <e p="ServerStrokeDrawerService.cs" t="Include" />
           </e>
           <e p="SocketService" t="Include">
+            <e p="ChatEventArgs.cs" t="Include" />
             <e p="DrawingEventArgs.cs" t="Include" />
             <e p="LobbyEventArgs.cs" t="Include" />
             <e p="MatchEventArgs.cs" t="Include" />
-            <e p="MessageReceivedEventArgs.cs" t="Include" />
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketErrorEventArgs.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
