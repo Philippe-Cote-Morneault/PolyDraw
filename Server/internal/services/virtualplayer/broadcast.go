@@ -3,19 +3,19 @@ package virtualplayer
 import "gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 //BAddPlayer message to indicate to add virtual player
-const BAddPlayer = "drawing:addPlayer"
+const BAddPlayer = "drawing:addplayer"
 
 //BKickPlayer message to indicate to kick virtual player
-const BKickPlayer = "drawing:kickPlayer"
+const BKickPlayer = "drawing:kickplayer"
 
 //BGameStarts message to indicate when game starts
-const BGameStarts = "drawing:gameStarts"
+const BGameStarts = "drawing:gamestarts"
 
 //BRoundEnds message to indicate when round ends
-const BRoundEnds = "drawing:roundEnds"
+const BRoundEnds = "drawing:roundends"
 
 //BAskHint message to ask for a hint
-const BAskHint = "drawing:askHint"
+const BAskHint = "drawing:askhint"
 
 //BSize buffer size for the drawing service
 const BSize = 5
