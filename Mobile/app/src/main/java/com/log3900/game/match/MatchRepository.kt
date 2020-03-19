@@ -47,6 +47,7 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.PLAYER_LEFT_MATCH, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.TIMES_UP, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.CHECKPOINT, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.ROUND_ENDED, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -85,6 +86,7 @@ class MatchRepository : Service() {
             Event.PLAYER_LEFT_MATCH -> onPlayerLeftMatch(socketMessage)
             Event.TIMES_UP -> onTimesUp(socketMessage)
             Event.CHECKPOINT -> onCheckpoint(socketMessage)
+            Event.ROUND_ENDED -> onRoundEnded(socketMessage)
         }
     }
 
@@ -183,7 +185,6 @@ class MatchRepository : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         Log.d("POTATO", "onPlayerLeftMatch json = $json")
         val userID = UUID.fromString(jsonObject.get("UserID").asString)
-        val username = jsonObject.get("Username").asString
         if (userID != AccountRepository.getInstance().getAccount().ID) {
             currentMatch?.players?.removeIf {
                 it.ID == userID
@@ -205,6 +206,12 @@ class MatchRepository : Service() {
         Log.d("POTATO", "onCheckpoint json = $json")
     }
 
+    private fun onRoundEnded(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "onRoundEnded json = $json")
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
         playerScores[playerID] = newScore
         reorderPlayers()
@@ -217,6 +224,7 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.TIMES_UP, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.PLAYER_LEFT_MATCH, socketMessageHandler!!)
