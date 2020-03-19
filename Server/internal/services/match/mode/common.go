@@ -2,6 +2,7 @@ package mode
 
 import (
 	"github.com/google/uuid"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -91,4 +92,15 @@ func (b *base) ready(socketID uuid.UUID) {
 		b.readyMatch.Done()
 		b.readyOnce[socketID] = true
 	}
+}
+
+//getPlayers used to return players needs to be exported by the implementing struct
+func (b *base) getPlayers() []match2.Player {
+	players := make([]match2.Player, len(b.players))
+	for i := range b.players {
+		players[i].ID = b.players[i].userID
+		players[i].Username = b.players[i].Username
+		players[i].IsCPU = b.players[i].IsCPU
+	}
+	return players
 }
