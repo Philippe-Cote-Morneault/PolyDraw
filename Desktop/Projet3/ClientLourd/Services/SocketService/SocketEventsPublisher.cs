@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 
 namespace ClientLourd.Services.SocketService
 {
@@ -125,6 +126,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler AreYouReady;
         public event SocketEventHandler UserDeleteStroke;
         public event SocketEventHandler HintResponse;
+        public event SocketEventHandler RoundEnded;
 
 
         protected virtual void OnMatchStarted(object source)
@@ -189,6 +191,12 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnHintResponse(object source, EventArgs e)
         {
             HintResponse?.Invoke(source, e);
+        }
+        
+        
+        protected virtual void OnRoundEnded(object source, EventArgs e)
+        {
+            RoundEnded?.Invoke(source, e);
         }
 
 

@@ -240,6 +240,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.HintResponse:
                             OnHintResponse(this, new MatchEventArgs(data));
                             break;
+                        case SocketMessageTypes.MatchRoundEnded:
+                            OnRoundEnded(this, new MatchEventArgs(data));
+                            break;
                         default:
                             throw new InvalidDataException();
                     }                    
