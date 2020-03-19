@@ -400,6 +400,13 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 
 }
 
+//GetPlayers returns the number of players
+func (f *FFA) GetPlayers() []match2.Player {
+	defer f.receiving.Unlock()
+	f.receiving.Lock()
+	return f.getPlayers()
+}
+
 //findGame used to find a game for the virtual players
 func (f *FFA) findGame() *model.Game {
 	word := ""

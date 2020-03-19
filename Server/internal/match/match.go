@@ -39,4 +39,7 @@ type IMatch interface {
 
 	//GetWelcome returns the message that the game manager needs to send before all the users can register
 	GetWelcome() socket.RawMessage
+
+	//GetPlayers returns the list of the actual players.
+	GetPlayers() []Player
 }
