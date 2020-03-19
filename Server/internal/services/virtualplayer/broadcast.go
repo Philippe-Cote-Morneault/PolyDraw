@@ -23,6 +23,9 @@ const BRoundEnds = "drawing:roundEnds"
 //BAskHint message to ask for a hint
 const BAskHint = "drawing:askHint"
 
+//BChatNew message used to inform the virtual player of the new chat channel id
+const BChatNew = "drawing:chatnew"
+
 //BSize buffer size for the drawing service
 const BSize = 5
 
