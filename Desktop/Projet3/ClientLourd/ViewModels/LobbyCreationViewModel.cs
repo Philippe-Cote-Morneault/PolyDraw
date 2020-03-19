@@ -24,7 +24,7 @@ namespace ClientLourd.ViewModels
         {
             GameName = "";
             SelectedMode = GameModes.FFA.GetDescription();
-            SelectedNumberOfVirtualPlayers = 0;
+            SelectedNumberOfPlayers = 8;
             SelectedDifficulty = DifficultyLevel.Easy.GetDescription();
         }
 
@@ -82,11 +82,24 @@ namespace ClientLourd.ViewModels
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _selectedMode = value.GetEnumFromDescription<GameModes>();
-                    SelectedNumberOfVirtualPlayers = 0;
+                    
+                    if (_selectedMode == GameModes.Coop)
+                    {
+                        SelectedNumberOfPlayers = 4;
+                    }
+                    
+                    if (_selectedMode == GameModes.Solo)
+                    {
+                        SelectedNumberOfPlayers = 1;
+                    }
+                    
+                    if (_selectedMode == GameModes.FFA)
+                    {
+                        SelectedNumberOfPlayers = 8;
+                    }
+
                     NotifyPropertyChanged();
-                    NotifyPropertyChanged(nameof(PlayersMax));
-                    NotifyPropertyChanged(nameof(PlayerMin));
-                    NotifyPropertyChanged(nameof(VirtualPlayersList));
+                    NotifyPropertyChanged(nameof(NumberOfPlayersList));
                 }
             }
         }
@@ -97,32 +110,32 @@ namespace ClientLourd.ViewModels
         }
 
 
-        private int _selectedNumberOfVirtualPlayers;
-        public int SelectedNumberOfVirtualPlayers
+        private int _selectedNumberOfPlayers;
+        public int SelectedNumberOfPlayers
         {
-            get => _selectedNumberOfVirtualPlayers;
+            get => _selectedNumberOfPlayers;
             set
             {
-                if (value != _selectedNumberOfVirtualPlayers)
+                if (value != _selectedNumberOfPlayers)
                 {
-                    _selectedNumberOfVirtualPlayers = value;
+                    _selectedNumberOfPlayers = value;
                     NotifyPropertyChanged();
                 }
             }
         }
 
-        public List<int> VirtualPlayersList
+        public List<int> NumberOfPlayersList
         {
-            get 
+            get
             {
                 if (SelectedMode == GameModes.Solo.GetDescription())
-                    return new List<int>() {0};
+                    return new List<int>() { 1 };
 
                 if (SelectedMode == GameModes.FFA.GetDescription())
-                    return new List<int>() { 0, 1, 2, 3, 4, 5, 6 };
+                    return new List<int>() { 8, 7, 6, 5, 4, 3, 2 };
 
                 if (SelectedMode == GameModes.Coop.GetDescription())
-                    return new List<int>() { 0, 1, 2 };
+                    return new List<int>() { 4, 3, 2 };
 
                 NotifyPropertyChanged();
                 return new List<int>();
@@ -166,7 +179,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGroup(GameName, PlayersMax, SelectedNumberOfVirtualPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
+                await RestClient.PostGroup(GameName, SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
@@ -175,43 +188,6 @@ namespace ClientLourd.ViewModels
             }
         }
         
-
-        public int PlayersMax
-        {
-            get
-            {
-                if (SelectedMode == GameModes.Solo.GetDescription())
-                    return 1;
-
-                if (SelectedMode == GameModes.Coop.GetDescription())
-                    return 4;
-
-                if (SelectedMode == GameModes.FFA.GetDescription())
-                    return 8;
-
-                NotifyPropertyChanged();
-                return -1;
-            }
-        }
-
-        public int PlayerMin
-        {
-            get
-            {
-                if (SelectedMode == GameModes.Solo.GetDescription())
-                    return 1;
-
-                if (SelectedMode == GameModes.Coop.GetDescription())
-                    return 2;
-
-                if (SelectedMode == GameModes.FFA.GetDescription())
-                    return 2;
-
-                NotifyPropertyChanged();
-                return -1;
-            }
-        }
-
         private bool LobbyNameValid(string lobbyName)
         {
             return LobbyNameRule.IsAlphaNumerical(lobbyName);

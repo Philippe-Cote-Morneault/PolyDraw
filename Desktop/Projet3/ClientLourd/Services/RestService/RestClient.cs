@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using ClientLourd.Models.Bindable;
+﻿using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
-using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService.Exceptions;
-using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.Enums;
+using ClientLourd.ViewModels;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Serialization.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Net;
+using System.Threading.Tasks;
+using System.Windows;
 using DataFormat = RestSharp.DataFormat;
 
 namespace ClientLourd.Services.RestService
@@ -23,6 +21,13 @@ namespace ClientLourd.Services.RestService
         private RestSharp.RestClient _client;
         private string _sessionToken;
         private NetworkInformations _networkInformations;
+        public string Language
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+            }
+        }
 
         public RestClient(NetworkInformations informations)
         {
@@ -198,15 +203,15 @@ namespace ClientLourd.Services.RestService
             var response = await Execute(request);
         }
 
-        public async Task<string> PostGroup(string groupName, int playersMax, int virtualPlayers, GameModes gameType, DifficultyLevel difficulty)
+        public async Task<string> PostGroup(string groupName, int playersMax, GameModes gameType, DifficultyLevel difficulty)
         {
             RestRequest request = new RestRequest($"/groups", Method.POST);
-            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            AddBasicHeaders(request);
+
             request.AddJsonBody(new
             {
                 GroupName = groupName,
                 PlayersMax = playersMax,
-                VirtualPlayers = virtualPlayers,
                 GameType = (int)gameType,
                 Difficulty = (int)difficulty
 
@@ -240,17 +245,6 @@ namespace ClientLourd.Services.RestService
             return groups;
         }
 
-        /*public async Task<object> GetGroup(string groupID)
-        {
-            RestRequest request = new RestRequest($"/groups/{groupID}", Method.GET);
-            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
-            var response = await Execute(request);
-            
-            var deseralizer = new JsonDeserializer();
-            return deseralizer.Deserialize<dynamic>(response);
-        }*/
-
-
         private Task<IRestResponse> Execute(RestRequest request)
         {
             Task<IRestResponse> task = new Task<IRestResponse>(() =>
@@ -279,6 +273,13 @@ namespace ClientLourd.Services.RestService
             task.Start();
             return task;
         }
+
+        private void AddBasicHeaders(RestRequest request)
+        {
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            request.AddParameter("Language", Language, ParameterType.HttpHeader);
+        }
+
 
         public delegate void RestEventHandler(object source, EventArgs args);
 
