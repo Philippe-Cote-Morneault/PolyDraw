@@ -142,7 +142,10 @@ namespace ClientLourd.ViewModels
             if (!IsGameStarted)
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
             else
+            {
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveMatch));
                 IsGameStarted = false;
+            }
 
             HomeViewModel.FetchLobbies();
             ContainedView = Utilities.Enums.Views.Home.ToString();

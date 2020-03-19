@@ -46,6 +46,19 @@ namespace ClientLourd.Views.Controls
             InitializeComponent();
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
+            SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+        }
+
+        private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (e.UserID == SessionInformations.User.ID)
+                {
+                    returnChat();
+                }
+            });
         }
 
 
@@ -60,6 +73,7 @@ namespace ClientLourd.Views.Controls
                 });
             }
         }
+        
 
         private void OnUserLeftLobby(object sender, EventArgs e)
         {
@@ -69,13 +83,17 @@ namespace ClientLourd.Views.Controls
             {    
                 if (SessionInformations.User.ID == userLeftLobbyArgs.UserID || (CurrentLobby != null && CurrentLobby.HostID == userLeftLobbyArgs.UserID))
                 {
-                   
-                    ChatContainer.Content = null;
-                    MainWindow.ChatToggleButton.IsEnabled = true;
-                    MainWindow.RightDrawerContent.Children.Add(MainWindow.ChatBox);
+                    returnChat();
                 }
                 
             });
+        }
+
+        public void returnChat()
+        {
+            ChatContainer.Content = null;
+            MainWindow.ChatToggleButton.IsEnabled = true;
+            MainWindow.RightDrawerContent.Children.Add(MainWindow.ChatBox);
         }
 
         public void ExportChat()
