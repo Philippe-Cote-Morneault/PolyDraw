@@ -9,13 +9,13 @@ A struct for each line that bot might say :
 	- Reference to win ratio
 */
 
-var iStartGameLines *startGameLines
-var iEndRoundLines *endRoundLines
-var iPlayerReferenceLines *playerReferenceLines
-var iHintLines *hintLines
-var iWinRatioLines *winRatioLines
+var iStartGameLines *lines
+var iEndRoundLines *lines
+var iPlayerRefLines *lines
+var iHintLines *lines
+var iWinRatioLines *lines
 
-type startGameLines struct {
+type lines struct {
 	Angry      []string
 	Funny      []string
 	Mean       []string
@@ -23,7 +23,7 @@ type startGameLines struct {
 	Supportive []string
 }
 
-func (l *startGameLines) init() {
+func initStartGameLines(l *lines) {
 	l.Angry = []string{"J'aime pas ce jeu et je n'aime pas les joueurs du groupe. Mauvais jeu à tous !",
 		"Ras le bol de ce jeu, mais bon je vais quand même jouer vu qu'on est confiné.",
 		"La partie va commencer, j'espère que je vais prendre du plaisir car d'habitude je ne m'amuse pas."}
@@ -45,15 +45,7 @@ func (l *startGameLines) init() {
 		"Si tu as envie d'abandonner, dis toi que les stats vont compter dans ton GPA. Ça va te donner un boost !"}
 }
 
-type endRoundLines struct {
-	Angry      []string
-	Funny      []string
-	Mean       []string
-	Nice       []string
-	Supportive []string
-}
-
-func (l *endRoundLines) init() {
+func initEndRoundLines(l *lines) {
 	l.Angry = []string{"J'aime toujours pas ce jeu !!!!",
 		"Toujours confiné, même apres le round. I guess qu'il faut qu'on continue...",
 		"Le round était nul. Mais je sens que le prochain va être pire."}
@@ -76,15 +68,7 @@ func (l *endRoundLines) init() {
 
 }
 
-type playerReferenceLines struct {
-	Angry      []string
-	Funny      []string
-	Mean       []string
-	Nice       []string
-	Supportive []string
-}
-
-func (l *playerReferenceLines) init() {
+func initPlayerRefLines(l *lines) {
 	l.Angry = []string{"Je sais pas pourquoi mais {}, je ne l'aime pas.",
 		"Ça m'énerve même confiné {} joue toujours.",
 		"Bon on peut kick-out {} svp ? Il m'enerve."}
@@ -106,15 +90,7 @@ func (l *playerReferenceLines) init() {
 		"Poursuis tes efforts {} ça va payer, tu vas voit !"}
 }
 
-type hintLines struct {
-	Angry      []string
-	Funny      []string
-	Mean       []string
-	Nice       []string
-	Supportive []string
-}
-
-func (l *hintLines) init() {
+func initHintLines(l *lines) {
 
 	l.Angry = []string{"Un indice ?!! Ça m'énerve !!",
 		"J'espere qu'avec cet indice tu vas trouver car la je suis à deux doigts de m'énerver !!",
@@ -137,15 +113,7 @@ func (l *hintLines) init() {
 		"Ne perd pas espoir, voila un indice pour t'aider !"}
 }
 
-type winRatioLines struct {
-	Angry      []string
-	Funny      []string
-	Mean       []string
-	Nice       []string
-	Supportive []string
-}
-
-func (l *winRatioLines) init() {
+func initRatioLines(l *lines) {
 	l.Angry = []string{"Hey {} tu te crois plus fort parce que tu as gagné le plus de parties ? Tu m'énerves !!!",
 		"Je sais même pas pourquoi je joue, c'est encore {} qui va gagner !!!",
 		"Bon on peut kick-out {} svp ? Il a déjà gagné assez de parties comme ça !!"}
@@ -168,9 +136,9 @@ func (l *winRatioLines) init() {
 }
 
 func initLines() {
-	iStartGameLines.init()
-	iEndRoundLines.init()
-	iPlayerReferenceLines.init()
-	iHintLines.init()
-	iWinRatioLines.init()
+	initStartGameLines(iStartGameLines)
+	initEndRoundLines(iEndRoundLines)
+	initPlayerRefLines(iPlayerRefLines)
+	initHintLines(iHintLines)
+	initRatioLines(iWinRatioLines)
 }
