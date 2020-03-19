@@ -21,6 +21,7 @@ type responseGroup struct {
 	Username string
 	GroupID  string
 	IsCPU    bool
+	IsKicked bool
 }
 
 type responsePlayer struct {
@@ -101,7 +102,7 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 				socketKickUser, err := auth.GetSocketID(userID)
 				if err == nil {
 					g.mutex.Unlock()
-					g.QuitGroup(socketKickUser)
+					g.QuitGroup(socketKickUser, true)
 				} else {
 					g.mutex.Unlock()
 					go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user", socketID)
@@ -235,7 +236,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 }
 
 //QuitGroup quits the groups the user is currently in.
-func (g *groups) QuitGroup(socketID uuid.UUID) {
+func (g *groups) QuitGroup(socketID uuid.UUID, forced bool) {
 	g.mutex.Lock()
 	if _, ok := g.assignment[socketID]; ok {
 		groupID := g.assignment[socketID]
@@ -251,6 +252,7 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 			UserID:   user.ID.String(),
 			Username: user.Username,
 			GroupID:  groupID.String(),
+			IsKicked: forced,
 			IsCPU:    false,
 		})
 		for i := range g.groups[groupID] {
