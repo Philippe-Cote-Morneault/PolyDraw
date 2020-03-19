@@ -151,13 +151,15 @@ func (f *FFA) GameLoop() {
 		log.Printf("[Match] [FFA] -> All players could guess the word, Match: %s", f.info.ID)
 	}
 
-	//Send message that the current word have expired
-	timeUpMessage := socket.RawMessage{}
-	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
-		Type: 1,
-		Word: f.currentWord,
-	})
-	f.pbroadcast(&timeUpMessage)
+	//Send message that the current word have expired unless it's the end of the round
+	if f.curLap < f.lapsTotal {
+		timeUpMessage := socket.RawMessage{}
+		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+			Type: 1,
+			Word: f.currentWord,
+		})
+		f.pbroadcast(&timeUpMessage)
+	}
 
 	f.receiving.Lock()
 	f.orderPos++
