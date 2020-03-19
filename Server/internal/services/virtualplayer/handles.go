@@ -9,7 +9,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 )
 
-var managerInstance *Manager
+var managerInstance Manager
 
 type virtualPlayerInfos struct {
 	PlayerID     uuid.UUID
@@ -66,16 +66,16 @@ func speak(socketID uuid.UUID, message string) {
 func getLines(interactionType string) *lines {
 	switch interactionType {
 	case "startGame":
-		return iStartGameLines
+		return &iStartGameLines
 	case "endRound":
-		return iEndRoundLines
+		return &iEndRoundLines
 	case "hint":
-		return iHintLines
+		return &iHintLines
 	default:
 		if rand.Intn(2) == 1 {
-			return iPlayerRefLines
+			return &iPlayerRefLines
 		}
-		return iWinRatioLines
+		return &iWinRatioLines
 	}
 }
 

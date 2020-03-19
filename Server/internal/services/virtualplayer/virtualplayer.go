@@ -23,7 +23,7 @@ type VirtualPlayer struct {
 func (v *VirtualPlayer) Init() {
 	v.shutdown = make(chan bool)
 	initLines()
-	managerInstance.init()
+	(&managerInstance).init()
 	v.subscribe()
 }
 
@@ -58,8 +58,9 @@ func (v *VirtualPlayer) listen() {
 				//Start a new function to kick players
 				go v.kickVirtualPlayer(message)
 			}
-		case <-v.gameStarts:
+		case data := <-v.gameStarts:
 			log.Println("[Virtual Player] -> Sends game Start message")
+			log.Println(data)
 
 		case <-v.roundEnds:
 			log.Println("[Virtual Player] -> Sends round End message")
