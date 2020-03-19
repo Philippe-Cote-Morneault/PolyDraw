@@ -112,14 +112,12 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showWordGuessingView() {
-        Log.d("POTATO", "showWordGuessingView()")
         if (wordToDrawView != null) {
             footer.removeAllViews()
             wordToDrawView = null
         }
 
         if (guessingView == null) {
-            Log.d("POTATO", "guessingView is null")
             guessingView = WordGuessingView(context!!)
             guessingView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(guessingView)
@@ -132,14 +130,12 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showWordToDrawView() {
-        Log.d("POTATO", "showWordToDrawView()")
         if (guessingView != null) {
             footer.removeAllViews()
             guessingView = null
         }
 
         if (wordToDrawView == null) {
-            Log.d("POTATO", "wordToDrawView is null")
             wordToDrawView = WordToDrawView(context!!)
             wordToDrawView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(wordToDrawView)
