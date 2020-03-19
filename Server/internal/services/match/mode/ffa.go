@@ -2,7 +2,10 @@ package mode
 
 import (
 	"context"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 	"math/rand"
 	"sort"
@@ -72,6 +75,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 		}
 	}
 	drawing.RegisterGame(f)
+	cbroadcast.Broadcast(virtualplayer.BGameStarts, f)
 }
 
 //Start the game mode
@@ -118,6 +122,16 @@ func (f *FFA) GameLoop() {
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
 		f.hasFoundIt[f.curDrawer.socketID] = true
 	}
+	cbroadcast.Broadcast(virtualplayer.BRoundStarts, match2.RoundStart{
+		MatchID: f.info.ID,
+		Drawer: match2.Player{
+			IsCpu:    f.curDrawer.IsCPU,
+			Username: f.curDrawer.Username,
+			ID:       f.curDrawer.userID,
+		},
+		Game: nil,
+	})
+
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
 	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
 	f.currentWord = f.findWord()
@@ -180,6 +194,8 @@ func (f *FFA) GameLoop() {
 	}
 
 	f.sendRoundSummary()
+
+	cbroadcast.Broadcast(virtualplayer.BRoundEnds, f.info.ID)
 
 	f.currentWord = ""
 	f.resetGuess()
@@ -312,14 +328,18 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		socket.SendRawMessageToSocketID(message, socketID)
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
+		player := f.connections[socketID]
 		f.receiving.Unlock()
 
-		message := socket.RawMessage{}
-		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
-			Hint:  "Not implemented", //TODO replace with the real hint from the virtual player
-			Error: "",
+		cbroadcast.Broadcast(virtualplayer.BAskHint, match2.HintRequested{
+			MatchID:  f.info.ID,
+			SocketID: socketID,
+			Player: match2.Player{
+				IsCpu:    player.IsCPU,
+				Username: player.Username,
+				ID:       player.userID,
+			},
 		})
-		socket.SendRawMessageToSocketID(message, socketID)
 	}
 }
 
@@ -543,6 +563,8 @@ func (f *FFA) finish() {
 	})
 
 	f.broadcast(&message)
+
+	cbroadcast.Broadcast(virtualplayer.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 }
