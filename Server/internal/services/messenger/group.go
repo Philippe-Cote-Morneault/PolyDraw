@@ -54,3 +54,8 @@ func UnRegisterGroup(group *model.Group, connections []uuid.UUID) {
 		delete(channelCache, group.ID)
 	}
 }
+
+//BroadcastAll sends a message to all the connections
+func BroadcastAll(message socket.RawMessage) {
+	instance.broadcast(uuid.Nil, message)
+}
