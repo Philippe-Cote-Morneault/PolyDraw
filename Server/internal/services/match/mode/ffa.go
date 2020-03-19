@@ -2,6 +2,8 @@ package mode
 
 import (
 	"context"
+	"github.com/jinzhu/gorm"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"math/rand"
 	"sort"
@@ -117,9 +119,19 @@ func (f *FFA) GameLoop() {
 	f.curDrawer = &f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
 
+	var game *model.Game
 	if f.curDrawer.IsCPU {
 		f.nbWaitingResponses = int64(f.realPlayers)
+
+		game = f.findGame()
+		if game.ID == uuid.Nil {
+			f.receiving.Unlock()
+			log.Printf("[Match] [FFA] Panic, not able to find a game for the virtual players")
+			return
+		}
+		f.currentWord = game.Word
 	} else {
+		f.currentWord = f.findWord()
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
 		f.hasFoundIt[f.curDrawer.socketID] = true
 	}
@@ -130,12 +142,11 @@ func (f *FFA) GameLoop() {
 			Username: f.curDrawer.Username,
 			ID:       f.curDrawer.userID,
 		},
-		Game: nil,
+		Game: game,
 	})
 
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
 	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
-	f.currentWord = f.findWord()
 
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawThis), PlayerDrawThis{
@@ -387,6 +398,27 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
 	return message
 
+}
+
+//findGame used to find a game for the virtual players
+func (f *FFA) findGame() *model.Game {
+	word := ""
+	watchDog := 0
+
+	var game model.Game
+	for word == "" {
+		model.DB().Where("difficulty = ? and language = ?", f.info.Difficulty, f.info.Language).Order(gorm.Expr("random()")).First(&game)
+		if game.ID != uuid.Nil {
+			if _, inList := f.wordHistory[word]; !inList || watchDog >= 10 {
+				//Add the word to the list so it does not come up again.
+				word = game.Word
+				f.wordHistory[word] = true
+				return &game
+			}
+		}
+		watchDog++
+	}
+	return &game
 }
 
 //findWord used to the find the word that must be drawn
