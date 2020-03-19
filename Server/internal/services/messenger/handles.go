@@ -1,6 +1,9 @@
 package messenger
 
 import (
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 	"strings"
 	"time"
@@ -22,6 +25,11 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 		IsGameChat: true,
 	}
 	model.DB().Create(&channel)
+
+	cbroadcast.Broadcast(virtualplayer.BChatNew, match2.ChatNew{
+		MatchID: group.ID,
+		ChatID:  channel.ID,
+	})
 
 	//Init the hashmap for the connections
 	h.channelsConnections[channel.ID] = make(map[uuid.UUID]bool)
