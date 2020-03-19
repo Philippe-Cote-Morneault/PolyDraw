@@ -49,6 +49,7 @@ class DrawViewBase @JvmOverloads constructor(
 
     private var mPaint = Paint()
     private var mPath = MyPath()
+    private val lastPathPoints: List<DrawPoint> = mutableListOf()
     private var lastPathID: UUID = mPath.id
     private var mPaintOptions = PaintOptions()
 
@@ -167,7 +168,8 @@ class DrawViewBase @JvmOverloads constructor(
             mPaintOptions,
             points
         )
-        socketDrawingSender!!.sendStrokeDraw(strokeInfo)
+//        socketDrawingSender!!.sendStrokeDraw(strokeInfo)
+        socketDrawingSender!!.addStrokeToSend(strokeInfo)
     }
 
     fun removeStroke(strokeID: UUID) {

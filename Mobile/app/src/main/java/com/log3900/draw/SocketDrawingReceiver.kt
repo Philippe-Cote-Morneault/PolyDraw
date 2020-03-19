@@ -76,7 +76,8 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
 
         drawView.setOptions(paintOptions)
 
-        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
+//        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
+        val time = 0L  // TODO: Validate delay
         drawView.drawStart(points.first(), strokeID)
         delay(time)
 
