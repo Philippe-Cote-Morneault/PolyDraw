@@ -75,6 +75,10 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of players must be between 1 and %d", maxPlayer))
 		return
 	}
+	if request.GameType == 0 && (request.NbRound <= 0 || request.NbRound > 5) {
+		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of round must be between 1 and 5 for the free for all game mode."))
+		return
+	}
 	if request.PlayersMax != 1 && request.GameType == 1 {
 		rbody.JSONError(w, http.StatusBadRequest, "The number of players must be one for the game mode Solo")
 		return
@@ -103,6 +107,7 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 	group := model.Group{
 		OwnerID:    userid,
 		Name:       groupName,
+		NbRound:    request.NbRound,
 		PlayersMax: request.PlayersMax,
 		GameType:   request.GameType,
 		Difficulty: request.Difficulty,

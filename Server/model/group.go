@@ -19,6 +19,7 @@ type Group struct {
 	Language   int `gorm:"default:0"` // 0 -> EN | 1 -> FR
 	PlayersMax int
 	GameType   int
+	NbRound    int
 	Difficulty int     `gorm:"default:0"`
 	Status     int     `gorm:"default:0"`
 	Users      []*User `gorm:"many2many:group_membership"`
