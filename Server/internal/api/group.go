@@ -45,6 +45,7 @@ type responseGroup struct {
 	Status         int
 	OwnerName      string
 	OwnerID        string
+	Language       int
 	Players        []responsePlayer
 }
 
@@ -161,6 +162,7 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 			GameType:       groups[i].GameType,
 			Difficulty:     groups[i].Difficulty,
 			Status:         0,
+			Language:       0,
 			OwnerName:      groups[i].Owner.Username,
 			OwnerID:        groups[i].OwnerID.String(),
 			Players:        players,
@@ -199,6 +201,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 			GameType:       group.GameType,
 			Difficulty:     group.Difficulty,
 			Status:         group.Status,
+			Language:       0,
 			OwnerName:      group.Owner.Username,
 			OwnerID:        group.Owner.ID.String(),
 			Players:        players,
