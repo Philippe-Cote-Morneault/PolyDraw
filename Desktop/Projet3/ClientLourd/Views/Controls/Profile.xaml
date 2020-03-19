@@ -36,8 +36,12 @@
 
             <!-- Left side -->
             <StackPanel Grid.Column="0" Grid.Row="1" Margin="0 0 20 0">
-                <Image  Stretch="UniformToFill" Margin="4" Height="400"  Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
+                <DockPanel>
 
+
+                <Image DockPanel.Dock="Top" Grid.Row="0"  Stretch="UniformToFill" Margin="4" Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
+
+            <StackPanel DockPanel.Dock="Bottom">
                 <TextBlock FontWeight="Bold" FontSize="30" Text="{Binding Path=User.Username, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 <TextBlock FontSize="18">
                     <TextBlock.Text >
@@ -73,8 +77,10 @@
                             <TextBlock Text="{DynamicResource ViewGamesPlayed}"></TextBlock>
                         </StackPanel>
                     </Button>
+                        </Grid>
+                    </StackPanel>
 
-                </Grid>
+                </DockPanel>
             </StackPanel>
             
             <!-- Right side (stats and achievements)-->
