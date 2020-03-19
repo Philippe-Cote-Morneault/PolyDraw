@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.R
@@ -20,14 +21,19 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     // UI
     private lateinit var groupNameTextInput: TextInputEditText
     private lateinit var maxPlayersTextView: TextView
+    private lateinit var roundsTextView: TextView
     private lateinit var gameTypeSpinner: Spinner
     private lateinit var difficultySpinner: Spinner
     private lateinit var languageSpinner: Spinner
     private lateinit var removeMaxPlayersButton: ImageView
     private lateinit var addMaxPlayersButton: ImageView
+    private lateinit var removeRoundButton: ImageView
+    private lateinit var addRoundButton: ImageView
+    private lateinit var roundsSelectionContainer: ConstraintLayout
 
     // Logic
     private var maxPlayersCurrentValue = 4
+    private var roundsCurrentValue = 3
     private var currentMatchMode = MatchMode.FFA
     private var currentDifficulty = Difficulty.EASY
     private var currentLanguage: Language? = null
@@ -35,6 +41,8 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
 
     private var addMaxPlayersButtonEnable = true
     private var removeMaxPlayersButtonEnable = true
+    private var addRoundButtonEnabled = true
+    private var removeRoundButtonEnabled = true
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -44,6 +52,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
                     listener?.onPositiveClick(GroupCreated(
                         groupNameTextInput.text.toString(),
                         maxPlayersTextView.text.toString().toInt(),
+                        roundsTextView.text.toString().toInt(),
                         MatchMode.values()[gameTypeSpinner.selectedItemPosition],
                         Difficulty.values()[difficultySpinner.selectedItemPosition],
                         availableLanguages[languageSpinner.selectedItemPosition]))
@@ -63,11 +72,15 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     private fun setupView(rootView: View) {
         groupNameTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_match_name)
         maxPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_max_players)
+        roundsTextView = rootView.findViewById(R.id.dialog_create_match_text_view_rounds)
         gameTypeSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_match_type)
         difficultySpinner = rootView.findViewById(R.id.dialog_create_match_spinner_difficulty)
         languageSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_language)
         removeMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_remove_max_player)
         addMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_add_max_player)
+        removeRoundButton = rootView.findViewById(R.id.dialog_create_match_button_remove_round)
+        addRoundButton = rootView.findViewById(R.id.dialog_create_match_button_add_round)
+        roundsSelectionContainer = rootView.findViewById(R.id.dialog_create_match_container_rounds_selection)
 
         removeMaxPlayersButton.setOnClickListener {
             onRemoveMaxPlayersClick()
@@ -75,6 +88,14 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
 
         addMaxPlayersButton.setOnClickListener {
             onAddMaxPlayersClick()
+        }
+
+        removeRoundButton.setOnClickListener {
+            onRemoveRoundClick()
+        }
+
+        addRoundButton.setOnClickListener {
+            onAddRoundClick()
         }
 
         matchModeChange(MatchMode.values()[0])
@@ -153,6 +174,17 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         maxPlayersChange(newCount)
     }
 
+    private fun onRemoveRoundClick() {
+        val newCount = roundsTextView.text.toString().toInt() - 1
+        roundsChange(newCount)
+    }
+
+    private fun onAddRoundClick() {
+        val newCount = roundsTextView.text.toString().toInt() + 1
+        roundsChange(newCount)
+    }
+
+
     private fun maxPlayersChange(newValue: Int) {
         if (newValue > Group.maxAmountOfPlayers(currentMatchMode) || newValue < Group.minAmountOfPlayers(currentMatchMode)) {
             return
@@ -174,17 +206,34 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         maxPlayersCurrentValue = newValue
     }
 
+    private fun roundsChange(newValue: Int) {
+        if (newValue > 5 || newValue < 1) {
+            return
+        }
+
+        enableAddRoundButton(newValue != 5)
+        enableRemoveRoundButton(newValue != 1)
+
+        roundsTextView.setText(newValue.toString())
+        roundsCurrentValue = newValue
+    }
+
     private fun matchModeChange(newValue: MatchMode) {
         currentMatchMode = newValue
         when (newValue) {
             MatchMode.SOLO -> {
                 maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
+                roundsSelectionContainer.visibility = View.GONE
             }
             MatchMode.FFA -> {
                 maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
+                roundsChange(3)
+                roundsSelectionContainer.visibility = View.VISIBLE
+
             }
             MatchMode.COOP -> {
                 maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
+                roundsSelectionContainer.visibility = View.GONE
             }
         }
     }
@@ -210,6 +259,26 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         } else {
             removeMaxPlayersButtonEnable = false
             removeMaxPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
+        }
+    }
+
+    private fun enableAddRoundButton(enable: Boolean) {
+        if (enable) {
+            addRoundButtonEnabled = true
+            addRoundButton.colorFilter = null
+        } else {
+            addRoundButtonEnabled = false
+            addRoundButton.setColorFilter(Color.argb(255, 255, 255, 255))
+        }
+    }
+
+    private fun enableRemoveRoundButton(enable: Boolean) {
+        if (enable) {
+            removeRoundButtonEnabled = true
+            removeRoundButton.colorFilter = null
+        } else {
+            removeRoundButtonEnabled = false
+            removeRoundButton.setColorFilter(Color.argb(255, 255, 255, 255))
         }
     }
 

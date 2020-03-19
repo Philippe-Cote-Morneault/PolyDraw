@@ -140,7 +140,7 @@
     <string name="match_lobby_match_name_title">Match name</string>
     <string name="match_lobby_host_title">Host</string>
     <string name="dialog_create_match_max_players_title">Max players</string>
-    <string name="dialog_create_match_virtual_players_title">Virtual players</string>
+    <string name="dialog_create_match_rounds_title">Rounds</string>
     <string name="dialog_create_match_match_mode_title">Mode</string>
     <string name="dialog_create_match_difficulty_title">Difficulty</string>
     <string name="channel_list_title">Channels</string>
