@@ -65,6 +65,12 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
             SocketClient.HintResponse += SocketClientOnHintResponse;
+            SocketClient.RoundEnded += SocketClientOnRoundEnded;
+        }
+
+        private void SocketClientOnRoundEnded(object source, EventArgs args)
+        {
+            
         }
 
         private void SocketClientOnHintResponse(object source, EventArgs args)
@@ -153,13 +159,13 @@ namespace ClientLourd.ViewModels
             Round = e.Laps;
             TotalRound = e.LapTotal;
             Time = e.Time;
-            NotifyPropertyChanged(nameof(Players));
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Players.FirstOrDefault(p => p.User.ID == e.UserID).GuessedTheWord = true;
+            var player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
+            player.GuessedTheWord = true;
         }
 
         private void SocketClientOnGuessResponse(object source, EventArgs args)
@@ -167,14 +173,7 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-                
-                //ShowCanvasMessage($"+ {e.Points}");
                 Player player = Players.First(p => p.User.ID == SessionInformations.User.ID);
-                player.PointsRecentlyGained = e.Points;
-                player.Score = e.PointsTotal;
-
-                NotifyPropertyChanged(nameof(Players));
-
                 Application.Current.Dispatcher.Invoke(() => 
                 {
                     CanStillGuess = false;
@@ -210,10 +209,6 @@ namespace ClientLourd.ViewModels
             if (e.Type == 1)
             {
                 ShowCanvasMessage($"The word was {e.Word}");
-            }
-            //Game end
-            else if (e.Type == 2)
-            {
             }
         }
 

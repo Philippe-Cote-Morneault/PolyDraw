@@ -14,8 +14,14 @@ namespace ClientLourd.Views.Controls.Game
         public GameStatus()
         {
             InitializeComponent();
-            SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchSync += SocketClientOnMatchSync;
+            SocketClient.RoundEnded += SocketClientOnRoundEnded;
+        }
+
+        private void SocketClientOnRoundEnded(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+            UpdatePlayersScore(e.Players);            
         }
 
         public SocketClient SocketClient
@@ -50,33 +56,24 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchSync(object source, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            
-            var playersInfo = e.Players;
+            UpdatePlayersScore(e.Players);            
 
+        }
+
+        private void UpdatePlayersScore(dynamic playersInfo)
+        {
             foreach (dynamic info in playersInfo)
             {
-                var tmpPlayer = GameViewModel.Players.First(p => p.User.ID == info["UserID"]);
-                if (tmpPlayer.Score != info["Points"])
+                var tmpPlayer = GameViewModel.Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
+                tmpPlayer.PointsRecentlyGained = info["PointsTotal"] - tmpPlayer.Score;
+                tmpPlayer.Score = info["PointsTotal"];
+                if (tmpPlayer != null && tmpPlayer.PointsRecentlyGained != 0)
                 {
-                    tmpPlayer.PointsRecentlyGained = info["Points"] - tmpPlayer.Score;
-                    AnimatePointsGained(info["UserID"]);
+                    AnimatePointsGained(tmpPlayer.User.ID);
                 }
-                tmpPlayer.Score = info["Points"];
-            }
-
-            
-
-            GameViewModel.Players = GameViewModel.Players;
-        }
-
-        private void SocketClientOnGuessResponse(object source, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            if (e.Valid)
-            {
-                AnimatePointsGained(SessionInformations.User.ID);
             }
         }
+
 
         private void AnimatePointsGained(string playerID)
         {

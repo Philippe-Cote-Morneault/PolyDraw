@@ -155,7 +155,7 @@ namespace ClientLourd.Views.Controls.Game
                     }
                     sb.Begin();
                 });
-                System.Threading.Thread.Sleep(200);
+                Thread.Sleep(200);
             }
         }
 
@@ -180,7 +180,7 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            if (ViewModel.Round != ViewModel.TotalRound)
+            if (e.Type == 1)
             {
                 Task.Run(() =>
                 {
@@ -199,7 +199,6 @@ namespace ClientLourd.Views.Controls.Game
                 });
             }
         }
-
 
 
         private void StartConfetti()
