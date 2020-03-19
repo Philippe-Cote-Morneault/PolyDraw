@@ -13,11 +13,11 @@ import (
 )
 
 type requestGroupCreate struct {
-	GroupName      string
-	PlayersMax     int
-	VirtualPlayers int
-	GameType       int
-	Difficulty     int
+	GroupName  string
+	PlayersMax int
+	NbRound    int
+	GameType   int
+	Difficulty int
 }
 
 type responsePlayer struct {
@@ -71,10 +71,6 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, "The game mode must be between 0 and 2")
 		return
 	}
-	if request.VirtualPlayers < 0 || request.VirtualPlayers > 11 {
-		rbody.JSONError(w, http.StatusBadRequest, "You must set the number of virtual players between 0 and 11")
-		return
-	}
 
 	if (request.PlayersMax > maxPlayer || request.PlayersMax < 1) && request.GameType != 1 {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of players must be between 1 and %d", maxPlayer))
@@ -84,17 +80,8 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, "The number of players must be one for the game mode Solo")
 		return
 	}
-	if request.VirtualPlayers != 0 && request.GameType == 1 {
-		rbody.JSONError(w, http.StatusBadRequest, "The number of virtual players must be set to zero for the game mode Solo")
-		return
-	}
-	if request.PlayersMax == 1 && request.VirtualPlayers <= 0 && request.GameType != 1 {
-		rbody.JSONError(w, http.StatusBadRequest, "There must be some virtual players if you are the only player in the group.")
-		return
-	}
 
-	totalPlayers := request.VirtualPlayers + request.PlayersMax
-	if totalPlayers > maxPlayer {
+	if request.PlayersMax > maxPlayer {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("You cannot have more than %d players in a game", maxPlayer))
 		return
 	}
@@ -115,13 +102,12 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	group := model.Group{
-		OwnerID:        userid,
-		Name:           groupName,
-		PlayersMax:     request.PlayersMax,
-		VirtualPlayers: request.VirtualPlayers,
-		GameType:       request.GameType,
-		Difficulty:     request.Difficulty,
-		Status:         0,
+		OwnerID:    userid,
+		Name:       groupName,
+		PlayersMax: request.PlayersMax,
+		GameType:   request.GameType,
+		Difficulty: request.Difficulty,
+		Status:     0,
 	}
 	var user model.User
 	model.DB().Model(&user).Where("id = ?", userid).First(&user)
