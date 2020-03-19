@@ -36,17 +36,16 @@ type responseGroupCreate struct {
 	GroupID   string
 }
 type responseGroup struct {
-	ID             string
-	GroupName      string
-	PlayersMax     int
-	VirtualPlayers int
-	GameType       int
-	Difficulty     int
-	Status         int
-	OwnerName      string
-	OwnerID        string
-	Language       int
-	Players        []responsePlayer
+	ID         string
+	GroupName  string
+	PlayersMax int
+	GameType   int
+	Difficulty int
+	Status     int
+	OwnerName  string
+	OwnerID    string
+	Language   int
+	Players    []responsePlayer
 }
 
 const maxPlayer = 8
@@ -141,17 +140,16 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response[i] = responseGroup{
-			ID:             groups[i].ID.String(),
-			GroupName:      groups[i].Name,
-			PlayersMax:     groups[i].PlayersMax,
-			VirtualPlayers: groups[i].VirtualPlayers,
-			GameType:       groups[i].GameType,
-			Difficulty:     groups[i].Difficulty,
-			Status:         0,
-			Language:       0,
-			OwnerName:      groups[i].Owner.Username,
-			OwnerID:        groups[i].OwnerID.String(),
-			Players:        players,
+			ID:         groups[i].ID.String(),
+			GroupName:  groups[i].Name,
+			PlayersMax: groups[i].PlayersMax,
+			GameType:   groups[i].GameType,
+			Difficulty: groups[i].Difficulty,
+			Status:     0,
+			Language:   0,
+			OwnerName:  groups[i].Owner.Username,
+			OwnerID:    groups[i].OwnerID.String(),
+			Players:    players,
 		}
 	}
 	rbody.JSON(w, http.StatusOK, response)
@@ -180,17 +178,16 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response := responseGroup{
-			ID:             group.ID.String(),
-			GroupName:      group.Name,
-			PlayersMax:     group.PlayersMax,
-			VirtualPlayers: group.VirtualPlayers,
-			GameType:       group.GameType,
-			Difficulty:     group.Difficulty,
-			Status:         group.Status,
-			Language:       0,
-			OwnerName:      group.Owner.Username,
-			OwnerID:        group.Owner.ID.String(),
-			Players:        players,
+			ID:         group.ID.String(),
+			GroupName:  group.Name,
+			PlayersMax: group.PlayersMax,
+			GameType:   group.GameType,
+			Difficulty: group.Difficulty,
+			Status:     group.Status,
+			Language:   0,
+			OwnerName:  group.Owner.Username,
+			OwnerID:    group.Owner.ID.String(),
+			Players:    players,
 		}
 		rbody.JSON(w, http.StatusOK, response)
 		return
