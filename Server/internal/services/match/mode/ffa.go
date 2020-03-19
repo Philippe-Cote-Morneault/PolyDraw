@@ -2,16 +2,17 @@ package mode
 
 import (
 	"context"
-	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
-	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
-	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 	"math/rand"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
@@ -125,7 +126,7 @@ func (f *FFA) GameLoop() {
 	cbroadcast.Broadcast(virtualplayer.BRoundStarts, match2.RoundStart{
 		MatchID: f.info.ID,
 		Drawer: match2.Player{
-			IsCpu:    f.curDrawer.IsCPU,
+			IsCPU:    f.curDrawer.IsCPU,
 			Username: f.curDrawer.Username,
 			ID:       f.curDrawer.userID,
 		},
@@ -335,7 +336,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 			MatchID:  f.info.ID,
 			SocketID: socketID,
 			Player: match2.Player{
-				IsCpu:    player.IsCPU,
+				IsCPU:    player.IsCPU,
 				Username: player.Username,
 				ID:       player.userID,
 			},
