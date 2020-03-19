@@ -11,6 +11,12 @@ const BKickPlayer = "drawing:kickPlayer"
 //BGameStarts message to indicate when game starts
 const BGameStarts = "drawing:gameStarts"
 
+//BGameEnds message to indicate when game ends
+const BGameEnds = "drawing:gameEnds"
+
+//BRoundStarts message to indicate when round starts
+const BRoundStarts = "drawing:roundStarts"
+
 //BRoundEnds message to indicate when round ends
 const BRoundEnds = "drawing:roundEnds"
 
