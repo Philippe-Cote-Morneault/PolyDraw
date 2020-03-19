@@ -163,7 +163,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		if groupDB.ID != uuid.Nil {
 
 			//Is the group full ?
-			if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
+			if groupDB.PlayersMax-len(g.groups[groupID]) > 0 {
 				delete(g.queue, socketID)
 				g.assignment[socketID] = groupID
 
@@ -352,7 +352,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 		if groupDB.OwnerID == userID {
 			//Check if there are enough people
 			g.mutex.Lock()
-			count := len(g.groups[groupID]) + groupDB.VirtualPlayers
+			count := len(g.groups[groupID])
 			g.mutex.Unlock()
 
 			//TODO make a check for solo
