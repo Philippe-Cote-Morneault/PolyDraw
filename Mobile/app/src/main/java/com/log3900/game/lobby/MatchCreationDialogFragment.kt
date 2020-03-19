@@ -20,18 +20,14 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     // UI
     private lateinit var groupNameTextInput: TextInputEditText
     private lateinit var maxPlayersTextView: TextView
-    private lateinit var virtualPlayersTextView: TextView
     private lateinit var gameTypeSpinner: Spinner
     private lateinit var difficultySpinner: Spinner
     private lateinit var languageSpinner: Spinner
     private lateinit var removeMaxPlayersButton: ImageView
     private lateinit var addMaxPlayersButton: ImageView
-    private lateinit var removeVirtualPlayersButton: ImageView
-    private lateinit var addVirtualPlayersButton: ImageView
 
     // Logic
     private var maxPlayersCurrentValue = 4
-    private var virtualPlayersCurrentValye = 0
     private var currentMatchMode = MatchMode.FFA
     private var currentDifficulty = Difficulty.EASY
     private var currentLanguage: Language? = null
@@ -39,8 +35,6 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
 
     private var addMaxPlayersButtonEnable = true
     private var removeMaxPlayersButtonEnable = true
-    private var addVirtualPlayersButtonEnable = true
-    private var removeVirtualPlayersButtonEnable = true
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -50,7 +44,6 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
                     listener?.onPositiveClick(GroupCreated(
                         groupNameTextInput.text.toString(),
                         maxPlayersTextView.text.toString().toInt(),
-                        virtualPlayersTextView.text.toString().toInt(),
                         MatchMode.values()[gameTypeSpinner.selectedItemPosition],
                         Difficulty.values()[difficultySpinner.selectedItemPosition],
                         availableLanguages[languageSpinner.selectedItemPosition]))
@@ -70,14 +63,11 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     private fun setupView(rootView: View) {
         groupNameTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_match_name)
         maxPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_max_players)
-        virtualPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_virtual_players)
         gameTypeSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_match_type)
         difficultySpinner = rootView.findViewById(R.id.dialog_create_match_spinner_difficulty)
         languageSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_language)
         removeMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_remove_max_player)
         addMaxPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_add_max_player)
-        removeVirtualPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_remove_virtual_player)
-        addVirtualPlayersButton = rootView.findViewById(R.id.dialog_create_match_button_add_virtual_player)
 
         removeMaxPlayersButton.setOnClickListener {
             onRemoveMaxPlayersClick()
@@ -85,14 +75,6 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
 
         addMaxPlayersButton.setOnClickListener {
             onAddMaxPlayersClick()
-        }
-
-        removeVirtualPlayersButton.setOnClickListener {
-            onRemoveVirtualPlayersClick()
-        }
-
-        addVirtualPlayersButton.setOnClickListener {
-            onAddVirtualPlayersClick()
         }
 
         matchModeChange(MatchMode.values()[0])
@@ -171,16 +153,6 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         maxPlayersChange(newCount)
     }
 
-    private fun onRemoveVirtualPlayersClick() {
-        val newCount = virtualPlayersTextView.text.toString().toInt() - 1
-        virtualPlayersChange(newCount)
-    }
-
-    private fun onAddVirtualPlayersClick() {
-        val newCount = virtualPlayersTextView.text.toString().toInt() + 1
-        virtualPlayersChange(newCount)
-    }
-
     private fun maxPlayersChange(newValue: Int) {
         if (newValue > Group.maxAmountOfPlayers(currentMatchMode) || newValue < Group.minAmountOfPlayers(currentMatchMode)) {
             return
@@ -202,48 +174,17 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
         maxPlayersCurrentValue = newValue
     }
 
-    private fun virtualPlayersChange(newValue: Int) {
-        if (currentMatchMode == MatchMode.COOP || currentMatchMode == MatchMode.SOLO) {
-            enableAddVirtualPlayersButton(false)
-            enableRemoveVirtualPlayersButton(false)
-            virtualPlayersTextView.setText(0.toString())
-            return
-        }
-
-        if (newValue > maxPlayersCurrentValue - 1 || newValue < 0) {
-            return
-        }
-
-        if (newValue == maxPlayersCurrentValue - 1) {
-            enableAddVirtualPlayersButton(false)
-        } else {
-            enableAddVirtualPlayersButton(true)
-        }
-
-        if (newValue == 0) {
-            enableRemoveVirtualPlayersButton(false)
-        } else {
-            enableRemoveVirtualPlayersButton(true)
-        }
-
-        virtualPlayersTextView.setText(newValue.toString())
-        virtualPlayersCurrentValye = newValue
-    }
-
     private fun matchModeChange(newValue: MatchMode) {
         currentMatchMode = newValue
         when (newValue) {
             MatchMode.SOLO -> {
                 maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
-                virtualPlayersChange(0)
             }
             MatchMode.FFA -> {
                 maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
-                virtualPlayersChange(0)
             }
             MatchMode.COOP -> {
                 maxPlayersChange(Group.maxAmountOfPlayers(currentMatchMode))
-                virtualPlayersChange(0)
             }
         }
     }
@@ -271,27 +212,6 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
             removeMaxPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
         }
     }
-
-    private fun enableAddVirtualPlayersButton(enable: Boolean) {
-        if (enable) {
-            addVirtualPlayersButtonEnable = true
-            addVirtualPlayersButton.colorFilter = null
-        } else {
-            addVirtualPlayersButtonEnable = false
-            addVirtualPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
-        }
-    }
-
-    private fun enableRemoveVirtualPlayersButton(enable: Boolean) {
-        if (enable) {
-            removeVirtualPlayersButtonEnable = true
-            removeVirtualPlayersButton.colorFilter = null
-        } else {
-            removeVirtualPlayersButtonEnable = false
-            removeVirtualPlayersButton.setColorFilter(Color.argb(255, 255, 255, 255))
-        }
-    }
-
 
     interface Listener {
         fun onPositiveClick(groupCreated: GroupCreated) {}
