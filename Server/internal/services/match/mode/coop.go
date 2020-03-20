@@ -4,7 +4,9 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
+	"log"
 	"sync"
+	"time"
 )
 
 const numberOfChances = 3
@@ -16,10 +18,12 @@ type Coop struct {
 	nbVirtualPlayers int
 	orderVirtual     []*players
 	chances          map[*players]int
+	isRunning        bool
 
 	remainingTime int
 
 	receiving sync.Mutex
+	timeStart time.Time
 }
 
 //Init creates the coop game mode
@@ -27,7 +31,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
 	c.chances = make(map[*players]int)
-
+	c.isRunning = true
 	c.computeDifficulty()
 	c.computeOrder()
 }
@@ -73,7 +77,15 @@ func (c *Coop) Ready(socketID uuid.UUID) {
 
 //Start the game and the game loop
 func (c *Coop) Start() {
-	panic("implement me")
+	c.waitForPlayers()
+
+	//We can start the game loop
+	log.Printf("[Match] [FFA] -> Starting gameloop Match: %s", f.info.ID)
+	c.timeStart = time.Now()
+	for c.isRunning {
+		c.GameLoop()
+	}
+	c.finish()
 }
 
 //Disconnect handle disconnect for the coop
@@ -102,7 +114,16 @@ func (c *Coop) Close() {
 
 //GetConnections method used to return all the connections of the players
 func (c *Coop) GetConnections() []uuid.UUID {
-	panic("implement me")
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
+
+	connections := make([]uuid.UUID, 0, len(c.players))
+	for i := range c.players {
+		if !c.players[i].IsCPU {
+			connections = append(connections, c.players[i].socketID)
+		}
+	}
+	return connections
 }
 
 //GetWelcome message used for the broadcast of the type of game
@@ -126,4 +147,14 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
 	return message
+}
+
+//GameLoop is called every new round
+func (c *Coop) GameLoop() {
+
+}
+
+//finish used to properly finish the coop mode
+func (c *Coop) finish() {
+
 }
