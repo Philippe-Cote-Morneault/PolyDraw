@@ -56,4 +56,14 @@
     <system:String x:Key="AddVirtualPlayer">Add virtual player</system:String>
     <system:String x:Key="RemovePlayer">Remove player</system:String>
 
+    <!-- Lobby creation -->
+    <system:String x:Key="CreateNewLobby">Create a new lobby</system:String>
+    <system:String x:Key="EnterLobbyName">Enter the lobby's name</system:String>
+    <system:String x:Key="LobbyNamePlaceHolder">Lobby name</system:String>
+    <system:String x:Key="SelectLobbyMode">Select the lobby's game mode</system:String>
+    <system:String x:Key="SelectDifficulty">Select the level of difficulty</system:String>
+    <system:String x:Key="SelectPlayers">Select the level number of players</system:String>
+    <system:String x:Key="SelectRounds">Select the number of rounds</system:String>
+    <system:String x:Key="CreateLobbyButton">Create lobby</system:String>
+
 </ResourceDictionary>

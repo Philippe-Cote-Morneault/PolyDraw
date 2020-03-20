@@ -33,6 +33,7 @@
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
             <Grid Grid.Column="0" x:Name="modeIcon"/>
@@ -41,14 +42,19 @@
             <Grid Grid.Column="3" x:Name="language"/>
             <Grid Grid.Column="4" x:Name="host"/>
             <Grid Grid.Column="5" x:Name="players"/>
-            <Grid Grid.Column="6" x:Name="difficulty"/>
+            <Grid Grid.Column="6" x:Name="rounds"/>
+            <Grid Grid.Column="7" x:Name="difficulty"/>
         </Grid>
 
 
 
         <Border Grid.Row="0" Margin="50" BorderBrush="LightGray" BorderThickness="1" Height="{Binding ElementName=firstRow, Path=ActualHeight}">
             <ListView ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                
+                <ListView.Resources>
+                    <Style TargetType="GridViewColumnHeader">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Style>
+                </ListView.Resources>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="{Binding ElementName=modeIcon, Path=ActualWidth}">
@@ -127,6 +133,19 @@
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Rounds" >
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Host}" Cursor="Hand" ToolTip="{DynamicResource FilterHost}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Host"/>
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                        
                         <GridViewColumn>
                             <GridViewColumn.DisplayMemberBinding>
                                 <MultiBinding StringFormat="{}{0}/{1}">

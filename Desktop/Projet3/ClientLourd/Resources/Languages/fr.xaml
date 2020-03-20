@@ -56,5 +56,15 @@
     <!-- Waiting room -->
     <system:String x:Key="AddVirtualPlayer">Ajouter un joueur virtuel</system:String>
     <system:String x:Key="RemovePlayer">Retirer le joueur</system:String>
-    
+
+    <!-- Lobby creation -->
+    <system:String x:Key="CreateNewLobby">Créer une salle d'attente</system:String>
+    <system:String x:Key="EnterLobbyName">Entrer le nom de la salle d'attente</system:String>
+    <system:String x:Key="LobbyNamePlaceHolder">Nom de la salle d'attente</system:String>
+    <system:String x:Key="SelectLobbyMode">Sélectionner le mode de la salle d'attente</system:String>
+    <system:String x:Key="SelectDifficulty">Sélectionner le niveau de difficulté de la salle d'attente</system:String>
+    <system:String x:Key="SelectPlayers">Sélectionner le nombre de joueurs</system:String>
+    <system:String x:Key="SelectRounds">Sélectionner le nombre de rondes</system:String>
+    <system:String x:Key="CreateLobbyButton">Créer la salle d'attente</system:String>
+
 </ResourceDictionary>
