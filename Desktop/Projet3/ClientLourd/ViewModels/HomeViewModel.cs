@@ -182,7 +182,14 @@ namespace ClientLourd.ViewModels
                 _playerCountFilteredAscending = false;
             }
         }
-        
+
+        private bool _roundsFilteredAscending;
+
+        private void FilterRounds() 
+        {
+            //TODO
+        }
+
         private bool _languageFilteredAscending;
         
         private void FilterLanguage()
@@ -242,6 +249,8 @@ namespace ClientLourd.ViewModels
                 FilterDifficulty();
             if (attribute == "Language")
                 FilterLanguage();
+            if (attribute == "Rounds")
+                FilterRounds();
         }
 
         public void JoinLobby(Lobby lobby) 

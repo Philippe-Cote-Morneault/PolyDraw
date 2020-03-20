@@ -28,7 +28,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
-                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -132,15 +132,17 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Rounds" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Host}" Cursor="Hand" ToolTip="{DynamicResource FilterHost}">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Rounds}" Cursor="Hand" ToolTip="{DynamicResource FilterRounds}">
                                         <Label.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Host"/>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Rounds"/>
                                         </Label.InputBindings>
                                     </Label>
                                 </DataTemplate>
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
-                        
+
+
+
                         <GridViewColumn>
                             <GridViewColumn.DisplayMemberBinding>
                                 <MultiBinding StringFormat="{}{0}/{1}">
