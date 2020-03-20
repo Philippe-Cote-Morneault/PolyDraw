@@ -2,8 +2,6 @@ package mode
 
 import (
 	"context"
-	"github.com/jinzhu/gorm"
-	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"math/rand"
 	"sort"
@@ -11,9 +9,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jinzhu/gorm"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
+
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 	"github.com/google/uuid"
@@ -78,7 +79,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 		}
 	}
 	drawing.RegisterGame(f)
-	cbroadcast.Broadcast(virtualplayer.BGameStarts, f)
+	cbroadcast.Broadcast(match2.BGameStarts, f)
 }
 
 //Start the game mode
@@ -135,7 +136,7 @@ func (f *FFA) GameLoop() {
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
 		f.hasFoundIt[f.curDrawer.socketID] = true
 	}
-	cbroadcast.Broadcast(virtualplayer.BRoundStarts, match2.RoundStart{
+	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
 		MatchID: f.info.ID,
 		Drawer: match2.Player{
 			IsCPU:    f.curDrawer.IsCPU,
@@ -207,7 +208,7 @@ func (f *FFA) GameLoop() {
 
 	f.sendRoundSummary()
 
-	cbroadcast.Broadcast(virtualplayer.BRoundEnds, f.info.ID)
+	cbroadcast.Broadcast(match2.BRoundEnds, f.info.ID)
 
 	f.currentWord = ""
 	f.resetGuess()
@@ -343,7 +344,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		player := f.connections[socketID]
 		f.receiving.Unlock()
 
-		cbroadcast.Broadcast(virtualplayer.BAskHint, match2.HintRequested{
+		cbroadcast.Broadcast(match2.BAskHint, match2.HintRequested{
 			MatchID:  f.info.ID,
 			SocketID: socketID,
 			Player: match2.Player{
@@ -611,7 +612,7 @@ func (f *FFA) finish() {
 
 	f.broadcast(&message)
 
-	cbroadcast.Broadcast(virtualplayer.BGameEnds, f.info.ID)
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 }
