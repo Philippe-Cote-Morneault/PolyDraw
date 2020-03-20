@@ -1,8 +1,10 @@
 package lobby
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"sync"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
@@ -416,4 +418,67 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 		})
 		socket.SendRawMessageToSocketID(rawMessage, socketID)
 	}
+}
+
+//AddBot used to add a bot to the group
+func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
+	//Check if groups exists
+	groupDB := model.Group{}
+	model.DB().Where("id = ? and status = 0", groupID).First(&groupDB)
+	if groupDB.ID != uuid.Nil {
+		g.mutex.Lock()
+		//Is the group full ?
+		if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
+			g.mutex.Unlock()
+
+			//send response to client
+			message := socket.RawMessage{}
+			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+				Response: true,
+				Error:    "",
+			})
+
+			if socket.SendRawMessageToSocketID(message, socketID) == nil {
+				//appel au joueur virtuel
+				botID, username := virtualplayer.AddVirtualPlayer(groupID)
+				groupDB.VirtualPlayers++
+				model.DB().Save(&groupDB)
+				//Send a message to all the member of the group to advertise that a new user is in the group
+				newUser := socket.RawMessage{}
+				newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
+					UserID:   botID,
+					Username: username,
+					GroupID:  groupID.String(),
+					IsCPU:    true,
+				})
+
+				g.mutex.Lock()
+				for i := range g.groups[groupID] {
+					go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
+				}
+				for k := range g.queue {
+					go socket.SendRawMessageToSocketID(newUser, k)
+				}
+				g.mutex.Unlock()
+			}
+			return
+		}
+		g.mutex.Unlock()
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+			Response: false,
+			Error:    "The group is full",
+		})
+		socket.SendRawMessageToSocketID(message, socketID)
+		return
+
+	}
+	g.mutex.Unlock()
+
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+		Response: false,
+		Error:    "The group could not be found.",
+	})
+	socket.SendRawMessageToSocketID(message, socketID)
 }
