@@ -39,8 +39,10 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 	switch gameInfo.GameType {
 	case 0:
 		match = &mode.FFA{}
+	case 1:
+	case 2:
+		match = &mode.Coop{}
 	}
-	//TODO add other game mode here!
 
 	if match != nil {
 		match.Init(connections, gameInfo)
