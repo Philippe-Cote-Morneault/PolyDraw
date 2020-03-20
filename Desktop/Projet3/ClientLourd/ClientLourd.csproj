@@ -235,6 +235,9 @@
     <Compile Include="Views\Controls\Game\Confetti.xaml.cs">
       <DependentUpon>Confetti.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Game\LeaderBoard.xaml.cs">
+      <DependentUpon>LeaderBoard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
@@ -335,6 +338,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Game\LeaderBoard.xaml" />
     <Page Include="Views\Controls\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

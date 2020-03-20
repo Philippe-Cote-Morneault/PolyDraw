@@ -119,11 +119,14 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
-            if (e.UserID == SessionInformations.User.ID)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                StrokeDrawerService.Stop();
-            }
+                Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
+                if (e.UserID == SessionInformations.User.ID)
+                {
+                    StrokeDrawerService.Stop();
+                }
+            });
         }
 
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
@@ -208,7 +211,7 @@ namespace ClientLourd.ViewModels
             //Round end
             if (e.Type == 1)
             {
-                ShowCanvasMessage($"The word was {e.Word}");
+                //ShowCanvasMessage($"The word was {e.Word}");
             }
         }
 

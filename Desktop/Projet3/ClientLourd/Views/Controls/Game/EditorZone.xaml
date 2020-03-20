@@ -132,8 +132,9 @@
             </StackPanel>
         </StackPanel>
         <Grid>
+            <Grid Name="LeaderBoardGrid" Visibility="Collapsed" Height="750" Width="1125" Background="Black" Opacity="0.5"  HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="13"/>
             <Grid Height="750" Width="1125" Background="Black" Opacity="0.5" Visibility="{Binding Path=IsMessageDisplay, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="12">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontWeight="Black" Foreground="White" Text="{Binding CanvasMessage}"/>
+                <TextBlock Name="CanvasMessageBlock" HorizontalAlignment="Center" VerticalAlignment="Center"  FontSize="30" FontWeight="Black" Foreground="White" Text="{Binding CanvasMessage}"/>
             </Grid>
             
             <Grid Name="CanvasContainer"  RenderTransformOrigin=".5,.5">
