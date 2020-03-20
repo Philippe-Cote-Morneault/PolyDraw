@@ -3,18 +3,20 @@ package virtualplayer
 import (
 	"log"
 
+	"gitlab.com/jigsawcorp/log3900/internal/match"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
-	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
 //VirtualPlayer service used to debug the message received by the server
 type VirtualPlayer struct {
-	kickPlayer cbroadcast.Channel
-	addPlayer  cbroadcast.Channel
-	gameStarts cbroadcast.Channel
-	roundEnds  cbroadcast.Channel
-	askHint    cbroadcast.Channel
+	kickPlayer  cbroadcast.Channel
+	gameStarts  cbroadcast.Channel
+	gameEnds    cbroadcast.Channel
+	roundStarts cbroadcast.Channel
+	roundEnds   cbroadcast.Channel
+	askHint     cbroadcast.Channel
+	chatNew     cbroadcast.Channel
 
 	shutdown chan bool
 }
@@ -45,22 +47,30 @@ func (v *VirtualPlayer) listen() {
 	//Message viewer
 	for {
 		select {
-		case data := <-v.addPlayer:
-			log.Println("[Virtual Player] -> Adding Virtual Player")
-			if message, ok := data.(socket.RawMessageReceived); ok {
-				//Start a new function to add players
-				go v.addVirtualPlayer(message)
+		case data := <-v.gameStarts:
+			log.Println("[Virtual Player] -> Receives game Start message")
+			match, ok := data.(match.IMatch)
+			if !ok {
+				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
+				break
+			}
+			startGame(match)
+
+		case data := <-v.roundStarts:
+			log.Println("[Virtual Player] -> Receives round Start message")
+
+			round, ok := data.(match.RoundStart)
+			if !ok {
+				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
+				break
+
 			}
 
-		case data := <-v.kickPlayer:
-			log.Println("[Virtual Player] -> Kicking Virtual Player")
-			if message, ok := data.(socket.RawMessageReceived); ok {
-				//Start a new function to kick players
-				go v.kickVirtualPlayer(message)
+			if round.Drawer.IsCPU {
+				go startDrawing(&round)
 			}
-		case data := <-v.gameStarts:
-			log.Println("[Virtual Player] -> Sends game Start message")
-			log.Println(data)
+
+			log.Println(*round.Game)
 
 		case <-v.roundEnds:
 			log.Println("[Virtual Player] -> Sends round End message")
@@ -73,9 +83,22 @@ func (v *VirtualPlayer) listen() {
 }
 
 func (v *VirtualPlayer) subscribe() {
-	v.addPlayer, _, _ = cbroadcast.Subscribe(BAddPlayer)
-	v.kickPlayer, _, _ = cbroadcast.Subscribe(BKickPlayer)
-	v.gameStarts, _, _ = cbroadcast.Subscribe(BGameStarts)
-	v.roundEnds, _, _ = cbroadcast.Subscribe(BRoundEnds)
-	v.askHint, _, _ = cbroadcast.Subscribe(BAskHint)
+	v.kickPlayer, _, _ = cbroadcast.Subscribe(match.BKickPlayer)
+	v.gameStarts, _, _ = cbroadcast.Subscribe(match.BGameStarts)
+	v.gameEnds, _, _ = cbroadcast.Subscribe(match.BGameEnds)
+	v.roundStarts, _, _ = cbroadcast.Subscribe(match.BRoundStarts)
+	v.roundEnds, _, _ = cbroadcast.Subscribe(match.BRoundEnds)
+	v.askHint, _, _ = cbroadcast.Subscribe(match.BAskHint)
+	v.chatNew, _, _ = cbroadcast.Subscribe(match.BChatNew)
+}
+
+//Register the broadcast for drawing
+func (v *VirtualPlayer) Register() {
+	cbroadcast.Register(match.BKickPlayer, match.BSize)
+	cbroadcast.Register(match.BGameStarts, match.BSize)
+	cbroadcast.Register(match.BGameEnds, match.BSize)
+	cbroadcast.Register(match.BRoundStarts, match.BSize)
+	cbroadcast.Register(match.BRoundEnds, match.BSize)
+	cbroadcast.Register(match.BAskHint, match.BSize)
+	cbroadcast.Register(match.BChatNew, match.BSize)
 }
