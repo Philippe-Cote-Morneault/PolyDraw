@@ -285,5 +285,21 @@ namespace ClientLourd.Views.Controls.Game
                 }));
             });
         }
+
+        public void SelectFirstEmptyTextBox(object sender, EventArgs e)
+        {
+            for (int i = 0; i < GuessTextBoxes.Items.Count; i++)
+            {
+                if (Convert.ToChar(GuessTextBoxes.Items[i]) == '\0')
+                {
+                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
+                    TextBox tb = c.ContentTemplate.FindName("textbox", c) as TextBox;
+                    Action focusAction = () => tb.Focus();
+                    Dispatcher.BeginInvoke(focusAction, DispatcherPriority.Render);
+
+                    return;
+                }
+            }
+        }
     }
 }
