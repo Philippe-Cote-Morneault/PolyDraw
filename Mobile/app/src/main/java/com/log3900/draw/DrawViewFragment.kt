@@ -3,6 +3,7 @@ package com.log3900.draw
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,9 @@ import com.log3900.draw.divyanshuwidget.DrawMode
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.*
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
+import nl.dionsegijn.konfetti.KonfettiView
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 import java.util.*
 
 // See https://github.com/divyanshub024/AndroidDraw
@@ -25,6 +29,7 @@ import java.util.*
 
 class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
+    private lateinit var konfettiView: KonfettiView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +62,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
+        konfettiView = root.findViewById(R.id.fragment_draw_view_konfetti)
     }
 
     private fun setUpFab() {
@@ -224,6 +230,25 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         }
 
         drawView.enableCanDraw(canDraw, drawingID)
+    }
+
+    fun showConfetti() {
+        konfettiView.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE)
+            .setDirection(0.0, 359.0)
+            .setSpeed(1f, 5f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .addShapes(Shape.Square, Shape.Circle)
+            .addSizes(Size(12))
+            .setPosition(-50f, konfettiView.width + 50f, -50f, -50f)
+            .streamFor(300, 5000L)
+    }
+
+    fun stopConfetti() {
+        konfettiView.getActiveSystems().forEach {
+            it.stop()
+        }
     }
 
     private fun setDrawToolsVisibility(visibility: Int) {

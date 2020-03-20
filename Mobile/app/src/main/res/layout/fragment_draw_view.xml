@@ -48,4 +48,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/fragment_draw_view_konfetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
