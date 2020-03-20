@@ -11,6 +11,7 @@ import (
 
 type virtualPlayerInfos struct {
 	PlayerID          uuid.UUID
+	GroupID           uuid.UUID
 	Personnality      string
 	DrawingTimeFactor float64
 	Username          string
