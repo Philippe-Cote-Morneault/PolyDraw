@@ -8,8 +8,8 @@ import androidx.fragment.app.DialogFragment
 class SimpleConfirmationDialog : DialogFragment {
     private var dialog: AlertDialog
 
-    constructor(context: Context, title: String, message: String, positiveButtonListener: ((dialog: DialogInterface, which: Int) -> Unit),
-                negativeButtonListener: ((dialog: DialogInterface, which: Int) -> Unit)) : super() {
+    constructor(context: Context, title: String, message: String, positiveButtonListener: ((dialog: DialogInterface, which: Int) -> Unit)?,
+                negativeButtonListener: ((dialog: DialogInterface, which: Int) -> Unit)?) : super() {
 
         dialog = AlertDialog.Builder(context)
             .setTitle(title)
