@@ -715,3 +715,10 @@ func (f *FFA) sendRoundSummary() {
 	})
 	f.pbroadcast(&roundEnd)
 }
+
+//GetGroupID return the group id
+func (f *FFA) GetGroupID() uuid.UUID {
+	defer f.receiving.Unlock()
+	f.receiving.Lock()
+	return f.info.ID
+}
