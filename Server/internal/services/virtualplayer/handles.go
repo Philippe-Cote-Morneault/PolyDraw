@@ -106,7 +106,7 @@ func startGame(game match2.IMatch) {
 	managerInstance.mutex.Lock()
 	managerInstance.Games[groupID] = &game
 	if channelID, ok := managerInstance.Channels[groupID]; ok {
-		for botID, _ := range managerInstance.Groups[groupID] {
+		for botID := range managerInstance.Groups[groupID] {
 			managerInstance.Bots[botID].speak(channelID, "start")
 		}
 		managerInstance.mutex.Unlock()
