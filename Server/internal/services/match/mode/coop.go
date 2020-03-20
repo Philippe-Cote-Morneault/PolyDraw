@@ -7,12 +7,15 @@ import (
 	"sync"
 )
 
+const numberOfChances = 3
+
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
 	wordHistory      map[string]bool
 	nbVirtualPlayers int
 	orderVirtual     []*players
+	chances          map[*players]int
 
 	remainingTime int
 
@@ -22,6 +25,8 @@ type Coop struct {
 //Init creates the coop game mode
 func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
+
+	c.chances = make(map[*players]int)
 
 	c.computeDifficulty()
 	c.computeOrder()
@@ -36,6 +41,8 @@ func (c *Coop) computeOrder() {
 		if c.players[i].IsCPU {
 			c.orderVirtual[c.nbVirtualPlayers] = &c.players[i]
 			c.nbVirtualPlayers++
+		} else {
+			c.chances[&c.players[i]] = numberOfChances
 		}
 	}
 }
