@@ -50,11 +50,6 @@
 
         <Border Grid.Row="0" Margin="50" BorderBrush="LightGray" BorderThickness="1" Height="{Binding ElementName=firstRow, Path=ActualHeight}">
             <ListView ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListView.Resources>
-                    <Style TargetType="GridViewColumnHeader">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                    </Style>
-                </ListView.Resources>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="{Binding ElementName=modeIcon, Path=ActualWidth}">
