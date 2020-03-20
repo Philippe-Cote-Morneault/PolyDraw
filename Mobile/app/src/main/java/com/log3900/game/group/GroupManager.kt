@@ -6,8 +6,13 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Message
+import android.util.Log
+import com.log3900.MainApplication
+import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
+import com.log3900.shared.ui.dialogs.SimpleErrorDialog
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
@@ -58,6 +63,7 @@ class GroupManager : Service() {
             {
             },
             {
+                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage("Error", it.message!!, null, null)))
             }
         )
     }
