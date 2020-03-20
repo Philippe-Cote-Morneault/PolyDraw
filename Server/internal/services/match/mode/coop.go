@@ -4,21 +4,64 @@ import (
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
+	"sync"
 )
 
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
+	wordHistory      map[string]bool
+	nbVirtualPlayers int
+	orderVirtual     []*players
+
+	remainingTime int
+
+	receiving sync.Mutex
 }
 
 //Init creates the coop game mode
 func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
+
+	c.computeDifficulty()
+	c.computeOrder()
+}
+
+//computeOrder used to compute the order for the coop
+func (c *Coop) computeOrder() {
+	c.nbVirtualPlayers = 0
+
+	//Count the number of virtualplayers
+	for i := range c.players {
+		if c.players[i].IsCPU {
+			c.orderVirtual[c.nbVirtualPlayers] = &c.players[i]
+			c.nbVirtualPlayers++
+		}
+	}
+}
+
+//computeDifficulty determine the time associated with the game
+func (c *Coop) computeDifficulty() {
+	//Determine the time based of the difficulty
+	switch c.info.Difficulty {
+	case 0:
+		c.remainingTime = 300
+	case 1:
+		c.remainingTime = 240
+	case 2:
+		c.remainingTime = 180
+	case 3:
+		c.remainingTime = 120
+	}
+	c.remainingTime *= 1000
 }
 
 //Ready client register to make sure they are ready to start the game
 func (c *Coop) Ready(socketID uuid.UUID) {
-	panic("implement me")
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
+
+	c.ready(socketID)
 }
 
 //Start the game and the game loop
@@ -57,5 +100,23 @@ func (c *Coop) GetConnections() []uuid.UUID {
 
 //GetWelcome message used for the broadcast of the type of game
 func (c *Coop) GetWelcome() socket.RawMessage {
-	panic("implement me")
+	players := make([]PlayersData, 0, len(c.info.Users))
+	for i := range c.info.Users {
+		players = append(players, PlayersData{
+			UserID:   c.info.Users[i].ID.String(),
+			Username: c.info.Users[i].Username,
+			Points:   0,
+			IsCPU:    false,
+		})
+	}
+	welcome := ResponseGameInfo{
+		Players:   players,
+		GameType:  2,
+		TimeImage: 0,
+		Laps:      0,
+		TotalTime: 0,
+	}
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
+	return message
 }
