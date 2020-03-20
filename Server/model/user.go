@@ -17,6 +17,7 @@ type User struct {
 	Email          string
 	HashedPassword string
 	Bearer         string
+	IsCPU          bool `gorm:"default:'false'"`
 }
 
 //Session represents a session in the database

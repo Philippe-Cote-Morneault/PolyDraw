@@ -105,7 +105,7 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 					g.QuitGroup(socketKickUser)
 				} else {
 					g.mutex.Unlock()
-					if !g.KickVirtualPlayer(socketID, userID) {
+					if !g.KickVirtualPlayer(userID) {
 						go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user.", socketID)
 					}
 				}
@@ -433,9 +433,12 @@ func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
 		//Is the group full ?
 		if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
 			g.mutex.Unlock()
-			botID, username := virtualplayer.AddVirtualPlayer(groupID)
+			user := model.User{IsCPU: true}
 
-			if botID != "" && username != "" {
+			username := virtualplayer.AddVirtualPlayer(groupID, user.ID)
+			user.Username = username
+
+			if username != "" {
 				//send response to client
 				message := socket.RawMessage{}
 				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
@@ -445,13 +448,14 @@ func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
 
 				if socket.SendRawMessageToSocketID(message, socketID) == nil {
 					//appel au joueur virtuel
-
+					model.AddUser(&user)
+					model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
 					groupDB.VirtualPlayers++
 					model.DB().Save(&groupDB)
 					//Send a message to all the member of the group to advertise that a new user is in the group
 					newUser := socket.RawMessage{}
 					newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
-						UserID:   botID,
+						UserID:   user.ID.String(),
 						Username: username,
 						GroupID:  groupID.String(),
 						IsCPU:    true,
@@ -504,12 +508,12 @@ func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
 }
 
 //KickVirtualPlayer quits the groups the virtual player is currently in.
-func (g *groups) KickVirtualPlayer(socketID, userID uuid.UUID) bool {
+func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
 
-	if groupID, botID, username := virtualplayer.KickVirtualPlayer(userID); botID != "" && username != "" && groupID != uuid.Nil {
+	if groupID, username := virtualplayer.KickVirtualPlayer(userID); username != "" && groupID != uuid.Nil {
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseLeaveGroup), responseGroup{
-			UserID:   botID,
+			UserID:   userID.String(),
 			Username: username,
 			GroupID:  groupID.String(),
 			IsCPU:    true,
@@ -525,8 +529,11 @@ func (g *groups) KickVirtualPlayer(socketID, userID uuid.UUID) bool {
 
 		var groupDB model.Group
 		model.DB().Where("id = ?", groupID).First(&groupDB)
-		groupDB.VirtualPlayers--
+		model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
 		model.DB().Save(&groupDB)
+
+		model.DB().Delete(&model.User{Base: model.Base{ID: userID}})
+		groupDB.VirtualPlayers--
 		return true
 	}
 	return false
