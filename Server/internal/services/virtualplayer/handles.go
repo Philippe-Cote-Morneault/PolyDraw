@@ -2,111 +2,119 @@ package virtualplayer
 
 import (
 	"log"
-	"math/rand"
 	"sync"
 
 	"github.com/google/uuid"
-	"gitlab.com/jigsawcorp/log3900/internal/socket"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 )
 
 var managerInstance Manager
 
-type virtualPlayerInfos struct {
-	PlayerID     uuid.UUID
-	Personnality string
-	DrawingTime  int
-	// LastStartLine     byte
-	// LastEndLine       byte
-	// LastReferenceLine byte
-	// LastRatioLine     byte
-	// LastHintLine      byte
-}
-
-type group struct {
-	id              string
-	playerUsernames []string
-}
-
 // Manager represents a struct that manage all virtual players
 type Manager struct {
 	mutex    sync.Mutex
-	Players  map[uuid.UUID]*virtualPlayerInfos // playerID -> virtualPlayerInfos
-	Channels map[uuid.UUID][]uuid.UUID         //channelID -> []playerID
-	Games    map[uuid.UUID]*group              //channelID -> group
+	Bots     map[uuid.UUID]*virtualPlayerInfos // playerID -> virtualPlayerInfos
+	Channels map[uuid.UUID]uuid.UUID           //channelID -> groupID
+	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []playerID
+	Players  map[uuid.UUID]match2.IMatch       //groupID -> ffa
+
 }
 
 func (m *Manager) init() {
-	m.Players = make(map[uuid.UUID]*virtualPlayerInfos)
-	m.Channels = make(map[uuid.UUID][]uuid.UUID)
-	m.Games = make(map[uuid.UUID]*group)
+	m.Bots = make(map[uuid.UUID]*virtualPlayerInfos)
+	m.Channels = make(map[uuid.UUID]uuid.UUID)
+	m.Groups = make(map[uuid.UUID]map[uuid.UUID]bool)
+	m.Players = make(map[uuid.UUID]match2.IMatch)
 }
 
-func (v *VirtualPlayer) addVirtualPlayer(message socket.RawMessageReceived) {
-
+//AddGroup adds the group to cache
+func AddGroup(groupID uuid.UUID) {
+	managerInstance.mutex.Lock()
+	managerInstance.Groups[groupID] = make(map[uuid.UUID]bool)
+	managerInstance.mutex.Unlock()
 }
 
-func hasVirtualPlayer(playerID uuid.UUID) bool {
-	_, ok := managerInstance.Players[playerID]
-	return ok
-}
-
-func (v *VirtualPlayer) kickVirtualPlayer(message socket.RawMessageReceived) {
-	log.Println("In kickVirtualPlayer")
-}
-
-func generateVirtualPlayer() *virtualPlayerInfos {
-	return &virtualPlayerInfos{Personnality: []string{"angry", "funny", "mean", "nice", "supportive"}[rand.Intn(5)],
-		DrawingTime: -1}
-}
-
-func speak(socketID uuid.UUID, message string) {
-	// sends message by socket
-}
-
-func getLines(interactionType string) *lines {
-	switch interactionType {
-	case "startGame":
-		return &iStartGameLines
-	case "endRound":
-		return &iEndRoundLines
-	case "hint":
-		return &iHintLines
-	default:
-		if rand.Intn(2) == 1 {
-			return &iPlayerRefLines
-		}
-		return &iWinRatioLines
+//RemoveGroup adds the group to cache
+func RemoveGroup(groupID uuid.UUID) {
+	managerInstance.mutex.Lock()
+	if _, ok := managerInstance.Groups[groupID]; ok {
+		delete(managerInstance.Groups, groupID)
+		managerInstance.mutex.Unlock()
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting RemoveGroup...", groupID)
 	}
 }
 
-func getInteraction(playerID uuid.UUID, interactionType string) string {
+//AddVirtualPlayer adds virtualPlayer to cache. Returns playerID, username
+func AddVirtualPlayer(groupID uuid.UUID) (string, string) {
+	botID := uuid.New()
+	playerInfos := generateVirtualPlayer()
+	playerInfos.PlayerID = botID
+	playerInfos.GroupID = groupID
+	managerInstance.mutex.Lock()
 
-	playerInfos, ok := managerInstance.Players[playerID]
+	if group, groupOk := managerInstance.Groups[groupID]; groupOk {
+		group[botID] = true
+	} else {
+		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting AddVirtualPlayer...", groupID)
+		return "", ""
+	}
 
-	lines := getLines(interactionType)
+	managerInstance.Bots[botID] = playerInfos
+	managerInstance.mutex.Unlock()
+
+	return playerInfos.PlayerID.String(), playerInfos.Username
+}
+
+//KickVirtualPlayer kicks virtualPlayer from cache. Returns playerID, username
+func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string, string) {
+	managerInstance.mutex.Lock()
+	if bot, ok := managerInstance.Bots[userID]; ok {
+		groupID := bot.GroupID
+
+		if group, ok := managerInstance.Groups[groupID]; ok {
+
+			if _, ok := group[userID]; ok {
+				delete(group, userID)
+				delete(managerInstance.Bots, userID)
+				managerInstance.mutex.Unlock()
+
+				return groupID, userID.String(), bot.Username
+			} else {
+				managerInstance.mutex.Unlock()
+				log.Printf("[Virtual Player] -> [Error] Can't find user with id : %v in group : %v. Aborting KickVirtualPlayer...", userID, groupID)
+				return uuid.Nil, "", ""
+			}
+		} else {
+			managerInstance.mutex.Unlock()
+			log.Printf("[Virtual Player] -> [Error] Can't find group with id : %v of user : %v. Aborting KickVirtualPlayer...", groupID, userID)
+			return uuid.Nil, "", ""
+		}
+
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find userID : %v. Aborting KickVirtualPlayer...", userID)
+		return uuid.Nil, "", ""
+	}
+}
+
+func startGame(game match2.IMatch) {
+
+}
+
+func startDrawing(round *match2.RoundStart) {
+	if !round.Drawer.IsCPU {
+		return
+	}
+	_, ok := managerInstance.Bots[round.Drawer.ID]
 
 	if !ok {
-		log.Println("[Virtual Player] -> Can't find bot's id. Aborting interaction...")
-		return ""
+		log.Printf("[Virtual Player] -> [Error] Can't find bot's id : %v. Aborting drawing...", round.Drawer.ID)
+		return
 	}
+	// for _, playerID := managerInstance.Games[round.MatchID].playerUsernames{
 
-	switch playerInfos.Personnality {
-	case "angry":
-		return lines.Angry[rand.Intn(3)]
-
-	case "funny":
-		return lines.Funny[rand.Intn(3)]
-
-	case "mean":
-		return lines.Mean[rand.Intn(3)]
-
-	case "nice":
-		return lines.Nice[rand.Intn(3)]
-
-	case "supportive":
-		return lines.Supportive[rand.Intn(3)]
-
-	default:
-		return ""
-	}
+	// 	drawing.StartDrawing()
+	// }
 }
