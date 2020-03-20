@@ -407,3 +407,28 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 		}
 	}
 }
+
+func (h *handler) handleBotMessage(message MessageReceived) {
+	channelID, err := uuid.Parse(message.ChannelID)
+	if err == nil {
+		rawMessage := socket.RawMessage{}
+		if rawMessage.ParseMessagePack(byte(socket.MessageType.MessageReceived), message) != nil {
+			log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
+			return
+		}
+		for k := range h.channelsConnections[channelID] {
+			// Send message to the socket in async way
+			go socket.SendRawMessageToSocketID(rawMessage, k)
+		}
+		log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", message.Message, message.Username, message.ChannelID)
+		botID, err2 := uuid.Parse(message.UserID)
+		if err2 == nil {
+			model.AddMessage(message.Message, channelID, botID, time.Now().Unix())
+		} else {
+			log.Printf("[Messenger] -> Receive: Invalid bot ID. Dropping packet!")
+		}
+	} else {
+		log.Printf("[Messenger] -> Receive: Invalid channel ID. Dropping packet!")
+	}
+
+}
