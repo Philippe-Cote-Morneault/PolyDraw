@@ -5,50 +5,52 @@ import (
 	"math/rand"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
+
 	"github.com/Pallinder/go-randomdata"
 	"github.com/google/uuid"
 )
 
 type virtualPlayerInfos struct {
-	PlayerID          uuid.UUID
+	BotID             uuid.UUID
 	GroupID           uuid.UUID
-	Personnality      string
+	Personality       string
 	DrawingTimeFactor float64
 	Username          string
 }
 
 func (v *virtualPlayerInfos) calculateDrawingTime() {
 	rand.Seed(time.Now().UnixNano())
-	switch v.Personnality {
+	min := 0.0
+	max := 1.0
+	switch v.Personality {
 	case "angry":
-		min := float64(0.9)
-		max := float64(1.4)
-		v.DrawingTimeFactor = min + rand.Float64()*(max-min)
+		min = 0.9
+		max = 1.4
 
 	case "funny":
-		min := float64(0.6)
-		max := float64(1.2)
-		v.DrawingTimeFactor = min + rand.Float64()*(max-min)
+		min = 0.6
+		max = 1.2
 
 	case "mean":
-		min := float64(1.5)
-		max := float64(2)
-		v.DrawingTimeFactor = min + rand.Float64()*(max-min)
+		min = 1.5
+		max = 2
 
 	case "nice":
-		min := float64(0.5)
-		max := float64(0.7)
-		v.DrawingTimeFactor = min + rand.Float64()*(max-min)
+		min = 0.5
+		max = 0.7
 
 	case "supportive":
-		min := float64(0.6)
-		max := float64(0.8)
-		v.DrawingTimeFactor = min + rand.Float64()*(max-min)
+		min = 0.6
+		max = 0.8
 	}
+	v.DrawingTimeFactor = float64(min) + rand.Float64()*float64(max-min)
+
 }
 
 func generateVirtualPlayer() *virtualPlayerInfos {
-	v := &virtualPlayerInfos{Personnality: []string{"angry", "funny", "mean", "nice", "supportive"}[rand.Intn(5)],
+	v := &virtualPlayerInfos{Personality: []string{"angry", "funny", "mean", "nice", "supportive"}[rand.Intn(5)],
 		DrawingTimeFactor: 0, Username: randomdata.GenerateProfile(randomdata.RandomGender).Login.Username}
 
 	v.calculateDrawingTime()
@@ -56,8 +58,15 @@ func generateVirtualPlayer() *virtualPlayerInfos {
 	return v
 }
 
-func speak(socketID uuid.UUID, message string) {
-	// sends message by socket
+func (v *virtualPlayerInfos) speak(channelID uuid.UUID, interactionType string) {
+
+	cbroadcast.Broadcast(messenger.BBotMessage, messenger.MessageReceived{
+		ChannelID: channelID.String(),
+		UserID:    v.BotID.String(),
+		Username:  v.Username,
+		Message:   v.getInteraction(interactionType),
+		Timestamp: time.Now().Unix(),
+	})
 }
 
 func getLines(interactionType string) *lines {
@@ -76,18 +85,11 @@ func getLines(interactionType string) *lines {
 	}
 }
 
-func getInteraction(playerID uuid.UUID, interactionType string) string {
-
-	playerInfos, ok := managerInstance.Bots[playerID]
+func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
 
 	lines := getLines(interactionType)
 
-	if !ok {
-		log.Printf("[Virtual Player] -> [Error] Can't find bot's id : %v. Aborting interaction...", playerID)
-		return ""
-	}
-
-	switch playerInfos.Personnality {
+	switch v.Personality {
 	case "angry":
 		return lines.Angry[rand.Intn(3)]
 

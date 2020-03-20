@@ -14,9 +14,9 @@ var managerInstance Manager
 type Manager struct {
 	mutex    sync.Mutex
 	Bots     map[uuid.UUID]*virtualPlayerInfos // playerID -> virtualPlayerInfos
-	Channels map[uuid.UUID]uuid.UUID           //channelID -> groupID
-	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []playerID
-	Players  map[uuid.UUID]match2.IMatch       //groupID -> ffa
+	Channels map[uuid.UUID]uuid.UUID           // groupID -> channelID
+	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
+	Games    map[uuid.UUID]*match2.IMatch      //groupID -> ffa
 
 }
 
@@ -24,7 +24,7 @@ func (m *Manager) init() {
 	m.Bots = make(map[uuid.UUID]*virtualPlayerInfos)
 	m.Channels = make(map[uuid.UUID]uuid.UUID)
 	m.Groups = make(map[uuid.UUID]map[uuid.UUID]bool)
-	m.Players = make(map[uuid.UUID]match2.IMatch)
+	m.Games = make(map[uuid.UUID]*match2.IMatch)
 }
 
 //AddGroup adds the group to cache
@@ -47,10 +47,10 @@ func RemoveGroup(groupID uuid.UUID) {
 }
 
 //AddVirtualPlayer adds virtualPlayer to cache. Returns playerID, username
-func AddVirtualPlayer(groupID uuid.UUID) (string, string) {
-	botID := uuid.New()
+func AddVirtualPlayer(groupID, botID uuid.UUID) string {
+
 	playerInfos := generateVirtualPlayer()
-	playerInfos.PlayerID = botID
+	playerInfos.BotID = botID
 	playerInfos.GroupID = groupID
 	managerInstance.mutex.Lock()
 
@@ -58,17 +58,17 @@ func AddVirtualPlayer(groupID uuid.UUID) (string, string) {
 		group[botID] = true
 	} else {
 		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting AddVirtualPlayer...", groupID)
-		return "", ""
+		return ""
 	}
 
 	managerInstance.Bots[botID] = playerInfos
 	managerInstance.mutex.Unlock()
 
-	return playerInfos.PlayerID.String(), playerInfos.Username
+	return playerInfos.Username
 }
 
 //KickVirtualPlayer kicks virtualPlayer from cache. Returns playerID, username
-func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string, string) {
+func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	managerInstance.mutex.Lock()
 	if bot, ok := managerInstance.Bots[userID]; ok {
 		groupID := bot.GroupID
@@ -80,26 +80,40 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string, string) {
 				delete(managerInstance.Bots, userID)
 				managerInstance.mutex.Unlock()
 
-				return groupID, userID.String(), bot.Username
+				return groupID, bot.Username
 			} else {
 				managerInstance.mutex.Unlock()
 				log.Printf("[Virtual Player] -> [Error] Can't find user with id : %v in group : %v. Aborting KickVirtualPlayer...", userID, groupID)
-				return uuid.Nil, "", ""
+				return uuid.Nil, ""
 			}
 		} else {
 			managerInstance.mutex.Unlock()
 			log.Printf("[Virtual Player] -> [Error] Can't find group with id : %v of user : %v. Aborting KickVirtualPlayer...", groupID, userID)
-			return uuid.Nil, "", ""
+			return uuid.Nil, ""
 		}
 
 	} else {
 		managerInstance.mutex.Unlock()
 		log.Printf("[Virtual Player] -> [Error] Can't find userID : %v. Aborting KickVirtualPlayer...", userID)
-		return uuid.Nil, "", ""
+		return uuid.Nil, ""
 	}
 }
 
+// startGame does the startGame routine for a bot
 func startGame(game match2.IMatch) {
+	groupID := game.GetGroupID()
+
+	managerInstance.mutex.Lock()
+	managerInstance.Games[groupID] = &game
+	if channelID, ok := managerInstance.Channels[groupID]; ok {
+		for botID, _ := range managerInstance.Groups[groupID] {
+			managerInstance.Bots[botID].speak(channelID, "start")
+		}
+		managerInstance.mutex.Unlock()
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find channelID of groupID : %v. Aborting startGame...", groupID)
+	}
 
 }
 
