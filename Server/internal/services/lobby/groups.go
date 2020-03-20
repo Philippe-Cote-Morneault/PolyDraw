@@ -45,9 +45,9 @@ type responseNewGroup struct {
 
 type groups struct {
 	mutex      sync.Mutex
-	queue      map[uuid.UUID]bool
-	assignment map[uuid.UUID]uuid.UUID //socketID -> groupID
-	groups     map[uuid.UUID][]uuid.UUID
+	queue      map[uuid.UUID]bool        // socketID -> _
+	assignment map[uuid.UUID]uuid.UUID   // socketID -> groupID
+	groups     map[uuid.UUID][]uuid.UUID // groupID -> socketID
 }
 
 func (g *groups) Init() {
@@ -530,10 +530,10 @@ func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
 		var groupDB model.Group
 		model.DB().Where("id = ?", groupID).First(&groupDB)
 		model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
-		model.DB().Save(&groupDB)
 
 		model.DB().Delete(&model.User{Base: model.Base{ID: userID}})
 		groupDB.VirtualPlayers--
+		model.DB().Save(&groupDB)
 		return true
 	}
 	return false
