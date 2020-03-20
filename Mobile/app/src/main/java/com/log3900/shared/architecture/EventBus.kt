@@ -36,6 +36,7 @@ enum class EventType {
     MATCH_ENDED,
     // Session
     LOGOUT,
+    SHOW_ERROR_MESSAGE,
     // Settings
     LANGUAGE_CHANGED,
     THEME_CHANGED
