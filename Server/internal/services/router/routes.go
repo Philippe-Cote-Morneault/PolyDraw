@@ -6,7 +6,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 )
 
@@ -34,13 +33,13 @@ func (r *Router) routing() {
 	r.handle(socket.MessageType.RequestGameStart, lobby.BStartMatch)
 	r.handle(socket.MessageType.RequestKickUser, lobby.BKickUser)
 
+	//Virtual Players
+	r.handle(socket.MessageType.AddVirtualPlayer, lobby.BAddBot)
+
 	//Match
 	r.handle(socket.MessageType.RequestReadyMatch, match.BMatchReady)
 	r.handle(socket.MessageType.RequestQuitMatch, match.BMatchQuit)
 	r.handle(socket.MessageType.RequestGuessWordMatch, match.BMatchGuess)
 	r.handle(socket.MessageType.RequestHintMatch, match.BMatchHint)
-
-	//Virtual Players
-	r.handle(socket.MessageType.AddVirtualPlayer, virtualplayer.BAddPlayer)
 
 }
