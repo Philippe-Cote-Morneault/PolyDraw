@@ -28,7 +28,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
-                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -37,9 +38,10 @@
             <Grid Grid.Column="0" x:Name="modeIcon"/>
             <Grid Grid.Column="1" x:Name="mode"/>
             <Grid Grid.Column="2" x:Name="gameName"/>
-            <Grid Grid.Column="3" x:Name="host"/>
-            <Grid Grid.Column="4" x:Name="players"/>
-            <Grid Grid.Column="5" x:Name="difficulty"/>
+            <Grid Grid.Column="3" x:Name="language"/>
+            <Grid Grid.Column="4" x:Name="host"/>
+            <Grid Grid.Column="5" x:Name="players"/>
+            <Grid Grid.Column="6" x:Name="difficulty"/>
         </Grid>
 
 
@@ -67,7 +69,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Mode}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand" Content="{DynamicResource Mode}">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand" Content="{DynamicResource Mode}" ToolTip="{DynamicResource FilterMode}">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Mode"/>
                                         </Label.InputBindings>
@@ -80,9 +82,21 @@
                         <GridViewColumn DisplayMemberBinding="{Binding GameName}" Width="{Binding ElementName=gameName, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource LobbyName}" Cursor="Hand">
-                                        <Label.InputBindings>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource LobbyName}" Cursor="Hand" ToolTip="{DynamicResource FilterGameName}">
+                                        <Label.InputBindings> 
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="LobbyName"/>
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Language}" Width="{Binding ElementName=language, Path=ActualWidth}" >
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Language}" Cursor="Hand" ToolTip="{DynamicResource FilterLanguage}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Language"/>
                                         </Label.InputBindings>
                                     </Label>
                                 </DataTemplate>
@@ -92,7 +106,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Difficulty}" Width="{Binding ElementName=difficulty, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Difficulty}" Cursor="Hand">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Difficulty}" Cursor="Hand" ToolTip="{DynamicResource FilterDifficulty}">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Difficulty"/>
                                         </Label.InputBindings>
@@ -102,10 +116,10 @@
                         </GridViewColumn>
 
 
-                        <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=host, Path=ActualWidth}" Header="Host">
+                        <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=host, Path=ActualWidth}" Header="Host" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Host}" Cursor="Hand">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Host}" Cursor="Hand" ToolTip="{DynamicResource FilterHost}">
                                         <Label.InputBindings>
                                             <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Host"/>
                                         </Label.InputBindings>
@@ -123,7 +137,7 @@
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="UserGroup" Cursor="Hand">
+                                        <materialDesign:PackIcon Kind="UserGroup" Cursor="Hand" ToolTip="{DynamicResource FilterPlayers}" Background="White">
                                             <materialDesign:PackIcon.InputBindings>
                                                 <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Players"/>
                                             </materialDesign:PackIcon.InputBindings>

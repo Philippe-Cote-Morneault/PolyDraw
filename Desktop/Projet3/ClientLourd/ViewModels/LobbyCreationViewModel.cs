@@ -26,6 +26,7 @@ namespace ClientLourd.ViewModels
             SelectedMode = GameModes.FFA.GetDescription();
             SelectedNumberOfPlayers = 8;
             SelectedDifficulty = DifficultyLevel.Easy.GetDescription();
+            SelectedNumberOfRounds = 3;
         }
 
         public SessionInformations SessionInformations
@@ -143,6 +144,26 @@ namespace ClientLourd.ViewModels
         }
 
 
+        private int _selectedNumberOfRounds;
+        public int SelectedNumberOfRounds
+        {
+            get => _selectedNumberOfRounds;
+            set
+            {
+                if (value != _selectedNumberOfRounds)
+                {
+                    _selectedNumberOfRounds = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public List<int> NumberOfRoundsList
+        {
+            get { return new List<int>() {1,2,3,4,5 }; }
+        }
+
+
 
 
         private string _gameName;
@@ -179,7 +200,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGroup(GameName, SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>());
+                await RestClient.PostGroup(GameName, SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>(), SelectedNumberOfRounds);
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)

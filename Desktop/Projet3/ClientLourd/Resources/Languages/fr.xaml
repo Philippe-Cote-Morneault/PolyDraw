@@ -20,10 +20,18 @@
     <!--Home.xaml-->
     <system:String x:Key="Mode">Mode</system:String>
     <system:String x:Key="LobbyName">Nom de la salle d'attente</system:String>
+    <system:String x:Key="Language">Langue</system:String>
     <system:String x:Key="Difficulty">Difficulté</system:String>
     <system:String x:Key="Host">Hôte</system:String>
     <system:String x:Key="CreateLobby">Créer une salle d'attente</system:String>
     <system:String x:Key="CreateGame">Créer une partie</system:String>
+
+    <system:String x:Key="FilterMode">Filtrer le mode</system:String>
+    <system:String x:Key="FilterGameName">Filtrer le nom</system:String>
+    <system:String x:Key="FilterLanguage">Filtrer la langue</system:String>
+    <system:String x:Key="FilterDifficulty">Filtrer la difficulté</system:String>
+    <system:String x:Key="FilterHost">Filtrer l'hôte</system:String>
+    <system:String x:Key="FilterPlayers">Filtrer le nombre de joueurs</system:String>
 
     <!--Profile-->
     <system:String x:Key="WelcomeProfile">Bienvenue sur votre profil!</system:String>

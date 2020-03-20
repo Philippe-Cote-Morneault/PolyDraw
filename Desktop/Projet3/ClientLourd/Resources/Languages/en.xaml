@@ -19,11 +19,19 @@
     <!--Home.xaml-->
     <system:String x:Key="Mode">Mode</system:String>
     <system:String x:Key="LobbyName">Lobby name</system:String>
+    <system:String x:Key="Language">Language</system:String>
     <system:String x:Key="Difficulty">Difficulty</system:String>
     <system:String x:Key="Host">Host</system:String>
     <system:String x:Key="CreateLobby">Create a lobby</system:String>
     <system:String x:Key="CreateGame">Create a game</system:String>
-    
+
+    <system:String x:Key="FilterMode">Filter by mode</system:String>
+    <system:String x:Key="FilterGameName">Filter by game name</system:String>
+    <system:String x:Key="FilterLanguage">Filter by language</system:String>
+    <system:String x:Key="FilterDifficulty">Filter by difficulty</system:String>
+    <system:String x:Key="FilterHost">Filter by host</system:String>
+    <system:String x:Key="FilterPlayers">Filter by players</system:String>
+
     <!--Profile-->
     <system:String x:Key="WelcomeProfile">Welcome to your profile!</system:String>
     <system:String x:Key="EditProfile">Edit my profile</system:String>

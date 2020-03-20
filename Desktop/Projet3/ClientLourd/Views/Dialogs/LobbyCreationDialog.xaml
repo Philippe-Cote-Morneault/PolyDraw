@@ -61,6 +61,13 @@
                 <ComboBox SelectedItem="{Binding SelectedNumberOfPlayers}" ItemsSource="{Binding NumberOfPlayersList}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100"></ComboBox>
             </StackPanel>
 
+            <StackPanel Margin="0 30 0 0" HorizontalAlignment="Center" >
+                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock FontSize="24" HorizontalAlignment="Center"  FontWeight="Bold">Select the number of rounds</TextBlock>
+                </StackPanel>
+                <ComboBox SelectedItem="{Binding SelectedNumberOfRounds}" ItemsSource="{Binding NumberOfRoundsList}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100"></ComboBox>
+            </StackPanel>
+
             <Button IsDefault="True" Margin="0 30 0 30" Width="300" Command="{Binding CreateLobbyCommand}" CommandParameter="{Binding ElementName=LobbyName, Path=Text}">Create lobby</Button>
             </StackPanel>
     </materialDesign:DialogHost>

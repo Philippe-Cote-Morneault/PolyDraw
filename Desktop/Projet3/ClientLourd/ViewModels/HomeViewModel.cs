@@ -74,6 +74,7 @@ namespace ClientLourd.ViewModels
             _lobbyFilteredAscending = false;
             _hostFilteredAscending = false;
             _playerCountFilteredAscending = false;
+            _languageFilteredAscending = false;
 
 
         }
@@ -82,7 +83,7 @@ namespace ClientLourd.ViewModels
         {
             //??
 
-           
+
         }
 
         public ObservableCollection<Lobby> Lobbies
@@ -181,6 +182,23 @@ namespace ClientLourd.ViewModels
                 _playerCountFilteredAscending = false;
             }
         }
+        
+        private bool _languageFilteredAscending;
+        
+        private void FilterLanguage()
+        {
+            if (!_languageFilteredAscending)
+            {
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int)lobby.Language).ToList());
+                _languageFilteredAscending = true;
+            }
+            else
+            {
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int)lobby.Language).ToList());
+                _languageFilteredAscending = false;
+            }
+        }
+
 
         private bool _difficultyFilteredAscending;
 
@@ -222,6 +240,8 @@ namespace ClientLourd.ViewModels
                 FilterPlayerCount();
             if (attribute == "Difficulty")
                 FilterDifficulty();
+            if (attribute == "Language")
+                FilterLanguage();
         }
 
         public void JoinLobby(Lobby lobby) 
@@ -244,14 +264,14 @@ namespace ClientLourd.ViewModels
                     (GameModes)lobbyCreated.Mode,
                     (DifficultyLevel)lobbyCreated.Difficulty,
                     lobbyCreated.Players.Count,
-                    lobbyCreated.PlayersMax
+                    lobbyCreated.PlayersMax,
+                    lobbyCreated.Language
                     );
                 Lobbies.Insert(0, lobby);
                 if (IsCreatedByUser(lobbyCreated.OwnerID))
                 {
                     CurrentLobby = lobby;
                     CurrentLobby.Host = lobbyCreated.OwnerName;
-                   // CurrentLobby.Players[0].User = await RestClient.GetUserInfo(CurrentLobby.Players[0].User.ID);
                 }
 
             });
