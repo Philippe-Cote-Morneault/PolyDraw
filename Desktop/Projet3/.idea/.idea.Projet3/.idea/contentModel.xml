@@ -189,6 +189,7 @@
             <e p="HealthPointConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
+            <e p="ItemToIndexConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
@@ -256,6 +257,8 @@
               <e p="GamePanel.xaml.cs" t="Include" />
               <e p="GameStatus.xaml" t="Include" />
               <e p="GameStatus.xaml.cs" t="Include" />
+              <e p="LeaderBoard.xaml" t="Include" />
+              <e p="LeaderBoard.xaml.cs" t="Include" />
               <e p="TopBar.xaml" t="Include" />
               <e p="TopBar.xaml.cs" t="Include" />
             </e>

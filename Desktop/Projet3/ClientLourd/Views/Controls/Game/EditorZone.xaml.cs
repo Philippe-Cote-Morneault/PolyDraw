@@ -36,18 +36,22 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            Task.Run(() =>
             {
-                LeaderBoard l = new LeaderBoard((MatchEventArgs) args);
-                LeaderBoardGrid.Children.Add(l);
-                LeaderBoardGrid.Visibility = Visibility.Visible;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoard l = new LeaderBoard((MatchEventArgs)args);
+                    LeaderBoardGrid.Children.Add(l);
+                    LeaderBoardGrid.Visibility = Visibility.Visible;
+                });
+                Thread.Sleep(2000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Clear();
+                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                });
             });
-            Thread.Sleep(2000);
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                LeaderBoardGrid.Children.Clear();
-                LeaderBoardGrid.Visibility = Visibility.Collapsed;
-            });
+
     }
 
 

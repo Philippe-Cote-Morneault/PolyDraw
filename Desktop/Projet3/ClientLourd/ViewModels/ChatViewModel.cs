@@ -186,12 +186,12 @@ namespace ClientLourd.ViewModels
                     if (channel == null)
                         return;
                     Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
-                    channel.Users.Remove(channel.Users.First(u => u.ID == e.UserID));
+                    var user = channel.Users.FirstOrDefault(u => u.ID == e.UserID);
                     channel.Messages.Add(m);
                     if (channel.IsGame)
-                    {
                         Channels.Remove(channel);
-                    }
+                    if(user != null)
+                        channel.Users.Remove(user);
                     UpdateChannels();
                 });
             }

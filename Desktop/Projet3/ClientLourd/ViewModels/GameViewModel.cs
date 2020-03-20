@@ -31,7 +31,6 @@ namespace ClientLourd.ViewModels
         private string _word;
         private char[] _guess;
         private DateTime _time;
-        private Timer _timer;
         private int _healthPoint;
         private ObservableCollection<Player> _players;
         private long _round;

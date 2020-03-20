@@ -171,6 +171,7 @@
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
     <Compile Include="Utilities\Converters\GameModeToImageConverter.cs" />
     <Compile Include="Utilities\Converters\HealthPointConverter.cs" />
+    <Compile Include="Utilities\Converters\PlayerToPositionConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\NumberToPlaceholder.cs" />
