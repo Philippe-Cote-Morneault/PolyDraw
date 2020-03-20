@@ -30,8 +30,10 @@ import com.log3900.settings.SettingsActivity
 import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.sound.SoundManager
 import com.log3900.settings.theme.ThemeManager
+import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.ui.dialogs.SimpleErrorDialog
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.user.account.AccountRepository
@@ -225,6 +227,10 @@ open class MainActivity : AppCompatActivity() {
         hideShowMessagesFAB.count = unreadMessagesCount
     }
 
+    private fun onShowErrorMessage(message: DialogEventMessage) {
+        SimpleErrorDialog(this, message.title, message.message, message.positiveButtonListener, message.negativeButtonListener).show()
+    }
+
     private fun setSoundEffectsIcon(enabled: Boolean) {
         if (enabled) {
             toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_up_black)
@@ -246,6 +252,9 @@ open class MainActivity : AppCompatActivity() {
         when(event.type) {
             EventType.UNREAD_MESSAGES_CHANGED -> {
                 onUnreadMessagesChanged(event.data as Int)
+            }
+            EventType.SHOW_ERROR_MESSAGE -> {
+                onShowErrorMessage(event.data as DialogEventMessage)
             }
         }
     }
