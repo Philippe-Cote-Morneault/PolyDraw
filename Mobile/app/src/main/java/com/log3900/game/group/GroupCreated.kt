@@ -12,7 +12,7 @@ class GroupCreated(var groupName: String?, var playersMax: Int, var rounds: Int?
         }
 
         if (rounds != null) {
-            groupCreated.addProperty("Rounds", rounds)
+            groupCreated.addProperty("NbRound", rounds)
         }
 
         if (groupName != null) {
