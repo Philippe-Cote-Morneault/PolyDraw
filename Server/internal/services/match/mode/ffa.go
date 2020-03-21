@@ -643,6 +643,7 @@ func (f *FFA) sendRoundSummary() {
 	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
 		Players:      playersDetails,
 		Achievements: nil,
+		Word:         f.currentWord,
 	})
 	f.pbroadcast(&roundEnd)
 }
