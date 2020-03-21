@@ -88,6 +88,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <!--TODO: Change to Solo|Coop-->
         <StackPanel Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|FFA}"  VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
             <materialDesign:PackIcon Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>

@@ -11,6 +11,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
+        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
         <Storyboard x:Key="PointsGainedAnimations" >
             <DoubleAnimation 
                 Storyboard.TargetProperty="(TextBlock.Opacity)" 
@@ -44,7 +45,10 @@
                                                 ConverterParameter=1,
                                                 StringFormat={}#{0},
                                                 RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                         FontSize="24" Margin="5"/>
+                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}"
+                                                
+                                         FontSize="24" Margin="5"
+                                         /> 
                                     <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}">
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
