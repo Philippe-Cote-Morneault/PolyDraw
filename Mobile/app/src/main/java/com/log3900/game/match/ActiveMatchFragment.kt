@@ -1,5 +1,6 @@
 package com.log3900.game.match
 
+import android.animation.*
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
@@ -12,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.log3900.R
 import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
@@ -21,6 +24,11 @@ import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.graphics.Color
+import android.view.animation.AnimationSet
+import android.view.animation.TranslateAnimation
+import androidx.core.content.ContextCompat
+
 
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var activeMatchPresenter: ActiveMatchPresenter? = null
@@ -112,14 +120,12 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showWordGuessingView() {
-        Log.d("POTATO", "showWordGuessingView()")
         if (wordToDrawView != null) {
             footer.removeAllViews()
             wordToDrawView = null
         }
 
         if (guessingView == null) {
-            Log.d("POTATO", "guessingView is null")
             guessingView = WordGuessingView(context!!)
             guessingView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(guessingView)
@@ -132,14 +138,12 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showWordToDrawView() {
-        Log.d("POTATO", "showWordToDrawView()")
         if (guessingView != null) {
             footer.removeAllViews()
             guessingView = null
         }
 
         if (wordToDrawView == null) {
-            Log.d("POTATO", "wordToDrawView is null")
             wordToDrawView = WordToDrawView(context!!)
             wordToDrawView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(wordToDrawView)
@@ -148,6 +152,79 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun notifyPlayersChanged() {
         playersAdapter.notifyDataSetChanged()
+    }
+
+    override fun hideCanvas() {
+        YoYo.with(Techniques.RotateOutUpRight)
+            .duration(1000)
+            .playOn(drawFragment.view)
+    }
+
+    override fun showCanvas() {
+        YoYo.with(Techniques.RotateInDownLeft)
+            .duration(1000)
+            .playOn(drawFragment.view)
+    }
+
+    override fun showConfetti() {
+        drawFragment.showConfetti()
+    }
+
+    override fun pulseRemainingTime() {
+        val scaleDown = ObjectAnimator.ofPropertyValuesHolder(
+            remainingTimeTextView,
+            PropertyValuesHolder.ofFloat("scaleX", 1.4f),
+            PropertyValuesHolder.ofFloat("scaleY", 1.4f)
+        )
+        scaleDown.duration = 500
+
+        scaleDown.repeatCount = 1
+        scaleDown.repeatMode = ObjectAnimator.REVERSE
+
+        val anim = ValueAnimator()
+        anim.setIntValues(Color.BLACK, Color.RED)
+        anim.setEvaluator(ArgbEvaluator())
+        anim.addUpdateListener { valueAnimator -> remainingTimeTextView.setTextColor(valueAnimator.animatedValue as Int) }
+        for (drawable in remainingTimeTextView.compoundDrawables) {
+            if (drawable != null) {
+                anim.addUpdateListener { valueAnimator -> drawable.setTint(valueAnimator.animatedValue as Int) }
+            }
+        }
+
+        anim.duration = 500
+
+        anim.repeatCount = 1
+        anim.repeatMode = ObjectAnimator.REVERSE
+        anim.start()
+
+        scaleDown.start()
+    }
+
+    override fun test1() {
+        val animator1 = ObjectAnimator.ofFloat(guessingView!!, "translationX", -10f)
+        animator1.duration = 100
+        animator1.repeatCount = 1
+        animator1.repeatMode = ObjectAnimator.REVERSE
+
+        val animator2 = ObjectAnimator.ofFloat(guessingView!!, "translationX", 10f)
+        animator2.duration = 100
+        animator2.repeatCount = 1
+        animator2.repeatMode = ObjectAnimator.REVERSE
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playSequentially(animator1, animator2)
+
+        val anim = ValueAnimator()
+        anim.setIntValues(Color.BLACK, Color.RED)
+        anim.setEvaluator(ArgbEvaluator())
+        anim.addUpdateListener { valueAnimator -> guessingView?.setWordGuessTextColor(valueAnimator.animatedValue as Int) }
+
+        anim.duration = 200
+
+        anim.repeatCount = 1
+        anim.repeatMode = ObjectAnimator.REVERSE
+        animatorSet.start()
+        anim.start()
     }
 
     override fun onDestroy() {

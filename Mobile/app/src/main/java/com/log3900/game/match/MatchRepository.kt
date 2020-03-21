@@ -8,28 +8,14 @@ import android.os.IBinder
 import android.os.Message
 import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.log3900.game.group.*
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
-import com.log3900.utils.format.UUIDUtils
-import com.log3900.utils.format.moshi.GroupAdapter
 import com.log3900.utils.format.moshi.MatchAdapter
-import com.log3900.utils.format.moshi.UUIDAdapter
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -58,6 +44,10 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.MATCH_ABOUT_TO_START, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.MATCH_ENDED, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.PLAYER_LEFT_MATCH, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.TIMES_UP, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.CHECKPOINT, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.ROUND_ENDED, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -93,6 +83,10 @@ class MatchRepository : Service() {
             Event.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(socketMessage)
             Event.PLAYER_SYNC -> onPlayerSync(socketMessage)
             Event.MATCH_ENDED -> onMatchEnded(socketMessage)
+            Event.PLAYER_LEFT_MATCH -> onPlayerLeftMatch(socketMessage)
+            Event.TIMES_UP -> onTimesUp(socketMessage)
+            Event.CHECKPOINT -> onCheckpoint(socketMessage)
+            Event.ROUND_ENDED -> onRoundEnded(socketMessage)
         }
     }
 
@@ -122,7 +116,11 @@ class MatchRepository : Service() {
 
     private fun onGuessWordResponse(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
-        Log.d("POTATO", "guessWordResponse = $json")
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val validGuess = jsonObject.get("Valid").asBoolean
+        if (!validGuess) {
+            EventBus.getDefault().post(MessageEvent(EventType.GUESSED_WORD_WRONG, null))
+        }
     }
 
     private fun onPlayerTurnToDraw(message: com.log3900.socket.Message) {
@@ -147,11 +145,11 @@ class MatchRepository : Service() {
         val playerGuessedWord = MatchAdapter.jsonToPlayerGuessedWord(jsonObject)
         updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal)
         if (playerGuessedWord.userID == AccountRepository.getInstance().getAccount().ID) {
-            EventBus.getDefault().post(MessageEvent(EventType.POINTS_GAINED, playerGuessedWord.points))
+            EventBus.getDefault().post(MessageEvent(EventType.GUESSED_WORD_RIGHT, playerGuessedWord))
+        } else {
+            EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
         }
-        Log.d("POTATO", "Posting MATCH_PLAYER_UPDATED")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
-        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_GUESSED_WORD, playerGuessedWord))
     }
 
     private fun onPlayerSync(message: com.log3900.socket.Message) {
@@ -182,6 +180,40 @@ class MatchRepository : Service() {
         //EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, matchEnded))
     }
 
+    private fun onPlayerLeftMatch(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "onPlayerLeftMatch json = $json")
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        if (userID != AccountRepository.getInstance().getAccount().ID) {
+            currentMatch?.players?.removeIf {
+                it.ID == userID
+            }
+            playerScores.remove(userID)
+            EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
+        }
+    }
+
+    private fun onTimesUp(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "onTimesUp json = $json")
+        val timesUp = MatchAdapter.jsonToTimesUp(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TIMES_UP, timesUp))
+    }
+
+    private fun onCheckpoint(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "onCheckpoint json = $json")
+    }
+
+    private fun onRoundEnded(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "onRoundEnded json = $json")
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
         playerScores[playerID] = newScore
         reorderPlayers()
@@ -194,6 +226,10 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.ROUND_ENDED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.CHECKPOINT, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.TIMES_UP, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.PLAYER_LEFT_MATCH, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.PLAYER_SYNC, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.PLAYER_GUESSED_WORD, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.GUESS_WORD_RESPONSE, socketMessageHandler!!)

@@ -61,3 +61,13 @@ class Player(
     var userID: UUID,
     var points: Int
 )
+
+class TimesUp(
+    var type: Type,
+    var word: String?
+) {
+    enum class Type {
+        WORD_END,
+        MATCH_END
+    }
+}

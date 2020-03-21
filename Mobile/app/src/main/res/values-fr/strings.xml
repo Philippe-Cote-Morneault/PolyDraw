@@ -29,7 +29,7 @@
     <string name="match_lobby_match_name_title">Nom du match</string>
     <string name="match_lobby_host_title">Hôte</string>
     <string name="dialog_create_match_max_players_title">Joueurs max</string>
-    <string name="dialog_create_match_virtual_players_title">Joueurs virtuels</string>
+    <string name="dialog_create_match_rounds_title">Rondes</string>
     <string name="dialog_create_match_match_mode_title">Mode</string>
     <string name="dialog_create_match_difficulty_title">Difficulté</string>
     <string name="achievements">Trophés</string>
@@ -138,4 +138,7 @@
     <string name="Round">Ronde</string>
     <string name="game_channel_name">Match Actif</string>
     <string name="general_channel_name">Général</string>
+    <string name="french">Français</string>
+    <string name="english">Anglais</string>
+    <string name="dialog_create_match_language_title">Langue</string>
 </resources>

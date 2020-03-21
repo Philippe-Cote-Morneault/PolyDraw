@@ -1,6 +1,5 @@
 package com.log3900.chat
 
-import android.accounts.Account
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
@@ -21,7 +20,6 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import kotlin.NoSuchElementException
 
@@ -178,7 +176,7 @@ class ChatManager : Service() {
             return
         }
 
-        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.audio_notification_new_message)
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_new_message)
     }
 
     @Subscribe

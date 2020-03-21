@@ -20,7 +20,7 @@ class DateFormatter {
         }
 
         fun formatDateToTime(date: Date): String {
-            var dateFormat: SimpleDateFormat = SimpleDateFormat("mm::ss")
+            var dateFormat: SimpleDateFormat = SimpleDateFormat("mm:ss")
             return dateFormat.format(date)
         }
 

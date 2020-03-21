@@ -46,6 +46,10 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
         }
     }
 
+    fun setWordGuessTextColor(color: Int) {
+        letterEditTexts.forEach { it.setTextColor(color) }
+    }
+
     fun getText(): String {
         var text = ""
         letterEditTexts.forEach {

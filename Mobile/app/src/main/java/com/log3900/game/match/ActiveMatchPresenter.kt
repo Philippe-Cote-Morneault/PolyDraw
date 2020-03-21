@@ -3,8 +3,8 @@ package com.log3900.game.match
 import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
-import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
+import com.log3900.settings.sound.SoundManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
@@ -39,6 +39,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
+        activeMatchView?.showCanvas()
     }
 
     private fun onWordGuessedSucessfully() {
@@ -57,6 +58,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordToDrawView()
         activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
+        activeMatchView?.showCanvas()
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
@@ -67,11 +69,32 @@ class ActiveMatchPresenter : Presenter {
             val totalRounds = (currentMatch as FFAMatch).laps
             activeMatchView?.setRoundsValue(MainApplication.instance.getString(R.string.Round) + " ${synchronisation.laps}/${totalRounds}")
         }
+
+        if (synchronisation.time <= 10000) {
+            activeMatchView?.pulseRemainingTime()
+            SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_timer_warning)
+        }
     }
 
     private fun onMatchPlayersUpdated() {
         activeMatchView?.notifyPlayersChanged()
     }
+
+    private fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
+        activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
+        activeMatchView?.showConfetti()
+    }
+
+    private fun onGuessedWordWrong() {
+        activeMatchView?.test1()
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
+    }
+
+    private fun onTimesUp() {
+        activeMatchView?.hideCanvas()
+    }
+
 
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
@@ -85,6 +108,9 @@ class ActiveMatchPresenter : Presenter {
             EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
             EventType.MATCH_SYNCHRONISATION -> onMatchSynchronisation(event.data as Synchronisation)
             EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
+            EventType.GUESSED_WORD_RIGHT -> onGuessedWordRight(event.data as PlayerGuessedWord)
+            EventType.GUESSED_WORD_WRONG -> onGuessedWordWrong()
+            EventType.TIMES_UP -> onTimesUp()
         }
     }
 

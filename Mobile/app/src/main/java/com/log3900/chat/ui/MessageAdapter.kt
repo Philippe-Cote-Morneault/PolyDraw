@@ -67,7 +67,6 @@ class MessageAdapter(var messages: LinkedList<ChatMessage>, val username: String
      */
 
     fun messageInserted() {
-        notifyItemInserted(messages.size - 1)
         if (!recyclerView.canScrollVertically(1)) {
             smoothScrollToBottom()
         }

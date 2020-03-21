@@ -13,6 +13,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.exceptions.BadNetworkResponseException
 import com.log3900.socket.Event
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
@@ -116,7 +117,9 @@ class GroupRepository : Service() {
                             it.onSuccess(res as UUID)
                         }
                         else -> {
-                            it.onError(Exception())
+                            val jsonObject = JsonParser().parse(response.errorBody()?.string()).asJsonObject
+                            val errorMessage = jsonObject.get("Error").asString
+                            it.onError(BadNetworkResponseException(errorMessage))
                         }
                     }
                 }
@@ -134,6 +137,10 @@ class GroupRepository : Service() {
 
     fun leaveGroup(groupID: UUID) {
         socketService?.sendMessage(Event.LEAVE_GROUP_REQUEST, byteArrayOf())
+    }
+
+    fun kickPlayer(player: Player) {
+        socketService?.sendMessage(Event.KICK_PLAYER, UUIDUtils.uuidToByteArray(player.ID))
     }
 
     fun refreshRepository() {
