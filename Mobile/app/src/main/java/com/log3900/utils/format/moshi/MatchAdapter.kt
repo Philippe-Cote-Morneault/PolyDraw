@@ -153,4 +153,15 @@ object MatchAdapter {
 
         return players
     }
+
+    fun jsonToTimesUp(jsonObject: JsonObject): TimesUp {
+        val type = TimesUp.Type.values()[jsonObject.get("Type").asInt]
+        var word: String? = null
+        
+        if (jsonObject.has("Word")) {
+            word = jsonObject.get("Word").asString
+        }
+
+        return TimesUp(type, word)
+    }
 }
