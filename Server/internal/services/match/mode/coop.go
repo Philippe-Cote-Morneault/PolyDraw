@@ -19,6 +19,7 @@ type Coop struct {
 	orderVirtual     []*players
 	chances          map[*players]int
 	isRunning        bool
+	currrentWord     string
 
 	remainingTime int
 
@@ -80,7 +81,7 @@ func (c *Coop) Start() {
 	c.waitForPlayers()
 
 	//We can start the game loop
-	log.Printf("[Match] [FFA] -> Starting gameloop Match: %s", f.info.ID)
+	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", g.info.ID)
 	c.timeStart = time.Now()
 	for c.isRunning {
 		c.GameLoop()
