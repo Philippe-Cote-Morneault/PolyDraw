@@ -532,17 +532,6 @@ func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
 		}
 		g.mutex.Unlock()
 
-		var groupDB model.Group
-		var user model.User
-		model.DB().Where("id = ?", groupID).First(&groupDB)
-		model.DB().Where("id = ?", userID).First(&user)
-		log.Printf("[Lobby] -> deleting bot in DB: %v", user)
-
-		model.DB().Model(&groupDB).Association("Users").Delete(&user)
-
-		model.DB().Unscoped().Delete(&user)
-		groupDB.VirtualPlayers--
-		model.DB().Save(&groupDB)
 		return true
 	}
 	return false

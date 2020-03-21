@@ -3,6 +3,7 @@ package virtualplayer
 import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
+	"gitlab.com/jigsawcorp/log3900/model"
 	"log"
 	"sync"
 
@@ -34,9 +35,10 @@ func AddGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Groups[groupID] = make(map[uuid.UUID]bool)
 	managerInstance.mutex.Unlock()
+	printManager()
 }
 
-//AddGroup adds the group to cache (lobby)
+//registerChannelGroup save in cache the groupID corresponding to channelID
 func registerChannelGroup(groupID, channelID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Channels[groupID] = channelID
@@ -46,17 +48,25 @@ func registerChannelGroup(groupID, channelID uuid.UUID) {
 //RemoveGroup adds the group to cache
 func RemoveGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
-	if _, ok := managerInstance.Groups[groupID]; ok {
+	if group, ok := managerInstance.Groups[groupID]; ok {
+		managerInstance.mutex.Unlock()
+
+		for botID := range group {
+			KickVirtualPlayer(botID)
+		}
+		managerInstance.mutex.Lock()
 		delete(managerInstance.Groups, groupID)
 		managerInstance.mutex.Unlock()
 	} else {
 		managerInstance.mutex.Unlock()
 		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting RemoveGroup...", groupID)
 	}
+	printManager()
 }
 
 //AddVirtualPlayer adds virtualPlayer to cache. Returns playerID, username
 func AddVirtualPlayer(groupID, botID uuid.UUID) string {
+	log.Println("[Virtual Player] -> AddVirtualPlayer")
 
 	playerInfos := generateVirtualPlayer()
 	playerInfos.BotID = botID
@@ -72,6 +82,7 @@ func AddVirtualPlayer(groupID, botID uuid.UUID) string {
 
 	managerInstance.Bots[botID] = playerInfos
 	managerInstance.mutex.Unlock()
+	printManager()
 
 	return playerInfos.Username
 }
@@ -88,6 +99,30 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 				delete(group, userID)
 				delete(managerInstance.Bots, userID)
 				managerInstance.mutex.Unlock()
+
+				var groupDB model.Group
+				var user model.User
+				model.DB().Where("id = ?", groupID).First(&groupDB)
+				if groupDB.ID == uuid.Nil {
+					log.Printf("[Virtual Player] -> [Error] Can't find in DB group with id : %v. Aborting KickVirtualPlayer...", groupID)
+					return uuid.Nil, ""
+				}
+
+				model.DB().Where("id = ?", userID).First(&user)
+				if user.ID == uuid.Nil {
+					log.Printf("[Virtual Player] -> [Error] Can't find in DB user with id : %v. Aborting KickVirtualPlayer...", userID)
+					return uuid.Nil, ""
+				}
+
+				log.Printf("[Lobby] -> deleting bot in DB: %v", user)
+
+				model.DB().Model(&groupDB).Association("Users").Delete(&user)
+
+				model.DB().Unscoped().Delete(&user)
+				groupDB.VirtualPlayers--
+				model.DB().Save(&groupDB)
+
+				printManager()
 
 				return groupID, bot.Username
 			} else {
