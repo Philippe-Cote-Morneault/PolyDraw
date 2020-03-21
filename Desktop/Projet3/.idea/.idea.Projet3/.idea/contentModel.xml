@@ -49,6 +49,7 @@
                   <e p="EditorZone.g.cs" t="Include" />
                   <e p="GamePanel.g.cs" t="Include" />
                   <e p="GameStatus.g.cs" t="Include" />
+                  <e p="LeaderBoard.g.cs" t="Include" />
                   <e p="TopBar.g.cs" t="Include" />
                 </e>
                 <e p="Home.g.cs" t="Include" />
@@ -190,6 +191,7 @@
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
+            <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
             <e p="NumberToPlaceholder.cs" t="Include" />
