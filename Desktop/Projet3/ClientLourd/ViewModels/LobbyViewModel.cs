@@ -344,7 +344,7 @@ namespace ClientLourd.ViewModels
         {
             var data = new { nbVirtualPlayer = 1 };
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.AddVirtualPlayer, data));
-            MockAddVirtualPlayer();
+            //MockAddVirtualPlayer();
         }
 
         private void MockAddVirtualPlayer()
