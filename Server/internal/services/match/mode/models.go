@@ -99,4 +99,5 @@ type AchievementData struct {
 type RoundSummary struct {
 	Players      []PlayersRoundSum
 	Achievements []AchievementData
+	Word         string
 }
