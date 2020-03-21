@@ -76,8 +76,8 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         if (points.isEmpty())
             return
 
-        Log.d("DRAW_VIEW", "Received ${points.size} points")
-        Log.d("DRAW_VIEW", "Erase is ${paintOptions.drawMode == DrawMode.ERASE}")
+//        Log.d("DRAW_VIEW", "Received points: ${points}")
+//        Log.d("DRAW_VIEW", "Erase is ${paintOptions.drawMode == DrawMode.ERASE}")
         drawView.setOptions(paintOptions)
 
 //        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay

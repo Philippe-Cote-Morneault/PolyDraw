@@ -40,7 +40,7 @@ object BytesToStrokeConverter {
             strokeID,
             userID,
             paintOptions,
-            points
+            points.reversed()
         )
     }
 
