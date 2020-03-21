@@ -20,6 +20,7 @@ namespace ClientLourd.Views.Controls.Game
 
         private void ExtractInformation(MatchEventArgs e)
         {
+            Word = e.Word;
             foreach (dynamic info in e.Players)
             {
                 Player p = new Player(false, info["UserID"], info["Username"]);
@@ -30,9 +31,11 @@ namespace ClientLourd.Views.Controls.Game
 
             Players = new ObservableCollection<Player>(Players.OrderBy(p => p.Score));
             OnPropertyChanged(nameof(Players));
+            OnPropertyChanged(nameof(Word));
         }
         
         public ObservableCollection<Player> Players { get; set; }
+        public string Word { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

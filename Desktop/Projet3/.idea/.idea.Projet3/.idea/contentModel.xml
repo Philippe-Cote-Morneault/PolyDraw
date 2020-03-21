@@ -189,11 +189,11 @@
             <e p="HealthPointConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
-            <e p="ItemToIndexConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
             <e p="NumberToPlaceholder.cs" t="Include" />
+            <e p="PlayerToPositionConverter.cs" t="Include" />
             <e p="SecondsToTimeSpanConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
