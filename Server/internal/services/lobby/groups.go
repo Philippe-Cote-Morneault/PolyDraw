@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"log"
 	"sync"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
@@ -187,7 +188,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 					//We only commit the data to the db if the message was sent successfully
 					//else we will handle the error in the disconnect message
 					user, _ := auth.GetUser(socketID)
-					model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
+					model.DB().Model(&groupDB).Association("Users").Append(&user)
 
 					//Send a message to all the member of the group to advertise that a new user is in the group
 					newUser := socket.RawMessage{}
@@ -428,7 +429,8 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 }
 
 //AddBot used to add a bot to the group
-func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
+func (g *groups) AddBot(socketID uuid.UUID) {
+	groupID := g.assignment[socketID]
 	//Check if groups exists
 	groupDB := model.Group{}
 	model.DB().Where("id = ? and status = 0", groupID).First(&groupDB)
@@ -438,11 +440,11 @@ func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
 		if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
 			g.mutex.Unlock()
 			user := model.User{IsCPU: true}
+			model.AddUser(&user)
 
-			username := virtualplayer.AddVirtualPlayer(groupID, user.ID)
-			user.Username = username
-
-			if username != "" {
+			user.Username = virtualplayer.AddVirtualPlayer(groupID, user.ID)
+			log.Printf("[Lobby] -> adding bot in DB: %v", user)
+			if user.Username != "" {
 				//send response to client
 				message := socket.RawMessage{}
 				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
@@ -452,15 +454,14 @@ func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
 
 				if socket.SendRawMessageToSocketID(message, socketID) == nil {
 					//appel au joueur virtuel
-					model.AddUser(&user)
-					model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
+					model.DB().Model(&groupDB).Association("Users").Append(&user)
 					groupDB.VirtualPlayers++
 					model.DB().Save(&groupDB)
 					//Send a message to all the member of the group to advertise that a new user is in the group
 					newUser := socket.RawMessage{}
 					newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
 						UserID:   user.ID.String(),
-						Username: username,
+						Username: user.Username,
 						GroupID:  groupID.String(),
 						IsCPU:    true,
 					})
@@ -530,13 +531,6 @@ func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
 		}
 		g.mutex.Unlock()
 
-		var groupDB model.Group
-		model.DB().Where("id = ?", groupID).First(&groupDB)
-		model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
-
-		model.DB().Delete(&model.User{Base: model.Base{ID: userID}})
-		groupDB.VirtualPlayers--
-		model.DB().Save(&groupDB)
 		return true
 	}
 	return false

@@ -90,12 +90,7 @@ func (l *Lobby) listen() {
 
 		case message := <-l.addbot:
 			rawMessage := message.(socket.RawMessageReceived)
-			groupID, err := uuid.FromBytes(rawMessage.Payload.Bytes)
-			if err == nil {
-				l.groups.AddBot(rawMessage.SocketID, groupID)
-			} else {
-				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
-			}
+			l.groups.AddBot(rawMessage.SocketID)
 
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
