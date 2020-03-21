@@ -428,7 +428,8 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 }
 
 //AddBot used to add a bot to the group
-func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
+func (g *groups) AddBot(socketID uuid.UUID) {
+	groupID := g.assignment[socketID]
 	//Check if groups exists
 	groupDB := model.Group{}
 	model.DB().Where("id = ? and status = 0", groupID).First(&groupDB)
