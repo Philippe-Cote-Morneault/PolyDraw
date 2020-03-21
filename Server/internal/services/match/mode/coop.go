@@ -25,6 +25,7 @@ type Coop struct {
 	isRunning        bool
 	currentWord      string
 	realPlayers      int
+	timeImage        int64
 
 	remainingTime int
 
@@ -37,6 +38,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
 	c.chances = numberOfChances
+	c.timeImage = imageDuration
 	c.isRunning = true
 	c.orderPos = 0
 	c.computeDifficulty()
@@ -163,6 +165,8 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
 	c.curDrawer = &c.players[c.orderPos]
+	drawingID := uuid.New()
+
 	game := c.findGame()
 
 	if game.ID == uuid.Nil {
@@ -180,6 +184,16 @@ func (c *Coop) GameLoop() {
 		},
 		Game: game,
 	})
+
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawingTurn), PlayerTurnDraw{
+		UserID:    c.curDrawer.userID.String(),
+		Username:  c.curDrawer.Username,
+		Time:      c.timeImage,
+		DrawingID: drawingID.String(),
+		Length:    len(c.currentWord),
+	})
+	c.pbroadcast(&message)
 
 	//End of round
 	c.orderPos++
