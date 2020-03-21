@@ -72,8 +72,8 @@ class SocketDrawingSender() {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
-                receiver!!.drawStrokeData(strokeData)   // TODO: Switch back
-//                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+//                receiver!!.drawStrokeData(strokeData)   // TODO: Switch back
+                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
             }
         }
     }
@@ -83,8 +83,8 @@ class SocketDrawingSender() {
     }
 
     fun sendStrokeRemove(strokeID: UUID) {
-        receiver!!.onStrokeRemove(strokeID) // TODO: Switch back
-//        socketService.sendMessage(Event.STROKE_ERASE_CLIENT, UUIDUtils.uuidToByteArray((strokeID)))
+//        receiver!!.onStrokeRemove(strokeID) // TODO: Switch back
+        socketService.sendMessage(Event.STROKE_ERASE_CLIENT, UUIDUtils.uuidToByteArray((strokeID)))
     }
 
     fun stopListening(isListening: Boolean) {
