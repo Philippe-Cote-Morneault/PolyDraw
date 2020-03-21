@@ -63,14 +63,11 @@ func (v *VirtualPlayer) listen() {
 			if !ok {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
 				break
-
 			}
 
 			if round.Drawer.IsCPU {
 				go startDrawing(&round)
 			}
-
-			log.Println(*round.Game)
 
 		case <-v.roundEnds:
 			log.Println("[Virtual Player] -> Sends round End message")
