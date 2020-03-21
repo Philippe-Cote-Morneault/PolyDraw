@@ -36,18 +36,7 @@ namespace ClientLourd.Services.SocketService
         {
             get  => _data["Word"]; 
         } 
-        public string TimesUpType
-        {
-            get  => _data["Type"]; 
-        } 
-        public long Points
-        {
-            get  => _data["Points"]; 
-        } 
-        public long PointsTotal
-        {
-            get  => _data["PointsTotal"]; 
-        } 
+
         public long Laps
         {
             get  =>_data["Laps"]; 

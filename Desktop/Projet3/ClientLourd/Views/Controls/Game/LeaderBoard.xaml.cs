@@ -35,19 +35,15 @@ namespace ClientLourd.Views.Controls.Game
             foreach (dynamic info in e.Players)
             {
                 Player p = new Player(false, info["UserID"], info["Username"]);
-                if (GameEnded)
+                p.Score = info["Points"];
+                if (!GameEnded)
                 {
-                    p.Score = info["Points"];
-                }
-                else
-                {
-                    p.PointsRecentlyGained = info["Points"];
-                    p.Score = info["PointsTotal"];
+                    var points = info["NewPoints"];
+                    p.PointsRecentlyGained = points;
                 }
                 Players.Add(p);
             }
-
-            Players = new ObservableCollection<Player>(Players.OrderBy(p => p.Score));
+            Players = new ObservableCollection<Player>(Players.OrderByDescending(p => p.Score));
             OnPropertyChanged(nameof(Players));
         }
 

@@ -66,13 +66,14 @@ namespace ClientLourd.Views.Controls.Game
             foreach (dynamic info in playersInfo)
             {
                 var dic = (Dictionary<object, object>)info;
-                if (!dic.ContainsKey("PointsTotal") || !dic.ContainsKey("UserID"))
+                if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
                     break;
                 var tmpPlayer = GameViewModel.Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
-                tmpPlayer.PointsRecentlyGained = info["PointsTotal"] - tmpPlayer.Score;
-                tmpPlayer.Score = info["PointsTotal"];
-                if (tmpPlayer != null && tmpPlayer.PointsRecentlyGained != 0)
+                var newPoints = info["Points"] - tmpPlayer.Score;
+                if (tmpPlayer != null && newPoints != 0)
                 {
+                    tmpPlayer.Score = info["Points"];
+                    tmpPlayer.PointsRecentlyGained = newPoints;
                     AnimatePointsGained(tmpPlayer.User.ID);
                 }
             }

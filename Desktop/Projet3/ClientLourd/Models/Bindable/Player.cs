@@ -98,7 +98,7 @@ using System.Threading.Tasks;
             get => _pointsRecentlyGained;
             set
             {
-                if (value != _score)
+                if (value != _pointsRecentlyGained)
                 {
                     _pointsRecentlyGained = value;
                     NotifyPropertyChanged();
