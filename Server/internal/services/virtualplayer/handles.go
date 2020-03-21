@@ -36,6 +36,13 @@ func AddGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Unlock()
 }
 
+//AddGroup adds the group to cache (lobby)
+func registerChannelGroup(groupID, channelID uuid.UUID) {
+	managerInstance.mutex.Lock()
+	managerInstance.Channels[groupID] = channelID
+	managerInstance.mutex.Unlock()
+}
+
 //RemoveGroup adds the group to cache
 func RemoveGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
@@ -126,11 +133,13 @@ func startDrawing(round *match2.RoundStart) {
 	bot, ok := managerInstance.Bots[round.Drawer.ID]
 
 	if !ok {
+		managerInstance.mutex.Unlock()
 		log.Printf("[Virtual Player] -> [Error] Can't find bot's id : %v. Aborting drawing...", round.Drawer.ID)
 		return
 	}
 	game, groupOk := managerInstance.Games[round.MatchID]
 	if !groupOk {
+		managerInstance.mutex.Unlock()
 		log.Printf("[Virtual Player] -> [Error] Can't find group's id : %v. Aborting drawing...", round.MatchID)
 		return
 	}
@@ -138,6 +147,7 @@ func startDrawing(round *match2.RoundStart) {
 		socketID, err := auth.GetSocketID(playerID)
 
 		if err != nil {
+			managerInstance.mutex.Unlock()
 			log.Printf("[Virtual Player] -> [Error] Can't find user's socketid from userID: %v. Aborting drawing...", playerID)
 			return
 		}
@@ -154,6 +164,7 @@ func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	group, groupOk := managerInstance.Groups[groupID]
 	if !groupOk {
+		managerInstance.mutex.Unlock()
 		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleRoundEnds...", groupID)
 		return
 	}

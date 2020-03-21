@@ -1,8 +1,9 @@
 package virtualplayer
 
 import (
-	"github.com/google/uuid"
 	"log"
+
+	"github.com/google/uuid"
 
 	"gitlab.com/jigsawcorp/log3900/internal/match"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
@@ -86,6 +87,15 @@ func (v *VirtualPlayer) listen() {
 				break
 			}
 			handleRoundEnds(groupID)
+
+		case data := <-v.chatNew:
+			log.Println("[Virtual Player] -> Sends chat New message")
+			chat, ok := data.(match.ChatNew)
+			if !ok {
+				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
+				break
+			}
+			registerChannelGroup(chat.ChatID, chat.MatchID)
 
 		case <-v.shutdown:
 			return
