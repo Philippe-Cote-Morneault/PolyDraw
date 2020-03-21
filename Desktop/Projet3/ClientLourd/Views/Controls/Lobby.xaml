@@ -15,6 +15,7 @@
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
         <converter:NumberToPlaceholder x:Key="NumberToPlaceholder"/>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
+        
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:LobbyViewModel x:Name="DataContext"/>
