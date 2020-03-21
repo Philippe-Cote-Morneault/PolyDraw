@@ -38,6 +38,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
+        activeMatchView?.showCanvas()
     }
 
     private fun onWordGuessedSucessfully() {
@@ -56,6 +57,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordToDrawView()
         activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
+        activeMatchView?.showCanvas()
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
@@ -75,11 +77,17 @@ class ActiveMatchPresenter : Presenter {
     private fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
+        activeMatchView?.showConfetti()
     }
 
     private fun onGuessedWordWrong() {
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
     }
+
+    private fun onTimesUp() {
+        activeMatchView?.hideCanvas()
+    }
+
 
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
@@ -95,6 +103,7 @@ class ActiveMatchPresenter : Presenter {
             EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
             EventType.GUESSED_WORD_RIGHT -> onGuessedWordRight(event.data as PlayerGuessedWord)
             EventType.GUESSED_WORD_WRONG -> onGuessedWordWrong()
+            EventType.TIMES_UP -> onTimesUp()
         }
     }
 

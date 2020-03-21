@@ -19,4 +19,7 @@ interface ActiveMatchView {
     fun showWordGuessingView()
     fun showWordToDrawView()
     fun notifyPlayersChanged()
+    fun showCanvas()
+    fun hideCanvas()
+    fun showConfetti()
 }

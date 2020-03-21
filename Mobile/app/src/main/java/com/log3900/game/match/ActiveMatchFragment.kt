@@ -12,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.log3900.R
 import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
@@ -146,6 +148,21 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         playersAdapter.notifyDataSetChanged()
     }
 
+    override fun hideCanvas() {
+        YoYo.with(Techniques.RotateOutUpRight)
+            .duration(1000)
+            .playOn(drawFragment.view)
+    }
+
+    override fun showCanvas() {
+        YoYo.with(Techniques.RotateInDownLeft)
+            .duration(1000)
+            .playOn(drawFragment.view)
+    }
+
+    override fun showConfetti() {
+        drawFragment.showConfetti()
+    }
     override fun onDestroy() {
         activeMatchPresenter?.destroy()
         activeMatchPresenter = null
