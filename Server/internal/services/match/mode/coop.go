@@ -21,9 +21,10 @@ type Coop struct {
 	orderVirtual     []*players
 	curDrawer        *players
 	orderPos         int
-	chances          map[*players]int
+	chances          int
 	isRunning        bool
 	currentWord      string
+	realPlayers      int
 
 	remainingTime int
 
@@ -35,7 +36,7 @@ type Coop struct {
 func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
-	c.chances = make(map[*players]int)
+	c.chances = numberOfChances
 	c.isRunning = true
 	c.orderPos = 0
 	c.computeDifficulty()
@@ -45,6 +46,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 //computeOrder used to compute the order for the coop
 func (c *Coop) computeOrder() {
 	c.nbVirtualPlayers = 0
+	c.realPlayers = 0
 
 	//Count the number of virtualplayers
 	for i := range c.players {
@@ -52,7 +54,7 @@ func (c *Coop) computeOrder() {
 			c.orderVirtual[c.nbVirtualPlayers] = &c.players[i]
 			c.nbVirtualPlayers++
 		} else {
-			c.chances[&c.players[i]] = numberOfChances
+			c.realPlayers++
 		}
 	}
 }
