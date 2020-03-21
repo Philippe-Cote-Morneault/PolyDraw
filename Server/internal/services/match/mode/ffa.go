@@ -364,7 +364,9 @@ func (f *FFA) Close() {
 	f.receiving.Lock()
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
-	f.cancelWait()
+	if f.cancelWait != nil {
+		f.cancelWait()
+	}
 
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
