@@ -111,6 +111,11 @@ class DrawViewBase @JvmOverloads constructor(
         } else if (lastPathID != strokeID) {
             mPath = MyPath(strokeID)
             mPath.reset()
+        } else if (lastPathID == strokeID) {
+            Log.d("START_VIEW", "CURR($mCurX, $mCurY) | START(${start.x}, ${start.y})")
+//            mPath.moveTo(mCurX, mCurY)
+//            drawMove(start)
+//            return
         }
 //        mPath.reset() TODO
         mPath.moveTo(start.x, start.y)
@@ -124,6 +129,7 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun drawMove(point: DrawPoint) {
+        interpolateDraw(point.x.toInt(), point.y.toInt())
         mPath.quadTo(mCurX, mCurY, (point.x + mCurX) / 2, (point.y + mCurY) / 2)
         mCurX = point.x
         mCurY = point.y
@@ -184,6 +190,7 @@ class DrawViewBase @JvmOverloads constructor(
 
     fun setOptions(options: PaintOptions) {
         mPaintOptions = options
+        changePaint(options)
     }
 
     fun setColor(newColor: Int) {
@@ -261,13 +268,19 @@ class DrawViewBase @JvmOverloads constructor(
             return true
         }
 
+        Log.d("TOUCH", "($x, $y), CURR($mCurX, $mCurY)")
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 mStartX = x
                 mStartY = y
                 drawStart(DrawPoint(x, y))
             }
-            MotionEvent.ACTION_MOVE -> drawMove(DrawPoint(x, y))
+            MotionEvent.ACTION_MOVE -> {
+//                interpolateDraw(x.toInt(), y.toInt())
+//                Log.d("TOUCH", "Interp: $point")
+                drawMove(DrawPoint(x, y))
+            }
             MotionEvent.ACTION_UP -> drawEnd()
         }
 
@@ -275,10 +288,29 @@ class DrawViewBase @JvmOverloads constructor(
         return true
     }
 
+    private fun interpolateDraw(x: Int, y: Int) {
+        val lastX = mCurX
+        val lastY = mCurY
+
+        val pointsToInterpolate = 5
+
+        val difX = (x - lastX) / pointsToInterpolate
+        val difY = (y - lastY) / pointsToInterpolate
+
+        for (i in 1 until pointsToInterpolate) {
+            val point = DrawPoint(lastX + i * difX, lastY + i * difY)
+            Log.d("TOUCH", "Point: $point")
+            mPath.quadTo(mCurX, mCurY, (point.x + mCurX) / 2, (point.y + mCurY) / 2)
+            mCurX = point.x
+            mCurY = point.y
+        }
+    }
+
     private fun removePathIfIntersection(x: Float, y: Float) {
         val sortedMap = mPaths
         var keyToRemove: MyPath? = null
         for ((key, value) in sortedMap) {
+            if (value.drawMode == DrawMode.ERASE) continue
             for (action in key.actions) {
                 var width = 30
                 if (value.strokeWidth > 30)
@@ -330,7 +362,7 @@ class DrawViewBase @JvmOverloads constructor(
             DrawMode.DRAW -> {}
             DrawMode.REMOVE -> {}
             DrawMode.ERASE -> {
-//                invalidate()
+                mPaintOptions.color = Color.WHITE
             }
         }
     }

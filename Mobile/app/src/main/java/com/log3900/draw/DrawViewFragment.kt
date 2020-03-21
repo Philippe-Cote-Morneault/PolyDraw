@@ -25,6 +25,7 @@ import java.util.*
 
 class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
+    var currentColor: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +58,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
+        currentColor = resources.getColor(R.color.color_draw_black, null)
     }
 
     private fun setUpFab() {
@@ -90,6 +92,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         draw_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
             drawView.setDrawMode(DrawMode.DRAW)
+            changeDrawColor(currentColor)
         }
         remove_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
@@ -130,35 +133,43 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         updateColorScale(color_picker_black)
 
         color_picker_black.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_black, null))
+            currentColor = resources.getColor(R.color.color_draw_black, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_white.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_white, null))
+            currentColor = resources.getColor(R.color.color_draw_white, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_red.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_red, null))
+            currentColor = resources.getColor(R.color.color_draw_red, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_green.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_green, null))
+            currentColor = resources.getColor(R.color.color_draw_green, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_blue.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_blue, null))
+            currentColor = resources.getColor(R.color.color_draw_blue, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_yellow.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_yellow, null))
+            currentColor = resources.getColor(R.color.color_draw_yellow, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_cyan.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_cyan, null))
+            currentColor = resources.getColor(R.color.color_draw_cyan, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
         color_picker_magenta.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_magenta, null))
+            currentColor = resources.getColor(R.color.color_draw_magenta, null)
+            changeDrawColor(currentColor)
             updateColorScale(it)
         }
     }

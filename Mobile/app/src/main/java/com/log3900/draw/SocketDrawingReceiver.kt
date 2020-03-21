@@ -1,6 +1,8 @@
 package com.log3900.draw
 
 import android.os.Handler
+import android.util.Log
+import com.log3900.draw.divyanshuwidget.DrawMode
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
@@ -74,6 +76,8 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         if (points.isEmpty())
             return
 
+        Log.d("DRAW_VIEW", "Received ${points.size} points")
+        Log.d("DRAW_VIEW", "Erase is ${paintOptions.drawMode == DrawMode.ERASE}")
         drawView.setOptions(paintOptions)
 
 //        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay

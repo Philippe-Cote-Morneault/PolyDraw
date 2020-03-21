@@ -12,7 +12,7 @@ import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 class SocketDrawingSender() {
-    private val SEND_INTERVAL_MS = 20L
+    private val SEND_INTERVAL_MS = 40L
     private val SEND_DELAY_MS = 0L
 
     private val socketService = SocketService.instance!!
@@ -67,12 +67,13 @@ class SocketDrawingSender() {
         strokeInfo.points.forEach {
             Log.d("DRAW_VIEW", "(${it.x}, ${it.y})")
         }
+        Log.d("DRAW_VIEW", "Sent ${strokeInfo.points.size} points")
 
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
-//                receiver!!.drawStrokeData(strokeData)   // TODO: Switch back
-                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+                receiver!!.drawStrokeData(strokeData)   // TODO: Switch back
+//                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
             }
         }
     }
@@ -82,8 +83,8 @@ class SocketDrawingSender() {
     }
 
     fun sendStrokeRemove(strokeID: UUID) {
-//        receiver!!.onStrokeRemove(strokeID)
-        socketService.sendMessage(Event.STROKE_ERASE_CLIENT, UUIDUtils.uuidToByteArray((strokeID)))
+        receiver!!.onStrokeRemove(strokeID) // TODO: Switch back
+//        socketService.sendMessage(Event.STROKE_ERASE_CLIENT, UUIDUtils.uuidToByteArray((strokeID)))
     }
 
     fun stopListening(isListening: Boolean) {
