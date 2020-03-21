@@ -2,10 +2,12 @@ package mode
 
 import (
 	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
+	"golang.org/x/sync/semaphore"
 	"log"
 	"sync"
 	"time"
@@ -16,21 +18,23 @@ const numberOfChances = 3
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
-	wordHistory      map[string]bool
-	nbVirtualPlayers int
-	orderVirtual     []*players
-	curDrawer        *players
-	orderPos         int
-	chances          int
-	isRunning        bool
-	currentWord      string
-	realPlayers      int
-	timeImage        int64
+	wordHistory  map[string]bool
+	orderVirtual []*players
+	curDrawer    *players
+	orderPos     int
+	chances      int
+	isRunning    bool
+	currentWord  string
+	realPlayers  int
+	cancelWait   func()
 
 	remainingTime int
 
-	receiving sync.Mutex
-	timeStart time.Time
+	receiving        sync.Mutex
+	timeStart        time.Time
+	waitingResponse  *semaphore.Weighted
+	receivingGuesses *abool.AtomicBool
+	nbVirtualPlayers int
 }
 
 //Init creates the coop game mode
@@ -41,8 +45,15 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.timeImage = imageDuration
 	c.isRunning = true
 	c.orderPos = 0
+	c.nbWaitingResponses = 1
+
+	c.receivingGuesses = abool.New()
+	c.funcSyncPlayer = c.syncPlayers
+
 	c.computeDifficulty()
 	c.computeOrder()
+
+	cbroadcast.Broadcast(match2.BGameStarts, c)
 }
 
 //Start the game and the game loop
@@ -82,6 +93,9 @@ func (c *Coop) GameLoop() {
 		Game: game,
 	})
 
+	c.waitingResponse = semaphore.NewWeighted(c.nbWaitingResponses)
+	c.waitingResponse.TryAcquire(c.nbWaitingResponses)
+
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawingTurn), PlayerTurnDraw{
 		UserID:    c.curDrawer.userID.String(),
@@ -90,7 +104,18 @@ func (c *Coop) GameLoop() {
 		DrawingID: drawingID.String(),
 		Length:    len(c.currentWord),
 	})
+
 	c.pbroadcast(&message)
+	log.Printf("[Match] [Coop] -> Word sent waiting for guesses, Match: %s", c.info.ID)
+	c.receiving.Unlock()
+
+	c.receivingGuesses.Set()
+
+	if c.waitTimeout() {
+		log.Printf("[Match] [Coop] -> Time's up. The word could not be found, Match: %s", c.info.ID)
+	} else {
+		log.Printf("[Match] [Coop] -> The word was found, Match: %s", c.info.ID)
+	}
 
 	//End of round
 	c.orderPos++
@@ -169,6 +194,20 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 	return message
 }
 
+//GetGroupID return group id
+func (c *Coop) GetGroupID() uuid.UUID {
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
+	return c.info.ID
+}
+
+//GetPlayers return all the players
+func (c *Coop) GetPlayers() []match2.Player {
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
+	return c.getPlayers()
+}
+
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
 
@@ -204,4 +243,9 @@ func (c *Coop) computeDifficulty() {
 		c.remainingTime = 120
 	}
 	c.remainingTime *= 1000
+}
+
+//syncPlayers used to send all the sync to all the players
+func (c *Coop) syncPlayers() {
+
 }

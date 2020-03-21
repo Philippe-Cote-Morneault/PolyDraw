@@ -1,14 +1,19 @@
 package mode
 
 import (
+	"context"
+	"log"
+	"sync"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
+	"github.com/tevino/abool"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
-	"log"
-	"sync"
+	"golang.org/x/sync/semaphore"
 )
 
 const imageDuration = 60000
@@ -28,12 +33,23 @@ type base struct {
 	connections map[uuid.UUID]*players
 	info        model.Group
 	wordHistory map[string]bool
+
+	nbWaitingResponses int64
+	waitingResponse    *semaphore.Weighted
+	cancelWait         func()
+	funcSyncPlayer     func()
+	receivingGuesses   *abool.AtomicBool
+	timeImage          int64
 }
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
 	b.players = make([]players, len(connections))
 	b.connections = make(map[uuid.UUID]*players, len(connections))
 	b.wordHistory = make(map[string]bool)
+
+	b.receivingGuesses = abool.New()
+	b.timeImage = imageDuration
+
 	for i := range connections {
 		socketID := connections[i]
 		userID, _ := auth.GetUserID(socketID)
@@ -128,4 +144,36 @@ func (b *base) findGame() *model.Game {
 		watchDog++
 	}
 	return &game
+}
+
+//waitTimeout wait for the guesses
+func (b *base) waitTimeout() bool {
+	c := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-time.After(time.Second):
+				//Send an update to the clients
+				b.funcSyncPlayer()
+			case <-c:
+				return
+			}
+		}
+	}()
+
+	cnt := context.Background()
+	cnt, b.cancelWait = context.WithTimeout(cnt, time.Millisecond*time.Duration(b.timeImage))
+	err := b.waitingResponse.Acquire(cnt, b.nbWaitingResponses)
+	b.cancelWait()
+
+	close(c)
+
+	if err == nil {
+		b.receivingGuesses.UnSet()
+		return false // completed normally
+	}
+
+	b.receivingGuesses.UnSet()
+	return true // timed out
 }

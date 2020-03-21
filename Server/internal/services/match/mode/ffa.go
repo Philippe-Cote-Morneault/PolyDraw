@@ -1,7 +1,6 @@
 package mode
 
 import (
-	"context"
 	"log"
 	"math/rand"
 	"sort"
@@ -17,7 +16,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 	"github.com/google/uuid"
-	"github.com/tevino/abool"
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -37,19 +35,15 @@ type FFA struct {
 	lapsTotal      int
 	realPlayers    int
 	rand           *rand.Rand
-	timeImage      int64
 	isRunning      bool
 	currentWord    string
 	timeStart      time.Time
 	timeStartImage time.Time
 
-	receiving          sync.Mutex
-	receivingGuesses   *abool.AtomicBool
-	hasFoundIt         map[uuid.UUID]bool
-	clientGuess        int
-	waitingResponse    *semaphore.Weighted
-	cancelWait         func()
-	nbWaitingResponses int64
+	receiving   sync.Mutex
+	hasFoundIt  map[uuid.UUID]bool
+	clientGuess int
+	cancelWait  func()
 }
 
 //Init initialize the game mode
@@ -58,12 +52,11 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	f.isRunning = true
 	f.hasFoundIt = make(map[uuid.UUID]bool, len(connections))
-	f.receivingGuesses = abool.New()
+	f.funcSyncPlayer = f.syncPlayers
 
 	f.scores = make([]score, len(f.players))
 
 	f.curLap = 1
-	f.timeImage = imageDuration
 	f.lapsTotal = len(f.players) * f.info.NbRound
 
 	f.realPlayers = 0
@@ -501,40 +494,6 @@ func (f *FFA) syncPlayers() {
 		GameTime: 0,
 	})
 	f.pbroadcast(&message)
-}
-
-func (f *FFA) waitTimeout() bool {
-	c := make(chan struct{})
-	defer f.receiving.Unlock()
-
-	go func() {
-		for {
-			select {
-			case <-time.After(time.Second):
-				//Send an update to the clients
-				f.syncPlayers()
-			case <-c:
-				return
-			}
-		}
-	}()
-
-	cnt := context.Background()
-	cnt, f.cancelWait = context.WithTimeout(cnt, time.Millisecond*time.Duration(f.timeImage))
-	err := f.waitingResponse.Acquire(cnt, f.nbWaitingResponses)
-	f.cancelWait()
-
-	close(c)
-
-	if err == nil {
-		f.receiving.Lock()
-		f.receivingGuesses.UnSet()
-		return false // completed normally
-	}
-
-	f.receiving.Lock()
-	f.receivingGuesses.UnSet()
-	return true // timed out
 }
 
 //calculateScore based on the number of seconds of remaining and the time associated with the score
