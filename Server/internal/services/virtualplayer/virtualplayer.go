@@ -48,6 +48,7 @@ func (v *VirtualPlayer) listen() {
 
 	//Message viewer
 	for {
+		printManager()
 		select {
 		case data := <-v.gameStarts:
 			log.Println("[Virtual Player] -> Receives game Start message")
@@ -96,7 +97,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
 				break
 			}
-			registerChannelGroup(chat.ChatID, chat.MatchID)
+			registerChannelGroup(chat.MatchID, chat.ChatID)
 
 		case data := <-v.askHint:
 			if message, ok := data.(socket.RawMessageReceived); ok {
@@ -127,4 +128,11 @@ func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BRoundEnds, match.BSize)
 	cbroadcast.Register(match.BAskHint, match.BSize)
 	cbroadcast.Register(match.BChatNew, match.BSize)
+}
+
+func printManager() {
+	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
+	log.Printf("[Virtual Player] -> Manager.Groups : %v", managerInstance.Groups)
+	log.Printf("[Virtual Player] -> Manager.Bots : %v", managerInstance.Bots)
+	log.Printf("[Virtual Player] -> Manager.Games : %v", managerInstance.Games)
 }
