@@ -49,7 +49,6 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	uuidBytes, _ := drawingID.MarshalBinary()
 
 	StartDrawing(message.SocketID, uuidBytes, game.Image.SVGFile, 1)
-
 }
 
 // StartDrawing starts the drawing procedure
