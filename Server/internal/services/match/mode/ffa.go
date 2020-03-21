@@ -214,7 +214,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 		f.pbroadcast(&endDrawing)
 	}
 	//Check the state of the game if there are enough players to finish the game
-	if f.realPlayers-1 <= 0 {
+	if f.realPlayers < 2 {
 		f.receiving.Unlock()
 		f.Close()
 		return
