@@ -1,10 +1,11 @@
 package virtualplayer
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
-	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"log"
 	"sync"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 
 	"github.com/google/uuid"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
@@ -90,22 +91,18 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 				managerInstance.mutex.Unlock()
 
 				return groupID, bot.Username
-			} else {
-				managerInstance.mutex.Unlock()
-				log.Printf("[Virtual Player] -> [Error] Can't find user with id : %v in group : %v. Aborting KickVirtualPlayer...", userID, groupID)
-				return uuid.Nil, ""
 			}
-		} else {
 			managerInstance.mutex.Unlock()
-			log.Printf("[Virtual Player] -> [Error] Can't find group with id : %v of user : %v. Aborting KickVirtualPlayer...", groupID, userID)
+			log.Printf("[Virtual Player] -> [Error] Can't find user with id : %v in group : %v. Aborting KickVirtualPlayer...", userID, groupID)
 			return uuid.Nil, ""
 		}
-
-	} else {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find userID : %v. Aborting KickVirtualPlayer...", userID)
+		log.Printf("[Virtual Player] -> [Error] Can't find group with id : %v of user : %v. Aborting KickVirtualPlayer...", groupID, userID)
 		return uuid.Nil, ""
 	}
+	managerInstance.mutex.Unlock()
+	log.Printf("[Virtual Player] -> [Error] Can't find userID : %v. Aborting KickVirtualPlayer...", userID)
+	return uuid.Nil, ""
 }
 
 // handleStartGame does the startGame routine for a bot in game
