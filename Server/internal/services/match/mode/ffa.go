@@ -25,8 +25,6 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-const imageDuration = 60000
-
 //FFA Free for all game mode
 type FFA struct {
 	base

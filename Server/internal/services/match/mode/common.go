@@ -11,6 +11,8 @@ import (
 	"sync"
 )
 
+const imageDuration = 60000
+
 type players struct {
 	socketID uuid.UUID
 	userID   uuid.UUID
