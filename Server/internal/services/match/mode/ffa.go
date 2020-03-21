@@ -19,7 +19,6 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-const numberOfTurns = 3
 const imageDuration = 60000
 
 //FFA Free for all game mode
@@ -63,7 +62,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 
 	f.curLap = 1
 	f.timeImage = imageDuration
-	f.lapsTotal = len(f.players) * numberOfTurns
+	f.lapsTotal = len(f.players) * f.info.NbRound
 
 	f.realPlayers = 0
 	for i := range f.players {
@@ -215,14 +214,14 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 		f.pbroadcast(&endDrawing)
 	}
 	//Check the state of the game if there are enough players to finish the game
-	if f.realPlayers-1 <= 0 {
+	if f.realPlayers < 2 {
 		f.receiving.Unlock()
 		f.Close()
 		return
 	}
 
 	f.removePlayer(f.connections[socketID], socketID)
-	f.lapsTotal -= numberOfTurns
+	f.lapsTotal -= f.info.NbRound
 	f.receiving.Unlock()
 
 	messenger.HandleQuitGroup(&f.info, socketID)
@@ -644,6 +643,7 @@ func (f *FFA) sendRoundSummary() {
 	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
 		Players:      playersDetails,
 		Achievements: nil,
+		Word:         f.currentWord,
 	})
 	f.pbroadcast(&roundEnd)
 }
