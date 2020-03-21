@@ -105,6 +105,7 @@ namespace ClientLourd.Models.Bindable
             get { return _brushSize; }
             set
             {
+                
                 _brushSize = value;
                 DrawingAttribtes.Width = BrushSize;
                 DrawingAttribtes.Height =BrushSize;

@@ -38,7 +38,7 @@
 
 
         <ScrollViewer Grid.ColumnSpan="4" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_OnScrollChanged">
-            <ListView ItemsSource="{Binding Path=StatsHistory.MatchesPlayedHistory, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
+            <ListView  ItemsSource="{Binding Path=StatsHistory.MatchesPlayedHistory, UpdateSourceTrigger=PropertyChanged}" Margin="5 -25 5 5" Name="lvUsers">
                 <ListView.Resources>
                     <Style TargetType="GridViewColumnHeader">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -46,7 +46,7 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchType}" />
+                        <GridViewColumn Header="Caca" Width="300" DisplayMemberBinding="{Binding MatchType}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding PlayersName}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource SecondsToTimeSpanConverter}}" />

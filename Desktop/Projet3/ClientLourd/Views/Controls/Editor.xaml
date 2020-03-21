@@ -17,6 +17,7 @@
     <UserControl.Resources>
         <converter:EditingModeConverter x:Key="EditorModeConverter"/>
         <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
+        <converter:MinimumEraserSizeToVisibilityConverter x:Key="MinimumEraserSizeToVisibilityConverter"/>
     </UserControl.Resources>
     <materialDesign:Card   materialDesign:ShadowAssist.ShadowDepth="Depth4">
         <DockPanel >
@@ -142,10 +143,15 @@
                             EditingMode="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditorModeConverter},  UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                             DefaultDrawingAttributes="{Binding Path=EditorInformation.DrawingAttribtes, Mode=OneTime}">
                     </InkCanvas>
+
+                    
                     <Grid Name="EraserIndicator"  Visibility="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static InkCanvasEditingMode.EraseByPoint}}">
-                        <Ellipse Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Ellipse}}"   Name="Ellipse"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
-                        <Rectangle Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Rectangle}}"   Name="Rectangle"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
+                        <Grid Visibility="{Binding Path=EditorInformation.BrushSize, Converter={StaticResource MinimumEraserSizeToVisibilityConverter}}">
+                            <Ellipse Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Ellipse}}"   Name="Ellipse"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
+                            <Rectangle Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Rectangle}}"   Name="Rectangle"  StrokeThickness="1" Stroke="LightSlateGray" Height="{Binding Path=EditorInformation.BrushSize}" Width="{Binding Path=EditorInformation.BrushSize}"/>
+                        </Grid>
                     </Grid>
+                    
                 </Canvas>
             </Grid>
         </DockPanel>

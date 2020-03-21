@@ -1,4 +1,5 @@
 ﻿using ClientLourd.Models.Bindable;
+using ClientLourd.Utilities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,6 +20,8 @@ namespace ClientLourd.Services.SocketService
 
         // Lobby created
         public string ID { get => _data["ID"]; }
+
+        public Languages Language { get => (Languages)_data["Language"]; }
 
         public string GroupName { get => _data["GroupName"]; }
 

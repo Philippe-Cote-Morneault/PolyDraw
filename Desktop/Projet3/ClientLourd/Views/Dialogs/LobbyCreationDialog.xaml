@@ -20,12 +20,12 @@
                 <Button HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
                     <materialDesign:PackIcon Kind="Close" />
                 </Button>
-                <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Create a new lobby</TextBlock>
+            <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35" Text="{DynamicResource CreateNewLobby}"></TextBlock>
             <StackPanel  Margin="0 30 0 30" Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Width="34" Height="45"  Margin="0 -5 10 0" Kind="GamepadVariant" />
-                    <TextBlock FontSize="24" FontWeight="Bold">Enter the lobby's name</TextBlock>
+                <TextBlock FontSize="24" FontWeight="Bold" Text="{DynamicResource EnterLobbyName}"></TextBlock>
                 </StackPanel>
-                <TextBox MaxLength="20" x:Name="LobbyName" HorizontalAlignment="Center" Width="400" materialDesign:HintAssist.Hint="Lobby name">
+            <TextBox MaxLength="20" x:Name="LobbyName" HorizontalAlignment="Center" Width="400" materialDesign:HintAssist.Hint="{DynamicResource LobbyNamePlaceHolder}">
                     <TextBox.Text>
                         <Binding Path="GameName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
@@ -36,7 +36,7 @@
                 </TextBox>
 
             <StackPanel Margin="0 30 0 30" HorizontalAlignment="Center">
-                    <TextBlock FontSize="24" HorizontalAlignment="Center"  FontWeight="Bold">Select the lobby's game mode</TextBlock>
+                <TextBlock FontSize="24" HorizontalAlignment="Center" Text="{DynamicResource SelectLobbyMode}"  FontWeight="Bold"></TextBlock>
                 <ComboBox SelectedItem="{Binding SelectedMode}" ItemsSource="{Binding Modes}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="400">
                 </ComboBox>
             </StackPanel>
@@ -45,7 +45,7 @@
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Skull" Width="24" Height="24" Margin="5" />
                     <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="Select the level of difficulty of the word " />
+                                           Text="{DynamicResource SelectDifficulty}" />
                     <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
                                            FontWeight="Bold"
                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
@@ -56,12 +56,19 @@
             <StackPanel Margin="0 30 0 0" HorizontalAlignment="Center" >
                 <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="UserGroup" Height="40" Width="25" Margin="0 -5 10 0" />
-                    <TextBlock FontSize="24" HorizontalAlignment="Center"  FontWeight="Bold">Select the number of players</TextBlock>
+                    <TextBlock FontSize="24" HorizontalAlignment="Center" Text="{DynamicResource SelectPlayers}" FontWeight="Bold"></TextBlock>
                 </StackPanel>
                 <ComboBox SelectedItem="{Binding SelectedNumberOfPlayers}" ItemsSource="{Binding NumberOfPlayersList}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100"></ComboBox>
             </StackPanel>
 
-            <Button IsDefault="True" Margin="0 30 0 30" Width="300" Command="{Binding CreateLobbyCommand}" CommandParameter="{Binding ElementName=LobbyName, Path=Text}">Create lobby</Button>
+            <StackPanel Margin="0 30 0 0" HorizontalAlignment="Center" >
+                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                    <TextBlock FontSize="24" HorizontalAlignment="Center"  FontWeight="Bold" Text="{DynamicResource SelectRounds}"></TextBlock>
+                </StackPanel>
+                <ComboBox SelectedItem="{Binding SelectedNumberOfRounds}" ItemsSource="{Binding NumberOfRoundsList}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100"></ComboBox>
+            </StackPanel>
+
+            <Button IsDefault="True" Margin="0 30 0 30" Width="300" Command="{Binding CreateLobbyCommand}" CommandParameter="{Binding ElementName=LobbyName, Path=Text}" Content="{DynamicResource CreateLobbyButton}"></Button>
             </StackPanel>
     </materialDesign:DialogHost>
 </UserControl>

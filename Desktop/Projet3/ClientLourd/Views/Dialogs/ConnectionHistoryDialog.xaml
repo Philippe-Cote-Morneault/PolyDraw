@@ -39,7 +39,7 @@
 
 
         <ScrollViewer Grid.ColumnSpan="3" Grid.Row="2" x:Name="ScrollViewerElement" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <ListView ItemsSource="{Binding Path=StatsHistory.ConnectionHistory, UpdateSourceTrigger=PropertyChanged}" Margin="10" Name="lvUsers">
+            <ListView ItemsSource="{Binding Path=StatsHistory.ConnectionHistory, UpdateSourceTrigger=PropertyChanged}" Margin="5 -25 5 5" Name="lvUsers">
                 <ListView.Resources>
                     <Style TargetType="GridViewColumnHeader">
                         <Setter Property="Visibility" Value="Collapsed" />

@@ -19,7 +19,9 @@ namespace ClientLourd.Models.Bindable
             GameModes gameMode, 
             DifficultyLevel difficulty, 
             int playersCount,
-            int nPlayersMax
+            int nPlayersMax,
+            Languages language
+            //int nbRounds
             )
         {
             PlayersCount = playersCount;
@@ -31,13 +33,18 @@ namespace ClientLourd.Models.Bindable
             HostID = hostID;
             Mode = gameMode;
             Difficulty = difficulty;
+            Language = language;
+            //Rounds = nbRounds;
         }
         public string ID { get; set; }
 
         public string HostID { get; set; }
 
+        public Languages Language { get; set; }
 
         public int PlayersMax { get; set; }
+
+        public int Rounds { get; set; }
 
         private int _playersCount;
         public int PlayersCount { get => _playersCount; set { _playersCount = value; NotifyPropertyChanged(); } }
