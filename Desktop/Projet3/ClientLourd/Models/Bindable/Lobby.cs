@@ -20,8 +20,8 @@ namespace ClientLourd.Models.Bindable
             DifficultyLevel difficulty, 
             int playersCount,
             int nPlayersMax,
-            Languages language
-            //int nbRounds
+            Languages language,
+            int nbRounds
             )
         {
             PlayersCount = playersCount;
@@ -34,7 +34,7 @@ namespace ClientLourd.Models.Bindable
             Mode = gameMode;
             Difficulty = difficulty;
             Language = language;
-            //Rounds = nbRounds;
+            Rounds = nbRounds;
         }
         public string ID { get; set; }
 
