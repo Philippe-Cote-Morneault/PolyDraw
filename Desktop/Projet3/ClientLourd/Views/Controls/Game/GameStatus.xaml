@@ -28,7 +28,7 @@
     <Grid Margin="10">
         <materialDesign:Card>
             <StackPanel>
-                <ItemsControl AlternationCount="{Binding Guess.Length}" x:Name="List" ItemsSource="{Binding Players}">
+                <ItemsControl AlternationCount="{Binding Players.Count}" x:Name="List" ItemsSource="{Binding Players}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Margin="10" Orientation="Vertical"/>
