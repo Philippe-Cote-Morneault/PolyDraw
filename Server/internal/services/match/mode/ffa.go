@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jinzhu/gorm"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
@@ -45,7 +44,6 @@ type FFA struct {
 	currentWord    string
 	timeStart      time.Time
 	timeStartImage time.Time
-	wordHistory    map[string]bool
 
 	receiving          sync.Mutex
 	receivingGuesses   *abool.AtomicBool
@@ -61,7 +59,6 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.init(connections, info)
 	f.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	f.isRunning = true
-	f.wordHistory = make(map[string]bool)
 	f.hasFoundIt = make(map[uuid.UUID]bool, len(connections))
 	f.receivingGuesses = abool.New()
 
@@ -410,27 +407,6 @@ func (f *FFA) GetPlayers() []match2.Player {
 	defer f.receiving.Unlock()
 	f.receiving.Lock()
 	return f.getPlayers()
-}
-
-//findGame used to find a game for the virtual players
-func (f *FFA) findGame() *model.Game {
-	word := ""
-	watchDog := 0
-
-	var game model.Game
-	for word == "" {
-		model.DB().Where("difficulty = ? and language = ?", f.info.Difficulty, f.info.Language).Order(gorm.Expr("random()")).First(&game)
-		if game.ID != uuid.Nil {
-			if _, inList := f.wordHistory[word]; !inList || watchDog >= 10 {
-				//Add the word to the list so it does not come up again.
-				word = game.Word
-				f.wordHistory[word] = true
-				return &game
-			}
-		}
-		watchDog++
-	}
-	return &game
 }
 
 //findWord used to the find the word that must be drawn

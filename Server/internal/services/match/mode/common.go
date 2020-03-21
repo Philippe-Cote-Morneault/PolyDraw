@@ -2,6 +2,7 @@ package mode
 
 import (
 	"github.com/google/uuid"
+	"github.com/jinzhu/gorm"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -24,11 +25,13 @@ type base struct {
 	players     []players
 	connections map[uuid.UUID]*players
 	info        model.Group
+	wordHistory map[string]bool
 }
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
 	b.players = make([]players, len(connections))
 	b.connections = make(map[uuid.UUID]*players, len(connections))
+	b.wordHistory = make(map[string]bool)
 	for i := range connections {
 		socketID := connections[i]
 		userID, _ := auth.GetUserID(socketID)
@@ -103,4 +106,24 @@ func (b *base) getPlayers() []match2.Player {
 		players[i].IsCPU = b.players[i].IsCPU
 	}
 	return players
+}
+
+func (b *base) findGame() *model.Game {
+	word := ""
+	watchDog := 0
+
+	var game model.Game
+	for word == "" {
+		model.DB().Where("difficulty = ? and language = ?", b.info.Difficulty, b.info.Language).Order(gorm.Expr("random()")).First(&game)
+		if game.ID != uuid.Nil {
+			if _, inList := b.wordHistory[word]; !inList || watchDog >= 10 {
+				//Add the word to the list so it does not come up again.
+				word = game.Word
+				b.wordHistory[word] = true
+				return &game
+			}
+		}
+		watchDog++
+	}
+	return &game
 }
