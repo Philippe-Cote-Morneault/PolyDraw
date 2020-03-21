@@ -11,6 +11,7 @@
              >
     <UserControl.Resources>
         <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
+        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
         <Storyboard x:Key="TimerCloseToEnd" >
             <ColorAnimation  Duration="0:0:1" From="Black" To="Red"
                     AutoReverse="True"
@@ -74,8 +75,8 @@
             <ColumnDefinition />
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
+
+        <StackPanel Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop}"  VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
             <materialDesign:PackIcon Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>
                     <TransformGroup>
