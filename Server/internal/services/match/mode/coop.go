@@ -17,6 +17,7 @@ type Coop struct {
 	wordHistory      map[string]bool
 	nbVirtualPlayers int
 	orderVirtual     []*players
+	orderPos         int
 	chances          map[*players]int
 	isRunning        bool
 	currentWord      string
@@ -154,6 +155,7 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 
 //GameLoop is called every new round
 func (c *Coop) GameLoop() {
+	c.receiving.Lock()
 
 }
 
