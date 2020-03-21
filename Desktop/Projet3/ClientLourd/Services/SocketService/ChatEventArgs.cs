@@ -46,5 +46,10 @@ namespace ClientLourd.Services.SocketService
             get { return _data["Username"]; }
         }
 
+        public string NewName
+        {
+            get { return _data["NewName"]; }
+        }
+
     }
 }

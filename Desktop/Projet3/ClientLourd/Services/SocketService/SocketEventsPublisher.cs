@@ -237,6 +237,13 @@ namespace ClientLourd.Services.SocketService
         {
             StartGameResponse?.Invoke(source, e);
         }
+        
+        
+        public event SocketEventHandler UserChangedName;
 
+        protected virtual void OnUserChangedName(object source, EventArgs e)
+        {
+            UserChangedName?.Invoke(source, e);
+        }
     }
 }

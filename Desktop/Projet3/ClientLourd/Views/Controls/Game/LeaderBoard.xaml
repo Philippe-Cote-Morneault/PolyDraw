@@ -11,9 +11,11 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converter:PlayerToPositionConverter x:Key="PlayerToPositionConverter"/>
+        <converter:PointsToColorConverter x:Key="PointsToColorConverter"/>
     </UserControl.Resources>
     <DockPanel ZIndex="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Center" FontSize="30" FontWeight="Medium" Text="{Binding  StringFormat={}The word was {0}!, Path=Word}"/> 
+        <TextBlock Visibility="{Binding Converter={StaticResource BooleanToVisibilityConverter}, Path=GameEnded}" DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Center" FontSize="30" FontWeight="Medium" Text="{Binding  StringFormat={}The winner is {0}!, Path=Winner}"/> 
+        <TextBlock Visibility="{Binding Converter={StaticResource InverseBoolToVisConverter}, Path=GameEnded}" DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Center" FontSize="30" FontWeight="Medium" Text="{Binding  StringFormat={}The word was {0}!, Path=Word}"/> 
         <ListView x:Name="LeaderBoardList" ItemsSource="{Binding Players}">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -23,7 +25,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel  Orientation="Horizontal">
-                        <TextBlock FontSize="30" HorizontalAlignment="Center" Foreground="WhiteSmoke">
+                        <TextBlock Visibility="{Binding ElementName=LeaderBoardList, Path=DataContext.GameEnded, Converter={StaticResource InverseBoolToVisConverter}}" TextAlignment="Center" FontSize="30" HorizontalAlignment="Center" Foreground="White" FontWeight="Medium">
                             <Run>
                                 <Run.Text>
                                     <MultiBinding StringFormat="{}#{0}" Converter="{StaticResource PlayerToPositionConverter}">
@@ -33,7 +35,20 @@
                                 </Run.Text>
                             </Run>
                             <Run  Text="{Binding Path=User.Username}"/>
-                            <Run Text="{Binding Path=PointsRecentlyGained, StringFormat={}+{0}}"/>
+                            <Run Text="{Binding Path=PointsRecentlyGained, StringFormat={}+{0}}" Foreground="{Binding Path=PointsRecentlyGained, Converter={StaticResource PointsToColorConverter}}"/>
+                        </TextBlock>
+                        
+                        <TextBlock Visibility="{Binding ElementName=LeaderBoardList, Path=DataContext.GameEnded, Converter={StaticResource BooleanToVisibilityConverter}}" TextAlignment="Center" FontSize="30" HorizontalAlignment="Center" Foreground="White" FontWeight="Medium">
+                            <Run>
+                                <Run.Text>
+                                    <MultiBinding StringFormat="{}#{0}" Converter="{StaticResource PlayerToPositionConverter}">
+                                        <Binding Path="." UpdateSourceTrigger="PropertyChanged"/>
+                                        <Binding ElementName="LeaderBoardList" Path="DataContext.Players" UpdateSourceTrigger="PropertyChanged"/>
+                                    </MultiBinding>
+                                </Run.Text>
+                            </Run>
+                            <Run  Text="{Binding Path=User.Username}"/>
+                            <Run Text="{Binding Path=Score, StringFormat={}{0}}" />
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>

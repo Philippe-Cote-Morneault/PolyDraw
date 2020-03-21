@@ -132,6 +132,7 @@ namespace ClientLourd.Utilities.Extensions
             newStroke.DrawingAttributes.StylusTip = strokeInfo.BrushTip;
             newStroke.DrawingAttributes.Height = strokeInfo.BrushSize;
             newStroke.DrawingAttributes.Width = strokeInfo.BrushSize;
+            newStroke.DrawingAttributes.FitToCurve = true;
             newStroke.AddPropertyData(GUIDs.ID, strokeInfo.StrokeID.ToString());
 
             return newStroke;

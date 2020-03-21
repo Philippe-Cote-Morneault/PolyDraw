@@ -140,9 +140,20 @@ namespace ClientLourd.ViewModels
             SocketClient.UserJoinedChannel += SocketClientOnUserJoinedChannel;
             SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
             SocketClient.UserDeletedChannel += SocketClientOnUserDeletedChannel;
+            SocketClient.UserChangedName += SocketClientOnUserChangedName;
             Channels = new List<Channel>();
             //We block all socket event until the channels are import
             _mutex.WaitOne();
+        }
+
+        private void SocketClientOnUserChangedName(object source, EventArgs args)
+        {
+            var e = (ChatEventArgs) args;
+            var user = _users.FirstOrDefault(u => u.ID == e.UserID);
+            if (user != null)
+            {
+                user.Username = e.NewName;
+            }
         }
 
         private void SocketClientOnUserDeletedChannel(object source, EventArgs args)

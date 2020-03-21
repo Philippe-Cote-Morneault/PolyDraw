@@ -140,7 +140,7 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID)
             {
-                ShowCanvasMessage($"{e.Username} is drawing the next word !");
+                OnNewCanavasMessage($"{e.Username} is drawing the next word !");
             }
             Guess = new char[e.WordLength];
         }
@@ -151,7 +151,7 @@ namespace ClientLourd.ViewModels
             //Enable the canvas
             Word = e.Word; 
             _drawingID = e.DrawingID;
-            ShowCanvasMessage($"It is your turn to draw to word {e.Word}");
+            OnNewCanavasMessage($"It is your turn to draw to word {e.Word}");
             ChangeCanvasStatus(true);
         }
 
@@ -184,7 +184,7 @@ namespace ClientLourd.ViewModels
             }
             else
             {
-                ShowCanvasMessage($"Try again !");
+                OnNewCanavasMessage($"Try again !");
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     SoundService.PlayWordGuessedWrong();
@@ -207,11 +207,6 @@ namespace ClientLourd.ViewModels
             PrepareNextRound();
             var e = (MatchEventArgs) args;
             Time = DateTime.MinValue;
-            //Round end
-            if (e.Type == 1)
-            {
-                //ShowCanvasMessage($"The word was {e.Word}");
-            }
         }
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
@@ -352,17 +347,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public string CanvasMessage
-        {
-            get => _canvasMessage;
-            set
-            {
-               _canvasMessage = value;  
-               NotifyPropertyChanged();
-               NotifyPropertyChanged(nameof(IsMessageDisplay));
-            } 
-        }
-
         public GameModes Mode
         {
             get => _mode;
@@ -386,11 +370,6 @@ namespace ClientLourd.ViewModels
                 return false;
             } 
             
-        }
-
-        public bool IsMessageDisplay
-        {
-            get => !String.IsNullOrWhiteSpace(CanvasMessage);
         }
 
         public Editor Editor { get; set; }
@@ -463,6 +442,7 @@ namespace ClientLourd.ViewModels
 
         private void PrepareMatch()
         {
+            Word = "";
             _mode = Lobby.Mode;
             if (_mode == GameModes.FFA)
             {
@@ -480,15 +460,12 @@ namespace ClientLourd.ViewModels
             });
         }
 
-        private void ShowCanvasMessage(string message)
-        {
-            Task.Run(() =>
-            {
-                CanvasMessage = message;
-                Thread.Sleep(2000);
-                CanvasMessage = "";
-            });
-        }
+
+        public delegate void CanvasMessageHandler(string message);
+
+        public event CanvasMessageHandler NewCanavasMessage;
+        
+        
 
 
         private bool _guessButtonIsDefault;
@@ -503,5 +480,9 @@ namespace ClientLourd.ViewModels
         }
 
 
+        protected virtual void OnNewCanavasMessage(string message)
+        {
+            NewCanavasMessage?.Invoke(message);
+        }
     }
 }

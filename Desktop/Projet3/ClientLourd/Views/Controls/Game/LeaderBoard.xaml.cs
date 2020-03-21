@@ -11,8 +11,10 @@ namespace ClientLourd.Views.Controls.Game
 {
     public partial class LeaderBoard : UserControl, INotifyPropertyChanged
     {
-        public LeaderBoard(MatchEventArgs e)
+        public LeaderBoard(MatchEventArgs e, bool gameEnded)
         {
+            GameEnded = gameEnded;
+            OnPropertyChanged(nameof(GameEnded));
             Players = new ObservableCollection<Player>();
             ExtractInformation(e);
             InitializeComponent();
@@ -20,22 +22,40 @@ namespace ClientLourd.Views.Controls.Game
 
         private void ExtractInformation(MatchEventArgs e)
         {
-            Word = e.Word;
+            if (GameEnded)
+            {
+                Winner = e.WinnerName;
+                OnPropertyChanged(nameof(Winner));
+            }
+            else
+            {
+                Word = e.Word;
+                OnPropertyChanged(nameof(Word));
+            }
             foreach (dynamic info in e.Players)
             {
                 Player p = new Player(false, info["UserID"], info["Username"]);
-                p.PointsRecentlyGained = info["Points"];
-                p.Score = info["PointsTotal"];
+                if (GameEnded)
+                {
+                    p.Score = info["Points"];
+                }
+                else
+                {
+                    p.PointsRecentlyGained = info["Points"];
+                    p.Score = info["PointsTotal"];
+                }
                 Players.Add(p);
             }
 
             Players = new ObservableCollection<Player>(Players.OrderBy(p => p.Score));
             OnPropertyChanged(nameof(Players));
-            OnPropertyChanged(nameof(Word));
         }
+
         
         public ObservableCollection<Player> Players { get; set; }
         public string Word { get; set; }
+        public string Winner { get; set; }
+        public bool GameEnded { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

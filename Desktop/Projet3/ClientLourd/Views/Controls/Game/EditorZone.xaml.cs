@@ -34,14 +34,14 @@ namespace ClientLourd.Views.Controls.Game
             _timer.Tick += (s, arg) => Confetti();
         }
 
+
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
             Task.Run(() =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    LeaderBoard l = new LeaderBoard((MatchEventArgs)args);
-                    LeaderBoardGrid.Children.Add(l);
+                    LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, false));
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
                 Thread.Sleep(2000);
@@ -60,8 +60,45 @@ namespace ClientLourd.Views.Controls.Game
             Task.Run(() =>
             {
                 StartConfetti();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
+                    LeaderBoardGrid.Visibility = Visibility.Visible;
+                });
                 Thread.Sleep(5000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Clear();
+                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                });
                 StopConfetti();
+            });
+        }
+
+        private void ShowCanvasMessage(string message)
+        {
+            Task.Run(() =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var tb = new TextBlock()
+                    {
+                        Text = message,
+                        FontWeight = FontWeights.Black,
+                        FontSize = 30,
+                        Foreground = Brushes.White,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                    };
+                    LeaderBoardGrid.Children.Add(tb);
+                    LeaderBoardGrid.Visibility = Visibility.Visible;
+                });
+                Thread.Sleep(2000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Clear();
+                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                });
             });
         }
 
@@ -79,8 +116,9 @@ namespace ClientLourd.Views.Controls.Game
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ((GameViewModel) DataContext).Editor = DrawingEditor;
-            ((GameViewModel)DataContext).StrokeDrawerService = new ServerStrokeDrawerService(DrawingEditor.Canvas, false);
+            ViewModel.Editor = DrawingEditor;
+            ViewModel.StrokeDrawerService = new ServerStrokeDrawerService(DrawingEditor.Canvas, false);
+            ViewModel.NewCanavasMessage += ShowCanvasMessage;
         }
 
         private GameViewModel ViewModel
@@ -302,7 +340,10 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
                     TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
-                    textBox.Focus();
+                    if(textBox != null)
+                    {
+                        textBox.Focus();
+                    }
                 }));
             });
         }
