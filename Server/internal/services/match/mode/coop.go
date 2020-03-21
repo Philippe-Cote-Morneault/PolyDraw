@@ -2,8 +2,10 @@ package mode
 
 import (
 	"github.com/google/uuid"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 	"sync"
 	"time"
@@ -17,7 +19,7 @@ type Coop struct {
 	wordHistory      map[string]bool
 	nbVirtualPlayers int
 	orderVirtual     []*players
-	currentDrawer    *players
+	curDrawer        *players
 	orderPos         int
 	chances          map[*players]int
 	isRunning        bool
@@ -158,8 +160,26 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 //GameLoop is called every new round
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
-	c.currentDrawer = &c.players[c.orderPos]
+	c.curDrawer = &c.players[c.orderPos]
+	game := c.findGame()
 
+	if game.ID == uuid.Nil {
+		c.receiving.Unlock()
+		log.Printf("[Match] [Coop] Panic, not able to find a game for the virtual players")
+		return
+	}
+	c.currentWord = game.Word
+	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
+		MatchID: c.info.ID,
+		Drawer: match2.Player{
+			IsCPU:    c.curDrawer.IsCPU,
+			Username: c.curDrawer.Username,
+			ID:       c.curDrawer.userID,
+		},
+		Game: game,
+	})
+
+	//End of round
 	c.orderPos++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 
