@@ -17,6 +17,7 @@ type Coop struct {
 	wordHistory      map[string]bool
 	nbVirtualPlayers int
 	orderVirtual     []*players
+	currentDrawer    *players
 	orderPos         int
 	chances          map[*players]int
 	isRunning        bool
@@ -34,6 +35,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 
 	c.chances = make(map[*players]int)
 	c.isRunning = true
+	c.orderPos = 0
 	c.computeDifficulty()
 	c.computeOrder()
 }
@@ -156,6 +158,10 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 //GameLoop is called every new round
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
+	c.currentDrawer = &c.players[c.orderPos]
+
+	c.orderPos++
+	c.orderPos = c.orderPos % c.nbVirtualPlayers
 
 }
 
