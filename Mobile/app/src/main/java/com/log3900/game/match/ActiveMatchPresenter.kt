@@ -1,5 +1,6 @@
 package com.log3900.game.match
 
+import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.group.MatchMode
@@ -67,6 +68,11 @@ class ActiveMatchPresenter : Presenter {
         if (currentMatch.matchType == MatchMode.FFA) {
             val totalRounds = (currentMatch as FFAMatch).laps
             activeMatchView?.setRoundsValue(MainApplication.instance.getString(R.string.Round) + " ${synchronisation.laps}/${totalRounds}")
+        }
+
+        if (synchronisation.time <= 10000) {
+            Log.d("POTATO", "Time less than 10 seconds!")
+            activeMatchView?.pulseRemainingTime()
         }
     }
 

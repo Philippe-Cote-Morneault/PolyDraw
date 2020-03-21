@@ -163,6 +163,13 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     override fun showConfetti() {
         drawFragment.showConfetti()
     }
+
+    override fun pulseRemainingTime() {
+        YoYo.with(Techniques.Pulse)
+            .duration(500)
+            .playOn(remainingTimeTextView)
+    }
+
     override fun onDestroy() {
         activeMatchPresenter?.destroy()
         activeMatchPresenter = null
