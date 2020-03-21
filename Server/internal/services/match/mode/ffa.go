@@ -109,7 +109,7 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	f.receiving.Lock()
-	if (len(f.players)) <= 0 {
+	if f.realPlayers <= 0 || len(f.players) <= 0 {
 		log.Printf("[Match] [FFA] No players will exit the game loop.")
 		f.isRunning = false
 		f.receiving.Unlock()
@@ -250,6 +250,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	}
 
 	f.removePlayer(f.connections[socketID], socketID)
+	f.realPlayers--
 	f.lapsTotal -= f.info.NbRound
 	f.receiving.Unlock()
 
