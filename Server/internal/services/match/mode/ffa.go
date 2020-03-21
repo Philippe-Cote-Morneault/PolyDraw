@@ -277,19 +277,19 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
-				Valid:       true,
-				Points:      pointsForWord,
-				PointsTotal: total,
+				Valid:     true,
+				Points:    total,
+				NewPoints: pointsForWord,
 			})
 			socket.SendRawMessageToSocketID(response, socketID)
 
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
 			broadcast.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
-				Username:    player.Username,
-				UserID:      player.userID.String(),
-				Points:      pointsForWord,
-				PointsTotal: total,
+				Username:  player.Username,
+				UserID:    player.userID.String(),
+				Points:    total,
+				NewPoints: pointsForWord,
 			})
 			f.pbroadcast(&broadcast)
 		} else {
@@ -300,9 +300,9 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
-				Valid:       false,
-				Points:      0,
-				PointsTotal: scoreTotal,
+				Valid:     false,
+				NewPoints: 0,
+				Points:    scoreTotal,
 			})
 			socket.SendRawMessageToSocketID(response, socketID)
 		}
@@ -313,9 +313,9 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 
 		response := socket.RawMessage{}
 		response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
-			Valid:       false,
-			Points:      0,
-			PointsTotal: scoreTotal,
+			Valid:     false,
+			NewPoints: 0,
+			Points:    scoreTotal,
 		})
 		socket.SendRawMessageToSocketID(response, socketID)
 	}
@@ -684,9 +684,9 @@ func (f *FFA) sendRoundSummary() {
 				UserID:   player.userID.String(),
 				Username: player.Username,
 				IsCPU:    player.IsCPU,
-				Points:   f.scores[player.Order].current,
+				Points:   f.scores[player.Order].total,
 			},
-			PointsTotal: f.scores[player.Order].total,
+			NewPoints: f.scores[player.Order].current,
 		}
 	}
 	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
