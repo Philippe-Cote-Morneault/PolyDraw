@@ -340,7 +340,10 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
                     TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
-                    textBox.Focus();
+                    if(textBox != null)
+                    {
+                        textBox.Focus();
+                    }
                 }));
             });
         }
