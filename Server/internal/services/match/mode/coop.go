@@ -117,6 +117,13 @@ func (c *Coop) GameLoop() {
 		log.Printf("[Match] [Coop] -> The word was found, Match: %s", c.info.ID)
 	}
 
+	timeUpMessage := socket.RawMessage{}
+	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+		Type: 1,
+		Word: c.currentWord,
+	})
+	c.pbroadcast(&timeUpMessage)
+
 	//End of round
 	c.orderPos++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
