@@ -38,7 +38,7 @@ type responseNewGroup struct {
 	PlayersMax int
 	Mode       int
 	Players    []responsePlayer
-fg	NbRound    int
+	NbRound    int
 	Language   int
 	Difficulty int
 }
