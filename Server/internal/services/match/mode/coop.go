@@ -81,7 +81,7 @@ func (c *Coop) Start() {
 	c.waitForPlayers()
 
 	//We can start the game loop
-	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", g.info.ID)
+	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 	c.timeStart = time.Now()
 	for c.isRunning {
 		c.GameLoop()
@@ -129,6 +129,8 @@ func (c *Coop) GetConnections() []uuid.UUID {
 
 //GetWelcome message used for the broadcast of the type of game
 func (c *Coop) GetWelcome() socket.RawMessage {
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
 	players := make([]PlayersData, 0, len(c.info.Users))
 	for i := range c.info.Users {
 		players = append(players, PlayersData{
