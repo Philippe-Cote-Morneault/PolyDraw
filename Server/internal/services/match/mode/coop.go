@@ -45,46 +45,6 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.computeOrder()
 }
 
-//computeOrder used to compute the order for the coop
-func (c *Coop) computeOrder() {
-	c.nbVirtualPlayers = 0
-	c.realPlayers = 0
-
-	//Count the number of virtualplayers
-	for i := range c.players {
-		if c.players[i].IsCPU {
-			c.orderVirtual[c.nbVirtualPlayers] = &c.players[i]
-			c.nbVirtualPlayers++
-		} else {
-			c.realPlayers++
-		}
-	}
-}
-
-//computeDifficulty determine the time associated with the game
-func (c *Coop) computeDifficulty() {
-	//Determine the time based of the difficulty
-	switch c.info.Difficulty {
-	case 0:
-		c.remainingTime = 300
-	case 1:
-		c.remainingTime = 240
-	case 2:
-		c.remainingTime = 180
-	case 3:
-		c.remainingTime = 120
-	}
-	c.remainingTime *= 1000
-}
-
-//Ready client register to make sure they are ready to start the game
-func (c *Coop) Ready(socketID uuid.UUID) {
-	defer c.receiving.Unlock()
-	c.receiving.Lock()
-
-	c.ready(socketID)
-}
-
 //Start the game and the game loop
 func (c *Coop) Start() {
 	c.waitForPlayers()
@@ -96,6 +56,54 @@ func (c *Coop) Start() {
 		c.GameLoop()
 	}
 	c.finish()
+}
+
+//GameLoop is called every new round
+func (c *Coop) GameLoop() {
+	c.receiving.Lock()
+	c.curDrawer = &c.players[c.orderPos]
+	drawingID := uuid.New()
+
+	game := c.findGame()
+
+	if game.ID == uuid.Nil {
+		c.receiving.Unlock()
+		log.Printf("[Match] [Coop] Panic, not able to find a game for the virtual players")
+		return
+	}
+	c.currentWord = game.Word
+	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
+		MatchID: c.info.ID,
+		Drawer: match2.Player{
+			IsCPU:    c.curDrawer.IsCPU,
+			Username: c.curDrawer.Username,
+			ID:       c.curDrawer.userID,
+		},
+		Game: game,
+	})
+
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawingTurn), PlayerTurnDraw{
+		UserID:    c.curDrawer.userID.String(),
+		Username:  c.curDrawer.Username,
+		Time:      c.timeImage,
+		DrawingID: drawingID.String(),
+		Length:    len(c.currentWord),
+	})
+	c.pbroadcast(&message)
+
+	//End of round
+	c.orderPos++
+	c.orderPos = c.orderPos % c.nbVirtualPlayers
+
+}
+
+//Ready client register to make sure they are ready to start the game
+func (c *Coop) Ready(socketID uuid.UUID) {
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
+
+	c.ready(socketID)
 }
 
 //Disconnect handle disconnect for the coop
@@ -161,47 +169,39 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 	return message
 }
 
-//GameLoop is called every new round
-func (c *Coop) GameLoop() {
-	c.receiving.Lock()
-	c.curDrawer = &c.players[c.orderPos]
-	drawingID := uuid.New()
-
-	game := c.findGame()
-
-	if game.ID == uuid.Nil {
-		c.receiving.Unlock()
-		log.Printf("[Match] [Coop] Panic, not able to find a game for the virtual players")
-		return
-	}
-	c.currentWord = game.Word
-	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
-		MatchID: c.info.ID,
-		Drawer: match2.Player{
-			IsCPU:    c.curDrawer.IsCPU,
-			Username: c.curDrawer.Username,
-			ID:       c.curDrawer.userID,
-		},
-		Game: game,
-	})
-
-	message := socket.RawMessage{}
-	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawingTurn), PlayerTurnDraw{
-		UserID:    c.curDrawer.userID.String(),
-		Username:  c.curDrawer.Username,
-		Time:      c.timeImage,
-		DrawingID: drawingID.String(),
-		Length:    len(c.currentWord),
-	})
-	c.pbroadcast(&message)
-
-	//End of round
-	c.orderPos++
-	c.orderPos = c.orderPos % c.nbVirtualPlayers
-
-}
-
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
 
+}
+
+//computeOrder used to compute the order for the coop
+func (c *Coop) computeOrder() {
+	c.nbVirtualPlayers = 0
+	c.realPlayers = 0
+
+	//Count the number of virtualplayers
+	for i := range c.players {
+		if c.players[i].IsCPU {
+			c.orderVirtual[c.nbVirtualPlayers] = &c.players[i]
+			c.nbVirtualPlayers++
+		} else {
+			c.realPlayers++
+		}
+	}
+}
+
+//computeDifficulty determine the time associated with the game
+func (c *Coop) computeDifficulty() {
+	//Determine the time based of the difficulty
+	switch c.info.Difficulty {
+	case 0:
+		c.remainingTime = 300
+	case 1:
+		c.remainingTime = 240
+	case 2:
+		c.remainingTime = 180
+	case 3:
+		c.remainingTime = 120
+	}
+	c.remainingTime *= 1000
 }
