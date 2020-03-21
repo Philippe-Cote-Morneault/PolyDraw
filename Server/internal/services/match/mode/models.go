@@ -11,7 +11,7 @@ type PlayersData struct {
 //PlayersRoundSum represent players with all the information for the round
 type PlayersRoundSum struct {
 	PlayersData
-	PointsTotal int
+	NewPoints int
 }
 
 //ResponseGameInfo represents the message for type 61
@@ -49,17 +49,17 @@ type GameEnded struct {
 
 //GuessResponse used when the player tries to guess a word
 type GuessResponse struct {
-	Valid       bool
-	Points      int
-	PointsTotal int
+	Valid     bool
+	Points    int
+	NewPoints int
 }
 
 //WordFound used to broadcast to all other players that the word was discovered
 type WordFound struct {
-	Username    string
-	UserID      string
-	Points      int
-	PointsTotal int
+	Username  string
+	UserID    string
+	Points    int
+	NewPoints int
 }
 
 //TimeUp message used to broadcast to other players that the time is up for finding the name
