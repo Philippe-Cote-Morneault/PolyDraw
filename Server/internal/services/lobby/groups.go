@@ -443,7 +443,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 			model.AddUser(&user)
 
 			user.Username = virtualplayer.AddVirtualPlayer(groupID, user.ID)
-			log.Printf("[Lobby] -> adding user in DB: %v", user)
+			log.Printf("[Lobby] -> adding bot in DB: %v", user)
 			if user.Username != "" {
 				//send response to client
 				message := socket.RawMessage{}
@@ -533,10 +533,14 @@ func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
 		g.mutex.Unlock()
 
 		var groupDB model.Group
+		var user model.User
 		model.DB().Where("id = ?", groupID).First(&groupDB)
-		model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
+		model.DB().Where("id = ?", userID).First(&user)
+		log.Printf("[Lobby] -> deleting bot in DB: %v", user)
 
-		model.DB().Delete(&model.User{Base: model.Base{ID: userID}})
+		model.DB().Model(&groupDB).Association("Users").Delete(&user)
+
+		model.DB().Unscoped().Delete(&user)
 		groupDB.VirtualPlayers--
 		model.DB().Save(&groupDB)
 		return true
