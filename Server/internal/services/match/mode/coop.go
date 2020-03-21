@@ -125,9 +125,10 @@ func (c *Coop) GameLoop() {
 	c.pbroadcast(&timeUpMessage)
 
 	//End of round
+	c.receiving.Lock()
 	c.orderPos++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
-
+	c.receiving.Unlock()
 }
 
 //Ready client register to make sure they are ready to start the game
