@@ -1,6 +1,7 @@
 package virtualplayer
 
 import (
+	"github.com/google/uuid"
 	"log"
 
 	"gitlab.com/jigsawcorp/log3900/internal/match"
@@ -10,7 +11,6 @@ import (
 
 //VirtualPlayer service used to debug the message received by the server
 type VirtualPlayer struct {
-	kickPlayer  cbroadcast.Channel
 	gameStarts  cbroadcast.Channel
 	gameEnds    cbroadcast.Channel
 	roundStarts cbroadcast.Channel
@@ -51,10 +51,19 @@ func (v *VirtualPlayer) listen() {
 			log.Println("[Virtual Player] -> Receives game Start message")
 			match, ok := data.(match.IMatch)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
+				log.Println("[Virtual Player] -> [Error] Error while parsing match.IMatch struct")
 				break
 			}
-			startGame(match)
+			handleStartGame(match)
+
+		case data := <-v.gameEnds:
+			log.Println("[Virtual Player] -> Sends game End message")
+			groupID, ok := data.(uuid.UUID)
+			if !ok {
+				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
+				break
+			}
+			handleEndGame(groupID)
 
 		case data := <-v.roundStarts:
 			log.Println("[Virtual Player] -> Receives round Start message")
@@ -69,8 +78,14 @@ func (v *VirtualPlayer) listen() {
 				go startDrawing(&round)
 			}
 
-		case <-v.roundEnds:
+		case data := <-v.roundEnds:
 			log.Println("[Virtual Player] -> Sends round End message")
+			groupID, ok := data.(uuid.UUID)
+			if !ok {
+				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
+				break
+			}
+			handleRoundEnds(groupID)
 
 		case <-v.shutdown:
 			return
@@ -80,7 +95,6 @@ func (v *VirtualPlayer) listen() {
 }
 
 func (v *VirtualPlayer) subscribe() {
-	v.kickPlayer, _, _ = cbroadcast.Subscribe(match.BKickPlayer)
 	v.gameStarts, _, _ = cbroadcast.Subscribe(match.BGameStarts)
 	v.gameEnds, _, _ = cbroadcast.Subscribe(match.BGameEnds)
 	v.roundStarts, _, _ = cbroadcast.Subscribe(match.BRoundStarts)
@@ -91,7 +105,6 @@ func (v *VirtualPlayer) subscribe() {
 
 //Register the broadcast for drawing
 func (v *VirtualPlayer) Register() {
-	cbroadcast.Register(match.BKickPlayer, match.BSize)
 	cbroadcast.Register(match.BGameStarts, match.BSize)
 	cbroadcast.Register(match.BGameEnds, match.BSize)
 	cbroadcast.Register(match.BRoundStarts, match.BSize)

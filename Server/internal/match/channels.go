@@ -5,9 +5,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/model"
 )
 
-//BKickPlayer message to indicate to kick virtual player
-const BKickPlayer = "drawing:kickplayer"
-
 //BGameStarts message to indicate when game starts
 const BGameStarts = "drawing:gamestarts"
 
