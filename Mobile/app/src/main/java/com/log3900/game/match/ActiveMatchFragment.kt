@@ -1,5 +1,6 @@
 package com.log3900.game.match
 
+import android.animation.*
 import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
@@ -23,11 +24,9 @@ import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
-import android.animation.ValueAnimator
-import android.animation.ArgbEvaluator
 import android.graphics.Color
+import android.view.animation.AnimationSet
+import android.view.animation.TranslateAnimation
 import androidx.core.content.ContextCompat
 
 
@@ -199,6 +198,33 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         anim.start()
 
         scaleDown.start()
+    }
+
+    override fun test1() {
+        val animator1 = ObjectAnimator.ofFloat(guessingView!!, "translationX", -10f)
+        animator1.duration = 100
+        animator1.repeatCount = 1
+        animator1.repeatMode = ObjectAnimator.REVERSE
+
+        val animator2 = ObjectAnimator.ofFloat(guessingView!!, "translationX", 10f)
+        animator2.duration = 100
+        animator2.repeatCount = 1
+        animator2.repeatMode = ObjectAnimator.REVERSE
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playSequentially(animator1, animator2)
+
+        val anim = ValueAnimator()
+        anim.setIntValues(Color.BLACK, Color.RED)
+        anim.setEvaluator(ArgbEvaluator())
+        anim.addUpdateListener { valueAnimator -> guessingView?.setWordGuessTextColor(valueAnimator.animatedValue as Int) }
+
+        anim.duration = 200
+
+        anim.repeatCount = 1
+        anim.repeatMode = ObjectAnimator.REVERSE
+        animatorSet.start()
+        anim.start()
     }
 
     override fun onDestroy() {

@@ -23,4 +23,5 @@ interface ActiveMatchView {
     fun hideCanvas()
     fun showConfetti()
     fun pulseRemainingTime()
+    fun test1()
 }
