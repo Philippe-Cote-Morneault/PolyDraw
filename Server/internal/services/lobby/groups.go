@@ -476,39 +476,38 @@ func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
 					return
 				}
 				return
-			} else {
-				g.mutex.Unlock()
-				message := socket.RawMessage{}
-				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
-					Response: false,
-					Error:    "The group could not be found full in virtual player cache.",
-				})
-				socket.SendRawMessageToSocketID(message, socketID)
-				return
 			}
-		} else {
 			g.mutex.Unlock()
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 				Response: false,
-				Error:    "The group is full",
+				Error:    "The group could not be found full in virtual player cache.",
 			})
 			socket.SendRawMessageToSocketID(message, socketID)
 			return
+
 		}
-
-	} else {
-
 		g.mutex.Unlock()
-
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 			Response: false,
-			Error:    "The group could not be found in DB.",
+			Error:    "The group is full",
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
 		return
+
 	}
+
+	g.mutex.Unlock()
+
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+		Response: false,
+		Error:    "The group could not be found in DB.",
+	})
+	socket.SendRawMessageToSocketID(message, socketID)
+	return
+
 }
 
 //KickVirtualPlayer quits the groups the virtual player is currently in.
