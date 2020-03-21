@@ -19,7 +19,7 @@ type Coop struct {
 	orderVirtual     []*players
 	chances          map[*players]int
 	isRunning        bool
-	currrentWord     string
+	currentWord      string
 
 	remainingTime int
 
