@@ -120,6 +120,7 @@ func startGame(game match2.IMatch) {
 }
 
 func startDrawing(round *match2.RoundStart) {
+	managerInstance.mutex.Lock()
 	if !round.Drawer.IsCPU {
 		return
 	}
@@ -146,4 +147,6 @@ func startDrawing(round *match2.RoundStart) {
 
 		go drawing.StartDrawing(socketID, uuidBytes, round.Game.Image.SVGFile, bot.DrawingTimeFactor)
 	}
+	managerInstance.mutex.Unlock()
+
 }
