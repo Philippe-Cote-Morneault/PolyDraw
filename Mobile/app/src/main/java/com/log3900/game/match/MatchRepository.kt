@@ -198,6 +198,8 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         Log.d("POTATO", "onTimesUp json = $json")
+        val timesUp = MatchAdapter.jsonToTimesUp(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TIMES_UP, timesUp))
     }
 
     private fun onCheckpoint(message: com.log3900.socket.Message) {
