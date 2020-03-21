@@ -63,6 +63,7 @@ type messageType struct {
 	EraseStrokeClient        int
 	PlayerHasLeftGame        int
 	RoundEndStatus           int
+	UsernameChange           int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -119,6 +120,7 @@ var MessageType = &messageType{
 	RequestHintMatch:         82,
 	ResponseHintMatch:        83,
 	RoundEndStatus:           85,
+	UsernameChange:           110,
 	ErrorResponse:            255,
 }
 

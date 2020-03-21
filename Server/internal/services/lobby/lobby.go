@@ -76,7 +76,7 @@ func (l *Lobby) listen() {
 		case id := <-l.close:
 			log.Printf("[Lobby] -> Session disconnected id: %s", id)
 			socketID := id.(uuid.UUID)
-			l.groups.QuitGroup(socketID)
+			l.groups.QuitGroup(socketID, false)
 			l.groups.UnRegisterSession(socketID)
 
 		case message := <-l.join:
@@ -99,7 +99,7 @@ func (l *Lobby) listen() {
 
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
-			l.groups.QuitGroup(rawMessage.SocketID)
+			l.groups.QuitGroup(rawMessage.SocketID, false)
 
 		case message := <-l.kick:
 			rawMessage := message.(socket.RawMessageReceived)

@@ -2,6 +2,8 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"net/http"
 	"strings"
 
@@ -21,6 +23,12 @@ type singleUserResponse struct {
 	PictureID int
 	CreatedAt int64
 	UpdatedAt int64
+}
+
+type socketUserChange struct {
+	UserID    string
+	NewName   string
+	PictureID int
 }
 
 // GetUsers returns all users
@@ -131,6 +139,17 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 		if updated {
 			model.DB().Save(&user)
 			json.NewEncoder(w).Encode("ok")
+
+			if request.Username != "" || request.PictureID != 0 {
+				//Broadcast to all users
+				message := socket.RawMessage{}
+				message.ParseMessagePack(byte(socket.MessageType.UsernameChange), socketUserChange{
+					UserID:    user.ID.String(),
+					PictureID: user.PictureID,
+					NewName:   request.Username,
+				})
+				messenger.BroadcastAll(message)
+			}
 		} else {
 			rbody.JSONError(w, http.StatusBadRequest, "No modifications are found")
 		}

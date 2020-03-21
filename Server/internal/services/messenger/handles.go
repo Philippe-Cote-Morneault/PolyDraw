@@ -71,9 +71,7 @@ func (h *handler) deleteGroupChannel(group *model.Group) {
 		return
 	}
 
-	for socketID := range h.channelsConnections[channel.ID] {
-		go socket.SendRawMessageToSocketID(rawMessage, socketID)
-	}
+	h.broadcast(channel.ID, rawMessage)
 
 	delete(h.channelsConnections, channel.ID)
 	model.DB().Delete(&channel)
@@ -104,9 +102,7 @@ func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {
 				return
 			}
 
-			for socketID := range h.channelsConnections[channel.ID] {
-				go socket.SendRawMessageToSocketID(rawMessage, socketID)
-			}
+			h.broadcast(channel.ID, rawMessage)
 			delete(h.channelsConnections[channelID], socketID)
 			log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
 		} else {
@@ -144,9 +140,7 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 			model.DB().Model(&channel).Association("Users").Append(user)
 			h.channelsConnections[channel.ID][socketID] = true
 
-			for socketID := range h.channelsConnections[channel.ID] {
-				go socket.SendRawMessageToSocketID(rawMessage, socketID)
-			}
+			h.broadcast(channel.ID, rawMessage)
 			log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
 		} else {
 			log.Printf("[Messenger] -> Join: User is already joined to the channel")
@@ -155,6 +149,12 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 	} else {
 		log.Printf("[Messenger] -> Join: Channel UUID not found, %s", channelID.String())
 		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 404, "Channel UUID not found.", socketID)
+	}
+}
+
+func (h *handler) broadcast(chanelID uuid.UUID, message socket.RawMessage) {
+	for socketID := range h.channelsConnections[chanelID] {
+		go socket.SendRawMessageToSocketID(message, socketID)
 	}
 }
 
@@ -194,10 +194,7 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
 					return
 				}
-				for k := range h.channelsConnections[channelID] {
-					// Send message to the socket in async way
-					go socket.SendRawMessageToSocketID(rawMessage, k)
-				}
+				h.broadcast(channelID, rawMessage)
 				log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", messageParsed.Message, user.Username, messageParsed.ChannelID)
 				model.AddMessage(messageParsed.Message, channelID, user.ID, timestamp)
 			} else {
@@ -249,10 +246,7 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 						return
 					}
 
-					for socketID := range h.channelsConnections[uuid.Nil] {
-						//Check if the user has a session
-						go socket.SendRawMessageToSocketID(rawMessage, socketID)
-					}
+					h.broadcast(uuid.Nil, rawMessage)
 					log.Printf("[Messenger] -> Create: channel %s created", channelParsed.ChannelName)
 				} else {
 					log.Printf("[Messenger] -> Create: Channel already exists. Dropping packet!")
@@ -329,9 +323,7 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 					return
 				}
 
-				for socketID := range h.channelsConnections[uuid.Nil] {
-					go socket.SendRawMessageToSocketID(rawMessage, socketID)
-				}
+				h.broadcast(uuid.Nil, rawMessage)
 				log.Printf("[Messenger] -> Destroy: Removed channel %s", channelID)
 			} else {
 				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
@@ -367,9 +359,7 @@ func (h *handler) handleConnect(socketID uuid.UUID) {
 		log.Printf("[Messenger] -> Connect: Can't pack message. Dropping packet!")
 		return
 	}
-	for connectionSocketID := range h.channelsConnections[uuid.Nil] {
-		go socket.SendRawMessageToSocketID(rawMessage, connectionSocketID)
-	}
+	h.broadcast(uuid.Nil, rawMessage)
 
 	//Update the cache
 	for _, channel := range channels {
@@ -396,9 +386,7 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 		log.Printf("[Messenger] -> Disconnect: Can't pack message. Dropping packet!")
 		return
 	}
-	for connectionSocketID := range h.channelsConnections[uuid.Nil] {
-		go socket.SendRawMessageToSocketID(rawMessage, connectionSocketID)
-	}
+	h.broadcast(uuid.Nil, rawMessage)
 
 	//Update the cache
 	for _, channel := range channels {

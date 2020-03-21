@@ -26,7 +26,6 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-const numberOfTurns = 3
 const imageDuration = 60000
 
 //FFA Free for all game mode
@@ -70,7 +69,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 
 	f.curLap = 1
 	f.timeImage = imageDuration
-	f.lapsTotal = len(f.players) * numberOfTurns
+	f.lapsTotal = len(f.players) * f.info.NbRound
 
 	f.realPlayers = 0
 	for i := range f.players {
@@ -178,13 +177,15 @@ func (f *FFA) GameLoop() {
 		log.Printf("[Match] [FFA] -> All players could guess the word, Match: %s", f.info.ID)
 	}
 
-	//Send message that the current word have expired
-	timeUpMessage := socket.RawMessage{}
-	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
-		Type: 1,
-		Word: f.currentWord,
-	})
-	f.pbroadcast(&timeUpMessage)
+	//Send message that the current word have expired unless it's the end of the round
+	if f.curLap < f.lapsTotal {
+		timeUpMessage := socket.RawMessage{}
+		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+			Type: 1,
+			Word: f.currentWord,
+		})
+		f.pbroadcast(&timeUpMessage)
+	}
 
 	f.receiving.Lock()
 	f.orderPos++
@@ -242,14 +243,14 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 		f.pbroadcast(&endDrawing)
 	}
 	//Check the state of the game if there are enough players to finish the game
-	if f.realPlayers-1 <= 0 {
+	if f.realPlayers < 2 {
 		f.receiving.Unlock()
 		f.Close()
 		return
 	}
 
 	f.removePlayer(f.connections[socketID], socketID)
-	f.lapsTotal -= numberOfTurns
+	f.lapsTotal -= f.info.NbRound
 	f.receiving.Unlock()
 
 	messenger.HandleQuitGroup(&f.info, socketID)
@@ -712,6 +713,7 @@ func (f *FFA) sendRoundSummary() {
 	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
 		Players:      playersDetails,
 		Achievements: nil,
+		Word:         f.currentWord,
 	})
 	f.pbroadcast(&roundEnd)
 }

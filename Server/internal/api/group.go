@@ -13,11 +13,11 @@ import (
 )
 
 type requestGroupCreate struct {
-	GroupName      string
-	PlayersMax     int
-	VirtualPlayers int
-	GameType       int
-	Difficulty     int
+	GroupName  string
+	PlayersMax int
+	NbRound    int
+	GameType   int
+	Difficulty int
 }
 
 type responsePlayer struct {
@@ -36,16 +36,17 @@ type responseGroupCreate struct {
 	GroupID   string
 }
 type responseGroup struct {
-	ID             string
-	GroupName      string
-	PlayersMax     int
-	VirtualPlayers int
-	GameType       int
-	Difficulty     int
-	Status         int
-	OwnerName      string
-	OwnerID        string
-	Players        []responsePlayer
+	ID         string
+	GroupName  string
+	PlayersMax int
+	GameType   int
+	Difficulty int
+	Status     int
+	OwnerName  string
+	OwnerID    string
+	Language   int
+	NbRound    int
+	Players    []responsePlayer
 }
 
 const maxPlayer = 8
@@ -70,30 +71,21 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, "The game mode must be between 0 and 2")
 		return
 	}
-	if request.VirtualPlayers < 0 || request.VirtualPlayers > 11 {
-		rbody.JSONError(w, http.StatusBadRequest, "You must set the number of virtual players between 0 and 11")
-		return
-	}
 
 	if (request.PlayersMax > maxPlayer || request.PlayersMax < 1) && request.GameType != 1 {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of players must be between 1 and %d", maxPlayer))
+		return
+	}
+	if request.GameType == 0 && (request.NbRound <= 0 || request.NbRound > 5) {
+		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of round must be between 1 and 5 for the free for all game mode."))
 		return
 	}
 	if request.PlayersMax != 1 && request.GameType == 1 {
 		rbody.JSONError(w, http.StatusBadRequest, "The number of players must be one for the game mode Solo")
 		return
 	}
-	if request.VirtualPlayers != 0 && request.GameType == 1 {
-		rbody.JSONError(w, http.StatusBadRequest, "The number of virtual players must be set to zero for the game mode Solo")
-		return
-	}
-	if request.PlayersMax == 1 && request.VirtualPlayers <= 0 && request.GameType != 1 {
-		rbody.JSONError(w, http.StatusBadRequest, "There must be some virtual players if you are the only player in the group.")
-		return
-	}
 
-	totalPlayers := request.VirtualPlayers + request.PlayersMax
-	if totalPlayers > maxPlayer {
+	if request.PlayersMax > maxPlayer {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("You cannot have more than %d players in a game", maxPlayer))
 		return
 	}
@@ -114,13 +106,13 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	group := model.Group{
-		OwnerID:        userid,
-		Name:           groupName,
-		PlayersMax:     request.PlayersMax,
-		VirtualPlayers: request.VirtualPlayers,
-		GameType:       request.GameType,
-		Difficulty:     request.Difficulty,
-		Status:         0,
+		OwnerID:    userid,
+		Name:       groupName,
+		NbRound:    request.NbRound,
+		PlayersMax: request.PlayersMax,
+		GameType:   request.GameType,
+		Difficulty: request.Difficulty,
+		Status:     0,
 	}
 	var user model.User
 	model.DB().Model(&user).Where("id = ?", userid).First(&user)
@@ -154,16 +146,17 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response[i] = responseGroup{
-			ID:             groups[i].ID.String(),
-			GroupName:      groups[i].Name,
-			PlayersMax:     groups[i].PlayersMax,
-			VirtualPlayers: groups[i].VirtualPlayers,
-			GameType:       groups[i].GameType,
-			Difficulty:     groups[i].Difficulty,
-			Status:         0,
-			OwnerName:      groups[i].Owner.Username,
-			OwnerID:        groups[i].OwnerID.String(),
-			Players:        players,
+			ID:         groups[i].ID.String(),
+			GroupName:  groups[i].Name,
+			PlayersMax: groups[i].PlayersMax,
+			GameType:   groups[i].GameType,
+			Difficulty: groups[i].Difficulty,
+			Status:     0,
+			Language:   0,
+			NbRound:    groups[i].NbRound,
+			OwnerName:  groups[i].Owner.Username,
+			OwnerID:    groups[i].OwnerID.String(),
+			Players:    players,
 		}
 	}
 	rbody.JSON(w, http.StatusOK, response)
@@ -192,16 +185,17 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response := responseGroup{
-			ID:             group.ID.String(),
-			GroupName:      group.Name,
-			PlayersMax:     group.PlayersMax,
-			VirtualPlayers: group.VirtualPlayers,
-			GameType:       group.GameType,
-			Difficulty:     group.Difficulty,
-			Status:         group.Status,
-			OwnerName:      group.Owner.Username,
-			OwnerID:        group.Owner.ID.String(),
-			Players:        players,
+			ID:         group.ID.String(),
+			GroupName:  group.Name,
+			PlayersMax: group.PlayersMax,
+			GameType:   group.GameType,
+			Difficulty: group.Difficulty,
+			Status:     group.Status,
+			Language:   0,
+			NbRound:    group.NbRound,
+			OwnerName:  group.Owner.Username,
+			OwnerID:    group.Owner.ID.String(),
+			Players:    players,
 		}
 		rbody.JSON(w, http.StatusOK, response)
 		return

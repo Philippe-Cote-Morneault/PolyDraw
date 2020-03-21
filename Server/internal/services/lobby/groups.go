@@ -23,6 +23,7 @@ type responseGroup struct {
 	Username string
 	GroupID  string
 	IsCPU    bool
+	IsKicked bool
 }
 
 type responsePlayer struct {
@@ -39,6 +40,7 @@ type responseNewGroup struct {
 	PlayersMax int
 	Mode       int
 	Players    []responsePlayer
+	NbRound    int
 	Language   int
 	Difficulty int
 }
@@ -102,7 +104,7 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 				socketKickUser, err := auth.GetSocketID(userID)
 				if err == nil {
 					g.mutex.Unlock()
-					g.QuitGroup(socketKickUser)
+					g.QuitGroup(socketKickUser, true)
 				} else {
 					g.mutex.Unlock()
 					if !g.KickVirtualPlayer(userID) {
@@ -144,6 +146,7 @@ func (g *groups) AddGroup(group *model.Group) {
 		Mode:       group.GameType,
 		Players:    players,
 		Language:   group.Language,
+		NbRound:    group.NbRound,
 		Difficulty: group.Difficulty,
 	})
 	messenger.RegisterGroup(group)
@@ -239,7 +242,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 }
 
 //QuitGroup quits the groups the user is currently in.
-func (g *groups) QuitGroup(socketID uuid.UUID) {
+func (g *groups) QuitGroup(socketID uuid.UUID, forced bool) {
 	g.mutex.Lock()
 	if _, ok := g.assignment[socketID]; ok {
 		groupID := g.assignment[socketID]
@@ -255,6 +258,7 @@ func (g *groups) QuitGroup(socketID uuid.UUID) {
 			UserID:   user.ID.String(),
 			Username: user.Username,
 			GroupID:  groupID.String(),
+			IsKicked: forced,
 			IsCPU:    false,
 		})
 		for i := range g.groups[groupID] {
