@@ -29,7 +29,7 @@ func (m *Manager) init() {
 	m.Games = make(map[uuid.UUID]*match2.IMatch)
 }
 
-//AddGroup adds the group to cache
+//AddGroup adds the group to cache (lobby)
 func AddGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Groups[groupID] = make(map[uuid.UUID]bool)
@@ -101,8 +101,8 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	}
 }
 
-// startGame does the startGame routine for a bot
-func startGame(game match2.IMatch) {
+// handleStartGame does the startGame routine for a bot in game
+func handleStartGame(game match2.IMatch) {
 	groupID := game.GetGroupID()
 
 	managerInstance.mutex.Lock()
@@ -116,7 +116,6 @@ func startGame(game match2.IMatch) {
 		managerInstance.mutex.Unlock()
 		log.Printf("[Virtual Player] -> [Error] Can't find channelID of groupID : %v. Aborting startGame...", groupID)
 	}
-
 }
 
 func startDrawing(round *match2.RoundStart) {
@@ -149,4 +148,55 @@ func startDrawing(round *match2.RoundStart) {
 	}
 	managerInstance.mutex.Unlock()
 
+}
+
+func handleRoundEnds(groupID uuid.UUID) {
+	managerInstance.mutex.Lock()
+	group, groupOk := managerInstance.Groups[groupID]
+	if !groupOk {
+		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleRoundEnds...", groupID)
+		return
+	}
+
+	if channelID, ok := managerInstance.Channels[groupID]; ok {
+		for botID := range group {
+			managerInstance.Bots[botID].speak(channelID, "roundStart")
+		}
+		managerInstance.mutex.Unlock()
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find channelID of groupID : %v. Aborting handleRoundEnds...", groupID)
+	}
+}
+
+// handleStartGame does the startGame routine for a bot
+func handleEndGame(groupID uuid.UUID) {
+	managerInstance.mutex.Lock()
+
+	if _, ok := managerInstance.Games[groupID]; ok {
+		delete(managerInstance.Games, groupID)
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find game of groupID : %v. Aborting handleEndGame...", groupID)
+		return
+	}
+
+	if _, ok := managerInstance.Channels[groupID]; ok {
+		delete(managerInstance.Channels, groupID)
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find channelID of groupID : %v. Aborting handleEndGame...", groupID)
+		return
+	}
+
+	if group, ok := managerInstance.Groups[groupID]; ok {
+		for botID := range group {
+			delete(group, botID)
+		}
+		delete(managerInstance.Groups, groupID)
+		managerInstance.mutex.Unlock()
+	} else {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find bots of groupID : %v. Aborting handleEndGame...", groupID)
+	}
 }
