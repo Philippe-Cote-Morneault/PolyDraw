@@ -207,6 +207,7 @@ namespace ClientLourd.ViewModels
             PrepareNextRound();
             var e = (MatchEventArgs) args;
             Time = DateTime.MinValue;
+            CanStillGuess = false;
         }
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
@@ -446,6 +447,7 @@ namespace ClientLourd.ViewModels
             _mode = Lobby.Mode;
             if (_mode == GameModes.FFA)
             {
+
             }
             else
             {

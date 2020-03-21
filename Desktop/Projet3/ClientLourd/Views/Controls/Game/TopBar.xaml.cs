@@ -1,5 +1,6 @@
 ﻿using ClientLourd.Services.SocketService;
 using ClientLourd.Services.SoundService;
+using ClientLourd.Utilities.Enums;
 using ClientLourd.ViewModels;
 using System;
 using System.Windows;
@@ -14,6 +15,7 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
             SocketClient.MatchSync += SocketClientOnMatchSync;
+            SocketClient.GuessResponse += SocketClientOnGuessResponse;
         }
 
         public SocketClient SocketClient
@@ -33,6 +35,11 @@ namespace ClientLourd.Views.Controls.Game
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
+        public GameViewModel GameViewModel
+        {
+            get => Application.Current.Dispatcher.Invoke(() => { return (GameViewModel)DataContext; }); 
+        }
+
         private void SocketClientOnMatchSync(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;
@@ -44,6 +51,30 @@ namespace ClientLourd.Views.Controls.Game
                     SoundService.PlayTimerWarning();
                     Storyboard sb = (Storyboard)FindResource("TimerCloseToEnd");
                     sb.Begin();
+                });
+            }
+        }
+
+        private void SocketClientOnGuessResponse(object sender, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+            if (!e.Valid)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // TODO: If solo
+                    if (GameViewModel.Mode == GameModes.Solo && GameViewModel.HealthPoint > 0) 
+                    {
+                        UIElement el = (HeartsContainer.Children[GameViewModel.HealthPoint - 1] as UIElement);
+                        GameViewModel.HealthPoint--;
+                        Storyboard sb = (Storyboard)FindResource("HealthLost");
+                        for (int j = 0; j < sb.Children.Count; j++)
+                        {
+                            Storyboard.SetTarget(sb.Children[j], el);
+                        }
+                        sb.Begin();
+                    }
+
                 });
             }
         }
