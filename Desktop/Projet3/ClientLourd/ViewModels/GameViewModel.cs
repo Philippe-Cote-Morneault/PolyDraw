@@ -134,6 +134,9 @@ namespace ClientLourd.ViewModels
             Time = e.Time;
             _roundStarted = true;
             CanStillGuess = true;
+            //TODO: if solo or coop
+            
+
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
@@ -447,7 +450,8 @@ namespace ClientLourd.ViewModels
             _mode = Lobby.Mode;
             if (_mode == GameModes.FFA)
             {
-
+                //TODO: Remove this
+                HealthPoint = 3;
             }
             else
             {

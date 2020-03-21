@@ -67,6 +67,18 @@
                 From="1" To="0" Duration="0:0:1" />
 
         </Storyboard>
+
+        <Storyboard x:Key="HealthReset">
+            <DoubleAnimation AutoReverse="False"
+                           
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="0" To="1" Duration="0:0:1" />
+
+            <DoubleAnimation AutoReverse="False"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="0" To="1" Duration="0:0:1" />
+
+        </Storyboard>
         
     </UserControl.Resources>
     <Grid >
@@ -76,7 +88,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop}"  VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
+        <StackPanel Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|FFA}"  VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
             <materialDesign:PackIcon Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>
                     <TransformGroup>
