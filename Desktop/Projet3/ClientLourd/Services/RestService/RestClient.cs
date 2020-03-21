@@ -236,6 +236,7 @@ namespace ClientLourd.Services.RestService
                 {
                     groups[i].Players[j].User = new User((tmpResponse[i] as dynamic)["Players"][j]["Username"], (tmpResponse[i] as dynamic)["Players"][j]["ID"]);
                 }
+                groups[i].Rounds = (int)tmpResponse[i]["NbRound"];
                 groups[i].Mode = (GameModes)tmpResponse[i]["GameType"];
                 groups[i].GameName= tmpResponse[i]["GroupName"];
                 groups[i].Host = tmpResponse[i]["OwnerName"];

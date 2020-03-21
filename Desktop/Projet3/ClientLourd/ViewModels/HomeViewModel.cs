@@ -75,6 +75,7 @@ namespace ClientLourd.ViewModels
             _hostFilteredAscending = false;
             _playerCountFilteredAscending = false;
             _languageFilteredAscending = false;
+            _roundsFilteredAscending = false;
 
 
         }
@@ -187,7 +188,17 @@ namespace ClientLourd.ViewModels
 
         private void FilterRounds() 
         {
-            //TODO
+            if (!_roundsFilteredAscending)
+            {
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => lobby.Rounds).ToList());
+                _roundsFilteredAscending = true;
+            }
+            else
+            {
+
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => lobby.Rounds).ToList());
+                _roundsFilteredAscending = false;
+            }
         }
 
         private bool _languageFilteredAscending;
@@ -274,7 +285,8 @@ namespace ClientLourd.ViewModels
                     (DifficultyLevel)lobbyCreated.Difficulty,
                     lobbyCreated.Players.Count,
                     lobbyCreated.PlayersMax,
-                    lobbyCreated.Language
+                    lobbyCreated.Language,
+                    lobbyCreated.Rounds
                     );
                 Lobbies.Insert(0, lobby);
                 if (IsCreatedByUser(lobbyCreated.OwnerID))

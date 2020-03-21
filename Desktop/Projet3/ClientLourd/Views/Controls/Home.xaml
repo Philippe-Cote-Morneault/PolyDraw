@@ -129,7 +129,7 @@
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn DisplayMemberBinding="{Binding Host}" Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Rounds" >
+                        <GridViewColumn DisplayMemberBinding="{Binding Rounds}" Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Rounds" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Rounds}" Cursor="Hand" ToolTip="{DynamicResource FilterRounds}">

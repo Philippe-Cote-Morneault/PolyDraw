@@ -21,6 +21,8 @@ namespace ClientLourd.Services.SocketService
         // Lobby created
         public string ID { get => _data["ID"]; }
 
+        public int Rounds { get => (int)_data["NbRound"]; }
+
         public Languages Language { get => (Languages)_data["Language"]; }
 
         public string GroupName { get => _data["GroupName"]; }
