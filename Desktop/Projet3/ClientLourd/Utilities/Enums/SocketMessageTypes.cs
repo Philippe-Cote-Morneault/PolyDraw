@@ -55,6 +55,7 @@
         MatchEnd = 81,
         AskForHint = 82,
         HintResponse = 83,
+        MatchRoundEnded = 85,
         ServerMessage = 255,
     }
 }

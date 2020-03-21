@@ -31,7 +31,6 @@ namespace ClientLourd.ViewModels
         private string _word;
         private char[] _guess;
         private DateTime _time;
-        private Timer _timer;
         private int _healthPoint;
         private ObservableCollection<Player> _players;
         private long _round;
@@ -65,6 +64,12 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
             SocketClient.HintResponse += SocketClientOnHintResponse;
+            SocketClient.RoundEnded += SocketClientOnRoundEnded;
+        }
+
+        private void SocketClientOnRoundEnded(object source, EventArgs args)
+        {
+            
         }
 
         private void SocketClientOnHintResponse(object source, EventArgs args)
@@ -113,11 +118,14 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
-            if (e.UserID == SessionInformations.User.ID)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                StrokeDrawerService.Stop();
-            }
+                Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
+                if (e.UserID == SessionInformations.User.ID)
+                {
+                    StrokeDrawerService.Stop();
+                }
+            });
         }
 
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
@@ -153,13 +161,13 @@ namespace ClientLourd.ViewModels
             Round = e.Laps;
             TotalRound = e.LapTotal;
             Time = e.Time;
-            NotifyPropertyChanged(nameof(Players));
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Players.FirstOrDefault(p => p.User.ID == e.UserID).GuessedTheWord = true;
+            var player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
+            player.GuessedTheWord = true;
         }
 
         private void SocketClientOnGuessResponse(object source, EventArgs args)
@@ -167,14 +175,7 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-                
-                //ShowCanvasMessage($"+ {e.Points}");
                 Player player = Players.First(p => p.User.ID == SessionInformations.User.ID);
-                player.PointsRecentlyGained = e.Points;
-                player.Score = e.PointsTotal;
-
-                NotifyPropertyChanged(nameof(Players));
-
                 Application.Current.Dispatcher.Invoke(() => 
                 {
                     CanStillGuess = false;
@@ -209,11 +210,7 @@ namespace ClientLourd.ViewModels
             //Round end
             if (e.Type == 1)
             {
-                ShowCanvasMessage($"The word was {e.Word}");
-            }
-            //Game end
-            else if (e.Type == 2)
-            {
+                //ShowCanvasMessage($"The word was {e.Word}");
             }
         }
 

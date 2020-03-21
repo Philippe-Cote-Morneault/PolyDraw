@@ -28,10 +28,32 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
             SocketClient.NewPlayerIsDrawing += SocketClientNewPlayerDrawing;
+            SocketClient.RoundEnded += SocketClientOnRoundEnded;
             _random = new Random((int)DateTime.Now.Ticks);
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             _timer.Tick += (s, arg) => Confetti();
         }
+
+        private void SocketClientOnRoundEnded(object source, EventArgs args)
+        {
+            Task.Run(() =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoard l = new LeaderBoard((MatchEventArgs)args);
+                    LeaderBoardGrid.Children.Add(l);
+                    LeaderBoardGrid.Visibility = Visibility.Visible;
+                });
+                Thread.Sleep(2000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Clear();
+                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                });
+            });
+
+    }
+
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
@@ -155,7 +177,7 @@ namespace ClientLourd.Views.Controls.Game
                     }
                     sb.Begin();
                 });
-                System.Threading.Thread.Sleep(200);
+                Thread.Sleep(200);
             }
         }
 
@@ -180,7 +202,7 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            if (ViewModel.Round != ViewModel.TotalRound)
+            if (e.Type == 1)
             {
                 Task.Run(() =>
                 {
@@ -199,7 +221,6 @@ namespace ClientLourd.Views.Controls.Game
                 });
             }
         }
-
 
 
         private void StartConfetti()
