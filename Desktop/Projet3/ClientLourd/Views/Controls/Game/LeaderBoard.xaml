@@ -24,7 +24,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel  Orientation="Horizontal">
-                        <TextBlock FontSize="30" HorizontalAlignment="Center" Foreground="WhiteSmoke" FontWeight="Medium">
+                        <TextBlock TextAlignment="Center" FontSize="30" HorizontalAlignment="Center" Foreground="White" FontWeight="Medium">
                             <Run>
                                 <Run.Text>
                                     <MultiBinding StringFormat="{}#{0}" Converter="{StaticResource PlayerToPositionConverter}">
