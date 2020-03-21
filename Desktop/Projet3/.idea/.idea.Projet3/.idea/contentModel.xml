@@ -196,6 +196,7 @@
             <e p="NotificationConverter.cs" t="Include" />
             <e p="NumberToPlaceholder.cs" t="Include" />
             <e p="PlayerToPositionConverter.cs" t="Include" />
+            <e p="PointsToColorConverter.cs" t="Include" />
             <e p="SecondsToTimeSpanConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />

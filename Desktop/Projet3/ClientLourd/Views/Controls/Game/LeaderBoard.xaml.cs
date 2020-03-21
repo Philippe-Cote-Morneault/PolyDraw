@@ -11,7 +11,7 @@ namespace ClientLourd.Views.Controls.Game
 {
     public partial class LeaderBoard : UserControl, INotifyPropertyChanged
     {
-        public LeaderBoard(MatchEventArgs e)
+        public LeaderBoard(MatchEventArgs e, bool gameEnded)
         {
             Players = new ObservableCollection<Player>();
             ExtractInformation(e);

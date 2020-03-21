@@ -11,6 +11,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converter:PlayerToPositionConverter x:Key="PlayerToPositionConverter"/>
+        <converter:PointsToColorConverter x:Key="PointsToColorConverter"/>
     </UserControl.Resources>
     <DockPanel ZIndex="20" HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock DockPanel.Dock="Top" Foreground="White" HorizontalAlignment="Center" FontSize="30" FontWeight="Medium" Text="{Binding  StringFormat={}The word was {0}!, Path=Word}"/> 
@@ -23,7 +24,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel  Orientation="Horizontal">
-                        <TextBlock FontSize="30" HorizontalAlignment="Center" Foreground="WhiteSmoke">
+                        <TextBlock FontSize="30" HorizontalAlignment="Center" Foreground="WhiteSmoke" FontWeight="Medium">
                             <Run>
                                 <Run.Text>
                                     <MultiBinding StringFormat="{}#{0}" Converter="{StaticResource PlayerToPositionConverter}">
@@ -33,7 +34,7 @@
                                 </Run.Text>
                             </Run>
                             <Run  Text="{Binding Path=User.Username}"/>
-                            <Run Text="{Binding Path=PointsRecentlyGained, StringFormat={}+{0}}"/>
+                            <Run Text="{Binding Path=PointsRecentlyGained, StringFormat={}+{0}}" Foreground="{Binding Converter={StaticResource PointsToColorConverter}}"/>
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>

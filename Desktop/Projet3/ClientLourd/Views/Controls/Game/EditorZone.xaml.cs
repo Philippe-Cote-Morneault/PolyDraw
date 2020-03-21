@@ -34,14 +34,14 @@ namespace ClientLourd.Views.Controls.Game
             _timer.Tick += (s, arg) => Confetti();
         }
 
+
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
             Task.Run(() =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    LeaderBoard l = new LeaderBoard((MatchEventArgs)args);
-                    LeaderBoardGrid.Children.Add(l);
+                    LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, false));
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
                 Thread.Sleep(2000);
@@ -60,7 +60,17 @@ namespace ClientLourd.Views.Controls.Game
             Task.Run(() =>
             {
                 StartConfetti();
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
+                    LeaderBoardGrid.Visibility = Visibility.Visible;
+                });
                 Thread.Sleep(5000);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LeaderBoardGrid.Children.Clear();
+                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                });
                 StopConfetti();
             });
         }

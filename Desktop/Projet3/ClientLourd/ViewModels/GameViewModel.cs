@@ -463,6 +463,7 @@ namespace ClientLourd.ViewModels
 
         private void PrepareMatch()
         {
+            Word = "";
             _mode = Lobby.Mode;
             if (_mode == GameModes.FFA)
             {
