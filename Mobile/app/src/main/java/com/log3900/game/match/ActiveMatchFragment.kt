@@ -23,6 +23,13 @@ import org.w3c.dom.Text
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
+import android.animation.ArgbEvaluator
+import android.graphics.Color
+import androidx.core.content.ContextCompat
+
 
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var activeMatchPresenter: ActiveMatchPresenter? = null
@@ -165,9 +172,33 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun pulseRemainingTime() {
-        YoYo.with(Techniques.Pulse)
-            .duration(500)
-            .playOn(remainingTimeTextView)
+        val scaleDown = ObjectAnimator.ofPropertyValuesHolder(
+            remainingTimeTextView,
+            PropertyValuesHolder.ofFloat("scaleX", 1.4f),
+            PropertyValuesHolder.ofFloat("scaleY", 1.4f)
+        )
+        scaleDown.duration = 500
+
+        scaleDown.repeatCount = 1
+        scaleDown.repeatMode = ObjectAnimator.REVERSE
+
+        val anim = ValueAnimator()
+        anim.setIntValues(Color.BLACK, Color.RED)
+        anim.setEvaluator(ArgbEvaluator())
+        anim.addUpdateListener { valueAnimator -> remainingTimeTextView.setTextColor(valueAnimator.animatedValue as Int) }
+        for (drawable in remainingTimeTextView.compoundDrawables) {
+            if (drawable != null) {
+                anim.addUpdateListener { valueAnimator -> drawable.setTint(valueAnimator.animatedValue as Int) }
+            }
+        }
+
+        anim.duration = 500
+
+        anim.repeatCount = 1
+        anim.repeatMode = ObjectAnimator.REVERSE
+        anim.start()
+
+        scaleDown.start()
     }
 
     override fun onDestroy() {

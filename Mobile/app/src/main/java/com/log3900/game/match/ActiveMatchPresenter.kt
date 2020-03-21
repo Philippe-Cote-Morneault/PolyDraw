@@ -71,8 +71,8 @@ class ActiveMatchPresenter : Presenter {
         }
 
         if (synchronisation.time <= 10000) {
-            Log.d("POTATO", "Time less than 10 seconds!")
             activeMatchView?.pulseRemainingTime()
+            SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_timer_warning)
         }
     }
 
