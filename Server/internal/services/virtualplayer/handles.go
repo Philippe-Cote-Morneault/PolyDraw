@@ -1,6 +1,8 @@
 package virtualplayer
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"log"
 	"sync"
 
@@ -16,7 +18,7 @@ type Manager struct {
 	Bots     map[uuid.UUID]*virtualPlayerInfos // playerID -> virtualPlayerInfos
 	Channels map[uuid.UUID]uuid.UUID           // groupID -> channelID
 	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
-	Games    map[uuid.UUID]*match2.IMatch      //groupID -> ffa
+	Games    map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
 
 }
 
@@ -107,7 +109,7 @@ func startGame(game match2.IMatch) {
 	managerInstance.Games[groupID] = &game
 	if channelID, ok := managerInstance.Channels[groupID]; ok {
 		for botID := range managerInstance.Groups[groupID] {
-			managerInstance.Bots[botID].speak(channelID, "start")
+			managerInstance.Bots[botID].speak(channelID, "startGame")
 		}
 		managerInstance.mutex.Unlock()
 	} else {
@@ -121,14 +123,27 @@ func startDrawing(round *match2.RoundStart) {
 	if !round.Drawer.IsCPU {
 		return
 	}
-	_, ok := managerInstance.Bots[round.Drawer.ID]
+	bot, ok := managerInstance.Bots[round.Drawer.ID]
 
 	if !ok {
 		log.Printf("[Virtual Player] -> [Error] Can't find bot's id : %v. Aborting drawing...", round.Drawer.ID)
 		return
 	}
-	// for _, playerID := managerInstance.Games[round.MatchID].playerUsernames{
+	game, groupOk := managerInstance.Games[round.MatchID]
+	if !groupOk {
+		log.Printf("[Virtual Player] -> [Error] Can't find group's id : %v. Aborting drawing...", round.MatchID)
+		return
+	}
+	for _, playerID := range (*game).GetConnections() {
+		socketID, err := auth.GetSocketID(playerID)
 
-	// 	drawing.StartDrawing()
-	// }
+		if err != nil {
+			log.Printf("[Virtual Player] -> [Error] Can't find user's socketid from userID: %v. Aborting drawing...", playerID)
+			return
+		}
+
+		uuidBytes, _ := round.Game.ID.MarshalBinary()
+
+		go drawing.StartDrawing(socketID, uuidBytes, round.Game.Image.SVGFile, bot.DrawingTimeFactor)
+	}
 }
