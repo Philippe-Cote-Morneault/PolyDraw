@@ -1,6 +1,7 @@
 package virtualplayer
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"log"
 
 	"github.com/google/uuid"
@@ -96,6 +97,11 @@ func (v *VirtualPlayer) listen() {
 				break
 			}
 			registerChannelGroup(chat.ChatID, chat.MatchID)
+
+		case data := <-v.askHint:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				log.Printf("[Match] -> received HINT request socket id: %v", message.SocketID)
+			}
 
 		case <-v.shutdown:
 			return
