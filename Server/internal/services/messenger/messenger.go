@@ -19,6 +19,7 @@ type Messenger struct {
 	quitChan        cbroadcast.Channel
 	connectedChan   cbroadcast.Channel
 	disconnectChan  cbroadcast.Channel
+	botMessage      cbroadcast.Channel
 }
 
 //Init the messenger service
@@ -49,6 +50,8 @@ func (m *Messenger) subscribe() {
 	m.destroyChan, _, _ = cbroadcast.Subscribe(BDestroyChannel)
 	m.joinChan, _, _ = cbroadcast.Subscribe(BJoinChannel)
 	m.quitChan, _, _ = cbroadcast.Subscribe(BLeaveChannel)
+
+	m.botMessage, _, _ = cbroadcast.Subscribe(BBotMessage)
 }
 
 func (m *Messenger) listen() {
@@ -60,6 +63,11 @@ func (m *Messenger) listen() {
 		select {
 		case <-m.shutdown:
 			return
+		case data := <-m.botMessage:
+			if m, ok := data.(MessageReceived); ok {
+				h.handleBotMessage(m)
+			}
+
 		case data := <-m.messageSentChan:
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				h.handleMessgeSent(message)

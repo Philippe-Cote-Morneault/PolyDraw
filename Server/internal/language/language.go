@@ -2,7 +2,7 @@ package language
 
 const (
 	//FR represent language
-	FR = iota
+	FR = 1
 	//EN represent language
-	EN = iota
+	EN = 0
 )

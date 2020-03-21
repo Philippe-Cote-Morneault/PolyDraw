@@ -26,8 +26,9 @@ type singleUserResponse struct {
 }
 
 type socketUserChange struct {
-	UserID  string
-	NewName string
+	UserID    string
+	NewName   string
+	PictureID int
 }
 
 // GetUsers returns all users
@@ -139,12 +140,13 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 			model.DB().Save(&user)
 			json.NewEncoder(w).Encode("ok")
 
-			if request.Username != "" {
+			if request.Username != "" || request.PictureID != 0 {
 				//Broadcast to all users
 				message := socket.RawMessage{}
 				message.ParseMessagePack(byte(socket.MessageType.UsernameChange), socketUserChange{
-					UserID:  user.ID.String(),
-					NewName: request.Username,
+					UserID:    user.ID.String(),
+					PictureID: user.PictureID,
+					NewName:   request.Username,
 				})
 				messenger.BroadcastAll(message)
 			}

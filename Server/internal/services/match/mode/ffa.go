@@ -2,13 +2,20 @@ package mode
 
 import (
 	"context"
-	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"log"
 	"math/rand"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/jinzhu/gorm"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
@@ -71,6 +78,7 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 		}
 	}
 	drawing.RegisterGame(f)
+	cbroadcast.Broadcast(match2.BGameStarts, f)
 }
 
 //Start the game mode
@@ -101,7 +109,7 @@ func (f *FFA) Ready(socketID uuid.UUID) {
 //GameLoop method should be called with start
 func (f *FFA) GameLoop() {
 	f.receiving.Lock()
-	if (len(f.players)) <= 0 {
+	if f.realPlayers <= 0 || len(f.players) <= 0 {
 		log.Printf("[Match] [FFA] No players will exit the game loop.")
 		f.isRunning = false
 		f.receiving.Unlock()
@@ -111,15 +119,34 @@ func (f *FFA) GameLoop() {
 	f.curDrawer = &f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
 
+	var game *model.Game
 	if f.curDrawer.IsCPU {
 		f.nbWaitingResponses = int64(f.realPlayers)
+
+		game = f.findGame()
+		if game.ID == uuid.Nil {
+			f.receiving.Unlock()
+			log.Printf("[Match] [FFA] Panic, not able to find a game for the virtual players")
+			return
+		}
+		f.currentWord = game.Word
 	} else {
+		f.currentWord = f.findWord()
 		f.nbWaitingResponses = int64(f.realPlayers - 1)
 		f.hasFoundIt[f.curDrawer.socketID] = true
 	}
+	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
+		MatchID: f.info.ID,
+		Drawer: match2.Player{
+			IsCPU:    f.curDrawer.IsCPU,
+			Username: f.curDrawer.Username,
+			ID:       f.curDrawer.userID,
+		},
+		Game: game,
+	})
+
 	f.waitingResponse = semaphore.NewWeighted(f.nbWaitingResponses)
 	f.waitingResponse.TryAcquire(f.nbWaitingResponses)
-	f.currentWord = f.findWord()
 
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawThis), PlayerDrawThis{
@@ -182,6 +209,8 @@ func (f *FFA) GameLoop() {
 
 	f.sendRoundSummary()
 
+	cbroadcast.Broadcast(match2.BRoundEnds, f.info.ID)
+
 	f.currentWord = ""
 	f.resetGuess()
 	f.receiving.Unlock()
@@ -214,13 +243,14 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 		f.pbroadcast(&endDrawing)
 	}
 	//Check the state of the game if there are enough players to finish the game
-	if f.realPlayers-1 <= 0 {
+	if f.realPlayers < 2 {
 		f.receiving.Unlock()
 		f.Close()
 		return
 	}
 
 	f.removePlayer(f.connections[socketID], socketID)
+	f.realPlayers--
 	f.lapsTotal -= f.info.NbRound
 	f.receiving.Unlock()
 
@@ -313,14 +343,18 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		socket.SendRawMessageToSocketID(message, socketID)
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
+		player := f.connections[socketID]
 		f.receiving.Unlock()
 
-		message := socket.RawMessage{}
-		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
-			Hint:  "Not implemented", //TODO replace with the real hint from the virtual player
-			Error: "",
+		cbroadcast.Broadcast(match2.BAskHint, match2.HintRequested{
+			MatchID:  f.info.ID,
+			SocketID: socketID,
+			Player: match2.Player{
+				IsCPU:    player.IsCPU,
+				Username: player.Username,
+				ID:       player.userID,
+			},
 		})
-		socket.SendRawMessageToSocketID(message, socketID)
 	}
 }
 
@@ -330,7 +364,9 @@ func (f *FFA) Close() {
 	f.receiving.Lock()
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
-	f.cancelWait()
+	if f.cancelWait != nil {
+		f.cancelWait()
+	}
 
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
@@ -369,15 +405,50 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 
 }
 
+//GetPlayers returns the number of players
+func (f *FFA) GetPlayers() []match2.Player {
+	defer f.receiving.Unlock()
+	f.receiving.Lock()
+	return f.getPlayers()
+}
+
+//findGame used to find a game for the virtual players
+func (f *FFA) findGame() *model.Game {
+	word := ""
+	watchDog := 0
+
+	var game model.Game
+	for word == "" {
+		model.DB().Where("difficulty = ? and language = ?", f.info.Difficulty, f.info.Language).Order(gorm.Expr("random()")).First(&game)
+		if game.ID != uuid.Nil {
+			if _, inList := f.wordHistory[word]; !inList || watchDog >= 10 {
+				//Add the word to the list so it does not come up again.
+				word = game.Word
+				f.wordHistory[word] = true
+				return &game
+			}
+		}
+		watchDog++
+	}
+	return &game
+}
+
 //findWord used to the find the word that must be drawn
 func (f *FFA) findWord() string {
-	//TODO language
+	key := ""
+	switch f.info.Language {
+	case language.EN:
+		key = "dict_words_en"
+	case language.FR:
+		key = "dict_words_fr"
+	}
+
 	word := ""
 	watchDog := 0
 	for word == "" {
 
 		var err error
-		word, err = model.Redis().SRandMember("dict_words_en").Result()
+		word, err = model.Redis().SRandMember(key).Result()
 		if err != nil {
 			log.Printf("[Match] [FFA] -> Cannot access the word library closing the game. Match: %s", f.info.ID)
 			f.Close()
@@ -544,6 +615,8 @@ func (f *FFA) finish() {
 	})
 
 	f.broadcast(&message)
+
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 }
@@ -646,4 +719,11 @@ func (f *FFA) sendRoundSummary() {
 		Word:         f.currentWord,
 	})
 	f.pbroadcast(&roundEnd)
+}
+
+//GetGroupID return the group id
+func (f *FFA) GetGroupID() uuid.UUID {
+	defer f.receiving.Unlock()
+	f.receiving.Lock()
+	return f.info.ID
 }

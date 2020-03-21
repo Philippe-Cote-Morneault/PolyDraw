@@ -5,6 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/match"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -22,6 +26,11 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 		IsGameChat: true,
 	}
 	model.DB().Create(&channel)
+
+	cbroadcast.Broadcast(match.BChatNew, match2.ChatNew{
+		MatchID: group.ID,
+		ChatID:  channel.ID,
+	})
 
 	//Init the hashmap for the connections
 	h.channelsConnections[channel.ID] = make(map[uuid.UUID]bool)
@@ -385,4 +394,29 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 			delete(h.channelsConnections[channel.ID], socketID)
 		}
 	}
+}
+
+func (h *handler) handleBotMessage(message MessageReceived) {
+	channelID, err := uuid.Parse(message.ChannelID)
+	if err == nil {
+		rawMessage := socket.RawMessage{}
+		if rawMessage.ParseMessagePack(byte(socket.MessageType.MessageReceived), message) != nil {
+			log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
+			return
+		}
+		for k := range h.channelsConnections[channelID] {
+			// Send message to the socket in async way
+			go socket.SendRawMessageToSocketID(rawMessage, k)
+		}
+		log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", message.Message, message.Username, message.ChannelID)
+		botID, err2 := uuid.Parse(message.UserID)
+		if err2 == nil {
+			model.AddMessage(message.Message, channelID, botID, time.Now().Unix())
+		} else {
+			log.Printf("[Messenger] -> Receive: Invalid bot ID. Dropping packet!")
+		}
+	} else {
+		log.Printf("[Messenger] -> Receive: Invalid channel ID. Dropping packet!")
+	}
+
 }

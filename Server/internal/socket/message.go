@@ -39,6 +39,8 @@ type messageType struct {
 	ErrorResponse            int
 	UserJoinedGroup          int
 	ResponseGroupRemoved     int
+	AddVirtualPlayer         int
+	RequestKickUser          int
 	RequestGameStart         int
 	GameStarting             int
 	RequestReadyMatch        int
@@ -60,7 +62,6 @@ type messageType struct {
 	EndDrawingClient         int
 	EraseStrokeClient        int
 	PlayerHasLeftGame        int
-	RequestKickUser          int
 	RoundEndStatus           int
 	UsernameChange           int
 }
@@ -102,6 +103,7 @@ var MessageType = &messageType{
 	ResponseGroupCreated:     51,
 	ResponseGroupRemoved:     53,
 	RequestKickUser:          54,
+	AddVirtualPlayer:         56,
 	GameWelcome:              61,
 	RequestReadyMatch:        62,
 	GameStarting:             63,

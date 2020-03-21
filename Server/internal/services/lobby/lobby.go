@@ -1,8 +1,9 @@
 package lobby
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"log"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -21,6 +22,7 @@ type Lobby struct {
 	leave      cbroadcast.Channel
 	startMatch cbroadcast.Channel
 	kick       cbroadcast.Channel
+	addbot     cbroadcast.Channel
 
 	groups   *groups
 	shutdown chan bool
@@ -86,6 +88,15 @@ func (l *Lobby) listen() {
 				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
 			}
 
+		case message := <-l.addbot:
+			rawMessage := message.(socket.RawMessageReceived)
+			groupID, err := uuid.FromBytes(rawMessage.Payload.Bytes)
+			if err == nil {
+				l.groups.AddBot(rawMessage.SocketID, groupID)
+			} else {
+				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
+			}
+
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
 			l.groups.QuitGroup(rawMessage.SocketID, false)
@@ -116,4 +127,5 @@ func (l *Lobby) subscribe() {
 	l.leave, _, _ = cbroadcast.Subscribe(BLeaveGroup)
 	l.startMatch, _, _ = cbroadcast.Subscribe(BStartMatch)
 	l.kick, _, _ = cbroadcast.Subscribe(BKickUser)
+	l.addbot, _, _ = cbroadcast.Subscribe(BAddBot)
 }

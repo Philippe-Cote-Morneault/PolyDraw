@@ -1,8 +1,10 @@
 package lobby
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"sync"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
@@ -45,9 +47,9 @@ type responseNewGroup struct {
 
 type groups struct {
 	mutex      sync.Mutex
-	queue      map[uuid.UUID]bool
-	assignment map[uuid.UUID]uuid.UUID //socketID -> groupID
-	groups     map[uuid.UUID][]uuid.UUID
+	queue      map[uuid.UUID]bool        // socketID -> _
+	assignment map[uuid.UUID]uuid.UUID   // socketID -> groupID
+	groups     map[uuid.UUID][]uuid.UUID // groupID -> socketID
 }
 
 func (g *groups) Init() {
@@ -99,14 +101,15 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 			//Make sure that we are the owner
 			currentUserID, _ := auth.GetUserID(socketID)
 			if groupDB.OwnerID == currentUserID {
-				//TODO handle virtual players
 				socketKickUser, err := auth.GetSocketID(userID)
 				if err == nil {
 					g.mutex.Unlock()
 					g.QuitGroup(socketKickUser, true)
 				} else {
 					g.mutex.Unlock()
-					go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user", socketID)
+					if !g.KickVirtualPlayer(userID) {
+						go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user.", socketID)
+					}
 				}
 			} else {
 				g.mutex.Unlock()
@@ -148,6 +151,7 @@ func (g *groups) AddGroup(group *model.Group) {
 	})
 	messenger.RegisterGroup(group)
 	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
+	virtualplayer.AddGroup(group.ID)
 	//TODO only if not solo
 	g.mutex.Lock()
 	for k := range g.queue {
@@ -165,7 +169,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		if groupDB.ID != uuid.Nil {
 
 			//Is the group full ?
-			if groupDB.PlayersMax-len(g.groups[groupID]) > 0 {
+			if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
 				delete(g.queue, socketID)
 				g.assignment[socketID] = groupID
 
@@ -333,6 +337,7 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 	}
 	delete(g.groups, groupDB.ID)
 
+	virtualplayer.RemoveGroup(groupDB.ID)
 	groupDB.Status = 3
 	model.DB().Save(&groupDB)
 }
@@ -354,7 +359,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 		if groupDB.OwnerID == userID {
 			//Check if there are enough people
 			g.mutex.Lock()
-			count := len(g.groups[groupID])
+			count := len(g.groups[groupID]) + groupDB.VirtualPlayers
 			g.mutex.Unlock()
 
 			//TODO make a check for solo
@@ -420,4 +425,119 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 		})
 		socket.SendRawMessageToSocketID(rawMessage, socketID)
 	}
+}
+
+//AddBot used to add a bot to the group
+func (g *groups) AddBot(socketID uuid.UUID, groupID uuid.UUID) {
+	//Check if groups exists
+	groupDB := model.Group{}
+	model.DB().Where("id = ? and status = 0", groupID).First(&groupDB)
+	if groupDB.ID != uuid.Nil {
+		g.mutex.Lock()
+		//Is the group full ?
+		if groupDB.PlayersMax-groupDB.VirtualPlayers-len(g.groups[groupID]) > 0 {
+			g.mutex.Unlock()
+			user := model.User{IsCPU: true}
+
+			username := virtualplayer.AddVirtualPlayer(groupID, user.ID)
+			user.Username = username
+
+			if username != "" {
+				//send response to client
+				message := socket.RawMessage{}
+				message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+					Response: true,
+					Error:    "",
+				})
+
+				if socket.SendRawMessageToSocketID(message, socketID) == nil {
+					//appel au joueur virtuel
+					model.AddUser(&user)
+					model.DB().Model(&groupDB).Association("Users").Append(&model.User{Base: model.Base{ID: user.ID}})
+					groupDB.VirtualPlayers++
+					model.DB().Save(&groupDB)
+					//Send a message to all the member of the group to advertise that a new user is in the group
+					newUser := socket.RawMessage{}
+					newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
+						UserID:   user.ID.String(),
+						Username: username,
+						GroupID:  groupID.String(),
+						IsCPU:    true,
+					})
+
+					g.mutex.Lock()
+					for i := range g.groups[groupID] {
+						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
+					}
+					for k := range g.queue {
+						go socket.SendRawMessageToSocketID(newUser, k)
+					}
+					g.mutex.Unlock()
+					return
+				}
+				return
+			}
+			g.mutex.Unlock()
+			message := socket.RawMessage{}
+			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+				Response: false,
+				Error:    "The group could not be found full in virtual player cache.",
+			})
+			socket.SendRawMessageToSocketID(message, socketID)
+			return
+
+		}
+		g.mutex.Unlock()
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+			Response: false,
+			Error:    "The group is full",
+		})
+		socket.SendRawMessageToSocketID(message, socketID)
+		return
+
+	}
+
+	g.mutex.Unlock()
+
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
+		Response: false,
+		Error:    "The group could not be found in DB.",
+	})
+	socket.SendRawMessageToSocketID(message, socketID)
+	return
+
+}
+
+//KickVirtualPlayer quits the groups the virtual player is currently in.
+func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
+
+	if groupID, username := virtualplayer.KickVirtualPlayer(userID); username != "" && groupID != uuid.Nil {
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseLeaveGroup), responseGroup{
+			UserID:   userID.String(),
+			Username: username,
+			GroupID:  groupID.String(),
+			IsCPU:    true,
+		})
+		g.mutex.Lock()
+		for i := range g.groups[groupID] {
+			go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
+		}
+		for k := range g.queue {
+			go socket.SendRawMessageToSocketID(message, k)
+		}
+		g.mutex.Unlock()
+
+		var groupDB model.Group
+		model.DB().Where("id = ?", groupID).First(&groupDB)
+		model.DB().Model(&groupDB).Association("Users").Delete(&model.User{Base: model.Base{ID: userID}})
+
+		model.DB().Delete(&model.User{Base: model.Base{ID: userID}})
+		groupDB.VirtualPlayers--
+		model.DB().Save(&groupDB)
+		return true
+	}
+	return false
 }

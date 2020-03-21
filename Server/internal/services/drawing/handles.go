@@ -48,20 +48,24 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
 
+	StartDrawing(message.SocketID, uuidBytes, game.Image.SVGFile, 1)
+}
+
+// StartDrawing starts the drawing procedure
+func StartDrawing(socketID uuid.UUID, uuidBytes []byte, SVGFile string, drawingTimeFactor float64) {
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.StartDrawingServer),
 		Length:      uint16(len(uuidBytes)),
 		Bytes:       uuidBytes,
-	}, message.SocketID)
+	}, socketID)
 
-	sendDrawing(message.SocketID, game.Image.SVGFile)
+	sendDrawing(socketID, SVGFile, drawingTimeFactor)
 
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.EndDrawingServer),
 		Length:      uint16(len(uuidBytes)),
 		Bytes:       uuidBytes,
-	}, message.SocketID)
-
+	}, socketID)
 }
 
 func sendPreviewResponse(socketID uuid.UUID, response bool) {
@@ -79,7 +83,7 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 	socket.SendRawMessageToSocketID(packet, socketID)
 }
 
-func sendDrawing(socketID uuid.UUID, svgKey string) {
+func sendDrawing(socketID uuid.UUID, svgKey string, drawingTimeFactor float64) {
 	file, err := datastore.GetFile(svgKey)
 	if err != nil {
 		log.Println(err)
@@ -107,7 +111,7 @@ func sendDrawing(socketID uuid.UUID, svgKey string) {
 		OrderPoints(&stroke.points, path.Order)
 		// log.Printf("[Drawing] Number of points in stroke : %v", len(stroke.points))
 		s := stroke.clone()
-		splitPointsIntoPayloads(&payloads, &stroke.points, &s, path.Time)
+		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(float64(path.Time)*drawingTimeFactor))
 		// payloads = append(payloads, stroke.Marshall())
 	}
 	for _, payload := range payloads {

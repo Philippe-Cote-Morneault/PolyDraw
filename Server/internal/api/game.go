@@ -80,8 +80,8 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(request.Hints) < 3 || len(request.Hints) > 10 {
-		rbody.JSONError(w, http.StatusBadRequest, "The game must have at least 3 hints and not more than 10.")
+	if len(request.Hints) < 1 || len(request.Hints) > 10 {
+		rbody.JSONError(w, http.StatusBadRequest, "The game must have at least 1 hint and not more than 10.")
 		return
 	}
 
