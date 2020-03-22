@@ -31,6 +31,7 @@ type Coop struct {
 	commonScore  score
 
 	remainingTime int
+	lives         int
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -48,6 +49,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.isRunning = true
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
+	c.lives = 3
 	c.commonScore.init()
 
 	c.receivingGuesses = abool.New()
@@ -66,14 +68,18 @@ func (c *Coop) Start() {
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 	c.timeStart = time.Now()
+
+	forceExit := false
 	for c.isRunning {
-		c.GameLoop()
+		forceExit = c.GameLoop()
 	}
-	c.finish()
+	if !forceExit {
+		c.finish()
+	}
 }
 
 //GameLoop is called every new round
-func (c *Coop) GameLoop() {
+func (c *Coop) GameLoop() bool {
 	c.receiving.Lock()
 	c.curDrawer = &c.players[c.orderPos]
 	drawingID := uuid.New()
@@ -83,7 +89,7 @@ func (c *Coop) GameLoop() {
 	if game.ID == uuid.Nil {
 		c.receiving.Unlock()
 		log.Printf("[Match] [Coop] Panic, not able to find a game for the virtual players")
-		return
+		return true
 	}
 	c.currentWord = game.Word
 	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
@@ -129,9 +135,23 @@ func (c *Coop) GameLoop() {
 
 	//End of round
 	c.receiving.Lock()
+	if c.lives <= 0 {
+		c.isRunning = false
+		//Exit the game since all the lives are expired
+		return true
+	}
+
+	if c.realPlayers <= 0 {
+		c.isRunning = false
+		c.Close()
+		return true
+	}
+	//Compute next round
 	c.orderPos++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.receiving.Unlock()
+
+	return false
 }
 
 //Ready client register to make sure they are ready to start the game
@@ -151,7 +171,7 @@ func (c *Coop) Disconnect(socketID uuid.UUID) {
 func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 	c.receiving.Lock()
 	log.Printf("[Match] [Coop] Guessing the word for the socket id %s", socketID)
-	if strings.ToLower(strings.TrimSpace(word)) == c.currentWord && c.currentWord != "" {
+	if strings.ToLower(strings.TrimSpace(word)) == c.currentWord && c.currentWord != "" && c.lives > 0 {
 		//The word was found
 		if c.receivingGuesses.IsSet() {
 			c.waitingResponse.Release(1)
@@ -195,6 +215,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 		}
 	} else {
 		scoreTotal := c.commonScore.total
+		c.lives--
 		c.receiving.Unlock()
 
 		response := socket.RawMessage{}
@@ -203,7 +224,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			NewPoints: 0,
 			Points:    scoreTotal,
 		})
-		socket.SendRawMessageToSocketID(response, socketID)
+		c.pbroadcast(&response)
 	}
 }
 
