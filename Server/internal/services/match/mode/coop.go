@@ -246,8 +246,8 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 	}
 	welcome := ResponseGameInfo{
 		Players:   players,
-		GameType:  2,
-		TimeImage: 0,
+		GameType:  c.info.GameType,
+		TimeImage: c.timeImage,
 		Laps:      0,
 		TotalTime: 0,
 	}
