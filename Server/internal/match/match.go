@@ -25,9 +25,6 @@ type IMatch interface {
 	//TryWord used to handle the requests from the client when they try a word
 	TryWord(socketID uuid.UUID, word string)
 
-	//IsDrawing is called every time one of the player is drawing on the screen. In case of a virtual player id null is used
-	IsDrawing(socketID uuid.UUID)
-
 	//HintRequested is called when a player is requesting a hint
 	HintRequested(socketID uuid.UUID)
 

@@ -149,10 +149,6 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 	panic("implement me")
 }
 
-//IsDrawing method not used by coop
-func (c *Coop) IsDrawing(socketID uuid.UUID) {
-}
-
 //HintRequested for the current virtual player drawing
 func (c *Coop) HintRequested(socketID uuid.UUID) {
 	panic("implement me")

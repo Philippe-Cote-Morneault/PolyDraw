@@ -312,10 +312,6 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 	}
 }
 
-//IsDrawing endpoint called by the drawing service when a user is drawing. Usefull to detect if a user is AFK
-func (f *FFA) IsDrawing(socketID uuid.UUID) {
-}
-
 //HintRequested method used by the user when requesting a hint
 func (f *FFA) HintRequested(socketID uuid.UUID) {
 	//Hint is not available in ffa
