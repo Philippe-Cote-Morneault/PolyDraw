@@ -153,7 +153,6 @@ func (g *groups) AddGroup(group *model.Group) {
 	messenger.RegisterGroup(group)
 	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	virtualplayer.AddGroup(group.ID)
-	//TODO only if not solo
 	g.mutex.Lock()
 	for k := range g.queue {
 		go socket.SendRawMessageToSocketID(message, k)
