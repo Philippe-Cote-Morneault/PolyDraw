@@ -283,7 +283,7 @@ func handleEndGame(groupID uuid.UUID) {
 	RemoveGroup(groupID)
 }
 
-//GetVortualPlayersInfos [Current Thread] returns botInfos from cache (match)
+//GetVirtualPlayersInfo [Current Thread] returns botInfos from cache (match)
 func GetVirtualPlayersInfo(groupID uuid.UUID) []match2.BotInfos {
 	var botsInfos []match2.BotInfos
 	managerInstance.mutex.Lock()
@@ -308,8 +308,9 @@ func GetVirtualPlayersInfo(groupID uuid.UUID) []match2.BotInfos {
 	return botsInfos
 }
 
-func GetHintByBot(hintRequest match2.HintRequested) {
-
+//GetHintByBot returns a boolean if hint is given to user or not
+func GetHintByBot(hintRequest match2.HintRequested) bool {
+	return false
 }
 
 // randomUsername [Current Thread] return random username among players in game (virtualplayer)

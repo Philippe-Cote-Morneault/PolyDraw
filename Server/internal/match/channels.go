@@ -50,6 +50,7 @@ type ChatNew struct {
 	ChatID  uuid.UUID
 }
 
+// BotInfos is used to give information to match service
 type BotInfos struct {
 	BotID    uuid.UUID
 	Username string
