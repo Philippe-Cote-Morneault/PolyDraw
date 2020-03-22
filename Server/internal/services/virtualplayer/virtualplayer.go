@@ -31,13 +31,13 @@ func (v *VirtualPlayer) Init() {
 
 //Start the messenger service
 func (v *VirtualPlayer) Start() {
-	log.Println("[Virtual Player] -> Starting service")
+	log.Println("[VirtualPlayer] -> Starting service")
 	go v.listen()
 }
 
 //Shutdown the messenger service
 func (v *VirtualPlayer) Shutdown() {
-	log.Println("[Virtual Player] -> Closing service")
+	log.Println("[VirtualPlayer] -> Closing service")
 	close(v.shutdown)
 }
 
@@ -49,29 +49,29 @@ func (v *VirtualPlayer) listen() {
 		printManager()
 		select {
 		case data := <-v.gameStarts:
-			log.Println("[Virtual Player] -> Receives game Start message")
+			log.Println("[VirtualPlayer] -> Receives game Start message")
 			match, ok := data.(match.IMatch)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.IMatch struct")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.IMatch struct")
 				break
 			}
 			go handleStartGame(match)
 
 		case data := <-v.gameEnds:
-			log.Println("[Virtual Player] -> Sends game End message")
+			log.Println("[VirtualPlayer] -> Sends game End message")
 			groupID, ok := data.(uuid.UUID)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
 			go handleEndGame(groupID)
 
 		case data := <-v.roundStarts:
-			log.Println("[Virtual Player] -> Receives round Start message")
+			log.Println("[VirtualPlayer] -> Receives round Start message")
 
 			round, ok := data.(match.RoundStart)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.RoundStart struct")
 				break
 			}
 
@@ -80,19 +80,19 @@ func (v *VirtualPlayer) listen() {
 			}
 
 		case data := <-v.roundEnds:
-			log.Println("[Virtual Player] -> Sends round End message")
+			log.Println("[VirtualPlayer] -> Sends round End message")
 			groupID, ok := data.(uuid.UUID)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
 			go handleRoundEnds(groupID)
 
 		case data := <-v.chatNew:
-			log.Println("[Virtual Player] -> Sends chat New message")
+			log.Println("[VirtualPlayer] -> Sends chat New message")
 			chat, ok := data.(match.ChatNew)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.ChatNew struct")
 				break
 			}
 			go registerChannelGroup(chat.MatchID, chat.ChatID)
@@ -122,10 +122,10 @@ func (v *VirtualPlayer) Register() {
 }
 
 func printManager() {
-	log.Printf("[Virtual Player] -> Manager.Bots : %v", managerInstance.Bots)
-	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
-	log.Printf("[Virtual Player] -> Manager.Games : %v", managerInstance.Games)
-	log.Printf("[Virtual Player] -> Manager.Groups : %v", managerInstance.Groups)
-	log.Printf("[Virtual Player] -> Manager.Matches : %v", managerInstance.Matches)
-	log.Printf("[Virtual Player] -> Manager.Hints : %v", managerInstance.Hints)
+	log.Printf("[VirtualPlayer] -> Manager.Bots : %v", managerInstance.Bots)
+	log.Printf("[VirtualPlayer] -> Manager.Channels : %v", managerInstance.Channels)
+	log.Printf("[VirtualPlayer] -> Manager.Games : %v", managerInstance.Games)
+	log.Printf("[VirtualPlayer] -> Manager.Groups : %v", managerInstance.Groups)
+	log.Printf("[VirtualPlayer] -> Manager.Matches : %v", managerInstance.Matches)
+	log.Printf("[VirtualPlayer] -> Manager.Hints : %v", managerInstance.Hints)
 }
