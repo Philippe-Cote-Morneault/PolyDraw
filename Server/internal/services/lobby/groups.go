@@ -364,7 +364,16 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 
 			//TODO make a check for solo
 			if (count >= 2 && groupDB.GameType == 0) ||
-				(groupDB.VirtualPlayers >= 1 && count >= 1 && groupDB.GameType >= 1) {
+				(count >= 1 && groupDB.GameType >= 1) {
+				if groupDB.GameType >= 1 && groupDB.VirtualPlayers < 1 {
+					rawMessage := socket.RawMessage{}
+					rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
+						Response: false,
+						Error:    "There should be one virtual player in the group in order to start the game",
+					})
+					socket.SendRawMessageToSocketID(rawMessage, socketID)
+					return
+				}
 				//We send the response and we pass it along to the match service
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
