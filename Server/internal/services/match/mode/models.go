@@ -81,6 +81,7 @@ type PlayerSync struct {
 	Time     int64
 	GameTime int64
 	LapTotal int
+	Lives    int
 }
 
 //PlayerHasLeft used to notify all the clients that a player has left a game

@@ -261,6 +261,8 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			log.Printf("[Match] [Coop] No more lives in the match. Closing game ,match: %s", c.info.ID)
 			c.finish()
 		}
+
+		c.syncPlayers()
 	}
 }
 
@@ -391,6 +393,7 @@ func (c *Coop) syncPlayers() {
 		}
 	}
 	checkPointTime := c.checkPointTime
+	lives := c.lives
 	c.receiving.Unlock()
 
 	message := socket.RawMessage{}
@@ -402,6 +405,7 @@ func (c *Coop) syncPlayers() {
 		LapTotal: 0,
 		Time:     c.timeImage - imageDuration.Milliseconds(),
 		GameTime: c.gameTime - gameDuration.Milliseconds() + checkPointTime,
+		Lives:    lives,
 	})
 	c.pbroadcast(&message)
 }
