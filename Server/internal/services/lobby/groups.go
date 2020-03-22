@@ -108,7 +108,7 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 					g.QuitGroup(socketKickUser, true)
 				} else {
 					g.mutex.Unlock()
-					if !g.KickVirtualPlayer(userID) {
+					if !g.kickVirtualPlayer(userID) {
 						go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user.", socketID)
 					}
 				}
@@ -511,8 +511,8 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 
 }
 
-//KickVirtualPlayer quits the groups the virtual player is currently in.
-func (g *groups) KickVirtualPlayer(userID uuid.UUID) bool {
+//kickVirtualPlayer quits the groups the virtual player is currently in.
+func (g *groups) kickVirtualPlayer(userID uuid.UUID) bool {
 
 	if groupID, username := virtualplayer.KickVirtualPlayer(userID); username != "" && groupID != uuid.Nil {
 		message := socket.RawMessage{}
