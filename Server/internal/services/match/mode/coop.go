@@ -71,18 +71,18 @@ func (c *Coop) Start() {
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 
-	forceExit := false
+	go func() {
+		time.Sleep(time.Duration(c.gameTime) * time.Millisecond)
+		c.finish()
+	}()
 	c.timeStart = time.Now()
 	for c.isRunning {
-		forceExit = c.GameLoop()
-	}
-	if !forceExit {
-		c.finish()
+		c.GameLoop()
 	}
 }
 
 //GameLoop is called every new round
-func (c *Coop) GameLoop() bool {
+func (c *Coop) GameLoop() {
 	c.receiving.Lock()
 	c.curDrawer = &c.players[c.orderPos]
 	drawingID := uuid.New()
@@ -92,7 +92,7 @@ func (c *Coop) GameLoop() bool {
 	if game.ID == uuid.Nil {
 		c.receiving.Unlock()
 		log.Printf("[Match] [Coop] Panic, not able to find a game for the virtual players")
-		return true
+		return
 	}
 	c.currentWord = game.Word
 	cbroadcast.Broadcast(match2.BRoundStarts, match2.RoundStart{
@@ -142,13 +142,13 @@ func (c *Coop) GameLoop() bool {
 	if c.lives <= 0 {
 		c.isRunning = false
 		//Exit the game since all the lives are expired
-		return true
+		return
 	}
 
 	if c.realPlayers <= 0 {
 		c.isRunning = false
 		c.Close()
-		return true
+		return
 	}
 	//Compute next round
 	c.orderPos++
@@ -157,7 +157,7 @@ func (c *Coop) GameLoop() bool {
 	c.receiving.Unlock()
 
 	time.Sleep(time.Millisecond * 500)
-	return false
+	return
 }
 
 //Ready client register to make sure they are ready to start the game
