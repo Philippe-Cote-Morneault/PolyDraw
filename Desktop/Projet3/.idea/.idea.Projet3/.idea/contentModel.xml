@@ -187,11 +187,11 @@
             <e p="DateConverter.cs" t="Include" />
             <e p="EditingModeConverter.cs" t="Include" />
             <e p="GameModeToImageConverter.cs" t="Include" />
-            <e p="HealthPointConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
+            <e p="ModeToVisibilityConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
             <e p="NumberToPlaceholder.cs" t="Include" />

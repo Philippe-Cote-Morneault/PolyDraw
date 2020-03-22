@@ -38,6 +38,8 @@ namespace ClientLourd.ViewModels
             Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
             BrushSize = 12;
+            NumberOfHints = new List<int>(){1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            SelectedNumberOfHints = 1;
         }
 
 
@@ -162,6 +164,21 @@ namespace ClientLourd.ViewModels
                 }
             } 
         }
+
+        public List<int> NumberOfHints { get; set; }
+        private int _selectedNumberOfHints;
+        public int SelectedNumberOfHints
+        {
+            get => _selectedNumberOfHints;
+            set
+            {
+                _selectedNumberOfHints = value;
+                var tmp = new String[value];
+                _hints.Take(value).ToArray().CopyTo(tmp, 0);
+                Hints = new ObservableCollection<string>(tmp);
+            }
+        } 
+        
         private PotraceMode _selectedMode;
 
 
