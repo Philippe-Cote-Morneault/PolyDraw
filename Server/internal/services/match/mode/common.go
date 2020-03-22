@@ -119,6 +119,7 @@ func (b *base) pbroadcast(message *socket.RawMessage) {
 //Wait for all the clients to be ready
 func (b *base) waitForPlayers() {
 	//TODO include a timeout in case a client drops the connection to avoid a deadlock
+	log.Printf("[Match] Waiting for all the players to register, match: %s", b.info.ID)
 	b.readyMatch.Wait()
 
 	//Send a message to all the clients to advise them that the game is starting
