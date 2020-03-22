@@ -59,6 +59,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.curLap = 1
 	c.checkPointTime = 0
 	c.commonScore.init()
+	c.orderVirtual = make([]*players, info.VirtualPlayers)
 
 	c.receivingGuesses = abool.New()
 	c.funcSyncPlayer = c.syncPlayers
