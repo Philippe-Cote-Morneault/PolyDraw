@@ -44,6 +44,7 @@ type Coop struct {
 	receivingGuesses *abool.AtomicBool
 	nbVirtualPlayers int
 	curLap           int
+	closing          chan struct{}
 }
 
 //Init creates the coop game mode
@@ -60,6 +61,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
+	c.closing = make(chan struct{})
 
 	c.receivingGuesses = abool.New()
 	c.funcSyncPlayer = c.syncPlayers
@@ -79,18 +81,23 @@ func (c *Coop) Start() {
 
 	timeOut := make(chan bool)
 	go func() {
+		defer close(timeOut)
 		//Check if the time has expired
-		expired := false
-		for !expired {
-			time.Sleep(time.Millisecond * 100)
-
-			c.receiving.Lock()
-			gameDuration := time.Now().Sub(c.timeStart).Milliseconds()
-			expired = gameDuration > c.gameTime+c.checkPointTime
-			c.receiving.Unlock()
+		for {
+			select {
+			case <-time.After(time.Millisecond * 100):
+				c.receiving.Lock()
+				gameDuration := time.Now().Sub(c.timeStart).Milliseconds()
+				expired := gameDuration > c.gameTime+c.checkPointTime
+				c.receiving.Unlock()
+				if expired {
+					c.finish()
+					return
+				}
+			case <-c.closing:
+				return
+			}
 		}
-		c.finish()
-		close(timeOut)
 	}()
 
 	c.timeStart = time.Now()
@@ -356,6 +363,7 @@ func (c *Coop) Close() {
 		c.cancelWait()
 		c.isRunning = false
 	}
+	close(c.closing)
 	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
