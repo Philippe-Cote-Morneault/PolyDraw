@@ -31,13 +31,13 @@ func (v *VirtualPlayer) Init() {
 
 //Start the messenger service
 func (v *VirtualPlayer) Start() {
-	log.Println("[Virtual Player] -> Starting service")
+	log.Println("[VirtualPlayer] -> Starting service")
 	go v.listen()
 }
 
 //Shutdown the messenger service
 func (v *VirtualPlayer) Shutdown() {
-	log.Println("[Virtual Player] -> Closing service")
+	log.Println("[VirtualPlayer] -> Closing service")
 	close(v.shutdown)
 }
 
@@ -51,7 +51,7 @@ func (v *VirtualPlayer) listen() {
 			log.Println("[Virtual Player] -> Receives gameStart event")
 			match, ok := data.(match.IMatch)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.IMatch struct")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.IMatch struct")
 				break
 			}
 			go handleStartGame(match)
@@ -61,7 +61,7 @@ func (v *VirtualPlayer) listen() {
 
 			groupID, ok := data.(uuid.UUID)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
 			go handleEndGame(groupID)
@@ -70,7 +70,7 @@ func (v *VirtualPlayer) listen() {
 			log.Println("[Virtual Player] -> Receives roundStarts event")
 			round, ok := data.(match.RoundStart)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.RoundStart struct")
 				break
 			}
 
@@ -82,7 +82,7 @@ func (v *VirtualPlayer) listen() {
 			log.Println("[Virtual Player] -> Receives roundEnds event")
 			groupID, ok := data.(uuid.UUID)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
 			go handleRoundEnds(groupID)
@@ -91,7 +91,7 @@ func (v *VirtualPlayer) listen() {
 			log.Println("[Virtual Player] -> Receives chatNew event")
 			chat, ok := data.(match.ChatNew)
 			if !ok {
-				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.ChatNew struct")
 				break
 			}
 			go registerChannelGroup(chat.MatchID, chat.ChatID)

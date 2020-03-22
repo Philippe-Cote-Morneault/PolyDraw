@@ -80,7 +80,7 @@ func RemoveGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Unlock()
 
 	if !ok {
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting RemoveGroup...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting RemoveGroup...", groupID)
 		return
 	}
 
@@ -104,7 +104,7 @@ func AddVirtualPlayer(groupID, botID uuid.UUID) string {
 
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting AddVirtualPlayer...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting AddVirtualPlayer...", groupID)
 		return ""
 	}
 
@@ -124,7 +124,7 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	bot, botOk := managerInstance.Bots[userID]
 	if !botOk {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find botID : %v. Aborting KickVirtualPlayer...", userID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting KickVirtualPlayer...", userID)
 		return uuid.Nil, ""
 	}
 
@@ -132,13 +132,13 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	group, ok := managerInstance.Groups[groupID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting KickVirtualPlayer...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting KickVirtualPlayer...", groupID)
 		return uuid.Nil, ""
 	}
 
 	if _, ok := group[userID]; !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find bot with id : %v in group : %v. Aborting KickVirtualPlayer...", userID, groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find bot with id : %v in group : %v. Aborting KickVirtualPlayer...", userID, groupID)
 		return uuid.Nil, ""
 	}
 
@@ -151,14 +151,14 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	model.DB().Where("id = ?", groupID).First(&groupDB)
 
 	if groupDB.ID == uuid.Nil {
-		log.Printf("[Virtual Player] -> [Error] Can't find in DB group with id : %v. Aborting KickVirtualPlayer...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find in DB group with id : %v. Aborting KickVirtualPlayer...", groupID)
 		return uuid.Nil, ""
 	}
 
 	model.DB().Where("id = ?", userID).First(&user)
 
 	if user.ID == uuid.Nil {
-		log.Printf("[Virtual Player] -> [Error] Can't find in DB user with id : %v. Aborting KickVirtualPlayer...", userID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find in DB user with id : %v. Aborting KickVirtualPlayer...", userID)
 		return uuid.Nil, ""
 	}
 
@@ -245,20 +245,19 @@ func handleRoundEnds(groupID uuid.UUID) {
 	channelID, ok := managerInstance.Channels[groupID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting handleRoundEnds...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find channelID with groupID : %v. Aborting handleRoundEnds...", groupID)
 		return
 	}
 
 	group, groupOk := managerInstance.Groups[groupID]
 	if !groupOk {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleRoundEnds...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting handleRoundEnds...", groupID)
 		return
 	}
 	//Unlocks mutex at the end
 	makeBotsSpeak("endRound", group, channelID)
 	printManager("handleRoundEnds")
-
 }
 
 // handleEndGame [New Threads] does the endGame routine for a bot in match (match ->)
@@ -267,14 +266,14 @@ func handleEndGame(groupID uuid.UUID) {
 
 	if _, ok := managerInstance.Games[groupID]; !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find game with groupID : %v. Aborting handleEndGame...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find game with groupID : %v. Aborting handleEndGame...", groupID)
 		return
 	}
 	delete(managerInstance.Games, groupID)
 
 	if _, ok := managerInstance.Matches[groupID]; !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find match with groupID : %v. Aborting handleEndGame...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting handleEndGame...", groupID)
 		return
 	}
 
@@ -305,20 +304,20 @@ func GetVirtualPlayersInfo(groupID uuid.UUID) []match2.BotInfos {
 
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting getVirtualPlayersInfo...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting getVirtualPlayersInfo...", groupID)
 		return nil
 	}
 
 	for botID := range bots {
 		botInfos, infoOk := managerInstance.Bots[botID]
 		if !infoOk {
-			log.Printf("[Virtual Player] -> [Error] Can't find botID : %v. Aborting getVirtualPlayersInfo...", botID)
+			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting getVirtualPlayersInfo...", botID)
 			return nil
 		}
 		botsInfos = append(botsInfos, match2.BotInfos{BotID: botInfos.BotID, Username: botInfos.Username})
 	}
 	managerInstance.mutex.Unlock()
-	log.Printf("[Virtual Player] GetVirtualPlayersInfos returns %v", botsInfos)
+	log.Printf("[VirtualPlayer] GetVirtualPlayersInfos returns %v", botsInfos)
 	return botsInfos
 }
 

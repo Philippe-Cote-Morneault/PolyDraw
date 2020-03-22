@@ -46,7 +46,7 @@ type base struct {
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
 
-	b.players = make([]players, len(connections))
+	b.players = make([]players, len(connections)+info.VirtualPlayers)
 	b.connections = make(map[uuid.UUID]*players, len(connections))
 	b.wordHistory = make(map[string]bool)
 
@@ -78,13 +78,14 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 
 	if bots != nil {
 		if len(bots) == info.VirtualPlayers {
-			for _, bot := range bots {
-				b.players = append(b.players, players{
+			offset := len(connections)
+			for i, bot := range bots {
+				b.players[offset+i] = players{
 					socketID: uuid.Nil,
 					userID:   bot.BotID,
 					Username: bot.Username,
 					IsCPU:    true,
-				})
+				}
 			}
 		}
 	}
@@ -118,6 +119,7 @@ func (b *base) pbroadcast(message *socket.RawMessage) {
 //Wait for all the clients to be ready
 func (b *base) waitForPlayers() {
 	//TODO include a timeout in case a client drops the connection to avoid a deadlock
+	log.Printf("[Match] Waiting for all the players to register, match: %s", b.info.ID)
 	b.readyMatch.Wait()
 
 	//Send a message to all the clients to advise them that the game is starting

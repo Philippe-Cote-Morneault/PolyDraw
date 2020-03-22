@@ -59,6 +59,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.curLap = 1
 	c.checkPointTime = 0
 	c.commonScore.init()
+	c.orderVirtual = make([]*players, info.VirtualPlayers)
 
 	c.receivingGuesses = abool.New()
 	c.funcSyncPlayer = c.syncPlayers
@@ -78,7 +79,16 @@ func (c *Coop) Start() {
 
 	timeOut := make(chan bool)
 	go func() {
-		time.Sleep(time.Duration(c.gameTime) * time.Millisecond)
+		//Check if the time has expired
+		expired := false
+		for !expired {
+			time.Sleep(time.Millisecond * 100)
+
+			c.receiving.Lock()
+			gameDuration := time.Now().Sub(c.timeStart).Milliseconds()
+			expired = gameDuration > c.gameTime+c.checkPointTime
+			c.receiving.Unlock()
+		}
 		c.finish()
 		close(timeOut)
 	}()
@@ -186,6 +196,40 @@ func (c *Coop) Ready(socketID uuid.UUID) {
 
 //Disconnect handle disconnect for the coop
 func (c *Coop) Disconnect(socketID uuid.UUID) {
+	//Remove the player
+	c.receiving.Lock()
+	player := c.connections[socketID]
+
+	leaveMessage := socket.RawMessage{}
+	leaveMessage.ParseMessagePack(byte(socket.MessageType.PlayerHasLeftGame), PlayerHasLeft{
+		UserID:   player.userID.String(),
+		Username: player.Username,
+	})
+	c.pbroadcast(&leaveMessage)
+
+	//Remove the player
+	for i := range c.players {
+		if c.players[i].userID == player.userID {
+			c.players[i] = c.players[len(c.players)-1] // Copy last element to index i.
+			c.players[len(c.players)-1] = players{}    // Erase last element (write zero value).
+			c.players = c.players[:len(c.players)-1]   // Truncate slice.
+
+			c.realPlayers--
+			realPlayer := c.realPlayers
+			delete(c.connections, socketID)
+			c.receiving.Unlock()
+
+			if realPlayer <= 0 {
+				//No more players close the game
+				c.Close()
+			}
+			return
+		}
+	}
+	c.receiving.Unlock()
+
+	messenger.HandleQuitGroup(&c.info, socketID)
+	c.syncPlayers()
 }
 
 //TryWord handle when a client wants to try a word
@@ -287,7 +331,7 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 	})
 	if hintSent {
 		c.receiving.Lock()
-		penalty := int64(10)
+		penalty := int64(10 * 1000)
 		c.checkPointTime -= penalty
 		gameDuration := time.Now().Sub(c.timeStart)
 		remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
@@ -306,6 +350,16 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 
 //Close method used to force close the current game
 func (c *Coop) Close() {
+	c.receiving.Lock()
+	log.Printf("[Match] [Coop] Force match shutdown, the game will finish the last lap")
+	if c.cancelWait != nil {
+		c.cancelWait()
+		c.isRunning = false
+	}
+	c.receiving.Unlock()
+
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 }
 
 //GetConnections method used to return all the connections of the players
@@ -340,7 +394,7 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 		GameType:  c.info.GameType,
 		TimeImage: c.timeImage,
 		Laps:      0,
-		TotalTime: 0,
+		TotalTime: c.gameTime,
 	}
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
