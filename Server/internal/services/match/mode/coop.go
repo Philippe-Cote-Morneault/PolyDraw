@@ -71,14 +71,18 @@ func (c *Coop) Start() {
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 
+	timeOut := make(chan bool)
 	go func() {
 		time.Sleep(time.Duration(c.gameTime) * time.Millisecond)
-		c.finish()
+		close(timeOut)
 	}()
+
 	c.timeStart = time.Now()
 	for c.isRunning {
 		c.GameLoop()
 	}
+	<-timeOut
+	c.finish()
 }
 
 //GameLoop is called every new round
