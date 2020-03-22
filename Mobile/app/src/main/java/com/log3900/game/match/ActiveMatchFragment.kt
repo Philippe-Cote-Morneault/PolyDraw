@@ -218,7 +218,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         scaleDown.start()
     }
 
-    override fun test1() {
+    override fun animateWordGuessedWrong() {
         val animator1 = ObjectAnimator.ofFloat(guessingView!!, "translationX", -10f)
         animator1.duration = 100
         animator1.repeatCount = 1
@@ -243,6 +243,31 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         anim.repeatMode = ObjectAnimator.REVERSE
         animatorSet.start()
         anim.start()
+    }
+
+    override fun animateWordGuessedRight() {
+        guessingView?.getEditTexts()?.forEachIndexed { index, editText ->
+            val scaleUpAnimator = ObjectAnimator.ofPropertyValuesHolder(
+                editText,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1.5f),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.5f)
+            )
+            scaleUpAnimator.duration = 200
+            scaleUpAnimator.repeatCount = 1
+            scaleUpAnimator.repeatMode = ObjectAnimator.REVERSE
+            scaleUpAnimator.startDelay = (index * 200).toLong()
+
+            val colorChangeAnimator = ValueAnimator()
+            colorChangeAnimator.setIntValues(Color.BLACK, Color.parseColor("#FF008000"))
+            colorChangeAnimator.setEvaluator(ArgbEvaluator())
+            colorChangeAnimator.addUpdateListener { valueAnimator -> editText.setTextColor(valueAnimator.animatedValue as Int) }
+            colorChangeAnimator.duration = 200
+            colorChangeAnimator.repeatCount = 1
+            colorChangeAnimator.repeatMode = ObjectAnimator.REVERSE
+            colorChangeAnimator.startDelay = (index * 200).toLong()
+            colorChangeAnimator.start()
+            scaleUpAnimator.start()
+        }
     }
 
     override fun onDestroy() {

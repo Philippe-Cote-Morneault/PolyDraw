@@ -83,11 +83,12 @@ class ActiveMatchPresenter : Presenter {
     private fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
-        activeMatchView?.showConfetti()
+        activeMatchView?.animateWordGuessedRight()
+        //activeMatchView?.showConfetti()
     }
 
     private fun onGuessedWordWrong() {
-        activeMatchView?.test1()
+        activeMatchView?.animateWordGuessedWrong()
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
     }
 

@@ -59,6 +59,10 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
         return text
     }
 
+    fun getEditTexts(): ArrayList<EditText> {
+        return letterEditTexts
+    }
+
     private fun generateEditText(): EditText {
         val editText = EditText(context)
         editText.setEms(1)
