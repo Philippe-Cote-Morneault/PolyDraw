@@ -247,6 +247,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 	} else {
 		scoreTotal := c.commonScore.total
 		c.lives--
+		lives := c.lives
 		c.receiving.Unlock()
 
 		response := socket.RawMessage{}
@@ -256,6 +257,10 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			Points:    scoreTotal,
 		})
 		c.pbroadcast(&response)
+		if lives <= 0 {
+			log.Printf("[Match] [Coop] No more lives in the match. Closing game ,match: %s", c.info.ID)
+			c.finish()
+		}
 	}
 }
 
