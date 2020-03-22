@@ -60,9 +60,9 @@ func generateVirtualPlayer() *virtualPlayerInfos {
 }
 
 func (v *virtualPlayerInfos) speak(channelID uuid.UUID, interactionType string) {
-	log.Println("[Virtual Player] -> speak()")
+	log.Println("[VirtualPlayer] -> speak()")
 	interaction := v.getInteraction(interactionType)
-	log.Printf("[Virtual Player] -> getInteraction() returns = %v", interaction)
+	log.Printf("[VirtualPlayer] -> getInteraction() returns = %v", interaction)
 
 	cbroadcast.Broadcast(messenger.BBotMessage, messenger.MessageReceived{
 		ChannelID: channelID.String(),
@@ -110,7 +110,7 @@ func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
 		return strings.ReplaceAll(lines.Supportive[rand.Intn(3)], "{}", randomUsername(v.GroupID))
 
 	default:
-		log.Println("[Virtual Player] -> [Error] Bot's personnality doesn't exists. Aborting interaction...")
+		log.Println("[VirtualPlayer] -> [Error] Bot's personnality doesn't exists. Aborting interaction...")
 		return ""
 	}
 }
