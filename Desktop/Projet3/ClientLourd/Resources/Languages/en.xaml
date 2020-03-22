@@ -57,6 +57,7 @@
     <!-- Waiting room -->
     <system:String x:Key="AddVirtualPlayer">Add virtual player</system:String>
     <system:String x:Key="RemovePlayer">Remove player</system:String>
+    <system:String x:Key="WaitingRoom">Waiting room</system:String>
 
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Create a new lobby</system:String>
