@@ -1,12 +1,13 @@
 package mode
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"log"
 	"strings"
 	"sync"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
@@ -326,7 +327,7 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 	player := c.connections[socketID]
 	c.receiving.Unlock()
 
-	hintSent := virtualplayer.GetHintByBot(match2.HintRequested{
+	hintSent := virtualplayer.GetHintByBot(&match2.HintRequested{
 		GameType: c.info.GameType,
 		MatchID:  c.info.ID,
 		SocketID: socketID,
