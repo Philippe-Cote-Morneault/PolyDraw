@@ -359,11 +359,12 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 		if groupDB.OwnerID == userID {
 			//Check if there are enough people
 			g.mutex.Lock()
-			count := len(g.groups[groupID]) + groupDB.VirtualPlayers
+			count := len(g.groups[groupID])
 			g.mutex.Unlock()
 
 			//TODO make a check for solo
-			if count > 1 {
+			if (count >= 2 && groupDB.GameType == 0) ||
+				(groupDB.VirtualPlayers >= 1 && count >= 1 && groupDB.GameType >= 1) {
 				//We send the response and we pass it along to the match service
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
