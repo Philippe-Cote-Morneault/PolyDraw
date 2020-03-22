@@ -30,11 +30,12 @@ type Coop struct {
 	cancelWait   func()
 	commonScore  score
 
-	remainingTime int
-	lives         int
+	gameTime int
+	lives    int
 
 	receiving        sync.Mutex
 	timeStart        time.Time
+	timeStartImage   time.Time
 	waitingResponse  *semaphore.Weighted
 	receivingGuesses *abool.AtomicBool
 	nbVirtualPlayers int
@@ -117,6 +118,7 @@ func (c *Coop) GameLoop() bool {
 	})
 
 	c.pbroadcast(&message)
+	c.timeStartImage = time.Now()
 	log.Printf("[Match] [Coop] -> Word sent waiting for guesses, Match: %s", c.info.ID)
 	c.receiving.Unlock()
 
@@ -320,15 +322,15 @@ func (c *Coop) computeDifficulty() {
 	//Determine the time based of the difficulty
 	switch c.info.Difficulty {
 	case 0:
-		c.remainingTime = 300
+		c.gameTime = 300
 	case 1:
-		c.remainingTime = 240
+		c.gameTime = 240
 	case 2:
-		c.remainingTime = 180
+		c.gameTime = 180
 	case 3:
-		c.remainingTime = 120
+		c.gameTime = 120
 	}
-	c.remainingTime *= 1000
+	c.gameTime *= 1000
 }
 
 //syncPlayers used to send all the sync to all the players
@@ -348,12 +350,13 @@ func (c *Coop) syncPlayers() {
 
 	message := socket.RawMessage{}
 	imageDuration := time.Now().Sub(c.timeStartImage)
+	gameDuration := time.Now().Sub(c.timeStart)
 	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
 		Players:  players,
 		Laps:     c.curLap,
 		LapTotal: 0,
 		Time:     c.timeImage - imageDuration.Milliseconds(),
-		GameTime: 0,
+		GameTime: c.gameTime - gameDuration.Milliseconds(),
 	})
 	c.pbroadcast(&message)
 }
