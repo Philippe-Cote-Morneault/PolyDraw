@@ -46,7 +46,6 @@ func (v *VirtualPlayer) listen() {
 
 	//Message viewer
 	for {
-		printManager()
 		select {
 		case data := <-v.gameStarts:
 			log.Println("[Virtual Player] -> Receives game Start message")
@@ -121,7 +120,8 @@ func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BChatNew, match.BSize)
 }
 
-func printManager() {
+func printManager(fromWho string) {
+	log.Println("[Virtual Player] -> {PrintManager} %v: ", fromWho)
 	log.Printf("[Virtual Player] -> Manager.Bots : %v", managerInstance.Bots)
 	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
 	log.Printf("[Virtual Player] -> Manager.Games : %v", managerInstance.Games)
