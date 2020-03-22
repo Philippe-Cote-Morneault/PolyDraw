@@ -220,8 +220,9 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 
 	//Check if drawing
 	if f.curDrawer != nil && f.curDrawer.socketID == socketID {
-		f.cancelWait() //We cancel the wait and finish the drawing for the client to see
-
+		if f.cancelWait != nil {
+			f.cancelWait() //We cancel the wait and finish the drawing for the client to see
+		}
 		//Finish the end of the drawing for the clients
 		bytes, _ := uuid.Nil.MarshalBinary()
 		endDrawing := socket.RawMessage{
