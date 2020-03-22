@@ -79,7 +79,7 @@ func getLines(interactionType string) *lines {
 		return &iStartGameLines
 	case "endRound":
 		return &iEndRoundLines
-	case "hint":
+	case "hintRequested":
 		return &iHintLines
 	default:
 		if rand.Intn(2) == 1 {
