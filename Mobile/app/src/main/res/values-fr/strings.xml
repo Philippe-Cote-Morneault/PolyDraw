@@ -141,4 +141,7 @@
     <string name="french">Français</string>
     <string name="english">Anglais</string>
     <string name="dialog_create_match_language_title">Langue</string>
+    <string name="language">Langue</string>
+    <string name="difficulty">Difficulté</string>
+    <string name="rounds">Rondes</string>
 </resources>

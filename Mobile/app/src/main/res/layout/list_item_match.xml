@@ -24,34 +24,54 @@
         app:layout_constraintStart_toEndOf="@id/list_item_match_image_view_match_type_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.2"/>
+        app:layout_constraintWidth_percent="0.15"/>
 
     <TextView
-        android:id="@+id/list_item_match_text_view_match_name"
+        android:id="@+id/list_item_match_text_view_match_language"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="This is a game title"
         app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_mode"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.3"/>
+        app:layout_constraintWidth_percent="0.15"/>
+
+    <TextView
+        android:id="@+id/list_item_match_text_view_match_difficulty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="This is a game title"
+        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_language"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.15"/>
 
     <TextView
         android:id="@+id/list_item_match_text_view_match_host"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Philippe"
-        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_name"
+        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_difficulty"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent="0.2"/>
+        app:layout_constraintWidth_percent="0.15"/>
+
+    <TextView
+        android:id="@+id/list_item_match_text_view_match_rounds"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Philippe"
+        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_host"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.15"/>
 
     <TextView
         android:id="@+id/list_item_match_text_view_match_player_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="1/8"
-        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_host"
+        app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_rounds"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintWidth_percent="0.1"/>
