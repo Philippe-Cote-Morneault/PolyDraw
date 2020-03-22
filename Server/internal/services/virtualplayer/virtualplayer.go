@@ -1,7 +1,6 @@
 package virtualplayer
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"log"
 
 	"github.com/google/uuid"
@@ -17,7 +16,6 @@ type VirtualPlayer struct {
 	gameEnds    cbroadcast.Channel
 	roundStarts cbroadcast.Channel
 	roundEnds   cbroadcast.Channel
-	askHint     cbroadcast.Channel
 	chatNew     cbroadcast.Channel
 
 	shutdown chan bool
@@ -48,6 +46,7 @@ func (v *VirtualPlayer) listen() {
 
 	//Message viewer
 	for {
+		printManager()
 		select {
 		case data := <-v.gameStarts:
 			log.Println("[Virtual Player] -> Receives game Start message")
@@ -56,7 +55,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.IMatch struct")
 				break
 			}
-			handleStartGame(match)
+			go handleStartGame(match)
 
 		case data := <-v.gameEnds:
 			log.Println("[Virtual Player] -> Sends game End message")
@@ -65,7 +64,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
 				break
 			}
-			handleEndGame(groupID)
+			go handleEndGame(groupID)
 
 		case data := <-v.roundStarts:
 			log.Println("[Virtual Player] -> Receives round Start message")
@@ -87,7 +86,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
 				break
 			}
-			handleRoundEnds(groupID)
+			go handleRoundEnds(groupID)
 
 		case data := <-v.chatNew:
 			log.Println("[Virtual Player] -> Sends chat New message")
@@ -96,12 +95,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
 				break
 			}
-			registerChannelGroup(chat.ChatID, chat.MatchID)
-
-		case data := <-v.askHint:
-			if message, ok := data.(socket.RawMessageReceived); ok {
-				log.Printf("[Match] -> received HINT request socket id: %v", message.SocketID)
-			}
+			go registerChannelGroup(chat.MatchID, chat.ChatID)
 
 		case <-v.shutdown:
 			return
@@ -115,7 +109,6 @@ func (v *VirtualPlayer) subscribe() {
 	v.gameEnds, _, _ = cbroadcast.Subscribe(match.BGameEnds)
 	v.roundStarts, _, _ = cbroadcast.Subscribe(match.BRoundStarts)
 	v.roundEnds, _, _ = cbroadcast.Subscribe(match.BRoundEnds)
-	v.askHint, _, _ = cbroadcast.Subscribe(match.BAskHint)
 	v.chatNew, _, _ = cbroadcast.Subscribe(match.BChatNew)
 }
 
@@ -125,6 +118,14 @@ func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BGameEnds, match.BSize)
 	cbroadcast.Register(match.BRoundStarts, match.BSize)
 	cbroadcast.Register(match.BRoundEnds, match.BSize)
-	cbroadcast.Register(match.BAskHint, match.BSize)
 	cbroadcast.Register(match.BChatNew, match.BSize)
+}
+
+func printManager() {
+	log.Printf("[Virtual Player] -> Manager.Bots : %v", managerInstance.Bots)
+	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
+	log.Printf("[Virtual Player] -> Manager.Games : %v", managerInstance.Games)
+	log.Printf("[Virtual Player] -> Manager.Groups : %v", managerInstance.Groups)
+	log.Printf("[Virtual Player] -> Manager.Matches : %v", managerInstance.Matches)
+	log.Printf("[Virtual Player] -> Manager.Hints : %v", managerInstance.Hints)
 }

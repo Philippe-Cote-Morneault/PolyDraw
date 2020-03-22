@@ -3,6 +3,7 @@ package virtualplayer
 import (
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
@@ -59,12 +60,15 @@ func generateVirtualPlayer() *virtualPlayerInfos {
 }
 
 func (v *virtualPlayerInfos) speak(channelID uuid.UUID, interactionType string) {
+	log.Println("[Virtual Player] -> speak()")
+	interaction := v.getInteraction(interactionType)
+	log.Printf("[Virtual Player] -> getInteraction() returns = %v", interaction)
 
 	cbroadcast.Broadcast(messenger.BBotMessage, messenger.MessageReceived{
 		ChannelID: channelID.String(),
 		UserID:    v.BotID.String(),
 		Username:  v.Username,
-		Message:   v.getInteraction(interactionType),
+		Message:   interaction,
 		Timestamp: time.Now().Unix(),
 	})
 }
@@ -91,19 +95,19 @@ func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
 
 	switch v.Personality {
 	case "angry":
-		return lines.Angry[rand.Intn(3)]
+		return strings.ReplaceAll(lines.Angry[rand.Intn(3)], "{}", randomUsername(v.GroupID))
 
 	case "funny":
-		return lines.Funny[rand.Intn(3)]
+		return strings.ReplaceAll(lines.Funny[rand.Intn(3)], "{}", randomUsername(v.GroupID))
 
 	case "mean":
-		return lines.Mean[rand.Intn(3)]
+		return strings.ReplaceAll(lines.Mean[rand.Intn(3)], "{}", randomUsername(v.GroupID))
 
 	case "nice":
-		return lines.Nice[rand.Intn(3)]
+		return strings.ReplaceAll(lines.Nice[rand.Intn(3)], "{}", randomUsername(v.GroupID))
 
 	case "supportive":
-		return lines.Supportive[rand.Intn(3)]
+		return strings.ReplaceAll(lines.Supportive[rand.Intn(3)], "{}", randomUsername(v.GroupID))
 
 	default:
 		log.Println("[Virtual Player] -> [Error] Bot's personnality doesn't exists. Aborting interaction...")

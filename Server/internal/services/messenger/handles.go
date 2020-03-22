@@ -57,26 +57,26 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 func (h *handler) deleteGroupChannel(group *model.Group) {
 	var channel model.ChatChannel
 	model.DB().Where("group_id = ?", group.ID).First(&channel)
+	if channel.ID != uuid.Nil {
+		//Create a destroy message
+		destroyMessage := ChannelDestroyResponse{
+			UserID:    uuid.Nil.String(),
+			Username:  "host",
+			ChannelID: channel.ID.String(),
+			Timestamp: time.Now().Unix(),
+		}
+		rawMessage := socket.RawMessage{}
+		if rawMessage.ParseMessagePack(byte(socket.MessageType.UserDestroyedChannel), destroyMessage) != nil {
+			log.Printf("[Messenger] -> Destroy: Can't pack message. Dropping packet!")
+			return
+		}
 
-	//Create a destroy message
-	destroyMessage := ChannelDestroyResponse{
-		UserID:    uuid.Nil.String(),
-		Username:  "host",
-		ChannelID: channel.ID.String(),
-		Timestamp: time.Now().Unix(),
+		h.broadcast(channel.ID, rawMessage)
+
+		delete(h.channelsConnections, channel.ID)
+		model.DB().Delete(&channel)
 	}
-	rawMessage := socket.RawMessage{}
-	if rawMessage.ParseMessagePack(byte(socket.MessageType.UserDestroyedChannel), destroyMessage) != nil {
-		log.Printf("[Messenger] -> Destroy: Can't pack message. Dropping packet!")
-		return
-	}
 
-	h.broadcast(channel.ID, rawMessage)
-
-	delete(h.channelsConnections, channel.ID)
-	model.DB().Delete(&channel)
-
-	return
 }
 
 func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {

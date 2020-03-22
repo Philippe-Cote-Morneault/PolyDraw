@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
+
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 	"github.com/tevino/abool"
@@ -43,6 +45,7 @@ type base struct {
 }
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
+
 	b.players = make([]players, len(connections))
 	b.connections = make(map[uuid.UUID]*players, len(connections))
 	b.wordHistory = make(map[string]bool)
@@ -65,34 +68,49 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 				socketID: socketID,
 				userID:   userID,
 				Username: user.Username,
-				IsCPU:    false, //TODO replace this with virtual players
+				IsCPU:    false,
 			}
 			b.connections[socketID] = &b.players[i]
 		}
 	}
 
+	bots := virtualplayer.GetVirtualPlayersInfo(info.ID)
+
+	if bots != nil {
+		if len(bots) == info.VirtualPlayers {
+			for _, bot := range bots {
+				b.players = append(b.players, players{
+					socketID: uuid.Nil,
+					userID:   bot.BotID,
+					Username: bot.Username,
+					IsCPU:    true,
+				})
+			}
+		}
+	}
+
 	b.info = info
-	b.readyMatch.Add(len(b.players))
+	b.readyMatch.Add(len(b.connections))
 
 	b.readyOnce = make(map[uuid.UUID]bool)
-	for i := range b.players {
-		b.readyOnce[b.players[i].socketID] = false
+	for i := range b.connections {
+		b.readyOnce[b.connections[i].socketID] = false
 	}
 	log.Printf("[Match] -> Init match %s", b.info.ID)
 }
 
 //broadcast messages to all users not in parallel
 func (b *base) broadcast(message *socket.RawMessage) {
-	for i := range b.players {
-		socket.SendRawMessageToSocketID(*message, b.players[i].socketID)
+	for i := range b.connections {
+		socket.SendRawMessageToSocketID(*message, b.connections[i].socketID)
 	}
 	log.Printf("[Match] -> Message %d broadcasted, Match: %s", message.MessageType, b.info.ID)
 }
 
 //pbroadcast use to broadcast to all users in parallel
 func (b *base) pbroadcast(message *socket.RawMessage) {
-	for i := range b.players {
-		go socket.SendRawMessageToSocketID(*message, b.players[i].socketID)
+	for i := range b.connections {
+		go socket.SendRawMessageToSocketID(*message, b.connections[i].socketID)
 	}
 	log.Printf("[Match] -> Message %d broadcasted in parallel, Match: %s", message.MessageType, b.info.ID)
 }
