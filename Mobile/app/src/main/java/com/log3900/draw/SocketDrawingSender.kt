@@ -7,14 +7,17 @@ import com.log3900.utils.format.UUIDUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 class SocketDrawingSender() {
-    private val SEND_INTERVAL_MS = 40L
+    private val SEND_INTERVAL_MS = 20L
     private val SEND_DELAY_MS = 0L
 
+    private val sendMutex = Mutex()
     private val socketService = SocketService.instance!!
     private lateinit var drawingID: UUID
     var isListening = true
@@ -71,9 +74,11 @@ class SocketDrawingSender() {
 
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
-                val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
+                sendMutex.withLock {
+                    val strokeData = StrokeToBytesConverter.packStrokeInfo(strokeInfo)
 //                receiver!!.drawStrokeData(strokeData)   // TODO: Switch back
-                socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+                    socketService.sendMessage(Event.STROKE_DATA_CLIENT, strokeData)
+                }
             }
         }
     }

@@ -63,8 +63,8 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     fun drawStrokeData(data: ByteArray) {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
-                val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
                 strokeMutex.withLock {
+                    val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
                     drawStrokes(strokeInfo)
                 }
             }
@@ -76,19 +76,21 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         if (points.isEmpty())
             return
 
-//        Log.d("DRAW_VIEW", "Received points: ${points}")
+        Log.d("DRAW_VIEW", "Received ${points.size} points")
 //        Log.d("DRAW_VIEW", "Erase is ${paintOptions.drawMode == DrawMode.ERASE}")
         drawView.setOptions(paintOptions)
 
 //        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
         val time = 0L  // TODO: Validate delay
+//        val time = 1000L  // TODO: Validate delay
         drawView.drawStart(points.first(), strokeID)
         delay(time)
 
         for (point in points.drop(1)) {
             drawView.drawMove(point)
-            delay(time)
+            delay(time/50)
         }
+        delay(time)
         drawView.drawEnd()
     }
 

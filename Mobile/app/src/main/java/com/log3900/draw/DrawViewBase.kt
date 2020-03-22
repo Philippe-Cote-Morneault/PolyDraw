@@ -272,7 +272,7 @@ class DrawViewBase @JvmOverloads constructor(
                 drawStart(DrawPoint(x, y))
             }
             MotionEvent.ACTION_MOVE -> {
-                interpolateDraw(x.toInt(), y.toInt())
+//                interpolateDraw(x.toInt(), y.toInt())
                 drawMove(DrawPoint(x, y))
             }
             MotionEvent.ACTION_UP -> drawEnd()
