@@ -307,10 +307,19 @@ func (c *Coop) GetPlayers() []match2.Player {
 
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
+	defer c.receiving.Unlock()
+	c.receiving.Lock()
 	if c.cancelWait != nil {
 		c.cancelWait()
 	}
+
 	//Send the time's up message
+	timeUpMessage := socket.RawMessage{}
+	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+		Type: 2,
+		Word: c.currentWord,
+	})
+	c.pbroadcast(&timeUpMessage)
 
 }
 
