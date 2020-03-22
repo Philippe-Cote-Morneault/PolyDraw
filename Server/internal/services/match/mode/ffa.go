@@ -8,10 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
-
-	"github.com/jinzhu/gorm"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
