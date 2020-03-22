@@ -156,6 +156,7 @@ func (c *Coop) GameLoop() bool {
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.receiving.Unlock()
 
+	time.Sleep(time.Millisecond * 500)
 	return false
 }
 
