@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
@@ -41,6 +42,7 @@ func main() {
 	graceful.Register(model.DBClose, "Database")
 
 	handleGraceful := graceful.ListenSIG()
+	cbroadcast.NonBlockingBuffer(lockingBroadcast)
 
 	registerServices()
 
@@ -78,4 +80,8 @@ func registerServices() {
 	service.Add(&lobby.Lobby{})
 	service.Add(&match.Service{})
 	service.Add(&virtualplayer.VirtualPlayer{})
+}
+
+func lockingBroadcast(name string) {
+	log.Printf("[DeadlockWatchdog] -> Channel %s is currently blocked", name)
 }
