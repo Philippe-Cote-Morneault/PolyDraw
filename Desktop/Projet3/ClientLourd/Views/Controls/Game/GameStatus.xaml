@@ -29,6 +29,8 @@
     <Grid Margin="10">
         <materialDesign:Card>
             <StackPanel>
+                
+                
                 <ItemsControl AlternationCount="{Binding Guess.Length}" x:Name="List" ItemsSource="{Binding Players}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -48,7 +50,8 @@
                                                Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}"
                                                 
                                          FontSize="24" Margin="5"
-                                         /> 
+                                         />
+                                   
                                     <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}">
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">

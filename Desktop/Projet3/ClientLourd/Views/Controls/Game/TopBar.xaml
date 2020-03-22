@@ -79,17 +79,42 @@
                 From="0" To="1" Duration="0:0:1" />
 
         </Storyboard>
-        
+
+        <Storyboard x:Key="PointsGainedAnimations" >
+            
+            <DoubleAnimation 
+                Storyboard.TargetName="PointsGained"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetName="PointsGained"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="2.5" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetName="PointsGained"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="2.5" Duration="0:0:2" />
+        </Storyboard>
+
     </UserControl.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
+            
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-
+        <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA}">
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20">Team score: </TextBlock>
+            <TextBlock VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20">1000</TextBlock>
+            <TextBlock Name="PointsGained" VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20">+1000</TextBlock>
+        </StackPanel>
+        
         <!--TODO: Change to Solo|Coop-->
         <StackPanel Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|FFA}"  VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
+            
             <materialDesign:PackIcon Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>
                     <TransformGroup>
