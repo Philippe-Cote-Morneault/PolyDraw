@@ -18,6 +18,12 @@ class GroupAdapter {
             matchType = MatchMode.values()[groupJson.get("GameType").asInt]
         }
 
+        var rounds: Int? = null
+
+        if (groupJson.has("NbRound")) {
+            rounds = groupJson.get("NbRound").asInt
+        }
+
         var language: Language? = null
 
         if (groupJson.has("Language")) {
@@ -30,6 +36,7 @@ class GroupAdapter {
             UUID.fromString(groupJson.getAsJsonPrimitive("ID")!!.asString),
             groupJson.getAsJsonPrimitive("GroupName")!!.asString,
             groupJson.getAsJsonPrimitive("PlayersMax")!!.asInt,
+            rounds,
             matchType,
             Difficulty.values()[groupJson.getAsJsonPrimitive("Difficulty")!!.asInt],
             UUID.fromString(groupJson.getAsJsonPrimitive("OwnerID").asString),
