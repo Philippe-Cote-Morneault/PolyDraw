@@ -161,9 +161,27 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showCanvas() {
-        YoYo.with(Techniques.RotateInDownLeft)
-            .duration(1000)
-            .playOn(drawFragment.view)
+        if (drawFragment.view!!.alpha == 1f) {
+            return
+        }
+
+        drawFragment.view!!.translationX = 0f
+        drawFragment.view!!.translationY = 0f
+        drawFragment.view!!.rotation = 0f
+        drawFragment.view!!.rotationX = 0f
+        drawFragment.view!!.rotationY = 0f
+        drawFragment.view!!.pivotX = 0f
+        drawFragment.view!!.pivotY = 0f
+
+        var anim1 = ObjectAnimator.ofPropertyValuesHolder(
+            drawFragment.view,
+            PropertyValuesHolder.ofFloat(View.ROTATION, 180f, 0f),
+            PropertyValuesHolder.ofFloat(View.TRANSLATION_X, -drawFragment.view!!.width.toFloat(), 0f),
+            PropertyValuesHolder.ofFloat(View.ALPHA,0f, 1f)
+        )
+        anim1.duration = 2000
+
+        anim1.start()
     }
 
     override fun showConfetti() {
