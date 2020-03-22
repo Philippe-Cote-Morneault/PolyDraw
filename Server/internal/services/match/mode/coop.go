@@ -1,6 +1,11 @@
 package mode
 
 import (
+	"log"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/tevino/abool"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
@@ -8,10 +13,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"golang.org/x/sync/semaphore"
-	"log"
-	"strings"
-	"sync"
-	"time"
 )
 
 const numberOfChances = 3
@@ -30,8 +31,9 @@ type Coop struct {
 	cancelWait   func()
 	commonScore  score
 
-	gameTime int64
-	lives    int
+	gameTime       int64
+	checkPointTime int64
+	lives          int
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -53,6 +55,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.nbWaitingResponses = 1
 	c.lives = 3
 	c.curLap = 1
+	c.checkPointTime = 0
 	c.commonScore.init()
 
 	c.receivingGuesses = abool.New()
@@ -188,6 +191,13 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 	if strings.ToLower(strings.TrimSpace(word)) == c.currentWord && c.currentWord != "" && c.lives > 0 {
 		//The word was found
 		if c.receivingGuesses.IsSet() {
+			imageDuration := time.Now().Sub(c.timeStartImage)
+			bonus := c.timeImage - imageDuration.Milliseconds()
+
+			c.checkPointTime += bonus
+			gameDuration := time.Now().Sub(c.timeStart)
+			remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
+
 			c.waitingResponse.Release(1)
 			player := c.connections[socketID]
 
@@ -214,6 +224,13 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				NewPoints: pointsForWord,
 			})
 			c.pbroadcast(&broadcast)
+
+			checkpoint := socket.RawMessage{}
+			checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
+				TotalTime: remaining,
+				Bonus:     bonus,
+			})
+			c.pbroadcast(&checkpoint)
 		} else {
 			log.Printf("[Match] [Coop] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			scoreTotal := c.commonScore.total
@@ -368,6 +385,7 @@ func (c *Coop) syncPlayers() {
 			IsCPU:    player.IsCPU,
 		}
 	}
+	checkPointTime := c.checkPointTime
 	c.receiving.Unlock()
 
 	message := socket.RawMessage{}
@@ -378,7 +396,7 @@ func (c *Coop) syncPlayers() {
 		Laps:     c.curLap,
 		LapTotal: 0,
 		Time:     c.timeImage - imageDuration.Milliseconds(),
-		GameTime: c.gameTime - gameDuration.Milliseconds(),
+		GameTime: c.gameTime - gameDuration.Milliseconds() + checkPointTime,
 	})
 	c.pbroadcast(&message)
 }

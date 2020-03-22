@@ -101,3 +101,9 @@ type RoundSummary struct {
 	Achievements []AchievementData
 	Word         string
 }
+
+//Checkpoint used to represent a checkpoint
+type Checkpoint struct {
+	TotalTime int64
+	Bonus     int64
+}

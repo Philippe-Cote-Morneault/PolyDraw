@@ -64,6 +64,7 @@ type messageType struct {
 	PlayerHasLeftGame        int
 	RoundEndStatus           int
 	UsernameChange           int
+	Checkpoint               int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -116,6 +117,7 @@ var MessageType = &messageType{
 	RequestGuessWordMatch:    74,
 	ResponseGuess:            75,
 	WordFound:                77,
+	Checkpoint:               79,
 	GameEnded:                81,
 	RequestHintMatch:         82,
 	ResponseHintMatch:        83,
