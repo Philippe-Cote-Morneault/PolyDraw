@@ -1,7 +1,6 @@
 package virtualplayer
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"log"
 
 	"github.com/google/uuid"
@@ -17,7 +16,6 @@ type VirtualPlayer struct {
 	gameEnds    cbroadcast.Channel
 	roundStarts cbroadcast.Channel
 	roundEnds   cbroadcast.Channel
-	askHint     cbroadcast.Channel
 	chatNew     cbroadcast.Channel
 
 	shutdown chan bool
@@ -99,11 +97,6 @@ func (v *VirtualPlayer) listen() {
 			}
 			go registerChannelGroup(chat.MatchID, chat.ChatID)
 
-		case data := <-v.askHint:
-			if message, ok := data.(socket.RawMessageReceived); ok {
-				log.Printf("[Match] -> received HINT request socket id: %v", message.SocketID)
-			}
-
 		case <-v.shutdown:
 			return
 		}
@@ -116,7 +109,6 @@ func (v *VirtualPlayer) subscribe() {
 	v.gameEnds, _, _ = cbroadcast.Subscribe(match.BGameEnds)
 	v.roundStarts, _, _ = cbroadcast.Subscribe(match.BRoundStarts)
 	v.roundEnds, _, _ = cbroadcast.Subscribe(match.BRoundEnds)
-	v.askHint, _, _ = cbroadcast.Subscribe(match.BAskHint)
 	v.chatNew, _, _ = cbroadcast.Subscribe(match.BChatNew)
 }
 
@@ -126,7 +118,6 @@ func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BGameEnds, match.BSize)
 	cbroadcast.Register(match.BRoundStarts, match.BSize)
 	cbroadcast.Register(match.BRoundEnds, match.BSize)
-	cbroadcast.Register(match.BAskHint, match.BSize)
 	cbroadcast.Register(match.BChatNew, match.BSize)
 }
 
