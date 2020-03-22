@@ -109,7 +109,6 @@ class MatchLobbyPresenter : Presenter {
     }
 
     override fun resume() {
-        Log.d("POTATO", "LobbyPresenter::onResume()")
         groupManager?.getAvailableGroups()
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(
