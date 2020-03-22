@@ -46,7 +46,7 @@ type base struct {
 
 func (b *base) init(connections []uuid.UUID, info model.Group) {
 
-	b.players = make([]players, len(connections))
+	b.players = make([]players, len(connections)+info.VirtualPlayers)
 	b.connections = make(map[uuid.UUID]*players, len(connections))
 	b.wordHistory = make(map[string]bool)
 
