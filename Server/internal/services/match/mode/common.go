@@ -152,7 +152,12 @@ func (b *base) findGame() *model.Game {
 
 	var game model.Game
 	for word == "" {
+		var count int
+		model.DB().Preload("Image").Where("difficulty = ? and language = ?", b.info.Difficulty, b.info.Language).Count(&count)
 		model.DB().Preload("Image").Where("difficulty = ? and language = ?", b.info.Difficulty, b.info.Language).Order(gorm.Expr("random()")).First(&game)
+		if count == 0 {
+			return &game
+		}
 		if game.ID != uuid.Nil {
 			if _, inList := b.wordHistory[word]; !inList || watchDog >= 10 {
 				//Add the word to the list so it does not come up again.
