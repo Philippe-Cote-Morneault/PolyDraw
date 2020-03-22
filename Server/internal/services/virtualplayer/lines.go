@@ -43,7 +43,7 @@ func initStartGameLines(l *lines) {
 
 	l.Mean = append(l.Mean, "Avant que la partie commence, je vous souhaite tous de perdre.")
 	l.Mean = append(l.Mean, "La partie va commencer, j'espère que ton appareil va manquer de batterie avant la fin !")
-	l.Mean = append(l.Mean, "Je tiens à vous prevenir avant le commencement, je vais tout faire pour vous faire perdre.")
+	l.Mean = append(l.Mean, "Je tiens à vous prévenir avant le commencement, je vais tout faire pour vous faire perdre.")
 
 	l.Nice = append(l.Nice, "Avant que la partie commence, je vous souhaite à tous bonne chance !")
 	l.Nice = append(l.Nice, "La partie va commencer, prenez du plaisir et que le meilleur gagne !")
@@ -57,22 +57,22 @@ func initStartGameLines(l *lines) {
 func initEndRoundLines(l *lines) {
 
 	l.Angry = append(l.Angry, "J'aime toujours pas ce jeu !!!!")
-	l.Angry = append(l.Angry, "Toujours confiné, même apres le round. I guess qu'il faut qu'on continue...")
+	l.Angry = append(l.Angry, "Toujours confiné, même après le round. I guess qu'il faut qu'on continue...")
 	l.Angry = append(l.Angry, "Le round était nul. Mais je sens que le prochain va être pire.")
 
-	l.Funny = append(l.Funny, "Le round est fini. Personne n'est encore ko j'espere ?")
+	l.Funny = append(l.Funny, "Le round est fini. Personne n'est encore ko j'espère ?")
 	l.Funny = append(l.Funny, "Avant que le prochain round commence, je peux aller aux toilettes svp ? Je dois vider ma RAM.")
-	l.Funny = append(l.Funny, "Wow c'etait physique ce round. On dirait que j'ai soulevé des montagnes. Et oui, vous serez surpris de ce qu'un bot virtuel peut faire.")
+	l.Funny = append(l.Funny, "Wow c'était physique ce round. On dirait que j'ai soulevé des montagnes. Et oui, vous serez surpris de ce qu'un bot virtuel peut faire.")
 
 	l.Mean = append(l.Mean, "Le round est fini, pour moi vous avez tous perdu car vous êtes tous nuls.")
-	l.Mean = append(l.Mean, "Ta batterie a tenu pour ce round la, mais elle va lacher au prochain (du moins je le souhaite).")
+	l.Mean = append(l.Mean, "Ta batterie a tenu pour ce round là, mais elle va lâcher au prochain (du moins je le souhaite).")
 	l.Mean = append(l.Mean, "C'était quoi ce round guys ? J'ai rarement vu des joueurs aussi mauvais.")
 
 	l.Nice = append(l.Nice, "Ce round était trop cool. On passe au prochain ?")
 	l.Nice = append(l.Nice, "Wow quel round. Je prends vraiment du plaisir.")
 	l.Nice = append(l.Nice, "Ce round était bon, mais je suis sûr que le prochain sera encore mieux !")
 
-	l.Supportive = append(l.Supportive, "Tout le monde s'est très bien debrouillé dans ce round. Bravo et passons au prochain !")
+	l.Supportive = append(l.Supportive, "Tout le monde s'est très bien débrouillé dans ce round. Bravo et passons au prochain !")
 	l.Supportive = append(l.Supportive, "Même si tu as fait des erreurs, ne t'inquiète pas. Tu feras mieux au prochain.")
 	l.Supportive = append(l.Supportive, "Aller on lâche rien ! Ton GPA est toujours en jeu !")
 }
@@ -93,7 +93,7 @@ func initPlayerRefLines(l *lines) {
 
 	l.Nice = append(l.Nice, "J'adore faire des parties avec {} !")
 	l.Nice = append(l.Nice, "Quel plaisir de jouer en présence de {}")
-	l.Nice = append(l.Nice, "Oh trop cool que {} soit avec nous dasn cette partie !")
+	l.Nice = append(l.Nice, "Oh trop cool que {} soit avec nous dans cette partie !")
 
 	l.Supportive = append(l.Supportive, "Bien joué {}, continue comme ça !")
 	l.Supportive = append(l.Supportive, "Courage {} ! Ne lâche rien !")
@@ -103,7 +103,7 @@ func initPlayerRefLines(l *lines) {
 func initHintLines(l *lines) {
 
 	l.Angry = []string{"Un indice ?!! Ça m'énerve !!",
-		"J'espere qu'avec cet indice tu vas trouver car la je suis à deux doigts de m'énerver !!",
+		"J'espère qu'avec cet indice tu vas trouver car la je suis à deux doigts de m'énerver !!",
 		"L'indice est nul ! Ça m'énerve !!"}
 
 	l.Funny = []string{"Quelqu'un a commandé un indice pas trop cuit ?",
@@ -111,7 +111,7 @@ func initHintLines(l *lines) {
 		"Indice sauvage en approche. Je répète, indice sauvage en approche."}
 
 	l.Mean = []string{"Tssss vous êtes assez désespéré pour demander un indice ?",
-		"Soyons honnète, l'indice ne va rien changer quand à votre incompétence pour trouver le mot.",
+		"Soyons honnête, l'indice ne va rien changer quand à votre incompétence pour trouver le mot.",
 		"Quelqu'un a demandé un indice ? Ahaha j'étais persuadé que vous n'étiez pas à la hauteur pour ce jeu."}
 
 	l.Nice = []string{"J'espère que cet indice va pouvoir t'aider.",
@@ -120,7 +120,7 @@ func initHintLines(l *lines) {
 
 	l.Supportive = []string{"Bonne initiative d'avoir demandé un indice ! Continue comme ça !",
 		"Cet indice va t'aider pour trouver le mot ! Continue de chercher !",
-		"Ne perd pas espoir, voila un indice pour t'aider !"}
+		"Ne perd pas espoir, voilà un indice pour t'aider !"}
 }
 
 func initRatioLines(l *lines) {
