@@ -1,6 +1,7 @@
 package mode
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"log"
 	"strings"
 	"sync"
@@ -331,7 +332,6 @@ func (c *Coop) GetPlayers() []match2.Player {
 
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
-	defer c.receiving.Unlock()
 	c.receiving.Lock()
 	if c.cancelWait != nil {
 		c.cancelWait()
@@ -345,6 +345,8 @@ func (c *Coop) finish() {
 	})
 	c.pbroadcast(&timeUpMessage)
 
+	c.receiving.Unlock()
+	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 }
 
 //computeOrder used to compute the order for the coop
