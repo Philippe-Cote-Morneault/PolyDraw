@@ -352,6 +352,7 @@ func (f *FFA) Close() {
 		f.cancelWait()
 	}
 
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
 }
