@@ -154,11 +154,15 @@ func (c *Coop) GameLoop() {
 		c.Close()
 		return
 	}
-	//Compute next round
+
+	//Prepare next round
 	c.orderPos++
 	c.curLap++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
+	c.commonScore.reset()
+	c.currentWord = ""
 	c.receiving.Unlock()
+	cbroadcast.Broadcast(match2.BRoundEnds, c.info.ID)
 
 	time.Sleep(time.Millisecond * 500)
 	return
