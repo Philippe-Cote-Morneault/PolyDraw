@@ -149,12 +149,15 @@ func (c *Coop) GameLoop() {
 	c.receiving.Lock()
 	if c.lives <= 0 {
 		c.isRunning = false
+		c.receiving.Unlock()
 		//Exit the game since all the lives are expired
 		return
 	}
 
 	if c.realPlayers <= 0 {
 		c.isRunning = false
+		c.receiving.Unlock()
+
 		c.Close()
 		return
 	}
@@ -182,7 +185,6 @@ func (c *Coop) Ready(socketID uuid.UUID) {
 
 //Disconnect handle disconnect for the coop
 func (c *Coop) Disconnect(socketID uuid.UUID) {
-	panic("implement me")
 }
 
 //TryWord handle when a client wants to try a word
@@ -269,12 +271,10 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 //HintRequested for the current virtual player drawing
 func (c *Coop) HintRequested(socketID uuid.UUID) {
-	panic("implement me")
 }
 
 //Close method used to force close the current game
 func (c *Coop) Close() {
-	panic("implement me")
 }
 
 //GetConnections method used to return all the connections of the players
