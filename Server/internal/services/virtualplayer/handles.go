@@ -54,7 +54,7 @@ func AddGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Groups[groupID] = make(map[uuid.UUID]bool)
 	managerInstance.mutex.Unlock()
-	printManager()
+	printManager("AddGroup")
 }
 
 //registerChannelGroup [New Thread] saves in cache the groupID corresponding to channelID (messenger->)
@@ -70,7 +70,7 @@ func RemoveGroup(groupID uuid.UUID) {
 
 	if _, ok := managerInstance.Channels[groupID]; !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting handleEndGame...", groupID)
+		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting RemoveGroup...", groupID)
 		return
 	}
 
@@ -91,7 +91,7 @@ func RemoveGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	delete(managerInstance.Groups, groupID)
 	managerInstance.mutex.Unlock()
-	printManager()
+	printManager("RemoveGroup")
 }
 
 //AddVirtualPlayer [Current Thread] adds virtualPlayer to cache. Returns playerID, username (lobby)
@@ -113,7 +113,7 @@ func AddVirtualPlayer(groupID, botID uuid.UUID) string {
 	managerInstance.mutex.Unlock()
 
 	log.Println("[Virtual Player] -> AddVirtualPlayer")
-	printManager()
+	printManager("AddVirtualPlayer")
 
 	return playerInfos.Username
 }
@@ -168,7 +168,7 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	model.DB().Save(&groupDB)
 
 	log.Printf("[Virtual Player] -> deleting bot in DB: %v", user)
-	printManager()
+	printManager("KickVirtualPlayer")
 
 	return groupID, bot.Username
 
@@ -183,73 +183,60 @@ func handleStartGame(match match2.IMatch) {
 	channelID, ok := managerInstance.Channels[groupID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting startGame...", groupID)
+		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting handleStartGame...", groupID)
 		return
 	}
 	group, groupOk := managerInstance.Groups[groupID]
 
 	if !groupOk {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting startGame...", groupID)
+		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleStartGame...", groupID)
 		return
 	}
+	//Unlocks mutex at the end
+	makeBotsSpeak("startGame", group, channelID)
+	printManager("handleStartGame")
 
-	var wg sync.WaitGroup
-	wg.Add(len(group))
-	for botID := range group {
-		go func(id uuid.UUID) {
-			defer wg.Done()
-			bot, botOk := managerInstance.Bots[id]
-			if !botOk {
-				log.Printf("[Virtual Player] -> [Error] Can't find botID : %v.", id)
-				return
-			}
-			bot.speak(channelID, "startGame")
-		}(botID)
-	}
-	managerInstance.mutex.Unlock()
-	wg.Wait()
 }
 
 // startDrawing [New Threads] bot draws for all player in games (match ->)
 func startDrawing(round *match2.RoundStart) {
+	log.Printf("[Virtual Player] Round start begin of startDrawing round:%v", *round.Game.Image)
 	managerInstance.mutex.Lock()
-	if !round.Drawer.IsCPU {
-		return
-	}
-
 	//Save All Hints from game
-	g := gameHints{GameID: round.Game.ID, Hints: make(map[string]bool)}
-	for _, h := range round.Game.Hints {
+	g := gameHints{GameID: (*round).Game.ID, Hints: make(map[string]bool)}
+	for _, h := range (*round).Game.Hints {
 		g.Hints[h.Hint] = true
 	}
 	managerInstance.Games[round.MatchID] = &g
 
-	bot, ok := managerInstance.Bots[round.Drawer.ID]
+	bot, ok := managerInstance.Bots[(*round).Drawer.ID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find botID : %v. Aborting drawing...", round.Drawer.ID)
+		log.Printf("[Virtual Player] -> [Error] Can't find botID : %v. Aborting drawing...", (*round).Drawer.ID)
 		return
 	}
 
-	match, groupOk := managerInstance.Matches[round.MatchID]
+	match, groupOk := managerInstance.Matches[(*round).MatchID]
 	if !groupOk {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find match with groupID : %v. Aborting drawing...", round.MatchID)
+		log.Printf("[Virtual Player] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
 	managerInstance.mutex.Unlock()
+
+	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
 	wg.Add(len(connections))
 	for _, id := range connections {
 		go func(socketID uuid.UUID) {
 			defer wg.Done()
-			uuidBytes, _ := round.Game.ID.MarshalBinary()
 			drawing.StartDrawing(socketID, uuidBytes, round.Game.Image.SVGFile, bot.DrawingTimeFactor)
 		}(id)
 	}
 	wg.Wait()
+	printManager("startDrawing")
 }
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
@@ -268,22 +255,10 @@ func handleRoundEnds(groupID uuid.UUID) {
 		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleRoundEnds...", groupID)
 		return
 	}
+	//Unlocks mutex at the end
+	makeBotsSpeak("endRound", group, channelID)
+	printManager("handleRoundEnds")
 
-	var wg sync.WaitGroup
-	wg.Add(len(group))
-	for botID := range group {
-		go func(id uuid.UUID) {
-			defer wg.Done()
-			bot, botOk := managerInstance.Bots[id]
-			if !botOk {
-				log.Printf("[Virtual Player] -> [Error] Can't find botID : %v.", id)
-				return
-			}
-			bot.speak(channelID, "endRound")
-		}(botID)
-	}
-	managerInstance.mutex.Unlock()
-	wg.Wait()
 }
 
 // handleEndGame [New Threads] does the endGame routine for a bot in match (match ->)
@@ -295,6 +270,7 @@ func handleEndGame(groupID uuid.UUID) {
 		log.Printf("[Virtual Player] -> [Error] Can't find game with groupID : %v. Aborting handleEndGame...", groupID)
 		return
 	}
+	delete(managerInstance.Games, groupID)
 
 	if _, ok := managerInstance.Matches[groupID]; !ok {
 		managerInstance.mutex.Unlock()
@@ -317,9 +293,9 @@ func handleEndGame(groupID uuid.UUID) {
 	}
 
 	delete(managerInstance.Matches, groupID)
-	delete(managerInstance.Games, groupID)
 	managerInstance.mutex.Unlock()
 	RemoveGroup(groupID)
+	printManager("handleEndGame")
 }
 
 //GetVirtualPlayersInfo [Current Thread] returns botInfos from cache (match)
@@ -355,7 +331,7 @@ func GetHintByBot(hintRequest match2.HintRequested) bool {
 	game, ok := managerInstance.Games[hintRequest.MatchID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find game with groupID : %v. Aborting handleEndGame...", hintRequest.MatchID)
+		log.Printf("[Virtual Player] -> [Error] Can't find game with groupID : %v. Aborting GetHintByBot...", hintRequest.MatchID)
 		respHintRequest(false, hintRequest.SocketID, "Group Id inccorect, game doesn't exists")
 		return false
 	}
@@ -418,11 +394,30 @@ func randomUsername(groupID uuid.UUID) string {
 	managerInstance.mutex.Unlock()
 
 	if !ok {
-		log.Printf("[Virtual Player] -> [Error] Can't find match with groupID : %v. Aborting handleEndGame...", groupID)
+		log.Printf("[Virtual Player] -> [Error] Can't find match with groupID : %v. Aborting randomUsername...", groupID)
 		return ""
 	}
 
 	players := (*match).GetPlayers()
 
 	return players[rand.Intn(len(players))].Username
+}
+
+//makeBotsSpeak [New Threads] sends bot interaction to all connected users (virtualplayer)
+func makeBotsSpeak(interactionType string, group map[uuid.UUID]bool, channelID uuid.UUID) {
+	var wg sync.WaitGroup
+	wg.Add(len(group))
+	for botID := range group {
+		bot, botOk := managerInstance.Bots[botID]
+		if !botOk {
+			log.Printf("[Virtual Player] -> [Error] Can't find botID : %v.", botID)
+			return
+		}
+		go func(chanID uuid.UUID) {
+			defer wg.Done()
+			bot.speak(chanID, interactionType)
+		}(channelID)
+	}
+	managerInstance.mutex.Unlock()
+	wg.Wait()
 }
