@@ -67,8 +67,8 @@ func (l *Logger) listen() {
 }
 
 func (l *Logger) subscribe() {
-	l.ready, _, _ = cbroadcast.Subscribe(socket.BSocketReady)
-	l.receiver, _, _ = cbroadcast.Subscribe(socket.BSocketReceive)
-	l.connected, _, _ = cbroadcast.Subscribe(socket.BSocketConnected)
-	l.close, _, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
+	l.ready, _ = cbroadcast.Subscribe(socket.BSocketReady)
+	l.receiver, _ = cbroadcast.Subscribe(socket.BSocketReceive)
+	l.connected, _ = cbroadcast.Subscribe(socket.BSocketConnected)
+	l.close, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
 }

@@ -104,11 +104,11 @@ func (v *VirtualPlayer) listen() {
 }
 
 func (v *VirtualPlayer) subscribe() {
-	v.gameStarts, _, _ = cbroadcast.Subscribe(match.BGameStarts)
-	v.gameEnds, _, _ = cbroadcast.Subscribe(match.BGameEnds)
-	v.roundStarts, _, _ = cbroadcast.Subscribe(match.BRoundStarts)
-	v.roundEnds, _, _ = cbroadcast.Subscribe(match.BRoundEnds)
-	v.chatNew, _, _ = cbroadcast.Subscribe(match.BChatNew)
+	v.gameStarts, _ = cbroadcast.Subscribe(match.BGameStarts)
+	v.gameEnds, _ = cbroadcast.Subscribe(match.BGameEnds)
+	v.roundStarts, _ = cbroadcast.Subscribe(match.BRoundStarts)
+	v.roundEnds, _ = cbroadcast.Subscribe(match.BRoundEnds)
+	v.chatNew, _ = cbroadcast.Subscribe(match.BChatNew)
 }
 
 //Register the broadcast for drawing

@@ -66,7 +66,7 @@ func (a *Auth) listen() {
 }
 
 func (a *Auth) subscribe() {
-	a.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+	a.close, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
 }
 
 //clearSessionDB to make sure we start in an known state

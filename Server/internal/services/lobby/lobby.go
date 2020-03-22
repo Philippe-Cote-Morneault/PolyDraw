@@ -116,11 +116,11 @@ func (l *Lobby) listen() {
 }
 
 func (l *Lobby) subscribe() {
-	l.connected, _, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
-	l.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
-	l.join, _, _ = cbroadcast.Subscribe(BJoinGroup)
-	l.leave, _, _ = cbroadcast.Subscribe(BLeaveGroup)
-	l.startMatch, _, _ = cbroadcast.Subscribe(BStartMatch)
-	l.kick, _, _ = cbroadcast.Subscribe(BKickUser)
-	l.addbot, _, _ = cbroadcast.Subscribe(BAddBot)
+	l.connected, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
+	l.close, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+	l.join, _ = cbroadcast.Subscribe(BJoinGroup)
+	l.leave, _ = cbroadcast.Subscribe(BLeaveGroup)
+	l.startMatch, _ = cbroadcast.Subscribe(BStartMatch)
+	l.kick, _ = cbroadcast.Subscribe(BKickUser)
+	l.addbot, _ = cbroadcast.Subscribe(BAddBot)
 }

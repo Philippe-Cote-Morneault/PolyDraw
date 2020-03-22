@@ -81,10 +81,10 @@ func (s *Service) listen() {
 }
 
 func (s *Service) subscribe() {
-	s.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+	s.close, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
 
-	s.ready, _, _ = cbroadcast.Subscribe(BMatchReady)
-	s.hint, _, _ = cbroadcast.Subscribe(BMatchHint)
-	s.guess, _, _ = cbroadcast.Subscribe(BMatchGuess)
-	s.quit, _, _ = cbroadcast.Subscribe(BMatchQuit)
+	s.ready, _ = cbroadcast.Subscribe(BMatchReady)
+	s.hint, _ = cbroadcast.Subscribe(BMatchHint)
+	s.guess, _ = cbroadcast.Subscribe(BMatchGuess)
+	s.quit, _ = cbroadcast.Subscribe(BMatchQuit)
 }
