@@ -17,9 +17,6 @@ const BRoundStarts = "drawing:roundstarts"
 //BRoundEnds message to indicate when round ends
 const BRoundEnds = "drawing:roundends"
 
-//BAskHint message to ask for a hint
-const BAskHint = "drawing:askhint"
-
 //BChatNew message used to inform the virtual player of the new chat channel id
 const BChatNew = "drawing:chatnew"
 
@@ -51,4 +48,9 @@ type HintRequested struct {
 type ChatNew struct {
 	MatchID uuid.UUID
 	ChatID  uuid.UUID
+}
+
+type BotInfos struct {
+	BotID    uuid.UUID
+	Username string
 }
