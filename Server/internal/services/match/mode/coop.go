@@ -349,7 +349,7 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 		GameType:  c.info.GameType,
 		TimeImage: c.timeImage,
 		Laps:      0,
-		TotalTime: 0,
+		TotalTime: c.gameTime,
 	}
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
