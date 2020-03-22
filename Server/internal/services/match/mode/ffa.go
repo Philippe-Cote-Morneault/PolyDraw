@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
+
 	"github.com/jinzhu/gorm"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 
@@ -346,7 +348,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		player := f.connections[socketID]
 		f.receiving.Unlock()
 
-		cbroadcast.Broadcast(match2.BAskHint, match2.HintRequested{
+		virtualplayer.GetHintByBot(match2.HintRequested{
 			MatchID:  f.info.ID,
 			SocketID: socketID,
 			Player: match2.Player{
@@ -374,9 +376,9 @@ func (f *FFA) Close() {
 
 //GetConnections returns all the socketID of the match
 func (f *FFA) GetConnections() []uuid.UUID {
-	connections := make([]uuid.UUID, 0, len(f.players))
-	for i := range f.players {
-		connections = append(connections, f.players[i].socketID)
+	connections := make([]uuid.UUID, 0, len(f.connections))
+	for i := range f.connections {
+		connections = append(connections, f.connections[i].socketID)
 	}
 	return connections
 }
@@ -494,7 +496,9 @@ func (f *FFA) SetOrder() {
 
 func (f *FFA) resetGuess() {
 	for i := range f.players {
-		f.hasFoundIt[f.players[i].socketID] = false
+		if !f.players[i].IsCPU {
+			f.hasFoundIt[f.players[i].socketID] = false
+		}
 		f.scores[f.players[i].Order].reset()
 	}
 
