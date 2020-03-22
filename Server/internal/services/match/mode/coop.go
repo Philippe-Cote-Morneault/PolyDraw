@@ -78,7 +78,16 @@ func (c *Coop) Start() {
 
 	timeOut := make(chan bool)
 	go func() {
-		time.Sleep(time.Duration(c.gameTime) * time.Millisecond)
+		//Check if the time has expired
+		expired := false
+		for !expired {
+			time.Sleep(time.Millisecond * 100)
+
+			c.receiving.Lock()
+			gameDuration := time.Now().Sub(c.timeStart).Milliseconds()
+			expired = gameDuration > c.gameTime+c.checkPointTime
+			c.receiving.Unlock()
+		}
 		c.finish()
 		close(timeOut)
 	}()
@@ -287,7 +296,7 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 	})
 	if hintSent {
 		c.receiving.Lock()
-		penalty := int64(10)
+		penalty := int64(10 * 1000)
 		c.checkPointTime -= penalty
 		gameDuration := time.Now().Sub(c.timeStart)
 		remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
