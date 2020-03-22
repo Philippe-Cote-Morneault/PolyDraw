@@ -48,7 +48,7 @@ func (v *VirtualPlayer) listen() {
 	for {
 		select {
 		case data := <-v.gameStarts:
-			log.Println("[Virtual Player] -> Receives game Start message")
+			log.Println("[Virtual Player] -> Receives gameStart event")
 			match, ok := data.(match.IMatch)
 			if !ok {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.IMatch struct")
@@ -57,7 +57,8 @@ func (v *VirtualPlayer) listen() {
 			go handleStartGame(match)
 
 		case data := <-v.gameEnds:
-			log.Println("[Virtual Player] -> Sends game End message")
+			log.Println("[Virtual Player] -> Receives gameEnds event")
+
 			groupID, ok := data.(uuid.UUID)
 			if !ok {
 				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
@@ -66,8 +67,7 @@ func (v *VirtualPlayer) listen() {
 			go handleEndGame(groupID)
 
 		case data := <-v.roundStarts:
-			log.Println("[Virtual Player] -> Receives round Start message")
-
+			log.Println("[Virtual Player] -> Receives roundStarts event")
 			round, ok := data.(match.RoundStart)
 			if !ok {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.RoundStart struct")
@@ -79,7 +79,7 @@ func (v *VirtualPlayer) listen() {
 			}
 
 		case data := <-v.roundEnds:
-			log.Println("[Virtual Player] -> Sends round End message")
+			log.Println("[Virtual Player] -> Receives roundEnds event")
 			groupID, ok := data.(uuid.UUID)
 			if !ok {
 				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
@@ -88,7 +88,7 @@ func (v *VirtualPlayer) listen() {
 			go handleRoundEnds(groupID)
 
 		case data := <-v.chatNew:
-			log.Println("[Virtual Player] -> Sends chat New message")
+			log.Println("[Virtual Player] -> Receives chatNew event")
 			chat, ok := data.(match.ChatNew)
 			if !ok {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
@@ -121,7 +121,7 @@ func (v *VirtualPlayer) Register() {
 }
 
 func printManager(fromWho string) {
-	log.Println("[Virtual Player] -> {PrintManager} %v: ", fromWho)
+	log.Printf("[Virtual Player] -> {PrintManager} %v: ", fromWho)
 	log.Printf("[Virtual Player] -> Manager.Bots : %v", managerInstance.Bots)
 	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
 	log.Printf("[Virtual Player] -> Manager.Games : %v", managerInstance.Games)
