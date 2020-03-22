@@ -346,6 +346,8 @@ func (c *Coop) finish() {
 	c.pbroadcast(&timeUpMessage)
 
 	c.receiving.Unlock()
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 }
 
