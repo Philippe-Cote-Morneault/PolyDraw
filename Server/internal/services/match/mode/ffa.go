@@ -233,7 +233,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 		f.pbroadcast(&endDrawing)
 	}
 	//Check the state of the game if there are enough players to finish the game
-	if f.realPlayers < 2 {
+	if (f.realPlayers - 1) < 2 {
 		f.receiving.Unlock()
 		f.Close()
 		return
@@ -544,6 +544,9 @@ func (f *FFA) finish() {
 		}
 	}
 	if bestPlayerOrder == -1 {
+		f.receiving.Unlock()
+
+		messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 		drawing.UnRegisterGame(f)
 		log.Printf("[Match] [FFA] No more players in the match. Will not send finish packet")
 		return
