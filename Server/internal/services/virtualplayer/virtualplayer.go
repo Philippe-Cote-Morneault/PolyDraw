@@ -122,8 +122,10 @@ func (v *VirtualPlayer) Register() {
 }
 
 func printManager() {
-	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
-	log.Printf("[Virtual Player] -> Manager.Groups : %v", managerInstance.Groups)
 	log.Printf("[Virtual Player] -> Manager.Bots : %v", managerInstance.Bots)
+	log.Printf("[Virtual Player] -> Manager.Channels : %v", managerInstance.Channels)
 	log.Printf("[Virtual Player] -> Manager.Games : %v", managerInstance.Games)
+	log.Printf("[Virtual Player] -> Manager.Groups : %v", managerInstance.Groups)
+	log.Printf("[Virtual Player] -> Manager.Matches : %v", managerInstance.Matches)
+	log.Printf("[Virtual Player] -> Manager.Hints : %v", managerInstance.Hints)
 }
