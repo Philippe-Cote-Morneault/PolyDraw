@@ -343,14 +343,17 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		})
 
 		if hintSent {
-			//TODO Rajouter les points (Martin)
+			f.receiving.Lock()
+			f.scores[player.Order].commit(-50)
+			f.receiving.Unlock()
+
+			f.syncPlayers()
 		}
 	}
 }
 
 //Close forces the game to stop completely. Graceful shutdown
 func (f *FFA) Close() {
-	defer f.receiving.Unlock()
 	f.receiving.Lock()
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
@@ -358,6 +361,7 @@ func (f *FFA) Close() {
 		f.cancelWait()
 	}
 
+	f.receiving.Unlock()
 	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
@@ -365,10 +369,12 @@ func (f *FFA) Close() {
 
 //GetConnections returns all the socketID of the match
 func (f *FFA) GetConnections() []uuid.UUID {
+	f.receiving.Lock()
 	connections := make([]uuid.UUID, 0, len(f.connections))
 	for i := range f.connections {
 		connections = append(connections, f.connections[i].socketID)
 	}
+	f.receiving.Unlock()
 	return connections
 }
 
@@ -516,6 +522,7 @@ func (f *FFA) calculateScore() int {
 
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
+	f.receiving.Lock()
 	gameDuration := time.Now().Sub(f.timeStart)
 	log.Printf("[Match] [FFA] -> Game has ended. Match: %s", f.info.ID)
 	//Identify the winner
@@ -541,6 +548,7 @@ func (f *FFA) finish() {
 		return
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
+	f.receiving.Unlock()
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
 
 	//Send a message to all the players to give them the details of the game and who is the winner

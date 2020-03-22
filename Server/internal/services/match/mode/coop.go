@@ -2,6 +2,7 @@ package mode
 
 import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"log"
 	"strings"
 	"sync"
@@ -271,6 +272,36 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 //HintRequested for the current virtual player drawing
 func (c *Coop) HintRequested(socketID uuid.UUID) {
+	player := c.connections[socketID]
+	c.receiving.Unlock()
+
+	hintSent := virtualplayer.GetHintByBot(match2.HintRequested{
+		GameType: c.info.GameType,
+		MatchID:  c.info.ID,
+		SocketID: socketID,
+		Player: match2.Player{
+			IsCPU:    player.IsCPU,
+			Username: player.Username,
+			ID:       player.userID,
+		},
+	})
+	if hintSent {
+		c.receiving.Lock()
+		penalty := int64(10)
+		c.checkPointTime -= penalty
+		gameDuration := time.Now().Sub(c.timeStart)
+		remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
+		c.receiving.Unlock()
+
+		checkpoint := socket.RawMessage{}
+		checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
+			TotalTime: remaining,
+			Bonus:     penalty,
+		})
+		c.pbroadcast(&checkpoint)
+
+		c.syncPlayers()
+	}
 }
 
 //Close method used to force close the current game
