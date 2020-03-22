@@ -57,7 +57,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.IMatch struct")
 				break
 			}
-			handleStartGame(match)
+			go handleStartGame(match)
 
 		case data := <-v.gameEnds:
 			log.Println("[Virtual Player] -> Sends game End message")
@@ -66,7 +66,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
 				break
 			}
-			handleEndGame(groupID)
+			go handleEndGame(groupID)
 
 		case data := <-v.roundStarts:
 			log.Println("[Virtual Player] -> Receives round Start message")
@@ -88,7 +88,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing uuid")
 				break
 			}
-			handleRoundEnds(groupID)
+			go handleRoundEnds(groupID)
 
 		case data := <-v.chatNew:
 			log.Println("[Virtual Player] -> Sends chat New message")
@@ -97,7 +97,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[Virtual Player] -> [Error] Error while parsing match.ChatNew struct")
 				break
 			}
-			registerChannelGroup(chat.MatchID, chat.ChatID)
+			go registerChannelGroup(chat.MatchID, chat.ChatID)
 
 		case data := <-v.askHint:
 			if message, ok := data.(socket.RawMessageReceived); ok {
