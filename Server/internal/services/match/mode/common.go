@@ -78,13 +78,14 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 
 	if bots != nil {
 		if len(bots) == info.VirtualPlayers {
-			for _, bot := range bots {
-				b.players = append(b.players, players{
+			offset := len(connections)
+			for i, bot := range bots {
+				b.players[offset+i] = players{
 					socketID: uuid.Nil,
 					userID:   bot.BotID,
 					Username: bot.Username,
 					IsCPU:    true,
-				})
+				}
 			}
 		}
 	}
