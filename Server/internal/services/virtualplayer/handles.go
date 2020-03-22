@@ -243,15 +243,8 @@ func startDrawing(round *match2.RoundStart) {
 	connections := (*match).GetConnections()
 	wg.Add(len(connections))
 	for _, id := range connections {
-		go func(playerID uuid.UUID) {
+		go func(socketID uuid.UUID) {
 			defer wg.Done()
-			socketID, err := auth.GetSocketID(playerID)
-
-			if err != nil {
-				log.Printf("[Virtual Player] -> [Error] Can't find user's socketid from userID: %v. Aborting drawing...", playerID)
-				return
-			}
-
 			uuidBytes, _ := round.Game.ID.MarshalBinary()
 			drawing.StartDrawing(socketID, uuidBytes, round.Game.Image.SVGFile, bot.DrawingTimeFactor)
 		}(id)
@@ -309,7 +302,13 @@ func handleEndGame(groupID uuid.UUID) {
 		return
 	}
 
-	for _, playerID := range (*managerInstance.Matches[groupID]).GetConnections() {
+	for _, socketID := range (*managerInstance.Matches[groupID]).GetConnections() {
+		playerID, err := auth.GetUserID(socketID)
+		if err != nil {
+			log.Printf("[Virtual Player] -> [Error] Can't find userID from socketID: %v. Aborting handleEndGame...", socketID)
+			return
+		}
+
 		if _, ok := managerInstance.Hints[playerID]; !ok {
 			log.Printf("[Virtual Player] -> [Error] Can't find player in game with groupID : %v. Aborting handleEndGame...", groupID)
 			return
