@@ -9,6 +9,7 @@ type Game struct {
 	Difficulty int
 	Hints      []*GameHint
 	Image      *GameImage //Represent the hash of the file
+	Language   int
 }
 
 //GameHint represents a game hint
