@@ -349,6 +349,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		f.receiving.Unlock()
 
 		hintSent := virtualplayer.GetHintByBot(match2.HintRequested{
+			GameType: f.info.GameType,
 			MatchID:  f.info.ID,
 			SocketID: socketID,
 			Player: match2.Player{

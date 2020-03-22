@@ -42,6 +42,7 @@ type HintRequested struct {
 	MatchID  uuid.UUID
 	SocketID uuid.UUID
 	Player   Player
+	GameType int
 }
 
 //ChatNew broadcast when there is a new chat channel for the match
