@@ -23,7 +23,7 @@ func GetFile(key string) (*bufio.Reader, error) {
 
 //PostFile used to post the file name
 func PostFile(reader io.Reader) (string, error) {
-	fileName := GenerateFileKey() + ".svg"
+	fileName := GenerateFileKey()
 	file, err := os.OpenFile(GetPath(fileName), os.O_WRONLY|os.O_CREATE, 0666)
 	defer file.Close()
 	if err != nil {
