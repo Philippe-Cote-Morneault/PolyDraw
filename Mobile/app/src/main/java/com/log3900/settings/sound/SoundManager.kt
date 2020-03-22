@@ -2,23 +2,33 @@ package com.log3900.settings.sound
 
 import android.content.Context
 import android.media.MediaPlayer
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
 
 class SoundManager {
     companion object {
+        private var soundEffectsMediaPlayer: MediaPlayer? = null
+        private var musicMediaPlayer: MediaPlayer? = null
+
         fun playSoundEffect(context: Context, audioRes: Int) {
             if (AccountRepository.getInstance().getAccount().soundEffectsOn) {
-                val musicPlayer = MediaPlayer.create(context, audioRes)
-                musicPlayer.start()
+                if (soundEffectsMediaPlayer != null && soundEffectsMediaPlayer!!.isPlaying) {
+                    return
+                }
+                soundEffectsMediaPlayer = MediaPlayer.create(context, audioRes)
+                soundEffectsMediaPlayer?.start()
             }
         }
 
         fun playMusic(context: Context, audioRes: Int) {
             if (AccountRepository.getInstance().getAccount().musicOn) {
-                val musicPlayer = MediaPlayer.create(context, audioRes)
-                musicPlayer.start()
+                if (musicMediaPlayer != null && musicMediaPlayer!!.isPlaying) {
+                    return
+                }
+                musicMediaPlayer = MediaPlayer.create(context, audioRes)
+                musicMediaPlayer?.start()
             }
         }
 
