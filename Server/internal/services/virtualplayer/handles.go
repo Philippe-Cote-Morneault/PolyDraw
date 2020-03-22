@@ -286,8 +286,7 @@ func handleEndGame(groupID uuid.UUID) {
 		}
 
 		if _, ok := managerInstance.Hints[playerID]; !ok {
-			log.Printf("[Virtual Player] -> [Error] Can't find player in game with groupID : %v. Aborting handleEndGame...", groupID)
-			return
+			continue
 		}
 		delete(managerInstance.Hints, playerID)
 	}
