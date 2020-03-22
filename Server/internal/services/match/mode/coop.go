@@ -30,7 +30,7 @@ type Coop struct {
 	cancelWait   func()
 	commonScore  score
 
-	gameTime int
+	gameTime int64
 	lives    int
 
 	receiving        sync.Mutex
