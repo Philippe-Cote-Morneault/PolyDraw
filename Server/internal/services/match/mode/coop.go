@@ -69,9 +69,9 @@ func (c *Coop) Start() {
 
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
-	c.timeStart = time.Now()
 
 	forceExit := false
+	c.timeStart = time.Now()
 	for c.isRunning {
 		forceExit = c.GameLoop()
 	}
