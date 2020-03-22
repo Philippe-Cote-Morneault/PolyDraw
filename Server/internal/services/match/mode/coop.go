@@ -195,6 +195,40 @@ func (c *Coop) Ready(socketID uuid.UUID) {
 
 //Disconnect handle disconnect for the coop
 func (c *Coop) Disconnect(socketID uuid.UUID) {
+	//Remove the player
+	c.receiving.Lock()
+	player := c.connections[socketID]
+
+	leaveMessage := socket.RawMessage{}
+	leaveMessage.ParseMessagePack(byte(socket.MessageType.PlayerHasLeftGame), PlayerHasLeft{
+		UserID:   player.userID.String(),
+		Username: player.Username,
+	})
+	c.pbroadcast(&leaveMessage)
+
+	//Remove the player
+	for i := range c.players {
+		if c.players[i].userID == player.userID {
+			c.players[i] = c.players[len(c.players)-1] // Copy last element to index i.
+			c.players[len(c.players)-1] = players{}    // Erase last element (write zero value).
+			c.players = c.players[:len(c.players)-1]   // Truncate slice.
+
+			c.realPlayers--
+			realPlayer := c.realPlayers
+			delete(c.connections, socketID)
+			c.receiving.Unlock()
+
+			if realPlayer <= 0 {
+				//No more players close the game
+				c.Close()
+			}
+			return
+		}
+	}
+	c.receiving.Unlock()
+
+	messenger.HandleQuitGroup(&c.info, socketID)
+	c.syncPlayers()
 }
 
 //TryWord handle when a client wants to try a word
