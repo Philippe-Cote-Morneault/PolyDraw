@@ -38,6 +38,7 @@ type Coop struct {
 	waitingResponse  *semaphore.Weighted
 	receivingGuesses *abool.AtomicBool
 	nbVirtualPlayers int
+	curLap           int
 }
 
 //Init creates the coop game mode
@@ -50,6 +51,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
 	c.lives = 3
+	c.curLap = 1
 	c.commonScore.init()
 
 	c.receivingGuesses = abool.New()
@@ -148,6 +150,7 @@ func (c *Coop) GameLoop() bool {
 	}
 	//Compute next round
 	c.orderPos++
+	c.curLap++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.receiving.Unlock()
 
@@ -330,5 +333,27 @@ func (c *Coop) computeDifficulty() {
 
 //syncPlayers used to send all the sync to all the players
 func (c *Coop) syncPlayers() {
+	c.receiving.Lock()
+	players := make([]PlayersData, len(c.players))
+	for i := range c.players {
+		player := &c.players[i]
+		players[i] = PlayersData{
+			Username: player.Username,
+			UserID:   player.userID.String(),
+			Points:   c.commonScore.total,
+			IsCPU:    player.IsCPU,
+		}
+	}
+	c.receiving.Unlock()
 
+	message := socket.RawMessage{}
+	imageDuration := time.Now().Sub(c.timeStartImage)
+	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
+		Players:  players,
+		Laps:     c.curLap,
+		LapTotal: 0,
+		Time:     c.timeImage - imageDuration.Milliseconds(),
+		GameTime: 0,
+	})
+	c.pbroadcast(&message)
 }
