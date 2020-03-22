@@ -349,6 +349,16 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 
 //Close method used to force close the current game
 func (c *Coop) Close() {
+	c.receiving.Lock()
+	log.Printf("[Match] [Coop] Force match shutdown, the game will finish the last lap")
+	if c.cancelWait != nil {
+		c.cancelWait()
+		c.isRunning = false
+	}
+	c.receiving.Unlock()
+
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 }
 
 //GetConnections method used to return all the connections of the players
