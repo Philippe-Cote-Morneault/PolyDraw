@@ -362,7 +362,6 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 			count := len(g.groups[groupID])
 			g.mutex.Unlock()
 
-			//TODO make a check for solo
 			if (count >= 2 && groupDB.GameType == 0) ||
 				(count >= 1 && groupDB.GameType >= 1) {
 				if groupDB.GameType >= 1 && groupDB.VirtualPlayers < 1 {
