@@ -348,7 +348,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		player := f.connections[socketID]
 		f.receiving.Unlock()
 
-		virtualplayer.GetHintByBot(match2.HintRequested{
+		hintSent := virtualplayer.GetHintByBot(match2.HintRequested{
 			MatchID:  f.info.ID,
 			SocketID: socketID,
 			Player: match2.Player{
@@ -357,6 +357,10 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 				ID:       player.userID,
 			},
 		})
+
+		if hintSent {
+			//TODO Rajouter les points (Martin)
+		}
 	}
 }
 
