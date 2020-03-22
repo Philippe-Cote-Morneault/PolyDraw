@@ -83,6 +83,10 @@ class GroupManager : Service() {
         groupRepository?.kickPlayer(player)
     }
 
+    fun addVirtualPlayers(amountOfPlayers: Byte) {
+        groupRepository?.addVirtualPlayers(amountOfPlayers)
+    }
+
     fun startMatch() {
         socketService?.sendMessage(Event.START_MATCH, byteArrayOf())
     }

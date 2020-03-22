@@ -64,6 +64,7 @@ class MatchLobbyPresenter : Presenter {
     private fun onGroupCreated(group: Group) {
         matchLobbyView?.notifyMatchesChanged()
     }
+
     private fun onGroupDeleted(groupID: UUID) {
         matchLobbyView?.notifyMatchesChanged()
     }

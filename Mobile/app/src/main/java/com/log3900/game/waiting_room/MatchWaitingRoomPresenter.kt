@@ -60,7 +60,7 @@ class MatchWaitingRoomPresenter : Presenter {
     }
 
     fun onPlayerAddClick() {
-
+        groupManager?.addVirtualPlayers(1)
     }
 
     fun onPlayerRemoveClick(player: Player) {

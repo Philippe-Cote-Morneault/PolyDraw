@@ -143,6 +143,13 @@ class GroupRepository : Service() {
         socketService?.sendMessage(Event.KICK_PLAYER, UUIDUtils.uuidToByteArray(player.ID))
     }
 
+    fun addVirtualPlayers(amountOfVirtualPlayers: Byte) {
+        val jsonRequest = JsonObject().apply {
+            addProperty("NbJoueurs", amountOfVirtualPlayers)
+        }
+        socketService?.sendJsonMessage(Event.ADD_VIRTUAL_PLAYER, jsonRequest.toString())
+    }
+
     fun refreshRepository() {
         groupCache = GroupCache()
         getGroups(AccountRepository.getInstance().getAccount().sessionToken).subscribe(
