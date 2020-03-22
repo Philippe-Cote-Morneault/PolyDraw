@@ -9,6 +9,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"golang.org/x/sync/semaphore"
 	"log"
+	"strings"
 	"sync"
 	"time"
 )
@@ -27,6 +28,7 @@ type Coop struct {
 	currentWord  string
 	realPlayers  int
 	cancelWait   func()
+	commonScore  score
 
 	remainingTime int
 
@@ -46,6 +48,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.isRunning = true
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
+	c.commonScore.init()
 
 	c.receivingGuesses = abool.New()
 	c.funcSyncPlayer = c.syncPlayers
@@ -146,7 +149,62 @@ func (c *Coop) Disconnect(socketID uuid.UUID) {
 
 //TryWord handle when a client wants to try a word
 func (c *Coop) TryWord(socketID uuid.UUID, word string) {
-	panic("implement me")
+	c.receiving.Lock()
+	log.Printf("[Match] [Coop] Guessing the word for the socket id %s", socketID)
+	if strings.ToLower(strings.TrimSpace(word)) == c.currentWord && c.currentWord != "" {
+		//The word was found
+		if c.receivingGuesses.IsSet() {
+			c.waitingResponse.Release(1)
+			player := c.connections[socketID]
+
+			pointsForWord := 100
+			c.commonScore.commit(pointsForWord)
+			total := c.commonScore.total
+
+			c.receiving.Unlock()
+
+			response := socket.RawMessage{}
+			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
+				Valid:     true,
+				Points:    total,
+				NewPoints: pointsForWord,
+			})
+			socket.SendRawMessageToSocketID(response, socketID)
+
+			//Broadcast to all the other players that the word was found
+			broadcast := socket.RawMessage{}
+			broadcast.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
+				Username:  player.Username,
+				UserID:    player.userID.String(),
+				Points:    total,
+				NewPoints: pointsForWord,
+			})
+			c.pbroadcast(&broadcast)
+		} else {
+			log.Printf("[Match] [Coop] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
+			scoreTotal := c.commonScore.total
+			c.receiving.Unlock()
+
+			response := socket.RawMessage{}
+			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
+				Valid:     false,
+				NewPoints: 0,
+				Points:    scoreTotal,
+			})
+			socket.SendRawMessageToSocketID(response, socketID)
+		}
+	} else {
+		scoreTotal := c.commonScore.total
+		c.receiving.Unlock()
+
+		response := socket.RawMessage{}
+		response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
+			Valid:     false,
+			NewPoints: 0,
+			Points:    scoreTotal,
+		})
+		socket.SendRawMessageToSocketID(response, socketID)
+	}
 }
 
 //HintRequested for the current virtual player drawing
