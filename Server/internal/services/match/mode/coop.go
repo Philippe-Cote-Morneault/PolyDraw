@@ -74,6 +74,7 @@ func (c *Coop) Start() {
 	timeOut := make(chan bool)
 	go func() {
 		time.Sleep(time.Duration(c.gameTime) * time.Millisecond)
+		c.finish()
 		close(timeOut)
 	}()
 
@@ -82,7 +83,6 @@ func (c *Coop) Start() {
 		c.GameLoop()
 	}
 	<-timeOut
-	c.finish()
 }
 
 //GameLoop is called every new round
