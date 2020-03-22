@@ -177,24 +177,11 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 // handleStartGame [New Threads] does the startGame routine for a bot in match (match ->)
 func handleStartGame(match match2.IMatch) {
 	groupID := match.GetGroupID()
-
 	managerInstance.mutex.Lock()
 	managerInstance.Matches[groupID] = &match
-	channelID, ok := managerInstance.Channels[groupID]
-	if !ok {
-		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting handleStartGame...", groupID)
-		return
-	}
-	group, groupOk := managerInstance.Groups[groupID]
+	managerInstance.mutex.Unlock()
 
-	if !groupOk {
-		managerInstance.mutex.Unlock()
-		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleStartGame...", groupID)
-		return
-	}
-	//Unlocks mutex at the end
-	makeBotsSpeak("startGame", group, channelID)
+	makeBotsSpeak("startGame", groupID)
 	printManager("handleStartGame")
 
 }
@@ -241,22 +228,7 @@ func startDrawing(round *match2.RoundStart) {
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
 func handleRoundEnds(groupID uuid.UUID) {
-	managerInstance.mutex.Lock()
-	channelID, ok := managerInstance.Channels[groupID]
-	if !ok {
-		managerInstance.mutex.Unlock()
-		log.Printf("[VirtualPlayer] -> [Error] Can't find channelID with groupID : %v. Aborting handleRoundEnds...", groupID)
-		return
-	}
-
-	group, groupOk := managerInstance.Groups[groupID]
-	if !groupOk {
-		managerInstance.mutex.Unlock()
-		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting handleRoundEnds...", groupID)
-		return
-	}
-	//Unlocks mutex at the end
-	makeBotsSpeak("endRound", group, channelID)
+	makeBotsSpeak("endRound", groupID)
 	printManager("handleRoundEnds")
 }
 
@@ -402,7 +374,24 @@ func randomUsername(groupID uuid.UUID) string {
 }
 
 //makeBotsSpeak [New Threads] sends bot interaction to all connected users (virtualplayer)
-func makeBotsSpeak(interactionType string, group map[uuid.UUID]bool, channelID uuid.UUID) {
+func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
+	managerInstance.mutex.Lock()
+
+	channelID, ok := managerInstance.Channels[groupID]
+	if !ok {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find channelID with groupID : %v. Aborting handleStartGame...", groupID)
+		return
+	}
+
+	group, groupOk := managerInstance.Groups[groupID]
+
+	if !groupOk {
+		managerInstance.mutex.Unlock()
+		log.Printf("[Virtual Player] -> [Error] Can't find groupId : %v. Aborting handleStartGame...", groupID)
+		return
+	}
+
 	var wg sync.WaitGroup
 	wg.Add(len(group))
 	for botID := range group {
