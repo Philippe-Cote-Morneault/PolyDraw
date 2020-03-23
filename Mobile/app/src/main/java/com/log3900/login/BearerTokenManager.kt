@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.log3900.MainApplication
 import com.log3900.R
 
-object BearerTokenStorer {
+object BearerTokenManager {
     private val sharedPrefs: SharedPreferences = with (MainApplication.instance) {
         getSharedPreferences(resources.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
     }
