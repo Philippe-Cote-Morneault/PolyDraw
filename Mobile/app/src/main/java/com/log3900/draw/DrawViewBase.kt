@@ -248,6 +248,7 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun clearCanvas() {
+        nextPathPosition = 0
         mLastPaths = ConcurrentHashMap(mPaths) // as ConcurrentHashMap<MyPath, PaintOptions>
         mPath.reset()
         mPaths.clear()
