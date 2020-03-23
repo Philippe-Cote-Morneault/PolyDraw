@@ -79,17 +79,13 @@ class MatchWaitingRoomPresenter : Presenter {
 
     private fun onPlayerJoined(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
-            if (groupManager?.currentGroup?.gameType == MatchMode.FFA) {
-                matchWaitingRoomView?.notifyPlayerJoined(playerID)
-            }
+            matchWaitingRoomView?.notifyPlayerJoined(playerID)
         }
     }
 
     private fun onPlayerLeft(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
-            if (groupManager?.currentGroup?.gameType == MatchMode.FFA) {
-                matchWaitingRoomView?.notifyPlayerLeft(playerID)
-            }
+            matchWaitingRoomView?.notifyPlayerLeft(playerID)
         }
     }
 
