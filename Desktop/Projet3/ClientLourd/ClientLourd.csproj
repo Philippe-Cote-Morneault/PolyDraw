@@ -154,6 +154,7 @@
     <Compile Include="Services\DateService\Timestamp.cs" />
     <Compile Include="Services\EnumService\EnumManager.cs" />
     <Compile Include="Services\InkCanvas\StrokesReader.cs" />
+    <Compile Include="Services\ProfileViewerService\ProfileViewer.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestException.cs" />
