@@ -130,11 +130,11 @@ func sendDrawing(socketID uuid.UUID, svgKey string, drawingTimeFactor float64) {
 
 func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, stroke *Stroke, time int) {
 
-	nbPoints := (delayDrawSending * len(*points)) / time
-
 	if time == 0 {
 		return
 	}
+
+	nbPoints := (delayDrawSending * len(*points)) / time
 
 	if nbPoints == 0 {
 		nbPoints = 1
