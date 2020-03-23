@@ -121,5 +121,15 @@ namespace ClientLourd.Views.Dialogs
             DialogHost.CloseDialogCommand.Execute(null, null);
         }
 
+        private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var tb = (TextBox) sender;
+                var request = new TraversalRequest(FocusNavigationDirection.Next);
+                request.Wrapped = true;
+                tb.MoveFocus(request);
+            }
+        }
     }
 }
