@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
-import com.log3900.draw.divyanshuwidget.DrawView
 import com.log3900.R
 import com.log3900.draw.divyanshuwidget.DrawMode
 import kotlinx.android.synthetic.main.fragment_draw_tools.*

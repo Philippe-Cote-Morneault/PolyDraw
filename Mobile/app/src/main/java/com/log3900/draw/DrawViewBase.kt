@@ -53,8 +53,8 @@ class DrawViewBase @JvmOverloads constructor(
     private var mLastPaths = ConcurrentHashMap<MyPath, PaintOptions>()
 
     private var mPaint = Paint()
-    private var mPath = MyPath()
-    private val lastPathPoints: List<DrawPoint> = mutableListOf()
+    private var nextPathPosition: Int = 0
+    private var mPath = MyPath(positionIndex =  getNextPathPosition())
     private var lastPathID: UUID = mPath.id
     private var mPaintOptions = PaintOptions()
 
@@ -118,7 +118,9 @@ class DrawViewBase @JvmOverloads constructor(
             return
         }
 
-        mPath = strokeID?.let { MyPath(it) } ?: MyPath()
+        mPath = strokeID
+            ?.let { MyPath(it, getNextPathPosition()) }
+            ?: MyPath(positionIndex =  getNextPathPosition())
         mPath.reset()
 
         mPath.moveTo(start.x, start.y)
@@ -228,19 +230,15 @@ class DrawViewBase @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        for ((key, value) in mPaths) {
-            changePaint(value)
-            canvas.drawPath(key, mPaint)
-        }
+        mPaths
+            .toSortedMap(compareBy { it.positionIndex })
+            .forEach { (path, paintOptions) ->
+                changePaint(paintOptions)
+                canvas.drawPath(path, mPaint)
+            }
 
         changePaint(mPaintOptions)
         canvas.drawPath(mPath, mPaint)
-
-        // Send stroke info
-        if (canDraw) {
-//            Log.d("DRAW", "in onDraw...")
-//            sendStrokeInfo()
-        }
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
@@ -370,4 +368,6 @@ class DrawViewBase @JvmOverloads constructor(
             }
         }
     }
+
+    private fun getNextPathPosition(): Int = nextPathPosition++
 }

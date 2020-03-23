@@ -12,7 +12,10 @@ import java.io.ObjectInputStream
 import java.io.Serializable
 import java.util.*
 
-class MyPath(val id: UUID = UUID.randomUUID()) : Path(), Serializable {
+class MyPath(
+    val id: UUID = UUID.randomUUID(),
+    val positionIndex: Int
+) : Path(), Serializable {
     val actions = LinkedList<Action>()
 
     private fun readObject(inputStream: ObjectInputStream) {
