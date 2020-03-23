@@ -108,10 +108,12 @@
                             </ItemsControl.Items>
                         </ItemsControl>
                         <Separator />
-                        <Slider Width="100" Minimum="1" Maximum="100"
+                        <Slider Width="200" Minimum="1" Maximum="200"
                             ToolTip="Brush size"
+                                Margin="0 0 0 5"
                             Name="BrushSizeSlider"
-                            TickFrequency="10"
+                            Style="{StaticResource MaterialDesignDiscreteSlider}"
+                            TickFrequency="1"
                             Value="{Binding Path=EditorInformation.BrushSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     </ToolBar>
                 </ToolBarTray>
