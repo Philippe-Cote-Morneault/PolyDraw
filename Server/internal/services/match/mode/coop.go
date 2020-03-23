@@ -428,6 +428,8 @@ func (c *Coop) GetPlayers() []match2.Player {
 func (c *Coop) finish() {
 	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 	c.receiving.Lock()
+
+	c.isRunning = false
 	if c.cancelWait != nil {
 		c.cancelWait()
 	}
