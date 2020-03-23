@@ -43,7 +43,6 @@ type FFA struct {
 	receiving   sync.Mutex
 	hasFoundIt  map[uuid.UUID]bool
 	clientGuess int
-	cancelWait  func()
 }
 
 //Init initialize the game mode
