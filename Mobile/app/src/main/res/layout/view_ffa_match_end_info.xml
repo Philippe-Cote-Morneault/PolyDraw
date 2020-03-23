@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/view_round_end_info_text_view_word"
+        android:id="@+id/view_ffa_match_end_info_text_view_winner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/color_white"
@@ -18,11 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/view_round_end_info_recycler_view_players"
+        android:id="@+id/view_ffa_match_end_info_recycler_view_players"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_round_end_info_text_view_word"/>
+        app:layout_constraintTop_toBottomOf="@id/view_ffa_match_end_info_text_view_winner"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

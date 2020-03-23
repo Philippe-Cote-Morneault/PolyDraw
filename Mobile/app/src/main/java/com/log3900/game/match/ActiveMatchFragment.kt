@@ -165,6 +165,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showCanvas() {
+        drawFragment.view!!.clearAnimation()
         if (drawFragment.view!!.alpha == 1f) {
             return
         }
@@ -281,7 +282,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun hideRoundEndInfoView() {
-        roundEndInfoView.visibility = View.GONE
+        roundEndInfoView.visibility = View.INVISIBLE
     }
 
     override fun onDestroy() {

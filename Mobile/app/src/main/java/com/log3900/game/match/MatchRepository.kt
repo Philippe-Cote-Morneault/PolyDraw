@@ -176,8 +176,8 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         val matchEnded = MatchAdapter.jsonToMatchEnded(jsonObject)
+        Log.d("POTATO", "Match ended = $json")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
-        //EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, matchEnded))
     }
 
     private fun onPlayerLeftMatch(message: com.log3900.socket.Message) {

@@ -92,7 +92,6 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
         activeMatchView?.animateWordGuessedRight()
-        //activeMatchView?.showConfetti()
     }
 
     private fun onGuessedWordWrong() {
@@ -107,7 +106,7 @@ class ActiveMatchPresenter : Presenter {
                 activeMatchView?.hideRoundEndInfoView()
                 Handler().postDelayed({
                     activeMatchView?.showCanvas()
-                }, 500)
+                }, 1500)
             }, 2000)
         }
     }
@@ -118,6 +117,12 @@ class ActiveMatchPresenter : Presenter {
             playerScores.add(Pair(it.username, it.newPoints))
         }
         activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
+    }
+
+    private fun onMatchEnded(matchEnded: MatchEnded) {
+        if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID.toString()) {
+            activeMatchView?.showConfetti()
+        }
     }
 
 
@@ -137,6 +142,7 @@ class ActiveMatchPresenter : Presenter {
             EventType.GUESSED_WORD_WRONG -> onGuessedWordWrong()
             EventType.TIMES_UP -> onTimesUp(event.data as TimesUp)
             EventType.ROUND_ENDED -> onRoundEnded(event.data as RoundEnded)
+            EventType.MATCH_ENDED -> onMatchEnded(event.data as MatchEnded)
         }
     }
 
