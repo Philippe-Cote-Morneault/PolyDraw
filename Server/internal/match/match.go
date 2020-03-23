@@ -42,4 +42,7 @@ type IMatch interface {
 
 	//GetPlayers returns the list of the actual players.
 	GetPlayers() []Player
+
+	//IsRunning returns if the game is currently running
+	IsRunning() bool
 }

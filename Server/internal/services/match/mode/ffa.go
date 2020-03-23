@@ -36,7 +36,6 @@ type FFA struct {
 	lapsTotal      int
 	realPlayers    int
 	rand           *rand.Rand
-	isRunning      bool
 	currentWord    string
 	timeStart      time.Time
 	timeStartImage time.Time
@@ -44,7 +43,6 @@ type FFA struct {
 	receiving   sync.Mutex
 	hasFoundIt  map[uuid.UUID]bool
 	clientGuess int
-	cancelWait  func()
 }
 
 //Init initialize the game mode

@@ -23,15 +23,12 @@ const numberOfChances = 3
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
-	wordHistory  map[string]bool
 	orderVirtual []*players
 	curDrawer    *players
 	orderPos     int
 	chances      int
-	isRunning    bool
 	currentWord  string
 	realPlayers  int
-	cancelWait   func()
 	commonScore  score
 
 	gameTime       int64
@@ -41,11 +38,11 @@ type Coop struct {
 	receiving        sync.Mutex
 	timeStart        time.Time
 	timeStartImage   time.Time
-	waitingResponse  *semaphore.Weighted
-	receivingGuesses *abool.AtomicBool
 	nbVirtualPlayers int
 	curLap           int
-	closing          chan struct{}
+
+	closingTimeKeeper chan struct{}
+	lastLoop          chan struct{}
 }
 
 //Init creates the coop game mode
@@ -62,7 +59,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
-	c.closing = make(chan struct{})
+	c.closingTimeKeeper = make(chan struct{})
 
 	c.receivingGuesses = abool.New()
 	c.funcSyncPlayer = c.syncPlayers
@@ -95,7 +92,7 @@ func (c *Coop) Start() {
 					c.finish()
 					return
 				}
-			case <-c.closing:
+			case <-c.closingTimeKeeper:
 				return
 			}
 		}
@@ -111,7 +108,8 @@ func (c *Coop) Start() {
 //GameLoop is called every new round
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
-	c.curDrawer = &c.players[c.orderPos]
+	c.lastLoop = make(chan struct{})
+	c.curDrawer = c.orderVirtual[c.orderPos]
 	drawingID := uuid.New()
 
 	game := c.findGame()
@@ -188,7 +186,9 @@ func (c *Coop) GameLoop() {
 	c.commonScore.reset()
 	c.currentWord = ""
 	c.receiving.Unlock()
+
 	cbroadcast.Broadcast(match2.BRoundEnds, c.info.ID)
+	close(c.lastLoop)
 
 	time.Sleep(time.Millisecond * 500)
 	return
@@ -324,6 +324,8 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 //HintRequested for the current virtual player drawing
 func (c *Coop) HintRequested(socketID uuid.UUID) {
+
+	c.receiving.Lock()
 	player := c.connections[socketID]
 	c.receiving.Unlock()
 
@@ -364,7 +366,7 @@ func (c *Coop) Close() {
 		c.cancelWait()
 		c.isRunning = false
 	}
-	close(c.closing)
+	close(c.closingTimeKeeper)
 	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
@@ -426,9 +428,13 @@ func (c *Coop) GetPlayers() []match2.Player {
 
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
+	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 	c.receiving.Lock()
+
+	c.isRunning = false
 	if c.cancelWait != nil {
 		c.cancelWait()
+		<-c.lastLoop //wait for the last loop to end
 	}
 
 	//Send the time's up message
