@@ -102,6 +102,29 @@
                             </StackPanel>
                             <ComboBox Width="400" ItemsSource="{Binding DifficultyLevels}"  SelectedItem="{Binding SelectedDifficulty}"></ComboBox>
                         </StackPanel>
+                        
+                        <StackPanel HorizontalAlignment="Center"  Margin="0 20 0 20">
+                            <TextBlock FontSize="24" FontWeight="Bold" >
+                                <Run Text="Select the way you want to create the game"/>
+                            </TextBlock>
+                            <ToggleButton
+                                Name="UploadToggle"
+                                Width="40"
+                                Height="40"
+                                IsChecked="{Binding IsUploadModeSelected}"
+                                Style="{StaticResource MaterialDesignActionToggleButton}">
+                              <ToggleButton.Content>
+                                <materialDesign:PackIcon
+                                  Kind="Draw" Height="30" Width="30" />
+                              </ToggleButton.Content>
+                              <materialDesign:ToggleButtonAssist.OnContent>
+                                <materialDesign:PackIcon
+                                  Kind="Image" Height="30" Width="30" />
+                              </materialDesign:ToggleButtonAssist.OnContent>
+                            </ToggleButton>
+                            <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"  Text="Draw the word by yourself"/>
+                            <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" Text="Upload an image of the word"/>
+                        </StackPanel>
                     </StackPanel>
                 </DockPanel>
                 <!-- Drawing or upload slide-->
@@ -123,7 +146,16 @@
                             <Button Grid.Column="1" Margin="5" Click="UploadImageClick" Content="Next" />
                         </Grid>
                         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-                            
+                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                                <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Text="Draw a representation of the word " />
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
+                                           FontWeight="Bold"
+                                           Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <Grid Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
                                 <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
@@ -134,18 +166,10 @@
                                 <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
                                 <Button Command="{Binding RemoveImageCommand}"   Style="{StaticResource MaterialDesignFlatButton}" Content="{materialDesign:PackIcon Kind=Delete}" />
                             </StackPanel>
-                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold" Text="Or" />
-                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
-                                <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="Draw a representation of the word " />
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
-                                           FontWeight="Bold"
-                                           Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
-                            </StackPanel>
-                        </StackPanel>
-                        <Grid Name="EditorGrid" IsEnabled="{Binding Path=IsImageUpload, Converter={StaticResource InverseBooleanConverter}}">
-                            <controls:Editor x:Name="EditorView" Width="800" Height="450"/>
+                            
+                        </Grid >
+                        <Grid Name="EditorGrid" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}">
+                            <controls:Editor x:Name="EditorView"/>
                         </Grid>
                     </DockPanel>
             </materialDesign:TransitionerSlide>
@@ -167,9 +191,9 @@
                             <Button Grid.Column="0" Margin="5" Click="ClearPreviewCanvas" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" IsEnabled="{Binding PreviewGUIEnabled}" Content="Previous" />
                             <Button Grid.Column="1" Margin="5" Click="OnClose" IsEnabled="{Binding PreviewGUIEnabled}" Content="Confirm" />
                         </Grid>
-                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Vertical">
+                        <StackPanel DockPanel.Dock="Left" HorizontalAlignment="Center" Orientation="Vertical">
                             <!-- Upload image settings-->
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Visibility="{Binding Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <StackPanel Margin="10" Orientation="Vertical">
                                     <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                                Text="Black level threshold (%)"/>
@@ -196,7 +220,7 @@
                             <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
                         </StackPanel>
                         <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
-                            <InkCanvas x:Name="PreviewCanvas" Width="800" Height="450" IsEnabled="False" />
+                            <InkCanvas x:Name="PreviewCanvas" Width="1125" Height="750" IsEnabled="False" />
                         </materialDesign:Card>
                     </DockPanel>
             </materialDesign:TransitionerSlide>

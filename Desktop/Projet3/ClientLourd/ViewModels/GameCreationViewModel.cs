@@ -203,6 +203,8 @@ namespace ClientLourd.ViewModels
         }
 
         private string _image;
+
+        public bool IsUploadModeSelected { get; set; }
         public bool IsImageUpload
         {
             get { return !string.IsNullOrWhiteSpace(_image); }

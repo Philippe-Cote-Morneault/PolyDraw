@@ -184,6 +184,7 @@
           <e p="Converters" t="Include">
             <e p="BoolToVisibilityConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
+            <e p="ComparatorToOpacity.cs" t="Include" />
             <e p="ComparatorToVisibilityConverter.cs" t="Include" />
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
