@@ -15,39 +15,42 @@ import java.util.*
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private val socketService: SocketService = SocketService.instance!!
+    private var socketHandler: Handler
     var isListening = true
     private val strokeMutex = Mutex()
 
     init {
-        socketService.subscribeToMessage(Event.DRAW_START_SERVER, Handler {
+        socketHandler = Handler {
+            handleSocketMessage(it)
             true
-        })
+        }
 
-        socketService.subscribeToMessage(Event.DRAW_END_SERVER, Handler {
-            true
-        })
-
-        socketService.subscribeToMessage(Event.DRAW_PREVIEW_RESPONSE, Handler {
-            true
-        })
-
-        socketService.subscribeToMessage(Event.STROKE_DATA_SERVER, Handler {
-            if (isListening) {
-                val message = it.obj as Message
-                drawStrokeData(message.data)
-            }
-            true
-        })
-
-        socketService.subscribeToMessage(Event.STROKE_ERASE_SERVER, Handler {
-            if (isListening) {
-                val message = it.obj as Message
-                onStrokeRemove(UUIDUtils.byteArrayToUUID(message.data))
-            }
-            true
-        })
-
+        subscribe()
+        
 //        sendPreviewRequest()
+    }
+
+    fun subscribe() {
+        socketService.subscribeToMessage(Event.STROKE_DATA_SERVER, socketHandler)
+        socketService.subscribeToMessage(Event.STROKE_ERASE_SERVER, socketHandler)
+    }
+
+    fun unsubscribe() {
+        socketService.unsubscribeFromMessage(Event.STROKE_DATA_SERVER, socketHandler)
+        socketService.unsubscribeFromMessage(Event.STROKE_ERASE_SERVER, socketHandler)
+    }
+
+    private fun handleSocketMessage(message: android.os.Message) {
+        if (!isListening)
+            return
+
+        val socketMessage = message.obj as Message
+
+        when (socketMessage.type) {
+            Event.STROKE_DATA_SERVER -> drawStrokeData(socketMessage.data)
+            Event.STROKE_ERASE_SERVER -> onStrokeRemove(socketMessage.data)
+            else -> return
+        }
     }
 
     @Deprecated("Test purposes only")
@@ -94,6 +97,10 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         drawView.drawEnd()
     }
 
+    fun onStrokeRemove(data: ByteArray) {
+        val strokeID = UUIDUtils.byteArrayToUUID(data)
+        drawView.removeStroke(strokeID)
+    }
     fun onStrokeRemove(strokeID: UUID) {
         drawView.removeStroke(strokeID)
     }
