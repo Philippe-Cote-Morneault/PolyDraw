@@ -144,4 +144,5 @@
     <string name="language">Langue</string>
     <string name="difficulty">Difficulté</string>
     <string name="rounds">Rondes</string>
+    <string name="round_end_info_word_was_sentence">Le mot était %1$s!</string>
 </resources>
