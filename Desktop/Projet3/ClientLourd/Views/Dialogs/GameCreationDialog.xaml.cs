@@ -62,22 +62,31 @@ namespace ClientLourd.Views.Dialogs
                   if (files != null) ViewModel.AddImageCommand.Execute(files[0]);
               }
         }
+        
 
         private void UploadImageClick(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(ViewModel.Image) && CanvasIsEmpty())
+            if(ViewModel.IsUploadModeSelected && !ViewModel.IsImageUpload)
             {
-                DialogHost.Show(new ClosableErrorDialog("The image uploaded and the canvas cannot be empty"), "Dialog");
+                DialogHost.Show(new ClosableErrorDialog("Upload an image first"), "Dialog");
                 return;
             }
-
-            try
+            
+            if (!ViewModel.IsUploadModeSelected)
             {
-                CreateSVGFile(EditorView.GenerateXMLDoc());
-            }
-            catch(Exception ex)
-            {
-                DialogHost.Show(new ClosableErrorDialog(ex), "Dialog");
+                if (CanvasIsEmpty())
+                {
+                    DialogHost.Show(new ClosableErrorDialog("The canvas cannot be empty"), "Dialog");
+                    return;
+                }
+                try
+                {
+                    CreateSVGFile(EditorView.GenerateXMLDoc());
+                }
+                catch(Exception ex)
+                {
+                    DialogHost.Show(new ClosableErrorDialog(ex), "Dialog");
+                }
             }
                 
             ViewModel.UploadImageCommand.Execute(null);

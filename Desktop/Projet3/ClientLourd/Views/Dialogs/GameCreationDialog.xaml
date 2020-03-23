@@ -129,7 +129,7 @@
                 </DockPanel>
                 <!-- Drawing or upload slide-->
             </materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide AllowDrop="True" Drop="DropFile">
+                <materialDesign:TransitionerSlide >
                     <materialDesign:TransitionerSlide.BackwardWipe>
                       <materialDesign:SlideOutWipe/>
                     </materialDesign:TransitionerSlide.BackwardWipe>
@@ -145,7 +145,8 @@
                             <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Content="Previous" />
                             <Button Grid.Column="1" Margin="5" Click="UploadImageClick" Content="Next" />
                         </Grid>
-                        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                        <!-- Editor -->
+                        <StackPanel Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"  DockPanel.Dock="Top" Orientation="Vertical">
                             <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
                                 <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
@@ -155,22 +156,22 @@
                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </StackPanel>
-                        <Grid Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
-                                <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="Upload an image " />
-                                <Button Click="AddImageClick" Content="Upload"></Button>
-                            </StackPanel>
-                            <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=EditorGrid, Path=IsEnabled, Converter={StaticResource InverseBoolToVisConverter}}">
-                                <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
-                                <Button Command="{Binding RemoveImageCommand}"   Style="{StaticResource MaterialDesignFlatButton}" Content="{materialDesign:PackIcon Kind=Delete}" />
-                            </StackPanel>
-                            
-                        </Grid >
                         <Grid Name="EditorGrid" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}">
                             <controls:Editor x:Name="EditorView"/>
                         </Grid>
+                        <!-- Upload image  -->
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
+                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                               Text="Upload an image " />
+                                    <Button Click="AddImageClick" Content="Upload"></Button>
+                                </StackPanel>
+                                <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding  Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
+                                    <Button Command="{Binding RemoveImageCommand}"   Style="{StaticResource MaterialDesignFlatButton}" Content="{materialDesign:PackIcon Kind=Delete}" />
+                                </StackPanel>
+                            </StackPanel >
                     </DockPanel>
             </materialDesign:TransitionerSlide>
             
@@ -191,9 +192,20 @@
                             <Button Grid.Column="0" Margin="5" Click="ClearPreviewCanvas" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" IsEnabled="{Binding PreviewGUIEnabled}" Content="Previous" />
                             <Button Grid.Column="1" Margin="5" Click="OnClose" IsEnabled="{Binding PreviewGUIEnabled}" Content="Confirm" />
                         </Grid>
-                        <StackPanel DockPanel.Dock="Left" HorizontalAlignment="Center" Orientation="Vertical">
-                            <!-- Upload image settings-->
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Visibility="{Binding Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <!-- Play preview -->
+                        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Orientation="Horizontal">
+                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                       Text="Select the way the draw will be display"/>
+                            <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
+                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
+                        </StackPanel>
+                        <!-- preview -->
+                        <materialDesign:Card Width="1125" Height="750" materialDesign:ShadowAssist.ShadowDepth="Depth4" DockPanel.Dock="Right" Margin="5">
+                            <InkCanvas x:Name="PreviewCanvas" Width="1125" Height="750" IsEnabled="False" />
+                        </materialDesign:Card>
+                        <!-- Upload image settings-->
+                        <StackPanel  HorizontalAlignment="Center" Orientation="Vertical"  Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
                                 <StackPanel Margin="10" Orientation="Vertical">
                                     <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                                Text="Black level threshold (%)"/>
@@ -202,7 +214,6 @@
                                       Maximum="100"
                                       Style="{StaticResource MaterialDesignDiscreteSlider}"
                                       Value="{Binding BlackLevelThreshold}"/>
-                                    
                                 </StackPanel>
                                 <StackPanel Margin="10" Orientation="Vertical">
                                     <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
@@ -214,14 +225,7 @@
                                       Style="{StaticResource MaterialDesignDiscreteSlider}"/>
                                 </StackPanel>
                             </StackPanel>
-                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                       Text="Select the way the draw will be display"/>
-                            <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
-                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
                         </StackPanel>
-                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4" Margin="5">
-                            <InkCanvas x:Name="PreviewCanvas" Width="1125" Height="750" IsEnabled="False" />
-                        </materialDesign:Card>
                     </DockPanel>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>

@@ -158,7 +158,7 @@ namespace ClientLourd.ViewModels
             {
                 
                 var list = EnumManager.GetAllDescriptions<PotraceMode>();
-                if (IsImageUpload)
+                if (IsUploadModeSelected)
                 {
                     list.Remove(PotraceMode.Classic.GetDescription());
                 }
@@ -198,6 +198,7 @@ namespace ClientLourd.ViewModels
                     _image = value;
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(IsImageUpload));
+                    NotifyPropertyChanged(nameof(IsUploadModeSelected));
                 }
             }
         }
@@ -277,7 +278,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _uploadImageCommand??
-                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(param), o => !string.IsNullOrWhiteSpace(_image)));
+                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(param)));
             }
         }
 
@@ -286,7 +287,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                if (IsImageUpload)
+                if (IsUploadModeSelected)
                 {
                     SelectedMode = PotraceMode.LeftToRight.GetDescription();
                     await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
