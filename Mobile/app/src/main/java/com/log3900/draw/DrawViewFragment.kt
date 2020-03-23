@@ -6,16 +6,16 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
-import com.log3900.draw.divyanshuwidget.DrawView
 import com.log3900.R
 import com.log3900.draw.divyanshuwidget.DrawMode
+import com.log3900.draw.divyanshuwidget.PaintOptions
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.*
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
@@ -29,7 +29,10 @@ import java.util.*
 
 class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
+    var currentColor: Int = 0
     private lateinit var konfettiView: KonfettiView
+
+    private val DEFAULT_WIDTH_PROGRESS = 8
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,20 +51,17 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         setUpColorButtons()
 
         enableDrawFunctions(canDraw)
+    }
 
-        val toggleBtn = Button(context).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            text = "Toggle canDraw"
-            setOnClickListener {
-                enableDrawFunctions(!canDraw)
-            }
-        }
-        draw_view_fragment_layout.addView(toggleBtn)
+    override fun onDestroyView() {
+        drawView.onDestroy()
+        super.onDestroyView()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpUi(root: View) {
         drawView = root.findViewById(R.id.draw_view_canvas)
+        currentColor = resources.getColor(R.color.color_draw_black, null)
         konfettiView = root.findViewById(R.id.fragment_draw_view_konfetti)
     }
 
@@ -93,36 +93,60 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         // Drawing selected by default
         draw_button.isPressed = true
 
-        draw_button.setOnClickListener {
-            updateDrawToolButtonPressed(it)
-            drawView.setDrawMode(DrawMode.DRAW)
+        draw_button.setOnTouchListener { _, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                startDrawMode()
+            }
+            true
         }
-        remove_button.setOnClickListener {
-            updateDrawToolButtonPressed(it)
-            // TODO: Change draw mode...
-            drawView.setDrawMode(DrawMode.REMOVE)
+        remove_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateDrawToolButtonPressed(view)
+                drawView.setDrawMode(DrawMode.REMOVE)
+            }
+            true
         }
-        erase_button.setOnClickListener {
-            updateDrawToolButtonPressed(it)
-            drawView.setDrawMode(DrawMode.ERASE)
+        erase_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateDrawToolButtonPressed(view)
+                drawView.setDrawMode(DrawMode.ERASE)
+            }
+            true
         }
 
         // Circle tip selected by default
         circle_tip_button.isPressed = true
-        circle_tip_button.setOnClickListener {
-            updateTipButtonPressed(it)
-            drawView.setCap(Paint.Cap.ROUND)
+        circle_tip_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateTipButtonPressed(view)
+                drawView.setCap(Paint.Cap.ROUND)
+            }
+            true
         }
-        square_tip_button.setOnClickListener {
-            updateTipButtonPressed(it)
-            drawView.setCap(Paint.Cap.SQUARE)
+
+        square_tip_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateTipButtonPressed(view)
+                drawView.setCap(Paint.Cap.SQUARE)
+            }
+            true
         }
+    }
+
+    private fun startDrawMode() {
+        if (drawView.getDrawMode() == DrawMode.DRAW)
+            return
+
+        updateDrawToolButtonPressed(draw_button)
+        drawView.setDrawMode(DrawMode.DRAW)
+        changeDrawColor(currentColor)
     }
 
     private fun setUpWidthSeekbar() {
         seekbar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                drawView.setStrokeWidth(progress.toFloat())
+                val newProgress = if (progress < 1) 1 else progress
+                drawView.setStrokeWidth(newProgress.toFloat())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -136,37 +160,43 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         updateColorScale(color_picker_black)
 
         color_picker_black.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_black, null))
+            onColorButtonPressed(R.color.color_draw_black)
             updateColorScale(it)
         }
         color_picker_white.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_white, null))
+            onColorButtonPressed(R.color.color_draw_white)
             updateColorScale(it)
         }
         color_picker_red.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_red, null))
+            onColorButtonPressed(R.color.color_draw_red)
             updateColorScale(it)
         }
         color_picker_green.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_green, null))
+            onColorButtonPressed(R.color.color_draw_green)
             updateColorScale(it)
         }
         color_picker_blue.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_blue, null))
+            onColorButtonPressed(R.color.color_draw_blue)
             updateColorScale(it)
         }
         color_picker_yellow.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_yellow, null))
+            onColorButtonPressed(R.color.color_draw_yellow)
             updateColorScale(it)
         }
         color_picker_cyan.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_cyan, null))
+            onColorButtonPressed(R.color.color_draw_cyan)
             updateColorScale(it)
         }
         color_picker_magenta.setOnClickListener {
-            changeDrawColor(resources.getColor(R.color.color_draw_magenta, null))
+            onColorButtonPressed(R.color.color_draw_magenta)
             updateColorScale(it)
         }
+    }
+
+    private fun onColorButtonPressed(color: Int) {
+        currentColor = resources.getColor(color, null)
+        changeDrawColor(currentColor)
+        startDrawMode()
     }
 
     private fun updateDrawToolButtonPressed(button: View) {
@@ -225,11 +255,20 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         canDraw = enable
         if (canDraw) {
             setDrawToolsVisibility(View.VISIBLE)
+            setToDefaultValues()
         } else {
             setDrawToolsVisibility(View.GONE)
         }
 
         drawView.enableCanDraw(canDraw, drawingID)
+    }
+
+    fun setToDefaultValues() {
+        updateDrawToolButtonPressed(draw_button)
+        updateTipButtonPressed(circle_tip_button)
+        updateColorScale(color_picker_black)
+        seekbar_width.progress = DEFAULT_WIDTH_PROGRESS
+        drawView.setOptions(PaintOptions())
     }
 
     fun showConfetti() {

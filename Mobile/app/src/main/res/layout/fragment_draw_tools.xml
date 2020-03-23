@@ -30,10 +30,11 @@
             android:src="@drawable/ic_eraser_24dp"/>
         <View
             android:layout_width="1dp"
-            android:layout_height="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:background="@color/color_on_background_light"/>
+            android:background="?attr/colorSecondary"/>
         <ImageButton
             android:id="@+id/circle_tip_button"
             android:layout_width="wrap_content"
@@ -44,17 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/rectangle_black"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@color/color_on_background_light"/>
-        <ImageButton
-            android:id="@+id/adjust_width_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_adjust_24dp"/>
     </LinearLayout>
 
     <SeekBar

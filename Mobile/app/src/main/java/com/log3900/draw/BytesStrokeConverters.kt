@@ -40,7 +40,7 @@ object BytesToStrokeConverter {
             strokeID,
             userID,
             paintOptions,
-            points
+            points.reversed()
         )
     }
 
@@ -67,11 +67,7 @@ object BytesToStrokeConverter {
             Paint.Cap.SQUARE
     }
 
-    private fun ByteArray.getUUID(): UUID {
-        if (isLittleEndianOrder())
-            this.reverse()
-        return UUID.nameUUIDFromBytes(this)
-    }
+    private fun ByteArray.getUUID(): UUID = UUIDUtils.byteArrayToUUID(this)
 
     private fun ByteArray.getPoints(): List<DrawPoint> {
         var bytes = this

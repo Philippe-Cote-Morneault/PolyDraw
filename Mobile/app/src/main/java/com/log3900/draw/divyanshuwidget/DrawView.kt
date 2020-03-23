@@ -35,7 +35,7 @@ class DrawView @JvmOverloads constructor(
     private var mUndonePaths = LinkedHashMap<MyPath, PaintOptions>()
 
     private var mPaint = Paint()
-    private var mPath = MyPath()
+    private var mPath = MyPath(positionIndex = nextPathPosition())
     private var mPaintOptions = PaintOptions()
 
     private var mCurX = 0f
@@ -191,7 +191,7 @@ class DrawView @JvmOverloads constructor(
         }
 
         mPaths[mPath] = mPaintOptions
-        mPath = MyPath()
+        mPath = MyPath(positionIndex = nextPathPosition())
         mPaintOptions = PaintOptions(
             mPaintOptions.color,
             mPaintOptions.strokeWidth,
@@ -228,7 +228,7 @@ class DrawView @JvmOverloads constructor(
 
     private fun removePathIfIntersection(x: Float, y: Float) {
     val sortedMap = mPaths
-    var keyToRemove = MyPath()
+    var keyToRemove = MyPath(positionIndex = nextPathPosition())
     var found = false
     for ((key, value) in sortedMap) {
         for (action in key.actions) {
@@ -284,4 +284,7 @@ class DrawView @JvmOverloads constructor(
             }
         }
     }
+
+    private var pathPosition = 0
+    private fun nextPathPosition() = pathPosition++
 }
