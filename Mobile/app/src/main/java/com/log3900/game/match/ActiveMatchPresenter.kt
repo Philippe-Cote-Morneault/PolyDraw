@@ -42,7 +42,6 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
-        //activeMatchView?.showCanvas()
     }
 
     private fun onWordGuessedSucessfully() {
@@ -61,7 +60,6 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordToDrawView()
         activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
-        //activeMatchView?.showCanvas()
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
@@ -75,7 +73,7 @@ class ActiveMatchPresenter : Presenter {
         
         if (currentMatch.matchType == MatchMode.FFA) {
             val totalRounds = (currentMatch as FFAMatch).laps
-            activeMatchView?.setRoundsValue(MainApplication.instance.getString(R.string.Round) + " ${synchronisation.laps}/${totalRounds}")
+            activeMatchView?.setRoundsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${totalRounds}")
         }
 
         if (synchronisation.time <= 10000) {

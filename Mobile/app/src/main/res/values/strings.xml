@@ -177,4 +177,5 @@
     <string name="rounds">Rounds</string>
     <string name="round_end_info_word_was_sentence">The word was %1$s!</string>
     <string name="ffa_match_end_info_winner_is">The winner is %1$s!</string>
+    <string name="turn">Turn</string>
 </resources>
