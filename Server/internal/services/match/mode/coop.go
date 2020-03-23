@@ -40,7 +40,8 @@ type Coop struct {
 	timeStartImage   time.Time
 	nbVirtualPlayers int
 	curLap           int
-	closing          chan struct{}
+
+	closingTimeKeeper chan struct{}
 }
 
 //Init creates the coop game mode
@@ -57,7 +58,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
-	c.closing = make(chan struct{})
+	c.closingTimeKeeper = make(chan struct{})
 
 	c.receivingGuesses = abool.New()
 	c.funcSyncPlayer = c.syncPlayers
@@ -90,7 +91,7 @@ func (c *Coop) Start() {
 					c.finish()
 					return
 				}
-			case <-c.closing:
+			case <-c.closingTimeKeeper:
 				return
 			}
 		}
@@ -361,7 +362,7 @@ func (c *Coop) Close() {
 		c.cancelWait()
 		c.isRunning = false
 	}
-	close(c.closing)
+	close(c.closingTimeKeeper)
 	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
