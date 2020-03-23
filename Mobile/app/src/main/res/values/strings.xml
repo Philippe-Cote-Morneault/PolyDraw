@@ -27,6 +27,7 @@
     <string name="login_reenter_password_hint">Confirm password</string>
     <string name="login_password_help">At least 8 characters</string>
     <string name="login_password_error">The password cannot be empty</string>
+    <string name="login_remember_me">Remember me</string>
     <string name="login_button">Login</string>
     <string name="login_signup_question">Don\'t have an account?</string>
     <string name="login_signup_now">Sign up now!</string>
