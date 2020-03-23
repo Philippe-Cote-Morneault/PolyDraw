@@ -18,6 +18,7 @@ import java.util.*
 class ActiveMatchPresenter : Presenter {
     private var activeMatchView: ActiveMatchView? = null
     private var matchManager: MatchManager
+    private var lastShownTime: String? = null
 
     constructor(activeMatchView: ActiveMatchView) {
         this.activeMatchView = activeMatchView
@@ -63,7 +64,12 @@ class ActiveMatchPresenter : Presenter {
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
         val currentMatch = matchManager.getCurrentMatch()
-        activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
+        val formattedTime = DateFormatter.formatDateToTime(Date(synchronisation.time.toLong()))
+
+        if (lastShownTime == null || lastShownTime != formattedTime) {
+            lastShownTime = formattedTime
+            activeMatchView?.setTimeValue(formattedTime)
+        }
         
         if (currentMatch.matchType == MatchMode.FFA) {
             val totalRounds = (currentMatch as FFAMatch).laps
