@@ -1,8 +1,6 @@
 package com.log3900.draw
 
 import android.os.Handler
-import android.util.Log
-import com.log3900.draw.divyanshuwidget.DrawMode
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
@@ -10,7 +8,6 @@ import com.log3900.utils.format.UUIDUtils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.lang.Long.min
 import java.util.*
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
@@ -26,7 +23,7 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         }
 
         subscribe()
-        
+
 //        sendPreviewRequest()
     }
 
@@ -59,10 +56,6 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
         socketService.sendMessage(Event.DRAW_PREVIEW_REQUEST, UUIDUtils.uuidToByteArray(gameUUID))
     }
 
-    fun onStrokeStart(data: ByteArray) {
-        // Drawing id...
-    }
-
     fun drawStrokeData(data: ByteArray) {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
@@ -75,25 +68,16 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     }
 
     private suspend fun drawStrokes(strokeInfo: StrokeInfo) {
-        val (strokeID, userID, paintOptions, points) = strokeInfo
+        val (strokeID, _, paintOptions, points) = strokeInfo
         if (points.isEmpty())
             return
 
-        Log.d("DRAW_VIEW", "Received ${points.size} points")
-//        Log.d("DRAW_VIEW", "Erase is ${paintOptions.drawMode == DrawMode.ERASE}")
         drawView.setOptions(paintOptions)
 
-//        val time = min((20 / points.size).toLong(), 1)  // TODO: Validate delay
-        val time = 0L  // TODO: Validate delay
-//        val time = 1000L  // TODO: Validate delay
         drawView.drawStart(points.first(), strokeID)
-        delay(time)
-
         for (point in points.drop(1)) {
             drawView.drawMove(point)
-            delay(time/50)
         }
-        delay(time)
         drawView.drawEnd()
     }
 
