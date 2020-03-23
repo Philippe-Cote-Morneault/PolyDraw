@@ -378,7 +378,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				//Check if there are enough games
 				if groupDB.VirtualPlayers >= 1 {
 					var count int
-					model.DB().Preload("Image").Where("difficulty = ? and language = ?", groupDB.Difficulty, groupDB.Language).Count(&count)
+					model.DB().Model(&model.Game{}).Where("difficulty = ? and language = ?", groupDB.Difficulty, groupDB.Language).Count(&count)
 					if count < 10 {
 						rawMessage := socket.RawMessage{}
 						rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
