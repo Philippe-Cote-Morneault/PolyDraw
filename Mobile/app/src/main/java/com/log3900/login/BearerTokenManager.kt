@@ -2,6 +2,7 @@ package com.log3900.login
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
 
@@ -19,6 +20,8 @@ object BearerTokenManager {
             putString(bearerPrefKey, token)
             commit()
         }
+
+        Log.d("BEAR_MAN", "Stored token $token -> ${getBearer()}")
     }
 
     fun resetBearer() {

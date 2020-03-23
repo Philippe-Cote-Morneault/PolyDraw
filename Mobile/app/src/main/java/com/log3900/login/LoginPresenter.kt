@@ -19,6 +19,7 @@ import java.net.SocketTimeoutException
 import java.util.*
 
 class LoginPresenter(var loginView: LoginView?) : Presenter {
+    private var rememberUser = false
 
     fun authenticate(username: String, password: String) {
         loginView?.showProgresBar()
@@ -125,6 +126,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
+                                if (rememberUser) {
+                                    BearerTokenManager.storeBearer(bearerToken)
+                                }
                                 completable.onComplete()
                             }
                     }
@@ -138,6 +142,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
+                                if (rememberUser) {
+                                    BearerTokenManager.storeBearer(bearerToken)
+                                }
                                 completable.onComplete()
                             }
                     }
@@ -171,7 +178,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     }
 
     fun rememberUser() {
-        //
+        rememberUser = true
     }
 
     override fun destroy() {
