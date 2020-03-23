@@ -146,7 +146,6 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         seekbar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val newProgress = if (progress < 1) 1 else progress
-                Log.d("SEEK_BAR", "progress: $newProgress")
                 drawView.setStrokeWidth(newProgress.toFloat())
             }
 

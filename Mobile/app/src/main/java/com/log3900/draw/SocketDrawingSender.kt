@@ -66,11 +66,11 @@ class SocketDrawingSender() {
     fun sendStrokeDraw(strokeInfo: StrokeInfo) {
         if (!isListening)
             return
-        Log.d("DRAW_VIEW", "Send points: \n")
-        strokeInfo.points.forEach {
-            Log.d("DRAW_VIEW", "(${it.x}, ${it.y})")
-        }
-        Log.d("DRAW_VIEW", "Sent ${strokeInfo.points.size} points")
+//        Log.d("DRAW_VIEW", "Send points: \n")
+//        strokeInfo.points.forEach {
+//            Log.d("DRAW_VIEW", "(${it.x}, ${it.y})")
+//        }
+//        Log.d("DRAW_VIEW", "Sent ${strokeInfo.points.size} points")
 
         GlobalScope.launch {
             withContext(Dispatchers.Default) {

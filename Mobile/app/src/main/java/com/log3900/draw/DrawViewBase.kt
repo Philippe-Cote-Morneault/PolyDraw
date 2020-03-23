@@ -34,7 +34,6 @@ fun MyPath.toPoints(): List<DrawPoint> {
             }
         }
     }
-//    Log.d("DRAW", "$points")
 
     return points
 }
@@ -80,7 +79,6 @@ class DrawViewBase @JvmOverloads constructor(
             isAntiAlias = true
         }
 
-        Log.d("TOUCH_EVENT", "w: $width, h: $height")
 
 //        if (canDraw) {
 //            socketDrawingSender = SocketDrawingSender()
@@ -168,7 +166,6 @@ class DrawViewBase @JvmOverloads constructor(
 
         mPaths[mPath] = mPaintOptions
 
-//        mPath = MyPath()  TODO
         lastPathID = mPath.id
 
         mPaintOptions = PaintOptions(
@@ -191,7 +188,6 @@ class DrawViewBase @JvmOverloads constructor(
             mPaintOptions,
             points
         )
-//        socketDrawingSender!!.sendStrokeDraw(strokeInfo)
         socketDrawingSender!!.addStrokeToSend(strokeInfo)
     }
 
@@ -289,16 +285,11 @@ class DrawViewBase @JvmOverloads constructor(
             event.y > MAX_HEIGHT -> MAX_HEIGHT
             else -> event.y
         }
-        
-        Log.d("TOUCH_EVENT", "($x, $y)")
 
         if (mPaintOptions.drawMode == DrawMode.REMOVE) {
-//            if (event.action == MotionEvent.ACTION_DOWN)
             removePathIfIntersection(x, y)
             return true
         }
-
-        Log.d("TOUCH", "($x, $y), CURR($mCurX, $mCurY)")
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -363,7 +354,6 @@ class DrawViewBase @JvmOverloads constructor(
             }
         }
         if (keyToRemove != null) {
-            Log.d("DRAW_CANVAS", "Removing ${keyToRemove.toString()}")
             mPaths.remove(keyToRemove)
             if (canDraw) {
                 socketDrawingSender?.sendStrokeRemove(keyToRemove.id)
