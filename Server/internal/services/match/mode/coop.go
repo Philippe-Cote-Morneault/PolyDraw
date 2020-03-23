@@ -23,14 +23,12 @@ const numberOfChances = 3
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
-	wordHistory  map[string]bool
 	orderVirtual []*players
 	curDrawer    *players
 	orderPos     int
 	chances      int
 	currentWord  string
 	realPlayers  int
-	cancelWait   func()
 	commonScore  score
 
 	gameTime       int64
@@ -40,7 +38,6 @@ type Coop struct {
 	receiving        sync.Mutex
 	timeStart        time.Time
 	timeStartImage   time.Time
-	receivingGuesses *abool.AtomicBool
 	nbVirtualPlayers int
 	curLap           int
 	closing          chan struct{}
