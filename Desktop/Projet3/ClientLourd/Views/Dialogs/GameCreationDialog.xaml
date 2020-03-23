@@ -38,7 +38,7 @@
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
                                 <Binding ElementName="WordBox" Path="(Validation.HasError)" />
-                                <Binding Path="AreFieldsEmpty"/>
+                                <Binding Path="Game.IsInformationInvalid"/>
                             </MultiBinding>
                         </Button.IsEnabled>
                     </Button>
@@ -54,7 +54,7 @@
                             <TextBox MaxLength="20" HorizontalAlignment="Center" Width="400"
                                      materialDesign:HintAssist.Hint="Word" Name="WordBox">
                                 <TextBox.Text>
-                                    <Binding Path="Word" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding Path="Game.Word" UpdateSourceTrigger="PropertyChanged">
                                         <Binding.ValidationRules>
                                             <rules:WordRules />
                                         </Binding.ValidationRules>
@@ -74,17 +74,13 @@
                                          Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                                 </TextBlock>
                             </StackPanel>
-                            <ItemsControl ItemsSource="{Binding Hints}">
+                            <ItemsControl ItemsSource="{Binding Game.Hints}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                     <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
                                              materialDesign:HintAssist.Hint="hint">
                                         <TextBox.Text>
-                                            <Binding Path="." UpdateSourceTrigger="PropertyChanged">
-                                                <Binding.ValidationRules>
-                                                    <rules:HintRules/>
-                                                </Binding.ValidationRules>
-                                            </Binding>
+                                            <Binding Path="Text" UpdateSourceTrigger="PropertyChanged"/>
                                         </TextBox.Text>
                                     </TextBox>
                                     </DataTemplate>

@@ -135,6 +135,8 @@
     </ApplicationDefinition>
     <Compile Include="Models\Bindable\Channel.cs" />
     <Compile Include="Models\Bindable\EditorInformation.cs" />
+    <Compile Include="Models\Bindable\Game.cs" />
+    <Compile Include="Models\Bindable\Hint.cs" />
     <Compile Include="Models\Bindable\Lobby.cs" />
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />

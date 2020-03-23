@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService;
@@ -28,14 +29,13 @@ namespace ClientLourd.ViewModels
     {        
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
         private int _numberStrokesReceived;
+        private Game _game;
 
         public GameCreationViewModel()
         {
-            Word = "";
+            Game = new Game();
             _numberStrokesReceived = 0;
             PreviewGUIEnabled = true;
-            Hints = new ObservableCollection<string>(new string[3]);
-            Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
             BrushSize = 12;
             NumberOfHints = new List<int>(){1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -103,22 +103,6 @@ namespace ClientLourd.ViewModels
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
         public override void AfterLogin() { throw new System.NotImplementedException(); }
-
-        private ObservableCollection<string> _hints;
-        public ObservableCollection<string> Hints 
-        {
-            get { return _hints; }
-            set
-            {
-                if (_hints != value)
-                {
-                    _hints = value;
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged(nameof(AreFieldsEmpty));
-                }
-            }
-        }
-
         
         
         public RestClient RestClient
@@ -132,25 +116,6 @@ namespace ClientLourd.ViewModels
         }
 
 
-        public bool AreFieldsEmpty
-        {
-            get { return string.IsNullOrEmpty(_word) || _hints.Any(string.IsNullOrEmpty); }
-        }
-        public string Word 
-        {
-            get { return _word; }
-            set
-            {
-                if (_word != value)
-                {
-
-                    _word = value;
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged(nameof(AreFieldsEmpty));
-                }
-            }
-        }
-        private string _word;
 
         public string SelectedMode 
         {
@@ -173,9 +138,11 @@ namespace ClientLourd.ViewModels
             set
             {
                 _selectedNumberOfHints = value;
-                var tmp = new String[value];
-                _hints.Take(value).ToArray().CopyTo(tmp, 0);
-                Hints = new ObservableCollection<string>(tmp);
+                var tmp = new Hint[value];
+                for (int i = 0; i < value; i++)
+                    tmp[i] = new Hint();
+                Game.Hints.Take(value).ToArray().CopyTo(tmp, 0);
+                Game.Hints = new ObservableCollection<Hint>(tmp);
             }
         } 
         
@@ -254,6 +221,19 @@ namespace ClientLourd.ViewModels
             {
                 _currentCanvas = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public Game Game
+        {
+            get => _game;
+            set
+            {
+                if (value != _game)
+                {
+                    _game = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
