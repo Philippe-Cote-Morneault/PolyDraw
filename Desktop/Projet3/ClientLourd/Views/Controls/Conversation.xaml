@@ -19,30 +19,35 @@
                   extensions:ScrollViewerExtensions.AlwaysScrollToEnd="True">
         <ListBox Name="ConversationList" ItemsSource="{Binding SelectedChannel.Messages}"
                  PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
-            <!--<ListBox.ItemContainerStyle>
+
+
+            <ListBox.Resources>
+
+
                 <Style TargetType="ListBoxItem">
+
+                    <!---Code that allows to select user-->
                     <Setter Property="IsSelected" Value="{Binding Content.IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <ContentPresenter/>
+                                <ContentPresenter
+                                    Content="{TemplateBinding ContentControl.Content}"
+                                    ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}"
+                                    HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}"
+                                    SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />        
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-
-            <ListBox.Resources>-->
 
 
 
-
-                <Style TargetType="ListBoxItem">
                     <!-- others message -->
                     <Setter Property="HorizontalAlignment" Value="Left" />
                     <Setter Property="Width"
                             Value="{Binding ElementName=ConversationList, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=1.5}" />
-                    <Setter Property="IsEnabled" Value="True" />
+                    
                     <Style.Triggers>
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
@@ -132,7 +137,9 @@
                                             </Style>
                                         </materialDesign:Card.Style>
                                         <!-- Message content -->
+                                        
                                         <TextBlock TextWrapping="Wrap"
+                                                   
                                                    FontSize="16"
                                                    Text="{Binding Content}">
                                             <TextBlock.Style>
@@ -156,6 +163,7 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        
                                     </materialDesign:Card>
                                 </StackPanel>
                             </Border>
