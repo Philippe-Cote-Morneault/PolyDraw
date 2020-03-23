@@ -295,6 +295,7 @@ func GetVirtualPlayersInfo(groupID uuid.UUID) []match2.BotInfos {
 
 //GetHintByBot returns a boolean if hint is given to user or not
 func GetHintByBot(hintRequest *match2.HintRequested) bool {
+	log.Printf("[Virtual Player] In GetHintByBot with hintRequest : %v", *hintRequest)
 	playerID := hintRequest.Player.ID
 	managerInstance.mutex.Lock()
 
