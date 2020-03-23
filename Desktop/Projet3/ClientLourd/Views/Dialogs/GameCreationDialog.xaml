@@ -74,7 +74,7 @@
                                          Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                                 </TextBlock>
                             </StackPanel>
-                            <ItemsControl ItemsSource="{Binding Game.Hints}">
+                            <ItemsControl ItemsSource="{Binding Hints}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                     <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"

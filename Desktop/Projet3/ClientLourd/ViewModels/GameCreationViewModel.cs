@@ -138,13 +138,16 @@ namespace ClientLourd.ViewModels
             set
             {
                 _selectedNumberOfHints = value;
-                var tmp = new Hint[value];
-                for (int i = 0; i < value; i++)
-                    tmp[i] = new Hint();
-                Game.Hints.Take(value).ToArray().CopyTo(tmp, 0);
-                Game.Hints = new ObservableCollection<Hint>(tmp);
+                Game.Hints.ToList().ForEach(h => h.IsSelected = false);
+                Game.Hints.Take(value).ToList().ForEach(h => h.IsSelected = true);
+                NotifyPropertyChanged(nameof(Hints));
             }
-        } 
+        }
+
+        public ObservableCollection<Hint> Hints
+        {
+            get => new ObservableCollection<Hint>(Game.Hints.Take(SelectedNumberOfHints));
+        }
         
         private PotraceMode _selectedMode;
 
@@ -254,7 +257,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                _gameID = await RestClient.PostGameInformations(Word, Hints.ToArray(), _selectedDifficulty);
+                _gameID = await RestClient.PostGameInformations(Game.Word, Hints.Select(h => h.Text).ToArray(), _selectedDifficulty);
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
             }

@@ -15,12 +15,21 @@ namespace ClientLourd.Models.Bindable
             Hints = new ObservableCollection<Hint>()
             {
                 new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
+                new Hint(),
             };
         }
 
         public bool IsInformationInvalid
         {
-            get { return string.IsNullOrWhiteSpace(Word) || Hints.Any(h => !h.IsValid); }
+            get { return string.IsNullOrWhiteSpace(Word) || Hints.Where(h => h.IsSelected).Any(h => !h.IsValid); }
         }
         public string Word
         {
