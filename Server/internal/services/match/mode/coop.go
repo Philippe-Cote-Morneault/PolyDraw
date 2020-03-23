@@ -41,7 +41,6 @@ type Coop struct {
 	receiving        sync.Mutex
 	timeStart        time.Time
 	timeStartImage   time.Time
-	waitingResponse  *semaphore.Weighted
 	receivingGuesses *abool.AtomicBool
 	nbVirtualPlayers int
 	curLap           int
@@ -111,7 +110,7 @@ func (c *Coop) Start() {
 //GameLoop is called every new round
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
-	c.curDrawer = &c.players[c.orderPos]
+	c.curDrawer = c.orderVirtual[c.orderPos]
 	drawingID := uuid.New()
 
 	game := c.findGame()
