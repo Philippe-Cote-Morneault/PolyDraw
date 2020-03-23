@@ -86,7 +86,7 @@
                                 <!-- Message -->
                                 <StackPanel Orientation="Vertical">
                                     <!-- Message header -->
-                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}">
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" CommandParameter="{Binding User}">
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
                                                 <Setter Property="Background" Value="WhiteSmoke" />

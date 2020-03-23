@@ -22,7 +22,7 @@
     <materialDesign:DialogHost Identifier="Dialog"  Width="800">
         
             <StackPanel>
-                <Button HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
+                <Button HorizontalAlignment="Right" Command="{Binding CloseDialogCommand}">
                     <materialDesign:PackIcon Kind="Close" />
                 </Button>
                 <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35" Text="{DynamicResource CreateNewLobby}"></TextBlock>

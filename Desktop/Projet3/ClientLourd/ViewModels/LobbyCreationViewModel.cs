@@ -205,5 +205,16 @@ namespace ClientLourd.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        private RelayCommand<object> _closeDialog;
+
+
+        public ICommand CloseDialogCommand
+        {
+            get
+            {
+                return _closeDialog ?? (_closeDialog = new RelayCommand<object>(param => DialogHost.CloseDialogCommand.Execute(null, null)));
+            }
+        }
     }
 }

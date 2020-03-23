@@ -218,6 +218,7 @@
     <Compile Include="Services\SocketService\SocketEventsPublisher.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\PublicProfileViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Utilities\Converters\ComparatorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\DateConverter.cs" />
@@ -305,6 +306,9 @@
     <Compile Include="Views\Dialogs\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\PublicProfileDialog.xaml.cs">
+      <DependentUpon>PublicProfileDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\RegisterDialog.xaml.cs">
       <DependentUpon>RegisterDialog.xaml</DependentUpon>
     </Compile>
@@ -390,6 +394,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
+    <Page Include="Views\Dialogs\PublicProfileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\RegisterDialog.xaml" />
     <Page Include="Views\Dialogs\Tutorial.xaml" />
     <Page Include="Views\Windows\ChatWindow.xaml">

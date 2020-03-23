@@ -2,26 +2,32 @@
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using System.Windows.Input;
+using ClientLourd.Models.Bindable;
+using System.Windows;
 
 namespace ClientLourd.Services.ProfileViewerService
 {
     public class ProfileViewer
     {
-        static private RelayCommand<object> _viewPublicProfileCommand;
+        static private RelayCommand<User> _viewPublicProfileCommand;
 
         static public ICommand ViewPublicProfileCommand
         {
             get
             {
                 return _viewPublicProfileCommand ??
-                       (_viewPublicProfileCommand = new RelayCommand<object>(param => OpenPublicProfile()));
+                       (_viewPublicProfileCommand = new RelayCommand<User>(param => OpenPublicProfile(param)));
             }
         }
 
-        static private void OpenPublicProfile() 
+        static private async void OpenPublicProfile(User param) 
         {
-            DialogHost.Show(new ClosableErrorDialog("Hi!"), "Default");
+            PublicProfileDialog publicProfileDialog = new PublicProfileDialog(param);
 
+            await DialogHost.Show(publicProfileDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
+            {
+                (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+            });
         }
 
 
