@@ -170,6 +170,7 @@
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
+    <Compile Include="Utilities\Converters\ComparatorToOpacity.cs" />
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
     <Compile Include="Utilities\Converters\GameModeToImageConverter.cs" />
     <Compile Include="Utilities\Converters\ModeToVisibilityConverter.cs" />

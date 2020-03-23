@@ -22,7 +22,6 @@ namespace ClientLourd.ViewModels
     {
         public LobbyCreationViewModel()
         {
-            GameName = "";
             SelectedMode = GameModes.FFA.GetDescription();
             SelectedNumberOfPlayers = 8;
             SelectedDifficulty = DifficultyLevel.Easy.GetDescription();
@@ -166,19 +165,7 @@ namespace ClientLourd.ViewModels
 
 
 
-        private string _gameName;
-
-        public string GameName
-        {
-            get => _gameName;
-            set
-            {
-                if (value != _gameName)
-                {
-                    _gameName = value;
-                }
-            }
-        }
+       
 
         public override void AfterLogOut()
         {
@@ -200,7 +187,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGroup(GameName, SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>(), SelectedNumberOfRounds);
+                await RestClient.PostGroup(SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>(), SelectedNumberOfRounds);
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)

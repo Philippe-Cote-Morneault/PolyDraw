@@ -30,7 +30,7 @@
             
             
             <StackPanel Margin="30" >
-                <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{Binding CurrentLobby.GameName}"></TextBlock>
+                <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{DynamicResource WaitingRoom}"></TextBlock>
                 <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}Mode: {0}}"></TextBlock>
                 <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
 

@@ -11,7 +11,7 @@ namespace ClientLourd.Models.Bindable
     public class Lobby: ModelBase
     {
         public Lobby(
-            string gameName,
+            
             string gameID,
             string host, 
             string hostID, 
@@ -27,7 +27,7 @@ namespace ClientLourd.Models.Bindable
             PlayersCount = playersCount;
             Players = players;
             PlayersMax = nPlayersMax;
-            GameName = gameName;
+            
             ID = gameID;
             Host = host;
             HostID = hostID;
@@ -48,7 +48,6 @@ namespace ClientLourd.Models.Bindable
 
         private int _playersCount;
         public int PlayersCount { get => _playersCount; set { _playersCount = value; NotifyPropertyChanged(); } }
-        public string GameName { get; set; }
 
         private string _host;
         public string Host 
