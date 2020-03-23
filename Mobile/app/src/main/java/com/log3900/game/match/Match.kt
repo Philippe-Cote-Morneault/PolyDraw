@@ -52,7 +52,8 @@ class Synchronisation(
 
 class MatchEnded(
     var players: ArrayList<com.log3900.game.match.Player>,
-    var winner: String,
+    var winner: UUID,
+    var winnerName: String,
     var time: Int
 )
 

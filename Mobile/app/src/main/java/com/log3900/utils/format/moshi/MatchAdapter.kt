@@ -136,10 +136,11 @@ object MatchAdapter {
 
     fun jsonToMatchEnded(jsonObject: JsonObject): MatchEnded {
         val players = jsonToPlayers(jsonObject.get("Players").asJsonArray)
-        val winner = jsonObject.get("Winner").asString
+        val winner = UUID.fromString(jsonObject.get("Winner").asString)
+        val winnerName = jsonObject.get("WinnerName").asString
         val time = jsonObject.get("Time").asInt
 
-        return MatchEnded(players, winner, time)
+        return MatchEnded(players, winner, winnerName, time)
     }
 
     private fun jsonToPlayers(jsonArray: JsonArray): ArrayList<com.log3900.game.match.Player> {

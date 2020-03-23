@@ -120,9 +120,14 @@ class ActiveMatchPresenter : Presenter {
     }
 
     private fun onMatchEnded(matchEnded: MatchEnded) {
-        if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID.toString()) {
+        if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
             activeMatchView?.showConfetti()
         }
+        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
+        matchEnded.players.forEach {
+            playerScores.add(Pair(it.username, it.points))
+        }
+        activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores)
     }
 
 

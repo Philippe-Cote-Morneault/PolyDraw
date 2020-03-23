@@ -145,4 +145,5 @@
     <string name="difficulty">Difficulté</string>
     <string name="rounds">Rondes</string>
     <string name="round_end_info_word_was_sentence">Le mot était %1$s!</string>
+    <string name="ffa_match_end_info_winner_is">Le vainqueur est %1$s!</string>
 </resources>
