@@ -358,6 +358,8 @@ class DrawViewBase @JvmOverloads constructor(
         invalidate()
     }
 
+    fun getDrawMode() = mPaintOptions.drawMode
+
     fun setCap(cap: Paint.Cap) {
         mPaintOptions.strokeCap = cap
     }

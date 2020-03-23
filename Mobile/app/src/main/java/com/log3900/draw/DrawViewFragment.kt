@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -95,13 +96,10 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         draw_button.isPressed = true
 
         draw_button.setOnClickListener {
-            updateDrawToolButtonPressed(it)
-            drawView.setDrawMode(DrawMode.DRAW)
-            changeDrawColor(currentColor)
+            startDrawMode()
         }
         remove_button.setOnClickListener {
             updateDrawToolButtonPressed(it)
-            // TODO: Change draw mode...
             drawView.setDrawMode(DrawMode.REMOVE)
         }
         erase_button.setOnClickListener {
@@ -121,10 +119,21 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         }
     }
 
+    private fun startDrawMode() {
+        if (drawView.getDrawMode() == DrawMode.DRAW)
+            return
+
+        updateDrawToolButtonPressed(draw_button)
+        drawView.setDrawMode(DrawMode.DRAW)
+        changeDrawColor(currentColor)
+    }
+
     private fun setUpWidthSeekbar() {
         seekbar_width.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                drawView.setStrokeWidth(progress.toFloat())
+                val newProgress = if (progress < 1) 1 else progress
+                Log.d("SEEK_BAR", "progress: $newProgress")
+                drawView.setStrokeWidth(newProgress.toFloat())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -138,45 +147,43 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         updateColorScale(color_picker_black)
 
         color_picker_black.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_black, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_black)
             updateColorScale(it)
         }
         color_picker_white.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_white, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_white)
             updateColorScale(it)
         }
         color_picker_red.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_red, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_red)
             updateColorScale(it)
         }
         color_picker_green.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_green, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_green)
             updateColorScale(it)
         }
         color_picker_blue.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_blue, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_blue)
             updateColorScale(it)
         }
         color_picker_yellow.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_yellow, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_yellow)
             updateColorScale(it)
         }
         color_picker_cyan.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_cyan, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_cyan)
             updateColorScale(it)
         }
         color_picker_magenta.setOnClickListener {
-            currentColor = resources.getColor(R.color.color_draw_magenta, null)
-            changeDrawColor(currentColor)
+            onColorButtonPressed(R.color.color_draw_magenta)
             updateColorScale(it)
         }
+    }
+
+    private fun onColorButtonPressed(color: Int) {
+        currentColor = resources.getColor(color, null)
+        changeDrawColor(currentColor)
+        startDrawMode()
     }
 
     private fun updateDrawToolButtonPressed(button: View) {
