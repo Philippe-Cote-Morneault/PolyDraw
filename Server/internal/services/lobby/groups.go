@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
@@ -373,6 +374,21 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 					socket.SendRawMessageToSocketID(rawMessage, socketID)
 					return
 				}
+
+				//Check if there are enough games
+				if groupDB.VirtualPlayers >= 1 {
+					var count int
+					model.DB().Preload("Image").Where("difficulty = ? and language = ?", groupDB.Difficulty, groupDB.Language).Count(&count)
+					if count < 10 {
+						rawMessage := socket.RawMessage{}
+						rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
+							Response: false,
+							Error:    fmt.Sprintf("There are only %d game(s). There needs to be a minimum of 10 games before it can start", count),
+						})
+						socket.SendRawMessageToSocketID(rawMessage, socketID)
+					}
+				}
+
 				//We send the response and we pass it along to the match service
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
