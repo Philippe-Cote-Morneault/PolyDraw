@@ -316,7 +316,6 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 
 //HintRequested method used by the user when requesting a hint
 func (f *FFA) HintRequested(socketID uuid.UUID) {
-	//Hint is not available in ffa
 	f.receiving.Lock()
 	if len(f.players) > 0 && !f.players[f.order[f.orderPos]].IsCPU {
 		f.receiving.Unlock()

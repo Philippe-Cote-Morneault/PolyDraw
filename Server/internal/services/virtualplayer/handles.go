@@ -308,8 +308,6 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	}
 
 	_, hasHint := managerInstance.Hints[playerID]
-	managerInstance.mutex.Unlock()
-
 	if !hasHint {
 		//Will iterate once and take the first hint in game
 		for hint := range game.Hints {
