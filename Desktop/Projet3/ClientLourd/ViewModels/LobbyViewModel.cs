@@ -18,9 +18,9 @@ using ClientLourd.Services.SoundService;
 using System.Windows.Media.Imaging;
 
 namespace ClientLourd.ViewModels
-{//test
+{
     class LobbyViewModel : ViewModelBase
-    {//test
+    {
         private bool _canStart;
         public bool CanStart
         {
