@@ -8,6 +8,8 @@
         android:id="@+id/list_item_round_end_info_text_view_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:textSize="26sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -16,6 +18,9 @@
         android:id="@+id/list_item_round_end_info_text_view_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
+        android:textSize="26sp"
+        android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@id/list_item_round_end_info_text_view_position"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
@@ -24,7 +29,7 @@
         android:id="@+id/list_item_round_end_info_text_view_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_green"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

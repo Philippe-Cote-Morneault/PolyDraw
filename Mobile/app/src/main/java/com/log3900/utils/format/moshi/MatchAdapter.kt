@@ -164,4 +164,27 @@ object MatchAdapter {
 
         return TimesUp(type, word)
     }
+
+    fun jsonToRoundEnded(jsonObject: JsonObject): RoundEnded {
+        val word = jsonObject.get("Word").asString
+        val players = jsonToRoundEndedPlayers(jsonObject.get("Players").asJsonArray)
+
+        return RoundEnded(players, word)
+    }
+
+    private fun jsonToRoundEndedPlayers(jsonArray: JsonArray): ArrayList<RoundEnded.Player> {
+        val players: ArrayList<RoundEnded.Player> = arrayListOf()
+
+        jsonArray.forEach {
+            val userID = UUID.fromString(it.asJsonObject.get("UserID").asString)
+            val username = it.asJsonObject.get("Username").asString
+            val isCPU = it.asJsonObject.get("IsCPU").asBoolean
+            val points = it.asJsonObject.get("Points").asInt
+            val newPoints = it.asJsonObject.get("NewPoints").asInt
+
+            players.add(RoundEnded.Player(userID, username, isCPU, points, newPoints))
+        }
+
+        return players
+    }
 }

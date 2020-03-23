@@ -25,4 +25,6 @@ interface ActiveMatchView {
     fun pulseRemainingTime()
     fun animateWordGuessedWrong()
     fun animateWordGuessedRight()
+    fun showRoundEndInfoView(word: String, players: ArrayList<Pair<String, Int>>)
+    fun hideRoundEndInfoView()
 }

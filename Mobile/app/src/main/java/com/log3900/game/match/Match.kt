@@ -71,3 +71,16 @@ class TimesUp(
         MATCH_END
     }
 }
+
+class RoundEnded(
+    var players: ArrayList<Player>,
+    var word: String
+) {
+    class Player(
+        var userID: UUID,
+        var username: String,
+        var isCPU: Boolean,
+        var points: Int,
+        var newPoints: Int
+    )
+}

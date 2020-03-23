@@ -2,6 +2,7 @@ package com.log3900.game.match.UI
 
 import android.content.Context
 import android.graphics.Color
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.MainApplication
 import com.log3900.R
 
-class RoundEndInfoView(context: Context) : ConstraintLayout(context) {
+class RoundEndInfoView(context: Context, attributeSet: AttributeSet) : ConstraintLayout(context, attributeSet) {
     private var layout: ConstraintLayout
     private var wordTextView: TextView
     private var playersRecyclerView: RecyclerView
@@ -21,7 +22,7 @@ class RoundEndInfoView(context: Context) : ConstraintLayout(context) {
     private lateinit var playersAdapter: PlayerAdapter
 
     init {
-        layout = View.inflate(context, R.layout.view_word_guessing, this) as ConstraintLayout
+        layout = View.inflate(context, R.layout.view_round_end_info, this) as ConstraintLayout
         wordTextView = layout.findViewById(R.id.view_round_end_info_text_view_word)
         playersRecyclerView = layout.findViewById(R.id.view_round_end_info_recycler_view_players)
 

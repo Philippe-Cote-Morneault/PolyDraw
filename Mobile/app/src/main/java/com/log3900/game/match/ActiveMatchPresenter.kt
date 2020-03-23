@@ -1,5 +1,6 @@
 package com.log3900.game.match
 
+import android.os.Handler
 import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
@@ -14,6 +15,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ActiveMatchPresenter : Presenter {
     private var activeMatchView: ActiveMatchView? = null
@@ -40,7 +42,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
-        activeMatchView?.showCanvas()
+        //activeMatchView?.showCanvas()
     }
 
     private fun onWordGuessedSucessfully() {
@@ -59,7 +61,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordToDrawView()
         activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
-        activeMatchView?.showCanvas()
+        //activeMatchView?.showCanvas()
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
@@ -98,8 +100,24 @@ class ActiveMatchPresenter : Presenter {
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
     }
 
-    private fun onTimesUp() {
-        activeMatchView?.hideCanvas()
+    private fun onTimesUp(timesUp: TimesUp) {
+        if (timesUp.type == TimesUp.Type.WORD_END) {
+            Handler().postDelayed({
+                activeMatchView?.hideCanvas()
+                activeMatchView?.hideRoundEndInfoView()
+                Handler().postDelayed({
+                    activeMatchView?.showCanvas()
+                }, 500)
+            }, 2000)
+        }
+    }
+
+    private fun onRoundEnded(roundEnded: RoundEnded) {
+        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
+        roundEnded.players.forEach {
+            playerScores.add(Pair(it.username, it.newPoints))
+        }
+        activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
     }
 
 
@@ -117,7 +135,8 @@ class ActiveMatchPresenter : Presenter {
             EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
             EventType.GUESSED_WORD_RIGHT -> onGuessedWordRight(event.data as PlayerGuessedWord)
             EventType.GUESSED_WORD_WRONG -> onGuessedWordWrong()
-            EventType.TIMES_UP -> onTimesUp()
+            EventType.TIMES_UP -> onTimesUp(event.data as TimesUp)
+            EventType.ROUND_ENDED -> onRoundEnded(event.data as RoundEnded)
         }
     }
 

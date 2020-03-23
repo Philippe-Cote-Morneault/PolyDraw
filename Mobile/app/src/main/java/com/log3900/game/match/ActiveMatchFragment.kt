@@ -28,6 +28,7 @@ import android.graphics.Color
 import android.view.animation.AnimationSet
 import android.view.animation.TranslateAnimation
 import androidx.core.content.ContextCompat
+import com.log3900.game.match.UI.RoundEndInfoView
 
 
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
@@ -43,6 +44,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private lateinit var roundsTextView: TextView
     private var guessingView: WordGuessingView? = null
     private var wordToDrawView: WordToDrawView? = null
+    private lateinit var roundEndInfoView: RoundEndInfoView
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,6 +68,8 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         toolbar = activity?.findViewById(R.id.toolbar_active_match_outer_container)!!
         remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
         roundsTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_rounds)
+
+        roundEndInfoView = rootView.findViewById(R.id.fragment_active_match_round_end_info_view)
     }
 
     private fun setupRecyclerView() {
@@ -268,6 +272,16 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
             colorChangeAnimator.start()
             scaleUpAnimator.start()
         }
+    }
+
+    override fun showRoundEndInfoView(word: String, players: ArrayList<Pair<String, Int>>) {
+        roundEndInfoView.setWord(word)
+        roundEndInfoView.setPlayers(players)
+        roundEndInfoView.visibility = View.VISIBLE
+    }
+
+    override fun hideRoundEndInfoView() {
+        roundEndInfoView.visibility = View.GONE
     }
 
     override fun onDestroy() {
