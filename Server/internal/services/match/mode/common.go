@@ -158,7 +158,8 @@ func (b *base) findGame() *model.Game {
 		if count == 0 {
 			return &game
 		}
-		if game.ID != uuid.Nil {
+
+		if game.ID != uuid.Nil && len(game.Hints) > 0 && game.Image != nil {
 			if _, inList := b.wordHistory[word]; !inList || watchDog >= 10 {
 				//Add the word to the list so it does not come up again.
 				word = game.Word
