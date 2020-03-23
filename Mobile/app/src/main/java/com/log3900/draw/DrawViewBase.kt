@@ -43,6 +43,11 @@ class DrawViewBase @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0,
     var canDraw: Boolean = true
 ) : View(context, attrs, defStyleAttr) {
+    private val MAX_WIDTH = 1125f
+    private val MIN_WIDTH = 0f
+    private val MAX_HEIGHT = 750f
+    private val MIN_HEIGHT = 0f
+
     private var mPaths = ConcurrentHashMap<MyPath, PaintOptions>()
 
     private var mLastPaths = ConcurrentHashMap<MyPath, PaintOptions>()
@@ -74,6 +79,8 @@ class DrawViewBase @JvmOverloads constructor(
             strokeWidth = mPaintOptions.strokeWidth
             isAntiAlias = true
         }
+
+        Log.d("TOUCH_EVENT", "w: $width, h: $height")
 
 //        if (canDraw) {
 //            socketDrawingSender = SocketDrawingSender()
@@ -254,8 +261,18 @@ class DrawViewBase @JvmOverloads constructor(
             return true
 
         // TODO: REmove when done testing
-        val x = event.x
-        val y = event.y
+        val x = when {
+            event.x < MIN_WIDTH -> MIN_WIDTH
+            event.x > MAX_WIDTH -> MAX_WIDTH
+            else -> event.x
+        }
+        val y = when {
+            event.y < MIN_HEIGHT -> MIN_HEIGHT
+            event.y > MAX_HEIGHT -> MAX_HEIGHT
+            else -> event.y
+        }
+        
+        Log.d("TOUCH_EVENT", "($x, $y)")
 
         if (mPaintOptions.drawMode == DrawMode.REMOVE) {
 //            if (event.action == MotionEvent.ACTION_DOWN)
