@@ -3,6 +3,7 @@ package com.log3900.game.waiting_room
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.ChatMessage
 import com.log3900.game.group.GroupManager
+import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -40,6 +41,9 @@ class MatchWaitingRoomPresenter : Presenter {
 
         if (groupManager?.currentGroup?.ownerID == AccountRepository.getInstance().getAccount().ID) {
             matchWaitingRoomView?.displayStartMatchButton(true)
+            if (groupManager?.currentGroup?.gameType == MatchMode.SOLO || groupManager?.currentGroup?.gameType == MatchMode.COOP) {
+                groupManager?.addVirtualPlayers(1)
+            }
         } else {
             matchWaitingRoomView?.displayStartMatchButton(false)
         }
@@ -75,13 +79,17 @@ class MatchWaitingRoomPresenter : Presenter {
 
     private fun onPlayerJoined(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
-            matchWaitingRoomView?.notifyPlayerJoined(playerID)
+            if (groupManager?.currentGroup?.gameType == MatchMode.FFA) {
+                matchWaitingRoomView?.notifyPlayerJoined(playerID)
+            }
         }
     }
 
     private fun onPlayerLeft(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
-            matchWaitingRoomView?.notifyPlayerLeft(playerID)
+            if (groupManager?.currentGroup?.gameType == MatchMode.FFA) {
+                matchWaitingRoomView?.notifyPlayerLeft(playerID)
+            }
         }
     }
 

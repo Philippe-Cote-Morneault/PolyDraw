@@ -48,6 +48,7 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.TIMES_UP, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.ROUND_ENDED, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -87,6 +88,7 @@ class MatchRepository : Service() {
             Event.TIMES_UP -> onTimesUp(socketMessage)
             Event.CHECKPOINT -> onCheckpoint(socketMessage)
             Event.ROUND_ENDED -> onRoundEnded(socketMessage)
+            Event.HINT_RESPONSE -> onHintResponse(socketMessage)
         }
     }
 
@@ -100,6 +102,10 @@ class MatchRepository : Service() {
 
     fun leaveMatch() {
         socketService?.sendMessage(Event.LEAVE_MATCH, byteArrayOf())
+    }
+
+    fun requestHint() {
+        socketService?.sendMessage(Event.HINT_REQUEST, byteArrayOf())
     }
 
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
@@ -214,6 +220,14 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.ROUND_ENDED, roundEnded))
     }
 
+    private fun onHintResponse(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "Hint response = $json")
+        val hintResponse = MatchAdapter.jsonToHintResponse(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.HINT_RESPONSE, hintResponse))
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
         playerScores[playerID] = newScore
         reorderPlayers()
@@ -226,6 +240,7 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.TIMES_UP, socketMessageHandler!!)

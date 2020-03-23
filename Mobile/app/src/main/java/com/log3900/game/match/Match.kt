@@ -47,7 +47,9 @@ class Synchronisation(
     var players: ArrayList<Pair<UUID, Int>>,
     var laps: Int?,
     var time: Int,
-    var gameTime: Int?
+    var gameTime: Int?,
+    var lapTotal: Int?,
+    var lives: Int?
 )
 
 class MatchEnded(
@@ -85,3 +87,8 @@ class RoundEnded(
         var newPoints: Int
     )
 }
+
+class HintResponse(
+    var hint: String?,
+    var error: String?
+)

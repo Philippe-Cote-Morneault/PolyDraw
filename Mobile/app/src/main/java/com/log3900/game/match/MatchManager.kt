@@ -29,4 +29,8 @@ class MatchManager {
     fun leaveMatch() {
         matchRepository.leaveMatch()
     }
+
+    fun requestHint() {
+        matchRepository.requestHint()
+    }
 }

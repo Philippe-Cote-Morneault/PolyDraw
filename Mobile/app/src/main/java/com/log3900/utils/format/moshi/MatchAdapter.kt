@@ -113,13 +113,27 @@ object MatchAdapter {
             gameTime = null
         }
 
+        var lapTotal: Int? = null
+
+        if (jsonObject.has("LapTotal")) {
+            lapTotal = jsonObject.get("LapTotal").asInt
+        }
+
+        var lives: Int? = null
+
+        if (jsonObject.has("Lives")) {
+            lives = jsonObject.get("Lives").asInt
+        }
+
         val time = jsonObject.get("Time").asInt
 
         return Synchronisation(
             playerScores,
             laps,
             time,
-            gameTime
+            gameTime,
+            lapTotal,
+            lives
         )
     }
 
@@ -187,5 +201,20 @@ object MatchAdapter {
         }
 
         return players
+    }
+
+    fun jsonToHintResponse(jsonObject: JsonObject): HintResponse {
+        var hint: String? = null
+        var error: String? = null
+
+        if (jsonObject.has("Hint")) {
+            hint = jsonObject.get("Hint").asString
+        }
+
+        if (jsonObject.has("Error")) {
+            error = jsonObject.get("Error").asString
+        }
+
+        return HintResponse(hint, error)
     }
 }
