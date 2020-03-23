@@ -198,6 +198,9 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun setColor(newColor: Int) {
+        if (mPaintOptions.drawMode != DrawMode.DRAW)
+            return
+
         @ColorInt
         val alphaColor = ColorUtils.setAlphaComponent(newColor, mPaintOptions.alpha)
         mPaintOptions.color = alphaColor
