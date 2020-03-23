@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -92,27 +93,43 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         // Drawing selected by default
         draw_button.isPressed = true
 
-        draw_button.setOnClickListener {
-            startDrawMode()
+        draw_button.setOnTouchListener { _, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                startDrawMode()
+            }
+            true
         }
-        remove_button.setOnClickListener {
-            updateDrawToolButtonPressed(it)
-            drawView.setDrawMode(DrawMode.REMOVE)
+        remove_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateDrawToolButtonPressed(view)
+                drawView.setDrawMode(DrawMode.REMOVE)
+            }
+            true
         }
-        erase_button.setOnClickListener {
-            updateDrawToolButtonPressed(it)
-            drawView.setDrawMode(DrawMode.ERASE)
+        erase_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateDrawToolButtonPressed(view)
+                drawView.setDrawMode(DrawMode.ERASE)
+            }
+            true
         }
 
         // Circle tip selected by default
         circle_tip_button.isPressed = true
-        circle_tip_button.setOnClickListener {
-            updateTipButtonPressed(it)
-            drawView.setCap(Paint.Cap.ROUND)
+        circle_tip_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateTipButtonPressed(view)
+                drawView.setCap(Paint.Cap.ROUND)
+            }
+            true
         }
-        square_tip_button.setOnClickListener {
-            updateTipButtonPressed(it)
-            drawView.setCap(Paint.Cap.SQUARE)
+
+        square_tip_button.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                updateTipButtonPressed(view)
+                drawView.setCap(Paint.Cap.SQUARE)
+            }
+            true
         }
     }
 
