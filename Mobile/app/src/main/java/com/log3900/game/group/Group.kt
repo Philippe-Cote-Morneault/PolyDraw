@@ -59,7 +59,7 @@ enum class Language(val languageCode: String) {
 }
 
 class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var groupName: String,
-            @Json(name = "PlayersMax") var playersMax: Int,
+            @Json(name = "PlayersMax") var playersMax: Int, @Json(name = "NbRound") var rounds: Int?,
             @Json(name = "GameType") var gameType: MatchMode, @Json(name = "Difficulty") var difficulty: Difficulty,
             @Json(name = "OwnerID") var ownerID: UUID, @Json(name = "OwnerName") var ownerName: String,
             @Json(name = "Language") var language: Language, @Json(name = "Players") var players: ArrayList<Player>) {

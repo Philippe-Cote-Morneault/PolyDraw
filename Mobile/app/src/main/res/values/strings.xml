@@ -171,4 +171,9 @@
     <string name="french">French</string>
     <string name="english">English</string>
     <string name="dialog_create_match_language_title">Language</string>
+    <string name="language">Language</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="rounds">Rounds</string>
+    <string name="round_end_info_word_was_sentence">The word was %1$s!</string>
+    <string name="ffa_match_end_info_winner_is">The winner is %1$s!</string>
 </resources>

@@ -34,6 +34,7 @@ enum class EventType {
     TIMES_UP,
     PLAYER_LEFT_GAME,
     POINTS_GAINED,
+    ROUND_ENDED,
     MATCH_ENDED,
     // Session
     LOGOUT,

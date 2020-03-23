@@ -64,6 +64,7 @@ class MatchLobbyPresenter : Presenter {
     private fun onGroupCreated(group: Group) {
         matchLobbyView?.notifyMatchesChanged()
     }
+
     private fun onGroupDeleted(groupID: UUID) {
         matchLobbyView?.notifyMatchesChanged()
     }
@@ -108,7 +109,6 @@ class MatchLobbyPresenter : Presenter {
     }
 
     override fun resume() {
-        Log.d("POTATO", "LobbyPresenter::onResume()")
         groupManager?.getAvailableGroups()
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe(

@@ -33,8 +33,26 @@
         app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <com.log3900.game.match.UI.RoundEndInfoView
+        android:id="@+id/fragment_active_match_round_end_info_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:layout_marginEnd="352dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
+        app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-
-
+    <com.log3900.game.match.UI.FFAMatchEndInfoView
+        android:id="@+id/fragment_active_match_ffa_match_end_info_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:layout_marginEnd="352dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
+        app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,6 +28,8 @@ import android.graphics.Color
 import android.view.animation.AnimationSet
 import android.view.animation.TranslateAnimation
 import androidx.core.content.ContextCompat
+import com.log3900.game.match.UI.FFAMatchEndInfoView
+import com.log3900.game.match.UI.RoundEndInfoView
 
 
 class ActiveMatchFragment : Fragment(), ActiveMatchView {
@@ -43,6 +45,8 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private lateinit var roundsTextView: TextView
     private var guessingView: WordGuessingView? = null
     private var wordToDrawView: WordToDrawView? = null
+    private lateinit var roundEndInfoView: RoundEndInfoView
+    private lateinit var matchEndInfoView: FFAMatchEndInfoView
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,6 +70,9 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         toolbar = activity?.findViewById(R.id.toolbar_active_match_outer_container)!!
         remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
         roundsTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_rounds)
+
+        roundEndInfoView = rootView.findViewById(R.id.fragment_active_match_round_end_info_view)
+        matchEndInfoView = rootView.findViewById(R.id.fragment_active_match_ffa_match_end_info_view)
     }
 
     private fun setupRecyclerView() {
@@ -161,9 +168,28 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showCanvas() {
-        YoYo.with(Techniques.RotateInDownLeft)
-            .duration(1000)
-            .playOn(drawFragment.view)
+        drawFragment.view!!.clearAnimation()
+        if (drawFragment.view!!.alpha == 1f) {
+            return
+        }
+
+        drawFragment.view!!.translationX = 0f
+        drawFragment.view!!.translationY = 0f
+        drawFragment.view!!.rotation = 0f
+        drawFragment.view!!.rotationX = 0f
+        drawFragment.view!!.rotationY = 0f
+        drawFragment.view!!.pivotX = 0f
+        drawFragment.view!!.pivotY = 0f
+
+        var anim1 = ObjectAnimator.ofPropertyValuesHolder(
+            drawFragment.view,
+            PropertyValuesHolder.ofFloat(View.ROTATION, 180f, 0f),
+            PropertyValuesHolder.ofFloat(View.TRANSLATION_X, -drawFragment.view!!.width.toFloat(), 0f),
+            PropertyValuesHolder.ofFloat(View.ALPHA,0f, 1f)
+        )
+        anim1.duration = 2000
+
+        anim1.start()
     }
 
     override fun showConfetti() {
@@ -200,7 +226,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         scaleDown.start()
     }
 
-    override fun test1() {
+    override fun animateWordGuessedWrong() {
         val animator1 = ObjectAnimator.ofFloat(guessingView!!, "translationX", -10f)
         animator1.duration = 100
         animator1.repeatCount = 1
@@ -225,6 +251,51 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
         anim.repeatMode = ObjectAnimator.REVERSE
         animatorSet.start()
         anim.start()
+    }
+
+    override fun animateWordGuessedRight() {
+        guessingView?.getEditTexts()?.forEachIndexed { index, editText ->
+            val scaleUpAnimator = ObjectAnimator.ofPropertyValuesHolder(
+                editText,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1.5f),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.5f)
+            )
+            scaleUpAnimator.duration = 200
+            scaleUpAnimator.repeatCount = 1
+            scaleUpAnimator.repeatMode = ObjectAnimator.REVERSE
+            scaleUpAnimator.startDelay = (index * 200).toLong()
+
+            val colorChangeAnimator = ValueAnimator()
+            colorChangeAnimator.setIntValues(Color.BLACK, Color.parseColor("#FF008000"))
+            colorChangeAnimator.setEvaluator(ArgbEvaluator())
+            colorChangeAnimator.addUpdateListener { valueAnimator -> editText.setTextColor(valueAnimator.animatedValue as Int) }
+            colorChangeAnimator.duration = 200
+            colorChangeAnimator.repeatCount = 1
+            colorChangeAnimator.repeatMode = ObjectAnimator.REVERSE
+            colorChangeAnimator.startDelay = (index * 200).toLong()
+            colorChangeAnimator.start()
+            scaleUpAnimator.start()
+        }
+    }
+
+    override fun showRoundEndInfoView(word: String, players: ArrayList<Pair<String, Int>>) {
+        roundEndInfoView.setWord(word)
+        roundEndInfoView.setPlayers(players)
+        roundEndInfoView.visibility = View.VISIBLE
+    }
+
+    override fun hideRoundEndInfoView() {
+        roundEndInfoView.visibility = View.INVISIBLE
+    }
+
+    override fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>) {
+        matchEndInfoView.setWinner(winnerName)
+        matchEndInfoView.setPlayers(players)
+        matchEndInfoView.visibility = View.VISIBLE
+    }
+
+    override fun hideMatchEndInfoView() {
+        matchEndInfoView.visibility = View.INVISIBLE
     }
 
     override fun onDestroy() {

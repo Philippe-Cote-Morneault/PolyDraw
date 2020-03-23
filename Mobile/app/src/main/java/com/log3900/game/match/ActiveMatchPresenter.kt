@@ -1,5 +1,6 @@
 package com.log3900.game.match
 
+import android.os.Handler
 import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
@@ -14,10 +15,12 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ActiveMatchPresenter : Presenter {
     private var activeMatchView: ActiveMatchView? = null
     private var matchManager: MatchManager
+    private var lastShownTime: String? = null
 
     constructor(activeMatchView: ActiveMatchView) {
         this.activeMatchView = activeMatchView
@@ -39,7 +42,7 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
-        activeMatchView?.showCanvas()
+        //activeMatchView?.showCanvas()
     }
 
     private fun onWordGuessedSucessfully() {
@@ -58,12 +61,17 @@ class ActiveMatchPresenter : Presenter {
         activeMatchView?.showWordToDrawView()
         activeMatchView?.setWordToDraw(turnToDraw.word)
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
-        activeMatchView?.showCanvas()
+        //activeMatchView?.showCanvas()
     }
 
     private fun onMatchSynchronisation(synchronisation: Synchronisation) {
         val currentMatch = matchManager.getCurrentMatch()
-        activeMatchView?.setTimeValue(DateFormatter.formatDateToTime(Date(synchronisation.time.toLong())))
+        val formattedTime = DateFormatter.formatDateToTime(Date(synchronisation.time.toLong()))
+
+        if (lastShownTime == null || lastShownTime != formattedTime) {
+            lastShownTime = formattedTime
+            activeMatchView?.setTimeValue(formattedTime)
+        }
         
         if (currentMatch.matchType == MatchMode.FFA) {
             val totalRounds = (currentMatch as FFAMatch).laps
@@ -83,16 +91,43 @@ class ActiveMatchPresenter : Presenter {
     private fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
-        activeMatchView?.showConfetti()
+        activeMatchView?.animateWordGuessedRight()
     }
 
     private fun onGuessedWordWrong() {
-        activeMatchView?.test1()
+        activeMatchView?.animateWordGuessedWrong()
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
     }
 
-    private fun onTimesUp() {
-        activeMatchView?.hideCanvas()
+    private fun onTimesUp(timesUp: TimesUp) {
+        if (timesUp.type == TimesUp.Type.WORD_END) {
+            Handler().postDelayed({
+                activeMatchView?.hideCanvas()
+                activeMatchView?.hideRoundEndInfoView()
+                Handler().postDelayed({
+                    activeMatchView?.showCanvas()
+                }, 1500)
+            }, 2000)
+        }
+    }
+
+    private fun onRoundEnded(roundEnded: RoundEnded) {
+        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
+        roundEnded.players.forEach {
+            playerScores.add(Pair(it.username, it.newPoints))
+        }
+        activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
+    }
+
+    private fun onMatchEnded(matchEnded: MatchEnded) {
+        if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
+            activeMatchView?.showConfetti()
+        }
+        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
+        matchEnded.players.forEach {
+            playerScores.add(Pair(it.username, it.points))
+        }
+        activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores)
     }
 
 
@@ -110,7 +145,9 @@ class ActiveMatchPresenter : Presenter {
             EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
             EventType.GUESSED_WORD_RIGHT -> onGuessedWordRight(event.data as PlayerGuessedWord)
             EventType.GUESSED_WORD_WRONG -> onGuessedWordWrong()
-            EventType.TIMES_UP -> onTimesUp()
+            EventType.TIMES_UP -> onTimesUp(event.data as TimesUp)
+            EventType.ROUND_ENDED -> onRoundEnded(event.data as RoundEnded)
+            EventType.MATCH_ENDED -> onMatchEnded(event.data as MatchEnded)
         }
     }
 

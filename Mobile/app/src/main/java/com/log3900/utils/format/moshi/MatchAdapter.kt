@@ -85,8 +85,8 @@ object MatchAdapter {
         Log.d("POTATO", "MatchAdapter parsing PlayerGuessedWord = ${jsonObject}")
         val username = jsonObject.get("Username").asString
         val userID = UUID.fromString(jsonObject.get("UserID").asString)
-        val points = jsonObject.get("Points").asInt
-        val pointsTotal = jsonObject.get("PointsTotal").asInt
+        val pointsTotal = jsonObject.get("Points").asInt
+        val points = jsonObject.get("NewPoints").asInt
 
         return PlayerGuessedWord(
             username,
@@ -136,10 +136,11 @@ object MatchAdapter {
 
     fun jsonToMatchEnded(jsonObject: JsonObject): MatchEnded {
         val players = jsonToPlayers(jsonObject.get("Players").asJsonArray)
-        val winner = jsonObject.get("Winner").asString
+        val winner = UUID.fromString(jsonObject.get("Winner").asString)
+        val winnerName = jsonObject.get("WinnerName").asString
         val time = jsonObject.get("Time").asInt
 
-        return MatchEnded(players, winner, time)
+        return MatchEnded(players, winner, winnerName, time)
     }
 
     private fun jsonToPlayers(jsonArray: JsonArray): ArrayList<com.log3900.game.match.Player> {
@@ -163,5 +164,28 @@ object MatchAdapter {
         }
 
         return TimesUp(type, word)
+    }
+
+    fun jsonToRoundEnded(jsonObject: JsonObject): RoundEnded {
+        val word = jsonObject.get("Word").asString
+        val players = jsonToRoundEndedPlayers(jsonObject.get("Players").asJsonArray)
+
+        return RoundEnded(players, word)
+    }
+
+    private fun jsonToRoundEndedPlayers(jsonArray: JsonArray): ArrayList<RoundEnded.Player> {
+        val players: ArrayList<RoundEnded.Player> = arrayListOf()
+
+        jsonArray.forEach {
+            val userID = UUID.fromString(it.asJsonObject.get("UserID").asString)
+            val username = it.asJsonObject.get("Username").asString
+            val isCPU = it.asJsonObject.get("IsCPU").asBoolean
+            val points = it.asJsonObject.get("Points").asInt
+            val newPoints = it.asJsonObject.get("NewPoints").asInt
+
+            players.add(RoundEnded.Player(userID, username, isCPU, points, newPoints))
+        }
+
+        return players
     }
 }

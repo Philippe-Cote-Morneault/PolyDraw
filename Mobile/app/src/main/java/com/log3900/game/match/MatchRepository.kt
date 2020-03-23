@@ -176,8 +176,8 @@ class MatchRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         val matchEnded = MatchAdapter.jsonToMatchEnded(jsonObject)
+        Log.d("POTATO", "Match ended = $json")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
-        //EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, matchEnded))
     }
 
     private fun onPlayerLeftMatch(message: com.log3900.socket.Message) {
@@ -197,7 +197,6 @@ class MatchRepository : Service() {
     private fun onTimesUp(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
-        Log.d("POTATO", "onTimesUp json = $json")
         val timesUp = MatchAdapter.jsonToTimesUp(jsonObject)
         EventBus.getDefault().post(MessageEvent(EventType.TIMES_UP, timesUp))
     }
@@ -211,7 +210,8 @@ class MatchRepository : Service() {
     private fun onRoundEnded(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
-        Log.d("POTATO", "onRoundEnded json = $json")
+        val roundEnded = MatchAdapter.jsonToRoundEnded(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.ROUND_ENDED, roundEnded))
     }
 
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {

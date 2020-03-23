@@ -52,7 +52,8 @@ class Synchronisation(
 
 class MatchEnded(
     var players: ArrayList<com.log3900.game.match.Player>,
-    var winner: String,
+    var winner: UUID,
+    var winnerName: String,
     var time: Int
 )
 
@@ -70,4 +71,17 @@ class TimesUp(
         WORD_END,
         MATCH_END
     }
+}
+
+class RoundEnded(
+    var players: ArrayList<Player>,
+    var word: String
+) {
+    class Player(
+        var userID: UUID,
+        var username: String,
+        var isCPU: Boolean,
+        var points: Int,
+        var newPoints: Int
+    )
 }

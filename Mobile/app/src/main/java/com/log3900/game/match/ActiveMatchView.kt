@@ -23,5 +23,10 @@ interface ActiveMatchView {
     fun hideCanvas()
     fun showConfetti()
     fun pulseRemainingTime()
-    fun test1()
+    fun animateWordGuessedWrong()
+    fun animateWordGuessedRight()
+    fun showRoundEndInfoView(word: String, players: ArrayList<Pair<String, Int>>)
+    fun hideRoundEndInfoView()
+    fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>)
+    fun hideMatchEndInfoView()
 }

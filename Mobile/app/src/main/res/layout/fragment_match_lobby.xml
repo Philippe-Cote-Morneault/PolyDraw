@@ -22,34 +22,54 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.2" />
+            app:layout_constraintWidth_percent="0.15" />
 
         <TextView
-            android:id="@+id/fragment_match_lobby_text_view_game_name"
+            android:id="@+id/fragment_match_lobby_text_view_language"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/match_lobby_match_name_title"
+            android:text="@string/language"
             app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_mode"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.3"/>
+            app:layout_constraintWidth_percent="0.15"/>
+
+        <TextView
+            android:id="@+id/fragment_match_lobby_text_view_difficulty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/difficulty"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_language"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.15" />
 
         <TextView
             android:id="@+id/fragment_match_lobby_text_view_host"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/match_lobby_host_title"
-            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_game_name"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_difficulty"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.2" />
+            app:layout_constraintWidth_percent="0.15" />
+
+        <TextView
+            android:id="@+id/fragment_match_lobby_text_view_rounds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/rounds"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_host"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.15" />
 
         <ImageView
             android:id="@+id/fragment_match_lobby_image_view_players"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_group_black_24dp"
-            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_host"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_rounds"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
