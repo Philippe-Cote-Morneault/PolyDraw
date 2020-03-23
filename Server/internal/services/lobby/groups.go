@@ -386,6 +386,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 							Error:    fmt.Sprintf("There are only %d game(s). There needs to be a minimum of 10 games before it can start", count),
 						})
 						socket.SendRawMessageToSocketID(rawMessage, socketID)
+						return
 					}
 				}
 
