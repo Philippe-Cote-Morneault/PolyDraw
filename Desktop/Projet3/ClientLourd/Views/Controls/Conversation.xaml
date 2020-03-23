@@ -19,13 +19,30 @@
                   extensions:ScrollViewerExtensions.AlwaysScrollToEnd="True">
         <ListBox Name="ConversationList" ItemsSource="{Binding SelectedChannel.Messages}"
                  PreviewMouseWheel="UIElement_OnPreviewMouseWheel">
-            <ListBox.Resources>
+            <!--<ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding Content.IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+            <ListBox.Resources>-->
+
+
+
+
                 <Style TargetType="ListBoxItem">
                     <!-- others message -->
                     <Setter Property="HorizontalAlignment" Value="Left" />
                     <Setter Property="Width"
                             Value="{Binding ElementName=ConversationList, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=1.5}" />
-                    <Setter Property="IsEnabled" Value="False" />
+                    <Setter Property="IsEnabled" Value="True" />
                     <Style.Triggers>
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
@@ -42,12 +59,12 @@
                         <!-- Admin message -->
                         <DataTrigger Value="true">
                             <DataTrigger.Binding>
-                                    <Binding Path="User.ID" Converter="{StaticResource SingleCompartorToBooleanConverter}" ConverterParameter="-1"/>
+                                <Binding Path="User.ID" Converter="{StaticResource SingleCompartorToBooleanConverter}" ConverterParameter="-1"/>
                             </DataTrigger.Binding>
                             <Setter Property="HorizontalAlignment" Value="Center" />
                         </DataTrigger>
                     </Style.Triggers>
-                    
+
                 </Style>
             </ListBox.Resources>
             <ListBox.ItemTemplate>
@@ -58,13 +75,13 @@
                             <TextBlock Style="{StaticResource MaterialDesignOverlineTextBlock}" Text="{Binding Content}" HorizontalAlignment="Center" TextWrapping="Wrap"/>
                         </Grid>
                         <!-- Message and date -->
-                        <StackPanel Visibility="{Binding ElementName=ServerMessage, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}" FlowDirection="LeftToRight" Orientation="Vertical">
+                        <StackPanel Visibility="{Binding ElementName=ServerMessage, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}" FlowDirection="LeftToRight" Orientation="Vertical" >
                             <Border Padding="5 5 5 0">
 
                                 <!-- Message -->
                                 <StackPanel Orientation="Vertical">
                                     <!-- Message header -->
-                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" >
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
                                                 <Setter Property="Background" Value="WhiteSmoke" />
