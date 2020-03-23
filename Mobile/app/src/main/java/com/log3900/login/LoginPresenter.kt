@@ -170,6 +170,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         }
     }
 
+    fun rememberUser() {
+        //
+    }
+
     override fun destroy() {
         loginView = null
     }
