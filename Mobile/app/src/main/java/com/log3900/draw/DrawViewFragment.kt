@@ -8,14 +8,13 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import com.log3900.R
 import com.log3900.draw.divyanshuwidget.DrawMode
+import com.log3900.draw.divyanshuwidget.PaintOptions
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.*
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
@@ -31,6 +30,8 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
     lateinit var drawView: DrawViewBase
     var currentColor: Int = 0
     private lateinit var konfettiView: KonfettiView
+
+    private val DEFAULT_WIDTH_PROGRESS = 8
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,15 +50,11 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         setUpColorButtons()
 
         enableDrawFunctions(canDraw)
+    }
 
-        val toggleBtn = Button(context).apply {
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            text = "Toggle canDraw"
-            setOnClickListener {
-                enableDrawFunctions(!canDraw)
-            }
-        }
-        draw_view_fragment_layout.addView(toggleBtn)
+    override fun onDestroyView() {
+        drawView.onDestroy()
+        super.onDestroyView()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -242,11 +239,20 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         canDraw = enable
         if (canDraw) {
             setDrawToolsVisibility(View.VISIBLE)
+            setToDefaultValues()
         } else {
             setDrawToolsVisibility(View.GONE)
         }
 
         drawView.enableCanDraw(canDraw, drawingID)
+    }
+
+    fun setToDefaultValues() {
+        updateDrawToolButtonPressed(draw_button)
+        updateTipButtonPressed(circle_tip_button)
+        updateColorScale(color_picker_black)
+        seekbar_width.progress = DEFAULT_WIDTH_PROGRESS
+        drawView.setOptions(PaintOptions())
     }
 
     fun showConfetti() {

@@ -89,6 +89,12 @@ class DrawViewBase @JvmOverloads constructor(
         socketDrawingReceiver = SocketDrawingReceiver(this)
     }
 
+    fun onDestroy() {
+        socketDrawingSender = null
+        socketDrawingReceiver?.unsubscribe()
+        socketDrawingReceiver = null
+    }
+
     fun enableCanDraw(canDrawOnCanvas: Boolean, drawingID: UUID?) {
         canDraw = canDrawOnCanvas
 
@@ -104,8 +110,15 @@ class DrawViewBase @JvmOverloads constructor(
                 socketDrawingSender?.sendStrokeStart(drawingID)
             }
         }
+
         // If we cannot draw, we want to receive strokes from the server
-        socketDrawingReceiver?.isListening = !canDraw
+        if (!canDraw) {
+            socketDrawingReceiver?.isListening = true
+            socketDrawingReceiver?.subscribe()
+        } else {
+            socketDrawingReceiver?.isListening = false
+            socketDrawingReceiver?.unsubscribe()
+        }
 //        socketDrawingReceiver?.sendPreviewRequest()
 
         socketDrawingSender?.isListening = canDraw
@@ -198,9 +211,6 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun setColor(newColor: Int) {
-        if (mPaintOptions.drawMode != DrawMode.DRAW)
-            return
-
         @ColorInt
         val alphaColor = ColorUtils.setAlphaComponent(newColor, mPaintOptions.alpha)
         mPaintOptions.color = alphaColor
@@ -214,6 +224,10 @@ class DrawViewBase @JvmOverloads constructor(
         if (mIsStrokeWidthBarEnabled) {
             invalidate()
         }
+    }
+
+    fun setCap(cap: Paint.Cap) {
+        mPaintOptions.strokeCap = cap
     }
 
     fun getBitmap(): Bitmap {
@@ -240,8 +254,10 @@ class DrawViewBase @JvmOverloads constructor(
                 canvas.drawPath(path, mPaint)
             }
 
-        changePaint(mPaintOptions)
-        canvas.drawPath(mPath, mPaint)
+        if (mPaintOptions.drawMode != DrawMode.REMOVE) {
+            changePaint(mPaintOptions)
+            canvas.drawPath(mPath, mPaint)
+        }
     }
 
     private fun changePaint(paintOptions: PaintOptions) {
@@ -334,13 +350,13 @@ class DrawViewBase @JvmOverloads constructor(
                     val q: Quad = action
                     val distance1 = sqrt((q.x1.toDouble() - x.toDouble()).pow(2.0) + (q.y1.toDouble() - y.toDouble()).pow(2.0))
                     val distance2 = sqrt((q.x2.toDouble() - x.toDouble()).pow(2.0) + (q.y2.toDouble() - y.toDouble()).pow(2.0))
-                    if (value.color != 0xFFFFFFFF.toInt() && (distance1 <= width || distance2 <= width)) {
+                    if (distance1 <= width || distance2 <= width) {
                         keyToRemove = key
                     }
                 } else if (action is Line) {
                     val q: Line = action
                     val distance = sqrt((q.x.toDouble() - x.toDouble()).pow(2.0) + (q.y.toDouble() - y.toDouble()).pow(2.0))
-                    if (distance <= width && value.color != 0xFFFFFFFF.toInt()) {
+                    if (distance <= width) {
                         keyToRemove = key
                     }
                 }
@@ -359,10 +375,6 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     fun getDrawMode() = mPaintOptions.drawMode
-
-    fun setCap(cap: Paint.Cap) {
-        mPaintOptions.strokeCap = cap
-    }
 
     fun setDrawMode(mode: DrawMode) {
         mPaintOptions.drawMode = mode
