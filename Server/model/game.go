@@ -7,15 +7,15 @@ type Game struct {
 	Base
 	Word       string
 	Difficulty int
-	Hints      []*GameHint
-	Image      *GameImage //Represent the hash of the file
+	Hints      []*GameHint `gorm:"foreignkey:GameID"`
+	Image      *GameImage  //Represent the hash of the file
 	Language   int
 }
 
 //GameHint represents a game hint
 type GameHint struct {
-	Game   Game      `gorm:"foreignkey:GameID"`
-	GameID uuid.UUID `gorm:"primary_key"`
+	Game   Game
+	GameID uuid.UUID
 	Hint   string
 }
 
