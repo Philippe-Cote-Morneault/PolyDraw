@@ -218,6 +218,7 @@
     <Compile Include="Services\SocketService\SocketEventsPublisher.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\PublicProfileViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Utilities\Converters\ComparatorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\DateConverter.cs" />
