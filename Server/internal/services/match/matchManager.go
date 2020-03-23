@@ -117,6 +117,8 @@ func (m *matchManager) Close() {
 }
 
 func (m *matchManager) closeMatch(wg *sync.WaitGroup, groupID uuid.UUID) {
-	m.matches[groupID].Close()
+	if m.matches[groupID].IsRunning() {
+		m.matches[groupID].Close()
+	}
 	wg.Done()
 }

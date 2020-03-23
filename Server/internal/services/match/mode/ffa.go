@@ -36,7 +36,6 @@ type FFA struct {
 	lapsTotal      int
 	realPlayers    int
 	rand           *rand.Rand
-	isRunning      bool
 	currentWord    string
 	timeStart      time.Time
 	timeStartImage time.Time

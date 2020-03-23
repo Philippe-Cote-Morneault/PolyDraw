@@ -35,6 +35,7 @@ type base struct {
 	connections map[uuid.UUID]*players
 	info        model.Group
 	wordHistory map[string]bool
+	isRunning   bool
 
 	nbWaitingResponses int64
 	waitingResponse    *semaphore.Weighted
@@ -202,4 +203,9 @@ func (b *base) waitTimeout() bool {
 
 	b.receivingGuesses.UnSet()
 	return true // timed out
+}
+
+//IsRunning returns if the game is running
+func (b *base) IsRunning() bool {
+	return b.isRunning
 }

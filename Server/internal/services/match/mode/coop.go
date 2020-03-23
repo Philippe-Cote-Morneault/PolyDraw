@@ -28,7 +28,6 @@ type Coop struct {
 	curDrawer    *players
 	orderPos     int
 	chances      int
-	isRunning    bool
 	currentWord  string
 	realPlayers  int
 	cancelWait   func()
@@ -427,6 +426,7 @@ func (c *Coop) GetPlayers() []match2.Player {
 
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
+	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 	c.receiving.Lock()
 	if c.cancelWait != nil {
 		c.cancelWait()
