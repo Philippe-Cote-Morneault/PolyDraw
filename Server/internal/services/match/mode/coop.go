@@ -323,6 +323,8 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 //HintRequested for the current virtual player drawing
 func (c *Coop) HintRequested(socketID uuid.UUID) {
+
+	c.receiving.Lock()
 	player := c.connections[socketID]
 	c.receiving.Unlock()
 
