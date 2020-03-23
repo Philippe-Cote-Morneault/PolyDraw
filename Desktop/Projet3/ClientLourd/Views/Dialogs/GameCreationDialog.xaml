@@ -183,6 +183,32 @@
                 <materialDesign:TransitionerSlide.ForwardWipe>
                       <materialDesign:SlideWipe/>
                     </materialDesign:TransitionerSlide.ForwardWipe>
+                <materialDesign:DrawerHost Name="CurrentDrawer">
+                        <materialDesign:DrawerHost.RightDrawerContent>
+                        <!-- Upload image settings-->
+                            <StackPanel  HorizontalAlignment="Center" Orientation="Vertical"   >
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
+                                    <StackPanel Margin="10" Orientation="Vertical">
+                                        <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                                   Text="Black level threshold (%)"/>
+                                        <Slider
+                                          Minimum="0"
+                                          Maximum="100"
+                                          Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                          Value="{Binding BlackLevelThreshold}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="10" Orientation="Vertical">
+                                        <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                                   Text="Brush size"/>
+                                        <Slider
+                                          Minimum="1"
+                                          Maximum="100"
+                                          Value="{Binding BrushSize}"
+                                          Style="{StaticResource MaterialDesignDiscreteSlider}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:DrawerHost.RightDrawerContent>
                     <DockPanel>
                         <Grid DockPanel.Dock="Bottom">
                             <Grid.ColumnDefinitions>
@@ -193,40 +219,29 @@
                             <Button Grid.Column="1" Margin="5" Click="OnClose" IsEnabled="{Binding PreviewGUIEnabled}" Content="Confirm" />
                         </Grid>
                         <!-- Play preview -->
-                        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Orientation="Horizontal">
-                            <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                       Text="Select the way the draw will be display"/>
-                            <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
-                            <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
+                        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Orientation="Vertical">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                           Text="Select the way the draw will be display"/>
+                                <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10" materialDesign:HintAssist.Hint="Preview effect" />
+                            </StackPanel>
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="Play the preview"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
+                                <ToggleButton 
+                                    Margin="5"
+                                    HorizontalAlignment="Right"
+                                    Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    IsChecked="{Binding ElementName=CurrentDrawer, Path=IsRightDrawerOpen, Mode=TwoWay}"
+                                    Content="{materialDesign:PackIcon Kind=Settings}"
+                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"/>
+                            </StackPanel>
                         </StackPanel>
                         <!-- preview -->
                         <materialDesign:Card Width="1125" Height="750" materialDesign:ShadowAssist.ShadowDepth="Depth4" DockPanel.Dock="Right" Margin="5">
                             <InkCanvas x:Name="PreviewCanvas" Width="1125" Height="750" IsEnabled="False" />
                         </materialDesign:Card>
-                        <!-- Upload image settings-->
-                        <StackPanel  HorizontalAlignment="Center" Orientation="Vertical"  Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
-                                <StackPanel Margin="10" Orientation="Vertical">
-                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                               Text="Black level threshold (%)"/>
-                                    <Slider
-                                      Minimum="0"
-                                      Maximum="100"
-                                      Style="{StaticResource MaterialDesignDiscreteSlider}"
-                                      Value="{Binding BlackLevelThreshold}"/>
-                                </StackPanel>
-                                <StackPanel Margin="10" Orientation="Vertical">
-                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                               Text="Brush size"/>
-                                    <Slider
-                                      Minimum="1"
-                                      Maximum="100"
-                                      Value="{Binding BrushSize}"
-                                      Style="{StaticResource MaterialDesignDiscreteSlider}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </StackPanel>
                     </DockPanel>
+                </materialDesign:DrawerHost>
             </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
     </DockPanel>
