@@ -9,21 +9,20 @@ namespace ClientLourd.Services.ProfileViewerService
 {
     public class ProfileViewer
     {
-        static private RelayCommand<Message> _viewPublicProfileCommand;
+        static private RelayCommand<User> _viewPublicProfileCommand;
 
         static public ICommand ViewPublicProfileCommand
         {
             get
             {
                 return _viewPublicProfileCommand ??
-                       (_viewPublicProfileCommand = new RelayCommand<Message>(param => OpenPublicProfile(param)));
+                       (_viewPublicProfileCommand = new RelayCommand<User>(param => OpenPublicProfile(param)));
             }
         }
 
-        static private async void OpenPublicProfile(Message param) 
+        static private async void OpenPublicProfile(User param) 
         {
-            //DialogHost.Show(new PublicProfileDialog(param.User), "Default");
-            PublicProfileDialog publicProfileDialog = new PublicProfileDialog(param.User);
+            PublicProfileDialog publicProfileDialog = new PublicProfileDialog(param);
 
             await DialogHost.Show(publicProfileDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
             {

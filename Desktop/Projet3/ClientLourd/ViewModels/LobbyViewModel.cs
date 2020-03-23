@@ -16,6 +16,7 @@ using MaterialDesignThemes.Wpf;
 using ClientLourd.Views.Dialogs;
 using ClientLourd.Services.SoundService;
 using System.Windows.Media.Imaging;
+using ClientLourd.Services.ProfileViewerService;
 
 namespace ClientLourd.ViewModels
 {
@@ -344,5 +345,11 @@ namespace ClientLourd.ViewModels
         {
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.AddVirtualPlayer, new { nbVirtualPlayer = 1 }));
         }
+
+        public ICommand ViewPublicProfile
+        {
+            get { return ProfileViewer.ViewPublicProfileCommand; }
+        }
+
     }
 }

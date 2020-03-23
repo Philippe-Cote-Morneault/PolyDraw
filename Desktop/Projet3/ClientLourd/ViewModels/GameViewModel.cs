@@ -10,6 +10,7 @@ using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.InkCanvas;
+using ClientLourd.Services.ProfileViewerService;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
@@ -481,6 +482,10 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public ICommand ViewPublicProfile
+        {
+            get { return ProfileViewer.ViewPublicProfileCommand; }
+        }
 
         protected virtual void OnNewCanavasMessage(string message)
         {

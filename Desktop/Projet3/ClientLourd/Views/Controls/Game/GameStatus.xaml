@@ -45,7 +45,7 @@
                                                 StringFormat={}#{0},
                                                 RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                          FontSize="24" Margin="5"/>
-                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}">
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding User}" >
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
                                                 <Setter Property="Background" Value="WhiteSmoke" />
