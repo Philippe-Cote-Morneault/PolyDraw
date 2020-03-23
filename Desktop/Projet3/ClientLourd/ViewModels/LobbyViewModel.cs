@@ -342,17 +342,7 @@ namespace ClientLourd.ViewModels
 
         public void AddVirtualPlayer()
         {
-            var data = new { nbVirtualPlayer = 1 };
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.AddVirtualPlayer, data));
-            //MockAddVirtualPlayer();
-        }
-
-        private void MockAddVirtualPlayer()
-        {
-            Player player = new Player(true, new Guid().ToString(), "Bot username");
-            player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png", UriKind.Relative));
-            CurrentLobby.Players.Add(player);
-            CurrentLobby = CurrentLobby;
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.AddVirtualPlayer, new { nbVirtualPlayer = 1 }));
         }
     }
 }

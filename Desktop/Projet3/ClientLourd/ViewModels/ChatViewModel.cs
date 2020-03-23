@@ -16,6 +16,7 @@ using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SoundService;
+using ClientLourd.Services.ProfileViewerService;
 
 namespace ClientLourd.ViewModels
 {
@@ -528,6 +529,12 @@ namespace ClientLourd.ViewModels
         }
 
         private List<Channel> _channels;
-  
+
+        public ICommand ViewPublicProfile
+        {
+            get { return ProfileViewer.ViewPublicProfileCommand; } 
+        }
+
+
     }
 }
