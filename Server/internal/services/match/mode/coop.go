@@ -42,6 +42,7 @@ type Coop struct {
 	curLap           int
 
 	closingTimeKeeper chan struct{}
+	lastLoop          chan struct{}
 }
 
 //Init creates the coop game mode
@@ -107,6 +108,7 @@ func (c *Coop) Start() {
 //GameLoop is called every new round
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
+	c.lastLoop = make(chan struct{})
 	c.curDrawer = c.orderVirtual[c.orderPos]
 	drawingID := uuid.New()
 
@@ -184,7 +186,9 @@ func (c *Coop) GameLoop() {
 	c.commonScore.reset()
 	c.currentWord = ""
 	c.receiving.Unlock()
+
 	cbroadcast.Broadcast(match2.BRoundEnds, c.info.ID)
+	close(c.lastLoop)
 
 	time.Sleep(time.Millisecond * 500)
 	return
@@ -430,6 +434,7 @@ func (c *Coop) finish() {
 	c.isRunning = false
 	if c.cancelWait != nil {
 		c.cancelWait()
+		<-c.lastLoop //wait for the last loop to end
 	}
 
 	//Send the time's up message
