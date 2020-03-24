@@ -32,9 +32,10 @@ type Coop struct {
 	realPlayers  int
 	commonScore  score
 
-	gameTime       int64
-	checkPointTime int64
-	lives          int
+	gameTime              int64
+	checkPointTime        int64
+	maximumCheckPointTime int64
+	lives                 int
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -51,7 +52,6 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
 	c.chances = numberOfChances
-	c.timeImage = imageDuration
 	c.isRunning = true
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
@@ -245,14 +245,21 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			imageDuration := time.Now().Sub(c.timeStartImage)
 			bonus := c.timeImage - imageDuration.Milliseconds()
 
-			c.checkPointTime += bonus
+			pointsForWord := 0
+			if bonus > 0 {
+				c.checkPointTime += bonus
+				pointsForWord = 100
+			} else {
+				pointsForWord = 50
+				bonus = 0
+			}
+
 			gameDuration := time.Now().Sub(c.timeStart)
 			remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
 
 			c.waitingResponse.Release(1)
 			player := c.connections[socketID]
 
-			pointsForWord := 100
 			c.commonScore.commit(pointsForWord)
 			total := c.commonScore.total
 
@@ -479,14 +486,19 @@ func (c *Coop) computeDifficulty() {
 	switch c.info.Difficulty {
 	case 0:
 		c.gameTime = 300
+		c.timeImage = 40
 	case 1:
 		c.gameTime = 240
+		c.timeImage = 30
 	case 2:
 		c.gameTime = 180
+		c.timeImage = 20
 	case 3:
 		c.gameTime = 120
+		c.timeImage = 10
 	}
 	c.gameTime *= 1000
+	c.timeImage *= 1000
 }
 
 //syncPlayers used to send all the sync to all the players
@@ -498,8 +510,10 @@ func (c *Coop) syncPlayers() {
 		players[i] = PlayersData{
 			Username: player.Username,
 			UserID:   player.userID.String(),
-			Points:   c.commonScore.total,
 			IsCPU:    player.IsCPU,
+		}
+		if !player.IsCPU {
+			players[i].Points = c.commonScore.total
 		}
 	}
 	checkPointTime := c.checkPointTime
@@ -507,13 +521,12 @@ func (c *Coop) syncPlayers() {
 	c.receiving.Unlock()
 
 	message := socket.RawMessage{}
-	imageDuration := time.Now().Sub(c.timeStartImage)
 	gameDuration := time.Now().Sub(c.timeStart)
 	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
 		Players:  players,
 		Laps:     c.curLap,
 		LapTotal: 0,
-		Time:     c.timeImage - imageDuration.Milliseconds(),
+		Time:     0,
 		GameTime: c.gameTime - gameDuration.Milliseconds() + checkPointTime,
 		Lives:    lives,
 	})
