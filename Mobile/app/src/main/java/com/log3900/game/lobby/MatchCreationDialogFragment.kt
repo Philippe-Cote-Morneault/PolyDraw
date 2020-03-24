@@ -48,7 +48,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(activity)
             .setTitle(resources.getString(R.string.create_match_dialog_title))
-            .setPositiveButton("Create") { _, _ ->
+            .setPositiveButton(R.string.create) { _, _ ->
                     listener?.onPositiveClick(GroupCreated(
                         groupNameTextInput.text.toString(),
                         maxPlayersTextView.text.toString().toInt(),
@@ -57,7 +57,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
                         Difficulty.values()[difficultySpinner.selectedItemPosition],
                         availableLanguages[languageSpinner.selectedItemPosition]))
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(R.string.cancel) { _, _ ->
                 listener?.onNegativeClick()
             }
 
