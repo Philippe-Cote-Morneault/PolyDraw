@@ -133,7 +133,7 @@
                     Guess
                 </Button>
                 
-                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{materialDesign:PackIcon Kind=QuestionMark}" 
+                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}" Content="Hint" 
                      Style="{StaticResource MaterialDesignIconButton}" 
                      Command="{Binding Path=AskHintCommand}"
                     Margin="10 0 10 0"/>

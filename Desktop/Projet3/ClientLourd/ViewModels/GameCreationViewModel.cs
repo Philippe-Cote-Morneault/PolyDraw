@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService;
@@ -28,16 +29,17 @@ namespace ClientLourd.ViewModels
     {        
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
         private int _numberStrokesReceived;
+        private Game _game;
 
         public GameCreationViewModel()
         {
-            Word = "";
+            Game = new Game();
             _numberStrokesReceived = 0;
             PreviewGUIEnabled = true;
-            Hints = new ObservableCollection<string>(new string[3]);
-            Hints.CollectionChanged += (sender, args) => { NotifyPropertyChanged(nameof(AreFieldsEmpty)); };
             BlackLevelThreshold = 50;
             BrushSize = 12;
+            NumberOfHints = new List<int>(){1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            SelectedNumberOfHints = 1;
         }
 
 
@@ -101,22 +103,6 @@ namespace ClientLourd.ViewModels
         
         public override void AfterLogOut() { throw new System.NotImplementedException(); }
         public override void AfterLogin() { throw new System.NotImplementedException(); }
-
-        private ObservableCollection<string> _hints;
-        public ObservableCollection<string> Hints 
-        {
-            get { return _hints; }
-            set
-            {
-                if (_hints != value)
-                {
-                    _hints = value;
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged(nameof(AreFieldsEmpty));
-                }
-            }
-        }
-
         
         
         public RestClient RestClient
@@ -130,25 +116,6 @@ namespace ClientLourd.ViewModels
         }
 
 
-        public bool AreFieldsEmpty
-        {
-            get { return string.IsNullOrEmpty(_word) || _hints.Any(string.IsNullOrEmpty); }
-        }
-        public string Word 
-        {
-            get { return _word; }
-            set
-            {
-                if (_word != value)
-                {
-
-                    _word = value;
-                    NotifyPropertyChanged();
-                    NotifyPropertyChanged(nameof(AreFieldsEmpty));
-                }
-            }
-        }
-        private string _word;
 
         public string SelectedMode 
         {
@@ -162,6 +129,26 @@ namespace ClientLourd.ViewModels
                 }
             } 
         }
+
+        public List<int> NumberOfHints { get; set; }
+        private int _selectedNumberOfHints;
+        public int SelectedNumberOfHints
+        {
+            get => _selectedNumberOfHints;
+            set
+            {
+                _selectedNumberOfHints = value;
+                Game.Hints.ToList().ForEach(h => h.IsSelected = false);
+                Game.Hints.Take(value).ToList().ForEach(h => h.IsSelected = true);
+                NotifyPropertyChanged(nameof(Hints));
+            }
+        }
+
+        public ObservableCollection<Hint> Hints
+        {
+            get => new ObservableCollection<Hint>(Game.Hints.Take(SelectedNumberOfHints));
+        }
+        
         private PotraceMode _selectedMode;
 
 
@@ -171,7 +158,7 @@ namespace ClientLourd.ViewModels
             {
                 
                 var list = EnumManager.GetAllDescriptions<PotraceMode>();
-                if (IsImageUpload)
+                if (IsUploadModeSelected)
                 {
                     list.Remove(PotraceMode.Classic.GetDescription());
                 }
@@ -211,11 +198,14 @@ namespace ClientLourd.ViewModels
                     _image = value;
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(IsImageUpload));
+                    NotifyPropertyChanged(nameof(IsUploadModeSelected));
                 }
             }
         }
 
         private string _image;
+
+        public bool IsUploadModeSelected { get; set; }
         public bool IsImageUpload
         {
             get { return !string.IsNullOrWhiteSpace(_image); }
@@ -240,6 +230,19 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public Game Game
+        {
+            get => _game;
+            set
+            {
+                if (value != _game)
+                {
+                    _game = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public int BlackLevelThreshold { get;  set;}
         public int BrushSize { get; set; }
         
@@ -257,7 +260,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                _gameID = await RestClient.PostGameInformations(Word, Hints.ToArray(), _selectedDifficulty);
+                _gameID = await RestClient.PostGameInformations(Game.Word, Hints.Select(h => h.Text).ToArray(), _selectedDifficulty);
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
             }
@@ -275,7 +278,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _uploadImageCommand??
-                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(param), o => !string.IsNullOrWhiteSpace(_image)));
+                       (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(param)));
             }
         }
 
@@ -284,7 +287,7 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                if (IsImageUpload)
+                if (IsUploadModeSelected)
                 {
                     SelectedMode = PotraceMode.LeftToRight.GetDescription();
                     await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);

@@ -71,7 +71,6 @@ namespace ClientLourd.ViewModels
             SocketClient.LobbyDeleted += OnLobbyDeleted;
             Lobbies = new ObservableCollection<Lobby>();
             _modeFilteredAscending = false;
-            _lobbyFilteredAscending = false;
             _hostFilteredAscending = false;
             _playerCountFilteredAscending = false;
             _languageFilteredAscending = false;
@@ -131,23 +130,6 @@ namespace ClientLourd.ViewModels
         }
 
 
-
-        private bool _lobbyFilteredAscending;
-
-        private void FilterLobbyName()
-        {
-
-            if (!_lobbyFilteredAscending)
-            {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => lobby.GameName).ToList());
-                _lobbyFilteredAscending = true;
-            }
-            else
-            {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => lobby.GameName).ToList());
-                _lobbyFilteredAscending = false;
-            }
-        }
 
         private bool _hostFilteredAscending;
 
@@ -248,8 +230,6 @@ namespace ClientLourd.ViewModels
 
         private void FilterLobbies(string attribute)
         {
-            if (attribute == "LobbyName")
-                FilterLobbyName();
             if (attribute == "Mode")
                 FilterMode();
             if (attribute == "Host")
@@ -276,7 +256,6 @@ namespace ClientLourd.ViewModels
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 Lobby lobby = new Lobby(
-                    lobbyCreated.GroupName,
                     lobbyCreated.ID,
                     lobbyCreated.OwnerName,
                     lobbyCreated.OwnerID,

@@ -10,6 +10,7 @@ using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
 using ClientLourd.Services.InkCanvas;
+using ClientLourd.Services.ProfileViewerService;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
@@ -77,11 +78,11 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs)args;
             if (e.HasHint)
             {
-                DialogHost.Show(((MatchEventArgs) args).Hint);
+                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new MessageDialog("Hint", e.Hint)); });
             }
             else
             {
-                DialogHost.Show(((MatchEventArgs) args).Error);
+                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new ClosableErrorDialog(e.Error)); });
             }
         }
 
@@ -139,7 +140,11 @@ namespace ClientLourd.ViewModels
 
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
-            Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
+            Player player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
+            player.IsDrawing = true;
+
+           StrokeDrawerService.ChangeMode(player.IsCPU);
+
             NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID)
             {
@@ -484,6 +489,10 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public ICommand ViewPublicProfile
+        {
+            get { return ProfileViewer.ViewPublicProfileCommand; }
+        }
 
         protected virtual void OnNewCanavasMessage(string message)
         {

@@ -203,14 +203,13 @@ namespace ClientLourd.Services.RestService
             var response = await Execute(request);
         }
 
-        public async Task<string> PostGroup(string groupName, int playersMax, GameModes gameType, DifficultyLevel difficulty, int nRounds)
+        public async Task<string> PostGroup(int playersMax, GameModes gameType, DifficultyLevel difficulty, int nRounds)
         {
             RestRequest request = new RestRequest($"/groups", Method.POST);
             AddBasicHeaders(request);
 
             request.AddJsonBody(new
             {
-                GroupName = groupName,
                 PlayersMax = playersMax,
                 GameType = (int)gameType,
                 Difficulty = (int)difficulty,
@@ -238,7 +237,6 @@ namespace ClientLourd.Services.RestService
                 }
                 groups[i].Rounds = (int)tmpResponse[i]["NbRound"];
                 groups[i].Mode = (GameModes)tmpResponse[i]["GameType"];
-                groups[i].GameName= tmpResponse[i]["GroupName"];
                 groups[i].Host = tmpResponse[i]["OwnerName"];
                 groups[i].HostID = tmpResponse[i]["OwnerID"];
                 groups[i].PlayersCount = groups[i].Players.Count;

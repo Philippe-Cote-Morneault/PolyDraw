@@ -35,12 +35,8 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
             _drawTimer.Elapsed += Draw;
             _drawTimer.Stop();
 
-
-            if (IsPreview)
-            {
-                TotalMessagesSent = -1;
-                _messageDequeuedCounter = 0;
-            }
+            TotalMessagesSent = -1;
+            _messageDequeuedCounter = 0;
         }
 
         public void Start()
@@ -57,6 +53,11 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
             {
                 _drawTimer.Stop();
             }
+        }
+
+        public void ChangeMode(bool isPreview)
+        {
+            _isPreview = (isPreview);
         }
 
         private void Draw(object source, EventArgs args)
@@ -78,7 +79,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
                             _messageDequeuedCounter++;
                         }
                         else
-                        { 
+                        {
                             _lastStroke = _canvas.AddStroke(strokeInfo, _lastStroke);
                         }
                     }

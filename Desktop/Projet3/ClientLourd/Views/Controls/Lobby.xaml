@@ -30,7 +30,7 @@
             
             
             <StackPanel Margin="30" >
-                <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{Binding CurrentLobby.GameName}"></TextBlock>
+                <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{DynamicResource WaitingRoom}"></TextBlock>
                 <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}Mode: {0}}"></TextBlock>
                 <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
 
@@ -39,7 +39,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
+                                <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding User}">
                                     <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
                                                        Style="{StaticResource MaterialDesignBody1TextBlock}"
                                                        Text="{Binding User.Username}" />
@@ -47,6 +47,8 @@
                                         <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
                                     </materialDesign:Chip.Icon>
                                 </materialDesign:Chip>
+                                
+                                <!-- Crown -->
                                 <materialDesign:PackIcon Foreground="Gold" ToolTip="Host" Width="40" Height="30" Kind="Crown">
                                     <materialDesign:PackIcon.Visibility>
                                         <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
@@ -56,6 +58,8 @@
                                     </materialDesign:PackIcon.Visibility>
                                 </materialDesign:PackIcon>
 
+                                
+                                <!-- +/- to add or remove virtual player -->
                                 <Grid>
                                     <Grid.Visibility>
                                         <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="0">

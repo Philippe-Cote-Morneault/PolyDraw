@@ -69,12 +69,15 @@ namespace ClientLourd.Views.Controls.Game
                 if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
                     break;
                 var tmpPlayer = GameViewModel.Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
-                var newPoints = info["Points"] - tmpPlayer.Score;
-                if (tmpPlayer != null && newPoints != 0)
+                if (tmpPlayer != null)
                 {
-                    tmpPlayer.Score = info["Points"];
-                    tmpPlayer.PointsRecentlyGained = newPoints;
-                    AnimatePointsGained(tmpPlayer.User.ID);
+                    var newPoints = info["Points"] - tmpPlayer.Score;
+                    if(newPoints != 0)
+                    {
+                        tmpPlayer.Score = info["Points"];
+                        tmpPlayer.PointsRecentlyGained = newPoints;
+                        AnimatePointsGained(tmpPlayer.User.ID);
+                    }
                 }
             }
         }

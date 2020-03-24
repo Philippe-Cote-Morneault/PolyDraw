@@ -16,6 +16,8 @@
           <e p="Bindable" t="Include">
             <e p="Channel.cs" t="Include" />
             <e p="EditorInformation.cs" t="Include" />
+            <e p="Game.cs" t="Include" />
+            <e p="Hint.cs" t="Include" />
             <e p="Lobby.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="ModelBase.cs" t="Include" />
@@ -72,6 +74,7 @@
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="LobbyCreationDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
+                <e p="PublicProfileDialog.g.cs" t="Include" />
                 <e p="RegisterDialog.g.cs" t="Include" />
                 <e p="Tutorial.g.cs" t="Include" />
               </e>
@@ -143,6 +146,9 @@
           <e p="InkCanvas" t="Include">
             <e p="StrokesReader.cs" t="Include" />
           </e>
+          <e p="ProfileViewerService" t="Include">
+            <e p="ProfileViewer.cs" t="Include" />
+          </e>
           <e p="RestService" t="Include">
             <e p="Exceptions" t="Include">
               <e p="RestBadRequestException.cs" t="Include" />
@@ -182,16 +188,17 @@
           <e p="Converters" t="Include">
             <e p="BoolToVisibilityConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
+            <e p="ComparatorToOpacity.cs" t="Include" />
             <e p="ComparatorToVisibilityConverter.cs" t="Include" />
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
             <e p="EditingModeConverter.cs" t="Include" />
             <e p="GameModeToImageConverter.cs" t="Include" />
-            <e p="HealthPointConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
+            <e p="ModeToVisibilityConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
             <e p="NumberToPlaceholder.cs" t="Include" />
@@ -239,6 +246,7 @@
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ProfileViewModel.cs" t="Include" />
+          <e p="PublicProfileViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>
         <e p="Views" t="Include">
@@ -301,6 +309,8 @@
             <e p="LobbyCreationDialog.xaml.cs" t="Include" />
             <e p="MessageDialog.xaml" t="Include" />
             <e p="MessageDialog.xaml.cs" t="Include" />
+            <e p="PublicProfileDialog.xaml" t="Include" />
+            <e p="PublicProfileDialog.xaml.cs" t="Include" />
             <e p="RegisterDialog.xaml" t="Include" />
             <e p="RegisterDialog.xaml.cs" t="Include" />
             <e p="Tutorial.xaml" t="Include" />
