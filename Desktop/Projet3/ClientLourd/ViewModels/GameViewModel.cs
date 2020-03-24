@@ -169,6 +169,7 @@ namespace ClientLourd.ViewModels
             Round = e.Laps;
             TotalRound = e.LapTotal;
             Time = e.Time;
+            
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)

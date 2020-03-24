@@ -48,7 +48,7 @@ namespace ClientLourd.Views.Controls.Game
         {
             var e = (MatchEventArgs)args;
             DateTime timeLeft = e.Time;
-            if (timeLeft.Second <= 10)
+            if (TimeSpan.FromTicks(timeLeft.Ticks).TotalSeconds <= 10)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {

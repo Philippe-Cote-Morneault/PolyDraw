@@ -347,7 +347,7 @@ namespace ClientLourd.ViewModels
 
         private async void SetUsersInfo(Lobby lobby)
         {
-            foreach(Player player in lobby.Players)
+            foreach (Player player in lobby.Players)
             {
                 if (player.User.Avatar == null)
                 {
@@ -359,7 +359,6 @@ namespace ClientLourd.ViewModels
                     {
                         player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png", UriKind.Relative));
                     }
-                    
                 }
             }
         }
