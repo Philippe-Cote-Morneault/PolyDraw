@@ -213,8 +213,8 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-
-	*managerInstance.Drawing[(*round).MatchID] = true
+	continueDrawing := true
+	managerInstance.Drawing[(*round).MatchID] = &continueDrawing
 	managerInstance.mutex.Unlock()
 
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
@@ -234,7 +234,9 @@ func startDrawing(round *match2.RoundStart) {
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
 func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
-	*managerInstance.Drawing[groupID] = false
+	continueDrawing := false
+
+	managerInstance.Drawing[groupID] = &continueDrawing
 	managerInstance.mutex.Unlock()
 
 	makeBotsSpeak("endRound", groupID)
