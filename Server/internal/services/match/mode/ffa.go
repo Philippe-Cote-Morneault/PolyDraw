@@ -384,7 +384,7 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 			UserID:   f.info.Users[i].ID.String(),
 			Username: f.info.Users[i].Username,
 			Points:   0,
-			IsCPU:    false,
+			IsCPU:    f.info.Users[i].IsCPU,
 		})
 	}
 	welcome := ResponseGameInfo{

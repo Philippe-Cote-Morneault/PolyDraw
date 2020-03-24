@@ -3,13 +3,14 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/moby/moby/pkg/namesgenerator"
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
-	"net/http"
 )
 
 type requestGroupCreate struct {
@@ -141,7 +142,7 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 			players[j] = responsePlayer{
 				ID:       groups[i].Users[j].ID.String(),
 				Username: groups[i].Users[j].Username,
-				IsCPU:    false,
+				IsCPU:    groups[i].Users[j].IsCPU,
 			}
 		}
 
@@ -180,7 +181,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 			players[j] = responsePlayer{
 				ID:       group.Users[j].ID.String(),
 				Username: group.Users[j].Username,
-				IsCPU:    false,
+				IsCPU:    group.Users[j].IsCPU,
 			}
 		}
 

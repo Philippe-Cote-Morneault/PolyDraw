@@ -36,6 +36,7 @@ type Manager struct {
 	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
 	Matches  map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
 	Hints    map[uuid.UUID]map[string]bool     //playerID -> []indices
+	Drawing  map[uuid.UUID]*bool               //playerID -> continueDrawing
 
 }
 
@@ -46,7 +47,7 @@ func (m *Manager) init() {
 	m.Matches = make(map[uuid.UUID]*match2.IMatch)
 	m.Games = make(map[uuid.UUID]*gameHints)
 	m.Hints = make(map[uuid.UUID]map[string]bool)
-
+	m.Drawing = make(map[uuid.UUID]*bool)
 }
 
 //AddGroup [Current Thread] adds the group to cache (lobby)
@@ -210,6 +211,8 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
+
+	*managerInstance.Drawing[(*round).MatchID] = true
 	managerInstance.mutex.Unlock()
 
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
@@ -219,7 +222,7 @@ func startDrawing(round *match2.RoundStart) {
 	for _, id := range connections {
 		go func(socketID uuid.UUID) {
 			defer wg.Done()
-			drawing.StartDrawing(socketID, uuidBytes, round.Game.Image.SVGFile, bot.DrawingTimeFactor)
+			drawing.StartDrawing(socketID, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor}, managerInstance.Drawing[(*round).MatchID])
 		}(id)
 	}
 	wg.Wait()
@@ -228,6 +231,10 @@ func startDrawing(round *match2.RoundStart) {
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
 func handleRoundEnds(groupID uuid.UUID) {
+	managerInstance.mutex.Lock()
+	*managerInstance.Drawing[groupID] = false
+	managerInstance.mutex.Unlock()
+
 	makeBotsSpeak("endRound", groupID)
 	printManager("handleRoundEnds")
 }
@@ -308,12 +315,12 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	}
 
 	_, hasHint := managerInstance.Hints[playerID]
-	if !hasHint {
+	if !hasHint || hintRequest.GameType != 0 {
 		//Will iterate once and take the first hint in game
 		for hint := range game.Hints {
 			managerInstance.Hints[playerID] = make(map[string]bool)
 			managerInstance.Hints[playerID][hint] = true
-			if hintRequest.GameType == 0 {
+			if hintRequest.GameType != 0 {
 				delete(game.Hints, hint)
 			}
 			managerInstance.mutex.Unlock()
