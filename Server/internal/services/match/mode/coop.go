@@ -370,9 +370,8 @@ func (c *Coop) Close() {
 		c.isRunning = false
 	}
 	c.receiving.Unlock()
-
-	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }
 
 //GetConnections method used to return all the connections of the players
@@ -453,9 +452,8 @@ func (c *Coop) finish() {
 	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 
 	c.receiving.Unlock()
-	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
-
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }
 
 //computeOrder used to compute the order for the coop
