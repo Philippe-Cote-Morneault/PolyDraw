@@ -67,7 +67,7 @@ namespace ClientLourd.Views.Controls.Game
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // TODO: If solo
-                    if (GameViewModel.Mode == GameModes.FFA && GameViewModel.HealthPoint > 0) 
+                    if ((GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo) && GameViewModel.HealthPoint > 0) 
                     {
                         AnimateLostHeart();
                     }
