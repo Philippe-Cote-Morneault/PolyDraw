@@ -520,3 +520,21 @@ func (c *Coop) syncPlayers() {
 	})
 	c.pbroadcast(&message)
 }
+
+func (c *Coop) waitGuess() bool {
+	ch := make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-time.After(time.Second):
+				//Send an update to the clients
+				c.funcSyncPlayer()
+			case <-ch:
+				return
+			}
+		}
+	}()
+
+	close(ch)
+}
