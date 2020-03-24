@@ -130,10 +130,11 @@ open class MainActivity : AppCompatActivity() {
         setupUI()
 
         navigationController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if (destination.id == R.id.navigation_main_active_match_fragment) {
-                switchToolbar(R.layout.toolbar_active_match)
-            } else {
-                switchToolbar(R.layout.toolbar_activity_main)
+            when (destination.id) {
+                R.id.navigation_main_active_ffa_match_fragment -> switchToolbar(R.layout.toolbar_active_ffa_match)
+                R.id.navigation_main_active_solo_match_fragment -> switchToolbar(R.layout.toolbar_active_solo_match)
+                R.id.navigation_main_active_coop_match_fragment -> switchToolbar(R.layout.toolbar_active_coop_match)
+                else -> switchToolbar(R.layout.toolbar_activity_main)
             }
         }
 
@@ -216,7 +217,7 @@ open class MainActivity : AppCompatActivity() {
         newToolbarView.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         toolbarContainer.addView(newToolbarView)
 
-        if (layout == R.layout.toolbar_active_match) {
+        if (layout == R.layout.toolbar_active_ffa_match || layout == R.layout.toolbar_active_coop_match || layout == R.layout.toolbar_active_solo_match) {
             supportActionBar?.title = ""
         } else {
             setupUI()

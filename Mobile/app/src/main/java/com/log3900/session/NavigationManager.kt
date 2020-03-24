@@ -2,6 +2,8 @@ package com.log3900.session
 
 import com.log3900.MainActivity
 import com.log3900.R
+import com.log3900.game.group.MatchMode
+import com.log3900.game.match.Match
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import org.greenrobot.eventbus.EventBus
@@ -25,9 +27,13 @@ class NavigationManager {
         }
     }
 
-    private fun onMatchAboutToStart() {
+    private fun onMatchAboutToStart(match: Match) {
         if (currentActivity?.navigationController?.currentDestination?.id == R.id.navigation_main_match_waiting_room_fragment) {
-            currentActivity?.startNavigationFragment(R.id.navigation_main_active_match_fragment, null, false)
+            when (match.matchType) {
+                MatchMode.FFA -> currentActivity?.startNavigationFragment(R.id.navigation_main_active_ffa_match_fragment, null, false)
+                MatchMode.SOLO -> currentActivity?.startNavigationFragment(R.id.navigation_main_active_solo_match_fragment, null, false)
+                MatchMode.COOP -> currentActivity?.startNavigationFragment(R.id.navigation_main_active_coop_match_fragment, null, false)
+            }
         }
     }
 
@@ -44,7 +50,7 @@ class NavigationManager {
                 onGroupLeft()
             }
             EventType.MATCH_ABOUT_TO_START -> {
-                onMatchAboutToStart()
+                onMatchAboutToStart(event.data as Match)
             }
         }
     }

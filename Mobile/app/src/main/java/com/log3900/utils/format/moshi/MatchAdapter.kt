@@ -14,6 +14,7 @@ import kotlin.collections.ArrayList
 object MatchAdapter {
     @FromJson
     fun fromJson(matchJson: JsonObject): Match {
+        Log.d("POTATO", "Convertin match $matchJson")
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
         val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
@@ -25,6 +26,20 @@ object MatchAdapter {
                     matchType,
                     timeImage,
                     matchJson.get("Laps").asInt
+                )
+            }
+            MatchMode.COOP -> {
+                return CoopMatch(
+                    players,
+                    matchType,
+                    timeImage
+                )
+            }
+            MatchMode.SOLO -> {
+                return SoloMatch(
+                    players,
+                    matchType,
+                    timeImage
                 )
             }
         }

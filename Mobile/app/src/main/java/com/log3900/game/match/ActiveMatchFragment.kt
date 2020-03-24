@@ -32,50 +32,39 @@ import com.log3900.game.match.UI.FFAMatchEndInfoView
 import com.log3900.game.match.UI.RoundEndInfoView
 
 
-class ActiveMatchFragment : Fragment(), ActiveMatchView {
-    private var activeMatchPresenter: ActiveMatchPresenter? = null
+abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
+    protected var activeMatchPresenter: ActiveMatchPresenter? = null
     private lateinit var playersAdapter: PlayerAdapter
     private lateinit var drawFragment: DrawViewFragment
 
     // UI
-    private lateinit var footer: LinearLayout
-    private lateinit var playersRecyclerView: RecyclerView
-    private lateinit var toolbar: ConstraintLayout
-    private lateinit var remainingTimeTextView: TextView
-    private lateinit var roundsTextView: TextView
-    private var guessingView: WordGuessingView? = null
+    protected lateinit var footer: LinearLayout
+    protected lateinit var playersRecyclerView: RecyclerView
+    protected lateinit var toolbar: ConstraintLayout
+    protected lateinit var remainingTimeTextView: TextView
+    protected var guessingView: WordGuessingView? = null
     private var wordToDrawView: WordToDrawView? = null
     private lateinit var roundEndInfoView: RoundEndInfoView
     private lateinit var matchEndInfoView: FFAMatchEndInfoView
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_active_match, container, false)
-
-        setupUI(rootView)
-
-        activeMatchPresenter = ActiveMatchPresenter(this)
-
-        return rootView
-    }
-
-    private fun setupUI(rootView: View) {
+    protected open fun setupUI(rootView: View) {
         footer = rootView.findViewById(R.id.fragment_active_match_footer_container)
         playersRecyclerView = rootView.findViewById(R.id.fragment_active_match_recycler_view_player_list)
+        drawFragment = childFragmentManager.findFragmentById(R.id.fragment_active_match_draw_container) as DrawViewFragment
+        toolbar = activity?.findViewById(R.id.toolbar_active_match_outer_container)!!
 
         setupRecyclerView()
-
-        drawFragment = childFragmentManager.findFragmentById(R.id.fragment_active_match_draw_container) as DrawViewFragment
-
-        toolbar = activity?.findViewById(R.id.toolbar_active_match_outer_container)!!
-        remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
-        roundsTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_rounds)
+        setupToolbar()
 
         roundEndInfoView = rootView.findViewById(R.id.fragment_active_match_round_end_info_view)
         matchEndInfoView = rootView.findViewById(R.id.fragment_active_match_ffa_match_end_info_view)
     }
 
-    private fun setupRecyclerView() {
+    protected open fun setupToolbar() {
+        remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
+    }
+
+    protected open fun setupRecyclerView() {
         playersAdapter = PlayerAdapter()
         playersRecyclerView.apply {
             setHasFixedSize(true)
@@ -116,10 +105,6 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun setTimeValue(time: String) {
         remainingTimeTextView.text = time
-    }
-
-    override fun setRoundsValue(rounds: String) {
-        roundsTextView.text = rounds
     }
 
     override fun clearCanvas() {
@@ -168,7 +153,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showCanvas() {
-        drawFragment.view!!.clearAnimation()
+        drawFragment.view?.clearAnimation()
         if (drawFragment.view!!.alpha == 1f) {
             return
         }

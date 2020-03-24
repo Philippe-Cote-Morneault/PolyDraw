@@ -22,6 +22,26 @@ class FFAMatch(
     timeImage
 )
 
+class CoopMatch(
+    players: ArrayList<Player>,
+    matchType: MatchMode,
+    timeImage: Int
+) : Match(
+    players,
+    matchType,
+    timeImage
+)
+
+class SoloMatch(
+    players: ArrayList<Player>,
+    matchType: MatchMode,
+    timeImage: Int
+) : Match(
+    players,
+    matchType,
+    timeImage
+)
+
 class PlayerTurnToDraw(
     var userID: UUID,
     var username: String,
