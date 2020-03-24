@@ -435,8 +435,8 @@ func (c *Coop) finish() {
 
 	c.isRunning = false
 	if c.cancelWait != nil {
-		c.cancelWait()
 		c.receiving.Unlock()
+		c.cancelWait()
 
 		<-c.lastLoop //wait for the last loop to end
 	} else {
