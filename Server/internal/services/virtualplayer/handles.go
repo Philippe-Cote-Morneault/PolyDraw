@@ -315,12 +315,12 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	}
 
 	_, hasHint := managerInstance.Hints[playerID]
-	if !hasHint {
+	if !hasHint || hintRequest.GameType != 0 {
 		//Will iterate once and take the first hint in game
 		for hint := range game.Hints {
 			managerInstance.Hints[playerID] = make(map[string]bool)
 			managerInstance.Hints[playerID][hint] = true
-			if hintRequest.GameType == 0 {
+			if hintRequest.GameType != 0 {
 				delete(game.Hints, hint)
 			}
 			managerInstance.mutex.Unlock()
