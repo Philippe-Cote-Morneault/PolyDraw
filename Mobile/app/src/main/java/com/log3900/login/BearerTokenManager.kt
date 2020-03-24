@@ -21,7 +21,7 @@ object BearerTokenManager {
         EventBus.getDefault().register(this)
     }
 
-    fun getBearer(): String? = sharedPrefs.getString(bearerPrefKey, null)
+    fun getBearer(): String? = sharedPrefs.getString(bearerPrefKey, null).also { Log.d("BEAR_MAN", "bearer found? ${it != null}") }
 
     fun storeBearer(token: String) {
         with(sharedPrefs.edit()) {
