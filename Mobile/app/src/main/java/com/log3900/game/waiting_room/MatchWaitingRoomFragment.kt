@@ -104,7 +104,7 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
         if (display) {
             startMatchButton.visibility = View.VISIBLE
         } else {
-            startMatchButton.visibility = View.INVISIBLE
+            startMatchButton.visibility = View.GONE
         }
     }
 
