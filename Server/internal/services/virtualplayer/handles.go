@@ -322,10 +322,12 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	if !hasHint || hintRequest.GameType != 0 {
 		//Will iterate once and take the first hint in game
 		for hint := range game.Hints {
-			managerInstance.Hints[playerID] = make(map[string]bool)
-			managerInstance.Hints[playerID][hint] = true
 			if hintRequest.GameType != 0 {
+
 				delete(game.Hints, hint)
+			} else {
+				managerInstance.Hints[playerID] = make(map[string]bool)
+				managerInstance.Hints[playerID][hint] = true
 			}
 			managerInstance.mutex.Unlock()
 			respHintRequest(true, hintRequest, hint)
@@ -455,10 +457,11 @@ func getHintsLeft(groupID, playerID uuid.UUID) int {
 		return -1
 	}
 	hintsPlayers, ok := managerInstance.Hints[playerID]
-	if !ok {
-		log.Printf("[VirtualPlayer] -> [Error] Can't find hints with playerID : %v. Aborting getHintsLeft", playerID)
-		return -1
+
+	hintAsked := 0
+	if ok {
+		hintAsked = len(hintsPlayers)
 	}
 
-	return len(hintsInGame.Hints) - len(hintsPlayers)
+	return len(hintsInGame.Hints) - hintAsked
 }
