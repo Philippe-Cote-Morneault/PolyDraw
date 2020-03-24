@@ -45,6 +45,7 @@ type Coop struct {
 
 	closingTimeKeeper chan struct{}
 	lastLoop          chan struct{}
+	penalty           int64
 }
 
 //Init creates the coop game mode
@@ -478,18 +479,23 @@ func (c *Coop) computeDifficulty() {
 	case 0:
 		c.gameTime = 300
 		c.timeImage = 40
+		c.penalty = 10
 	case 1:
 		c.gameTime = 240
 		c.timeImage = 30
+		c.penalty = 20
 	case 2:
 		c.gameTime = 180
 		c.timeImage = 20
+		c.penalty = 30
 	case 3:
 		c.gameTime = 120
 		c.timeImage = 10
+		c.penalty = 30
 	}
 	c.gameTime *= 1000
 	c.timeImage *= 1000
+	c.penalty *= 1000
 }
 
 //syncPlayers used to send all the sync to all the players
@@ -557,8 +563,7 @@ func (c *Coop) waitGuess() bool {
 //applyPenalty, is calling lock
 func (c *Coop) applyPenalty() {
 	c.receiving.Lock()
-	penalty := int64(10 * 1000)
-	c.checkPointTime -= penalty
+	c.checkPointTime -= c.penalty
 
 	gameDuration := time.Now().Sub(c.timeStart)
 	remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
@@ -567,7 +572,7 @@ func (c *Coop) applyPenalty() {
 	checkpoint := socket.RawMessage{}
 	checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
 		TotalTime: remaining,
-		Bonus:     penalty,
+		Bonus:     c.penalty,
 	})
 	c.pbroadcast(&checkpoint)
 
