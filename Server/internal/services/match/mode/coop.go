@@ -315,8 +315,9 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			Points:    scoreTotal,
 		})
 		c.pbroadcast(&response)
+
 		if lives <= 0 {
-			log.Printf("[Match] [Coop] No more lives for the drawing ,match: %s", c.info.ID)
+			log.Printf("[Match] [Coop] No more lives for the drawing. Penalty will apply ,match: %s", c.info.ID)
 			c.receiving.Lock()
 			if c.cancelWait != nil {
 				c.receiving.Unlock()
@@ -324,6 +325,9 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			} else {
 				c.receiving.Unlock()
 			}
+
+			c.applyPenalty()
+			return
 		}
 
 		c.syncPlayers()
@@ -347,22 +351,9 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 			ID:       player.userID,
 		},
 	})
+
 	if hintSent {
-		c.receiving.Lock()
-		penalty := int64(10 * 1000)
-		c.checkPointTime -= penalty
-		gameDuration := time.Now().Sub(c.timeStart)
-		remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
-		c.receiving.Unlock()
-
-		checkpoint := socket.RawMessage{}
-		checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
-			TotalTime: remaining,
-			Bonus:     penalty,
-		})
-		c.pbroadcast(&checkpoint)
-
-		c.syncPlayers()
+		c.applyPenalty()
 	}
 }
 
@@ -561,4 +552,24 @@ func (c *Coop) waitGuess() bool {
 
 	c.receivingGuesses.UnSet()
 	return true // timed out
+}
+
+//applyPenalty, is calling lock
+func (c *Coop) applyPenalty() {
+	c.receiving.Lock()
+	penalty := int64(10 * 1000)
+	c.checkPointTime -= penalty
+
+	gameDuration := time.Now().Sub(c.timeStart)
+	remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
+	c.receiving.Unlock()
+
+	checkpoint := socket.RawMessage{}
+	checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
+		TotalTime: remaining,
+		Bonus:     penalty,
+	})
+	c.pbroadcast(&checkpoint)
+
+	c.syncPlayers()
 }
