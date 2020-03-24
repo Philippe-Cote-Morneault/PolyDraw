@@ -1,6 +1,7 @@
 package mode
 
 import (
+	"context"
 	"log"
 	"strings"
 	"sync"
@@ -113,6 +114,7 @@ func (c *Coop) GameLoop() {
 	drawingID := uuid.New()
 
 	game := c.findGame()
+	c.lives = c.chances
 
 	if game.ID == uuid.Nil {
 		c.receiving.Unlock()
@@ -149,8 +151,8 @@ func (c *Coop) GameLoop() {
 
 	c.receivingGuesses.Set()
 
-	if c.waitTimeout() {
-		log.Printf("[Match] [Coop] -> Time's up. The word could not be found, Match: %s", c.info.ID)
+	if c.waitGuess() {
+		log.Printf("[Match] [Coop] -> Word aborted could not be found., Match: %s", c.info.ID)
 	} else {
 		log.Printf("[Match] [Coop] -> The word was found, Match: %s", c.info.ID)
 	}
@@ -164,13 +166,6 @@ func (c *Coop) GameLoop() {
 
 	//End of round
 	c.receiving.Lock()
-	if c.lives <= 0 {
-		c.isRunning = false
-		c.receiving.Unlock()
-		//Exit the game since all the lives are expired
-		return
-	}
-
 	if c.realPlayers <= 0 {
 		c.isRunning = false
 		c.receiving.Unlock()
@@ -314,8 +309,14 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 		})
 		c.pbroadcast(&response)
 		if lives <= 0 {
-			log.Printf("[Match] [Coop] No more lives in the match. Closing game ,match: %s", c.info.ID)
-			c.finish()
+			log.Printf("[Match] [Coop] No more lives for the drawing ,match: %s", c.info.ID)
+			c.receiving.Lock()
+			if c.cancelWait != nil {
+				c.receiving.Unlock()
+				c.cancelWait()
+			} else {
+				c.receiving.Unlock()
+			}
 		}
 
 		c.syncPlayers()
@@ -536,5 +537,17 @@ func (c *Coop) waitGuess() bool {
 		}
 	}()
 
+	cnt := context.Background()
+	cnt, c.cancelWait = context.WithCancel(cnt)
+	err := c.waitingResponse.Acquire(cnt, c.nbWaitingResponses)
+	c.cancelWait()
+
 	close(ch)
+	if err == nil {
+		c.receivingGuesses.UnSet()
+		return false // completed normally
+	}
+
+	c.receivingGuesses.UnSet()
+	return true // timed out
 }
