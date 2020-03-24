@@ -109,6 +109,7 @@ func (c *Coop) Start() {
 func (c *Coop) GameLoop() {
 	c.receiving.Lock()
 	c.lastLoop = make(chan struct{})
+	defer close(c.lastLoop)
 	c.curDrawer = c.orderVirtual[c.orderPos]
 	drawingID := uuid.New()
 
@@ -188,7 +189,6 @@ func (c *Coop) GameLoop() {
 	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(match2.BRoundEnds, c.info.ID)
-	close(c.lastLoop)
 
 	time.Sleep(time.Millisecond * 500)
 	return
@@ -430,7 +430,6 @@ func (c *Coop) GetPlayers() []match2.Player {
 
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
-	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 	c.receiving.Lock()
 
 	c.isRunning = false
@@ -451,6 +450,7 @@ func (c *Coop) finish() {
 		Word: c.currentWord,
 	})
 	c.pbroadcast(&timeUpMessage)
+	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 
 	c.receiving.Unlock()
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
