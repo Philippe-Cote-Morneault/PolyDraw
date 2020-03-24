@@ -137,7 +137,11 @@ namespace ClientLourd.ViewModels
             CanStillGuess = true;
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
-            Players.FirstOrDefault(p => p.User.ID == e.UserID).IsDrawing = true;
+            Player player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
+            player.IsDrawing = true;
+
+           StrokeDrawerService.ChangeMode(player.IsCPU);
+
             NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID)
             {
