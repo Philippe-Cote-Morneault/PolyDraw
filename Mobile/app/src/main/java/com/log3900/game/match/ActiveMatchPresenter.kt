@@ -18,13 +18,13 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 abstract class ActiveMatchPresenter : Presenter {
-    private var activeMatchView: ActiveMatchView? = null
-    private var matchManager: MatchManager
+    protected var activeMatchView: ActiveMatchView? = null
+    protected var matchManager: MatchManager
     private var lastShownTime: String? = null
 
-    constructor(activeMatchView: ActiveMatchView) {
+    constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
         this.activeMatchView = activeMatchView
-        this.matchManager = MatchManager()
+        this.matchManager = matchManager
         activeMatchView.setPlayers(matchManager.getCurrentMatch().players)
         activeMatchView.setPlayerScores(matchManager.getPlayerScores())
         subscribeToEvents()
@@ -62,18 +62,13 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
     }
 
-    private fun onMatchSynchronisation(synchronisation: Synchronisation) {
+    protected open fun onMatchSynchronisation(synchronisation: Synchronisation) {
         val currentMatch = matchManager.getCurrentMatch()
         val formattedTime = DateFormatter.formatDateToTime(Date(synchronisation.time.toLong()))
 
         if (lastShownTime == null || lastShownTime != formattedTime) {
             lastShownTime = formattedTime
             activeMatchView?.setTimeValue(formattedTime)
-        }
-        
-        if (currentMatch.matchType == MatchMode.FFA) {
-            val totalRounds = (currentMatch as FFAMatch).laps
-            activeMatchView?.setRoundsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${totalRounds}")
         }
 
         if (synchronisation.time <= 10000) {
