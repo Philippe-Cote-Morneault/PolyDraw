@@ -82,7 +82,7 @@ namespace ClientLourd.Services.SocketService
 
         public bool HasHint
         {
-            get => ((Dictionary<string,string>)_data).ContainsKey("Hint");
+            get => ((Dictionary<object,object>)_data).ContainsKey("Hint");
         }
         public string Hint
         {

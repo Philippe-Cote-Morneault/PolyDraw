@@ -78,11 +78,11 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs)args;
             if (e.HasHint)
             {
-                DialogHost.Show(((MatchEventArgs) args).Hint);
+                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new MessageDialog("Hint", e.Hint)); });
             }
             else
             {
-                DialogHost.Show(((MatchEventArgs) args).Error);
+                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new ClosableErrorDialog(e.Error)); });
             }
         }
 

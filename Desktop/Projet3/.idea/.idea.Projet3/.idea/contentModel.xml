@@ -74,6 +74,7 @@
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="LobbyCreationDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
+                <e p="PublicProfileDialog.g.cs" t="Include" />
                 <e p="RegisterDialog.g.cs" t="Include" />
                 <e p="Tutorial.g.cs" t="Include" />
               </e>
@@ -144,6 +145,9 @@
           </e>
           <e p="InkCanvas" t="Include">
             <e p="StrokesReader.cs" t="Include" />
+          </e>
+          <e p="ProfileViewerService" t="Include">
+            <e p="ProfileViewer.cs" t="Include" />
           </e>
           <e p="RestService" t="Include">
             <e p="Exceptions" t="Include">
@@ -242,6 +246,7 @@
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ProfileViewModel.cs" t="Include" />
+          <e p="PublicProfileViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>
         <e p="Views" t="Include">
@@ -304,6 +309,8 @@
             <e p="LobbyCreationDialog.xaml.cs" t="Include" />
             <e p="MessageDialog.xaml" t="Include" />
             <e p="MessageDialog.xaml.cs" t="Include" />
+            <e p="PublicProfileDialog.xaml" t="Include" />
+            <e p="PublicProfileDialog.xaml.cs" t="Include" />
             <e p="RegisterDialog.xaml" t="Include" />
             <e p="RegisterDialog.xaml.cs" t="Include" />
             <e p="Tutorial.xaml" t="Include" />
