@@ -41,6 +41,8 @@ func (l *Lobby) Init() {
 //Start the lobby service
 func (l *Lobby) Start() {
 	log.Println("[Lobby] -> Starting service")
+
+	l.cleanup()
 	go l.listen()
 	//TODO include a cleanup for unused groups after x minutes
 }
@@ -113,6 +115,11 @@ func (l *Lobby) listen() {
 			return
 		}
 	}
+}
+
+//cleanup, changes the group to the status
+func (l *Lobby) cleanup() {
+	model.DB().Model(&model.Group{}).Where("status = ?", 0).Update(struct{ Status int }{Status: 3})
 }
 
 func (l *Lobby) subscribe() {
