@@ -18,8 +18,10 @@ import (
 var managerInstance Manager
 
 type responseHint struct {
-	Hint  string
-	Error string
+	UserID    string
+	HintsLeft int
+	Hint      string
+	Error     string
 }
 
 type gameHints struct {
@@ -36,7 +38,7 @@ type Manager struct {
 	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
 	Matches  map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
 	Hints    map[uuid.UUID]map[string]bool     //playerID -> []indices
-	Drawing  map[uuid.UUID]*bool               //playerID -> continueDrawing
+	Drawing  map[uuid.UUID]*bool               //groupID -> continueDrawing
 
 }
 
@@ -357,10 +359,30 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 		hintRes.Hint = ""
 		hintRes.Error = hint
 	}
-	message := socket.RawMessage{}
-	message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
-	socket.SendRawMessageToSocketID(message, hintRequest.SocketID)
+	// determiner le nb d'indices restant (game.hint-PlayersHints)
+	managerInstance.mutex.Lock()
+	group, ok := managerInstance.Groups[hintRequest.MatchID]
 
+	if !ok {
+		managerInstance.mutex.Unlock()
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting respHintRequest...", hintRequest.MatchID)
+		return
+	}
+
+	for playerID := range group {
+		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID)
+		hintRes.UserID = playerID.String()
+		socketID, err := auth.GetSocketID(playerID)
+
+		if err != nil {
+			log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)
+		}
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
+		socket.SendRawMessageToSocketID(message, socketID)
+	}
+
+	managerInstance.mutex.Unlock()
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -394,7 +416,7 @@ func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
 	channelID, ok := managerInstance.Channels[groupID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[VirtualPlayer] -> [Error] Can't find channelID with groupID : %v. Aborting handleStartGame...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find channelID with groupID : %v. Aborting makeBotsSpeak...", groupID)
 		return
 	}
 
@@ -402,7 +424,7 @@ func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
 
 	if !groupOk {
 		managerInstance.mutex.Unlock()
-		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting handleStartGame...", groupID)
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting makeBotsSpeak...", groupID)
 		return
 	}
 
@@ -421,4 +443,20 @@ func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
 	}
 	managerInstance.mutex.Unlock()
 	wg.Wait()
+}
+
+// Only called in hitRequest
+func getHintsLeft(groupID, playerID uuid.UUID) int {
+	hintsInGame, ok := managerInstance.Games[groupID]
+	if !ok {
+		log.Printf("[VirtualPlayer] -> [Error] Can't find game with groupID : %v. Aborting getHintsLeft...", groupID)
+		return -1
+	}
+	hintsPlayers, ok := managerInstance.Hints[playerID]
+	if !ok {
+		log.Printf("[VirtualPlayer] -> [Error] Can't find hints with playerID : %v. Aborting getHintsLeft", playerID)
+		return -1
+	}
+
+	return len(hintsInGame.Hints) - len(hintsPlayers)
 }
