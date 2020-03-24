@@ -500,7 +500,6 @@ func (f *FFA) syncPlayers() {
 		Laps:     f.curLap,
 		LapTotal: f.lapsTotal,
 		Time:     f.timeImage - imageDuration.Milliseconds(),
-		GameTime: 0,
 	})
 	f.pbroadcast(&message)
 }

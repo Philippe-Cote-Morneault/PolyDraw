@@ -79,7 +79,6 @@ type PlayerSync struct {
 	Players  []PlayersData
 	Laps     int
 	Time     int64
-	GameTime int64
 	LapTotal int
 	Lives    int
 }

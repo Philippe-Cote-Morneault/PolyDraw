@@ -523,8 +523,7 @@ func (c *Coop) syncPlayers() {
 		Players:  players,
 		Laps:     c.curLap,
 		LapTotal: 0,
-		Time:     0,
-		GameTime: c.gameTime - gameDuration.Milliseconds() + checkPointTime,
+		Time:     c.gameTime - gameDuration.Milliseconds() + checkPointTime,
 		Lives:    lives,
 	})
 	c.pbroadcast(&message)
