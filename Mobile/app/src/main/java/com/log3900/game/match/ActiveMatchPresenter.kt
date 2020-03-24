@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ActiveMatchPresenter : Presenter {
+abstract class ActiveMatchPresenter : Presenter {
     private var activeMatchView: ActiveMatchView? = null
     private var matchManager: MatchManager
     private var lastShownTime: String? = null

@@ -32,8 +32,8 @@ import com.log3900.game.match.UI.FFAMatchEndInfoView
 import com.log3900.game.match.UI.RoundEndInfoView
 
 
-class ActiveMatchFragment : Fragment(), ActiveMatchView {
-    private var activeMatchPresenter: ActiveMatchPresenter? = null
+abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
+    protected var activeMatchPresenter: ActiveMatchPresenter? = null
     private lateinit var playersAdapter: PlayerAdapter
     private lateinit var drawFragment: DrawViewFragment
 
@@ -48,18 +48,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private lateinit var roundEndInfoView: RoundEndInfoView
     private lateinit var matchEndInfoView: FFAMatchEndInfoView
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_active_match, container, false)
-
-        setupUI(rootView)
-
-        activeMatchPresenter = ActiveMatchPresenter(this)
-
-        return rootView
-    }
-
-    private fun setupUI(rootView: View) {
+    protected fun setupUI(rootView: View) {
         footer = rootView.findViewById(R.id.fragment_active_match_footer_container)
         playersRecyclerView = rootView.findViewById(R.id.fragment_active_match_recycler_view_player_list)
 
@@ -168,7 +157,7 @@ class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun showCanvas() {
-        drawFragment.view!!.clearAnimation()
+        drawFragment.view?.clearAnimation()
         if (drawFragment.view!!.alpha == 1f) {
             return
         }
