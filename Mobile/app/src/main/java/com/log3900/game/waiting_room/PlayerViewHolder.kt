@@ -96,7 +96,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
                 playerChip.setChipIconResource(R.drawable.ic_person)
             }
         } else {
-            playerChip.text = "Empty Slot"
+            playerChip.setText(R.string.empty_slot)
             playerChip.setChipIconResource(R.drawable.ic_person_colored_foreground)
             if (showKickOptions) {
                 addImageView.visibility = View.VISIBLE
