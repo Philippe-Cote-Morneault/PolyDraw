@@ -362,11 +362,13 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 func (c *Coop) Close() {
 	c.receiving.Lock()
 	log.Printf("[Match] [Coop] Force match shutdown, the game will finish the last lap")
+	if c.isRunning {
+		close(c.closingTimeKeeper)
+	}
 	if c.cancelWait != nil {
 		c.cancelWait()
 		c.isRunning = false
 	}
-	close(c.closingTimeKeeper)
 	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)

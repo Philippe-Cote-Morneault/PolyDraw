@@ -155,7 +155,7 @@ func (b *base) findGame() *model.Game {
 	for word == "" {
 		var count int
 		model.DB().Model(&game).Where("difficulty = ? and language = ?", b.info.Difficulty, b.info.Language).Count(&count)
-		model.DB().Preload("Image").Preload("Hints").Where("difficulty = ? and language = ?", b.info.Difficulty, b.info.Language).Order(gorm.Expr("random()")).First(&game)
+		model.DB().Preload("Image").Preload("Hints").Joins("left join game_images on game_images.game_id = games.id").Where("difficulty = ? and language = ? and game_images.svg_file IS NOT NULL", b.info.Difficulty, b.info.Language).Order(gorm.Expr("random()")).First(&game)
 		if count == 0 {
 			return &game
 		}
