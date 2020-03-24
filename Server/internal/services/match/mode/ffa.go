@@ -360,9 +360,9 @@ func (f *FFA) Close() {
 	}
 
 	f.receiving.Unlock()
-	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 }
 
 //GetConnections returns all the socketID of the match
@@ -563,9 +563,9 @@ func (f *FFA) finish() {
 
 	f.broadcast(&message)
 
-	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 }
 
 //removePlayer remove the player and set the order

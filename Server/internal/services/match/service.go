@@ -2,6 +2,7 @@ package match
 
 import (
 	"github.com/google/uuid"
+	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"log"
 
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
@@ -21,6 +22,7 @@ type Service struct {
 	manager matchManager
 
 	shutdown chan bool
+	finish   cbroadcast.Channel
 }
 
 //Init the match service
@@ -73,6 +75,8 @@ func (s *Service) listen() {
 				log.Printf("[Match] -> received HINT request socket id: %s", message.SocketID)
 				s.manager.Hint(message.SocketID)
 			}
+		case data := <-s.finish:
+			s.manager.Remove(data.(uuid.UUID))
 		case <-s.shutdown:
 			return
 		}
@@ -87,4 +91,6 @@ func (s *Service) subscribe() {
 	s.hint, _ = cbroadcast.Subscribe(BMatchHint)
 	s.guess, _ = cbroadcast.Subscribe(BMatchGuess)
 	s.quit, _ = cbroadcast.Subscribe(BMatchQuit)
+
+	s.finish, _ = cbroadcast.Subscribe(match2.BGameEnds)
 }
