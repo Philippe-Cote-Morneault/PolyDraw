@@ -78,6 +78,7 @@ func (c *Coop) Start() {
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 
 	timeOut := make(chan bool)
+	c.timeStart = time.Now()
 	go func() {
 		defer close(timeOut)
 		//Check if the time has expired
@@ -98,7 +99,6 @@ func (c *Coop) Start() {
 		}
 	}()
 
-	c.timeStart = time.Now()
 	for c.isRunning {
 		c.GameLoop()
 	}
@@ -436,9 +436,14 @@ func (c *Coop) finish() {
 	c.isRunning = false
 	if c.cancelWait != nil {
 		c.cancelWait()
+		c.receiving.Unlock()
+
 		<-c.lastLoop //wait for the last loop to end
+	} else {
+		c.receiving.Unlock()
 	}
 
+	c.receiving.Lock()
 	//Send the time's up message
 	timeUpMessage := socket.RawMessage{}
 	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
