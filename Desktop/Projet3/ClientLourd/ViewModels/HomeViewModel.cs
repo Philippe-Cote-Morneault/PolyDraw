@@ -305,10 +305,8 @@ namespace ClientLourd.ViewModels
                 var lobbyDeletedArgs = (LobbyEventArgs)e;
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
-                //TODO
 
                 var lobbyToDelete = FindLobby(lobbyDeletedID);
-                //var lobbyDeleted = Lobbies.Single(lobby => lobby.ID == lobbyDeletedID);
 
                 if (lobbyToDelete != null)
                 {
