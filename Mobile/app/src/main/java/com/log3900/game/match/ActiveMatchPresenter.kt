@@ -87,7 +87,7 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.animateWordGuessedRight()
     }
 
-    private fun onGuessedWordWrong() {
+    protected open fun onGuessedWordWrong() {
         activeMatchView?.animateWordGuessedWrong()
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
     }

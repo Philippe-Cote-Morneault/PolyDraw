@@ -7,6 +7,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
+        android:id="@+id/toolbar_active_coop_match_text_view_team_score"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/toolbar_active_coop_match_container_lives"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/toolbar_active_coop_match_text_view_team_score"/>
+
+    <TextView
         android:id="@+id/toolbar_active_match_text_view_remaining_time"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
