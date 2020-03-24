@@ -65,8 +65,12 @@
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                 </StackPanel>
                                 <StackPanel Height="30" Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock HorizontalAlignment="Center" Text="{Binding Score, StringFormat={}Score: {0}}" RenderTransformOrigin=".5,.5"></TextBlock>
-                                    <TextBlock Margin="15 0 0 0" x:Name="PointsGainedTextBlock" Opacity="0" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained, StringFormat={}+{0}}">
+                                    <TextBlock 
+                                        HorizontalAlignment="Center" 
+                                        Text="{Binding Score, StringFormat={}Score: {0}}" RenderTransformOrigin=".5,.5"
+                                        Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA|Solo, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock Margin="15 0 0 0" x:Name="PointsGainedTextBlock" Opacity="0" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained, StringFormat={}+{0}}"
+                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA|Solo, UpdateSourceTrigger=PropertyChanged}">
                                         <TextBlock.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>
