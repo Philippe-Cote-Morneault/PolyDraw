@@ -22,6 +22,12 @@ const MaxUint16 = ^uint16(0)
 const maxPointsperPacket = 16000
 const delayDrawSending = 20 //in Milliseconds
 
+// Draw specifications that contains the informations of the sketch
+type Draw struct {
+	SVGFile           string
+	DrawingTimeFactor float64
+}
+
 //Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
 	ID        uuid.UUID
@@ -47,19 +53,20 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-
-	StartDrawing(message.SocketID, uuidBytes, game.Image.SVGFile, 1)
+	var continueDrawing *bool
+	*continueDrawing = true
+	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1}, continueDrawing)
 }
 
 // StartDrawing starts the drawing procedure
-func StartDrawing(socketID uuid.UUID, uuidBytes []byte, SVGFile string, drawingTimeFactor float64) {
+func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, continueDrawing *bool) {
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.StartDrawingServer),
 		Length:      uint16(len(uuidBytes)),
 		Bytes:       uuidBytes,
 	}, socketID)
 
-	sendDrawing(socketID, SVGFile, drawingTimeFactor)
+	sendDrawing(socketID, draw, continueDrawing)
 
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.EndDrawingServer),
@@ -83,8 +90,8 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 	socket.SendRawMessageToSocketID(packet, socketID)
 }
 
-func sendDrawing(socketID uuid.UUID, svgKey string, drawingTimeFactor float64) {
-	file, err := datastore.GetFile(svgKey)
+func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *bool) {
+	file, err := datastore.GetFile(draw.SVGFile)
 	if err != nil {
 		log.Println(err)
 	}
@@ -111,10 +118,13 @@ func sendDrawing(socketID uuid.UUID, svgKey string, drawingTimeFactor float64) {
 		OrderPoints(&stroke.points, path.Order)
 		// log.Printf("[Drawing] Number of points in stroke : %v", len(stroke.points))
 		s := stroke.clone()
-		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(float64(path.Time)*drawingTimeFactor))
+		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(float64(path.Time)*(draw.DrawingTimeFactor)))
 		// payloads = append(payloads, stroke.Marshall())
 	}
 	for _, payload := range payloads {
+		if !(*continueDrawing) {
+			return
+		}
 		packet := socket.RawMessage{
 			MessageType: byte(socket.MessageType.StrokeChunkServer),
 			Length:      uint16(len(payload)),
