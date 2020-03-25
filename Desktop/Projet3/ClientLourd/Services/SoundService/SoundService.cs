@@ -44,36 +44,39 @@ namespace ClientLourd.Services.SoundService
 
         public void PlayNotification()
         {
-            
-            if (SoundIsOn)
+            Task.Run(() => 
             {
-                _soundPlayer.Stream = Properties.Resources.Message;
-                _soundPlayer.PlaySync();
+                if (SoundIsOn)
+                {
+                    _soundPlayer.Stream = Properties.Resources.Message;
+                    _soundPlayer.PlaySync();
 
-            }
+                }
+            });
         }
 
         public void PlayWordGuessedRight()
         {
-            
-            if (SoundIsOn)
+            Task.Run(() =>
             {
-                _soundPlayer.Stream = Properties.Resources.WordGuessedRight;
-                _soundPlayer.PlaySync();
-            }
-            
+                if (SoundIsOn)
+                {
+                    _soundPlayer.Stream = Properties.Resources.WordGuessedRight;
+                    _soundPlayer.PlaySync();
+                }
+            });
+
         }
         public void PlayWordGuessedWrong()
         {
-            mut.WaitOne();
-
-            if (SoundIsOn)
+            Task.Run(() =>
             {
-                _soundPlayer.Stream = Properties.Resources.WordGuessedWrong;
-                _soundPlayer.PlaySync();
-            }
-            mut.ReleaseMutex();
-
+                if (SoundIsOn)
+                {
+                    _soundPlayer.Stream = Properties.Resources.WordGuessedWrong;
+                    _soundPlayer.PlaySync();
+                }
+            });
         }
 
         public void PlayTimerWarning()
