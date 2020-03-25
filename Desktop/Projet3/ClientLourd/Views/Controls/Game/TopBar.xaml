@@ -118,6 +118,24 @@
 
         </Storyboard>
 
+        <Storyboard x:Key="TimeLostAnimation" >
+
+            <DoubleAnimation 
+                Storyboard.TargetName="TimeLostText"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetName="TimeLostText"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.2" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetName="TimeLostText"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.2" Duration="0:0:2" />
+
+        </Storyboard>
     </UserControl.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
@@ -181,6 +199,14 @@
                 
         </StackPanel>
         <TextBlock RenderTransformOrigin=".5,.5" Name="TimeGainText" Opacity="0" Text="{Binding Path=TimeGained, StringFormat={}+{0:mm:ss}}" HorizontalAlignment="Center" Foreground="Green" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock RenderTransformOrigin=".5,.5" Name="TimeLostText" Opacity="0" Text="{Binding Path=TimeGained, StringFormat={}-{0:mm:ss}}" HorizontalAlignment="Center" Foreground="Red" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
             <TextBlock.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

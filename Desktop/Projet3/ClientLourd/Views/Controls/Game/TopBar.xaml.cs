@@ -128,18 +128,33 @@ namespace ClientLourd.Views.Controls.Game
         {
             var e = (MatchEventArgs)args;
 
-            GameViewModel.TimeGained = e.Bonus;
-
-            Application.Current.Dispatcher.Invoke(() =>
+            if (e.Bonus > 0)
             {
-                AnimateTimeGained();
-            });
-            
+                GameViewModel.TimeGained = DateTime.MinValue.AddMilliseconds(e.Bonus);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    AnimateTimeGained();
+                });
+            }
+            else
+            {
+                GameViewModel.TimeGained = DateTime.MinValue.AddMilliseconds(-e.Bonus);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    AnimateTimeLost();
+                });
+            } 
         }
 
         private void AnimateTimeGained()
         {
             Storyboard sb = (Storyboard)FindResource("TimeGainedAnimation");
+            sb.Begin();
+        }
+
+        private void AnimateTimeLost()
+        {
+            Storyboard sb = (Storyboard)FindResource("TimeLostAnimation");
             sb.Begin();
         }
     }

@@ -94,9 +94,9 @@ namespace ClientLourd.Services.SocketService
             get => _data["Error"];
         }
         
-        public DateTime Bonus
+        public int Bonus
         {
-            get => DateTime.MinValue.AddMilliseconds(_data["Bonus"]);
+            get => (int)_data["Bonus"];
         }
     }
 }
