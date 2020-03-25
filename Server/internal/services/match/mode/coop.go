@@ -571,7 +571,7 @@ func (c *Coop) applyPenalty() {
 	checkpoint := socket.RawMessage{}
 	checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
 		TotalTime: remaining,
-		Bonus:     c.penalty,
+		Bonus:     -c.penalty,
 	})
 	c.pbroadcast(&checkpoint)
 
