@@ -58,7 +58,7 @@ func AddGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Groups[groupID] = make(map[uuid.UUID]bool)
 	managerInstance.mutex.Unlock()
-	printManager("AddGroup")
+	// printManager("AddGroup")
 }
 
 //registerChannelGroup [New Thread] saves in cache the groupID corresponding to channelID (messenger->)
@@ -95,7 +95,7 @@ func RemoveGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	delete(managerInstance.Groups, groupID)
 	managerInstance.mutex.Unlock()
-	printManager("RemoveGroup")
+	// printManager("RemoveGroup")
 }
 
 //AddVirtualPlayer [Current Thread] adds virtualPlayer to cache. Returns playerID, username (lobby)
@@ -117,7 +117,7 @@ func AddVirtualPlayer(groupID, botID uuid.UUID) string {
 	managerInstance.mutex.Unlock()
 
 	log.Println("[VirtualPlayer] -> AddVirtualPlayer")
-	printManager("AddVirtualPlayer")
+	// printManager("AddVirtualPlayer")
 
 	return playerInfos.Username
 }
@@ -172,7 +172,7 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	model.DB().Save(&groupDB)
 
 	log.Printf("[VirtualPlayer] -> deleting bot in DB: %v", user)
-	printManager("KickVirtualPlayer")
+	// printManager("KickVirtualPlayer")
 
 	return groupID, bot.Username
 
@@ -186,7 +186,7 @@ func handleStartGame(match match2.IMatch) {
 	managerInstance.mutex.Unlock()
 
 	makeBotsSpeak("startGame", groupID)
-	printManager("handleStartGame")
+	// printManager("handleStartGame")
 
 }
 
@@ -228,7 +228,7 @@ func startDrawing(round *match2.RoundStart) {
 		}(id)
 	}
 	wg.Wait()
-	printManager("startDrawing")
+	// printManager("startDrawing")
 }
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
@@ -245,7 +245,7 @@ func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Unlock()
 
 	makeBotsSpeak("endRound", groupID)
-	printManager("handleRoundEnds")
+	// printManager("handleRoundEnds")
 }
 
 // handleEndGame [New Threads] does the endGame routine for a bot in match (match ->)
@@ -281,7 +281,7 @@ func handleEndGame(groupID uuid.UUID) {
 	delete(managerInstance.Matches, groupID)
 	managerInstance.mutex.Unlock()
 	RemoveGroup(groupID)
-	printManager("handleEndGame")
+	// printManager("handleEndGame")
 }
 
 //GetVirtualPlayersInfo [Current Thread] returns botInfos from cache (match)
