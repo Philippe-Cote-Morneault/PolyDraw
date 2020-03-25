@@ -4,6 +4,7 @@ import (
 	"log"
 	"math/rand"
 	"sync"
+	"time"
 
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 
@@ -215,7 +216,7 @@ func startDrawing(round *match2.RoundStart) {
 	}
 	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: true}
 	managerInstance.mutex.Unlock()
-
+	time.Sleep(3500 * time.Millisecond)
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
