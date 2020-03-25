@@ -35,6 +35,10 @@ abstract class ActiveMatchPresenter : Presenter {
         matchManager.makeGuess(text)
     }
 
+    fun hintPressed() {
+        matchManager.requestHint()
+    }
+
     private fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
         activeMatchView?.clearCanvas()
         activeMatchView?.clearAllPlayerStatusRes()

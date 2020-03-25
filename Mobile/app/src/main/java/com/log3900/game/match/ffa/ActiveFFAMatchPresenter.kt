@@ -15,6 +15,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     constructor(activeFFAMatchView: ActiveFFAMatchView) : super(activeFFAMatchView, FFAMatchManager()) {
         FFAMatchManager = matchManager as FFAMatchManager
         this.activeFFAMatchView = activeMatchView as ActiveFFAMatchView
+        activeFFAMatchView.enableHintButton(false)
     }
 
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {

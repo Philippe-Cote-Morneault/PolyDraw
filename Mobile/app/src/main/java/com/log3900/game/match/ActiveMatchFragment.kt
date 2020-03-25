@@ -125,6 +125,10 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
                 override fun onGuessPressed(text: String) {
                     activeMatchPresenter?.guessPressed(text)
                 }
+
+                override fun onHintPressed() {
+                    activeMatchPresenter?.hintPressed()
+                }
             }
         }
     }
@@ -281,6 +285,10 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun hideMatchEndInfoView() {
         matchEndInfoView.visibility = View.INVISIBLE
+    }
+
+    override fun enableHintButton(enable: Boolean) {
+        guessingView?.enableHintButton(enable)
     }
 
     override fun onDestroy() {

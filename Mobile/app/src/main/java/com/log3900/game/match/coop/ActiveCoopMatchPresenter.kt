@@ -17,6 +17,7 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
 
         activeCoopMatchView.setTeamScore((MainApplication.instance.getContext().resources.getString(R.string.team_score_title, 0)))
         activeCoopMatchView.setRemainingLives(3)
+        activeCoopMatchView.enableHintButton(true)
     }
 
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {

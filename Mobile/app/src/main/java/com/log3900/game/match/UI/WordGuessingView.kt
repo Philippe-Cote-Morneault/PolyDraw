@@ -20,6 +20,7 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
     private var layout: ConstraintLayout
     private var editTextContainer: LinearLayout
     private var guessButton: MaterialButton
+    private var hintButton: MaterialButton
     private var letterEditTexts: ArrayList<EditText> = ArrayList()
     var listener: Listener? = null
 
@@ -33,6 +34,19 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
             }
         }
 
+        hintButton = layout.findViewById(R.id.view_word_guessing_button_hint)
+        hintButton.setOnClickListener {
+            listener?.onHintPressed()
+        }
+
+    }
+
+    fun enableHintButton(enable: Boolean) {
+        if (enable) {
+            hintButton.visibility = View.VISIBLE
+        } else {
+            hintButton.visibility = View.GONE
+        }
     }
 
     fun setWordLength(wordLength: Int) {
@@ -104,5 +118,6 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
 
     interface Listener {
         fun onGuessPressed(text: String)
+        fun onHintPressed()
     }
 }

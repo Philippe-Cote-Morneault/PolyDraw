@@ -23,6 +23,19 @@
         android:paddingBottom="15dp"
         android:text="@string/guess"
         android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toStartOf="@id/view_word_guessing_button_hint"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/view_word_guessing_button_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:background="?attr/colorSecondary"
+        android:text="Hint"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

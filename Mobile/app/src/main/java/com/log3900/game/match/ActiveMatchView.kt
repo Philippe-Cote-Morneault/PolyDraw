@@ -28,4 +28,5 @@ interface ActiveMatchView {
     fun hideRoundEndInfoView()
     fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>)
     fun hideMatchEndInfoView()
+    fun enableHintButton(enable: Boolean)
 }
