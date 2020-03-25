@@ -98,6 +98,7 @@ abstract class ActiveMatchPresenter : Presenter {
                 activeMatchView?.hideCanvas()
                 activeMatchView?.hideRoundEndInfoView()
                 Handler().postDelayed({
+                    activeMatchView?.clearCanvas()
                     activeMatchView?.showCanvas()
                 }, 1500)
             }, 2000)
