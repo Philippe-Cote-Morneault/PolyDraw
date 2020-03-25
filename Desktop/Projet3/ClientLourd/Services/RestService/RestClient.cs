@@ -192,6 +192,13 @@ namespace ClientLourd.Services.RestService
 
         }
 
+        public async Task DeleteGame(string gameID)
+        {
+            RestRequest request = new RestRequest($"games/{gameID}", Method.DELETE);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
+            var response = await Execute(request);
+        }
+
         public async Task PostGameImage(string gameID, string image, PotraceMode mode, double blackLevel, int brushSize)
         {
             RestRequest request = new RestRequest($"games/{gameID}/image", Method.POST);

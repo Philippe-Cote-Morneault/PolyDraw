@@ -372,6 +372,23 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public bool CancelGame()
+        {
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(GameID))
+                {
+                    RestClient.DeleteGame(GameID);
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new ClosableErrorDialog(e), "Dialog"); });
+                return false;
+            }
+        }
+
         bool _previewGUIEnabled;
 
         public bool PreviewGUIEnabled

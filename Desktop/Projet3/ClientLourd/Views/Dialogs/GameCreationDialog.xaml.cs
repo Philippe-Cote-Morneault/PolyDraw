@@ -121,13 +121,17 @@ namespace ClientLourd.Views.Dialogs
         {
             PreviewCanvas.Strokes.Clear();
         }
-
+        
+        
         public void OnClose(object sender, EventArgs arg)
         {
-            // Make sure its stopped although it should already be.
-            ViewModel.StrokeDrawerService.Close();
-            ViewModel.RemoveSocketListeners();
-            DialogHost.CloseDialogCommand.Execute(null, null);
+            if (ViewModel.CancelGame())
+            {
+                // Make sure its stopped although it should already be.
+                ViewModel.StrokeDrawerService.Close();
+                ViewModel.RemoveSocketListeners();
+                DialogHost.CloseDialogCommand.Execute(null, null);
+            }
         }
 
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
@@ -139,6 +143,24 @@ namespace ClientLourd.Views.Dialogs
                 request.Wrapped = true;
                 tb.MoveFocus(request);
             }
+        }
+        /// <summary>
+        /// Clear the canvas after the first next
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClearCanvasClick(object sender, RoutedEventArgs e)
+        {
+            EditorView.Canvas.Strokes.Clear();
+        }
+        /// <summary>
+        /// Call when the previous button is use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CancelCurrentGame(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CancelGame();
         }
     }
 }

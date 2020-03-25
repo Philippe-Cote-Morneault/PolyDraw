@@ -160,7 +160,7 @@ namespace ClientLourd.ViewModels
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     //Trigger NotifyProperty...
-                    CurrentLobby = CurrentLobby;
+                    NotifyPropertyChanged(nameof(CurrentLobby));
                     CanStart = CanStartGame();
                 });
             }
