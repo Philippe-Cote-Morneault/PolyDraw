@@ -285,7 +285,6 @@ func (g *groups) QuitGroup(socketID uuid.UUID, forced bool) {
 
 	} else {
 		g.mutex.Unlock()
-		go socket.SendErrorToSocketID(44, 404, "The user does not belong to this group", socketID)
 	}
 }
 
