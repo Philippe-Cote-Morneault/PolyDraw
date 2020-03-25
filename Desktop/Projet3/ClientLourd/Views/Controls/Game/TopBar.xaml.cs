@@ -22,8 +22,13 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
         }
 
-        
-    public SocketClient SocketClient
+        private void ScoreGainedHandler(object sender, EventArgs e)
+        {
+
+        }
+
+
+        public SocketClient SocketClient
         {
             get
             {
@@ -67,7 +72,6 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    // TODO: If solo
                     if ((GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo) && GameViewModel.HealthPoint > 0) 
                     {
                         AnimateLostHeart();
@@ -157,5 +161,7 @@ namespace ClientLourd.Views.Controls.Game
             Storyboard sb = (Storyboard)FindResource("TimeLostAnimation");
             sb.Begin();
         }
+
+        
     }
 }

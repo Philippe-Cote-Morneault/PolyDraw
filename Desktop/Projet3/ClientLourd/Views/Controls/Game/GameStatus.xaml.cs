@@ -22,7 +22,9 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            UpdatePlayersScore(e.Players);            
+            
+            UpdatePlayersScore(e.Players);
+            
         }
 
         public SocketClient SocketClient
@@ -57,7 +59,9 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchSync(object source, EventArgs args)
         {
             var e = (MatchEventArgs)args;
-            UpdatePlayersScore(e.Players);            
+            
+            UpdatePlayersScore(e.Players);
+            
 
         }
 
