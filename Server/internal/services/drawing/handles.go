@@ -28,6 +28,11 @@ type Draw struct {
 	DrawingTimeFactor float64
 }
 
+// DrawState gives the state of drawing
+type DrawState struct {
+	ContinueDrawing bool
+}
+
 //Stroke represent a stroke to be drawn on the client canvas
 type Stroke struct {
 	ID        uuid.UUID
@@ -53,13 +58,11 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	var continueDrawing *bool
-	*continueDrawing = true
-	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1}, continueDrawing)
+	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1}, &DrawState{ContinueDrawing: true})
 }
 
 // StartDrawing starts the drawing procedure
-func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, continueDrawing *bool) {
+func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, continueDrawing *DrawState) {
 	socket.SendRawMessageToSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.StartDrawingServer),
 		Length:      uint16(len(uuidBytes)),
@@ -90,7 +93,7 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 	socket.SendRawMessageToSocketID(packet, socketID)
 }
 
-func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *bool) {
+func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 	file, err := datastore.GetFile(draw.SVGFile)
 	if err != nil {
 		log.Println(err)
@@ -122,7 +125,7 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *bool) {
 		// payloads = append(payloads, stroke.Marshall())
 	}
 	for _, payload := range payloads {
-		if !(*continueDrawing) {
+		if !continueDrawing.ContinueDrawing {
 			return
 		}
 		packet := socket.RawMessage{

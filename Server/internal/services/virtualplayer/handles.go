@@ -38,7 +38,7 @@ type Manager struct {
 	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
 	Matches  map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
 	Hints    map[uuid.UUID]map[string]bool     //playerID -> []indices
-	Drawing  map[uuid.UUID]*bool               //groupID -> continueDrawing
+	Drawing  map[uuid.UUID]*drawing.DrawState  //groupID -> continueDrawing
 
 }
 
@@ -49,7 +49,7 @@ func (m *Manager) init() {
 	m.Matches = make(map[uuid.UUID]*match2.IMatch)
 	m.Games = make(map[uuid.UUID]*gameHints)
 	m.Hints = make(map[uuid.UUID]map[string]bool)
-	m.Drawing = make(map[uuid.UUID]*bool)
+	m.Drawing = make(map[uuid.UUID]*drawing.DrawState)
 }
 
 //AddGroup [Current Thread] adds the group to cache (lobby)
@@ -213,8 +213,7 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	continueDrawing := true
-	managerInstance.Drawing[(*round).MatchID] = &continueDrawing
+	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: true}
 	managerInstance.mutex.Unlock()
 
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
@@ -234,9 +233,14 @@ func startDrawing(round *match2.RoundStart) {
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
 func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
-	continueDrawing := false
 
-	managerInstance.Drawing[groupID] = &continueDrawing
+	drawState, ok := managerInstance.Drawing[groupID]
+	if !ok {
+		managerInstance.mutex.Unlock()
+		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId in Drawing : %v. Aborting handleRoundEnds...", groupID)
+		return
+	}
+	drawState.ContinueDrawing = false
 	managerInstance.mutex.Unlock()
 
 	makeBotsSpeak("endRound", groupID)
