@@ -20,6 +20,17 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
+            SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
+        }
+
+        private void SocketClientCoopWordGuessed(object source, EventArgs args)
+        {
+            MatchEventArgs e = (MatchEventArgs)args;
+            //e.Username;
+            //e.Word;
+            GameViewModel.TeamPoints = e.Points;
+            GameViewModel.TeamNewPoints = e.NewPoints;
+            Application.Current.Dispatcher.Invoke(() => AnimatePointsGained());
         }
 
         private void AnimatePointsGained()
@@ -77,15 +88,6 @@ namespace ClientLourd.Views.Controls.Game
                         AnimateLostHeart();
                     }
 
-                });
-            }
-            else
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    GameViewModel.TeamPoints = e.Points;
-                    GameViewModel.TeamNewPoints = e.NewPoints;
-                    AnimatePointsGained();
                 });
             }
         }

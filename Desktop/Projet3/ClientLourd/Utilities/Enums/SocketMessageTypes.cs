@@ -56,6 +56,7 @@
         AskForHint = 82,
         HintResponse = 83,
         MatchRoundEnded = 85,
+        CoopWordGuessed = 87,
         UserChangedName = 110,
         ServerMessage = 255,
     }
