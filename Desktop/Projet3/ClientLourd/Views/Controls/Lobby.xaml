@@ -15,7 +15,7 @@
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter" />
         <converter:NumberToPlaceholder x:Key="NumberToPlaceholder"/>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
-        
+        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:LobbyViewModel x:Name="DataContext"/>
@@ -59,7 +59,7 @@
                                 </materialDesign:PackIcon>
 
                                 
-                                <!-- +/- to add or remove virtual player -->
+                                <!-- Minus to remove virtual player -->
                                 <Grid>
                                     <Grid.Visibility>
                                         <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="0">
@@ -105,21 +105,23 @@
                                         <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
                                     </materialDesign:Chip.Icon>
                                 </materialDesign:Chip>
-                                <materialDesign:PackIcon Kind="Add"  ToolTip="{DynamicResource AddVirtualPlayer}" Margin="10 8 0 0" Foreground="Green" Background="White" Cursor="Hand">
-                                    <materialDesign:PackIcon.InputBindings>
-                                        <MouseBinding Gesture="LeftClick" 
-                                                        Command="{Binding ElementName=DataContext, Path=AddVirtualPlayerCommand}"/>
-                                        <MouseBinding Gesture="LeftDoubleClick" 
-                                                        Command="{Binding ElementName=DataContext, Path=AddVirtualPlayerCommand}"/>
+                                <Grid Visibility="{Binding ElementName=DataContext, Path=CurrentLobby.Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
+                                    <materialDesign:PackIcon Kind="Add"  ToolTip="{DynamicResource AddVirtualPlayer}" Margin="10 8 0 0" Foreground="Green" Background="White" Cursor="Hand">
+                                        <materialDesign:PackIcon.InputBindings>
+                                            <MouseBinding Gesture="LeftClick" 
+                                                            Command="{Binding ElementName=DataContext, Path=AddVirtualPlayerCommand}"/>
+                                            <MouseBinding Gesture="LeftDoubleClick" 
+                                                            Command="{Binding ElementName=DataContext, Path=AddVirtualPlayerCommand}"/>
 
-                                    </materialDesign:PackIcon.InputBindings>
-                                    <materialDesign:PackIcon.Visibility>
-                                        <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
-                                            <Binding ElementName="DataContext" Path="CurrentLobby.HostID" UpdateSourceTrigger="PropertyChanged"></Binding>
-                                            <Binding ElementName="DataContext" Path="SessionInformations.User.ID" UpdateSourceTrigger="PropertyChanged"></Binding>
-                                        </MultiBinding>
-                                    </materialDesign:PackIcon.Visibility>
-                                </materialDesign:PackIcon>
+                                        </materialDesign:PackIcon.InputBindings>
+                                        <materialDesign:PackIcon.Visibility>
+                                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
+                                                <Binding ElementName="DataContext" Path="CurrentLobby.HostID" UpdateSourceTrigger="PropertyChanged"></Binding>
+                                                <Binding ElementName="DataContext" Path="SessionInformations.User.ID" UpdateSourceTrigger="PropertyChanged"></Binding>
+                                            </MultiBinding>
+                                        </materialDesign:PackIcon.Visibility>
+                                    </materialDesign:PackIcon>
+                                </Grid>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

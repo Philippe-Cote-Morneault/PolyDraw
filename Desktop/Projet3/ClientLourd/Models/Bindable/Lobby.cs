@@ -64,7 +64,8 @@ namespace ClientLourd.Models.Bindable
 
         private ObservableCollection<Player> _players;
 
-        public GameModes Mode { get; set; }
+        GameModes _mode;
+        public GameModes Mode { get => _mode; set { _mode = value; NotifyPropertyChanged(); } }
 
         public ObservableCollection<Player> Players 
         {
