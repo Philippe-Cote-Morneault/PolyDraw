@@ -121,7 +121,8 @@ namespace ClientLourd.Views.Dialogs
         {
             PreviewCanvas.Strokes.Clear();
         }
-
+        
+        
         public void OnClose(object sender, EventArgs arg)
         {
             if (ViewModel.CancelGame())
@@ -142,6 +143,24 @@ namespace ClientLourd.Views.Dialogs
                 request.Wrapped = true;
                 tb.MoveFocus(request);
             }
+        }
+        /// <summary>
+        /// Clear the canvas after the first next
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClearCanvasClick(object sender, RoutedEventArgs e)
+        {
+            EditorView.Canvas.Strokes.Clear();
+        }
+        /// <summary>
+        /// Call when the previous button is use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CancelCurrentGame(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CancelGame();
         }
     }
 }

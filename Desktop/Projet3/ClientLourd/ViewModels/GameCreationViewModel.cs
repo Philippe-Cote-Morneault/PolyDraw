@@ -376,7 +376,10 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                RestClient.DeleteGame(GameID);
+                if (!String.IsNullOrWhiteSpace(GameID))
+                {
+                    RestClient.DeleteGame(GameID);
+                }
                 return true;
             }
             catch(Exception e)
