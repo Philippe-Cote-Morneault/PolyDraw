@@ -15,15 +15,34 @@ namespace ClientLourd.Views.Controls.Game
         public GameStatus()
         {
             InitializeComponent();
- 
-            Loaded += OnLoaded;
+            SocketClient.RoundEnded += SocketClientOnRoundEnded;
+            SocketClient.MatchSync += SocketClientOnMatchSync;
+
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void SocketClientOnMatchSync(object source, EventArgs args)
         {
-            GameViewModel.ScoreUpdatedEvent += OnScoreUpdated;
+            var e = (MatchEventArgs)args;
+            UpdatePlayersScore(e.Players);
         }
 
+        private void SocketClientOnRoundEnded(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+            UpdatePlayersScore(e.Players);
+        }
+
+        public SocketClient SocketClient
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
+                        ?.SocketClient;
+                });
+            }
+        }
         private void OnScoreUpdated(object source, string userID)
         {
             Application.Current.Dispatcher.Invoke(() => 
@@ -36,6 +55,24 @@ namespace ClientLourd.Views.Controls.Game
         public GameViewModel GameViewModel
         {
             get => Application.Current.Dispatcher.Invoke(() => { return (GameViewModel)DataContext; });
+        }
+
+        private void UpdatePlayersScore(dynamic playersInfo)
+        {
+            foreach (dynamic info in playersInfo)
+            {
+                var dic = (Dictionary<object, object>)info;
+                if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
+                    break;
+                var tmpPlayer = GameViewModel.Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
+                var newPoints = info["Points"] - tmpPlayer.Score;
+                if (tmpPlayer != null && newPoints != 0)
+                {
+                    tmpPlayer.Score = info["Points"];
+                    tmpPlayer.PointsRecentlyGained = newPoints;
+                    AnimatePointsGained(tmpPlayer.User.ID);
+                }
+            }
         }
 
 

@@ -66,14 +66,8 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
             SocketClient.HintResponse += SocketClientOnHintResponse;
-            SocketClient.RoundEnded += SocketClientOnRoundEnded;
         }
 
-        private void SocketClientOnRoundEnded(object source, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            UpdatePlayersScore(e.Players);
-        }
 
         private void SocketClientOnHintResponse(object source, EventArgs args)
         {
@@ -190,7 +184,6 @@ namespace ClientLourd.ViewModels
             Round = e.Laps;
             TotalRound = e.LapTotal;
             Time = e.Time;
-            UpdatePlayersScore(e.Players);
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
@@ -515,26 +508,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private void UpdatePlayersScore(dynamic playersInfo)
-        {
-            foreach (dynamic info in playersInfo)
-            {
-                var dic = (Dictionary<object, object>)info;
-                if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
-                    break;
-                var tmpPlayer = Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
-                var newPoints = info["Points"] - tmpPlayer.Score;
-                if (tmpPlayer != null && newPoints != 0)
-                {
-                    tmpPlayer.Score = info["Points"];
-                    tmpPlayer.PointsRecentlyGained = newPoints;
-                    ScoreUpdatedEvent?.Invoke(this, tmpPlayer.User.ID);
-                }
-            }
-        }
-
-        public delegate void ScoreUpdatedHandler(object source, string userID);
-        public event ScoreUpdatedHandler ScoreUpdatedEvent;
 
         public ICommand ViewPublicProfile
         {
@@ -544,6 +517,34 @@ namespace ClientLourd.ViewModels
         protected virtual void OnNewCanavasMessage(string message)
         {
             NewCanavasMessage?.Invoke(message);
+        }
+
+        int _teamPoints;
+        public int TeamPoints
+        {
+            get => _teamPoints;
+            set
+            {
+                if (_teamPoints != value)
+                {
+                    _teamPoints = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        int _teamNewPoints;
+        public int TeamNewPoints
+        {
+            get => _teamNewPoints;
+            set
+            {
+                if (_teamNewPoints != value)
+                {
+                    _teamNewPoints = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
     }
 }

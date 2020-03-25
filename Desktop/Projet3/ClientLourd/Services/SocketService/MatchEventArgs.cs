@@ -98,5 +98,15 @@ namespace ClientLourd.Services.SocketService
         {
             get => (int)_data["Bonus"];
         }
+
+        public int Points
+        {
+            get => (int)_data["Points"];
+        }
+
+        public int NewPoints
+        {
+            get => (int)_data["NewPoints"];
+        }
     }
 }
