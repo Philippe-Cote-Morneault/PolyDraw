@@ -18,7 +18,7 @@
                 <materialDesign:PackIcon Kind="Close" />
             </Button>
 
-            <Ellipse Width="350" Height="350">
+            <Ellipse Width="350" Stroke="LightGray" Height="350">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
                 </Ellipse.Fill>

@@ -284,10 +284,8 @@ namespace ClientLourd.ViewModels
                 var lobbyDeletedArgs = (LobbyEventArgs)e;
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
-                //TODO
 
                 var lobbyToDelete = FindLobby(lobbyDeletedID);
-                //var lobbyDeleted = Lobbies.Single(lobby => lobby.ID == lobbyDeletedID);
 
                 if (lobbyToDelete != null)
                 {
@@ -349,7 +347,7 @@ namespace ClientLourd.ViewModels
 
         private async void SetUsersInfo(Lobby lobby)
         {
-            foreach(Player player in lobby.Players)
+            foreach (Player player in lobby.Players)
             {
                 if (player.User.Avatar == null)
                 {
@@ -361,7 +359,6 @@ namespace ClientLourd.ViewModels
                     {
                         player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png", UriKind.Relative));
                     }
-                    
                 }
             }
         }

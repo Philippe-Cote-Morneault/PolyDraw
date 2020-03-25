@@ -91,6 +91,20 @@ namespace ClientLourd.ViewModels
             get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
+        private DateTime _timeGained;
+        public DateTime TimeGained
+        {
+            get { return _timeGained; }
+            set
+            {
+                if (_timeGained != value)
+                {
+                    _timeGained = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private void SocketClientOnUserDeleteStroke(object source, EventArgs args)
         {
             Application.Current.Dispatcher.Invoke(delegate 
@@ -132,9 +146,17 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            Time = e.Time;
+            
+            if (Mode == GameModes.FFA)
+            {
+                Time = e.Time;
+            }
+            
             _roundStarted = true;
             CanStillGuess = true;
+            //TODO: if solo or coop
+            
+
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Player player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
@@ -211,7 +233,11 @@ namespace ClientLourd.ViewModels
         {
             PrepareNextRound();
             var e = (MatchEventArgs) args;
-            Time = DateTime.MinValue;
+            if (Mode == GameModes.FFA)
+            {
+                Time = DateTime.MinValue;
+
+            }
             CanStillGuess = false;
         }
 
@@ -449,7 +475,7 @@ namespace ClientLourd.ViewModels
         private void PrepareMatch()
         {
             Word = "";
-            _mode = Lobby.Mode;
+            Mode = Lobby.Mode;
             if (_mode == GameModes.FFA)
             {
 

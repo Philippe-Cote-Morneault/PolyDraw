@@ -3,8 +3,10 @@ using ClientLourd.Services.SoundService;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.ViewModels;
 using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace ClientLourd.Views.Controls.Game
@@ -16,7 +18,15 @@ namespace ClientLourd.Views.Controls.Game
             InitializeComponent();
             SocketClient.MatchSync += SocketClientOnMatchSync;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
+            SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
+            SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
         }
+
+        private void ScoreGainedHandler(object sender, EventArgs e)
+        {
+
+        }
+
 
         public SocketClient SocketClient
         {
@@ -44,7 +54,7 @@ namespace ClientLourd.Views.Controls.Game
         {
             var e = (MatchEventArgs)args;
             DateTime timeLeft = e.Time;
-            if (timeLeft.Second <= 10)
+            if (TimeSpan.FromTicks(timeLeft.Ticks).TotalSeconds <= 10)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -62,21 +72,96 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    // TODO: If solo
-                    if (GameViewModel.Mode == GameModes.Solo && GameViewModel.HealthPoint > 0) 
+                    if ((GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo) && GameViewModel.HealthPoint > 0) 
                     {
-                        UIElement el = (HeartsContainer.Children[GameViewModel.HealthPoint - 1] as UIElement);
-                        GameViewModel.HealthPoint--;
-                        Storyboard sb = (Storyboard)FindResource("HealthLost");
-                        for (int j = 0; j < sb.Children.Count; j++)
-                        {
-                            Storyboard.SetTarget(sb.Children[j], el);
-                        }
-                        sb.Begin();
+                        AnimateLostHeart();
                     }
 
                 });
             }
         }
+
+        private void AnimateLostHeart() 
+        {
+            UIElement el = (HeartsContainer.Children[GameViewModel.HealthPoint - 1] as UIElement);
+            GameViewModel.HealthPoint--;
+            Storyboard sb = (Storyboard)FindResource("HealthLost");
+            for (int j = 0; j < sb.Children.Count; j++)
+            {
+                Storyboard.SetTarget(sb.Children[j], el);
+            }
+            sb.Begin();
+        }
+
+        
+        private void SocketClientOnNewPlayerIsDrawing(object sender, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+
+            if (GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo)
+            {
+                if (GameViewModel.HealthPoint != 3)
+                {
+                    GameViewModel.HealthPoint = 3;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        AnimateHeartsReset();
+                    });
+                }
+            }
+        }
+
+        private void AnimateHeartsReset()
+        {
+            
+            foreach(UIElement el in HeartsContainer.Children)
+            {
+                if ((((el.RenderTransform as TransformGroup).Children[0]) as ScaleTransform).ScaleX < 1)
+                {
+                    Storyboard sb = (Storyboard)FindResource("HealthReset");
+                    foreach (DependencyObject animation in sb.Children)
+                    {
+                        Storyboard.SetTarget(animation, el);
+                    }
+                    sb.Begin();
+                }
+                
+            }
+        }
+        private void SocketClientMatchCheckPoint(object sender, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+
+            if (e.Bonus > 0)
+            {
+                GameViewModel.TimeGained = DateTime.MinValue.AddMilliseconds(e.Bonus);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    AnimateTimeGained();
+                });
+            }
+            else
+            {
+                GameViewModel.TimeGained = DateTime.MinValue.AddMilliseconds(-e.Bonus);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    AnimateTimeLost();
+                });
+            } 
+        }
+
+        private void AnimateTimeGained()
+        {
+            Storyboard sb = (Storyboard)FindResource("TimeGainedAnimation");
+            sb.Begin();
+        }
+
+        private void AnimateTimeLost()
+        {
+            Storyboard sb = (Storyboard)FindResource("TimeLostAnimation");
+            sb.Begin();
+        }
+
+        
     }
 }

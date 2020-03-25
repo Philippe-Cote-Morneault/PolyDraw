@@ -5,15 +5,20 @@ using System.Linq;
 using System.Media;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ClientLourd.Services.SoundService
 {
-    public class SoundService: INotifyPropertyChanged
+    public class SoundService : INotifyPropertyChanged
     {
+        private static Mutex mut;
+
         public SoundService()
         {
             SoundIsOn = true;
+            mut = new Mutex();
         }
 
         bool _soundIsOn;
@@ -22,7 +27,7 @@ namespace ClientLourd.Services.SoundService
             get => _soundIsOn;
             set
             {
-                if (value != _soundIsOn) 
+                if (value != _soundIsOn)
                 {
                     _soundIsOn = value;
                     NotifyPropertyChanged();
@@ -37,13 +42,16 @@ namespace ClientLourd.Services.SoundService
 
         public void PlayNotification()
         {
+            //mut.WaitOne();
             if (SoundIsOn)
             {
                 new SoundPlayer(Properties.Resources.Message).Play();
+                
             }
+            //mut.ReleaseMutex();
         }
 
-        public void PlayWordGuessedRight() 
+        public void PlayWordGuessedRight()
         {
             if (SoundIsOn)
             {
@@ -64,6 +72,20 @@ namespace ClientLourd.Services.SoundService
             {
                 new SoundPlayer(Properties.Resources.TimerWarning).Play();
             }
+        }
+
+        private void DisableSpam()
+        {
+            _soundIsOn = false;
+
+            Task.Delay(1000).ContinueWith(_ =>
+            {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    _soundIsOn = true;
+                }));
+            });
+
         }
 
 

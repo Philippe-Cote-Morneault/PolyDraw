@@ -94,5 +94,9 @@ namespace ClientLourd.Services.SocketService
             get => _data["Error"];
         }
         
+        public int Bonus
+        {
+            get => (int)_data["Bonus"];
+        }
     }
 }
