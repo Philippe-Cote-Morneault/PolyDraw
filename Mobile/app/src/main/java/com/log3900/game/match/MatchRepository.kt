@@ -168,7 +168,7 @@ class MatchRepository : Service() {
         var playerScoresChanged = false
         synchronisation.players.forEach {
             if (playerScores[it.first] != it.second && playerScores.getOrDefault(it.first, 0) < it.second) {
-                playerScores[it.first] = it.second
+                updatePlayerScore(it.first, it.second)
                 playerScoresChanged = true
             }
         }
@@ -184,6 +184,12 @@ class MatchRepository : Service() {
         val matchEnded = MatchAdapter.jsonToMatchEnded(jsonObject)
         Log.d("POTATO", "Match ended = $json")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
+
+        matchEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points)
+        }
+
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
     }
 
     private fun onPlayerLeftMatch(message: com.log3900.socket.Message) {
@@ -218,6 +224,12 @@ class MatchRepository : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         val roundEnded = MatchAdapter.jsonToRoundEnded(jsonObject)
         EventBus.getDefault().post(MessageEvent(EventType.ROUND_ENDED, roundEnded))
+
+        roundEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points)
+        }
+
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
     }
 
     private fun onHintResponse(message: com.log3900.socket.Message) {
