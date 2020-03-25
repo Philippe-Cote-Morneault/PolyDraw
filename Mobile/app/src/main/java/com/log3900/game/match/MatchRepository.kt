@@ -216,7 +216,9 @@ class MatchRepository : Service() {
     private fun onCheckpoint(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
+        val checkPoint = MatchAdapter.jsonToCheckpoint(jsonObject)
         Log.d("POTATO", "onCheckpoint json = $json")
+        EventBus.getDefault().post(MessageEvent(EventType.CHECKPOINT, checkPoint))
     }
 
     private fun onRoundEnded(message: com.log3900.socket.Message) {

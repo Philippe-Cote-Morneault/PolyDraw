@@ -224,4 +224,11 @@ object MatchAdapter {
 
         return HintResponse(hint, error)
     }
+
+    fun jsonToCheckpoint(jsonObject: JsonObject): CheckPoint {
+        val totalTime = jsonObject.get("TotalTime").asInt
+        val bonus = jsonObject.get("Bonus").asInt
+
+        return CheckPoint(totalTime, bonus)
+    }
 }

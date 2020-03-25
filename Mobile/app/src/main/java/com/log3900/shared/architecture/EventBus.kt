@@ -37,6 +37,7 @@ enum class EventType {
     ROUND_ENDED,
     MATCH_ENDED,
     HINT_RESPONSE,
+    CHECKPOINT,
     // Session
     LOGOUT,
     SHOW_ERROR_MESSAGE,

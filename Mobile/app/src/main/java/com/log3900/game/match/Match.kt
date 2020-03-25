@@ -111,3 +111,8 @@ class HintResponse(
     var hint: String?,
     var error: String?
 )
+
+class CheckPoint(
+    var totalTime: Int,
+    var bonus: Int
+)
