@@ -363,7 +363,8 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 			g.mutex.Unlock()
 
 			if (count >= 2 && groupDB.GameType == 0) ||
-				(count >= 1 && groupDB.GameType >= 1) {
+				(count == 1 && groupDB.GameType == 1) ||
+				(count >= 2 && groupDB.GameType == 2) {
 				if groupDB.GameType >= 1 && groupDB.VirtualPlayers < 1 {
 					g.addBotGroupID(&groupDB)
 				}
