@@ -2,6 +2,7 @@ package mode
 
 import (
 	"log"
+	"math"
 	"math/rand"
 	"sort"
 	"strings"
@@ -509,8 +510,7 @@ func (f *FFA) calculateScore() int {
 	const baseScore = 1000
 	const minimum = 100
 	imageDuration := time.Now().Sub(f.timeStartImage)
-	remaining := int((f.timeImage - imageDuration.Milliseconds()) / 10000)
-	score := (baseScore / f.clientGuess) - (remaining * 10)
+	score := int(baseScore - minimum*math.Sqrt(imageDuration.Seconds()))
 	if score < minimum {
 		return minimum
 	}
