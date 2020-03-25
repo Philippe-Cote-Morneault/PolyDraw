@@ -398,7 +398,7 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 			UserID:   c.info.Users[i].ID.String(),
 			Username: c.info.Users[i].Username,
 			Points:   0,
-			IsCPU:    false,
+			IsCPU:    c.info.Users[i].IsCPU,
 		})
 	}
 	welcome := ResponseGameInfo{
