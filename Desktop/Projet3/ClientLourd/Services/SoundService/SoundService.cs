@@ -14,10 +14,12 @@ namespace ClientLourd.Services.SoundService
     public class SoundService : INotifyPropertyChanged
     {
         private static Mutex mut;
+        private SoundPlayer _soundPlayer;
 
         public SoundService()
         {
             SoundIsOn = true;
+            _soundPlayer = new SoundPlayer();
             mut = new Mutex();
         }
 
@@ -42,32 +44,41 @@ namespace ClientLourd.Services.SoundService
 
         public void PlayNotification()
         {
-            //mut.WaitOne();
+            
             if (SoundIsOn)
             {
-                new SoundPlayer(Properties.Resources.Message).Play();
-                
+                _soundPlayer.Stream = Properties.Resources.Message;
+                _soundPlayer.PlaySync();
+
             }
-            //mut.ReleaseMutex();
         }
 
         public void PlayWordGuessedRight()
         {
+            
             if (SoundIsOn)
             {
-                new SoundPlayer(Properties.Resources.WordGuessedRight).Play();
+                _soundPlayer.Stream = Properties.Resources.WordGuessedRight;
+                _soundPlayer.PlaySync();
             }
+            
         }
         public void PlayWordGuessedWrong()
         {
+            mut.WaitOne();
+
             if (SoundIsOn)
             {
-                new SoundPlayer(Properties.Resources.WordGuessedWrong).Play();
+                _soundPlayer.Stream = Properties.Resources.WordGuessedWrong;
+                _soundPlayer.PlaySync();
             }
+            mut.ReleaseMutex();
+
         }
 
         public void PlayTimerWarning()
         {
+
             if (SoundIsOn)
             {
                 new SoundPlayer(Properties.Resources.TimerWarning).Play();
