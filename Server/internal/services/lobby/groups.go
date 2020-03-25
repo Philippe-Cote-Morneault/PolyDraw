@@ -365,13 +365,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 			if (count >= 2 && groupDB.GameType == 0) ||
 				(count >= 1 && groupDB.GameType >= 1) {
 				if groupDB.GameType >= 1 && groupDB.VirtualPlayers < 1 {
-					rawMessage := socket.RawMessage{}
-					rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
-						Response: false,
-						Error:    "There should be one virtual player in the group in order to start the game",
-					})
-					socket.SendRawMessageToSocketID(rawMessage, socketID)
-					return
+					g.addBotGroupID(&groupDB)
 				}
 
 				//Check if there are enough games
@@ -452,6 +446,44 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 	}
 }
 
+//addBotGroupID, remove
+func (g *groups) addBotGroupID(groupDB *model.Group) {
+	user := model.User{IsCPU: true}
+	model.AddUser(&user)
+
+	user.Username = virtualplayer.AddVirtualPlayer(groupDB.ID, user.ID)
+	log.Printf("[Lobby] -> adding bot in DB: %v", user)
+
+	if user.Username != "" {
+		//appel au joueur virtuel
+		model.DB().Model(groupDB).Association("Users").Append(&user)
+		groupDB.VirtualPlayers++
+		model.DB().Save(groupDB)
+
+		//Send a message to all the member of the group to advertise that a new user is in the group
+		newUser := socket.RawMessage{}
+		newUser.ParseMessagePack(byte(socket.MessageType.UserJoinedGroup), responseGroup{
+			UserID:   user.ID.String(),
+			Username: user.Username,
+			GroupID:  groupDB.ID.String(),
+			IsCPU:    true,
+		})
+
+		g.mutex.Lock()
+		for i := range g.groups[groupDB.ID] {
+			go socket.SendRawMessageToSocketID(newUser, g.groups[groupDB.ID][i])
+		}
+		for k := range g.queue {
+			go socket.SendRawMessageToSocketID(newUser, k)
+		}
+		g.mutex.Unlock()
+		return
+	}
+
+	log.Printf("[Lobby] -> Cannot find a user for the virtual player : %v", user)
+
+}
+
 //AddBot used to add a bot to the group
 func (g *groups) AddBot(socketID uuid.UUID) {
 	groupID := g.assignment[socketID]
@@ -506,7 +538,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 				Response: false,
-				Error:    "The group could not be found full in virtual player cache.",
+				Error:    "The user could not be found full in virtual player cache.",
 			})
 			socket.SendRawMessageToSocketID(message, socketID)
 			return
