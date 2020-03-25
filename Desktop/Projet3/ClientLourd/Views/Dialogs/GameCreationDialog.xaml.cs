@@ -124,10 +124,13 @@ namespace ClientLourd.Views.Dialogs
 
         public void OnClose(object sender, EventArgs arg)
         {
-            // Make sure its stopped although it should already be.
-            ViewModel.StrokeDrawerService.Close();
-            ViewModel.RemoveSocketListeners();
-            DialogHost.CloseDialogCommand.Execute(null, null);
+            if (ViewModel.CancelGame())
+            {
+                // Make sure its stopped although it should already be.
+                ViewModel.StrokeDrawerService.Close();
+                ViewModel.RemoveSocketListeners();
+                DialogHost.CloseDialogCommand.Execute(null, null);
+            }
         }
 
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
