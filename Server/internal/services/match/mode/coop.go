@@ -257,12 +257,12 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 			gameDuration := time.Now().Sub(c.timeStart)
 			remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
-
-			c.waitingResponse.Release(1)
+			word := c.currentWord
 			player := c.connections[socketID]
 
 			c.commonScore.commit(pointsForWord)
 			total := c.commonScore.total
+			c.waitingResponse.Release(1)
 
 			c.receiving.Unlock()
 
@@ -276,11 +276,14 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
-			broadcast.ParseMessagePack(byte(socket.MessageType.WordFound), WordFound{
-				Username:  player.Username,
-				UserID:    player.userID.String(),
-				Points:    total,
-				NewPoints: pointsForWord,
+			broadcast.ParseMessagePack(byte(socket.MessageType.WordFoundCoop), WordFoundCoop{
+				WordFound: WordFound{
+					Username:  player.Username,
+					UserID:    player.userID.String(),
+					Points:    total,
+					NewPoints: pointsForWord,
+				},
+				Word: word,
 			})
 			c.pbroadcast(&broadcast)
 

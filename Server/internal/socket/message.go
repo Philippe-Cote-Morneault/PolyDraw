@@ -54,6 +54,7 @@ type messageType struct {
 	GameEnded                int
 	ResponseGuess            int
 	WordFound                int
+	WordFoundCoop            int
 	TimeUp                   int
 	ResponseHintMatch        int
 	PlayerSync               int
@@ -122,6 +123,7 @@ var MessageType = &messageType{
 	RequestHintMatch:         82,
 	ResponseHintMatch:        83,
 	RoundEndStatus:           85,
+	WordFoundCoop:            87,
 	UsernameChange:           110,
 	ErrorResponse:            255,
 }

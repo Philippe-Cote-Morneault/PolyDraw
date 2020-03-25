@@ -62,6 +62,12 @@ type WordFound struct {
 	NewPoints int
 }
 
+//WordFoundCoop represent the message when a word was found by all the users
+type WordFoundCoop struct {
+	WordFound
+	Word string
+}
+
 //TimeUp message used to broadcast to other players that the time is up for finding the name
 type TimeUp struct {
 	Type int
