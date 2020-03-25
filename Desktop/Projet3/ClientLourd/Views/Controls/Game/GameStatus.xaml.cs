@@ -15,75 +15,27 @@ namespace ClientLourd.Views.Controls.Game
         public GameStatus()
         {
             InitializeComponent();
-            SocketClient.MatchSync += SocketClientOnMatchSync;
-            SocketClient.RoundEnded += SocketClientOnRoundEnded;
+ 
+            Loaded += OnLoaded;
         }
 
-        private void SocketClientOnRoundEnded(object source, EventArgs args)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var e = (MatchEventArgs)args;
-            
-            UpdatePlayersScore(e.Players);
-            
+            GameViewModel.ScoreUpdatedEvent += OnScoreUpdated;
         }
 
-        public SocketClient SocketClient
+        private void OnScoreUpdated(object source, string userID)
         {
-            get
+            Application.Current.Dispatcher.Invoke(() => 
             {
-                return Application.Current.Dispatcher.Invoke(() =>
-                {
-                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
-                        ?.SocketClient;
-                });
-            }
+                AnimatePointsGained(userID);
+            });
         }
+
 
         public GameViewModel GameViewModel
         {
             get => Application.Current.Dispatcher.Invoke(() => { return (GameViewModel)DataContext; });
-        }
-
-        public SessionInformations SessionInformations
-        {
-            get
-            {
-                return Application.Current.Dispatcher.Invoke(() =>
-                {
-                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
-                        ?.SessionInformations;
-                });
-            }
-        }
-
-        private void SocketClientOnMatchSync(object source, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            
-            UpdatePlayersScore(e.Players);
-            
-
-        }
-
-        private void UpdatePlayersScore(dynamic playersInfo)
-        {
-            foreach (dynamic info in playersInfo)
-            {
-                var dic = (Dictionary<object, object>)info;
-                if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
-                    break;
-                var tmpPlayer = GameViewModel.Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
-                if (tmpPlayer != null)
-                {
-                    var newPoints = info["Points"] - tmpPlayer.Score;
-                    if(newPoints != 0)
-                    {
-                        tmpPlayer.Score = info["Points"];
-                        tmpPlayer.PointsRecentlyGained = newPoints;
-                        AnimatePointsGained(tmpPlayer.User.ID);
-                    }
-                }
-            }
         }
 
 

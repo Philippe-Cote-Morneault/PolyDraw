@@ -20,13 +20,27 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
+            Loaded += OnLoaded;
         }
 
-        private void ScoreGainedHandler(object sender, EventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
-
+            GameViewModel.ScoreUpdatedEvent += OnScoreUpdate;
         }
 
+        private void OnScoreUpdate(object sender, string userID)
+        {
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                AnimatePointsGained();
+            });
+        }
+
+        private void AnimatePointsGained()
+        {
+            Storyboard sb = (Storyboard)FindResource("PointsGainedAnimations");
+            sb.Begin();
+        }
 
         public SocketClient SocketClient
         {

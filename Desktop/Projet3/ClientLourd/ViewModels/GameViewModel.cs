@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -70,7 +71,8 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
-            
+            var e = (MatchEventArgs)args;
+            UpdatePlayersScore(e.Players);
         }
 
         private void SocketClientOnHintResponse(object source, EventArgs args)
@@ -188,6 +190,7 @@ namespace ClientLourd.ViewModels
             Round = e.Laps;
             TotalRound = e.LapTotal;
             Time = e.Time;
+            UpdatePlayersScore(e.Players);
         }
 
         private void SocketClientOnPlayerGuessedTheWord(object source, EventArgs args)
@@ -511,6 +514,27 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        private void UpdatePlayersScore(dynamic playersInfo)
+        {
+            foreach (dynamic info in playersInfo)
+            {
+                var dic = (Dictionary<object, object>)info;
+                if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
+                    break;
+                var tmpPlayer = Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
+                var newPoints = info["Points"] - tmpPlayer.Score;
+                if (tmpPlayer != null && newPoints != 0)
+                {
+                    tmpPlayer.Score = info["Points"];
+                    tmpPlayer.PointsRecentlyGained = newPoints;
+                    ScoreUpdatedEvent?.Invoke(this, tmpPlayer.User.ID);
+                }
+            }
+        }
+
+        public delegate void ScoreUpdatedHandler(object source, string userID);
+        public event ScoreUpdatedHandler ScoreUpdatedEvent;
 
         public ICommand ViewPublicProfile
         {
