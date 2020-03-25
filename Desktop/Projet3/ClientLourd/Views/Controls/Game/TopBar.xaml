@@ -60,11 +60,11 @@
             <DoubleAnimation AutoReverse="False"
                            
                 Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="0" Duration="0:0:1" />
+                From="1" To="0" Duration="0:0:0.5" />
 
             <DoubleAnimation AutoReverse="False"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="0" Duration="0:0:1" />
+                From="1" To="0" Duration="0:0:0.5" />
 
         </Storyboard>
 
@@ -72,7 +72,7 @@
             <DoubleAnimation AutoReverse="False"
                            
                 Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="0" To="1" Duration="0:0:1" />
+                From="0" To="1" Duration="0:0:1"/>
 
             <DoubleAnimation AutoReverse="False"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
@@ -98,6 +98,26 @@
                 From="1" To="2.5" Duration="0:0:2" />
         </Storyboard>
 
+
+        <Storyboard x:Key="TimeGainedAnimation" >
+            
+            <DoubleAnimation 
+                Storyboard.TargetName="TimeGainText"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetName="TimeGainText"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1" To="1.2" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="True"
+                Storyboard.TargetName="TimeGainText"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1" To="1.2" Duration="0:0:2" />
+
+        </Storyboard>
+
     </UserControl.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
@@ -106,6 +126,8 @@
             <ColumnDefinition />
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+
+        
         <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}">
             <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20">Team score: </TextBlock>
             <TextBlock VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20">1000</TextBlock>
@@ -137,26 +159,38 @@
                 </materialDesign:PackIcon.RenderTransform>
             </materialDesign:PackIcon>
         </StackPanel>
-        
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
-            <materialDesign:PackIcon Name="TimeIcon" Kind="Clock" HorizontalAlignment="Center">
-                <materialDesign:PackIcon.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </materialDesign:PackIcon.RenderTransform>
-            </materialDesign:PackIcon>
-            <TextBlock Name="TimeText" Text="{Binding Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black">
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
+                <materialDesign:PackIcon Name="TimeIcon" Kind="Clock" HorizontalAlignment="Center">
+                    <materialDesign:PackIcon.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </materialDesign:PackIcon.RenderTransform>
+                </materialDesign:PackIcon>
+
+            <TextBlock  Name="TimeText" Text="{Binding Path=Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black">
                 <TextBlock.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </TextBlock.RenderTransform>
-            </TextBlock>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+                
         </StackPanel>
-        
+        <TextBlock RenderTransformOrigin=".5,.5" Name="TimeGainText" Opacity="0" Text="{Binding Path=TimeGained, StringFormat={}+{0:mm:ss}}" HorizontalAlignment="Center" Foreground="Green" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+
+
+
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2">
             <StackPanel 
                 Margin="10"

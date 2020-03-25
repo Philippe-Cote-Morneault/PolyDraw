@@ -19,6 +19,7 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.MatchSync += SocketClientOnMatchSync;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
+            SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
         }
 
         
@@ -91,7 +92,9 @@ namespace ClientLourd.Views.Controls.Game
         
         private void SocketClientOnNewPlayerIsDrawing(object sender, EventArgs args)
         {
-            if (GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo || GameViewModel.Mode == GameModes.FFA)
+            var e = (MatchEventArgs)args;
+
+            if (GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo)
             {
                 if (GameViewModel.HealthPoint != 3)
                 {
@@ -109,7 +112,7 @@ namespace ClientLourd.Views.Controls.Game
             
             foreach(UIElement el in HeartsContainer.Children)
             {
-                if ((((el.RenderTransform as TransformGroup).Children[0]) as ScaleTransform).ScaleX == 0)
+                if ((((el.RenderTransform as TransformGroup).Children[0]) as ScaleTransform).ScaleX < 1)
                 {
                     Storyboard sb = (Storyboard)FindResource("HealthReset");
                     foreach (DependencyObject animation in sb.Children)
@@ -120,6 +123,24 @@ namespace ClientLourd.Views.Controls.Game
                 }
                 
             }
+        }
+        private void SocketClientMatchCheckPoint(object sender, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+
+            GameViewModel.TimeGained = e.Bonus;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                AnimateTimeGained();
+            });
+            
+        }
+
+        private void AnimateTimeGained()
+        {
+            Storyboard sb = (Storyboard)FindResource("TimeGainedAnimation");
+            sb.Begin();
         }
     }
 }
