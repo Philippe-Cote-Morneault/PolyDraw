@@ -41,9 +41,6 @@ class MatchWaitingRoomPresenter : Presenter {
 
         if (groupManager?.currentGroup?.ownerID == AccountRepository.getInstance().getAccount().ID) {
             matchWaitingRoomView?.displayStartMatchButton(true)
-            if (groupManager?.currentGroup?.gameType == MatchMode.SOLO || groupManager?.currentGroup?.gameType == MatchMode.COOP) {
-                groupManager?.addVirtualPlayers(1)
-            }
         } else {
             matchWaitingRoomView?.displayStartMatchButton(false)
         }
