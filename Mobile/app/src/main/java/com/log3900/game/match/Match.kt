@@ -108,6 +108,8 @@ class RoundEnded(
 }
 
 class HintResponse(
+    var userID: UUID?,
+    var hintsLeft: Int?,
     var hint: String?,
     var error: String?
 )

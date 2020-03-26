@@ -37,6 +37,9 @@ class MatchViewHolder : RecyclerView.ViewHolder {
         joinMatchButton.setOnClickListener {
             listener?.joinButtonClicked(match)
         }
+        itemView.setOnClickListener {
+            listener?.joinButtonClicked(match)
+        }
     }
 
     fun bind(match: Group) {

@@ -31,6 +31,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     protected lateinit var footer: LinearLayout
     protected lateinit var toolbar: ConstraintLayout
     protected lateinit var remainingTimeTextView: TextView
+    protected lateinit var remainingTimeChangeTextView: TextView
     protected var guessingView: WordGuessingView? = null
     private var wordToDrawView: WordToDrawView? = null
     private lateinit var roundEndInfoView: RoundEndInfoView
@@ -50,6 +51,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     protected open fun setupToolbar(rootView: View) {
         remainingTimeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time)
+        remainingTimeChangeTextView = toolbar.findViewById(R.id.toolbar_active_match_text_view_remaining_time_changed)
     }
 
     abstract protected open fun setupHumanPlayerRecyclerView(rootView: View)
@@ -248,6 +250,14 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
     override fun enableHintButton(enable: Boolean) {
         guessingView?.enableHintButton(enable)
+    }
+
+    override fun showRemainingTimeChangedAnimation(timeChangedValue: Int) {
+        if (timeChangedValue > 0) {
+            remainingTimeChangeTextView.setTextColor(Color.RED)
+        } else if (timeChangedValue < 0) {
+            remainingTimeChangeTextView.setTextColor(Color.GREEN)
+        }
     }
 
     override fun onDestroy() {

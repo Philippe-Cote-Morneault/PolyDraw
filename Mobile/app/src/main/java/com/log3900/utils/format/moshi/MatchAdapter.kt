@@ -213,6 +213,8 @@ object MatchAdapter {
     fun jsonToHintResponse(jsonObject: JsonObject): HintResponse {
         var hint: String? = null
         var error: String? = null
+        var userID: UUID? = null
+        var hintsLeft: Int? = null
 
         if (jsonObject.has("Hint")) {
             hint = jsonObject.get("Hint").asString
@@ -222,7 +224,15 @@ object MatchAdapter {
             error = jsonObject.get("Error").asString
         }
 
-        return HintResponse(hint, error)
+        if (jsonObject.has("UserID")) {
+            userID = UUID.fromString(jsonObject.get("UserID").asString)
+        }
+
+        if (jsonObject.has("HintsLeft")) {
+            hintsLeft = jsonObject.get("Hint").asInt
+        }
+
+        return HintResponse(userID, hintsLeft, hint, error)
     }
 
     fun jsonToCheckpoint(jsonObject: JsonObject): CheckPoint {

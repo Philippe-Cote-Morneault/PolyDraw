@@ -1,6 +1,7 @@
 package com.log3900.game.waiting_room
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -53,7 +54,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
     }
 
-    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean, gameType: MatchMode) {
+    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean, canAddAIs: Boolean) {
         this.player = player
         this.isPlaceholder = isPlaceholder
 
@@ -66,7 +67,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
 
         if (!isPlaceholder) {
-            if (showKickOptions) {
+            if (showKickOptions || isHost) {
                 crownRemoveImageView.visibility = View.VISIBLE
             } else {
                 crownRemoveImageView.visibility = View.INVISIBLE
@@ -98,9 +99,8 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         } else {
             playerChip.setText(R.string.empty_slot)
             playerChip.setChipIconResource(R.drawable.ic_person_colored_foreground)
-            if (showKickOptions && gameType == MatchMode.FFA) {
+            if (showKickOptions && canAddAIs) {
                 addImageView.visibility = View.VISIBLE
-
             } else {
                 addImageView.visibility = View.INVISIBLE
             }
