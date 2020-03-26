@@ -159,109 +159,86 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnUserDeletedChannel(object source, EventArgs args)
         {
-            _mutex.WaitOne();
-            try
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                        var e = (ChatEventArgs) args;
-                        Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
-                        if (channel == null)
-                            return;
-                        Channels.Remove(channel);
-                        if (SelectedChannel == channel)
-                        {
-                            SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
-                            if (e.UserID != Guid.Empty.ToString())
-                            {
-                                DialogHost.Show(new MessageDialog("Oups",
-                                $"{e.Username} delete the channel '{channel.Name}' !"));
-                            }
-                        }
-                        UpdateChannels();
-                });
-            }
-            finally{
-                _mutex.ReleaseMutex();
-            }
-        }
-
-        private void SocketClientOnUserLeftChannel(object source, EventArgs args)
-        {
-            _mutex.WaitOne();
-            try
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
                     var e = (ChatEventArgs) args;
                     Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
                     if (channel == null)
                         return;
-                    Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
-                    var user = channel.Users.FirstOrDefault(u => u.ID == e.UserID);
-                    channel.Messages.Add(m);
-                    if (channel.IsGame)
-                        Channels.Remove(channel);
-                    if(user != null)
-                        channel.Users.Remove(user);
+                    Channels.Remove(channel);
+                    if (SelectedChannel == channel)
+                    {
+                        SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+                        if (e.UserID != Guid.Empty.ToString())
+                        {
+                            DialogHost.Show(new MessageDialog("Oups",
+                            $"{e.Username} delete the channel '{channel.Name}' !"));
+                        }
+                    }
                     UpdateChannels();
-                });
-            }
-            finally{
-                _mutex.ReleaseMutex();
-            }
+            });
+        }
+
+        private void SocketClientOnUserLeftChannel(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var e = (ChatEventArgs) args;
+                Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                if (channel == null)
+                    return;
+                if (SessionInformations.User.ID != e.UserID)
+                {
+                    Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
+                    channel.Messages.Add(m);
+                }
+                if (channel.IsGame)
+                    Channels.Remove(channel);
+                var user = channel.Users.FirstOrDefault(u => u.ID == e.UserID);
+                if(user != null)
+                    channel.Users.Remove(user);
+                UpdateChannels();
+            });
         }
 
         private void SocketClientOnUserJoinedChannel(object source, EventArgs args)
         {
-            _mutex.WaitOne();
-            try
+            Application.Current.Dispatcher.Invoke(async () =>
             {
-                Application.Current.Dispatcher.Invoke(async () =>
-                {
-                        var e = (ChatEventArgs) args;
-                        Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
-                       if(channel == null){ 
-                           return;
-                       } 
-                        Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
-                        channel.Users.Add(await GetUser(e.Username, e.UserID));
-                        channel.Messages.Add(m);
-                        // Select this channel if I am the user concern
-                        if (e.UserID == SessionInformations.User.ID)
-                        {
-                            SelectedChannel = channel;
-                        }
-                        UpdateChannels();
-                });
-            }
-            finally
-            {
-                _mutex.ReleaseMutex();
-            }
+                    var e = (ChatEventArgs) args;
+                    Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                   if(channel == null){ 
+                       return;
+                   }
+
+                   if (SessionInformations.User.ID != e.UserID)
+                   {
+                    Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
+                    channel.Messages.Add(m);
+                   }
+                    channel.Users.Add(await GetUser(e.Username, e.UserID));
+                    // Select this channel if I am the user concern
+                    if (e.UserID == SessionInformations.User.ID)
+                    {
+                        SelectedChannel = channel;
+                    }
+                    UpdateChannels();
+            });
         }
 
         private void SocketClientOnUserCreatedChannel(object source, EventArgs args)
         {
-            _mutex.WaitOne();
-            try
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                ChatEventArgs e = (ChatEventArgs) args;
+                var newChannel = new Channel(e.ChannelName, e.ChannelId, e.IsGame);
+                Channels.Add(newChannel);
+                if (e.UserID == SessionInformations.User.ID)
                 {
-                    ChatEventArgs e = (ChatEventArgs) args;
-                    var newChannel = new Channel(e.ChannelName, e.ChannelId, e.IsGame);
-                    Channels.Add(newChannel);
-                    if (e.UserID == SessionInformations.User.ID)
-                    {
-                        JoinChannel(newChannel);
-                    }
-                    UpdateChannels();
-                });
-            }
-            finally
-            {
-                _mutex.ReleaseMutex();
-            }
+                    JoinChannel(newChannel);
+                }
+                UpdateChannels();
+            });
         }
 
         private async void SocketClientOnMessageReceived(object source, EventArgs e)
@@ -296,7 +273,6 @@ namespace ClientLourd.ViewModels
         {
             if (SelectedChannel != null && !SelectedChannel.IsFullyLoaded)
             {
-                _mutex.WaitOne();
                 var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
                     SelectedChannel.UserMessageCount,
                     SelectedChannel.UserMessageCount + numberOfMessages - 1);
@@ -312,7 +288,6 @@ namespace ClientLourd.ViewModels
                 {
                     SelectedChannel.IsFullyLoaded = true;
                 }
-                _mutex.ReleaseMutex();
             }
         }
         
