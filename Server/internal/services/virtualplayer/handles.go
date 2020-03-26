@@ -318,7 +318,7 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	if !ok {
 		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find hint with groupID : %v. Aborting GetHintByBot...", hintRequest.MatchID)
-		respHintRequest(false, hintRequest, "Group Id incorrect")
+		respHintRequest(false, hintRequest, "Group Id incorrect", hintRequest.GameType)
 		return false
 	}
 
@@ -333,7 +333,7 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 				managerInstance.HintsPerPlayers[playerID][hint] = true
 			}
 			managerInstance.mutex.Unlock()
-			respHintRequest(true, hintRequest, hint)
+			respHintRequest(true, hintRequest, hint, hintRequest.GameType)
 			return true
 		}
 	} else {
@@ -346,19 +346,19 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 					managerInstance.HintsPerPlayers[playerID][hint] = true
 				}
 				managerInstance.mutex.Unlock()
-				respHintRequest(true, hintRequest, hint)
+				respHintRequest(true, hintRequest, hint, hintRequest.GameType)
 				return true
 			}
 		}
 	}
 
 	managerInstance.mutex.Unlock()
-	respHintRequest(false, hintRequest, "No more hints remaining.")
+	respHintRequest(false, hintRequest, "No more hints remaining.", hintRequest.GameType)
 	return false
 }
 
 // respHintRequest [Current Thread] sends to client hint response (virtualplayer)
-func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string) {
+func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string, gameType int) {
 	var hintRes responseHint
 	if hintOk {
 		hintRes.Hint = hint
@@ -376,19 +376,28 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting respHintRequest...", hintRequest.MatchID)
 		return
 	}
-
-	for _, socketID := range (*group).GetConnections() {
-		playerID, err := auth.GetUserID(socketID)
-		if err != nil {
-			log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)
-		}
-
-		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID)
-		hintRes.UserID = playerID.String()
+	if gameType == 0 {
+		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, hintRequest.Player.ID)
+		hintRes.UserID = hintRequest.Player.ID.String()
 
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
-		socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendRawMessageToSocketID(message, hintRequest.SocketID)
+	} else {
+
+		for _, socketID := range (*group).GetConnections() {
+			playerID, err := auth.GetUserID(socketID)
+			if err != nil {
+				log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)
+			}
+
+			hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID)
+			hintRes.UserID = playerID.String()
+
+			message := socket.RawMessage{}
+			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
+			socket.SendRawMessageToSocketID(message, socketID)
+		}
 	}
 
 	managerInstance.mutex.Unlock()
