@@ -53,7 +53,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
     }
 
-    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean) {
+    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean, gameType: MatchMode) {
         this.player = player
         this.isPlaceholder = isPlaceholder
 
@@ -98,7 +98,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         } else {
             playerChip.setText(R.string.empty_slot)
             playerChip.setChipIconResource(R.drawable.ic_person_colored_foreground)
-            if (showKickOptions) {
+            if (showKickOptions && gameType == MatchMode.FFA) {
                 addImageView.visibility = View.VISIBLE
 
             } else {

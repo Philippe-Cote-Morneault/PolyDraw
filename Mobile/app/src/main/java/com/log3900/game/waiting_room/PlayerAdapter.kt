@@ -67,6 +67,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
             playersCopy[position],
             playersCopy[position] == null || (playersCopy[position]!!.isCPU && group.gameType != MatchMode.FFA),
             group.ownerID == playersCopy[position]?.ID,
-            AccountRepository.getInstance().getAccount().ID == group.ownerID)
+            AccountRepository.getInstance().getAccount().ID == group.ownerID,
+            group.gameType)
     }
 }
