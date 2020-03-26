@@ -24,7 +24,7 @@
         <DockPanel Width="1000" DockPanel.Dock="Left" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource InverseBoolToVisConverter}}">
             
             <UniformGrid Columns="2" DockPanel.Dock="Bottom" >
-                <Button Margin="30" Command="{Binding StartGameCommand}" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>
+                <Button Margin="30" Command="{Binding StartGameCommand}" Click="Button_Click" IsEnabled="{Binding CanStart, UpdateSourceTrigger=PropertyChanged}">Start Game</Button>
                 <Button Margin="30" Command="{Binding LeaveLobbyCommand}">Leave lobby</Button>
             </UniformGrid>
             
@@ -132,7 +132,7 @@
         </DockPanel>
         
         <Grid DockPanel.Dock="Left" Visibility="{Binding Path=IsGameStarted, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <game:GamePanel/>
+            <game:GamePanel x:Name="GameView"/>
         </Grid>
 
         <materialDesign:Card Name="ChatContainer"/>

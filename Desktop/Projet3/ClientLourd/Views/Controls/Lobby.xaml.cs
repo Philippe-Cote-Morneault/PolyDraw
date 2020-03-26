@@ -2,6 +2,7 @@
 using ClientLourd.Services.SocketService;
 using ClientLourd.ViewModels;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,9 +108,17 @@ namespace ClientLourd.Views.Controls
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    (ChatContainer.Content as Chat).MessageTextBox.Focus();
+                    Chat chat = ChatContainer.Content as Chat;
+                    chat.MessageTextBox.Focus();
                 }));
             });
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Chat chat = ChatContainer.Content as Chat;
+            ((GameViewModel) GameView.DataContext).GameChannel =
+            ((ChatViewModel) chat.DataContext).Channels.FirstOrDefault(c => c.IsGame = true);
         }
     }
 }

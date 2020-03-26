@@ -41,6 +41,7 @@ namespace ClientLourd.ViewModels
         private string _canvasMessage;
         private GameModes _mode;
         private bool _roundStarted;
+        private Channel _gameChannel;
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
 
         public GameViewModel()
@@ -74,7 +75,12 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs)args;
             if (e.HasHint)
             {
-                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new MessageDialog("Hint", e.Hint)); });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    DialogHost.Show(new MessageDialog("Hint", e.Hint));
+                    var message = new Message(DateTime.Now, Players.First(p => p.User.ID == e.UserID).User, e.Hint);
+                    GameChannel.Messages.Add(message);
+                });
             }
             else
             {
@@ -381,6 +387,16 @@ namespace ClientLourd.ViewModels
             set
             {
                 _mode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Channel GameChannel
+        {
+            get => _gameChannel;
+            set
+            {
+                _gameChannel = value;
                 NotifyPropertyChanged();
             }
         }
