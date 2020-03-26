@@ -3,6 +3,7 @@ package drawing
 import (
 	"encoding/binary"
 	"encoding/xml"
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	"io/ioutil"
 	"log"
 	"time"
@@ -26,6 +27,7 @@ const delayDrawSending = 20 //in Milliseconds
 type Draw struct {
 	SVGFile           string
 	DrawingTimeFactor float64
+	Mode              int
 }
 
 // DrawState gives the state of drawing
@@ -58,7 +60,7 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1}, &DrawState{ContinueDrawing: true})
+	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{ContinueDrawing: true})
 }
 
 // StartDrawing starts the drawing procedure
@@ -104,6 +106,10 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 	err = xml.Unmarshal(byteValue, &xmlSvg)
 	if err != nil {
 		log.Println(err)
+	}
+	//If random we shuffle it
+	if draw.Mode == 1 {
+		potrace.Random(&xmlSvg.G.XMLPaths)
 	}
 
 	var commands []svgparser.Command

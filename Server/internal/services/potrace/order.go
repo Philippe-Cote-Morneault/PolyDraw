@@ -14,7 +14,7 @@ import (
 func ChangeOrder(paths *[]model.XMLPath, mode int) {
 	switch mode {
 	case 1:
-		random(paths)
+		Random(paths)
 	case 2, 3, 4, 5:
 		pano(paths, mode)
 	case 6, 7:
@@ -22,8 +22,8 @@ func ChangeOrder(paths *[]model.XMLPath, mode int) {
 	}
 }
 
-//random changes the order of the paths randomly
-func random(paths *[]model.XMLPath) {
+//Random changes the order of the paths randomly
+func Random(paths *[]model.XMLPath) {
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 	pathLength := len(*paths)
 	choices := make([]int, pathLength)

@@ -224,7 +224,7 @@ func startDrawing(round *match2.RoundStart) {
 	for _, id := range connections {
 		go func(socketID uuid.UUID) {
 			defer wg.Done()
-			drawing.StartDrawing(socketID, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor}, managerInstance.Drawing[(*round).MatchID])
+			drawing.StartDrawing(socketID, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
 		}(id)
 	}
 	wg.Wait()
