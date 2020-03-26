@@ -288,7 +288,7 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                CurrentLobby = CurrentLobby;
+                NotifyPropertyChanged(nameof(CurrentLobby));
                 CanStart = CanStartGame();
             });
         }
@@ -304,7 +304,7 @@ namespace ClientLourd.ViewModels
                     ContainedView = Utilities.Enums.Views.Home.ToString();
                 }
 
-                CurrentLobby = CurrentLobby;
+                NotifyPropertyChanged(nameof(CurrentLobby));
                 CanStart = CanStartGame();
             });
         }

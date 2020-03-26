@@ -43,13 +43,7 @@ namespace ClientLourd.Views.Controls.Game
                 });
             }
         }
-        private void OnScoreUpdated(object source, string userID)
-        {
-            Application.Current.Dispatcher.Invoke(() => 
-            {
-                AnimatePointsGained(userID);
-            });
-        }
+       
 
 
         public GameViewModel GameViewModel

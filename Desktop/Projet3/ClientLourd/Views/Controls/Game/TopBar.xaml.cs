@@ -26,11 +26,13 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientCoopWordGuessed(object source, EventArgs args)
         {
             MatchEventArgs e = (MatchEventArgs)args;
-            //e.Username;
-            //e.Word;
-            GameViewModel.TeamPoints = e.Points;
-            GameViewModel.TeamNewPoints = e.NewPoints;
-            Application.Current.Dispatcher.Invoke(() => AnimatePointsGained());
+            
+            if (GameViewModel.Mode == GameModes.Coop)
+            {
+                GameViewModel.TeamPoints = e.Points;
+                GameViewModel.TeamNewPoints = e.NewPoints;
+                Application.Current.Dispatcher.Invoke(() => AnimatePointsGained());
+            }
         }
 
         private void AnimatePointsGained()
@@ -151,7 +153,7 @@ namespace ClientLourd.Views.Controls.Game
                     AnimateTimeGained();
                 });
             }
-            else
+            else if (e.Bonus < 0)
             {
                 GameViewModel.TimeGained = DateTime.MinValue.AddMilliseconds(-e.Bonus);
                 Application.Current.Dispatcher.Invoke(() =>
