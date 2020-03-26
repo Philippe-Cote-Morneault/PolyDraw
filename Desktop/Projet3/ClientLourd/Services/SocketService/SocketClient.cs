@@ -243,6 +243,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.MatchRoundEnded:
                             OnRoundEnded(this, new MatchEventArgs(data));
                             break;
+                        case SocketMessageTypes.CoopWordGuessed:
+                            OnCoopWordGuessed(this, new MatchEventArgs(data));
+                            break;
                         case SocketMessageTypes.UserChangedName:
                             OnUserChangedName(this, new ChatEventArgs(data));
                             break;

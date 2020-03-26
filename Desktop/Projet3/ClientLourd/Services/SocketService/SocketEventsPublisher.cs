@@ -127,6 +127,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler UserDeleteStroke;
         public event SocketEventHandler HintResponse;
         public event SocketEventHandler RoundEnded;
+        public event SocketEventHandler CoopWordGuessed;
 
 
         protected virtual void OnMatchStarted(object source)
@@ -199,6 +200,10 @@ namespace ClientLourd.Services.SocketService
             RoundEnded?.Invoke(source, e);
         }
 
+        protected virtual void OnCoopWordGuessed(object source, EventArgs e)
+        {
+            CoopWordGuessed?.Invoke(source, e);
+        }
 
         //Lobby relate
         public event SocketEventHandler LobbyCreated;

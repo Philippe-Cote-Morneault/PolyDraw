@@ -66,9 +66,10 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
             SocketClient.HintResponse += SocketClientOnHintResponse;
+            SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
         }
 
-
+        
         private void SocketClientOnHintResponse(object source, EventArgs args)
         {
             var e = (MatchEventArgs)args;
@@ -161,7 +162,7 @@ namespace ClientLourd.ViewModels
            StrokeDrawerService.ChangeMode(player.IsCPU);
 
             NotifyPropertyChanged(nameof(DrawerIsCPU));
-            if (SessionInformations.User.ID != e.UserID)
+            if (SessionInformations.User.ID != e.UserID && Mode == GameModes.FFA)
             {
                 OnNewCanavasMessage($"{e.Username} is drawing the next word !");
             }
@@ -546,5 +547,12 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
+
+        private void SocketClientCoopWordGuessed(object source, EventArgs args)
+        {
+            MatchEventArgs e = (MatchEventArgs)args;
+            OnNewCanavasMessage($"{e.Username} has guessed correctly! The word was {e.Word}.");
+        }
+
     }
 }
