@@ -229,10 +229,10 @@ object MatchAdapter {
         }
 
         if (jsonObject.has("HintsLeft")) {
-            hintsLeft = jsonObject.get("Hint").asInt
+            hintsLeft = jsonObject.get("HintsLeft").asInt
         }
 
-        return HintResponse(userID, hintsLeft, hint, error)
+        return HintResponse(userID, hint, hintsLeft, error)
     }
 
     fun jsonToCheckpoint(jsonObject: JsonObject): CheckPoint {
