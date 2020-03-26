@@ -338,11 +338,18 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
-                    TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
-                    if(textBox != null)
+                    try
                     {
-                        textBox.Focus();
+                        ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
+                        TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
+                        if(textBox != null)
+                        {
+                            textBox.Focus();
+                        }
+                    }
+                    catch
+                    {
+                        //
                     }
                 }));
             });
