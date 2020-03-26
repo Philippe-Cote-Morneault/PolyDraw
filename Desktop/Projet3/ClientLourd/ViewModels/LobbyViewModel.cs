@@ -17,6 +17,7 @@ using ClientLourd.Views.Dialogs;
 using ClientLourd.Services.SoundService;
 using System.Windows.Media.Imaging;
 using ClientLourd.Services.ProfileViewerService;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.ViewModels
 {
@@ -40,7 +41,7 @@ namespace ClientLourd.ViewModels
         {
             Task.Run(() =>
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaveLobby();

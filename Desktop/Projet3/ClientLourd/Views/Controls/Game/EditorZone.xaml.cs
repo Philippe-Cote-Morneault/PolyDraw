@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Services.SoundService;
+using ClientLourd.Utilities.Constants;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls.Game
@@ -44,7 +45,7 @@ namespace ClientLourd.Views.Controls.Game
                     LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, false));
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
-                Thread.Sleep(2000);
+                Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaderBoardGrid.Children.Clear();
@@ -65,7 +66,7 @@ namespace ClientLourd.Views.Controls.Game
                     LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
-                Thread.Sleep(5000);
+                Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaderBoardGrid.Children.Clear();
@@ -93,7 +94,7 @@ namespace ClientLourd.Views.Controls.Game
                     LeaderBoardGrid.Children.Add(tb);
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
-                Thread.Sleep(2000);
+                Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaderBoardGrid.Children.Clear();
@@ -244,13 +245,13 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Task.Run(() =>
                 {
-                    Thread.Sleep(2000);
+                    Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
                         sb.Begin();
                     });
-                    Thread.Sleep(1000);
+                    Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Storyboard sb = (Storyboard)FindResource("NextRoundEnd");

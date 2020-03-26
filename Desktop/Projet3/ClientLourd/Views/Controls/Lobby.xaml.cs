@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.Views.Controls
 {
@@ -47,6 +48,18 @@ namespace ClientLourd.Views.Controls
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
+        }
+
+        private void SocketClientOnMatchEnded(object source, EventArgs args)
+        {
+            Task.Delay(MatchTiming.GAME_ENDED_TIMEOUT).ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    returnChat();
+                });
+            });
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)

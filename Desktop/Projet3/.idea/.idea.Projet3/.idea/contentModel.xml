@@ -183,6 +183,7 @@
           <e p="Constants" t="Include">
             <e p="ApplicationInformations.cs" t="Include" />
             <e p="GUIDs.cs" t="Include" />
+            <e p="MatchTiming.cs" t="Include" />
             <e p="StrokeMessageOffsets.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
