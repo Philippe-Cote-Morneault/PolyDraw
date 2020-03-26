@@ -22,6 +22,7 @@ using ClientLourd.Views.Dialogs;
 using ClientLourd.Views.Windows;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Services.EnumService;
+using ClientLourd.Services.SocketService;
 
 namespace ClientLourd
 {
@@ -38,11 +39,22 @@ namespace ClientLourd
             SetLanguageDictionary();
         }
 
+        private void SocketClientOnConnectionLost(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                DialogHost.CloseDialogCommand.Execute(null, MainWindowDialogHost);
+                MainWindowDialogHost.ShowDialog(new ClosableErrorDialog(
+                  "You have lost connection to the server! Returning to the login page..."));
+            });
+        }
+
         private void OnLoggedIn(object source, EventArgs args)
         {
             var loginViewModel = (LoginViewModel) source;
             Dispatcher.Invoke(() =>
             {
+                (DataContext as MainViewModel).SocketClient.ConnectionLost += SocketClientOnConnectionLost;
                 AfterLogin(loginViewModel);
                 ChatBox.AfterLogin();
                 LoginScreen.AfterLogin();
@@ -58,6 +70,7 @@ namespace ClientLourd
             (Profile.DataContext as ProfileViewModel).AfterLogin();
             (Home.DataContext as HomeViewModel).AfterLogin();
             (Lobby.DataContext as LobbyViewModel).AfterLogin();
+
             //TODO: Remove this comment
             //DialogHost.Show(new Tutorial(), "Default");
         }

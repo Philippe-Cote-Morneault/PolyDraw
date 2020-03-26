@@ -70,6 +70,7 @@ namespace ClientLourd.ViewModels
             SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
             SocketClient.ServerMessage += SocketClientOnServerMessage;
+            
         }
 
         private void SocketClientOnServerMessage(object source, EventArgs args)
@@ -150,12 +151,6 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnConnectionLost(object source, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                DialogHost.Show(
-                    new ClosableErrorDialog(
-                        "You have lost connection to the server! Returning to the login page..."));
-            });
             Logout();
         }
 
