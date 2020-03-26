@@ -14,12 +14,6 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     private var players: ArrayList<Player> = arrayListOf()
     private var statusImageRes: HashMap<UUID, Int?> = HashMap()
     private var playerScores: HashMap<UUID, Int> = HashMap()
-    private lateinit var group: Group
-
-
-    fun setGroup(group: Group) {
-        this.group = group
-    }
 
     fun setPlayers(players: ArrayList<Player>) {
         this.players = players

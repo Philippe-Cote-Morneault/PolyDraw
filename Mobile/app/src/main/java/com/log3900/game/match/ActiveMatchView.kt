@@ -7,9 +7,6 @@ import kotlin.collections.HashMap
 
 interface ActiveMatchView {
     fun setPlayers(players: ArrayList<Player>)
-    fun setPlayerStatus(playerID: UUID, statusImageRes: Int)
-    fun setPlayerScores(playerScores: HashMap<UUID, Int>)
-    fun clearAllPlayerStatusRes()
     fun setWordToGuessLength(length: Int)
     fun setWordToDraw(word: String)
     fun enableDrawFunctions(enable: Boolean, drawingID: UUID?)

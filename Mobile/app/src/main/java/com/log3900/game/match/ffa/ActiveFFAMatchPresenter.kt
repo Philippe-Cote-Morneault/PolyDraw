@@ -2,11 +2,13 @@ package com.log3900.game.match.ffa
 
 import com.log3900.MainApplication
 import com.log3900.R
-import com.log3900.game.match.ActiveMatchPresenter
-import com.log3900.game.match.ActiveMatchView
-import com.log3900.game.match.MatchManager
-import com.log3900.game.match.Synchronisation
+import com.log3900.game.match.*
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
+import com.log3900.user.account.AccountRepository
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     private var FFAMatchManager: FFAMatchManager
@@ -15,13 +17,51 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     constructor(activeFFAMatchView: ActiveFFAMatchView) : super(activeFFAMatchView, FFAMatchManager()) {
         FFAMatchManager = matchManager as FFAMatchManager
         this.activeFFAMatchView = activeMatchView as ActiveFFAMatchView
+
+        activeFFAMatchView.setPlayerScores(matchManager.getPlayerScores())
         activeFFAMatchView.enableHintButton(false)
+
+        matchManager.notifyReadyToPlay()
     }
 
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {
         super.onMatchSynchronisation(synchronisation)
         val totalRounds = FFAMatchManager.getCurrentMatch().laps
         activeFFAMatchView?.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${totalRounds}")
+
+    }
+
+    override fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
+        super.onGuessedWordRight(playerGuessedWord)
+        activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+    }
+
+    override fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
+        super.onPlayerTurnToDraw(playerTurnToDraw)
+        activeFFAMatchView?.clearAllPlayerStatusRes()
+        activeFFAMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
+    }
+
+    private fun onTurnToDraw(turnToDraw: TurnToDraw) {
+        activeFFAMatchView?.clearCanvas()
+        activeFFAMatchView?.clearAllPlayerStatusRes()
+        activeFFAMatchView?.setPlayerStatus(AccountRepository.getInstance().getAccount().ID, R.drawable.ic_edit_black)
+        activeFFAMatchView?.showWordToDrawView()
+        activeFFAMatchView?.setWordToDraw(turnToDraw.word)
+        activeFFAMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
+    }
+
+    private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
+        activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    override fun onMessageEvent(event: MessageEvent) {
+        super.onMessageEvent(event)
+        when (event.type) {
+            EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
+            EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
+        }
     }
 
     override fun destroy() {
