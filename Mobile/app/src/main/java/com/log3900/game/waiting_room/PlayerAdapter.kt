@@ -65,7 +65,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
         holder.bind(
             playersCopy[position],
-            playersCopy[position] == null,
+            playersCopy[position] == null || (playersCopy[position]!!.isCPU && group.gameType != MatchMode.FFA),
             group.ownerID == playersCopy[position]?.ID,
             AccountRepository.getInstance().getAccount().ID == group.ownerID,
             group.gameType == MatchMode.FFA)
