@@ -212,7 +212,13 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 		if mime == "text/xml; charset=utf-8" {
 			//Load svg
-			image.SVGFile = keyFile
+			image.OriginalFile = keyFile
+			newFile, err := datastore.Copy(keyFile)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			game.Image.SVGFile = newFile
 		} else {
 			//Load jpg
 			image.ImageFile = keyFile
@@ -241,13 +247,19 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-
-			err = potrace.Translate(svgKey, brushsize, modeInt, false)
+			image.OriginalFile = svgKey
+			newFile, err := datastore.Copy(svgKey)
 			if err != nil {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-			image.SVGFile = svgKey
+
+			err = potrace.Translate(newFile, brushsize, modeInt, false)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			image.SVGFile = newFile
 
 		}
 		game.Image = &image
@@ -351,7 +363,13 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-			game.Image.SVGFile = svgKey
+			game.Image.OriginalFile = svgKey
+			newFile, err := datastore.Copy(svgKey)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			game.Image.SVGFile = newFile
 			xmlNeedsUpdating = true
 			updateOnlySVG = false
 		}
@@ -359,6 +377,12 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 		game.Image.BrushSize = -1
 	}
 	if xmlNeedsUpdating {
+		newFile, err := datastore.Copy(game.Image.OriginalFile)
+		if err != nil {
+			rbody.JSONError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		game.Image.SVGFile = newFile
 		err = potrace.Translate(game.Image.SVGFile, game.Image.BrushSize, game.Image.Mode, updateOnlySVG)
 		if err != nil {
 			rbody.JSONError(w, http.StatusBadRequest, err.Error())
