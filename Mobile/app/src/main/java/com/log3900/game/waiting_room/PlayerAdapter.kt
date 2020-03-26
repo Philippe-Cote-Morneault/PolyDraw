@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.game.group.Group
+import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.log3900.user.account.AccountRepository
 import java.util.*
@@ -66,6 +67,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
             playersCopy[position],
             playersCopy[position] == null,
             group.ownerID == playersCopy[position]?.ID,
-            AccountRepository.getInstance().getAccount().ID == group.ownerID)
+            AccountRepository.getInstance().getAccount().ID == group.ownerID,
+            group.gameType == MatchMode.FFA)
     }
 }
