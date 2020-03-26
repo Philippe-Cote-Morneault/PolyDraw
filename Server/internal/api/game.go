@@ -218,7 +218,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-			game.Image.SVGFile = newFile
+			image.SVGFile = newFile
 		} else {
 			//Load jpg
 			image.ImageFile = keyFile

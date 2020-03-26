@@ -32,14 +32,14 @@ type gameHints struct {
 
 // Manager represents a struct that manage all virtual players
 type Manager struct {
-	mutex    sync.Mutex
-	Bots     map[uuid.UUID]*virtualPlayerInfos //botID -> virtualPlayerInfos
-	Channels map[uuid.UUID]uuid.UUID           //groupID -> channelID
-	Games    map[uuid.UUID]*gameHints          //groupID -> gameHints
-	Groups   map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
-	Matches  map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
-	Hints    map[uuid.UUID]map[string]bool     //playerID -> []indices
-	Drawing  map[uuid.UUID]*drawing.DrawState  //groupID -> continueDrawing
+	mutex           sync.Mutex
+	Bots            map[uuid.UUID]*virtualPlayerInfos //botID -> virtualPlayerInfos
+	Channels        map[uuid.UUID]uuid.UUID           //groupID -> channelID
+	HintsInGames    map[uuid.UUID]*gameHints          //groupID -> gameHints
+	Groups          map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
+	Matches         map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
+	HintsPerPlayers map[uuid.UUID]map[string]bool     //playerID -> []indices
+	Drawing         map[uuid.UUID]*drawing.DrawState  //groupID -> continueDrawing
 
 }
 
@@ -48,8 +48,8 @@ func (m *Manager) init() {
 	m.Channels = make(map[uuid.UUID]uuid.UUID)
 	m.Groups = make(map[uuid.UUID]map[uuid.UUID]bool)
 	m.Matches = make(map[uuid.UUID]*match2.IMatch)
-	m.Games = make(map[uuid.UUID]*gameHints)
-	m.Hints = make(map[uuid.UUID]map[string]bool)
+	m.HintsInGames = make(map[uuid.UUID]*gameHints)
+	m.HintsPerPlayers = make(map[uuid.UUID]map[string]bool)
 	m.Drawing = make(map[uuid.UUID]*drawing.DrawState)
 }
 
@@ -199,7 +199,7 @@ func startDrawing(round *match2.RoundStart) {
 	for _, h := range (*round).Game.Hints {
 		g.Hints[h.Hint] = true
 	}
-	managerInstance.Games[round.MatchID] = &g
+	managerInstance.HintsInGames[round.MatchID] = &g
 
 	bot, ok := managerInstance.Bots[(*round).Drawer.ID]
 	if !ok {
@@ -216,7 +216,9 @@ func startDrawing(round *match2.RoundStart) {
 	}
 	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: true}
 	managerInstance.mutex.Unlock()
-	time.Sleep(3500 * time.Millisecond)
+
+	time.Sleep(2500 * time.Millisecond)
+
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
@@ -235,13 +237,10 @@ func startDrawing(round *match2.RoundStart) {
 func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 
-	drawState, ok := managerInstance.Drawing[groupID]
-	if !ok {
-		managerInstance.mutex.Unlock()
-		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId in Drawing : %v. Aborting handleRoundEnds...", groupID)
-		return
+	if drawState, ok := managerInstance.Drawing[groupID]; ok {
+		drawState.ContinueDrawing = false
 	}
-	drawState.ContinueDrawing = false
+
 	managerInstance.mutex.Unlock()
 
 	makeBotsSpeak("endRound", groupID)
@@ -252,12 +251,12 @@ func handleRoundEnds(groupID uuid.UUID) {
 func handleEndGame(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 
-	if _, ok := managerInstance.Games[groupID]; !ok {
+	if _, ok := managerInstance.HintsInGames[groupID]; !ok {
 		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find game with groupID : %v. Aborting handleEndGame...", groupID)
 		return
 	}
-	delete(managerInstance.Games, groupID)
+	delete(managerInstance.HintsInGames, groupID)
 
 	if _, ok := managerInstance.Matches[groupID]; !ok {
 		managerInstance.mutex.Unlock()
@@ -272,10 +271,10 @@ func handleEndGame(groupID uuid.UUID) {
 			return
 		}
 
-		if _, ok := managerInstance.Hints[playerID]; !ok {
+		if _, ok := managerInstance.HintsPerPlayers[playerID]; !ok {
 			continue
 		}
-		delete(managerInstance.Hints, playerID)
+		delete(managerInstance.HintsPerPlayers, playerID)
 	}
 
 	delete(managerInstance.Matches, groupID)
@@ -315,51 +314,51 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	playerID := hintRequest.Player.ID
 	managerInstance.mutex.Lock()
 
-	game, ok := managerInstance.Games[hintRequest.MatchID]
+	hintsInGame, ok := managerInstance.HintsInGames[hintRequest.MatchID]
 	if !ok {
 		managerInstance.mutex.Unlock()
-		log.Printf("[VirtualPlayer] -> [Error] Can't find game with groupID : %v. Aborting GetHintByBot...", hintRequest.MatchID)
-		respHintRequest(false, hintRequest, "Group Id inccorect, game doesn't exists")
+		log.Printf("[VirtualPlayer] -> [Error] Can't find hint with groupID : %v. Aborting GetHintByBot...", hintRequest.MatchID)
+		respHintRequest(false, hintRequest, "Group Id incorrect", hintRequest.GameType)
 		return false
 	}
 
-	_, hasHint := managerInstance.Hints[playerID]
+	_, hasHint := managerInstance.HintsPerPlayers[playerID]
 	if !hasHint || hintRequest.GameType != 0 {
 		//Will iterate once and take the first hint in game
-		for hint := range game.Hints {
+		for hint := range hintsInGame.Hints {
 			if hintRequest.GameType != 0 {
-
-				delete(game.Hints, hint)
+				delete(hintsInGame.Hints, hint)
 			} else {
-				managerInstance.Hints[playerID] = make(map[string]bool)
-				managerInstance.Hints[playerID][hint] = true
+				managerInstance.HintsPerPlayers[playerID] = make(map[string]bool)
+				managerInstance.HintsPerPlayers[playerID][hint] = true
 			}
 			managerInstance.mutex.Unlock()
-			respHintRequest(true, hintRequest, hint)
+			respHintRequest(true, hintRequest, hint, hintRequest.GameType)
 			return true
 		}
 	} else {
 		//Will look for an hint not asked yet
-		for hint := range game.Hints {
-			if _, hintExists := managerInstance.Hints[playerID][hint]; !hintExists {
-				managerInstance.Hints[playerID][hint] = true
-				if hintRequest.GameType == 0 {
-					delete(game.Hints, hint)
+		for hint := range hintsInGame.Hints {
+			if _, hintExists := managerInstance.HintsPerPlayers[playerID][hint]; !hintExists {
+				if hintRequest.GameType != 0 {
+					delete(hintsInGame.Hints, hint)
+				} else {
+					managerInstance.HintsPerPlayers[playerID][hint] = true
 				}
 				managerInstance.mutex.Unlock()
-				respHintRequest(true, hintRequest, hint)
+				respHintRequest(true, hintRequest, hint, hintRequest.GameType)
 				return true
 			}
 		}
 	}
 
 	managerInstance.mutex.Unlock()
-	respHintRequest(false, hintRequest, "No more hints remaining.")
+	respHintRequest(false, hintRequest, "No more hints remaining.", hintRequest.GameType)
 	return false
 }
 
 // respHintRequest [Current Thread] sends to client hint response (virtualplayer)
-func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string) {
+func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string, gameType int) {
 	var hintRes responseHint
 	if hintOk {
 		hintRes.Hint = hint
@@ -370,25 +369,35 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 	}
 	// determiner le nb d'indices restant (game.hint-PlayersHints)
 	managerInstance.mutex.Lock()
-	group, ok := managerInstance.Groups[hintRequest.MatchID]
+	group, ok := managerInstance.Matches[hintRequest.MatchID]
 
 	if !ok {
 		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting respHintRequest...", hintRequest.MatchID)
 		return
 	}
+	if gameType == 0 {
+		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, hintRequest.Player.ID)
+		hintRes.UserID = hintRequest.Player.ID.String()
 
-	for playerID := range group {
-		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID)
-		hintRes.UserID = playerID.String()
-		socketID, err := auth.GetSocketID(playerID)
-
-		if err != nil {
-			log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)
-		}
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
-		socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendRawMessageToSocketID(message, hintRequest.SocketID)
+	} else {
+
+		for _, socketID := range (*group).GetConnections() {
+			playerID, err := auth.GetUserID(socketID)
+			if err != nil {
+				log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)
+			}
+
+			hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID)
+			hintRes.UserID = playerID.String()
+
+			message := socket.RawMessage{}
+			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
+			socket.SendRawMessageToSocketID(message, socketID)
+		}
 	}
 
 	managerInstance.mutex.Unlock()
@@ -456,12 +465,12 @@ func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
 
 // Only called in hitRequest
 func getHintsLeft(groupID, playerID uuid.UUID) int {
-	hintsInGame, ok := managerInstance.Games[groupID]
+	hintsInGame, ok := managerInstance.HintsInGames[groupID]
 	if !ok {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find game with groupID : %v. Aborting getHintsLeft...", groupID)
 		return -1
 	}
-	hintsPlayers, ok := managerInstance.Hints[playerID]
+	hintsPlayers, ok := managerInstance.HintsPerPlayers[playerID]
 
 	hintAsked := 0
 	if ok {
