@@ -118,11 +118,9 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 		}
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
-		OrderPoints(&stroke.points, path.Order)
-		// log.Printf("[Drawing] Number of points in stroke : %v", len(stroke.points))
 		s := stroke.clone()
 		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(float64(path.Time)*(draw.DrawingTimeFactor)))
-		// payloads = append(payloads, stroke.Marshall())
+
 	}
 	for _, payload := range payloads {
 		if !continueDrawing.ContinueDrawing {
@@ -135,7 +133,6 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 		}
 
 		socket.SendRawMessageToSocketID(packet, socketID)
-		// log.Printf("[Drawing] %v | Length of current paquet : %v.", time.Now(), packet.Length)
 		//Wait 20ms between strokes
 		time.Sleep(delayDrawSending * time.Millisecond)
 	}
@@ -157,25 +154,17 @@ func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, strok
 		}
 	}
 
-	// log.Printf("[Drawing] %v points per %v ms is (with total time of %v ms).", nbPoints, delayDrawSending, time)
-
 	index := 0
-	// TODO a supprimer et faire boucle infinie apres debug
 	iterations := len(*points)/nbPoints + 1
-	// log.Printf("[Drawing] iterations : %v", iterations)
 
 	for i := 0; i < iterations; i++ {
 		if nbPoints+index >= len(*points) {
 			stroke.points = (*points)[index:]
-			// log.Printf("[Drawing] nb Points in payload (final) : %v", len(stroke.points))
 			*payloads = append(*payloads, stroke.Marshall())
 			break
 		}
 
 		stroke.points = (*points)[index : index+nbPoints]
-
-		// log.Printf("[Drawing] nb Points in payload : %v", len(stroke.points))
-		// log.Println(stroke.points)
 
 		*payloads = append(*payloads, stroke.Marshall())
 		index += nbPoints
