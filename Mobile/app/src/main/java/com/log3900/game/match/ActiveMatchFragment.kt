@@ -252,12 +252,23 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         guessingView?.enableHintButton(enable)
     }
 
-    override fun showRemainingTimeChangedAnimation(timeChangedValue: Int) {
-        if (timeChangedValue > 0) {
-            remainingTimeChangeTextView.setTextColor(Color.RED)
-        } else if (timeChangedValue < 0) {
+    override fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean) {
+        if (isPositive) {
             remainingTimeChangeTextView.setTextColor(Color.GREEN)
+            remainingTimeChangeTextView.text = timeChangedValue
+        } else {
+            remainingTimeChangeTextView.setTextColor(Color.RED)
+            remainingTimeChangeTextView.text = timeChangedValue
         }
+
+        YoYo.with(Techniques.FadeIn)
+            .duration(1000)
+            .playOn(remainingTimeChangeTextView)
+
+        YoYo.with(Techniques.FadeOut)
+            .duration(1000)
+            .delay(1000)
+            .playOn(remainingTimeChangeTextView)
     }
 
     override fun onDestroy() {

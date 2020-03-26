@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 abstract class ActiveMatchPresenter : Presenter {
     protected var activeMatchView: ActiveMatchView? = null
     protected var matchManager: MatchManager
-    private var lastShownTime: String? = null
+    protected var lastShownTime: String? = null
 
     constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
         this.activeMatchView = activeMatchView
@@ -42,19 +42,23 @@ abstract class ActiveMatchPresenter : Presenter {
        // activeMatchView?.setPlayerStatus()
     }
 
-    protected open fun onMatchSynchronisation(synchronisation: Synchronisation) {
-        val currentMatch = matchManager.getCurrentMatch()
-        val formattedTime = DateFormatter.formatDateToTime(Date(synchronisation.time.toLong()))
-
+    protected fun changeRemainingTime(remainingTime: Int) {
+        val formattedTime = DateFormatter.formatDateToTime(Date(remainingTime.toLong()))
         if (lastShownTime == null || lastShownTime != formattedTime) {
             lastShownTime = formattedTime
             activeMatchView?.setTimeValue(formattedTime)
-        }
 
-        if (synchronisation.time <= 10000) {
-            activeMatchView?.pulseRemainingTime()
-            SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_timer_warning)
+            if (remainingTime <= 10000) {
+                activeMatchView?.pulseRemainingTime()
+                SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_timer_warning)
+            }
         }
+    }
+
+    protected open fun onMatchSynchronisation(synchronisation: Synchronisation) {
+        val currentMatch = matchManager.getCurrentMatch()
+
+        changeRemainingTime(synchronisation.time)
     }
 
     private fun onMatchPlayersUpdated() {
