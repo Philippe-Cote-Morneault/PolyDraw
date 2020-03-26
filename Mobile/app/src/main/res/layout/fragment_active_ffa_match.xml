@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_active_match_recycler_view_player_list"
+        android:id="@+id/fragment_active_ffa_match_recycler_view_player_list"
         android:layout_width="150dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +19,7 @@
         android:layout_height="60dp"
         android:orientation="horizontal"
         android:layout_marginEnd="352dp"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
+        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -31,7 +31,7 @@
         android:layout_marginEnd="352dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
+        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.log3900.game.match.UI.RoundEndInfoView
@@ -42,7 +42,7 @@
         android:layout_marginEnd="352dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
+        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.log3900.game.match.UI.FFAMatchEndInfoView
@@ -53,7 +53,7 @@
         android:layout_marginEnd="352dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_match_recycler_view_player_list"
+        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

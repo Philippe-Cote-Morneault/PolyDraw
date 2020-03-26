@@ -26,40 +26,20 @@ abstract class ActiveMatchPresenter : Presenter {
         this.activeMatchView = activeMatchView
         this.matchManager = matchManager
         activeMatchView.setPlayers(matchManager.getCurrentMatch().players)
-        activeMatchView.setPlayerScores(matchManager.getPlayerScores())
         subscribeToEvents()
-        matchManager.notifyReadyToPlay()
     }
 
     fun guessPressed(text: String) {
         matchManager.makeGuess(text)
     }
 
-    private fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
-        activeMatchView?.clearCanvas()
-        activeMatchView?.clearAllPlayerStatusRes()
-        activeMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
-        activeMatchView?.showWordGuessingView()
-        activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
-        activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
+    fun hintPressed() {
+        matchManager.requestHint()
     }
+
 
     private fun onWordGuessedSucessfully() {
        // activeMatchView?.setPlayerStatus()
-    }
-
-    private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
-        activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
-    }
-
-
-    private fun onTurnToDraw(turnToDraw: TurnToDraw) {
-        activeMatchView?.clearCanvas()
-        activeMatchView?.clearAllPlayerStatusRes()
-        activeMatchView?.setPlayerStatus(AccountRepository.getInstance().getAccount().ID, R.drawable.ic_edit_black)
-        activeMatchView?.showWordToDrawView()
-        activeMatchView?.setWordToDraw(turnToDraw.word)
-        activeMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
     }
 
     protected open fun onMatchSynchronisation(synchronisation: Synchronisation) {
@@ -81,8 +61,7 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.notifyPlayersChanged()
     }
 
-    private fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
-        activeMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+    protected open fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
         activeMatchView?.animateWordGuessedRight()
     }
@@ -98,6 +77,7 @@ abstract class ActiveMatchPresenter : Presenter {
                 activeMatchView?.hideCanvas()
                 activeMatchView?.hideRoundEndInfoView()
                 Handler().postDelayed({
+                    activeMatchView?.clearCanvas()
                     activeMatchView?.showCanvas()
                 }, 1500)
             }, 2000)
@@ -123,17 +103,21 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores)
     }
 
+    protected open fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
+        activeMatchView?.clearCanvas()
+        activeMatchView?.showWordGuessingView()
+        activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
+        activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
+    }
+
 
     private fun subscribeToEvents() {
         EventBus.getDefault().register(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onMessageEvent(event: MessageEvent) {
+    open fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
-            EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
-            EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
-            EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
             EventType.MATCH_SYNCHRONISATION -> onMatchSynchronisation(event.data as Synchronisation)
             EventType.MATCH_PLAYERS_UPDATED -> onMatchPlayersUpdated()
             EventType.GUESSED_WORD_RIGHT -> onGuessedWordRight(event.data as PlayerGuessedWord)
@@ -141,6 +125,7 @@ abstract class ActiveMatchPresenter : Presenter {
             EventType.TIMES_UP -> onTimesUp(event.data as TimesUp)
             EventType.ROUND_ENDED -> onRoundEnded(event.data as RoundEnded)
             EventType.MATCH_ENDED -> onMatchEnded(event.data as MatchEnded)
+            EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
         }
     }
 

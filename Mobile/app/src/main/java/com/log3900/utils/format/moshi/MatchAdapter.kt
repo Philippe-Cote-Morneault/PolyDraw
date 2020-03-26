@@ -115,17 +115,10 @@ object MatchAdapter {
         val players = jsonObject.get("Players").asJsonArray
         val playerScores = jsonToSynchronisationPlayers(players)
         var laps: Int? = null
-        var gameTime: Int? = null
         try {
             laps = jsonObject.get("Laps").asInt
         } catch (e: Exception) {
             laps = null
-        }
-
-        try {
-            gameTime = jsonObject.get("GameTime").asInt
-        } catch (e: Exception) {
-            gameTime = null
         }
 
         var lapTotal: Int? = null
@@ -146,7 +139,6 @@ object MatchAdapter {
             playerScores,
             laps,
             time,
-            gameTime,
             lapTotal,
             lives
         )
@@ -231,5 +223,12 @@ object MatchAdapter {
         }
 
         return HintResponse(hint, error)
+    }
+
+    fun jsonToCheckpoint(jsonObject: JsonObject): CheckPoint {
+        val totalTime = jsonObject.get("TotalTime").asInt
+        val bonus = jsonObject.get("Bonus").asInt
+
+        return CheckPoint(totalTime, bonus)
     }
 }

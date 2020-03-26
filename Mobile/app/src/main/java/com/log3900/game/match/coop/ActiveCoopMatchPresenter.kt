@@ -17,17 +17,18 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
 
         activeCoopMatchView.setTeamScore((MainApplication.instance.getContext().resources.getString(R.string.team_score_title, 0)))
         activeCoopMatchView.setRemainingLives(3)
+        activeCoopMatchView.enableHintButton(true)
+
+        matchManager.notifyReadyToPlay()
     }
 
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {
-        Log.d("POTATO", "ActiveCoopMatchPresenter::onMatchSynchronisation")
         super.onMatchSynchronisation(synchronisation)
         activeCoopMatchView?.setRemainingLives(synchronisation.lives!!)
         activeCoopMatchView?.setTeamScore(MainApplication.instance.getContext().resources.getString(R.string.team_score_title,synchronisation.players[0].second))
     }
 
     override fun onGuessedWordWrong() {
-        Log.d("POTATO", "ActiveCoopMatchPresenter::onGuessedWordWrong")
         super.onGuessedWordWrong()
     }
 

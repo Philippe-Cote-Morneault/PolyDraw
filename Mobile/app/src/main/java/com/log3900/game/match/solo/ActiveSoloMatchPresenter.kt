@@ -10,6 +10,9 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
     constructor(activeSoloMatchView: ActiveSoloMatchView) : super(activeSoloMatchView, SoloMatchManager()) {
         soloMatchManager = matchManager as SoloMatchManager
         this.activeSoloMatchView = activeMatchView as ActiveSoloMatchView
+        activeSoloMatchView.enableHintButton(true)
+
+        matchManager.notifyReadyToPlay()
     }
 
     override fun destroy() {

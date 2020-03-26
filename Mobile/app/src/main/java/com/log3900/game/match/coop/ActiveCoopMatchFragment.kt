@@ -8,19 +8,25 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.daimajia.easing.linear.Linear
 import com.log3900.R
+import com.log3900.game.group.Player
 import com.log3900.game.match.ActiveMatchFragment
+import com.log3900.game.match.PlayerAdapter
 import com.log3900.game.match.ffa.ActiveFFAMatchPresenter
 import com.log3900.game.match.ffa.ActiveFFAMatchView
 
 class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
     private var activeCoopMatchPresenter: ActiveCoopMatchPresenter? = null
+    private lateinit var teamPlayersAdapter: TeamPlayerAdapter
 
     // UI
     private lateinit var teamScoreTextView: TextView
     private lateinit var remainingLivesContainer: LinearLayout
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
+    protected lateinit var teamPlayersRecyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_active_coop_match, container, false)
@@ -33,11 +39,30 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
         return rootView
     }
 
-    override fun setupToolbar() {
-        super.setupToolbar()
+    override fun setupToolbar(rootView: View) {
+        super.setupToolbar(rootView)
 
         teamScoreTextView = toolbar.findViewById(R.id.toolbar_active_coop_match_text_view_team_score)
         remainingLivesContainer = toolbar.findViewById(R.id.toolbar_active_coop_match_container_lives)
+    }
+
+    override fun setupHumanPlayerRecyclerView(rootView: View) {
+        teamPlayersRecyclerView = rootView.findViewById(R.id.fragment_active_coop_match_recycler_view_team_player_list)
+        teamPlayersAdapter = TeamPlayerAdapter()
+        teamPlayersRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = teamPlayersAdapter
+        }
+    }
+
+    override fun setPlayers(players: ArrayList<Player>) {
+        teamPlayersAdapter.setPlayers(players)
+        teamPlayersAdapter.notifyDataSetChanged()
+    }
+
+    override fun notifyPlayersChanged() {
+        teamPlayersAdapter.notifyDataSetChanged()
     }
 
     override fun setTeamScore(score: String) {

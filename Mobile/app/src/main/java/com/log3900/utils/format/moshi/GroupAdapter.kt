@@ -46,10 +46,10 @@ class GroupAdapter {
         )
     }
 
-    fun jsonArrayToPlayers(ids: JsonArray): ArrayList<Player> {
-        var arrayList = arrayListOf<Player>()
+    fun jsonArrayToPlayers(players: JsonArray): ArrayList<Player> {
+        val arrayList = arrayListOf<Player>()
 
-        ids.forEach {
+        players.forEach {
             arrayList.add(Player(
                 UUID.fromString(it.asJsonObject.getAsJsonPrimitive("ID").asString),
                 it.asJsonObject.getAsJsonPrimitive("Username").asString,
