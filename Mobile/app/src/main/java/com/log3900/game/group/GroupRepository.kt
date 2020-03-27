@@ -11,6 +11,7 @@ import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -61,7 +62,7 @@ class GroupRepository : Service() {
     fun getGroups(sessionToken: String, forceReload: Boolean = false): Single<ArrayList<Group>> {
         val single = Single.create<ArrayList<Group>> {
             if (groupCache.needsReload || forceReload) {
-                val call = GroupRestService.service.getGroups(sessionToken, "EN")
+                val call = GroupRestService.service.getGroups(sessionToken, LanguageManager.getCurrentLanguageCode())
                 call.enqueue(object : Callback<JsonArray> {
                     override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                         when (response.code()) {
@@ -97,7 +98,7 @@ class GroupRepository : Service() {
     
     fun getGroup(sessionToken: String, groupID: UUID): Single<Group> {
         return Single.create {
-            val call = GroupRestService.service.getGroup(sessionToken, "EN", groupID.toString())
+            val call = GroupRestService.service.getGroup(sessionToken, LanguageManager.getCurrentLanguageCode(), groupID.toString())
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     it.onSuccess(GroupAdapter().fromJson(response.body()!!.asJsonObject))
@@ -112,7 +113,7 @@ class GroupRepository : Service() {
 
     fun createGroup(sessionToken: String, group: GroupCreated): Single<UUID> {
         return Single.create {
-            val call = GroupRestService.service.createGroup(sessionToken, "EN", group.toJsonObject())
+            val call = GroupRestService.service.createGroup(sessionToken, LanguageManager.getCurrentLanguageCode(), group.toJsonObject())
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     when (response.code()) {
