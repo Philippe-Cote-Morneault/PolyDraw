@@ -2,6 +2,7 @@
 using ClientLourd.Services.SocketService;
 using ClientLourd.ViewModels;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,6 +49,7 @@ namespace ClientLourd.Views.Controls
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+            SocketClient.StartGameResponse += SocketClientOnGameResponse;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
         }
 
@@ -55,10 +57,17 @@ namespace ClientLourd.Views.Controls
         {
             Task.Delay(MatchTiming.GAME_ENDED_TIMEOUT).ContinueWith((t) =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    returnChat();
-                });
+                Application.Current.Dispatcher.Invoke(() => { returnChat(); });
+            });
+        }
+        private void SocketClientOnGameResponse(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Chat chat = (Chat)ChatContainer.Content;
+                var channel =
+                ((ChatViewModel)chat.DataContext).Channels.FirstOrDefault(c => c.IsGame == true);
+                ((GameViewModel)GameView.DataContext).GameChannel = channel;
             });
         }
 
@@ -95,7 +104,7 @@ namespace ClientLourd.Views.Controls
             Application.Current.Dispatcher.Invoke(() =>
             {    
                 if (SessionInformations.User.ID == userLeftLobbyArgs.UserID || (CurrentLobby != null && CurrentLobby.HostID == userLeftLobbyArgs.UserID))
-                {
+               {
                     returnChat();
                 }
                 
@@ -120,7 +129,8 @@ namespace ClientLourd.Views.Controls
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    (ChatContainer.Content as Chat).MessageTextBox.Focus();
+                    Chat chat = ChatContainer.Content as Chat;
+                    chat.MessageTextBox.Focus();
                 }));
             });
         }
