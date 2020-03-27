@@ -1,5 +1,6 @@
 package com.log3900.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,11 @@ import kotlinx.android.synthetic.main.dialog_fragment_player_profile.*
 import java.util.*
 
 class PlayerProfileDialogFragment(userID: UUID) : DialogFragment() {
-    val presenter = PlayerProfilePresenter(this, userID)
+    private val presenter = PlayerProfilePresenter(this, userID)
 
     companion object {
-        fun show(view: View, userID: UUID) {
-            val fragmentManager = (view.context as FragmentActivity).supportFragmentManager//activity?.supportFragmentManager!!
+        fun show(context: Context, userID: UUID) {
+            val fragmentManager = (context as FragmentActivity).supportFragmentManager//activity?.supportFragmentManager!!
             val ft = fragmentManager.beginTransaction()
             fragmentManager.findFragmentByTag("dialog")?.let {
                 ft.remove(it)
