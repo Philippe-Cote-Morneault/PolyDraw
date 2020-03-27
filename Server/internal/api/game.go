@@ -111,11 +111,11 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 			Hint: request.Hints[i],
 		})
 	}
-	//TODO language from headers to include
+	lang := r.Context().Value(CtxLang).(int)
 	game := model.Game{
 		Word:       wordLower,
 		Difficulty: request.Difficulty,
-		Language:   language.EN,
+		Language:   lang,
 		Hints:      hints,
 	}
 	model.DB().Save(&game)
