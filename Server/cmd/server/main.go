@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 
@@ -31,6 +32,7 @@ func main() {
 	config.Init()
 	model.DBConnect()
 	geometry.InitTable()
+	language.Init()
 
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}

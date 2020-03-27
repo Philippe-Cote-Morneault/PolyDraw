@@ -3,6 +3,7 @@ package language
 import (
 	"bytes"
 	"github.com/spf13/viper"
+	"log"
 )
 
 const (
@@ -16,6 +17,7 @@ var viperInstance *viper.Viper
 
 //Init load all the strings in memory
 func Init() {
+	log.Printf("[18n] Loading all the strings translation")
 	viperInstance = viper.New()
 	viperInstance.SetConfigType("yaml")
 	err := viperInstance.ReadConfig(bytes.NewBuffer(strings))
