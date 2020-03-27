@@ -83,7 +83,7 @@ abstract class ActiveMatchPresenter : Presenter {
                 Handler().postDelayed({
                     activeMatchView?.clearCanvas()
                     activeMatchView?.showCanvas()
-                }, 1500)
+                }, 500)
             }, 2000)
         }
     }
