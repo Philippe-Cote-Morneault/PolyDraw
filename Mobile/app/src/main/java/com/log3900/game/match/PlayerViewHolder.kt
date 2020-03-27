@@ -52,15 +52,27 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
 
         scoreTextView.text = "Score: $score"
 
-        UserRepository.getInstance().getUser(player.ID)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    playerChip.chipIcon = ResourcesCompat.getDrawable(MainApplication.instance.resources, getAvatarID(it.pictureID), null)
-                },
-                {
-                }
+        if (player.isCPU) {
+            playerChip.chipIcon = ResourcesCompat.getDrawable(
+                MainApplication.instance.resources,
+                R.drawable.ic_robot,
+                null
             )
+        } else {
+            UserRepository.getInstance().getUser(player.ID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        playerChip.chipIcon = ResourcesCompat.getDrawable(
+                            MainApplication.instance.resources,
+                            getAvatarID(it.pictureID),
+                            null
+                        )
+                    },
+                    {
+                    }
+                )
+        }
     }
 }
