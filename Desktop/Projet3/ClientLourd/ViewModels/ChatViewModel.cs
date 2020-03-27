@@ -34,6 +34,22 @@ namespace ClientLourd.ViewModels
         {
             get { return Channels.Sum(c => c.Notification); }
         }
+        
+        /// <summary>
+        /// Use to update virtual player information 
+        /// </summary>
+        /// <param name="user"></param>
+        public void UpdateUser(User user)
+        {
+            User findUser = _users.FirstOrDefault(u => u.ID == user.ID);            
+            if (findUser == null)
+            {
+                _users.Add(user);
+                return;
+            }
+            //Update the avatar
+            findUser.Avatar = user.Avatar;
+        }
 
         private async Task<User> GetUser(string username, string id)
         {

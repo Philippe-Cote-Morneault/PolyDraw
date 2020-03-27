@@ -84,7 +84,11 @@ namespace ClientLourd.ViewModels
             }
             else
             {
-                Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new ClosableErrorDialog(e.Error)); });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var message = new Message(DateTime.Now, Players.First(p => p.IsDrawing).User, e.Error);
+                    GameChannel.Messages.Add(message);
+                });
             }
         }
 
