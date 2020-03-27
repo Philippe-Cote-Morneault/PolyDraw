@@ -14,6 +14,7 @@ import kotlin.collections.ArrayList
 object MatchAdapter {
     @FromJson
     fun fromJson(matchJson: JsonObject): Match {
+        Log.d("POTATO", "Convertin match $matchJson")
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
         val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
@@ -25,6 +26,20 @@ object MatchAdapter {
                     matchType,
                     timeImage,
                     matchJson.get("Laps").asInt
+                )
+            }
+            MatchMode.COOP -> {
+                return CoopMatch(
+                    players,
+                    matchType,
+                    timeImage
+                )
+            }
+            MatchMode.SOLO -> {
+                return SoloMatch(
+                    players,
+                    matchType,
+                    timeImage
                 )
             }
         }
@@ -100,17 +115,10 @@ object MatchAdapter {
         val players = jsonObject.get("Players").asJsonArray
         val playerScores = jsonToSynchronisationPlayers(players)
         var laps: Int? = null
-        var gameTime: Int? = null
         try {
             laps = jsonObject.get("Laps").asInt
         } catch (e: Exception) {
             laps = null
-        }
-
-        try {
-            gameTime = jsonObject.get("GameTime").asInt
-        } catch (e: Exception) {
-            gameTime = null
         }
 
         var lapTotal: Int? = null
@@ -131,7 +139,6 @@ object MatchAdapter {
             playerScores,
             laps,
             time,
-            gameTime,
             lapTotal,
             lives
         )
@@ -206,6 +213,8 @@ object MatchAdapter {
     fun jsonToHintResponse(jsonObject: JsonObject): HintResponse {
         var hint: String? = null
         var error: String? = null
+        var userID: UUID? = null
+        var hintsLeft: Int? = null
 
         if (jsonObject.has("Hint")) {
             hint = jsonObject.get("Hint").asString
@@ -215,6 +224,21 @@ object MatchAdapter {
             error = jsonObject.get("Error").asString
         }
 
-        return HintResponse(hint, error)
+        if (jsonObject.has("UserID")) {
+            userID = UUID.fromString(jsonObject.get("UserID").asString)
+        }
+
+        if (jsonObject.has("HintsLeft")) {
+            hintsLeft = jsonObject.get("Hint").asInt
+        }
+
+        return HintResponse(userID, hintsLeft, hint, error)
+    }
+
+    fun jsonToCheckpoint(jsonObject: JsonObject): CheckPoint {
+        val totalTime = jsonObject.get("TotalTime").asInt
+        val bonus = jsonObject.get("Bonus").asInt
+
+        return CheckPoint(totalTime, bonus)
     }
 }

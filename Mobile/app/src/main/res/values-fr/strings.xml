@@ -149,4 +149,6 @@
     <string name="round_end_info_word_was_sentence">Le mot était %1$s!</string>
     <string name="ffa_match_end_info_winner_is">Le vainqueur est %1$s!</string>
     <string name="turn">Tour</string>
+    <string name="team_score_title">Score d\'équipe: %1$d</string>
+    <string name="empty_slot">Place vide</string>
 </resources>
