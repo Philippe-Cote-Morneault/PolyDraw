@@ -57,6 +57,7 @@
         HintResponse = 83,
         MatchRoundEnded = 85,
         CoopWordGuessed = 87,
+        CoopTeamateGuessedIncorrectly = 89,
         UserChangedName = 110,
         ServerMessage = 255,
     }

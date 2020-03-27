@@ -88,6 +88,11 @@ namespace ClientLourd.Services.SocketService
         {
             get => _data["Hint"];
         }
+
+        public int Lives
+        {
+            get => (int)_data["Lives"];
+        }
         
         public string Error
         {
