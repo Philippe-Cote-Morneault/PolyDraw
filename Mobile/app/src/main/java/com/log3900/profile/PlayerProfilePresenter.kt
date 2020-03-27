@@ -31,7 +31,7 @@ class PlayerProfilePresenter(
         }
     }
 
-    private suspend fun getUserInfo(): PublicUserInfo {
+    private fun getUserInfo() {
         val call = AuthenticationRestService.service.getUserInfo(
             AccountRepository.getInstance().getAccount().sessionToken,
             userID.toString()
@@ -57,7 +57,8 @@ class PlayerProfilePresenter(
     }
 
     private fun fillUserInfo(userInfo: PublicUserInfo) {
-        
+        profileDialog.setUsername(userInfo.username)
+        profileDialog.setAvatar(userInfo.avatarID)
     }
 
     private fun onError(error: String) {
