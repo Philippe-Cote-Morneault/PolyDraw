@@ -26,6 +26,13 @@ en:
     playerMax: "You cannot have more than %d players in a game."
     groupSingle: "You already have a group created you cannot create multiple groups."
     groupNotFound: "The group could not be found."
+    usernameInvalid: "The username must be between 4 and 12 characters."
+    usernameFail: "The user could not be created!"
+    usernameExists: "The username already exists. Please choose a different username."
+    firstNameInvalid: "Invalid first name or last name, it should not be empty."
+    emailInvalid: "Invalid email, it must respect the typical email format."
+    passwordInvalid: "Invalid password, it must have a minimum of 8 characters."
+    sessionExists: "The user already has an other session tied to this account. Please disconnect the other session before connecting."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -51,4 +58,11 @@ fr:
     playerMax: "Vous ne pouvez pas avoir plus de %d joueurs dans une partie."
     groupSingle: "Vous avez déjà créé un groupe. Vous ne pouvez pas avoir plusieurs groupes à votre nom."
     groupNotFound: "Le groupe ne peut pas être trouvé."
+    usernameInvalid: "Le nom d'utilisateur est doit être entre 4 et 12 caractères."
+    usernameFail: "Le nom d'utilisateur n'a pu être créé!"
+    usernameExists: "Le nom d'utilisateur existe déjà. Veuillez en choisir un autre."
+    firstNameInvalid: "Prénom ou le nom est invalide. Il ne doit pas être vide."
+    emailInvalid: "Courriel invalide, il doit respecter le format d'une adresse courriel."
+    passwordInvalid: "Mot de passe invalide. Le mot de passe doit avoir un minimum de 8 caractères."
+    sessionExists: "L'utilisateur possède déjà une session. Veuillez déconnecter l'autre session avant de réessayer."
 `)
