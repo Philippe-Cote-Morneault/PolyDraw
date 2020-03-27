@@ -130,7 +130,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -139,7 +139,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 	model.DB().Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 	//Check for the fields
@@ -162,19 +162,19 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The file is not valid")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.gameFileInvalid", r))
 		return
 	}
 
 	fileHeader := make([]byte, 512)
 
 	if _, err := file.Read(fileHeader); err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The file cannot be read.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.fileNotReadable", r))
 		return
 	}
 
 	if _, err := file.Seek(0, 0); err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The file cannot be read.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.fileNotReadable", r))
 		return
 	}
 
@@ -266,7 +266,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 		model.DB().Save(&game)
 		rbody.JSON(w, http.StatusOK, "OK")
 	default:
-		rbody.JSONError(w, http.StatusBadRequest, "The file is not a valid type")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.fileInvalidType", r))
 		return
 	}
 
@@ -278,7 +278,7 @@ func DeleteGame(w http.ResponseWriter, r *http.Request) {
 	gameID, err := uuid.Parse(vars["id"])
 
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -287,7 +287,7 @@ func DeleteGame(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Image").Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 
@@ -301,7 +301,7 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -310,7 +310,7 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Image").Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 	//Parse json request
@@ -398,7 +398,7 @@ func GetGame(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -407,7 +407,7 @@ func GetGame(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Hints").Preload("Image").Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 	var hints []string

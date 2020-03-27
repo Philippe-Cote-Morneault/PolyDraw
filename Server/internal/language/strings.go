@@ -15,7 +15,11 @@ en:
 		hintEmpty: "The hints cannot be empty."
 		hintWord: "The hint cannot contain the word."
 		hintDuplicate: "The hint cannot be the same."
-
+		invalidUUID: "A valid uuid must be set."
+		gameNotFound: "The game cannot be found. Please check if the id is valid."
+		gameFileInvalid: "The file is not valid"
+		fileNotReadable: "The file cannot be read."
+		fileInvalidType: "The file is not a valid type"
 fr:
 	error:
 		channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -30,4 +34,9 @@ fr:
 		hintEmpty: "Les indices ne peuvent être vides."
 		hintWord: "L'indice ne peut pas contenir le mot à deviner."
 		hintDuplicate: "L'indice ne peut être indentique aux autres."
+		invalidUUID: "Un UUID valide doit être utilisé."
+		gameNotFound: "Le jeu n'a pas été trouvé. Vérifiez si l'identifiant est valide."
+		gameFileInvalid: "Le fichier n'est pas valide."
+		fileNotReadable: "Le fichier ne peut être lu."
+		fileInvalidType: "Le fichier n'est pas un type valide."
 `)
