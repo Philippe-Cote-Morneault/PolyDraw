@@ -89,20 +89,20 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	var hints []*model.GameHint
 	for i := range request.Hints {
 		if strings.TrimSpace(request.Hints[i]) == "" {
-			rbody.JSONError(w, http.StatusBadRequest, "The hints cannot be empty.")
+			rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintEmpty", r))
 			return
 		}
 		//Check if the word is not in the string
 		hintLower := strings.ToLower(request.Hints[i])
 		if strings.Contains(hintLower, wordLower) {
-			rbody.JSONError(w, http.StatusBadRequest, "The hint cannot contain the word.")
+			rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintWord", r))
 			return
 		}
 		currentHint := strings.TrimSpace(hintLower)
 		for j, hint := range request.Hints {
 			hintLower := strings.TrimSpace(strings.ToLower(hint))
 			if hintLower == currentHint && j != i {
-				rbody.JSONError(w, http.StatusBadRequest, "The hint cannot be the same.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintDuplicate", r))
 				return
 			}
 		}

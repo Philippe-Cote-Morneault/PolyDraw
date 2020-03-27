@@ -12,6 +12,9 @@ en:
 		wordInvalid: "This is not a word, please enter a valid word."
 		difficultyRange: "The difficulty must be between 0 and 3."
 		hintLimits: "The game must have at least 1 hint and not more than 10."
+		hintEmpty: "The hints cannot be empty."
+		hintWord: "The hint cannot contain the word."
+		hintDuplicate: "The hint cannot be the same."
 
 fr:
 	error:
@@ -24,4 +27,7 @@ fr:
 		wordInvalid: "Ceci n'est pas un mot valide, veuillez entrer un mot valide."
 		difficultyRange: "La difficulté doit être entre 0 et 3."
 		hintLimits: "Le jeu doit avoir entre 1 et 10 indices maximums."
+		hintEmpty: "Les indices ne peuvent être vides."
+		hintWord: "L'indice ne peut pas contenir le mot à deviner."
+		hintDuplicate: "L'indice ne peut être indentique aux autres."
 `)
