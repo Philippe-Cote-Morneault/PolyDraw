@@ -239,6 +239,8 @@ func (c *Coop) Disconnect(socketID uuid.UUID) {
 //TryWord handle when a client wants to try a word
 func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 	c.receiving.Lock()
+	player := c.connections[socketID]
+
 	log.Printf("[Match] [Coop] Guessing the word for the socket id %s", socketID)
 	if strings.ToLower(strings.TrimSpace(word)) == c.currentWord && c.currentWord != "" && c.lives > 0 {
 		//The word was found
@@ -258,7 +260,6 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			gameDuration := time.Now().Sub(c.timeStart)
 			remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
 			word := c.currentWord
-			player := c.connections[socketID]
 
 			c.commonScore.commit(pointsForWord)
 			total := c.commonScore.total
@@ -318,7 +319,17 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			NewPoints: 0,
 			Points:    scoreTotal,
 		})
-		c.pbroadcast(&response)
+		socket.SendRawMessageToSocketID(response, socketID)
+
+		c.receiving.Lock()
+		messageFail := socket.RawMessage{}
+		messageFail.ParseMessagePack(byte(socket.MessageType.GuessFailUser), GuessFail{
+			Username: player.Username,
+			UserID:   player.userID.String(),
+			Lives:    lives,
+		})
+		c.receiving.Unlock()
+		c.pbroadcast(&messageFail)
 
 		if lives <= 0 {
 			log.Printf("[Match] [Coop] No more lives for the drawing. Penalty will apply ,match: %s", c.info.ID)

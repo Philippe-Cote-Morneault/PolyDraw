@@ -113,3 +113,10 @@ type Checkpoint struct {
 	TotalTime int64
 	Bonus     int64
 }
+
+//GuessFail used when a teammate has guess wrongly
+type GuessFail struct {
+	Username string
+	UserID   string
+	Lives    int
+}
