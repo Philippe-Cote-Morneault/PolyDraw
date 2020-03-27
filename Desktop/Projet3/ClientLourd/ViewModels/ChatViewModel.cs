@@ -371,13 +371,17 @@ namespace ClientLourd.ViewModels
 
         public void LeaveChannel(Channel channel)
         {
-            if (channel.ID != GLOBAL_CHANNEL_ID)
+            if (channel.ID == GLOBAL_CHANNEL_ID )
             {
-                SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveChannel, new Guid(channel.ID)));
+                DialogHost.Show(new ClosableErrorDialog("You can't leave the Global channel"));
+            }
+            else if(channel.IsGame)
+            {
+                DialogHost.Show(new ClosableErrorDialog("You can't leave a game channel"));
             }
             else
             {
-                DialogHost.Show(new ClosableErrorDialog("You can't leave the Global channel"));
+                SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveChannel, new Guid(channel.ID)));
             }
         }
 
