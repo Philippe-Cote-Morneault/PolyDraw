@@ -73,6 +73,7 @@
     <string name="match_players_title">Players:</string>
     <string name="match_win">Win</string>
     <string name="match_loss">Loss</string>
+    <string name="username_title">Username:</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
