@@ -255,7 +255,7 @@ namespace ClientLourd.ViewModels
 
                 foreach (Player player in CurrentLobby.Players)
                 {
-                    if (!player.IsCPU)
+                    if (!player.User.IsCPU)
                     {
                         nHumanPlayers++;
                     }

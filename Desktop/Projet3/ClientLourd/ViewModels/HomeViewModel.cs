@@ -351,7 +351,7 @@ namespace ClientLourd.ViewModels
             {
                 if (player.User.Avatar == null)
                 {
-                    if (!player.IsCPU)
+                    if (!player.User.IsCPU)
                     {
                         player.User = await RestClient.GetUserInfo(player.User.ID);
                     }

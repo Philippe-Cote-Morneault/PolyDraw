@@ -131,7 +131,7 @@ namespace ClientLourd.Services.RestService
             var messagesInformations = ((Dictionary<string, object>)objects[0])["Messages"];
             foreach (var message in (List<dynamic>)messagesInformations)
             {
-                User user = new User(message["Username"], message["UserID"]);
+                User user = new User(message["Username"], message["UserID"], false);
                 messages.Add(new Message((int)message["Timestamp"], user, message["Message"]));
             }
             return messages;
@@ -240,7 +240,7 @@ namespace ClientLourd.Services.RestService
             {
                 for (int j = 0; j < groups[i].Players.Count; j++)
                 {
-                    groups[i].Players[j].User = new User((tmpResponse[i] as dynamic)["Players"][j]["Username"], (tmpResponse[i] as dynamic)["Players"][j]["ID"]);
+                    groups[i].Players[j].User = new User((tmpResponse[i] as dynamic)["Players"][j]["Username"], (tmpResponse[i] as dynamic)["Players"][j]["ID"], false);
                 }
                 groups[i].Rounds = (int)tmpResponse[i]["NbRound"];
                 groups[i].Mode = (GameModes)tmpResponse[i]["GameType"];

@@ -7,8 +7,12 @@ namespace ClientLourd.Models.Bindable
 {
     public class User : ModelBase
     {
+        
+        
+        private bool _isCPU;
         public User()
         {
+            IsCPU = false;
             Username = "";
             FirstName = "";
             LastName = "";
@@ -29,12 +33,14 @@ namespace ClientLourd.Models.Bindable
             Avatar = user.Avatar;
             CreatedAt = user.CreatedAt;
             UpdatedAt = user.UpdatedAt;
+            IsCPU = user.IsCPU;
         }
 
-        public User(string username, string id)
+        public User(string username, string id, bool isCPU)
         {
             Username = username;
             ID = id;
+            IsCPU = isCPU;
         }
 
         public void Update(User user)
@@ -49,6 +55,22 @@ namespace ClientLourd.Models.Bindable
             UpdatedAt = user.UpdatedAt;
         }
 
+        public bool IsCPU
+        {
+            get => _isCPU;
+            set
+            {
+                if (value != _isCPU)
+                {
+                    _isCPU = value;
+                    if (_isCPU)
+                    {
+                        _avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png", UriKind.Relative));
+                    }
+                    NotifyPropertyChanged();
+                }
+            }
+        }
         private string _id;
          public string ID
          {

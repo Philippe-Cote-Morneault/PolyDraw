@@ -24,7 +24,7 @@ namespace ClientLourd.Utilities.Converters
             User[] users = new User[nPlaceHolder];
             for(int i = 0; i < nPlaceHolder; i++)
             {
-                users[i] = new User("Empty slot", "");
+                users[i] = new User("Empty slot", "", false);
             }
 
             return users;

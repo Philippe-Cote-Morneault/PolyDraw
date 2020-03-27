@@ -25,7 +25,7 @@ namespace ClientLourd.ViewModels
         private const string GLOBAL_CHANNEL_ID = "00000000-0000-0000-0000-000000000000";
         private readonly Mutex _mutex = new Mutex();
         private List<User> _users;
-        private readonly User _admin = new User("Admin", "-1");
+        private readonly User _admin = new User("Admin", "-1", false);
 
         /// <summary>
         /// New message counter

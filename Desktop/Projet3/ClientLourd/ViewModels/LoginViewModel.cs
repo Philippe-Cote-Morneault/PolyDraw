@@ -148,7 +148,7 @@ namespace ClientLourd.ViewModels
                 SessionToken = data["SessionToken"],
                 Bearer = data["Bearer"],
             };
-            User = new User(username, data["UserID"]);
+            User = new User(username, data["UserID"], false);
             await SocketClient.InitializeConnection(Tokens.SessionToken);
             if (rememberMeIsActive)
             {

@@ -164,7 +164,7 @@ namespace ClientLourd.ViewModels
             Player player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
             player.IsDrawing = true;
 
-           StrokeDrawerService.ChangeMode(player.IsCPU);
+           StrokeDrawerService.ChangeMode(player.User.IsCPU);
 
             NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID && Mode == GameModes.FFA)
@@ -409,7 +409,7 @@ namespace ClientLourd.ViewModels
                 var player = Players.FirstOrDefault(p => p.IsDrawing);
                 if(player != null)
                 {
-                    return player.IsCPU;
+                    return player.User.IsCPU;
                 }
                 return false;
             } 

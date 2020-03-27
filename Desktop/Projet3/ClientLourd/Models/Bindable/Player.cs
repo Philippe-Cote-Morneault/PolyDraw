@@ -12,14 +12,12 @@ using System.Threading.Tasks;
         private bool _isDrawing;
         private bool _guessedTheWord;
         private long _score;
-        private bool _isCPU;
         private long _pointsRecentlyGained;
 
 
         public Player(bool isCPU, string id, string username)
         {
-            IsCPU = isCPU;
-            User = new User(username, id);
+            User = new User(username, id, isCPU);
         }
 
         public Player()
@@ -40,18 +38,6 @@ using System.Threading.Tasks;
             }
         }
         
-    public bool IsCPU
-        {
-            get => _isCPU;
-            set
-            {
-                if (value != _isCPU)
-                {
-                    _isCPU = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
 
         public long Score
         {
