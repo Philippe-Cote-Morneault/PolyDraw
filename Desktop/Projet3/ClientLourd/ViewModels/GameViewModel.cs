@@ -77,8 +77,7 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    DialogHost.Show(new MessageDialog("Hint", e.Hint));
-                    var message = new Message(DateTime.Now, Players.First(p => p.User.ID == e.UserID).User, e.Hint);
+                    var message = new Message(DateTime.Now, Players.First(p => p.IsDrawing).User, e.Hint);
                     GameChannel.Messages.Add(message);
                 });
             }

@@ -48,6 +48,17 @@ namespace ClientLourd.Views.Controls
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+            SocketClient.StartGameResponse += SocketClientOnGameResponse;
+        }
+        private void SocketClientOnGameResponse(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Chat chat = (Chat)ChatContainer.Content;
+                var channel =
+                ((ChatViewModel)chat.DataContext).Channels.FirstOrDefault(c => c.IsGame == true);
+                ((GameViewModel)GameView.DataContext).GameChannel = channel;
+            });
         }
 
         private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
@@ -112,13 +123,6 @@ namespace ClientLourd.Views.Controls
                     chat.MessageTextBox.Focus();
                 }));
             });
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Chat chat = ChatContainer.Content as Chat;
-            ((GameViewModel) GameView.DataContext).GameChannel =
-            ((ChatViewModel) chat.DataContext).Channels.FirstOrDefault(c => c.IsGame = true);
         }
     }
 }
