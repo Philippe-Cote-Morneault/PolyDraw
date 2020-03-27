@@ -130,8 +130,8 @@ func printManager(fromWho string) {
 	log.Printf("[VirtualPlayer] -> {PrintManager} %v: ", fromWho)
 	log.Printf("[VirtualPlayer] -> Manager.Bots : %v", managerInstance.Bots)
 	log.Printf("[VirtualPlayer] -> Manager.Channels : %v", managerInstance.Channels)
-	log.Printf("[VirtualPlayer] -> Manager.Games : %v", managerInstance.Games)
+	log.Printf("[VirtualPlayer] -> Manager.HintsInGames : %v", managerInstance.HintsInGames)
 	log.Printf("[VirtualPlayer] -> Manager.Groups : %v", managerInstance.Groups)
 	log.Printf("[VirtualPlayer] -> Manager.Matches : %v", managerInstance.Matches)
-	log.Printf("[VirtualPlayer] -> Manager.Hints : %v", managerInstance.Hints)
+	log.Printf("[VirtualPlayer] -> Manager.HintsPerPlayers : %v", managerInstance.HintsPerPlayers)
 }

@@ -555,9 +555,6 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 		return
 
 	}
-
-	g.mutex.Unlock()
-
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 		Response: false,
