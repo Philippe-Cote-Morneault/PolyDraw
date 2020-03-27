@@ -20,6 +20,12 @@ en:
 		gameFileInvalid: "The file is not valid"
 		fileNotReadable: "The file cannot be read."
 		fileInvalidType: "The file is not a valid type"
+		ffaRound: "The number of round must be between 1 and 5 for the free for all game mode."
+		soloCount: "The number of players must be one for the game mode solo."
+		playerCount: "The number of players must be between 1 and %d."
+		playerMax: "You cannot have more than %d players in a game."
+		groupSingle: "You already have a group created you cannot create multiple groups."
+		groupNotFound: "The group could not be found."
 fr:
 	error:
 		channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -39,4 +45,10 @@ fr:
 		gameFileInvalid: "Le fichier n'est pas valide."
 		fileNotReadable: "Le fichier ne peut être lu."
 		fileInvalidType: "Le fichier n'est pas un type valide."
+		ffaRound: "Le nombre de tours doit être entre 1 et 5 pour le type mêlée générale."
+		soloCount: "Le nombre de joueurs doit être de un pour le mode de jeu solo."
+		playerCount: "Le nombre de joueurs doit être entre 1 et %d."
+		playerMax: "Vous ne pouvez pas avoir plus de %d joueurs dans une partie."
+		groupSingle: "Vous avez déjà créé un groupe. Vous ne pouvez pas avoir plusieurs groupes à votre nom."
+		groupNotFound: "Le groupe ne peut pas être trouvé."
 `)
