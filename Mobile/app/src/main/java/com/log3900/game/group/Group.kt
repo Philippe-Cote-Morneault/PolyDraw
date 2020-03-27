@@ -52,8 +52,8 @@ enum class MatchMode {
 }
 
 enum class Language(val languageCode: String) {
-    FRENCH("FR"),
-    ENGLISH("EN");
+    ENGLISH("EN"),
+    FRENCH("FR");
 
     companion object {
         fun stringRes(item: Language): Int {
