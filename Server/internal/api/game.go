@@ -59,29 +59,29 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if strings.TrimSpace(request.Word) == "" {
-		rbody.JSONError(w, http.StatusBadRequest, "The word cannot be blank.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordBlank", r))
 		return
 	}
 
 	//Validate if the word is validate
 	wordLower := strings.ToLower(request.Word)
 	if wordvalidator.IsBlacklist(wordLower, language.EN) {
-		rbody.JSONError(w, http.StatusBadRequest, "This word is not allowed!")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordBlacklist", r))
 		return
 	}
 
 	if !wordvalidator.IsWord(wordLower, language.EN) {
-		rbody.JSONError(w, http.StatusBadRequest, "This is not a word, please enter a valid word.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordInvalid", r))
 		return
 	}
 
 	if request.Difficulty < 0 || request.Difficulty > 3 {
-		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 3.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.difficultyRange", r))
 		return
 	}
 
 	if len(request.Hints) < 1 || len(request.Hints) > 10 {
-		rbody.JSONError(w, http.StatusBadRequest, "The game must have at least 1 hint and not more than 10.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintLimits", r))
 		return
 	}
 
