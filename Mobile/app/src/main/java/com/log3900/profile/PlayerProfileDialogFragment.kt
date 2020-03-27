@@ -8,8 +8,8 @@ import androidx.fragment.app.DialogFragment
 import com.log3900.R
 import java.util.*
 
-class PlayerProfileDialogFragment(val userID: UUID) : DialogFragment() {
-    val presenter = PlayerProfilePresenter(this)
+class PlayerProfileDialogFragment(userID: UUID) : DialogFragment() {
+    val presenter = PlayerProfilePresenter(this, userID)
 
     override fun onStart() {
         super.onStart()
@@ -25,7 +25,7 @@ class PlayerProfileDialogFragment(val userID: UUID) : DialogFragment() {
         return rootView
     }
 
-    fun setUpUi(root: View) {
+    private fun setUpUi(root: View) {
         presenter.fetchUserInfo()
     }
 }
