@@ -112,6 +112,7 @@
     <string name="tutorial_slide_welcome_01_title">Bienvenue</string>
     <string name="unlocked_message">Vous avez débloqué</string>
     <string name="username">Nom d\'utilisateur</string>
+    <string name="username_title">Nom d\'utilisateur:</string>
     <string name="view_all">Tout voir</string>
     <string name="win_ratio_title">Ratio de victoires:</string>
     <string name="channel_list_title">Canaux</string>

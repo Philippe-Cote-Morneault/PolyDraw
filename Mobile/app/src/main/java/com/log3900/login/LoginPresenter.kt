@@ -3,6 +3,7 @@ package com.log3900.login
 import android.content.Intent
 import android.os.CountDownTimer
 import android.os.Handler
+import android.util.Log
 import com.google.gson.JsonObject
 import com.log3900.MainActivity
 import com.log3900.settings.language.LanguageManager
@@ -36,6 +37,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
                         handleSuccessAuth(bearerToken, sessionToken, username, userID)
+                        Log.d("SESSION_TOKEN", sessionToken)
                     }
                         else -> {
                         handleErrorAuth(response.errorBody()?.string() ?: "Internal error")

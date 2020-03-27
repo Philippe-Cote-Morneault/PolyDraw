@@ -10,6 +10,7 @@ import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.group.Player
 import com.log3900.game.waiting_room.PlayerViewHolder
+import com.log3900.profile.PlayerProfileDialogFragment
 import com.log3900.user.UserRepository
 import com.log3900.utils.ui.getAvatarID
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,6 +35,10 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         playerChip = itemView.findViewById(R.id.list_item_active_match_player_chip_player)
         playerStatusImageView = itemView.findViewById(R.id.list_item_active_match_player_image_view_status)
         scoreTextView = itemView.findViewById(R.id.list_item_active_match_player_text_view_score)
+
+        playerChip.setOnClickListener {
+            PlayerProfileDialogFragment.show(itemView.context, player.ID)
+        }
     }
 
     fun bind(player: Player, position: Int, score: Int, statusRes: Int? = null) {
