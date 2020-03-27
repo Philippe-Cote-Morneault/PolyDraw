@@ -60,6 +60,12 @@
     <system:String x:Key="AddVirtualPlayer">Add virtual player</system:String>
     <system:String x:Key="RemovePlayer">Remove player</system:String>
     <system:String x:Key="WaitingRoom">Waiting room</system:String>
+    <system:String x:Key="Players">Players</system:String>
+    <system:String x:Key="StartGame">Start game</system:String>
+    <system:String x:Key="QuitLobby">Leave lobby</system:String>
+
+
+
 
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Create a new lobby</system:String>

@@ -61,6 +61,10 @@
     <system:String x:Key="AddVirtualPlayer">Ajouter un joueur virtuel</system:String>
     <system:String x:Key="RemovePlayer">Retirer le joueur</system:String>
     <system:String x:Key="WaitingRoom">Salle d'attente</system:String>
+    <system:String x:Key="Players">Joueurs</system:String>
+    <system:String x:Key="StartGame">Commencer la partie</system:String>
+    <system:String x:Key="QuitLobby">Quitter la salle d'attente</system:String>
+
 
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Créer une salle d'attente</system:String>
