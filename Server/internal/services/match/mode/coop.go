@@ -321,15 +321,17 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 		})
 		socket.SendRawMessageToSocketID(response, socketID)
 
-		c.receiving.Lock()
-		messageFail := socket.RawMessage{}
-		messageFail.ParseMessagePack(byte(socket.MessageType.GuessFailUser), GuessFail{
-			Username: player.Username,
-			UserID:   player.userID.String(),
-			Lives:    lives,
-		})
-		c.receiving.Unlock()
-		c.pbroadcast(&messageFail)
+		if player != nil {
+			c.receiving.Lock()
+			messageFail := socket.RawMessage{}
+			messageFail.ParseMessagePack(byte(socket.MessageType.GuessFailUser), GuessFail{
+				Username: player.Username,
+				UserID:   player.userID.String(),
+				Lives:    lives,
+			})
+			c.receiving.Unlock()
+			c.pbroadcast(&messageFail)
+		}
 
 		if lives <= 0 {
 			log.Printf("[Match] [Coop] No more lives for the drawing. Penalty will apply ,match: %s", c.info.ID)
