@@ -2,13 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:theme="@style/Base.MyTheme">
+    android:layout_height="match_parent">
     <ImageView
         android:id="@+id/avatar_image_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@mipmap/avatar_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
 
         android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
@@ -20,20 +18,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
         android:text="@string/username_title"
-        android:textSize="25sp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/avatar_image_view"
         app:layout_constraintStart_toEndOf="@+id/avatar_image_view"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/avatar_image_view" />
+
     <TextView
         android:id="@+id/username_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="USERNAME"
-        android:textSize="30sp"
-        android:textStyle="bold"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="32dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
@@ -41,8 +42,9 @@
         android:id="@+id/close_dialog_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:text="@string/close"
-        android:layout_margin="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/avatar_image_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

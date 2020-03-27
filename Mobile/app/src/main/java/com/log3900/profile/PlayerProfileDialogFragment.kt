@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.button.MaterialButton
 import com.log3900.R
 import com.log3900.utils.ui.getAvatarID
 import kotlinx.android.synthetic.main.dialog_fragment_player_profile.*
@@ -12,6 +14,19 @@ import java.util.*
 
 class PlayerProfileDialogFragment(userID: UUID) : DialogFragment() {
     val presenter = PlayerProfilePresenter(this, userID)
+
+    companion object {
+        fun show(view: View, userID: UUID) {
+            val fragmentManager = (view.context as FragmentActivity).supportFragmentManager//activity?.supportFragmentManager!!
+            val ft = fragmentManager.beginTransaction()
+            fragmentManager.findFragmentByTag("dialog")?.let {
+                ft.remove(it)
+            }
+            ft.addToBackStack(null)
+
+            PlayerProfileDialogFragment(userID).show(ft, "dialog")
+        }
+    }
 
     override fun onStart() {
         super.onStart()
@@ -29,6 +44,9 @@ class PlayerProfileDialogFragment(userID: UUID) : DialogFragment() {
 
     private fun setUpUi(root: View) {
         presenter.fetchUserInfo()
+        root.findViewById<MaterialButton>(R.id.close_dialog_button).setOnClickListener {
+            dismiss()
+        }
     }
 
     fun setUsername(username: String) {
