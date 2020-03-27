@@ -24,7 +24,7 @@
     <system:String x:Key="Difficulty">Difficulté</system:String>
     <system:String x:Key="Host">Hôte</system:String>
     <system:String x:Key="Rounds">Rondes</system:String>
-    <system:String x:Key="Duration">Durée (min)</system:String>
+    <system:String x:Key="Duration">Durée (minutes)</system:String>
 
     <system:String x:Key="CreateLobby">Créer une salle d'attente</system:String>
     <system:String x:Key="CreateGame">Créer une partie</system:String>
@@ -64,6 +64,8 @@
     <system:String x:Key="Players">Joueurs</system:String>
     <system:String x:Key="StartGame">Commencer la partie</system:String>
     <system:String x:Key="QuitLobby">Quitter la salle d'attente</system:String>
+    <system:String x:Key="EmptySlot">Place libre</system:String>
+
 
 
     <!-- Lobby creation -->

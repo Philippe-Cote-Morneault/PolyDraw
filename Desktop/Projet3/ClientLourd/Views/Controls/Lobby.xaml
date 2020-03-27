@@ -16,6 +16,8 @@
         <converter:NumberToPlaceholder x:Key="NumberToPlaceholder"/>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
         <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
+        <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
+
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:LobbyViewModel x:Name="DataContext"/>
@@ -33,11 +35,11 @@
                 <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{DynamicResource WaitingRoom}"></TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Mode}"></TextBlock>
-                    <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}: {0}}"></TextBlock>
+                    <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}: {0}, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Difficulty}"></TextBlock>
-                    <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Difficulty, StringFormat={}: {0}}"></TextBlock>
+                    <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Difficulty, StringFormat={}: {0}, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Duration}"></TextBlock>
@@ -48,7 +50,7 @@
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Language, StringFormat={}: {0}}"></TextBlock>
                 </StackPanel>
 
-                <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="Players:"></TextBlock>
+                <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Players}"></TextBlock>
 
                 <!-- Players -->
                 <ItemsControl ItemsSource="{Binding CurrentLobby.Players}">
@@ -116,7 +118,7 @@
                                 <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Margin="0 0 0 15">
                                     <TextBlock Margin="5" TextWrapping="Wrap" VerticalAlignment="Center"
                                                        Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                                       Text="{Binding Username}" />
+                                                       Text="{DynamicResource EmptySlot}" />
                                     <materialDesign:Chip.Icon>
                                         <Image Source="{Binding Avatar, UpdateSourceTrigger=PropertyChanged}"></Image>
                                     </materialDesign:Chip.Icon>

@@ -57,10 +57,9 @@ namespace ClientLourd.Models.Bindable
             { 
                 _playersCount = value; NotifyPropertyChanged();
                 
-                if (Mode == GameModes.FFA)
-                {
-                    Duration = CalculateDuration();
-                }
+                
+                Duration = CalculateDuration();
+            
             }
         }
 
@@ -87,7 +86,16 @@ namespace ClientLourd.Models.Bindable
             } 
         }
 
-        public DifficultyLevel Difficulty { get; set; }
+        private DifficultyLevel _difficulty;
+        public DifficultyLevel Difficulty 
+        {
+            get => _difficulty;
+            set
+            {
+                _difficulty = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         private ObservableCollection<Player> _players;
 

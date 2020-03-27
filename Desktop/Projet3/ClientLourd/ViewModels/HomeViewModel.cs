@@ -59,11 +59,17 @@ namespace ClientLourd.ViewModels
             set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; }
         }
 
+        
+        public MainViewModel MainViewModel
+        {
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
+        }
+
         public async override void AfterLogin()
         {
-
+            
             FetchLobbies();
-
+            
             SocketClient.LobbyCreated += OnLobbyCreated;
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
@@ -75,8 +81,21 @@ namespace ClientLourd.ViewModels
             _playerCountFilteredAscending = false;
             _languageFilteredAscending = false;
             _durationFilteredAscending = false;
+            MainViewModel.LanguageChangedEvent += OnLanguageChanged;
 
+        }
 
+        private void OnLanguageChanged(object source, EventArgs args)
+        {
+            
+            foreach (Lobby lobby in Lobbies)
+            {
+                // Line below doesnt work for some reason (binding is trash in WPF)
+                // NotifyPropertyChanged(nameof(lobby.Difficulty));
+                lobby.Difficulty = lobby.Difficulty;
+                    
+                lobby.Mode = lobby.Mode;
+            }
         }
 
         public override void AfterLogOut()
