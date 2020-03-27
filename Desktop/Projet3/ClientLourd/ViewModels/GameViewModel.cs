@@ -425,7 +425,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _askHintCommand ??
-                       (_askHintCommand = new RelayCommand<object>(channel => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint))));
+                       (_askHintCommand = new RelayCommand<object>(channel => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint)), (c) => CanStillGuess));
             }
         }
         
