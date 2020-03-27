@@ -23,6 +23,8 @@
     <system:String x:Key="Difficulty">Difficulty</system:String>
     <system:String x:Key="Host">Host</system:String>
     <system:String x:Key="Rounds">Rounds</system:String>
+    <system:String x:Key="Duration">Duration (min)</system:String>
+
     <system:String x:Key="CreateLobby">Create a lobby</system:String>
     <system:String x:Key="CreateGame">Create a game</system:String>
 
@@ -31,7 +33,7 @@
     <system:String x:Key="FilterLanguage">Filter by language</system:String>
     <system:String x:Key="FilterDifficulty">Filter by difficulty</system:String>
     <system:String x:Key="FilterHost">Filter by host</system:String>
-    <system:String x:Key="FilterRounds">Filter by rounds</system:String>
+    <system:String x:Key="FilterDuration">Filter by duration</system:String>
     <system:String x:Key="FilterPlayers">Filter by players</system:String>
 
     <!--Profile-->

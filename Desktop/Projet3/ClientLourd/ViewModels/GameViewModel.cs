@@ -144,7 +144,7 @@ namespace ClientLourd.ViewModels
                 Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
                 if (e.UserID == SessionInformations.User.ID)
                 {
-                    StrokeDrawerService.Stop();
+                    StrokeDrawerService.Close();
                 }
             });
         }

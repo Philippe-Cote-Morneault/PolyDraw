@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.Models.Bindable
 {
@@ -35,6 +36,8 @@ namespace ClientLourd.Models.Bindable
             Difficulty = difficulty;
             Language = language;
             Rounds = nbRounds;
+
+            Duration = CalculateDuration();
         }
         public string ID { get; set; }
 
@@ -47,7 +50,31 @@ namespace ClientLourd.Models.Bindable
         public int Rounds { get; set; }
 
         private int _playersCount;
-        public int PlayersCount { get => _playersCount; set { _playersCount = value; NotifyPropertyChanged(); } }
+        public int PlayersCount 
+        { 
+            get => _playersCount; 
+            set 
+            { 
+                _playersCount = value; NotifyPropertyChanged();
+                
+                if (Mode == GameModes.FFA)
+                {
+                    Duration = CalculateDuration();
+                }
+            }
+        }
+
+
+        private DateTime _duration;
+        public DateTime Duration
+        {
+            get => _duration;
+            set
+            {
+                _duration = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         private string _host;
         public string Host 
@@ -80,6 +107,29 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-        
+        public DateTime CalculateDuration() 
+        {
+            if (Mode == GameModes.FFA)
+            {
+                return DateTime.Now.Date + TimeSpan.FromMinutes(_playersCount * Rounds);
+            }
+            else
+            {
+                switch (Difficulty)
+                {
+                    case DifficultyLevel.Easy:
+                        return DateTime.Now.Date + TimeSpan.FromMinutes(GameDurations.EASY_GAME);
+
+                    case DifficultyLevel.Medium:
+                        return DateTime.Now.Date + TimeSpan.FromMinutes(GameDurations.MEDIUM_GAME);
+
+                    case DifficultyLevel.Hard:
+                        return DateTime.Now.Date + TimeSpan.FromMinutes(GameDurations.HARD_GAME);
+
+                    default:
+                        return DateTime.Now.Date + TimeSpan.FromMinutes(-1);
+                }
+            }
+        }
     }
 }

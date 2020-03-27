@@ -169,6 +169,7 @@
     <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
     <Compile Include="Services\SoundService\SoundService.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
+    <Compile Include="Utilities\Constants\GameDurations.cs" />
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\MatchTiming.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
