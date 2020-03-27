@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/spf13/viper"
 	"log"
+	"net/http"
 )
 
 const (
@@ -42,4 +43,12 @@ func MustGet(key string, lang int) string {
 	} else {
 		panic("[i18n] The key " + realKey + " cannot be found")
 	}
+}
+
+//MustGetRest returns the translated string with a request for a key
+func MustGetRest(key string, r *http.Request) string {
+	ctxLang := 1
+	lang := r.Context().Value(ctxLang).(int)
+
+	return MustGet(key, lang)
 }

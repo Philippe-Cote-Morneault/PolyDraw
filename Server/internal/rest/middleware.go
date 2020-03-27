@@ -2,8 +2,10 @@ package rest
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"net/http"
+	"strings"
 
 	"gitlab.com/jigsawcorp/log3900/internal/api"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
@@ -50,7 +52,14 @@ func authMiddleware(next http.Handler) http.Handler {
 				if !ok {
 					rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")
 				} else {
+
+					langStr := r.Header.Get("Language")
+					lang := language.EN
+					if strings.ToLower(langStr) == "fr" {
+						lang = language.FR
+					}
 					ctx := context.WithValue(r.Context(), api.CtxUserID, userID)
+					ctx = context.WithValue(ctx, api.CtxLang, lang)
 					next.ServeHTTP(w, r.WithContext(ctx))
 				}
 			} else {

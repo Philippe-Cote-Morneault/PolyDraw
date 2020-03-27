@@ -9,7 +9,8 @@ type key int
 
 const (
 	//CtxUserID represent the user id of the context
-	CtxUserID key = iota
+	CtxUserID key = 0
+	CtxLang   key = 1
 )
 
 //Init function for the API
