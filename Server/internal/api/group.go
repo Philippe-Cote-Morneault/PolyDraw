@@ -114,6 +114,7 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		PlayersMax: request.PlayersMax,
 		GameType:   request.GameType,
 		Difficulty: request.Difficulty,
+		Language:   r.Context().Value(CtxLang).(int),
 		Status:     0,
 	}
 	var user model.User
