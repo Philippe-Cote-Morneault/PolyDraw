@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"net/http"
 	"strings"
@@ -172,7 +173,7 @@ func registerSession(user *model.User, w http.ResponseWriter, r *http.Request) {
 		for !auth.IsTokenAvailable(sessionToken) {
 			sessionToken, _ = secureb.GenerateToken()
 		}
-		auth.Register(sessionToken, user.ID)
+		auth.Register(sessionToken, user.ID, r.Context().Value(context.CtxLang).(int))
 		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken, UserID: user.ID.String()})
 	}
 }
