@@ -65,13 +65,14 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Validate if the word is validate
+	lang := r.Context().Value(context.CtxLang).(int)
 	wordLower := strings.ToLower(request.Word)
-	if wordvalidator.IsBlacklist(wordLower, language.EN) {
+	if wordvalidator.IsBlacklist(wordLower, lang) {
 		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordBlacklist", r))
 		return
 	}
 
-	if !wordvalidator.IsWord(wordLower, language.EN) {
+	if !wordvalidator.IsWord(wordLower, lang) {
 		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordInvalid", r))
 		return
 	}
@@ -112,7 +113,6 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 			Hint: request.Hints[i],
 		})
 	}
-	lang := r.Context().Value(context.CtxLang).(int)
 	game := model.Game{
 		Word:       wordLower,
 		Difficulty: request.Difficulty,
