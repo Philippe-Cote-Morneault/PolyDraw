@@ -7,6 +7,7 @@ en:
     channelInvalidStart: "Invalid parameters, start must be the lowest parameter."
     channelInvalidUrl: "Invalid parameters, the url parameters must be a number."
     channelInvalidUUID: "Invalid channel ID. It must respect the UUID format."
+    channelExists: "Channel already exists."
     wordBlank: "The word cannot be blank."
     wordBlacklist: "This word is not allowed!"
     wordInvalid: "This is not a word, please enter a valid word."
@@ -40,12 +41,15 @@ en:
     groupMembership: "The user does not belong to a group."
     userLeaveChannel: "User is not in the channel."
     userJoinChannel: "User is already joined to the channel."
+    userJoinFirst: "The user needs to join the channel first."
+    channelInvalidName: "The channel name is invalid."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
     channelInvalidStart: "Paramètres invalides, start doit être celui le plus bas."
     channelInvalidUrl: "Paramètres invalides, les paramètres de l'url doivent être des nombres."
     channelInvalidUUID: "Identifiant de canal invalide. L'identifiant doit respecter le format UUID."
+    channelExists: "Le canal existe déjà."
     wordBlank: "Le mot ne peut pas être vide."
     wordBlacklist: "Le mot n'est pas autorisé!"
     wordInvalid: "Ceci n'est pas un mot valide, veuillez entrer un mot valide."
@@ -79,4 +83,6 @@ fr:
     groupMembership: "L'utilisateur n'appartient pas à un groupe."
     userLeaveChannel: "L'utilisateur n'est pas dans le canal."
     userJoinChannel: "L'utilisateur est déjà présent dans le canal."
+    userJoinFirst: "L'utilisateur doit rejoindre le canal avant."
+    channelInvalidName: "Le nom du canal est invalide."
 `)

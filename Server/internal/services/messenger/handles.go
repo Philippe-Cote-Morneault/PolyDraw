@@ -200,11 +200,11 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 				model.AddMessage(messageParsed.Message, channelID, user.ID, timestamp)
 			} else {
 				log.Printf("[Messenger] -> Receive: The user needs to join the channel first. Dropping packet!")
-				socket.SendErrorToSocketID(socket.MessageType.MessageSent, 409, "The user needs to join the channel first.", message.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.MessageSent, 409, language.MustGetSocket("error.userJoinFirst", message.SocketID), message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Receive: Invalid channel ID. Dropping packet!")
-			socket.SendErrorToSocketID(socket.MessageType.MessageSent, 404, "Invalid channel ID", message.SocketID)
+			socket.SendErrorToSocketID(socket.MessageType.MessageSent, 404, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Receive: Wrong data format. Dropping packet!")
@@ -251,15 +251,15 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Create: channel %s created", channelParsed.ChannelName)
 				} else {
 					log.Printf("[Messenger] -> Create: Channel already exists. Dropping packet!")
-					socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 409, "Channel already exists.", message.SocketID)
+					socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 409, language.MustGetSocket("error.channelExists", message.SocketID), message.SocketID)
 				}
 			} else {
 				log.Printf("[Messenger] -> Create: Can't find user. Dropping packet!")
-				socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 404, "Can't find user.", message.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 404, language.MustGetSocket("error.userNotFound", message.SocketID), message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Create: Invalid channel name. Dropping packet!")
-			socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 400, "Invalid channel UUID.", message.SocketID)
+			socket.SendErrorToSocketID(socket.MessageType.CreateChannel, 400, language.MustGetSocket("error.channelInvalidName", message.SocketID), message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Create: Invalid channel decoding. Dropping packet!")
@@ -274,11 +274,11 @@ func (h *handler) handleJoinChannel(message socket.RawMessageReceived) {
 			h.joinChannel(message.SocketID, channelID)
 		} else {
 			log.Printf("[Messenger] -> Join: Invalid channel UUID")
-			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, "Invalid channel UUID.", message.SocketID)
+			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Join: Invalid channel UUID")
-		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, "Invalid channel UUID.", message.SocketID)
+		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 400, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 	}
 }
 
@@ -289,11 +289,11 @@ func (h *handler) handleQuitChannel(message socket.RawMessageReceived) {
 			h.quitChannel(message.SocketID, channelID)
 		} else {
 			log.Printf("[Messenger] -> Quit: Invalid channel UUID")
-			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "Invalid channel UUID.", message.SocketID)
+			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Quit: Invalid channel UUID")
-		socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "Invalid channel UUID.", message.SocketID)
+		socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 	}
 }
 
@@ -328,15 +328,15 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 				log.Printf("[Messenger] -> Destroy: Removed channel %s", channelID)
 			} else {
 				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
-				socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 404, "Invalid channel UUID, not found.", message.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 404, language.MustGetSocket("error.channelNotFound", message.SocketID), message.SocketID)
 			}
 		} else {
 			log.Printf("[Messenger] -> Destroy: Invalid channel UUID")
-			socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 400, "Invalid channel UUID", message.SocketID)
+			socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 400, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Destroy: Invalid channel UUID")
-		socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 400, "Invalid channel UUID", message.SocketID)
+		socket.SendErrorToSocketID(socket.MessageType.DestroyChannel, 400, language.MustGetSocket("error.channelInvalidUUID", message.SocketID), message.SocketID)
 	}
 }
 
