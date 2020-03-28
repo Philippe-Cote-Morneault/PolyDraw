@@ -3,6 +3,7 @@ package language
 import (
 	"bytes"
 	"github.com/spf13/viper"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"log"
 	"net/http"
 )
@@ -40,15 +41,13 @@ func MustGet(key string, lang int) string {
 	}
 	if viperInstance.IsSet(realKey) {
 		return viperInstance.GetString(realKey)
-	} else {
-		panic("[i18n] The key " + realKey + " cannot be found")
 	}
+	panic("[i18n] The key " + realKey + " cannot be found")
 }
 
 //MustGetRest returns the translated string with a request for a key
 func MustGetRest(key string, r *http.Request) string {
-	ctxLang := 1
-	lang := r.Context().Value(ctxLang).(int)
+	lang := r.Context().Value(context.CtxLang).(int)
 
 	return MustGet(key, lang)
 }
