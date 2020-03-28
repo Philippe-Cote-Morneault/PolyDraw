@@ -90,8 +90,6 @@
     <system:String x:Key="DrawingMode">Select the way the drawing will be displayed</system:String>
 
 
-
-
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Create a new lobby</system:String>
     <system:String x:Key="EnterLobbyName">Enter the lobby's name</system:String>
@@ -101,5 +99,15 @@
     <system:String x:Key="SelectPlayers">Select the level number of players</system:String>
     <system:String x:Key="SelectRounds">Select the number of rounds</system:String>
     <system:String x:Key="CreateLobbyButton">Create lobby</system:String>
+    
+    <!-- EditorZone -->
+    <system:String x:Key="WordIs">The word is </system:String>
+    <system:String x:Key="Guess">Guess</system:String>
+    <system:String x:Key="TypeGuess">Type your guess here</system:String>
+    <system:String x:Key="TeamateWrongGuess">Your teamate has guessed incorrectly!</system:String>
+
+    <!-- TopBar -->
+    <system:String x:Key="TeamScore">Team score: </system:String>
+
 
 </ResourceDictionary>

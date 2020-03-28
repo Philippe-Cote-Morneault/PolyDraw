@@ -147,7 +147,7 @@
 
         
         <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}">
-            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20">Team score: </TextBlock>
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="{DynamicResource TeamScore}"></TextBlock>
             <TextBlock VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamPoints}"></TextBlock>
             <TextBlock Opacity="0" Foreground="Green" Name="PointsGained" VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamNewPoints, StringFormat={}+{0}}" RenderTransformOrigin=".5,.5">
                 <TextBlock.RenderTransform>

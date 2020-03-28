@@ -98,4 +98,13 @@
     <system:String x:Key="SelectRounds">Sélectionner le nombre de rondes</system:String>
     <system:String x:Key="CreateLobbyButton">Créer la salle d'attente</system:String>
 
+    <!-- EditorZone -->
+    <system:String x:Key="WordIs">Le mot est</system:String>
+    <system:String x:Key="Guess">Deviner</system:String>
+    <system:String x:Key="TypeGuess">Devinez ici</system:String>
+    <system:String x:Key="TeamateWrongGuess">Votre coéquipier a deviné incorrectement!</system:String>
+
+    <!-- TopBar -->
+    <system:String x:Key="TeamScore">Score de l'équipe: </system:String>
+    
 </ResourceDictionary>
