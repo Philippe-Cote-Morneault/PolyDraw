@@ -142,12 +142,16 @@ namespace ClientLourd
         /// <returns></returns>
         public Chat GetChat()
         {
+            //Close the chat window
+            ChatWindow?.Close();
             //Close the chat
             Drawer.IsRightDrawerOpen = false;
             //Hide the chat button
             ChatToggleButton.IsEnabled = false;
             //Remove the chat from his parent
             ((Grid)ChatBox.Parent)?.Children.Clear();
+            //Disable notification for the current channel
+            ((ChatViewModel)ChatBox.DataContext).OnChatToggle(true);
             return ChatBox;
         }
         

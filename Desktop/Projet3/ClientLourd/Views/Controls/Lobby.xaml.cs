@@ -142,16 +142,12 @@ namespace ClientLourd.Views.Controls
 
         public void ExportChat()
         {
-            MainWindow.ChatWindow?.Close();
-            MainWindow.Drawer.IsRightDrawerOpen = false;
-            MainWindow.ChatToggleButton.IsEnabled = false;
-            ((Grid)MainWindow.ChatBox.Parent)?.Children.Clear();
-            ChatContainer.Children.Add(MainWindow.ChatBox);
+            var chat = MainWindow.GetChat();
+            ChatContainer.Children.Add(chat);
             Task.Delay(50).ContinueWith(_ =>
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Chat chat = ChatContainer.Children[0] as Chat;
                     chat.MessageTextBox.Focus();
                 }));
             });

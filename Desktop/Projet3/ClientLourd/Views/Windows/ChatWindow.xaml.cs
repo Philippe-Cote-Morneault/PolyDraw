@@ -16,7 +16,6 @@ namespace ClientLourd.Views.Windows
             _chatBox = ChatBox;
             InitializeComponent();
             MainPanel.Children.Add(ChatBox);
-            ((ChatViewModel)ChatBox.DataContext).OnChatToggle(true);
             Closing += OnWindowClosing;
         }
 
