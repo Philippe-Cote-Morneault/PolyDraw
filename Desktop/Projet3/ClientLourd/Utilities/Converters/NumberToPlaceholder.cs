@@ -21,6 +21,10 @@ namespace ClientLourd.Utilities.Converters
 
             Lobby currentLobby = (Lobby)value;
             int nPlaceHolder = currentLobby.PlayersMax - currentLobby.Players.Count;
+
+            if (nPlaceHolder < 0)
+                return null;
+
             User[] users = new User[nPlaceHolder];
             for(int i = 0; i < nPlaceHolder; i++)
             {
