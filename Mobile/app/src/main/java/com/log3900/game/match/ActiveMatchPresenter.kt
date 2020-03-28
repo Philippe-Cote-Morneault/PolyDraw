@@ -71,8 +71,14 @@ abstract class ActiveMatchPresenter : Presenter {
     }
 
     protected open fun onGuessedWordWrong() {
+        activeMatchView?.setCanvasMessage("Try again!")
+        activeMatchView?.showCanvasMessageView(true)
         activeMatchView?.animateWordGuessedWrong()
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
+        Handler().postDelayed({
+            activeMatchView?.showCanvasMessageView(false)
+        }, 2000)
+
     }
 
     private fun onTimesUp(timesUp: TimesUp) {

@@ -27,4 +27,6 @@ interface ActiveMatchView {
     fun hideMatchEndInfoView()
     fun enableHintButton(enable: Boolean)
     fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean)
+    fun setCanvasMessage(message: String)
+    fun showCanvasMessageView(show: Boolean)
 }

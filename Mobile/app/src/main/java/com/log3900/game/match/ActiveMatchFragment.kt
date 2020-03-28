@@ -13,16 +13,13 @@ import com.daimajia.androidanimations.library.YoYo
 import com.log3900.R
 import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
-import com.log3900.game.match.UI.WordGuessingView
-import com.log3900.game.match.UI.WordToDrawView
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.Color
 import android.util.Log
 import android.view.animation.Animation
-import com.log3900.game.match.UI.FFAMatchEndInfoView
-import com.log3900.game.match.UI.RoundEndInfoView
+import com.log3900.game.match.UI.*
 
 
 abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
@@ -38,6 +35,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var wordToDrawView: WordToDrawView? = null
     private lateinit var roundEndInfoView: RoundEndInfoView
     private lateinit var matchEndInfoView: FFAMatchEndInfoView
+    private lateinit var canvasMessageView: CanvasMessageView
 
     protected open fun setupUI(rootView: View) {
         footer = rootView.findViewById(R.id.fragment_active_match_footer_container)
@@ -49,6 +47,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
         roundEndInfoView = rootView.findViewById(R.id.fragment_active_match_round_end_info_view)
         matchEndInfoView = rootView.findViewById(R.id.fragment_active_match_ffa_match_end_info_view)
+        canvasMessageView = rootView.findViewById(R.id.fragment_active_match_canvas_message_view)
     }
 
     protected open fun setupToolbar(rootView: View) {
@@ -291,6 +290,18 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             .duration(1000)
             .delay(1000)
             .playOn(remainingTimeChangeTextView)
+    }
+
+    override fun setCanvasMessage(message: String) {
+        canvasMessageView.setMessage(message)
+    }
+
+    override fun showCanvasMessageView(show: Boolean) {
+        if (show) {
+            canvasMessageView.visibility = View.VISIBLE
+        } else {
+            canvasMessageView.visibility = View.INVISIBLE
+        }
     }
 
     override fun onDestroy() {
