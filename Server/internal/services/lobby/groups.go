@@ -550,7 +550,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 			Response: false,
-			Error:    "The group is full",
+			Error:    language.MustGetSocket("error.groupIsFull", socketID),
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
 		return
