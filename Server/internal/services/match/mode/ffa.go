@@ -1,6 +1,7 @@
 package mode
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"log"
 	"math"
 	"math/rand"
@@ -10,8 +11,6 @@ import (
 	"time"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
-
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 
@@ -328,26 +327,37 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
 		player := f.connections[socketID]
-		f.receiving.Unlock()
-
-		hintSent := virtualplayer.GetHintByBot(&match2.HintRequested{
-			GameType: f.info.GameType,
-			MatchID:  f.info.ID,
-			SocketID: socketID,
-			Player: match2.Player{
-				IsCPU:    player.IsCPU,
-				Username: player.Username,
-				ID:       player.userID,
-			},
-		})
-
-		if hintSent {
-			f.receiving.Lock()
-			f.scores[player.Order].commit(-50)
+		if f.scores[player.Order].total-50 > 0 {
 			f.receiving.Unlock()
+			hintSent := virtualplayer.GetHintByBot(&match2.HintRequested{
+				GameType: f.info.GameType,
+				MatchID:  f.info.ID,
+				SocketID: socketID,
+				Player: match2.Player{
+					IsCPU:    player.IsCPU,
+					Username: player.Username,
+					ID:       player.userID,
+				},
+			})
 
-			f.syncPlayers()
+			if hintSent {
+				f.receiving.Lock()
+				f.scores[player.Order].commit(-50)
+				f.receiving.Unlock()
+
+				f.syncPlayers()
+			}
+		} else {
+			f.receiving.Unlock()
+			message := socket.RawMessage{}
+			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
+				Hint:  "",
+				Error: "You need at least 50 points for a hint.",
+			})
+			socket.SendRawMessageToSocketID(message, socketID)
+			log.Printf("[Match] [FFA] -> Hint requested but not enough points. Match: %s", f.info.ID)
 		}
+
 	}
 }
 
