@@ -1,5 +1,6 @@
 package com.log3900.game.match.ffa
 
+import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.match.*
@@ -9,6 +10,7 @@ import com.log3900.shared.architecture.Presenter
 import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     private var FFAMatchManager: FFAMatchManager
@@ -34,6 +36,8 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     override fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         super.onGuessedWordRight(playerGuessedWord)
         activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+
+        updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal, playerGuessedWord.points)
     }
 
     override fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
@@ -53,6 +57,20 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
     private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
         activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+
+        updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal, playerGuessedWord.points)
+    }
+
+    private fun updatePlayerScore(playerID: UUID, newScore: Int, variation: Int) {
+        var formattedScoreChange = "+"
+        if (variation < 0) {
+            formattedScoreChange = "-"
+        }
+
+        formattedScoreChange += variation
+
+        val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
+        activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

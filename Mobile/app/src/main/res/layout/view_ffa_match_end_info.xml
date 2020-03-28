@@ -19,7 +19,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/view_ffa_match_end_info_recycler_view_players"
-        android:layout_width="250dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

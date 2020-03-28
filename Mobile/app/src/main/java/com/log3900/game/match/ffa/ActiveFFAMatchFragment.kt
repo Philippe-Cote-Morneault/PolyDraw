@@ -12,6 +12,7 @@ import com.log3900.game.group.Player
 import com.log3900.game.match.ActiveMatchFragment
 import com.log3900.game.match.ActiveMatchPresenter
 import com.log3900.game.match.PlayerAdapter
+import com.log3900.game.match.PlayerViewHolder
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -74,6 +75,10 @@ class ActiveFFAMatchFragment : ActiveMatchFragment(), ActiveFFAMatchView {
 
     override fun setTurnsValue(turns: String) {
         turnsTextView.text = turns
+    }
+
+    override fun showPlayerScoredChangedAnimation(scoreChangedValue: String, isPositive: Boolean, position: Int) {
+        (playersRecyclerView.findViewHolderForAdapterPosition(position) as PlayerViewHolder).showScoreChangedAnimation(scoreChangedValue, isPositive)
     }
 
     override fun onDestroy() {
