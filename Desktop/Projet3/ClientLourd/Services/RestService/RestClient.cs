@@ -52,7 +52,7 @@ namespace ClientLourd.Services.RestService
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth", Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new {username = username});
+            request.AddJsonBody(new {username = username, password = password});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             dynamic data = deseralizer.Deserialize<dynamic>(response);
@@ -264,16 +264,13 @@ namespace ClientLourd.Services.RestService
                     case HttpStatusCode.OK:
                         return response;
                     case HttpStatusCode.BadRequest:
-                        throw new RestBadRequestException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     case HttpStatusCode.Conflict:
-                        
-                        throw new RestConflictException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     case HttpStatusCode.Unauthorized:
-                        throw new RestUnauthorizedException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     case HttpStatusCode.NotFound:
+                    case HttpStatusCode.Forbidden:
                         throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     default:
-                        throw new RestException(response.ErrorMessage);
+                        throw new RestException("The request failed");
                 }
             });
             task.Start();
