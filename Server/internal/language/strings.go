@@ -33,6 +33,9 @@ en:
     emailInvalid: "Invalid email, it must respect the typical email format."
     passwordInvalid: "Invalid password, it must have a minimum of 8 characters."
     sessionExists: "The user already has an other session tied to this account. Please disconnect the other session before connecting."
+    userNotFound: "The specified user cannot be found."
+    userUpdate: "The user could not be updated."
+    modifications: "No modifications are found."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -65,4 +68,7 @@ fr:
     emailInvalid: "Courriel invalide, il doit respecter le format d'une adresse courriel."
     passwordInvalid: "Mot de passe invalide. Le mot de passe doit avoir un minimum de 8 caractères."
     sessionExists: "L'utilisateur possède déjà une session. Veuillez déconnecter l'autre session avant de réessayer."
+    userNotFound: "L'utilisateur n'est pas trouvable."
+    userUpdate: "L'utilisateur n'a pas été mis à jour."
+    modifications: "Les modifications n'ont pas été trouvés."
 `)
