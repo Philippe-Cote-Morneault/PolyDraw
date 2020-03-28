@@ -37,12 +37,17 @@ namespace ClientLourd.Utilities.ValidationRules
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The word can't be empty");
                 else
-                    return new ValidationResult(false, "The word can't be empty");
+                    return new ValidationResult(false, "Le mot ne peut pas être vide");
             }
             Regex spaceRegex = new Regex(@"\s");
             if (spaceRegex.IsMatch(word))
             {
-                return new ValidationResult(false, "White space character are not allowed");
+                if (Language == Languages.EN.GetDescription())
+                    return new ValidationResult(false, "White space characters are not allowed");
+                else
+                    return new ValidationResult(false, "Les espaces ne sont pas des caractères oermis");
+
+
             }
             
             return new ValidationResult(true,"");
