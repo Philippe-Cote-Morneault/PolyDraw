@@ -2,6 +2,7 @@ package lobby
 
 import (
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"sync"
 
@@ -110,20 +111,20 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 				} else {
 					g.mutex.Unlock()
 					if !g.kickVirtualPlayer(userID) {
-						go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "Cannot find the user.", socketID)
+						go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, language.MustGetSocket("error.userNotFound", socketID), socketID)
 					}
 				}
 			} else {
 				g.mutex.Unlock()
-				go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "Only the group owner can kick people out", socketID)
+				go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.groupOwner", socketID), socketID)
 			}
 		} else {
 			g.mutex.Unlock()
-			go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, "The group could not be found", socketID)
+			go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, language.MustGetSocket("error.groupNotFound", socketID), socketID)
 		}
 	} else {
 		g.mutex.Unlock()
-		go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "The user does not belong to a group", socketID)
+		go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.groupMembership", socketID), socketID)
 	}
 }
 

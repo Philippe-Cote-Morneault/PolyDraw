@@ -1,6 +1,7 @@
 package messenger
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"strings"
 	"time"
@@ -107,11 +108,11 @@ func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {
 			log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
 		} else {
 			log.Printf("[Messenger] -> Quit: User is not in the channel")
-			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, "User is not in the channel.", socketID)
+			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, language.MustGetSocket("error.userLeaveChannel", socketID), socketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
-		socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 404, "Invalid channel UUID, not found.", socketID)
+		socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 404, language.MustGetSocket("error.channelNotFound", socketID), socketID)
 	}
 }
 
@@ -144,11 +145,11 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 			log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
 		} else {
 			log.Printf("[Messenger] -> Join: User is already joined to the channel")
-			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 409, "User is already joined to the channel.", socketID)
+			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 409, language.MustGetSocket("error.userJoinChannel", socketID), socketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Join: Channel UUID not found, %s", channelID.String())
-		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 404, "Channel UUID not found.", socketID)
+		socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 404, language.MustGetSocket("error.channelNotFound", socketID), socketID)
 	}
 }
 

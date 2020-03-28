@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
@@ -87,7 +88,7 @@ func (l *Lobby) listen() {
 			if err == nil {
 				l.groups.JoinGroup(rawMessage.SocketID, groupID)
 			} else {
-				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, language.MustGetSocket("error.invalidUUID", rawMessage.SocketID), rawMessage.SocketID)
 			}
 
 		case message := <-l.addbot:
@@ -104,7 +105,7 @@ func (l *Lobby) listen() {
 			if err == nil {
 				l.groups.KickUser(rawMessage.SocketID, userID)
 			} else {
-				socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "The uuid is invalid", rawMessage.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.invalidUUID", rawMessage.SocketID), rawMessage.SocketID)
 			}
 
 		case message := <-l.startMatch:

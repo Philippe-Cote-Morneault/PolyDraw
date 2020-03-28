@@ -36,6 +36,10 @@ en:
     userNotFound: "The specified user cannot be found."
     userUpdate: "The user could not be updated."
     modifications: "No modifications are found."
+    groupOwner: "Only the group owner can kick people out."
+    groupMembership: "The user does not belong to a group."
+    userLeaveChannel: "User is not in the channel."
+    userJoinChannel: "User is already joined to the channel."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -71,4 +75,8 @@ fr:
     userNotFound: "L'utilisateur n'est pas trouvable."
     userUpdate: "L'utilisateur n'a pas été mis à jour."
     modifications: "Les modifications n'ont pas été trouvés."
+    groupOwner: "Seulement le propriétaire du groupe peut retirer des joueurs."
+    groupMembership: "L'utilisateur n'appartient pas à un groupe."
+    userLeaveChannel: "L'utilisateur n'est pas dans le canal."
+    userJoinChannel: "L'utilisateur est déjà présent dans le canal."
 `)
