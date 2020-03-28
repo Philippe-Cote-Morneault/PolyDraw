@@ -72,8 +72,10 @@
     <system:String x:Key="WriteHints2">hint(s) related to the word</system:String>
     <system:String x:Key="WordDifficulty">Select the word's level of difficulty</system:String>
     <system:String x:Key="DrawingWay">Select the way you wish to create the game</system:String>
-    <system:String x:Key="ManualDraw">Create the game by drawing the word</system:String>
-    <system:String x:Key="ImageUploaded">Create the game by uploading an image of the word</system:String>
+
+    <system:String x:Key="ManualDraw">Draw the word</system:String>
+    <system:String x:Key="ImageUploaded">Upload an image of the word</system:String>
+    
     <system:String x:Key="Next">Next</system:String>
     <system:String x:Key="Previous">Previous</system:String>
     <system:String x:Key="Confirm">Confirm</system:String>

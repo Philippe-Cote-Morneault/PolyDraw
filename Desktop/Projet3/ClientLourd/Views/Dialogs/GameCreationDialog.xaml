@@ -22,7 +22,7 @@
     </UserControl.Resources>
     <materialDesign:DialogHost Identifier="Dialog">
 
-        <DockPanel>
+        <DockPanel Height="975">
             <Button DockPanel.Dock="Top" HorizontalAlignment="Right" IsEnabled="{Binding PreviewGUIEnabled}" Click="OnClose">
             <materialDesign:PackIcon Kind="Close" />
         </Button>

@@ -45,7 +45,7 @@ namespace ClientLourd.Utilities.ValidationRules
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "White space characters are not allowed");
                 else
-                    return new ValidationResult(false, "Les espaces ne sont pas des caractères oermis");
+                    return new ValidationResult(false, "Les espaces ne sont pas des caractères permis");
 
 
             }
