@@ -51,6 +51,11 @@ namespace ClientLourd.ViewModels
             CanStillGuess = true;
         }
 
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+
         private void InitEventHandler()
         {
             SocketClient.MatchStarted += SocketClientOnMatchStarted;
@@ -153,6 +158,9 @@ namespace ClientLourd.ViewModels
         {
             var e = (MatchEventArgs) args;
             
+
+            
+
             if (Mode == GameModes.FFA)
             {
                 Time = e.Time;
@@ -173,18 +181,25 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID && Mode == GameModes.FFA)
             {
-                OnNewCanavasMessage($"{e.Username} is drawing the next word !");
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnNewCanavasMessage($"{e.Username} {CurrentDictionary["IsDrawingNext"]}");
+                });
             }
             Guess = new char[e.WordLength];
         }
 
         private void SocketClientOnYourTurnToDraw(object source, EventArgs args)
         {
+            
             var e = (MatchEventArgs) args;
             //Enable the canvas
             Word = e.Word; 
             _drawingID = e.DrawingID;
-            OnNewCanavasMessage($"It is your turn to draw to word {e.Word}");
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                OnNewCanavasMessage($"{CurrentDictionary["YourTurnDraw"]} {e.Word}");
+            });
             ChangeCanvasStatus(true);
         }
 
@@ -217,9 +232,9 @@ namespace ClientLourd.ViewModels
             }
             else
             {
-                OnNewCanavasMessage($"Try again !");
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    OnNewCanavasMessage($"{CurrentDictionary["TryAgain"]}");
                     SoundService.PlayWordGuessedWrong();
                 });
             }
@@ -569,8 +584,13 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientCoopWordGuessed(object source, EventArgs args)
         {
+
             MatchEventArgs e = (MatchEventArgs)args;
-            OnNewCanavasMessage($"{e.Username} has guessed correctly! The word was {e.Word}.");
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                OnNewCanavasMessage($"{e.Username} {CurrentDictionary["RightGuessCoop"]} {e.Word}.");
+
+            });
         }
 
     }

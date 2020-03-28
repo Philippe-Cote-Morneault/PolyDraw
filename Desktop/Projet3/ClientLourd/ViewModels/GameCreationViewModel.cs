@@ -263,6 +263,7 @@ namespace ClientLourd.ViewModels
                 _gameID = await RestClient.PostGameInformations(Game.Word, Hints.Select(h => h.Text).ToArray(), _selectedDifficulty);
                 //If the game is valid move to the next slide
                 Transitioner.MoveNextCommand.Execute(null,null);
+               
             }
             catch(Exception e)
             {

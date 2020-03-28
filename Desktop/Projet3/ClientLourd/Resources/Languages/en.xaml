@@ -108,6 +108,21 @@
 
     <!-- TopBar -->
     <system:String x:Key="TeamScore">Team score: </system:String>
+    <system:String x:Key="BestScore">Best score: </system:String>
+    <system:String x:Key="Turn">Turn</system:String>
+    
+    <!-- GameViewModel -->
+    <system:String x:Key="IsDrawingNext">is drawing the next word!</system:String>
+    <system:String x:Key="YourTurnDraw">It is your turn to draw the word</system:String>
+    <system:String x:Key="TryAgain">Try again!</system:String>
+    <system:String x:Key="RightGuessCoop">has guessed correctly! The word was</system:String>
+
+    <!-- Leaderboard -->
+    <system:String x:Key="WinnerIs">The winner is</system:String>
+    <system:String x:Key="WordWas">The word was</system:String>
+
+
+
 
 
 </ResourceDictionary>
