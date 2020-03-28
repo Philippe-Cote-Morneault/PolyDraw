@@ -13,7 +13,7 @@
              Name="Control"
              mc:Ignorable="d">
     <UserControl.DataContext>
-        <viewModels:LoginViewModel />
+        <viewModels:LoginViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />

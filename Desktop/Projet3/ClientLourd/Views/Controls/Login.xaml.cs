@@ -56,6 +56,15 @@ namespace ClientLourd.Views.Controls
         public void Load(object sender, RoutedEventArgs e)
         {
             NameTextBox.Focus();
+            object[] param = new object[4];
+            param[0] = NameTextBox.Text;
+            param[1] = PasswordBox;
+            param[2] = RememberMeCheckBox.IsChecked;
+            param[3] = Control.IsBearerActive;
+            if (ViewModel.LoginCommand.CanExecute(param))
+            {
+                ViewModel.LoginCommand.Execute(param);
+            }
         }
 
         public static readonly DependencyProperty IsWaitingProperty =
