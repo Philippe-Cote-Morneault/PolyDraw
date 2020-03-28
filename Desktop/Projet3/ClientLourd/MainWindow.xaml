@@ -259,7 +259,8 @@
                                     </Button>
                                 </ListViewItem>
 
-
+                                
+                                
                                 <ListViewItem>
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
                                             ToolTip="Disconnect and return to the login screen"

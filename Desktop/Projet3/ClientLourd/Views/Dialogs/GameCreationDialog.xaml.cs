@@ -134,6 +134,12 @@ namespace ClientLourd.Views.Dialogs
             }
         }
 
+        public void OnConfirm(object sender, EventArgs arg)
+        {
+            DialogHost.CloseDialogCommand.Execute(null, null);
+
+        }
+
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)

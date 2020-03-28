@@ -196,6 +196,7 @@ namespace ClientLourd.Services.RestService
         {
             RestRequest request = new RestRequest($"games/{gameID}", Method.DELETE);
             AddBasicHeaders(request);
+            Console.WriteLine("Delete game");
             var response = await Execute(request);
         }
 
