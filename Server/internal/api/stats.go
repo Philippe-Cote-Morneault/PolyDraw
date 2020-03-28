@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"net/http"
 	"strconv"
@@ -51,7 +52,7 @@ type history struct {
 // GetStats returns userStats
 func GetStats(w http.ResponseWriter, r *http.Request) {
 
-	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(CtxUserID)))
+	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(context.CtxUserID)))
 
 	var stats stats
 	model.DB().Model(model.Stats{}).Where("id = ?", userID).Find(&stats)
@@ -67,7 +68,7 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 
 // GetHistory returns the history
 func GetHistory(w http.ResponseWriter, r *http.Request) {
-	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(CtxUserID)))
+	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(context.CtxUserID)))
 
 	offset := 0
 	limit := 100

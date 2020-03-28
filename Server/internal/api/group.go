@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"net/http"
 
@@ -91,7 +92,7 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf(language.MustGetRest("error.playerMax", r), maxPlayer))
 		return
 	}
-	userid := r.Context().Value(CtxUserID).(uuid.UUID)
+	userid := r.Context().Value(context.CtxUserID).(uuid.UUID)
 
 	var count int64
 	model.DB().Table("groups").Where("owner_id = ? and status = ?", userid, 0).Count(&count)
@@ -114,7 +115,7 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		PlayersMax: request.PlayersMax,
 		GameType:   request.GameType,
 		Difficulty: request.Difficulty,
-		Language:   r.Context().Value(CtxLang).(int),
+		Language:   r.Context().Value(context.CtxLang).(int),
 		Status:     0,
 	}
 	var user model.User

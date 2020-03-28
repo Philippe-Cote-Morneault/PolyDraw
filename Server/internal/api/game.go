@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"net/http"
 	"strconv"
 	"strings"
@@ -111,7 +112,7 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 			Hint: request.Hints[i],
 		})
 	}
-	lang := r.Context().Value(CtxLang).(int)
+	lang := r.Context().Value(context.CtxLang).(int)
 	game := model.Game{
 		Word:       wordLower,
 		Difficulty: request.Difficulty,

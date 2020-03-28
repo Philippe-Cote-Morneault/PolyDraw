@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -70,7 +71,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	userid := r.Context().Value(CtxUserID)
+	userid := r.Context().Value(context.CtxUserID)
 	var user model.User
 	model.DB().Where("id = ?", userid).First(&user)
 	if user.ID != uuid.Nil {

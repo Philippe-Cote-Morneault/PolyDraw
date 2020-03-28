@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"gitlab.com/jigsawcorp/log3900/internal/api"
+	context2 "gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
@@ -47,7 +47,7 @@ func authMiddleware(next http.Handler) http.Handler {
 		if strings.ToLower(langStr) == "fr" {
 			lang = language.FR
 		}
-		ctx := context.WithValue(r.Context(), api.CtxLang, lang)
+		ctx := context.WithValue(r.Context(), context2.CtxLang, lang)
 
 		if val, ok := authExceptions[r.URL.Path]; ok && val {
 			next.ServeHTTP(w, r.WithContext(ctx))
@@ -59,7 +59,7 @@ func authMiddleware(next http.Handler) http.Handler {
 				if !ok {
 					rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")
 				} else {
-					ctx = context.WithValue(ctx, api.CtxUserID, userID)
+					ctx = context.WithValue(ctx, context2.CtxUserID, userID)
 					next.ServeHTTP(w, r.WithContext(ctx))
 				}
 			} else {
