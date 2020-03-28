@@ -67,6 +67,7 @@ type messageType struct {
 	UsernameChange           int
 	Checkpoint               int
 	GuessFailUser            int
+	LanguageChange           int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -127,6 +128,7 @@ var MessageType = &messageType{
 	WordFoundCoop:            87,
 	GuessFailUser:            89,
 	UsernameChange:           110,
+	LanguageChange:           112,
 	ErrorResponse:            255,
 }
 

@@ -1,6 +1,7 @@
 package router
 
 import (
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/healthcheck"
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
@@ -10,6 +11,9 @@ import (
 )
 
 func (r *Router) routing() {
+	//Auth
+	r.handle(socket.MessageType.LanguageChange, auth.BLanguage)
+
 	//Messenger
 	r.handle(socket.MessageType.MessageSent, messenger.BMessageSent)
 	r.handle(socket.MessageType.CreateChannel, messenger.BCreateChannel)

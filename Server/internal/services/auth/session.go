@@ -198,6 +198,17 @@ func GetUserID(socketID uuid.UUID) (uuid.UUID, error) {
 	return uuid.Nil, fmt.Errorf("No user is associated with this connection")
 }
 
+//ChangeLang change the language of the sessionCache
+func ChangeLang(socketID uuid.UUID, lang int) {
+	defer mutex.Unlock()
+	mutex.Lock()
+	if _, ok := sessionCache[socketID]; ok && sessionCache[socketID].lang != lang {
+		sessionVar := sessionCache[socketID]
+		sessionVar.lang = lang
+		sessionCache[socketID] = sessionVar
+	}
+}
+
 //GetSocketID returns the user id associated with a session
 func GetSocketID(userID uuid.UUID) (uuid.UUID, error) {
 	defer mutex.Unlock()
