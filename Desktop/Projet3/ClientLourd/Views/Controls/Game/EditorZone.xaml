@@ -36,6 +36,13 @@
                 From="1" To="1.5" Duration="0:0:0.2" />
         </Storyboard>
 
+        <Storyboard x:Key="TeamateGuessedWrong">
+            <DoubleAnimation 
+                Storyboard.TargetName="TeamateGuessedWrong"
+                Storyboard.TargetProperty="(TextBlock.Opacity)" 
+                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+        </Storyboard>
+        
         <Storyboard x:Key="GuessWrong" >
             <ColorAnimation  Duration="0:0:0.5" From="Black" To="Red"
                     AutoReverse="True"
@@ -137,6 +144,8 @@
                      Style="{StaticResource MaterialDesignIconButton}" 
                      Command="{Binding Path=AskHintCommand}"
                     Margin="10 0 10 0"/>
+
+                <TextBlock Foreground="Red" Opacity="0" VerticalAlignment="Center" FontSize="25" Name="TeamateGuessedWrong">Your teamate has guessed incorrectly!</TextBlock>
             </StackPanel>
         </StackPanel>
         <Grid>

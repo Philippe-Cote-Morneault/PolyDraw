@@ -17,11 +17,13 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
             SocketClient.MatchSync += SocketClientOnMatchSync;
-            SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
+            SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
         }
+
+       
 
         private void SocketClientCoopWordGuessed(object source, EventArgs args)
         {
@@ -78,26 +80,13 @@ namespace ClientLourd.Views.Controls.Game
             }
         }
 
-        private void SocketClientOnGuessResponse(object sender, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            if (!e.Valid)
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if ((GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo) && GameViewModel.HealthPoint > 0) 
-                    {
-                        AnimateLostHeart();
-                    }
+        
 
-                });
-            }
-        }
 
-        private void AnimateLostHeart() 
+        private void AnimateLostHeart(int lives) 
         {
             UIElement el = (HeartsContainer.Children[GameViewModel.HealthPoint - 1] as UIElement);
-            GameViewModel.HealthPoint--;
+            GameViewModel.HealthPoint = lives;
             Storyboard sb = (Storyboard)FindResource("HealthLost");
             for (int j = 0; j < sb.Children.Count; j++)
             {
@@ -106,7 +95,21 @@ namespace ClientLourd.Views.Controls.Game
             sb.Begin();
         }
 
-        
+        private void SocketClientTeamateGuessedWrong(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if ((GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo) && GameViewModel.HealthPoint > 0)
+                {
+                    AnimateLostHeart(e.Lives);
+                }
+
+            });
+        }
+
+
         private void SocketClientOnNewPlayerIsDrawing(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;

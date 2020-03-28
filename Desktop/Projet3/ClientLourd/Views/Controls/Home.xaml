@@ -16,6 +16,8 @@
     <UserControl.Resources>
         <converters:GameModeToImageConverter x:Key="GameModeToImageConverter"/>
         <converters:WidthToLeftMarginConverter x:Key="WidthToLeftMarginConverter"/>
+        <converters:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
+
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -65,7 +67,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn DisplayMemberBinding="{Binding Mode}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
+                        <GridViewColumn DisplayMemberBinding="{Binding Mode, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand" Content="{DynamicResource Mode}" ToolTip="{DynamicResource FilterMode}">
@@ -103,7 +105,7 @@
                             </GridViewColumn.HeaderTemplate>
                         </GridViewColumn>
 
-                        <GridViewColumn DisplayMemberBinding="{Binding Difficulty}" Width="{Binding ElementName=difficulty, Path=ActualWidth}" >
+                        <GridViewColumn DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="{Binding ElementName=difficulty, Path=ActualWidth}" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Difficulty}" Cursor="Hand" ToolTip="{DynamicResource FilterDifficulty}">
@@ -116,14 +118,14 @@
                         </GridViewColumn>
 
 
-                        
 
-                        <GridViewColumn DisplayMemberBinding="{Binding Rounds}" Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Rounds" >
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Duration, StringFormat={}{0:mm:ss}}" Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Duration (min)" >
                             <GridViewColumn.HeaderTemplate>
                                 <DataTemplate>
-                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Rounds}" Cursor="Hand" ToolTip="{DynamicResource FilterRounds}">
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Duration}" Cursor="Hand" ToolTip="{DynamicResource FilterDuration}">
                                         <Label.InputBindings>
-                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Rounds"/>
+                                            <MouseBinding Gesture="LeftClick" Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}" CommandParameter="Duration"/>
                                         </Label.InputBindings>
                                     </Label>
                                 </DataTemplate>

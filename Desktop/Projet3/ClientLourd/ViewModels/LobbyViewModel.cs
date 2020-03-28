@@ -104,6 +104,11 @@ namespace ClientLourd.ViewModels
             set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; NotifyPropertyChanged(); }
         }
 
+        public MainViewModel MainViewModel
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel);
+        }
+
         public SessionInformations SessionInformations
         {
             get
@@ -120,7 +125,13 @@ namespace ClientLourd.ViewModels
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.StartGameResponse += OnStartGameResponse;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
+            MainViewModel.LanguageChangedEvent += OnLanguageChanged;
             IsGameStarted = false;
+        }
+
+        private void OnLanguageChanged(object source, EventArgs args)
+        {
+            NotifyPropertyChanged(nameof(CurrentLobby));
         }
 
         public override void AfterLogOut()

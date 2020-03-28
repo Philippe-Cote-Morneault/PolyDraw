@@ -246,6 +246,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.CoopWordGuessed:
                             OnCoopWordGuessed(this, new MatchEventArgs(data));
                             break;
+                        case SocketMessageTypes.CoopTeamateGuessedIncorrectly:
+                            OnCoopTeamateGuessedIncorrectly(this, new MatchEventArgs(data));
+                            break;
                         case SocketMessageTypes.UserChangedName:
                             OnUserChangedName(this, new ChatEventArgs(data));
                             break;

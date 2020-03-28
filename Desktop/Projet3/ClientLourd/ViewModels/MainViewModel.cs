@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace ClientLourd.ViewModels
 {
-    class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         string _containedView;
         
@@ -229,6 +229,7 @@ namespace ClientLourd.ViewModels
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _selectedLanguage = value.GetEnumFromDescription<Languages>();
+                    LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                     NotifyPropertyChanged();
                 }
             }
@@ -238,5 +239,9 @@ namespace ClientLourd.ViewModels
         {
             get { return EnumManager.GetAllDescriptions<Languages>(); }
         }
+
+        public delegate void LanguageChangedHandler(object source, EventArgs args);
+        public event LanguageChangedHandler LanguageChangedEvent;
+
     }
 }

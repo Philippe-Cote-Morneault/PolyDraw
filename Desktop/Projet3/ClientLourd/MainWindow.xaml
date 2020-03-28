@@ -12,6 +12,7 @@
         xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
         Name="PolyDraw"
         mc:Ignorable="d"
+        xmlns:enum="clr-namespace:ClientLourd.Utilities.Enums"
         WindowState="Maximized"
         Title="PolyDraw">
     <Window.DataContext>
@@ -24,8 +25,9 @@
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
         <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter"/>
         <converter:NotificationConverter x:Key="NotificationConverter"/>
-        
-        
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
+
+
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="OemTilde"
@@ -140,7 +142,8 @@
                                     FontSize="17"
                                     ItemsSource="{Binding Languages}"  
                                     SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}"
-                                    Margin="0 0 20 0">
+                                    Margin="0 0 20 0"
+                                    Visibility="{Binding ElementName=LobbyContainer, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
                                 </ComboBox>
 
 
@@ -199,11 +202,6 @@
 
                     <Grid Name="ControlSelector">
 
-                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Editor'}">
-                            <controls:Editor/>
-                            <Button Click="CreateGame">Add game</Button>
-                        </DockPanel>
-
                         <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
                             <controls:Profile x:Name="Profile"/>
                         </DockPanel>
@@ -212,7 +210,7 @@
                             <controls:Home x:Name="Home"/>
                         </DockPanel>
 
-                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">
+                        <DockPanel x:Name="LobbyContainer" Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">
                             <controls:Lobby x:Name="Lobby"/>
                         </DockPanel>
 

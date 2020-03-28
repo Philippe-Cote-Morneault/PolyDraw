@@ -23,6 +23,8 @@
     <system:String x:Key="Difficulty">Difficulty</system:String>
     <system:String x:Key="Host">Host</system:String>
     <system:String x:Key="Rounds">Rounds</system:String>
+    <system:String x:Key="Duration">Duration (minutes)</system:String>
+
     <system:String x:Key="CreateLobby">Create a lobby</system:String>
     <system:String x:Key="CreateGame">Create a game</system:String>
 
@@ -31,7 +33,7 @@
     <system:String x:Key="FilterLanguage">Filter by language</system:String>
     <system:String x:Key="FilterDifficulty">Filter by difficulty</system:String>
     <system:String x:Key="FilterHost">Filter by host</system:String>
-    <system:String x:Key="FilterRounds">Filter by rounds</system:String>
+    <system:String x:Key="FilterDuration">Filter by duration</system:String>
     <system:String x:Key="FilterPlayers">Filter by players</system:String>
 
     <!--Profile-->
@@ -58,6 +60,14 @@
     <system:String x:Key="AddVirtualPlayer">Add virtual player</system:String>
     <system:String x:Key="RemovePlayer">Remove player</system:String>
     <system:String x:Key="WaitingRoom">Waiting room</system:String>
+    <system:String x:Key="Players">Players</system:String>
+    <system:String x:Key="StartGame">Start game</system:String>
+    <system:String x:Key="QuitLobby">Leave lobby</system:String>
+    <system:String x:Key="EmptySlot">Empty slot</system:String>
+
+
+
+
 
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Create a new lobby</system:String>

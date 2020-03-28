@@ -59,11 +59,17 @@ namespace ClientLourd.ViewModels
             set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; }
         }
 
+        
+        public MainViewModel MainViewModel
+        {
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
+        }
+
         public async override void AfterLogin()
         {
-
+            
             FetchLobbies();
-
+            
             SocketClient.LobbyCreated += OnLobbyCreated;
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
@@ -74,9 +80,22 @@ namespace ClientLourd.ViewModels
             _hostFilteredAscending = false;
             _playerCountFilteredAscending = false;
             _languageFilteredAscending = false;
-            _roundsFilteredAscending = false;
+            _durationFilteredAscending = false;
+            MainViewModel.LanguageChangedEvent += OnLanguageChanged;
 
+        }
 
+        private void OnLanguageChanged(object source, EventArgs args)
+        {
+            
+            foreach (Lobby lobby in Lobbies)
+            {
+                // Line below doesnt work for some reason (binding is trash in WPF)
+                // NotifyPropertyChanged(nameof(lobby.Difficulty));
+                lobby.Difficulty = lobby.Difficulty;
+                    
+                lobby.Mode = lobby.Mode;
+            }
         }
 
         public override void AfterLogOut()
@@ -166,20 +185,20 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private bool _roundsFilteredAscending;
+        private bool _durationFilteredAscending;
 
-        private void FilterRounds() 
+        private void FilterDuration() 
         {
-            if (!_roundsFilteredAscending)
+            if (!_durationFilteredAscending)
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => lobby.Rounds).ToList());
-                _roundsFilteredAscending = true;
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => TimeSpan.FromTicks(lobby.Duration.Ticks).TotalMinutes).ToList());
+                _durationFilteredAscending = true;
             }
             else
             {
 
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => lobby.Rounds).ToList());
-                _roundsFilteredAscending = false;
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => TimeSpan.FromTicks(lobby.Duration.Ticks).TotalMinutes).ToList());
+                _durationFilteredAscending = false;
             }
         }
 
@@ -240,8 +259,8 @@ namespace ClientLourd.ViewModels
                 FilterDifficulty();
             if (attribute == "Language")
                 FilterLanguage();
-            if (attribute == "Rounds")
-                FilterRounds();
+            if (attribute == "Duration")
+                FilterDuration();
         }
 
         public void JoinLobby(Lobby lobby) 

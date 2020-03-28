@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using ClientLourd.Models.Bindable;
 using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Services.SoundService;
@@ -30,11 +31,39 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
             SocketClient.NewPlayerIsDrawing += SocketClientNewPlayerDrawing;
             SocketClient.RoundEnded += SocketClientOnRoundEnded;
+            SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
             _random = new Random((int)DateTime.Now.Ticks);
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             _timer.Tick += (s, arg) => Confetti();
         }
 
+        public SessionInformations SessionInformations
+        {
+            get
+            {
+                return Application.Current.Dispatcher.Invoke(() =>
+                {
+                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
+                        ?.SessionInformations;
+                });
+            }
+        }
+
+        private void SocketClientTeamateGuessedWrong(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+
+            if (e.UserID != SessionInformations.User.ID)
+            {
+                Application.Current.Dispatcher.Invoke(() => 
+                {
+                    Storyboard sb = (Storyboard)FindResource("TeamateGuessedWrong");
+
+                    sb.Begin();
+                });
+            }
+                
+        }
 
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
