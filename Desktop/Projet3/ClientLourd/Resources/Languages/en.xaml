@@ -64,7 +64,28 @@
     <system:String x:Key="StartGame">Start game</system:String>
     <system:String x:Key="QuitLobby">Leave lobby</system:String>
     <system:String x:Key="EmptySlot">Empty slot</system:String>
+    
+    <!-- Game creation -->
+    <system:String x:Key="CreateNewGame">Create a new game</system:String>
+    <system:String x:Key="TypeWord">Type the word to guess</system:String>
+    <system:String x:Key="WriteHints1">Write</system:String>
+    <system:String x:Key="WriteHints2">hint(s) related to the word</system:String>
+    <system:String x:Key="WordDifficulty">Select the word's level of difficulty</system:String>
+    <system:String x:Key="DrawingWay">Select the way you wish to create the game</system:String>
+    <system:String x:Key="ManualDraw">Create the game by drawing the word</system:String>
+    <system:String x:Key="ImageUploaded">Create the game by uploading an image of the word</system:String>
+    <system:String x:Key="Next">Next</system:String>
+    <system:String x:Key="Previous">Previous</system:String>
+    <system:String x:Key="Confirm">Confirm</system:String>
+    <system:String x:Key="Word">Word</system:String>
+    <system:String x:Key="Hint">Hint</system:String>
+    <system:String x:Key="DrawRepresentation">Draw a representation of the word</system:String>
+    <system:String x:Key="PlayPreview">Play the preview</system:String>
+    <system:String x:Key="UploadImage">Upload an image</system:String>
+    <system:String x:Key="Upload">Upload</system:String>
 
+
+    <system:String x:Key="DrawingMode">Select the way the drawing will be displayed</system:String>
 
 
 

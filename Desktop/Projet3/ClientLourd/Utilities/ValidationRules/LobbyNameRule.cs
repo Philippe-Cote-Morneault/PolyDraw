@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ClientLourd.Services.EnumService;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.ViewModels;
+using System.Windows;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,6 +15,13 @@ namespace ClientLourd.Utilities.ValidationRules
 {
     class LobbyNameRule: ValidationRule
     {
+        public string Language
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+            }
+        }
 
         public static bool IsAlphaNumerical(string lobbyName)
         {
@@ -23,7 +34,10 @@ namespace ClientLourd.Utilities.ValidationRules
 
             if (!IsAlphaNumerical(lobbyName))
             {
-                return new ValidationResult(false, "The lobby name must be alphanumeric.");
+                if (Language == Languages.EN.GetDescription())
+                    return new ValidationResult(false, "The lobby name must be alphanumeric.");
+                else
+                    return new ValidationResult(false, "Le nom de la salle d'attente ne doit contenir que des caractères alphanumériques.");
             }
 
             return ValidationResult.ValidResult;

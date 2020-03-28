@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ClientLourd.Services.EnumService;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.ViewModels;
+using System.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +14,15 @@ namespace ClientLourd.Utilities.ValidationRules
 {
     class LoginInputRules
     {
+
+        public string Language
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+            }
+        }
+
         public LoginInputRules()
         {
         }
