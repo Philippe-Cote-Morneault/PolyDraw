@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"sync"
 	"time"
@@ -172,7 +171,7 @@ func GetLang(socketID uuid.UUID) int {
 	if session, ok := sessionCache[socketID]; ok {
 		return session.lang
 	}
-	return language.EN
+	return 0
 }
 
 //GetUser returns the user associated with a session

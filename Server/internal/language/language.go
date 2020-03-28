@@ -2,8 +2,10 @@ package language
 
 import (
 	"bytes"
+	"github.com/google/uuid"
 	"github.com/spf13/viper"
 	"gitlab.com/jigsawcorp/log3900/internal/context"
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"log"
 	"net/http"
 )
@@ -49,5 +51,11 @@ func MustGet(key string, lang int) string {
 func MustGetRest(key string, r *http.Request) string {
 	lang := r.Context().Value(context.CtxLang).(int)
 
+	return MustGet(key, lang)
+}
+
+//MustGetSocket returns the translated string with a socketID for a key
+func MustGetSocket(key string, socketID uuid.UUID) string {
+	lang := auth.GetLang(socketID)
 	return MustGet(key, lang)
 }
