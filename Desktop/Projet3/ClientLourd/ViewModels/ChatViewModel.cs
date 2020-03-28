@@ -184,7 +184,6 @@ namespace ClientLourd.ViewModels
                     Channels.Remove(channel);
                     if (SelectedChannel == channel)
                     {
-                        SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
                         if (e.UserID != Guid.Empty.ToString())
                         {
                             DialogHost.Show(new MessageDialog("Oups",
@@ -208,8 +207,10 @@ namespace ClientLourd.ViewModels
                     Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
                     channel.Messages.Add(m);
                 }
-                if (channel.IsGame)
+                else if (channel.IsGame)
+                {
                     Channels.Remove(channel);
+                }
                 var user = channel.Users.FirstOrDefault(u => u.ID == e.UserID);
                 if(user != null)
                     channel.Users.Remove(user);
@@ -410,7 +411,8 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged(nameof(NewMessages));
 
             if (SelectedChannel == null || SessionInformations.User == null) return;
-            if(SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null)
+            //If the current player is not in the SelectedChannel or if the SelectedChannel have been removed
+            if(SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null || !Channels.Contains(SelectedChannel))
             {
                 SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
             }
