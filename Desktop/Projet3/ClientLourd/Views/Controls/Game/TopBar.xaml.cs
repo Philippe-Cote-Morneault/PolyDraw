@@ -17,7 +17,6 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
             SocketClient.MatchSync += SocketClientOnMatchSync;
-            SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
@@ -81,21 +80,7 @@ namespace ClientLourd.Views.Controls.Game
             }
         }
 
-        private void SocketClientOnGuessResponse(object sender, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            if (!e.Valid)
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if ((GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo) && GameViewModel.HealthPoint > 0) 
-                    {
-                       // AnimateLostHeart();
-                    }
-
-                });
-            }
-        }
+        
 
 
         private void AnimateLostHeart(int lives) 
