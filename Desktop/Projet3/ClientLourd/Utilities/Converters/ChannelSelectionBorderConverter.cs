@@ -6,7 +6,7 @@ using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class ChannelSelectionConverter: IMultiValueConverter
+    public class ChannelSelectionBorderConverter: IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

@@ -173,7 +173,8 @@
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\MatchTiming.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
-    <Compile Include="Utilities\Converters\ChannelSelectionConverter.cs" />
+    <Compile Include="Utilities\Converters\ChannelSelectionBorderConverter.cs" />
+    <Compile Include="Utilities\Converters\ChannelSelectionToIconConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToOpacity.cs" />
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
     <Compile Include="Utilities\Converters\EnumTranslationConverter.cs" />
