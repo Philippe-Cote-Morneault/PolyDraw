@@ -42,8 +42,15 @@ func logMiddleware(next http.Handler) http.Handler {
 
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		langStr := r.Header.Get("Language")
+		lang := language.EN
+		if strings.ToLower(langStr) == "fr" {
+			lang = language.FR
+		}
+		ctx := context.WithValue(r.Context(), api.CtxLang, lang)
+
 		if val, ok := authExceptions[r.URL.Path]; ok && val {
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, r.WithContext(ctx))
 		} else {
 			sessionToken := r.Header.Get("SessionToken")
 			if sessionToken != "" {
@@ -52,14 +59,7 @@ func authMiddleware(next http.Handler) http.Handler {
 				if !ok {
 					rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")
 				} else {
-
-					langStr := r.Header.Get("Language")
-					lang := language.EN
-					if strings.ToLower(langStr) == "fr" {
-						lang = language.FR
-					}
-					ctx := context.WithValue(r.Context(), api.CtxUserID, userID)
-					ctx = context.WithValue(ctx, api.CtxLang, lang)
+					ctx = context.WithValue(ctx, api.CtxUserID, userID)
 					next.ServeHTTP(w, r.WithContext(ctx))
 				}
 			} else {
