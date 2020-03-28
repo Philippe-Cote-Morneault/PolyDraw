@@ -389,11 +389,11 @@ namespace ClientLourd.ViewModels
         {
             if (channel.ID == GLOBAL_CHANNEL_ID )
             {
-                DialogHost.Show(new ClosableErrorDialog("You can't leave the Global channel"));
+                DialogHost.Show(new ClosableErrorDialog("You can't leave the General channel"));
             }
             else if(channel.IsGame)
             {
-                DialogHost.Show(new ClosableErrorDialog("You can't leave a game channel"));
+                DialogHost.Show(new ClosableErrorDialog("You can't leave the Game channel"));
             }
             else
             {
