@@ -25,6 +25,7 @@ type authRegisterRequest struct {
 
 type authRequest struct {
 	Username string
+	Password string
 }
 
 type authBearerRequest struct {
@@ -59,13 +60,12 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 	//Get the user if not create it.
 	var user model.User
 	if !model.FindUserByName(username, &user) {
-		//The user does not already exists create it
-		user = model.User{}
-		if user.NewFakeUser(username) != nil {
-			rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.usernameFail", r))
-			return
-		}
-		model.AddUser(&user)
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.userNotFound", r))
+		return
+	}
+	if !secureb.CheckPasswordHash(request.Password, user.HashedPassword) {
+		rbody.JSONError(w, http.StatusForbidden, language.MustGetRest("error.passwordWrong", r))
+		return
 	}
 	registerSession(&user, w, r)
 

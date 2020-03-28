@@ -47,6 +47,7 @@ en:
     userSingleGroup: "The user can only join one group."
     gameMinimum: "There are only %d game(s). There needs to be a minimum of 10 games before it can start."
     notEnough: "There are not enough users to start the game."
+    passwordWrong: "The password is incorrect."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -93,4 +94,5 @@ fr:
     userSingleGroup: "L'utilisateur ne peut joindre qu'un seul groupe."
     gameMinimum: "Il n'a seulement que %d jeu(x). Un minimum de 10 jeux doivent être présents pour débuter la partie."
     notEnough: "Il n'a pas assez d'utilisateurs pour démarrer la partie."
+    passwordWrong: "Le mot de passe est erroné."
 `)
