@@ -46,6 +46,21 @@ namespace ClientLourd.Views.Controls
         public Lobby()
         {
             InitializeComponent();
+            InitSocket();
+        }
+
+        public void AfterLogin()
+        {
+            InitSocket();
+            DataContext.AfterLogin();
+        }
+        public void AfterLogout()
+        {
+            DataContext.AfterLogOut();
+        }
+
+        private void InitSocket()
+        {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
@@ -64,7 +79,7 @@ namespace ClientLourd.Views.Controls
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Chat chat = (Chat)ChatContainer.Content;
+                Chat chat = (Chat)ChatContainer.Children[0];
                 ChatViewModel chatViewModel = (ChatViewModel) chat.DataContext; 
                 var channel = chatViewModel.Channels.FirstOrDefault(c => c.IsGame);
                 ((GameViewModel)GameView.DataContext).GameChannel = channel;
@@ -117,9 +132,12 @@ namespace ClientLourd.Views.Controls
 
         public void returnChat()
         {
-            ChatContainer.Content = null;
-            MainWindow.ChatToggleButton.IsEnabled = true;
-            MainWindow.RightDrawerContent.Children.Add(MainWindow.ChatBox);
+            //If the chat is still in the lobby view
+            if (ChatContainer.Children.Count > 0)
+            {
+                //Remove the chat
+                MainWindow.ReturnTheChat();
+            }
         }
 
         public void ExportChat()
@@ -127,13 +145,13 @@ namespace ClientLourd.Views.Controls
             MainWindow.ChatWindow?.Close();
             MainWindow.Drawer.IsRightDrawerOpen = false;
             MainWindow.ChatToggleButton.IsEnabled = false;
-            MainWindow.RightDrawerContent.Children.Clear();
-            ChatContainer.Content = MainWindow.ChatBox;
+            ((Grid)MainWindow.ChatBox.Parent)?.Children.Clear();
+            ChatContainer.Children.Add(MainWindow.ChatBox);
             Task.Delay(50).ContinueWith(_ =>
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Chat chat = ChatContainer.Content as Chat;
+                    Chat chat = ChatContainer.Children[0] as Chat;
                     chat.MessageTextBox.Focus();
                 }));
             });

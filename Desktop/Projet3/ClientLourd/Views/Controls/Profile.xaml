@@ -11,8 +11,7 @@
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
-        <viewModels:ProfileViewModel/>
-
+        <viewModels:ProfileViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
     <UserControl.Resources>
         <converter:SecondsToTimeSpanConverter x:Key="SecondsToTimeSpanConverter"/>

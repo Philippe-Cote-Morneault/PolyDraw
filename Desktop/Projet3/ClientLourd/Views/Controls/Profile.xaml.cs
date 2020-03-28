@@ -25,6 +25,16 @@ namespace ClientLourd.Views.Controls
             InitializeComponent();
         }
 
+        public void AfterLogin()
+        {
+            ViewModel.AfterLogin();
+        }
+
+        public void AfterLogout()
+        {
+            ViewModel.AfterLogOut();
+        }
+
 
     }
 }

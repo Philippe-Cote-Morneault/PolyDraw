@@ -153,7 +153,9 @@
             <game:GamePanel x:Name="GameView"/>
         </Grid>
 
-        <materialDesign:Card Name="ChatContainer"/>
+        <materialDesign:Card >
+            <Grid Name="ChatContainer"/>
+        </materialDesign:Card>
 
     </DockPanel>
 

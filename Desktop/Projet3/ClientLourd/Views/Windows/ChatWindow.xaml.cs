@@ -15,16 +15,15 @@ namespace ClientLourd.Views.Windows
         {
             _chatBox = ChatBox;
             InitializeComponent();
-            MainStackPanel.Children.Add(ChatBox);
+            MainPanel.Children.Add(ChatBox);
             ((ChatViewModel)ChatBox.DataContext).OnChatToggle(true);
             Closing += OnWindowClosing;
         }
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            MainStackPanel.Children.Clear();
-            ((MainWindow) Owner).RightDrawerContent.Children.Add(_chatBox);
-            ((MainWindow) Owner).ChatToggleButton.IsEnabled = true;
+            MainPanel.Children.Clear();
+            ((MainWindow) Owner).ReturnTheChat();
         }
     }
 }

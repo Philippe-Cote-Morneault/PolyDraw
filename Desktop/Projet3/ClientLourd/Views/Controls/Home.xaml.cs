@@ -29,6 +29,16 @@ namespace ClientLourd.Views.Controls
             InitializeComponent();
         }
 
+        public void AfterLogin()
+        {
+            ViewModel.AfterLogin();
+        }
+        
+        public void AfterLogout()
+        {
+            ViewModel.AfterLogOut();
+        }
+
         public HomeViewModel HomeViewModel
         {
             get => (DataContext as HomeViewModel);

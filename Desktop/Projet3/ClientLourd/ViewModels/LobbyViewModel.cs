@@ -136,7 +136,6 @@ namespace ClientLourd.ViewModels
 
         public override void AfterLogOut()
         {
-            throw new NotImplementedException();
         }
 
         private RelayCommand<object> _leaveLobbyCommand;

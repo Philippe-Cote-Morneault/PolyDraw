@@ -23,6 +23,7 @@ using ClientLourd.Views.Windows;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.SocketService;
+using ClientLourd.Views.Controls;
 
 namespace ClientLourd
 {
@@ -67,9 +68,9 @@ namespace ClientLourd
             mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
-            (Profile.DataContext as ProfileViewModel).AfterLogin();
-            (Home.DataContext as HomeViewModel).AfterLogin();
-            (Lobby.DataContext as LobbyViewModel).AfterLogin();
+            Profile.AfterLogin();
+            Home.AfterLogin();
+            Lobby.AfterLogin();
 
             //TODO: Remove this comment
             //DialogHost.Show(new Tutorial(), "Default");
@@ -82,6 +83,9 @@ namespace ClientLourd
                 AfterLogout();
                 ChatBox.AfterLogout();
                 LoginScreen.AfterLogout();
+                Lobby.AfterLogout();
+                Home.AfterLogout();
+                Profile.AfterLogout();
             });
         }
 
@@ -127,25 +131,46 @@ namespace ClientLourd
             get
             {
                 return _exportChatCommand ??
-                       (_exportChatCommand = new RelayCommand<object>(param => ExportChat(this, null),
+                       (_exportChatCommand = new RelayCommand<object>(param => ExportChatAsNewWindow(this, null),
                            o => ChatToggleButton.IsEnabled));
             }
         }
 
-        public object MainDialogHost { get; internal set; }
-
-        private void ExportChat(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Remove the chat from his current parent
+        /// </summary>
+        /// <returns></returns>
+        public Chat GetChat()
         {
+            //Close the chat
             Drawer.IsRightDrawerOpen = false;
+            //Hide the chat button
             ChatToggleButton.IsEnabled = false;
-            RightDrawerContent.Children.Clear();
+            //Remove the chat from his parent
+            ((Grid)ChatBox.Parent)?.Children.Clear();
+            return ChatBox;
+        }
+        
+        /// <summary>
+        /// Return the chat to the mainwindow if the parent is null or a grid
+        /// </summary>
+        public void ReturnTheChat()
+        {
+            ((Grid)ChatBox.Parent)?.Children.Clear();
+            MainWindowChatContainer.Children.Add(ChatBox);
+            ChatToggleButton.IsEnabled = true;
+        }
+
+        private void ExportChatAsNewWindow(object sender, RoutedEventArgs e)
+        {
+            Chat chat = GetChat();
             Task.Factory.StartNew(() =>
             {
                 //Wait until the drawer is close
                 Thread.Sleep(100);
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    ChatWindow = new ChatWindow(ChatBox)
+                    ChatWindow = new ChatWindow(chat)
                     {
                         Title = "Chat",
                         DataContext = DataContext,

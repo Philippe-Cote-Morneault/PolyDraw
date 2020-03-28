@@ -110,7 +110,7 @@
                                     Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
                                     <ToggleButton.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Export as a new window" Click="ExportChat" />
+                                            <MenuItem Header="Export as a new window" Click="ExportChatAsNewWindow" />
                                         </ContextMenu>
                                     </ToggleButton.ContextMenu>
                                     <materialDesign:PackIcon
@@ -220,7 +220,9 @@
                         <DockPanel
                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=3}"
                             x:Name="RightDrawerContent">
-                            <controls:Chat x:Name="ChatBox" IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Grid x:Name="MainWindowChatContainer">
+                                <controls:Chat x:Name="ChatBox" IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
                         </DockPanel>
                     </materialDesign:DrawerHost.RightDrawerContent>
 
