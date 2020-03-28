@@ -43,6 +43,10 @@ en:
     userJoinChannel: "User is already joined to the channel."
     userJoinFirst: "The user needs to join the channel first."
     channelInvalidName: "The channel name is invalid."
+    groupIsFull: "The group is full."
+    userSingleGroup: "The user can only join one group."
+    gameMinimum: "There are only %d game(s). There needs to be a minimum of 10 games before it can start."
+    notEnough: "There are not enough users to start the game."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -85,4 +89,8 @@ fr:
     userJoinChannel: "L'utilisateur est déjà présent dans le canal."
     userJoinFirst: "L'utilisateur doit rejoindre le canal avant."
     channelInvalidName: "Le nom du canal est invalide."
+    groupIsFull: "Le groupe est plein."
+    userSingleGroup: "L'utilisateur ne peut joindre qu'un seul groupe."
+    gameMinimum: "Il n'a seulement que %d jeu(x). Un minimum de 10 jeux doivent être présents pour débuter la partie."
+    notEnough: "Il n'a pas assez d'utilisateurs pour démarrer la partie."
 `)

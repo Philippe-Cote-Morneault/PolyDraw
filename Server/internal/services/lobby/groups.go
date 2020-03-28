@@ -217,7 +217,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 				Response: false,
-				Error:    "The group is full",
+				Error:    language.MustGetSocket("error.groupIsFull", socketID),
 			})
 			socket.SendRawMessageToSocketID(message, socketID)
 			return
@@ -228,7 +228,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 			Response: false,
-			Error:    "The group could not be found.",
+			Error:    language.MustGetSocket("error.groupNotFound", socketID),
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
 	} else {
@@ -237,7 +237,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseJoinGroup), responseGen{
 			Response: false,
-			Error:    "The user can only join one group",
+			Error:    language.MustGetSocket("error.userSingleGroup", socketID),
 		})
 		socket.SendRawMessageToSocketID(message, socketID)
 	}
@@ -378,7 +378,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 						rawMessage := socket.RawMessage{}
 						rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
 							Response: false,
-							Error:    fmt.Sprintf("There are only %d game(s). There needs to be a minimum of 10 games before it can start", count),
+							Error:    fmt.Sprintf(language.MustGetSocket("error.gameMinimum", socketID), count),
 						})
 						socket.SendRawMessageToSocketID(rawMessage, socketID)
 						return
@@ -425,7 +425,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				rawMessage := socket.RawMessage{}
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
 					Response: false,
-					Error:    "There are not enough users to start the game.",
+					Error:    language.MustGetSocket("error.notEnough", socketID),
 				})
 				socket.SendRawMessageToSocketID(rawMessage, socketID)
 			}
