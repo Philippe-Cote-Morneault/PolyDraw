@@ -18,11 +18,7 @@ class TeamPlayerAdapter: RecyclerView.Adapter<TeamPlayerViewHolder>() {
         refreshLists()
     }
 
-    fun playerAdded(playerID: UUID) {
-        refreshLists()
-    }
-
-    fun playerRemoved(playerID: UUID) {
+    fun notifyPlayersChanged() {
         refreshLists()
     }
 
