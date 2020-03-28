@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using ClientLourd.Annotations;
 using ClientLourd.Services.CredentialsService;
 using ClientLourd.Utilities.Constants;
 using ClientLourd.ViewModels;
@@ -10,9 +13,23 @@ namespace ClientLourd.Views.Controls
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class Login : UserControl
+    public partial class Login : UserControl, INotifyPropertyChanged
     {
-        public bool IsBearerActive { get; set; }
+
+        private bool _isBearerActive;
+
+        public bool IsBearerActive
+        {
+            get => _isBearerActive;
+            set
+            {
+                if (_isBearerActive != value)
+                {
+                    _isBearerActive = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public Login()
         {
             InitializeComponent();
@@ -59,6 +76,14 @@ namespace ClientLourd.Views.Controls
         private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             IsBearerActive = false;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
