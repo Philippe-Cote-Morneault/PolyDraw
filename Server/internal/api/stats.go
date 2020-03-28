@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"net/http"
 	"strconv"
 
@@ -85,11 +86,11 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 						limit = newLimit
 					}
 				} else {
-					rbody.JSONError(w, http.StatusBadRequest, "Invalid parameters, start must be the lowest parameter.")
+					rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidStart", r))
 					return
 				}
 			} else {
-				rbody.JSONError(w, http.StatusBadRequest, "Invalid parameters, the url parameters must be a number.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidUrl", r))
 				return
 			}
 		}
