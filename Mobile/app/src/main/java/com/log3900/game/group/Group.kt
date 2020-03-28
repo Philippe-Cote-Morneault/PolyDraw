@@ -93,7 +93,7 @@ class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var group
 
     fun getDuration(): Long {
         if (gameType == MatchMode.FFA) {
-            return (1000 * 60 * players.size + rounds!!).toLong()
+            return (1000 * 60 * players.size * rounds!!).toLong()
         } else {
             return Difficulty.timeToPlay(difficulty)
         }

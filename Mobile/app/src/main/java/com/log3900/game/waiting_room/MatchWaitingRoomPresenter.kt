@@ -70,19 +70,21 @@ class MatchWaitingRoomPresenter : Presenter {
 
     private fun onGroupUpdated(groupID: UUID){
         if (groupID == groupManager?.currentGroup?.ID) {
-            matchWaitingRoomView?.notifyGroupUpdated()
+            matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
 
     private fun onPlayerJoined(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
             matchWaitingRoomView?.notifyPlayerJoined(playerID)
+            matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
 
     private fun onPlayerLeft(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
             matchWaitingRoomView?.notifyPlayerLeft(playerID)
+            matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
 

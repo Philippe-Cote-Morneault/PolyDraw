@@ -118,8 +118,10 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
 
     }
 
-    override fun notifyGroupUpdated() {
+    override fun notifyGroupUpdated(group: Group) {
         playersAdapter.notifyDataSetChanged()
+        durationTextView.text = MainApplication.instance.getContext().resources.getString(R.string.match_lobby_duration_title) + ": " +
+                DateFormatter.formatDateToTime(Date(group.getDuration()))
     }
 
     override fun notifyPlayerJoined(playerID: UUID) {

@@ -10,7 +10,7 @@ interface MatchWaitingRoomView {
     fun setGroup(group: Group)
     fun displayStartMatchButton(display: Boolean)
     fun enableStartMatchButton(enable: Boolean)
-    fun notifyGroupUpdated()
+    fun notifyGroupUpdated(group: Group)
     fun notifyPlayerJoined(playerID: UUID)
     fun notifyPlayerLeft(playerID: UUID)
 }
