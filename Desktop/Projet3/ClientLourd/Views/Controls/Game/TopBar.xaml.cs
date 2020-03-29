@@ -43,7 +43,7 @@ namespace ClientLourd.Views.Controls.Game
         {
             MatchEventArgs e = (MatchEventArgs)args;
             
-            if (GameViewModel.Mode == GameModes.Coop)
+            if (GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo)
             {
                 GameViewModel.TeamPoints = e.Points;
                 GameViewModel.TeamNewPoints = e.NewPoints;
