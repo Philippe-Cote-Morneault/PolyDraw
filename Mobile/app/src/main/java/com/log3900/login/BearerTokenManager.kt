@@ -42,6 +42,12 @@ object BearerTokenManager {
 
     fun resetUsername() = reset(usernamePrefKey)
 
+
+    fun resetAll() {
+        resetBearer()
+        resetUsername()
+    }
+
     private fun store(key: String, value: String) {
         with(sharedPrefs.edit()) {
             putString(key, value)
@@ -63,10 +69,7 @@ object BearerTokenManager {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: MessageEvent) {
         when (event.type) {
-            EventType.LOGOUT -> {
-                resetBearer()
-                resetUsername()
-            }
+            EventType.LOGOUT -> resetAll()
             else -> return
         }
     }

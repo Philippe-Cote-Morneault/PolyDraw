@@ -35,6 +35,9 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         }
         Log.d("BEAR_MAN", "Found bearer: $bearer")
         Log.d("BEAR_MAN", "Found username: $username")
+        val bearerLoginDialog = ProgressDialog()
+        loginView?.showProgressDialog(bearerLoginDialog)
+
 
         val json = JsonObject().apply {
             addProperty("Bearer", bearer)
@@ -53,15 +56,22 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
-                        handleSuccessAuth(bearerToken, sessionToken, userID, true, username)
+                        handleSuccessAuth(bearerToken, sessionToken, userID) {
+                            loginView?.showWelcomeBackMessage(username)
+                            loginView?.hideProgressDialog(bearerLoginDialog)
+                        }
                     }
 //                    401 -> handleErrorAuth("Your session has expired. Please log in again.")
                     else -> { // Fail silently...
+                        BearerTokenManager.resetAll()
+                        loginView?.hideProgressDialog(bearerLoginDialog)
 //                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
                     }
                 }
             }
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                BearerTokenManager.resetAll()
+                loginView?.hideProgressDialog(bearerLoginDialog)
                 loginView?.showErrorDialog(
                     "Error",
                     "Error during authentication (Bearer token)",
@@ -110,15 +120,12 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         bearer: String,
         session: String,
         userID: String,
-        isBearerAuth: Boolean = false,
-        username: String = ""
+        onMainStart: () -> Unit = {}
     ) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()
-                if (isBearerAuth) {
-                    loginView?.showWelcomeBackMessage(username)
-                }
+                onMainStart()
                 true
             } else {
                 handleErrorAuth("Connection refused.")
