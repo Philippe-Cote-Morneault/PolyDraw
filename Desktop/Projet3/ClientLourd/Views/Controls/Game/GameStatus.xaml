@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
         <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
-        <Storyboard x:Key="PointsGainedAnimations" >
+        <Storyboard x:Key="PointsAnimations" >
             <DoubleAnimation 
                 Storyboard.TargetProperty="(TextBlock.Opacity)" 
                 From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
@@ -78,6 +78,19 @@
                                             </TransformGroup>
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
+
+                                    <TextBlock Margin="15 0 0 0" x:Name="PointsLostTextBlock" Opacity="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained}"
+                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA|Solo, UpdateSourceTrigger=PropertyChanged}">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform/>
+                                                <TranslateTransform Y="-15"></TranslateTransform>
+                                                <TranslateTransform X="-45"></TranslateTransform>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+
+
                                 </StackPanel>
                                 <Separator/>
                             </StackPanel>
