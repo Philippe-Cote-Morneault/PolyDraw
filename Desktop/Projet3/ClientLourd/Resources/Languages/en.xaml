@@ -132,6 +132,20 @@
     <system:String x:Key="Cancel">Cancel</system:String>
     <system:String x:Key="PasswordRetype">Retype the password</system:String>
 
+    <!-- Chat -->
+    <system:String x:Key="TypeMessage">Type your message...</system:String>
+    <system:String x:Key="SendMessage">Send the message</system:String>
+    <system:String x:Key="ExportChat">Export the chat as a new window</system:String>
+
+    <!-- ChannelSection -->
+    <system:String x:Key="Channels">Channels</system:String>
+    <system:String x:Key="CreateChannel">Create a new channel</system:String>
+    <system:String x:Key="SearchChannel">Search a channel</system:String>
+    <system:String x:Key="Joined">Joined</system:String>
+    <system:String x:Key="Leave">Leave</system:String>
+    <system:String x:Key="Available">Available</system:String>
+    <system:String x:Key="Join">Join</system:String>
+    <system:String x:Key="Delete">Delete</system:String>
 
 
 </ResourceDictionary>

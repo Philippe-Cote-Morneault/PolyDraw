@@ -30,7 +30,7 @@
                 <!--send button-->
                 <Button Margin="5"
                         IsDefault="{Binding ElementName=MessageTextBox, Path=IsFocused}"
-                        ToolTip="Send the message"
+                        ToolTip="{DynamicResource SendMessage}"
                         Style="{DynamicResource MaterialDesignToolForegroundButton}"
 
                         Command="{Binding SendMessageCommand}">
@@ -47,7 +47,7 @@
                 <!--export button-->
                 <Button
                     Name="ExportButton"
-                    ToolTip="Export the chat as a new window"
+                    ToolTip="{DynamicResource ExportChat}"
                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ExportChatCommand}"
                     Style="{DynamicResource MaterialDesignToolForegroundButton}">
                     <materialDesign:PackIcon Kind="ApplicationExport"
@@ -60,7 +60,7 @@
                     <TextBox
                         Background="White"
                         Margin="10 10 10 5"
-                        materialDesign:HintAssist.Hint="Type your message..."
+                        materialDesign:HintAssist.Hint="{DynamicResource TypeMessage}"
                         TextWrapping="Wrap"
                         Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
                         MaxLines="2"

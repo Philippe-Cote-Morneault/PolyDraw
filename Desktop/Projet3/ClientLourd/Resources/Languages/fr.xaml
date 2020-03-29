@@ -130,4 +130,19 @@
     <system:String x:Key="Cancel">Annuler</system:String>
     <system:String x:Key="PasswordRetype">Retaper le mot de passe</system:String>
 
+    <!-- Chat -->
+    <system:String x:Key="TypeMessage">Entrez votre message...</system:String>
+    <system:String x:Key="SendMessage">Envoyer le message</system:String>
+    <system:String x:Key="ExportChat">Exporter le chat comme une nouvelle fenêtre</system:String>
+
+    <!-- ChannelSection -->
+    <system:String x:Key="Channels">Canaux</system:String>
+    <system:String x:Key="CreateChannel">Créer un nouveau canal</system:String>
+    <system:String x:Key="SearchChannel">Rechercher un canal</system:String>
+    <system:String x:Key="Joined">Canaux joints</system:String>
+    <system:String x:Key="Leave">Quitter</system:String>
+    <system:String x:Key="Available">Canaux disponibles</system:String>
+    <system:String x:Key="Join">Rejoindre</system:String>
+    <system:String x:Key="Delete">Supprimer</system:String>
+
 </ResourceDictionary>
