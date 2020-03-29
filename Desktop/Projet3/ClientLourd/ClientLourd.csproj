@@ -38,6 +38,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>windows.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
@@ -448,6 +451,8 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="windows.ico" />
+    <Resource Include="Resources\windows.ico" />
     <Resource Include="Resources\robot.png" />
     <None Include="Resources\TimerWarning.wav" />
     <None Include="Resources\WordGuessRight.wav" />
