@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
@@ -33,6 +34,12 @@ class ActiveFFAMatchFragment : ActiveMatchFragment(), ActiveFFAMatchView {
 
         activeFFAMatchPresenter = ActiveFFAMatchPresenter(this)
         activeMatchPresenter = activeFFAMatchPresenter
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackButtonPressed()
+            }
+        })
 
         return rootView
     }

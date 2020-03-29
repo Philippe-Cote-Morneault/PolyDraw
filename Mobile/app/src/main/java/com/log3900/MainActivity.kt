@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -169,6 +170,16 @@ open class MainActivity : AppCompatActivity() {
         MainApplication.instance.registerMainActivity(this)
 
         EventBus.getDefault().register(this)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (navigationController.currentDestination?.label == "Lobby") {
+                    showLogoutDialog()
+                } else {
+                    navigationController.navigateUp()
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -203,7 +214,7 @@ open class MainActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
+    fun showLogoutDialog() {
         SimpleConfirmationDialog(
             this,
             getString(R.string.logout),

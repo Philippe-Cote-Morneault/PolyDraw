@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.daimajia.easing.linear.Linear
@@ -35,6 +36,12 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
 
         activeCoopMatchPresenter = ActiveCoopMatchPresenter(this)
         activeMatchPresenter = activeCoopMatchPresenter
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackButtonPressed()
+            }
+        })
 
         return rootView
     }

@@ -39,6 +39,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     private fun loginWithBearer() {
         val bearer = UserPrefsManager.getBearer()
         val username = UserPrefsManager.getUsername()
+        Log.d("BEARER", "username: $username, bearer: $bearer")
         if (bearer == null || username == null) {
             return
         }
@@ -70,6 +71,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     }
 //                    401 -> handleErrorAuth("Your session has expired. Please log in again.")
                     else -> { // Fail silently...
+                        Log.d("BEARER", "BEARER ERROR: ${response.errorBody()?.string()}")
                         UserPrefsManager.resetAll()
                         loginView?.hideProgressDialog(bearerLoginDialog)
 //                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")

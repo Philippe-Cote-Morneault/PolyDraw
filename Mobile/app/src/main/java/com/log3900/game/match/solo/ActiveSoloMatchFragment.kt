@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
@@ -31,6 +32,12 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
 
         activeSoloMatchPresenter = ActiveSoloMatchPresenter(this)
         activeMatchPresenter = activeSoloMatchPresenter
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackButtonPressed()
+            }
+        })
 
         return rootView
     }
