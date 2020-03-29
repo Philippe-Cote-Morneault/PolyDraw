@@ -361,8 +361,10 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 		} else {
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
-				Hint:  "",
-				Error: language.MustGet("error.hintScore", f.info.Language),
+				Hint:   "",
+				Error:  language.MustGet("error.hintScore", f.info.Language),
+				UserID: player.userID.String(),
+				BotID:  f.curDrawer.userID.String(),
 			})
 			f.receiving.Unlock()
 			socket.SendQueueMessageSocketID(message, socketID)
