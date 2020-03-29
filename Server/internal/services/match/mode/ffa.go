@@ -1,7 +1,6 @@
 package mode
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"log"
 	"math"
 	"math/rand"
@@ -9,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
@@ -338,6 +339,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 					Username: player.Username,
 					ID:       player.userID,
 				},
+				DrawerID: f.curDrawer.userID,
 			})
 
 			if hintSent {

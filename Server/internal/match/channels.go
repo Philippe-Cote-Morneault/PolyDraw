@@ -42,6 +42,7 @@ type HintRequested struct {
 	MatchID  uuid.UUID
 	SocketID uuid.UUID
 	Player   Player
+	DrawerID uuid.UUID
 	GameType int
 }
 
