@@ -27,14 +27,11 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     }
 
     private fun loginWithBearer() {
-        val bearer = BearerTokenManager.getBearer()
-        val username = BearerTokenManager.getUsername()
+        val bearer = UserPrefsManager.getBearer()
+        val username = UserPrefsManager.getUsername()
         if (bearer == null || username == null) {
-            Log.d("BEAR_MAN", "Bearer is $bearer, username is $username")
             return
         }
-        Log.d("BEAR_MAN", "Found bearer: $bearer")
-        Log.d("BEAR_MAN", "Found username: $username")
         val bearerLoginDialog = ProgressDialog()
         loginView?.showProgressDialog(bearerLoginDialog)
 
@@ -48,7 +45,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             "EN", // LanguageManager.getCurrentLanguage().languageCode,
             json
         )
-        Log.d("BEAR_MAN", "Sending json: $json")
+
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 when(response.code()) {
@@ -63,14 +60,14 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     }
 //                    401 -> handleErrorAuth("Your session has expired. Please log in again.")
                     else -> { // Fail silently...
-                        BearerTokenManager.resetAll()
+                        UserPrefsManager.resetAll()
                         loginView?.hideProgressDialog(bearerLoginDialog)
 //                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
                     }
                 }
             }
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                BearerTokenManager.resetAll()
+                UserPrefsManager.resetAll()
                 loginView?.hideProgressDialog(bearerLoginDialog)
                 loginView?.showErrorDialog(
                     "Error",
@@ -100,7 +97,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         handleSuccessAuth(bearerToken, sessionToken, userID)
                     }
                         else -> {
-                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
+                        handleErrorAuth(response.errorBody()?.string() ?: "Internal errora")
                     }
                 }
             }
@@ -177,7 +174,6 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     }
 
     private fun storeUser(account: Account, sessionToken: String, bearerToken: String): Completable {
-        Log.d("BEAR_MAN", "Got bearer: $bearerToken")
         return Completable.create {completable ->
             AccountRepository.getInstance().getAccountByID(account.ID).subscribe(
                 {
@@ -195,8 +191,8 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
                                 if (rememberUser) {
-                                    BearerTokenManager.storeBearer(bearerToken)
-                                    BearerTokenManager.storeUsername(account.username)
+                                    UserPrefsManager.storeBearer(bearerToken)
+                                    UserPrefsManager.storeUsername(account.username)
                                 }
                                 completable.onComplete()
                             }
@@ -212,8 +208,8 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
                                 if (rememberUser) {
-                                    BearerTokenManager.storeBearer(bearerToken)
-                                    BearerTokenManager.storeUsername(account.username)
+                                    UserPrefsManager.storeBearer(bearerToken)
+                                    UserPrefsManager.storeUsername(account.username)
                                 }
                                 completable.onComplete()
                             }
