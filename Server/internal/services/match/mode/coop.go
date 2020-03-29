@@ -2,12 +2,13 @@ package mode
 
 import (
 	"context"
-	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
+
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
@@ -385,8 +386,10 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 		c.receiving.Lock()
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
-			Hint:  "",
-			Error: language.MustGet("error.hintTime", c.info.Language),
+			Hint:   "",
+			Error:  language.MustGet("error.hintTime", c.info.Language),
+			UserID: player.userID.String(),
+			BotID:  c.curDrawer.userID.String(),
 		})
 		c.broadcast(&message)
 		c.receiving.Unlock()
