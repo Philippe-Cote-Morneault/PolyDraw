@@ -276,20 +276,29 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     override fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean) {
         if (isPositive) {
             remainingTimeChangeTextView.setTextColor(Color.GREEN)
-            remainingTimeChangeTextView.text = timeChangedValue
         } else {
             remainingTimeChangeTextView.setTextColor(Color.RED)
-            remainingTimeChangeTextView.text = timeChangedValue
         }
 
-        YoYo.with(Techniques.FadeIn)
-            .duration(1000)
-            .playOn(remainingTimeChangeTextView)
+        remainingTimeChangeTextView.text = timeChangedValue
+        remainingTimeChangeTextView.bringToFront()
 
-        YoYo.with(Techniques.FadeOut)
-            .duration(1000)
-            .delay(1000)
-            .playOn(remainingTimeChangeTextView)
+        val scaleUpAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            remainingTimeChangeTextView,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 2f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 2f)
+        )
+        scaleUpAnimator.duration = 2000
+
+        val alphaChangeAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            remainingTimeChangeTextView,
+            PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
+        )
+        alphaChangeAnimator.repeatCount = 1
+        alphaChangeAnimator.repeatMode = ObjectAnimator.REVERSE
+        alphaChangeAnimator.duration = 1000
+        alphaChangeAnimator.start()
+        scaleUpAnimator.start()
     }
 
     override fun setCanvasMessage(message: String) {
