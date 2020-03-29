@@ -398,7 +398,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 			}
 
 			hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID) // pas de lock
-			hintRes.UserID = playerID.String()
+			hintRes.UserID = hintRequest.Player.ID.String()
 
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
