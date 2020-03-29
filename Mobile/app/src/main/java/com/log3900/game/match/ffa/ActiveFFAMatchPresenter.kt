@@ -11,10 +11,14 @@ import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     private var FFAMatchManager: FFAMatchManager
     private var activeFFAMatchView: ActiveFFAMatchView? = null
+    private var updatedScores: HashMap<UUID, Boolean> = hashMapOf()
+    private var playerScores: HashMap<UUID, Int> = hashMapOf()
 
     constructor(activeFFAMatchView: ActiveFFAMatchView) : super(activeFFAMatchView, FFAMatchManager()) {
         FFAMatchManager = matchManager as FFAMatchManager
@@ -46,6 +50,31 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         activeFFAMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
     }
 
+    override fun onRoundEnded(roundEnded: RoundEnded) {
+        super.onRoundEnded(roundEnded)
+
+        roundEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points, it.newPoints)
+            updatedScores[it.userID] = false
+        }
+    }
+
+    override fun onMatchPlayersUpdated() {
+        super.onMatchPlayersUpdated()
+        matchManager.getPlayerScores().forEach { t, u ->
+            if (!playerScores.containsKey(t)) {
+                playerScores[t] = u
+            }
+
+            if (playerScores[t] != u) {
+                val variation = u - playerScores[t]!!
+                updatedScores[t] = false
+                playerScores[t] = u
+                updatePlayerScore(t, u, variation)
+            }
+        }
+    }
+
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
         activeFFAMatchView?.clearCanvas()
         activeFFAMatchView?.clearAllPlayerStatusRes()
@@ -61,7 +90,24 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal, playerGuessedWord.points)
     }
 
+    private fun onMatchStarting() {
+        matchManager.getPlayerScores().forEach { t, u ->
+            playerScores[t] = u
+            updatedScores[t] = false
+        }
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int, variation: Int) {
+        if (!updatedScores.containsKey(playerID)) {
+            updatedScores[playerID] = false
+        }
+
+        if (updatedScores[playerID]!! || variation == 0) {
+            return
+        }
+
+        updatedScores[playerID] = true
+
         var formattedScoreChange = "+"
         if (variation < 0) {
             formattedScoreChange = "-"
@@ -79,6 +125,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         when (event.type) {
             EventType.TURN_TO_DRAW -> onTurnToDraw(event.data as TurnToDraw)
             EventType.PLAYER_GUESSED_WORD -> onPlayerGuessedWord(event.data as PlayerGuessedWord)
+            EventType.MATCH_STARTING -> onMatchStarting()
         }
     }
 

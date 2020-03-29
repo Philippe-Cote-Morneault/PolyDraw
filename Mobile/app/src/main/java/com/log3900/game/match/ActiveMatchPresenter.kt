@@ -61,7 +61,7 @@ abstract class ActiveMatchPresenter : Presenter {
         changeRemainingTime(synchronisation.time)
     }
 
-    private fun onMatchPlayersUpdated() {
+    protected open fun onMatchPlayersUpdated() {
         activeMatchView?.notifyPlayersChanged()
     }
 
@@ -94,7 +94,7 @@ abstract class ActiveMatchPresenter : Presenter {
         }
     }
 
-    private fun onRoundEnded(roundEnded: RoundEnded) {
+    protected open fun onRoundEnded(roundEnded: RoundEnded) {
         val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
         roundEnded.players.forEach {
             playerScores.add(Pair(it.username, it.newPoints))
@@ -102,7 +102,7 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
     }
 
-    private fun onMatchEnded(matchEnded: MatchEnded) {
+    protected open fun onMatchEnded(matchEnded: MatchEnded) {
         if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
             activeMatchView?.showConfetti()
         }

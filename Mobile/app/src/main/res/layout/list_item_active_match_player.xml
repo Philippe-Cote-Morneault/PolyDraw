@@ -53,6 +53,8 @@
         android:textSize="12sp"
         android:translationY="-5dp"
         android:layout_marginStart="10dp"
+        android:text="+0000"
+        android:alpha="0"
         app:layout_constraintTop_toTopOf="@id/list_item_active_match_player_text_view_score"
         app:layout_constraintBottom_toBottomOf="@id/list_item_active_match_player_text_view_score"
         app:layout_constraintStart_toEndOf="@id/list_item_active_match_player_image_view_status"/>

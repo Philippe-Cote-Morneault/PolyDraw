@@ -167,7 +167,7 @@ class MatchRepository : Service() {
 
         var playerScoresChanged = false
         synchronisation.players.forEach {
-            if (playerScores[it.first] != it.second && playerScores.getOrDefault(it.first, 0) < it.second) {
+            if (playerScores[it.first] != it.second) {
                 updatePlayerScore(it.first, it.second)
                 playerScoresChanged = true
             }
@@ -224,13 +224,13 @@ class MatchRepository : Service() {
     private fun onRoundEnded(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "RoundEnded = $json")
         val roundEnded = MatchAdapter.jsonToRoundEnded(jsonObject)
-        EventBus.getDefault().post(MessageEvent(EventType.ROUND_ENDED, roundEnded))
-
         roundEnded.players.forEach {
             updatePlayerScore(it.userID, it.points)
         }
 
+        EventBus.getDefault().post(MessageEvent(EventType.ROUND_ENDED, roundEnded))
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
     }
 

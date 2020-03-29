@@ -1,6 +1,7 @@
 package com.log3900.game.match.ffa
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,7 +79,8 @@ class ActiveFFAMatchFragment : ActiveMatchFragment(), ActiveFFAMatchView {
     }
 
     override fun showPlayerScoredChangedAnimation(scoreChangedValue: String, isPositive: Boolean, position: Int) {
-        (playersRecyclerView.findViewHolderForAdapterPosition(position) as PlayerViewHolder).showScoreChangedAnimation(scoreChangedValue, isPositive)
+        val view = playersAdapter.getViewHolderAtPos(position)
+        view?.showScoreChangedAnimation(scoreChangedValue, isPositive)
     }
 
     override fun onDestroy() {
