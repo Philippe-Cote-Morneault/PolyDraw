@@ -11,7 +11,7 @@
     <UserControl.DataContext>
         <viewModels:PublicProfileViewModel/>
     </UserControl.DataContext>
-    <materialDesign:DialogHost Identifier="Dialog"  Width="500" Height="800">
+    <materialDesign:DialogHost Identifier="Dialog"  Width="500" >
 
         <StackPanel>
             <Button HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
@@ -24,16 +24,7 @@
                 </Ellipse.Fill>
             </Ellipse>
             <TextBlock Margin="0 20 0 20" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold" Text="{Binding User.Username}"></TextBlock>
-            <Separator Margin="15 0 15 20"/>
-            <TextBlock Margin="20 0 0 0" HorizontalAlignment="Left" FontSize="25" FontWeight="Bold" Text="Achievements"></TextBlock>
-            <StackPanel Margin="20 20 0 0" Orientation="Horizontal">
-                <materialDesign:PackIcon Margin="10 0 10 0" Height="40" Width="40" Kind="Trophy" />
-                <materialDesign:PackIcon Margin="10 0 10 0" Height="40" Width="40" Kind="Trophy" />
-                <materialDesign:PackIcon Margin="10 0 10 0" Height="40" Width="40" Kind="Trophy" />
-                <materialDesign:PackIcon Margin="10 0 10 0" Height="40" Width="40" Kind="Trophy" />
-                <materialDesign:PackIcon Margin="10 0 10 0" Height="40" Width="40" Kind="Trophy" />
-                <materialDesign:PackIcon Margin="10 0 10 0" Height="40" Width="40" Kind="Trophy" />
-            </StackPanel>
+            
         </StackPanel>
     </materialDesign:DialogHost>
 </UserControl>

@@ -84,8 +84,7 @@ namespace ClientLourd.ViewModels
             {
                 if ((args as DrawingEventArgs).Data == 0)
                 {
-                    DialogHost.Show(new ClosableErrorDialog("The preview request was refused."), "Dialog");
-
+                    DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["PreviewRefused"].ToString()), "Dialog");
                 }
             });
 
@@ -359,13 +358,18 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+
         private void AddImage(string image)
         {
             //TODO validate the file
             FileInfo f = new FileInfo(image);
             if (f.Length >= 5000000)
             {
-                DialogHost.Show(new ClosableErrorDialog("You cant upload a file larger than 5MB"), "Dialog");
+                DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["FileSize"].ToString()), "Dialog");
             }
             else
             {

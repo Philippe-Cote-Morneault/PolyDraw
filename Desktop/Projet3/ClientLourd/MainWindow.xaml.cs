@@ -45,8 +45,9 @@ namespace ClientLourd
             Application.Current.Dispatcher.Invoke(() =>
             {
                 DialogHost.CloseDialogCommand.Execute(null, MainWindowDialogHost);
-                MainWindowDialogHost.ShowDialog(new ClosableErrorDialog(
-                  "You have lost connection to the server! Returning to the login page..."));
+                
+                MainWindowDialogHost.ShowDialog(new ClosableErrorDialog(((MainViewModel)DataContext).CurrentDictionary["LostConnection"].ToString()));
+
             });
         }
 
@@ -73,7 +74,7 @@ namespace ClientLourd
             mainViewModel.AfterLogin();
 
             //TODO: Remove this comment
-            //DialogHost.Show(new Tutorial(), "Default");
+            DialogHost.Show(new Tutorial(), "Default");
         }
 
         private void OnUserLogout(object source, EventArgs args)

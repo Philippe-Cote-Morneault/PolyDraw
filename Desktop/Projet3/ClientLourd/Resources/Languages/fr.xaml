@@ -130,4 +130,63 @@
     <system:String x:Key="Cancel">Annuler</system:String>
     <system:String x:Key="PasswordRetype">Retaper le mot de passe</system:String>
 
+    <!-- Chat -->
+    <system:String x:Key="TypeMessage">Entrez votre message...</system:String>
+    <system:String x:Key="SendMessage">Envoyer le message</system:String>
+    <system:String x:Key="ExportChat">Exporter le chat comme une nouvelle fenêtre</system:String>
+
+    <!-- ChannelSection -->
+    <system:String x:Key="Channels">Canaux</system:String>
+    <system:String x:Key="CreateChannel">Créer un nouveau canal</system:String>
+    <system:String x:Key="SearchChannel">Rechercher un canal</system:String>
+    <system:String x:Key="Joined">Canaux joints</system:String>
+    <system:String x:Key="Leave">Quitter</system:String>
+    <system:String x:Key="Available">Canaux disponibles</system:String>
+    <system:String x:Key="Join">Rejoindre</system:String>
+    <system:String x:Key="Delete">Supprimer</system:String>
+
+    <!-- MainWindow -->
+    <system:String x:Key="OpenChat">Ouvrir le chat</system:String>
+    <system:String x:Key="LeaveLobby">Quitter la salle d'attente</system:String>
+    
+    <!-- Error messages -->
+    <system:String x:Key="LostConnection">Vous avez perdu connexion au serveur! Retournons à la page de connexion...</system:String>
+    <system:String x:Key="Error">Erreur!</system:String>
+    <system:String x:Key="LeaveGeneral">Vous ne pouvez pas quitter le canal General</system:String>
+    <system:String x:Key="LeaveGame">Vous ne pouvez pas quitter le canal Game</system:String>
+    <system:String x:Key="FileSize">Vous ne pouvez pas télécharger un fichier de plus de 5MB</system:String>
+    <system:String x:Key="PreviewRefused">La requête de prévisualisation a été refusée.</system:String>
+    <system:String x:Key="HostLeft">L'hôte a quitté la salle d'attente!</system:String>
+
+    <system:String x:Key="UploadFirst">Veuillez téléchargez une image</system:String>
+    <system:String x:Key="CanvasEmpty">Le canevas ne peut pas être vide</system:String>
+
+    <!-- Confirmation Dialogs-->
+    <system:String x:Key="RemovePlayerTitle">Retirer le joueur</system:String>
+    <system:String x:Key="RemovePlayerBody">Êtes-vous certain de vouloir retirer le joueur</system:String>
+
+    <system:String x:Key="Warning">Avertissement</system:String>
+    <system:String x:Key="WarningLeaveChannel">Êtes-vous certain de vouloir quitter le canal</system:String>
+    <system:String x:Key="WarningDeleteChannel">Êtes-vous certain de vouloir supprimer le canal</system:String>
+
+    <system:String x:Key="JoinChannelWarning1">Vous devez joindre le canal</system:String>
+    <system:String x:Key="JoinChannelWarning2">d'abord!</system:String>
+
+    <!-- Message Dialogs-->
+    <system:String x:Key="DeleteChannel">a supprimé le canal</system:String>
+
+    <!-- Input Dialogs-->
+    <system:String x:Key="ChannelName">Entrez le nom du canal</system:String>
+
+    <!-- Connection history -->
+    <system:String x:Key="Connection">Connexion</system:String>
+    <system:String x:Key="Disconnection">Déconnexion</system:String>
+    <system:String x:Key="TimePlayer">Temps joué</system:String>
+
+    <!-- Game history -->
+    <system:String x:Key="GameMode">Mode de la partie</system:String>
+    <system:String x:Key="Winner">Gagnant</system:String>
+    <system:String x:Key="GameDuration">Durée de la partie</system:String>
+
+
 </ResourceDictionary>

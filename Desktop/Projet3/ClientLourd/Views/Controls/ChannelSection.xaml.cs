@@ -24,13 +24,16 @@ namespace ClientLourd.Views.Controls
         {
 
             Channel channel = (Channel)((MenuItem) sender).Tag;
-            var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"Are you sure you want to leave {channel.Name}"));
+            var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}", $"{CurrentDictionary["WarningLeaveChannel"]} {channel.Name}?"));
             if (bool.Parse(result.ToString()))
             {
                 ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(channel);
             }
         }
-
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
         private async void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             //TODO check if the channel is available or joined
@@ -42,7 +45,7 @@ namespace ClientLourd.Views.Controls
                 {
                     if (AvailableTree.Items.Contains(channel))
                     {
-                        var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"You have to join the {channel.Name} first !"));
+                        var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}", $"{CurrentDictionary["JoinChannelWarning1"]} {channel.Name} {CurrentDictionary["JoinChannelWarning2"]}"));
                         if (bool.Parse(result.ToString()))
                         {
                             ((ChatViewModel) DataContext).JoinChannelCommand.Execute(channel);
@@ -63,7 +66,7 @@ namespace ClientLourd.Views.Controls
         private async void DeleteChannelClick(object sender, RoutedEventArgs e)
         {
             Channel channel = (Channel)((MenuItem) sender).Tag;
-            var result = await DialogHost.Show(new ConfirmationDialog("Warning", $"Are you sure you want to delete {channel.Name}"));
+            var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}", $"{CurrentDictionary["WarningDeleteChannel"]} {channel.Name}?"));
             if (bool.Parse(result.ToString()))
             {
                 ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(channel);

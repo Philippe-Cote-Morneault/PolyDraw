@@ -132,6 +132,62 @@
     <system:String x:Key="Cancel">Cancel</system:String>
     <system:String x:Key="PasswordRetype">Retype the password</system:String>
 
+    <!-- Chat -->
+    <system:String x:Key="TypeMessage">Type your message...</system:String>
+    <system:String x:Key="SendMessage">Send the message</system:String>
+    <system:String x:Key="ExportChat">Export the chat as a new window</system:String>
 
+    <!-- ChannelSection -->
+    <system:String x:Key="Channels">Channels</system:String>
+    <system:String x:Key="CreateChannel">Create a new channel</system:String>
+    <system:String x:Key="SearchChannel">Search a channel</system:String>
+    <system:String x:Key="Joined">Joined</system:String>
+    <system:String x:Key="Leave">Leave</system:String>
+    <system:String x:Key="Available">Available</system:String>
+    <system:String x:Key="Join">Join</system:String>
+    <system:String x:Key="Delete">Delete</system:String>
+
+    <!-- MainWindow -->
+    <system:String x:Key="OpenChat">Open the chat</system:String>
+    <system:String x:Key="LeaveLobby">Leave the lobby</system:String>
+
+    <!-- Error messages -->
+    <system:String x:Key="LostConnection">You have lost connection to the server! Returning to the login page...</system:String>
+    <system:String x:Key="Error">Error!</system:String>
+    <system:String x:Key="LeaveGeneral">You can't leave the General channel</system:String>
+    <system:String x:Key="LeaveGame">You can't leave the Game channel</system:String>
+    <system:String x:Key="FileSize">You cant upload a file larger than 5MB</system:String>
+    <system:String x:Key="PreviewRefused">The preview request was refused.</system:String>
+    <system:String x:Key="HostLeft">The host has left the lobby!</system:String>
+
+    <system:String x:Key="UploadFirst">Upload an image first</system:String>
+    <system:String x:Key="CanvasEmpty">The canvas cannot be empty</system:String>
+
+    <!-- Confirmation Dialogs-->
+    <system:String x:Key="RemovePlayerTitle">Remove player</system:String>
+    <system:String x:Key="RemovePlayerBody">Are you sure you want to remove the player</system:String>
+    
+    <system:String x:Key="Warning">Warning</system:String>
+    <system:String x:Key="WarningLeaveChannel">Are you sure you want to leave the channel</system:String>
+    <system:String x:Key="WarningDeleteChannel">Are you sure you want to delete the channel</system:String>
+
+    <system:String x:Key="JoinChannelWarning1">You have to join the channel</system:String>
+    <system:String x:Key="JoinChannelWarning2">first !</system:String>
+
+    <!-- Message Dialogs-->
+    <system:String x:Key="DeleteChannel">has deleted the channel</system:String>
+
+    <!-- Input Dialogs-->
+    <system:String x:Key="ChannelName">Enter the channel's name</system:String>
+
+    <!-- Connection history -->
+    <system:String x:Key="Connection">Connection</system:String>
+    <system:String x:Key="Disconnection">Disconnection</system:String>
+    <system:String x:Key="TimePlayer">Time played</system:String>
+
+    <!-- Game history -->
+    <system:String x:Key="GameMode">Game Mode</system:String>
+    <system:String x:Key="Winner">Winner</system:String>
+    <system:String x:Key="GameDuration">Game duration</system:String>
 
 </ResourceDictionary>

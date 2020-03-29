@@ -83,7 +83,7 @@
                             DockPanel.Dock="Left"
                             Name="LeaveButton"
                             Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}"
-                            ToolTip="Leave the lobby"
+                            ToolTip="{DynamicResource LeaveLobby}"
                             Margin="16"
                             Cursor="Hand"
                             MouseUp="LeaveLobby"
@@ -104,7 +104,7 @@
 
                                 <ToggleButton
                                     Name="ChatToggleButton"
-                                    ToolTip="Open the chat"
+                                    ToolTip="{DynamicResource OpenChat}"
                                     Checked="ChatToggleButton_OnChecked"
                                     Unchecked="ChatToggleButton_OnChecked"
                                     Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}">
@@ -263,7 +263,6 @@
                                 
                                 <ListViewItem>
                                     <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
-                                            ToolTip="Disconnect and return to the login screen"
                                             Command="{Binding Path=LogoutCommand}"
                                             CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}">
                                         <StackPanel Orientation="Horizontal">
