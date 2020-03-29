@@ -40,8 +40,6 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     override fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         super.onGuessedWordRight(playerGuessedWord)
         activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
-
-        updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal, playerGuessedWord.points)
     }
 
     override fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
@@ -86,8 +84,6 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
     private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
         activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
-
-        updatePlayerScore(playerGuessedWord.userID, playerGuessedWord.pointsTotal, playerGuessedWord.points)
     }
 
     private fun onMatchStarting() {
@@ -98,6 +94,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     }
 
     private fun updatePlayerScore(playerID: UUID, newScore: Int, variation: Int) {
+        Log.d("POTATO", "ActiveFFAMatchPresenter::updatePlayerScore($playerID, $newScore, $variation)")
         if (!updatedScores.containsKey(playerID)) {
             updatedScores[playerID] = false
         }
