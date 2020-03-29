@@ -112,6 +112,7 @@
     <string name="tutorial_slide_welcome_01_title">Bienvenue</string>
     <string name="unlocked_message">Vous avez débloqué</string>
     <string name="username">Nom d\'utilisateur</string>
+    <string name="username_title">Nom d\'utilisateur:</string>
     <string name="view_all">Tout voir</string>
     <string name="win_ratio_title">Ratio de victoires:</string>
     <string name="channel_list_title">Canaux</string>
@@ -147,4 +148,8 @@
     <string name="rounds">Rondes</string>
     <string name="round_end_info_word_was_sentence">Le mot était %1$s!</string>
     <string name="ffa_match_end_info_winner_is">Le vainqueur est %1$s!</string>
+    <string name="turn">Tour</string>
+    <string name="team_score_title">Score d\'équipe: %1$d</string>
+    <string name="empty_slot">Place vide</string>
+    <string name="match_lobby_duration_title">Durée (min)</string>
 </resources>

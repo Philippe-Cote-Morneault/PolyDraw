@@ -16,8 +16,11 @@ import com.log3900.R
 import com.log3900.chat.ChatRestService
 import com.log3900.chat.Message.UserJoinedChannelMessage
 import com.log3900.chat.Message.UserLeftChannelMessage
+import com.log3900.settings.language.LanguageManager
+import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.exceptions.BadNetworkResponseException
 import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
@@ -68,15 +71,22 @@ class ChannelRepository : Service() {
 
     fun getChannels(sessionToken: String): Single<ArrayList<Channel>> {
         return Single.create {
-            val call = ChatRestService.service.getChannels(sessionToken, "EN")
+            val call = ChatRestService.service.getChannels(sessionToken, LanguageManager.getCurrentLanguageCode())
             call.enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                    val channels = com.log3900.chat.Channel.JsonAdapter.jsonToChannels(response.body()!!)
-                    it.onSuccess(channels)
+                    when (response.code()) {
+                        200 -> {
+                            val channels = com.log3900.chat.Channel.JsonAdapter.jsonToChannels(response.body()!!)
+                            it.onSuccess(channels)
+                        }
+                        else -> {
+                            it.onError(BadNetworkResponseException(response.errorBody()?.string()?: "getChannels failure"))
+                        }
+                    }
                 }
 
                 override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-                    println("onFailure")
+                    it.onError(BadNetworkResponseException(t.message?: "getChannels failure"))
                 }
             })
         }
@@ -89,8 +99,8 @@ class ChannelRepository : Service() {
                     channelCache.reloadChannels(channels)
                     it.onSuccess(channelCache.joinedChannels)
                 },
-                {
-
+                { throwable ->
+                    it.onError(throwable)
                 }
             )
         }
@@ -103,8 +113,8 @@ class ChannelRepository : Service() {
                     channelCache.reloadChannels(channels)
                     it.onSuccess(channelCache.availableChannels)
                 },
-                {
-
+                { throwable ->
+                    it.onError(throwable)
                 }
             )
         }
@@ -112,7 +122,7 @@ class ChannelRepository : Service() {
 
     fun getChannel(sessionToken: String, channelID: String) {
         var channel: Channel? = null
-        val call = ChatRestService.service.getChannel(sessionToken, "EN", channelID)
+        val call = ChatRestService.service.getChannel(sessionToken, LanguageManager.getCurrentLanguageCode(), channelID)
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 val moshi = Moshi.Builder()

@@ -8,18 +8,38 @@ import kotlin.collections.ArrayList
 abstract class Match(
     var players: ArrayList<Player>,
     var matchType: MatchMode,
-    var timeImage: Int
+    var time: Int
 )
 
 class FFAMatch(
     players: ArrayList<Player>,
     matchType: MatchMode,
-    timeImage: Int,
+    time: Int,
     var laps: Int
 ) : Match(
     players,
     matchType,
-    timeImage
+    time
+)
+
+class CoopMatch(
+    players: ArrayList<Player>,
+    matchType: MatchMode,
+    time: Int
+) : Match(
+    players,
+    matchType,
+    time
+)
+
+class SoloMatch(
+    players: ArrayList<Player>,
+    matchType: MatchMode,
+    time: Int
+) : Match(
+    players,
+    matchType,
+    time
 )
 
 class PlayerTurnToDraw(
@@ -47,7 +67,8 @@ class Synchronisation(
     var players: ArrayList<Pair<UUID, Int>>,
     var laps: Int?,
     var time: Int,
-    var gameTime: Int?
+    var lapTotal: Int?,
+    var lives: Int?
 )
 
 class MatchEnded(
@@ -85,3 +106,15 @@ class RoundEnded(
         var newPoints: Int
     )
 }
+
+class HintResponse(
+    var userID: UUID?,
+    var hint: String?,
+    var hintsLeft: Int?,
+    var error: String?
+)
+
+class CheckPoint(
+    var totalTime: Int,
+    var bonus: Int
+)

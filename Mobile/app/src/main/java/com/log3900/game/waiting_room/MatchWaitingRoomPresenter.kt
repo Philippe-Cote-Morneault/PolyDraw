@@ -3,6 +3,7 @@ package com.log3900.game.waiting_room
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.ChatMessage
 import com.log3900.game.group.GroupManager
+import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -69,19 +70,21 @@ class MatchWaitingRoomPresenter : Presenter {
 
     private fun onGroupUpdated(groupID: UUID){
         if (groupID == groupManager?.currentGroup?.ID) {
-            matchWaitingRoomView?.notifyGroupUpdated()
+            matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
 
     private fun onPlayerJoined(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
             matchWaitingRoomView?.notifyPlayerJoined(playerID)
+            matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
 
     private fun onPlayerLeft(groupID: UUID, playerID: UUID) {
         if (groupID == groupManager?.currentGroup?.ID) {
             matchWaitingRoomView?.notifyPlayerLeft(playerID)
+            matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
 

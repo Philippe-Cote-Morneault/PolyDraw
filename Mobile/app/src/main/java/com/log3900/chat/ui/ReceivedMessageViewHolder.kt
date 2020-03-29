@@ -15,6 +15,7 @@ import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
+import com.log3900.profile.PlayerProfileDialogFragment
 import com.log3900.shared.ui.ThemeUtils
 import com.log3900.user.UserRepository
 import com.log3900.utils.format.DateFormatter
@@ -41,6 +42,10 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
         messageBoxCardView = itemView.findViewById(R.id.list_item_message_text_card_view)
         messageHeader = itemView.findViewById(R.id.list_item_message_header)
         this.username = username
+
+        usernameTextView.setOnClickListener {
+            PlayerProfileDialogFragment.show(itemView.context, message.userID)
+        }
     }
 
     fun bind(message: ChatMessage) {

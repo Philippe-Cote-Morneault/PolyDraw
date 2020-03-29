@@ -48,6 +48,7 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.TIMES_UP, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.ROUND_ENDED, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -87,6 +88,7 @@ class MatchRepository : Service() {
             Event.TIMES_UP -> onTimesUp(socketMessage)
             Event.CHECKPOINT -> onCheckpoint(socketMessage)
             Event.ROUND_ENDED -> onRoundEnded(socketMessage)
+            Event.HINT_RESPONSE -> onHintResponse(socketMessage)
         }
     }
 
@@ -100,6 +102,10 @@ class MatchRepository : Service() {
 
     fun leaveMatch() {
         socketService?.sendMessage(Event.LEAVE_MATCH, byteArrayOf())
+    }
+
+    fun requestHint() {
+        socketService?.sendMessage(Event.HINT_REQUEST, byteArrayOf())
     }
 
     private fun onMatchAboutToStart(message: com.log3900.socket.Message) {
@@ -161,8 +167,8 @@ class MatchRepository : Service() {
 
         var playerScoresChanged = false
         synchronisation.players.forEach {
-            if (playerScores[it.first] != it.second && playerScores.getOrDefault(it.first, 0) < it.second) {
-                playerScores[it.first] = it.second
+            if (playerScores[it.first] != it.second) {
+                updatePlayerScore(it.first, it.second)
                 playerScoresChanged = true
             }
         }
@@ -178,6 +184,12 @@ class MatchRepository : Service() {
         val matchEnded = MatchAdapter.jsonToMatchEnded(jsonObject)
         Log.d("POTATO", "Match ended = $json")
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
+
+        matchEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points)
+        }
+
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
     }
 
     private fun onPlayerLeftMatch(message: com.log3900.socket.Message) {
@@ -204,14 +216,30 @@ class MatchRepository : Service() {
     private fun onCheckpoint(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
+        val checkPoint = MatchAdapter.jsonToCheckpoint(jsonObject)
         Log.d("POTATO", "onCheckpoint json = $json")
+        EventBus.getDefault().post(MessageEvent(EventType.CHECKPOINT, checkPoint))
     }
 
     private fun onRoundEnded(message: com.log3900.socket.Message) {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "RoundEnded = $json")
         val roundEnded = MatchAdapter.jsonToRoundEnded(jsonObject)
+        roundEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points)
+        }
+
         EventBus.getDefault().post(MessageEvent(EventType.ROUND_ENDED, roundEnded))
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
+    }
+
+    private fun onHintResponse(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "Hint response = $json")
+        val hintResponse = MatchAdapter.jsonToHintResponse(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.HINT_RESPONSE, hintResponse))
     }
 
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
@@ -226,6 +254,7 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.TIMES_UP, socketMessageHandler!!)

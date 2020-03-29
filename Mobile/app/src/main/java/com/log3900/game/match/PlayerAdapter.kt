@@ -14,12 +14,7 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
     private var players: ArrayList<Player> = arrayListOf()
     private var statusImageRes: HashMap<UUID, Int?> = HashMap()
     private var playerScores: HashMap<UUID, Int> = HashMap()
-    private lateinit var group: Group
-
-
-    fun setGroup(group: Group) {
-        this.group = group
-    }
+    private var viewHolders: ArrayList<PlayerViewHolder> = arrayListOf()
 
     fun setPlayers(players: ArrayList<Player>) {
         this.players = players
@@ -39,14 +34,20 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder>() {
         statusImageRes = HashMap()
     }
 
+    fun getViewHolderAtPos(pos: Int): PlayerViewHolder? {
+        return viewHolders.getOrNull(pos)
+    }
+
     override fun getItemCount(): Int {
         return players.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_active_match_player, parent, false)
+        val viewHolder = PlayerViewHolder(view)
+        viewHolders.add(viewHolder)
 
-        return PlayerViewHolder(view)
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {

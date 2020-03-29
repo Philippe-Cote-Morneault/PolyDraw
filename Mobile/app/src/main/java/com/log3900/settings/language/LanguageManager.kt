@@ -25,11 +25,25 @@ class LanguageManager {
             Language(LANGUAGE.ENGLISH.ordinal, "en", R.string.language_english_title),
             Language(LANGUAGE.FRENCH.ordinal, "fr", R.string.language_french_title)
         )
+
         fun getAvailableLanguages(): ArrayList<Language> {
             return languages
         }
+
         fun getCurrentLanguage(): Language {
             return languages[AccountRepository.getInstance().getAccount().languageID]
+        }
+
+        fun getCurrentLanguageCode(): String {
+            if (getCurrentLanguage().languageCode == "") {
+                if (MainApplication.instance.getContext().resources.configuration.locale.language == "en") {
+                    return "EN"
+                } else {
+                    return "FR"
+                }
+            } else {
+                return getCurrentLanguage().languageCode.toUpperCase()
+            }
         }
 
         fun changeLanguage(language: Language): Completable {

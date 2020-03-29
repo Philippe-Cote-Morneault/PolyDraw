@@ -7,15 +7,11 @@ import kotlin.collections.HashMap
 
 interface ActiveMatchView {
     fun setPlayers(players: ArrayList<Player>)
-    fun setPlayerStatus(playerID: UUID, statusImageRes: Int)
-    fun setPlayerScores(playerScores: HashMap<UUID, Int>)
-    fun clearAllPlayerStatusRes()
     fun setWordToGuessLength(length: Int)
     fun setWordToDraw(word: String)
     fun enableDrawFunctions(enable: Boolean, drawingID: UUID?)
     fun clearCanvas()
     fun setTimeValue(time: String)
-    fun setRoundsValue(rounds: String)
     fun showWordGuessingView()
     fun showWordToDrawView()
     fun notifyPlayersChanged()
@@ -29,4 +25,8 @@ interface ActiveMatchView {
     fun hideRoundEndInfoView()
     fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>)
     fun hideMatchEndInfoView()
+    fun enableHintButton(enable: Boolean)
+    fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean)
+    fun setCanvasMessage(message: String)
+    fun showCanvasMessageView(show: Boolean)
 }

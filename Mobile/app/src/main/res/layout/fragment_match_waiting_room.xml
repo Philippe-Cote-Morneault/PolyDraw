@@ -7,62 +7,42 @@
     android:padding="25dp">
 
     <TextView
-        android:id="@+id/fragment_match_waiting_room_text_view_header_match_name"
+        android:id="@+id/fragment_match_waiting_room_text_view_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/match_waiting_room_match_name_title"
-        android:textSize="35sp"
-        android:textStyle="bold"
+        android:textSize="30sp"
+        android:textColor="@color/color_black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/fragment_match_waiting_room_text_view_match_name"
+        android:id="@+id/fragment_match_waiting_room_text_view_difficulty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_header_match_name"
+        android:textSize="30sp"
+        android:textColor="@color/color_black"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_mode"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/fragment_match_waiting_room_text_view_header_match_mode"
+        android:id="@+id/fragment_match_waiting_room_text_view_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/match_waiting_room_match_mode_title"
-        android:layout_marginTop="60dp"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_match_name"
+        android:layout_marginTop="30dp"
+        android:textSize="30sp"
+        android:textColor="@color/color_black"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_difficulty"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/fragment_match_waiting_room_text_view_match_mode"
+        android:id="@+id/fragment_match_waiting_room_text_view_language"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_header_match_mode"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/fragment_match_waiting_room_text_view_header_host_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/match_waiting_room_host_title"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        android:layout_marginTop="60dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_match_mode"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/fragment_match_waiting_room_text_view_host_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_header_host_name"
+        android:textSize="30sp"
+        android:textColor="@color/color_black"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_duration"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
@@ -72,6 +52,7 @@
         android:text="@string/match_waiting_room_players_title"
         android:textSize="35sp"
         android:textStyle="bold"
+        android:textColor="@color/color_black"
         android:gravity="center"
         android:layout_marginBottom="30dp"
         app:layout_constraintStart_toStartOf="@id/fragment_match_waiting_room_recycler_view_players"

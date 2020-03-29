@@ -11,6 +11,8 @@ import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.log3900.settings.language.LanguageManager
+import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.exceptions.BadNetworkResponseException
@@ -60,21 +62,30 @@ class GroupRepository : Service() {
     fun getGroups(sessionToken: String, forceReload: Boolean = false): Single<ArrayList<Group>> {
         val single = Single.create<ArrayList<Group>> {
             if (groupCache.needsReload || forceReload) {
-                val call = GroupRestService.service.getGroups(sessionToken, "EN")
+                val call = GroupRestService.service.getGroups(sessionToken, LanguageManager.getCurrentLanguageCode())
                 call.enqueue(object : Callback<JsonArray> {
                     override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                        val groups = arrayListOf<Group>()
+                        when (response.code()) {
+                            200 -> {
+                                val groups = arrayListOf<Group>()
 
-                        response.body()?.forEach { group ->
-                            groups.add(GroupAdapter().fromJson(group.asJsonObject))
+                                response.body()?.forEach { group ->
+                                    groups.add(GroupAdapter().fromJson(group.asJsonObject))
+                                }
+                                groupCache.needsReload = false
+                                groupCache.setGroups(groups)
+                                it.onSuccess(groupCache.getAllGroups())
+                            }
+                            else -> {
+                                val jsonObject = JsonParser().parse(response.errorBody()?.string()).asJsonObject
+                                val errorMessage = jsonObject.get("Error").asString
+                                it.onError(BadNetworkResponseException(errorMessage))
+                            }
                         }
-                        groupCache.needsReload = false
-                        groupCache.setGroups(groups)
-                        it.onSuccess(groupCache.getAllGroups())
                     }
 
                     override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-                        it.onError(t)
+                        it.onError(BadNetworkResponseException(t.message?: "getGroups failure"))
                     }
                 })
             } else {
@@ -87,7 +98,7 @@ class GroupRepository : Service() {
     
     fun getGroup(sessionToken: String, groupID: UUID): Single<Group> {
         return Single.create {
-            val call = GroupRestService.service.getGroup(sessionToken, "EN", groupID.toString())
+            val call = GroupRestService.service.getGroup(sessionToken, LanguageManager.getCurrentLanguageCode(), groupID.toString())
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     it.onSuccess(GroupAdapter().fromJson(response.body()!!.asJsonObject))
@@ -102,7 +113,7 @@ class GroupRepository : Service() {
 
     fun createGroup(sessionToken: String, group: GroupCreated): Single<UUID> {
         return Single.create {
-            val call = GroupRestService.service.createGroup(sessionToken, "EN", group.toJsonObject())
+            val call = GroupRestService.service.createGroup(sessionToken, LanguageManager.getCurrentLanguageCode(), group.toJsonObject())
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     when (response.code()) {
@@ -125,7 +136,7 @@ class GroupRepository : Service() {
                 }
 
                 override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                    println("onFailure")
+                    it.onError(BadNetworkResponseException(t.message?: "createGroup failure"))
                 }
             })
         }
@@ -195,7 +206,7 @@ class GroupRepository : Service() {
         if (response) {
             EventBus.getDefault().post(MessageEvent(EventType.MATCH_START_RESPONSE, Pair(response, "")))
         } else {
-            EventBus.getDefault().post(MessageEvent(EventType.MATCH_START_RESPONSE, Pair(response, jsonObject.get("Error"))))
+            EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage("Error", jsonObject.get("Error").asString, null, null)))
         }
     }
 
@@ -243,6 +254,7 @@ class GroupRepository : Service() {
         val response = jsonObject.get("Response").asBoolean
         if (!response) {
             val error = jsonObject.get("Error").asString
+            EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage("Error", error, null, null)))
         }
     }
 

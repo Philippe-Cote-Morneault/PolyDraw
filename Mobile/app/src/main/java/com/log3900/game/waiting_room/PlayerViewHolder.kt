@@ -1,6 +1,7 @@
 package com.log3900.game.waiting_room
 
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +12,7 @@ import com.log3900.R
 import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
+import com.log3900.profile.PlayerProfileDialogFragment
 import com.log3900.user.UserRepository
 import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -51,9 +53,13 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
                 listener?.removedClicked(player!!)
             }
         }
+
+        playerChip.setOnClickListener {
+            PlayerProfileDialogFragment.show(itemView.context, player!!.ID)
+        }
     }
 
-    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean) {
+    fun bind(player: Player?, isPlaceholder: Boolean, isHost: Boolean, showKickOptions: Boolean, canAddAIs: Boolean) {
         this.player = player
         this.isPlaceholder = isPlaceholder
 
@@ -66,7 +72,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
         }
 
         if (!isPlaceholder) {
-            if (showKickOptions) {
+            if (showKickOptions || isHost) {
                 crownRemoveImageView.visibility = View.VISIBLE
             } else {
                 crownRemoveImageView.visibility = View.INVISIBLE
@@ -93,14 +99,13 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
                     addImageView.visibility = View.INVISIBLE
                 }
                 addImageView.visibility = View.INVISIBLE
-                playerChip.setChipIconResource(R.drawable.ic_person)
+                playerChip.setChipIconResource(R.drawable.ic_robot)
             }
         } else {
-            playerChip.text = "Empty Slot"
+            playerChip.setText(R.string.empty_slot)
             playerChip.setChipIconResource(R.drawable.ic_person_colored_foreground)
-            if (showKickOptions) {
+            if (showKickOptions && canAddAIs) {
                 addImageView.visibility = View.VISIBLE
-
             } else {
                 addImageView.visibility = View.INVISIBLE
             }

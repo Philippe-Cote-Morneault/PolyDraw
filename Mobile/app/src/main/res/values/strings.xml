@@ -73,6 +73,7 @@
     <string name="match_players_title">Players:</string>
     <string name="match_win">Win</string>
     <string name="match_loss">Loss</string>
+    <string name="username_title">Username:</string>
 
     <!--fragment_chat-->
     <string name="fragment_chat_send_message_button_text">Send</string>
@@ -177,4 +178,8 @@
     <string name="rounds">Rounds</string>
     <string name="round_end_info_word_was_sentence">The word was %1$s!</string>
     <string name="ffa_match_end_info_winner_is">The winner is %1$s!</string>
+    <string name="turn">Turn</string>
+    <string name="team_score_title">Team Score: %1$d</string>
+    <string name="empty_slot">Empty slot</string>
+    <string name="match_lobby_duration_title">Duration (min)</string>
 </resources>

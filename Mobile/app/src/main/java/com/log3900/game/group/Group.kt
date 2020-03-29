@@ -17,6 +17,14 @@ enum class Difficulty {
                 HARD -> return R.string.difficulty_hard_title
             }
         }
+
+        fun timeToPlay(item: Difficulty): Long {
+            when (item) {
+                EASY -> return 5 * 1000 * 60
+                MEDIUM -> return 4 * 1000 * 60
+                HARD -> return 3 * 1000 * 60
+            }
+        }
     }
 }
 
@@ -44,8 +52,8 @@ enum class MatchMode {
 }
 
 enum class Language(val languageCode: String) {
-    FRENCH("FR"),
-    ENGLISH("EN");
+    ENGLISH("EN"),
+    FRENCH("FR");
 
     companion object {
         fun stringRes(item: Language): Int {
@@ -80,6 +88,14 @@ class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var group
                 MatchMode.COOP -> return 4
                 MatchMode.FFA -> return 8
             }
+        }
+    }
+
+    fun getDuration(): Long {
+        if (gameType == MatchMode.FFA) {
+            return (1000 * 60 * players.size * rounds!!).toLong()
+        } else {
+            return Difficulty.timeToPlay(difficulty)
         }
     }
 
