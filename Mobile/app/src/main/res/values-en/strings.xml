@@ -106,6 +106,7 @@
     <string name="statistics">Statistics</string>
     <string name="surname_hint">Surname</string>
     <string name="time_played_title">Time played:</string>
+    <string name="time_played">Time played</string>
     <string name="tutorial">Tutorial</string>
     <string name="tutorial_button_next">Next</string>
     <string name="tutorial_button_previous">Previous</string>
