@@ -49,6 +49,8 @@ en:
     notEnough: "There are not enough users to start the game."
     passwordWrong: "The password is incorrect."
     loginBearer: "The username and the bearer must be set."
+    hintInvalid: "Hints are not available for this player. The drawing player needs to be a virtual player."
+    hintScore: "You need at least 50 points for a hint."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -97,4 +99,6 @@ fr:
     notEnough: "Il n'a pas assez d'utilisateurs pour démarrer la partie."
     passwordWrong: "Le mot de passe est erroné."
     loginBearer: "Le nom d'utilisateur et le bearer doivent être dans la requête."
+    hintInvalid: "Les indices ne sont pas disponible pour ce joueur. Ils ne sont disponibles que pour les joueurs virtuels."
+    hintScore: "Vous avez besoin de 50 pts pour demander un indice. Vous n'avez pas assez de points."
 `)

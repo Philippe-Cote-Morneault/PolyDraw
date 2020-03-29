@@ -318,13 +318,14 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 func (f *FFA) HintRequested(socketID uuid.UUID) {
 	f.receiving.Lock()
 	if len(f.players) > 0 && !f.players[f.order[f.orderPos]].IsCPU {
-		f.receiving.Unlock()
 
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
 			Hint:  "",
-			Error: "Hints are not available for this player. The drawing player needs to be a virtual player.",
+			Error: language.MustGet("error.hintInvalid", f.info.Language),
 		})
+		f.receiving.Unlock()
+
 		socket.SendQueueMessageSocketID(message, socketID)
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
@@ -351,12 +352,12 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 				f.syncPlayers()
 			}
 		} else {
-			f.receiving.Unlock()
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
 				Hint:  "",
-				Error: "You need at least 50 points for a hint.",
+				Error: language.MustGet("error.hintScore", f.info.Language),
 			})
+			f.receiving.Unlock()
 			socket.SendQueueMessageSocketID(message, socketID)
 			log.Printf("[Match] [FFA] -> Hint requested but not enough points. Match: %s", f.info.ID)
 		}
