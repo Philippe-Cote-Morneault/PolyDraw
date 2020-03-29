@@ -233,10 +233,14 @@ namespace ClientLourd.ViewModels
                 {
                     _selectedLanguage = value.GetEnumFromDescription<Languages>();
                     SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }): new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1}));
-                    LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                     NotifyPropertyChanged();
                 }
             }
+        }
+
+        public void TriggerLangChangedEvent()
+        {
+           LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
 
