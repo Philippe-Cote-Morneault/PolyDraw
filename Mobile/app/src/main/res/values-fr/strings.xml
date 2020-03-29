@@ -51,6 +51,8 @@
     <string name="connected_at">Connecté à</string>
     <string name="connection_history">Historique de connexion</string>
     <string name="connection_history_title">Historique de connexion:</string>
+    <string name="connection_title">Connexion</string>
+    <string name="disconnection_title">Déconnexion</string>
     <string name="disconnected_at">Déconnecté à</string>
     <string name="email">Courriel</string>
     <string name="email_hint">Courriel</string>

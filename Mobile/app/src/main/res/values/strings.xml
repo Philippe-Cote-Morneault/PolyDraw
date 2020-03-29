@@ -56,6 +56,8 @@
     <string name="best_solo_score_title">Best Solo Score:</string>
     <string name="connection_history_title">Connection history:</string>
     <string name="connection_history">Connection history</string>
+    <string name="connection_title">Connection</string>
+    <string name="disconnection_title">Disconnection</string>
     <string name="connected_at">Connected at </string>
     <string name="disconnected_at">Disconnected at </string>
     <string name="achievements">Achievements</string>
