@@ -226,11 +226,12 @@ namespace ClientLourd.ViewModels
             }
             set
             {
-                if (!string.IsNullOrWhiteSpace(value))
+                if (!string.IsNullOrWhiteSpace(value) && _selectedLanguage.GetDescription() != value)
                 {
                     _selectedLanguage = value.GetEnumFromDescription<Languages>();
-                    LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                     NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(Languages));
+                    LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
