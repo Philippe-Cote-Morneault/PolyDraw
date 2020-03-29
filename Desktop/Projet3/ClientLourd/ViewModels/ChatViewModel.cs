@@ -169,17 +169,16 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs)args;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                //TODO update bot id 
-                User bot = _users.FirstOrDefault(u => u.ID == e.UserID);
+                User bot = _users.FirstOrDefault(u => u.ID == e.BotID);
                 User player = _users.FirstOrDefault(u => u.ID == e.UserID);
-                if (bot != null)
+                if (bot != null && player != null)
                 {
                     Message message;
                     if (e.HasHint)
                     {
                         if (player.ID != SessionInformations.User.ID)
                         {
-                            var systemMessage = new Message(DateTime.Now, _admin, $"{player.Username}{CurrentDictionary["HintResponse"]}");
+                            var systemMessage = new Message(DateTime.Now, _admin, $"{player.Username} {CurrentDictionary["HintResponse"]}");
                             GameChannel.Messages.Add(systemMessage);
                         }
                         message = new Message(DateTime.Now, bot, e.Hint);

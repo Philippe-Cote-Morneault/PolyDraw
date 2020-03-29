@@ -82,7 +82,7 @@ namespace ClientLourd.Services.SocketService
 
         public bool HasHint
         {
-            get => ((Dictionary<object,object>)_data).ContainsKey("Hint") && !String.IsNullOrWhiteSpace(Hint);
+            get => !String.IsNullOrWhiteSpace(Hint);
         }
         public string Hint
         {
@@ -112,6 +112,11 @@ namespace ClientLourd.Services.SocketService
         public int NewPoints
         {
             get => (int)_data["NewPoints"];
+        }
+
+        public string BotID
+        {
+            get => _data["BotID"];
         }
     }
 }
