@@ -2,8 +2,8 @@ package mode
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
-	"sync"
 	"time"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
@@ -29,7 +29,7 @@ type players struct {
 }
 
 type base struct {
-	readyMatch  sync.WaitGroup
+	readyMatch  *semaphore.Weighted
 	readyOnce   map[uuid.UUID]bool
 	players     []players
 	connections map[uuid.UUID]*players
@@ -92,7 +92,10 @@ func (b *base) init(connections []uuid.UUID, info model.Group) {
 	}
 
 	b.info = info
-	b.readyMatch.Add(len(b.connections))
+
+	nbConnections := int64(len(b.connections))
+	b.readyMatch = semaphore.NewWeighted(nbConnections)
+	b.readyMatch.TryAcquire(nbConnections)
 
 	b.readyOnce = make(map[uuid.UUID]bool)
 	for i := range b.connections {
@@ -110,20 +113,34 @@ func (b *base) broadcast(message *socket.RawMessage) {
 }
 
 //Wait for all the clients to be ready
-func (b *base) waitForPlayers() {
-	//TODO include a timeout in case a client drops the connection to avoid a deadlock
+func (b *base) waitForPlayers() bool {
 	log.Printf("[Match] Waiting for all the players to register, match: %s", b.info.ID)
-	b.readyMatch.Wait()
+	nbConnections := int64(len(b.connections))
 
+	cnt := context.Background()
+	var cancel func()
+	cnt, cancel = context.WithTimeout(cnt, time.Second*5)
+	if b.readyMatch.Acquire(cnt, nbConnections) != nil {
+		cancel()
+		b.broadcast(&socket.RawMessage{
+			MessageType: byte(socket.MessageType.GameCancel),
+			Length:      0,
+			Bytes:       nil,
+		})
+		cbroadcast.Broadcast(match2.BGameEnds, b.info.ID)
+		return false
+	}
+	cancel()
 	//Send a message to all the clients to advise them that the game is starting
 	message := socket.RawMessage{}
 	message.MessageType = byte(socket.MessageType.GameStarting)
 	b.broadcast(&message)
+	return true
 }
 
 func (b *base) ready(socketID uuid.UUID) {
 	if !b.readyOnce[socketID] {
-		b.readyMatch.Done()
+		b.readyMatch.Release(1)
 		b.readyOnce[socketID] = true
 	}
 }
