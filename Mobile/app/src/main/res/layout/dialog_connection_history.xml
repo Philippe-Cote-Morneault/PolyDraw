@@ -20,6 +20,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/connection_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/connection_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_background"
+        app:layout_constraintTop_toBottomOf="@id/connection_history_title"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/disconnection_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/disconnection_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_background"
+        app:layout_constraintTop_toBottomOf="@id/connection_history_title"
+        app:layout_constraintStart_toEndOf="@id/connection_title"
+        app:layout_constraintEnd_toStartOf="@id/time_played_title"/>
+
+    <TextView
+        android:id="@+id/time_played_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/connection_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_on_background"
+        app:layout_constraintTop_toBottomOf="@id/connection_history_title"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <ScrollView
         android:id="@+id/connection_history_container"
         android:layout_width="match_parent"
@@ -28,7 +65,7 @@
         app:layout_constraintBottom_toTopOf="@+id/close_dialog_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connection_history_title"
+        app:layout_constraintTop_toBottomOf="@+id/connection_title"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.recyclerview.widget.RecyclerView
