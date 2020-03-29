@@ -24,7 +24,7 @@ namespace ClientLourd.Services.ProfileViewerService
         {
             PublicProfileDialog publicProfileDialog = new PublicProfileDialog(param);
 
-            await DialogHost.Show(publicProfileDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
+            await DialogHost.Show(publicProfileDialog, "Default", (object o, DialogClosingEventArgs closingEventHandler) =>
             {
                 (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
             });
