@@ -21,9 +21,15 @@ import java.util.*
 
 class LoginPresenter(var loginView: LoginView?) : Presenter {
     private var rememberUser = false
+    private val socketService = SocketService.instance!!
+    private val socketHandler = Handler {
+        loginWithBearer()
+        true
+    }
 
     init {
-        loginWithBearer()
+        // TODO: Unsubscribe?
+        socketService.subscribeToEvent(SocketEvent.CONNECTED, socketHandler)
     }
 
     private fun loginWithBearer() {
