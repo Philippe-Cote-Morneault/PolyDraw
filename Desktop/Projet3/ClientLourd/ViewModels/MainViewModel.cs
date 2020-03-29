@@ -229,11 +229,13 @@ namespace ClientLourd.ViewModels
             }
             set
             {
-                if (!string.IsNullOrWhiteSpace(value))
+                if (!string.IsNullOrWhiteSpace(value) && _selectedLanguage.GetDescription() != value)
                 {
                     _selectedLanguage = value.GetEnumFromDescription<Languages>();
                     SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }): new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1}));
                     NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(Languages));
+                    LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

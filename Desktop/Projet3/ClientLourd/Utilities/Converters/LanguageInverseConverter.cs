@@ -14,7 +14,7 @@ namespace ClientLourd.Utilities.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value.ToString() == Languages.EN.GetDescription()) ? Languages.FR.GetDescription() : Languages.EN.GetDescription();
+            return (value.ToString() == Languages.EN.GetDescription()) ? "French" : "Anglais";
         }
 
 

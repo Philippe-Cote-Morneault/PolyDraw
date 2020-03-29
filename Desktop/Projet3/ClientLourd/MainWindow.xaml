@@ -26,7 +26,7 @@
         <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter"/>
         <converter:NotificationConverter x:Key="NotificationConverter"/>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
-
+        <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
 
     </Window.Resources>
     <Window.InputBindings>
@@ -144,6 +144,11 @@
                                     SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}"
                                     Margin="0 0 20 0"
                                     Visibility="{Binding ElementName=LobbyContainer, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Converter={StaticResource EnumTranslationConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
                                 </ComboBox>
 
 

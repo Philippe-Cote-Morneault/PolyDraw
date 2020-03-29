@@ -28,6 +28,12 @@ namespace ClientLourd.Utilities.Converters
             string enumStr = value.ToString();
             if (Language == Languages.FR.GetDescription())
             {
+                //langue 
+                if (enumStr == Languages.EN.ToString() || enumStr == Languages.EN.GetDescription())
+                    return "Anglais";
+                if (enumStr == Languages.FR.ToString() || enumStr == Languages.FR.GetDescription())
+                    return "Français";
+                
                 // Mode de jeu
                 if (enumStr == GameModes.FFA.ToString() || enumStr == GameModes.FFA.GetDescription())
                     return "Mêlée générale";
