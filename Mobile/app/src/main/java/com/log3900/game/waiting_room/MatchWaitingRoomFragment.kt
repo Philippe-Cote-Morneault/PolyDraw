@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -16,6 +18,7 @@ import com.log3900.chat.ChatMessage
 import com.log3900.game.group.*
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import com.log3900.utils.format.DateFormatter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -42,6 +45,12 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
         setupUi(rootView)
 
         matchWaitingRoomPresenter = MatchWaitingRoomPresenter(this)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackButtonPressed()
+            }
+        })
 
         return rootView
     }
@@ -130,6 +139,16 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
 
     override fun notifyPlayerLeft(playerID: UUID) {
         playersAdapter.playerRemoved(playerID)
+    }
+
+    fun onBackButtonPressed() {
+        SimpleConfirmationDialog(
+            context!!,
+            getString(R.string.quit_waiting_room),
+            getString(R.string.quit_waiting_room_confirm),
+            {_, _ -> findNavController().navigateUp()},
+            null
+        ).show()
     }
 
     override fun onDestroy() {

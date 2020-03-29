@@ -157,4 +157,6 @@
     <string name="no">Non</string>
     <string name="quit_match">Quitter</string>
     <string name="quit_match_confirm">Vous êtes sur le point de quitter la partie en cours. Voulez-vous continuer?</string>
+    <string name="quit_waiting_room">Quitter</string>
+    <string name="quit_waiting_room_confirm">Vous êtes sur le point de quitter la salle d\'attente. Voulez-vous continuer?</string>
 </resources>
