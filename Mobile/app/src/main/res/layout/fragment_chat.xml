@@ -64,14 +64,15 @@
                         android:hint="@string/chat_box_enter_message_title"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
+                <ImageView
                     android:id="@+id/fragment_chat_send_message_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="0.1"
-                    android:text="@string/fragment_chat_send_message_button_text" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_send_black"
+                    android:tint="?attr/colorPrimary"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0.1"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

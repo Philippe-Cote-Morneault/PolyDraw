@@ -10,6 +10,7 @@ import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.ChatRestService
+import com.log3900.settings.language.LanguageManager
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
@@ -71,7 +72,7 @@ class MessageRepository : Service() {
         return Single.create {
                 val call = ChatRestService.service.getChannelMessages(
                     AccountRepository.getInstance().getAccount().sessionToken,
-                    "EN",
+                    LanguageManager.getCurrentLanguageCode(),
                     channelID.toString(),
                     startIndex,
                     endIndex

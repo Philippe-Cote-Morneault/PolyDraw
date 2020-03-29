@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -31,7 +32,7 @@ class ChatFragment : Fragment(), ChatView {
     private lateinit var messagesRecyclerView: RecyclerView
     private lateinit var messagesViewAdapter: MessageAdapter
     private lateinit var viewManager: LinearLayoutManager
-    private lateinit var sendMessageButton: Button
+    private lateinit var sendMessageButton: ImageView
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
 

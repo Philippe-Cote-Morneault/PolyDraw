@@ -109,8 +109,8 @@ class RoundEnded(
 
 class HintResponse(
     var userID: UUID?,
-    var hintsLeft: Int?,
     var hint: String?,
+    var hintsLeft: Int?,
     var error: String?
 )
 

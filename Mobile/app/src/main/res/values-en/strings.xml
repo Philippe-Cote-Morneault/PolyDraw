@@ -151,4 +151,5 @@
     <string name="turn">Turn</string>
     <string name="team_score_title">Team Score: %1$d</string>
     <string name="empty_slot">Empty slot</string>
+    <string name="match_lobby_duration_title">Duration (min)</string>
 </resources>

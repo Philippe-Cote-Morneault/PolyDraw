@@ -45,7 +45,17 @@ class PlayerAdapter: RecyclerView.Adapter<PlayerViewHolder> {
     }
 
     private fun refreshLists() {
-        playersCopy = players.clone() as ArrayList<Player?>
+        playersCopy.clear()
+        if (group.gameType == MatchMode.FFA) {
+            playersCopy = players.clone() as ArrayList<Player?>
+        } else {
+            players.forEach {
+                if (!it.isCPU) {
+                    playersCopy.add(it)
+                }
+            }
+        }
+
         for (i in playersCopy.size until group.playersMax) {
             playersCopy.add(null)
         }

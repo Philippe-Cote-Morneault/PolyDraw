@@ -9,14 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.chat.Channel.Channel
 import com.log3900.chat.ChatMessage
-import com.log3900.game.group.Group
-import com.log3900.game.group.MatchMode
-import com.log3900.game.group.Player
+import com.log3900.game.group.*
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.utils.format.DateFormatter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -29,9 +29,10 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     // UI
     private lateinit var startMatchButton: MaterialButton
     private lateinit var leaveMatchButton: MaterialButton
-    private lateinit var matchNameTextView: TextView
     private lateinit var matchModeTextView: TextView
-    private lateinit var hostNameTextView: TextView
+    private lateinit var difficultyTextView: TextView
+    private lateinit var durationTextView: TextView
+    private lateinit var languageTextView: TextView
     private lateinit var playersRecyclerView: RecyclerView
     private lateinit var playersAdapter: PlayerAdapter
 
@@ -48,9 +49,10 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private fun setupUi(rootView: View) {
         startMatchButton = rootView.findViewById(R.id.fragment_match_waiting_room_button_start_match)
         leaveMatchButton = rootView.findViewById(R.id.fragment_match_waiting_room_button_leave_match)
-        matchNameTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_match_name)
-        matchModeTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_match_mode)
-        hostNameTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_host_name)
+        matchModeTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_mode)
+        difficultyTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_difficulty)
+        durationTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_duration)
+        languageTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_language)
         playersRecyclerView = rootView.findViewById(R.id.fragment_match_waiting_room_recycler_view_players)
 
         setupRecyclerView()
@@ -90,9 +92,13 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     }
 
     override fun setGroup(group: Group) {
-        matchNameTextView.text = group.groupName
-        matchModeTextView.setText(MatchMode.stringRes(group.gameType))
-        hostNameTextView.text = group.ownerName
+        matchModeTextView.text = "Mode: " + MainApplication.instance.getContext().resources.getString(MatchMode.stringRes(group.gameType))
+        difficultyTextView.text = MainApplication.instance.getContext().resources.getString(R.string.difficulty) + ": " +
+                MainApplication.instance.getContext().resources.getString(Difficulty.stringRes(group.difficulty))
+        durationTextView.text = MainApplication.instance.getContext().resources.getString(R.string.match_lobby_duration_title) + ": " +
+                DateFormatter.formatDateToTime(Date(group.getDuration()))
+        languageTextView.text = MainApplication.instance.getContext().resources.getString(R.string.language) + ": " +
+                MainApplication.instance.getContext().resources.getString(Language.stringRes(group.language))
         playersAdapter.setGroup(group)
     }
 
@@ -112,8 +118,10 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
 
     }
 
-    override fun notifyGroupUpdated() {
+    override fun notifyGroupUpdated(group: Group) {
         playersAdapter.notifyDataSetChanged()
+        durationTextView.text = MainApplication.instance.getContext().resources.getString(R.string.match_lobby_duration_title) + ": " +
+                DateFormatter.formatDateToTime(Date(group.getDuration()))
     }
 
     override fun notifyPlayerJoined(playerID: UUID) {
