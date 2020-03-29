@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"net/http"
 	"strconv"
 	"strings"
@@ -59,29 +60,30 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if strings.TrimSpace(request.Word) == "" {
-		rbody.JSONError(w, http.StatusBadRequest, "The word cannot be blank.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordBlank", r))
 		return
 	}
 
 	//Validate if the word is validate
+	lang := r.Context().Value(context.CtxLang).(int)
 	wordLower := strings.ToLower(request.Word)
-	if wordvalidator.IsBlacklist(wordLower, language.EN) {
-		rbody.JSONError(w, http.StatusBadRequest, "This word is not allowed!")
+	if wordvalidator.IsBlacklist(wordLower, lang) {
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordBlacklist", r))
 		return
 	}
 
-	if !wordvalidator.IsWord(wordLower, language.EN) {
-		rbody.JSONError(w, http.StatusBadRequest, "This is not a word, please enter a valid word.")
+	if !wordvalidator.IsWord(wordLower, lang) {
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.wordInvalid", r))
 		return
 	}
 
 	if request.Difficulty < 0 || request.Difficulty > 3 {
-		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 3.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.difficultyRange", r))
 		return
 	}
 
-	if len(request.Hints) < 3 || len(request.Hints) > 10 {
-		rbody.JSONError(w, http.StatusBadRequest, "The game must have at least 3 hints and not more than 10.")
+	if len(request.Hints) < 1 || len(request.Hints) > 10 {
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintLimits", r))
 		return
 	}
 
@@ -89,20 +91,20 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	var hints []*model.GameHint
 	for i := range request.Hints {
 		if strings.TrimSpace(request.Hints[i]) == "" {
-			rbody.JSONError(w, http.StatusBadRequest, "The hints cannot be empty.")
+			rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintEmpty", r))
 			return
 		}
 		//Check if the word is not in the string
 		hintLower := strings.ToLower(request.Hints[i])
 		if strings.Contains(hintLower, wordLower) {
-			rbody.JSONError(w, http.StatusBadRequest, "The hint cannot contain the word.")
+			rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintWord", r))
 			return
 		}
 		currentHint := strings.TrimSpace(hintLower)
 		for j, hint := range request.Hints {
 			hintLower := strings.TrimSpace(strings.ToLower(hint))
 			if hintLower == currentHint && j != i {
-				rbody.JSONError(w, http.StatusBadRequest, "The hint cannot be the same.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.hintDuplicate", r))
 				return
 			}
 		}
@@ -114,6 +116,7 @@ func PostGame(w http.ResponseWriter, r *http.Request) {
 	game := model.Game{
 		Word:       wordLower,
 		Difficulty: request.Difficulty,
+		Language:   lang,
 		Hints:      hints,
 	}
 	model.DB().Save(&game)
@@ -128,7 +131,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -137,7 +140,7 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 	model.DB().Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 	//Check for the fields
@@ -160,19 +163,19 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The file is not valid")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.gameFileInvalid", r))
 		return
 	}
 
 	fileHeader := make([]byte, 512)
 
 	if _, err := file.Read(fileHeader); err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The file cannot be read.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.fileNotReadable", r))
 		return
 	}
 
 	if _, err := file.Seek(0, 0); err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The file cannot be read.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.fileNotReadable", r))
 		return
 	}
 
@@ -210,7 +213,13 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 
 		if mime == "text/xml; charset=utf-8" {
 			//Load svg
-			image.SVGFile = keyFile
+			image.OriginalFile = keyFile
+			newFile, err := datastore.Copy(keyFile)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			image.SVGFile = newFile
 		} else {
 			//Load jpg
 			image.ImageFile = keyFile
@@ -239,31 +248,38 @@ func PostGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-
-			err = potrace.Translate(svgKey, brushsize, modeInt, false)
+			image.OriginalFile = svgKey
+			newFile, err := datastore.Copy(svgKey)
 			if err != nil {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-			image.SVGFile = svgKey
+
+			err = potrace.Translate(newFile, brushsize, modeInt, false)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			image.SVGFile = newFile
 
 		}
 		game.Image = &image
 		model.DB().Save(&game)
 		rbody.JSON(w, http.StatusOK, "OK")
 	default:
-		rbody.JSONError(w, http.StatusBadRequest, "The file is not a valid type")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.fileInvalidType", r))
 		return
 	}
 
 }
 
-//PutGameImage used to update the mode of the picture
-func PutGameImage(w http.ResponseWriter, r *http.Request) {
+//DeleteGame used to remove a game from the list
+func DeleteGame(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
+
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -272,7 +288,30 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Image").Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
+		return
+	}
+
+	model.DB().Delete(&game)
+	rbody.JSON(w, http.StatusOK, "OK")
+
+}
+
+//PutGameImage used to update the mode of the picture
+func PutGameImage(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	gameID, err := uuid.Parse(vars["id"])
+	if err != nil {
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
+		return
+	}
+
+	//Check if the game exists
+	game := model.Game{}
+	model.DB().Preload("Image").Where("id = ?", gameID).First(&game)
+
+	if game.ID == uuid.Nil {
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 	//Parse json request
@@ -325,7 +364,13 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusBadRequest, err.Error())
 				return
 			}
-			game.Image.SVGFile = svgKey
+			game.Image.OriginalFile = svgKey
+			newFile, err := datastore.Copy(svgKey)
+			if err != nil {
+				rbody.JSONError(w, http.StatusBadRequest, err.Error())
+				return
+			}
+			game.Image.SVGFile = newFile
 			xmlNeedsUpdating = true
 			updateOnlySVG = false
 		}
@@ -333,6 +378,12 @@ func PutGameImage(w http.ResponseWriter, r *http.Request) {
 		game.Image.BrushSize = -1
 	}
 	if xmlNeedsUpdating {
+		newFile, err := datastore.Copy(game.Image.OriginalFile)
+		if err != nil {
+			rbody.JSONError(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		game.Image.SVGFile = newFile
 		err = potrace.Translate(game.Image.SVGFile, game.Image.BrushSize, game.Image.Mode, updateOnlySVG)
 		if err != nil {
 			rbody.JSONError(w, http.StatusBadRequest, err.Error())
@@ -348,7 +399,7 @@ func GetGame(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	gameID, err := uuid.Parse(vars["id"])
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "A valid uuid must be set")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 
@@ -357,7 +408,7 @@ func GetGame(w http.ResponseWriter, r *http.Request) {
 	model.DB().Preload("Hints").Preload("Image").Where("id = ?", gameID).First(&game)
 
 	if game.ID == uuid.Nil {
-		rbody.JSONError(w, http.StatusNotFound, "The game cannot be found. Please check if the id is valid.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.gameNotFound", r))
 		return
 	}
 	var hints []string

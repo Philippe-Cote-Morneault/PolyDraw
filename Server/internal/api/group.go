@@ -3,13 +3,16 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+	"net/http"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/moby/moby/pkg/namesgenerator"
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
-	"net/http"
 )
 
 type requestGroupCreate struct {
@@ -73,28 +76,28 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if (request.PlayersMax > maxPlayer || request.PlayersMax < 1) && request.GameType != 1 {
-		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of players must be between 1 and %d", maxPlayer))
+		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf(language.MustGetRest("error.playerCount", r), maxPlayer))
 		return
 	}
 	if request.GameType == 0 && (request.NbRound <= 0 || request.NbRound > 5) {
-		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("The number of round must be between 1 and 5 for the free for all game mode."))
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.ffaRound", r))
 		return
 	}
 	if request.PlayersMax != 1 && request.GameType == 1 {
-		rbody.JSONError(w, http.StatusBadRequest, "The number of players must be one for the game mode Solo")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.soloCount", r))
 		return
 	}
 
 	if request.PlayersMax > maxPlayer {
-		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf("You cannot have more than %d players in a game", maxPlayer))
+		rbody.JSONError(w, http.StatusBadRequest, fmt.Sprintf(language.MustGetRest("error.playerMax", r), maxPlayer))
 		return
 	}
-	userid := r.Context().Value(CtxUserID).(uuid.UUID)
+	userid := r.Context().Value(context.CtxUserID).(uuid.UUID)
 
 	var count int64
 	model.DB().Table("groups").Where("owner_id = ? and status = ?", userid, 0).Count(&count)
 	if count != 0 {
-		rbody.JSONError(w, http.StatusConflict, "You already have a group created you cannot create multiple groups.")
+		rbody.JSONError(w, http.StatusConflict, language.MustGetRest("error.groupSingle", r))
 		return
 	}
 	var groupName string
@@ -112,6 +115,7 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		PlayersMax: request.PlayersMax,
 		GameType:   request.GameType,
 		Difficulty: request.Difficulty,
+		Language:   r.Context().Value(context.CtxLang).(int),
 		Status:     0,
 	}
 	var user model.User
@@ -134,29 +138,32 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 	model.DB().Model(&groups).Related(&model.User{}, "Users")
 	model.DB().Preload("Users").Preload("Owner").Where("status = ?", 0).Find(&groups)
 
-	response := make([]responseGroup, len(groups))
+	response := make([]responseGroup, 0, len(groups))
 	for i := range groups {
-		players := make([]responsePlayer, len(groups[i].Users))
-		for j := range groups[i].Users {
-			players[j] = responsePlayer{
-				ID:       groups[i].Users[j].ID.String(),
-				Username: groups[i].Users[j].Username,
-				IsCPU:    false,
+		lenUsers := len(groups[i].Users)
+		if lenUsers > 0 {
+			players := make([]responsePlayer, lenUsers)
+			for j := range groups[i].Users {
+				players[j] = responsePlayer{
+					ID:       groups[i].Users[j].ID.String(),
+					Username: groups[i].Users[j].Username,
+					IsCPU:    groups[i].Users[j].IsCPU,
+				}
 			}
-		}
 
-		response[i] = responseGroup{
-			ID:         groups[i].ID.String(),
-			GroupName:  groups[i].Name,
-			PlayersMax: groups[i].PlayersMax,
-			GameType:   groups[i].GameType,
-			Difficulty: groups[i].Difficulty,
-			Status:     0,
-			Language:   0,
-			NbRound:    groups[i].NbRound,
-			OwnerName:  groups[i].Owner.Username,
-			OwnerID:    groups[i].OwnerID.String(),
-			Players:    players,
+			response = append(response, responseGroup{
+				ID:         groups[i].ID.String(),
+				GroupName:  groups[i].Name,
+				PlayersMax: groups[i].PlayersMax,
+				GameType:   groups[i].GameType,
+				Difficulty: groups[i].Difficulty,
+				Status:     0,
+				Language:   groups[i].Language,
+				NbRound:    groups[i].NbRound,
+				OwnerName:  groups[i].Owner.Username,
+				OwnerID:    groups[i].OwnerID.String(),
+				Players:    players,
+			})
 		}
 	}
 	rbody.JSON(w, http.StatusOK, response)
@@ -167,7 +174,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	groupID, err := uuid.Parse(vars["id"])
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The id is not a correct UUID format.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.invalidUUID", r))
 		return
 	}
 	var group model.Group
@@ -180,7 +187,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 			players[j] = responsePlayer{
 				ID:       group.Users[j].ID.String(),
 				Username: group.Users[j].Username,
-				IsCPU:    false,
+				IsCPU:    group.Users[j].IsCPU,
 			}
 		}
 
@@ -191,7 +198,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 			GameType:   group.GameType,
 			Difficulty: group.Difficulty,
 			Status:     group.Status,
-			Language:   0,
+			Language:   group.Language,
 			NbRound:    group.NbRound,
 			OwnerName:  group.Owner.Username,
 			OwnerID:    group.Owner.ID.String(),
@@ -201,7 +208,7 @@ func GetGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rbody.JSONError(w, http.StatusNotFound, "The group could not be found.")
+	rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.groupNotFound", r))
 	return
 
 }

@@ -1,8 +1,10 @@
 package lobby
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -21,6 +23,7 @@ type Lobby struct {
 	leave      cbroadcast.Channel
 	startMatch cbroadcast.Channel
 	kick       cbroadcast.Channel
+	addbot     cbroadcast.Channel
 
 	groups   *groups
 	shutdown chan bool
@@ -39,6 +42,8 @@ func (l *Lobby) Init() {
 //Start the lobby service
 func (l *Lobby) Start() {
 	log.Println("[Lobby] -> Starting service")
+
+	l.cleanup()
 	go l.listen()
 	//TODO include a cleanup for unused groups after x minutes
 }
@@ -83,8 +88,12 @@ func (l *Lobby) listen() {
 			if err == nil {
 				l.groups.JoinGroup(rawMessage.SocketID, groupID)
 			} else {
-				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, "The uuid is invalid", rawMessage.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.RequestJoinGroup, 400, language.MustGetSocket("error.invalidUUID", rawMessage.SocketID), rawMessage.SocketID)
 			}
+
+		case message := <-l.addbot:
+			rawMessage := message.(socket.RawMessageReceived)
+			l.groups.AddBot(rawMessage.SocketID)
 
 		case message := <-l.leave:
 			rawMessage := message.(socket.RawMessageReceived)
@@ -96,7 +105,7 @@ func (l *Lobby) listen() {
 			if err == nil {
 				l.groups.KickUser(rawMessage.SocketID, userID)
 			} else {
-				socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, "The uuid is invalid", rawMessage.SocketID)
+				socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.invalidUUID", rawMessage.SocketID), rawMessage.SocketID)
 			}
 
 		case message := <-l.startMatch:
@@ -109,11 +118,17 @@ func (l *Lobby) listen() {
 	}
 }
 
+//cleanup, changes the group to the status
+func (l *Lobby) cleanup() {
+	model.DB().Model(&model.Group{}).Where("status = ?", 0).Update(struct{ Status int }{Status: 3})
+}
+
 func (l *Lobby) subscribe() {
-	l.connected, _, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
-	l.close, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
-	l.join, _, _ = cbroadcast.Subscribe(BJoinGroup)
-	l.leave, _, _ = cbroadcast.Subscribe(BLeaveGroup)
-	l.startMatch, _, _ = cbroadcast.Subscribe(BStartMatch)
-	l.kick, _, _ = cbroadcast.Subscribe(BKickUser)
+	l.connected, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
+	l.close, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+	l.join, _ = cbroadcast.Subscribe(BJoinGroup)
+	l.leave, _ = cbroadcast.Subscribe(BLeaveGroup)
+	l.startMatch, _ = cbroadcast.Subscribe(BStartMatch)
+	l.kick, _ = cbroadcast.Subscribe(BKickUser)
+	l.addbot, _ = cbroadcast.Subscribe(BAddBot)
 }

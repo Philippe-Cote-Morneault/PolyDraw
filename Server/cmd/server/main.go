@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
+	"log"
+
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
-	"log"
 
 	"github.com/spf13/viper"
 	"gitlab.com/jigsawcorp/log3900/internal/config"
@@ -28,6 +32,7 @@ func main() {
 	config.Init()
 	model.DBConnect()
 	geometry.InitTable()
+	language.Init()
 
 	restServer := &rest.Server{}
 	socketServer := &socket.Server{}
@@ -39,6 +44,7 @@ func main() {
 	graceful.Register(model.DBClose, "Database")
 
 	handleGraceful := graceful.ListenSIG()
+	cbroadcast.NonBlockingBuffer(lockingBroadcast)
 
 	registerServices()
 
@@ -75,4 +81,9 @@ func registerServices() {
 	service.Add(&drawing.Drawing{})
 	service.Add(&lobby.Lobby{})
 	service.Add(&match.Service{})
+	service.Add(&virtualplayer.VirtualPlayer{})
+}
+
+func lockingBroadcast(name string) {
+	log.Printf("[DeadlockWatchdog] -> Channel %s is currently blocked", name)
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
@@ -92,7 +93,7 @@ func GetChatChannelID(w http.ResponseWriter, r *http.Request) {
 			channelResponse.Users = users
 			json.NewEncoder(w).Encode(&channelResponse)
 		} else {
-			rbody.JSONError(w, http.StatusNotFound, "The specified channel cannot be found.")
+			rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.channelNotFound", r))
 		}
 	}
 }
@@ -125,11 +126,11 @@ func GetChatMessages(w http.ResponseWriter, r *http.Request) {
 								limit = newLimit
 							}
 						} else {
-							rbody.JSONError(w, http.StatusBadRequest, "Invalid parameters, start must be the lowest parameter.")
+							rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidStart", r))
 							return
 						}
 					} else {
-						rbody.JSONError(w, http.StatusBadRequest, "Invalid parameters, the url parameters must be a number.")
+						rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidUrl", r))
 						return
 					}
 				}
@@ -159,10 +160,10 @@ func GetChatMessages(w http.ResponseWriter, r *http.Request) {
 			}
 			json.NewEncoder(w).Encode(&response)
 		} else {
-			rbody.JSONError(w, http.StatusNotFound, "The channel ID could not be found.")
+			rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.channelNotFound", r))
 		}
 	} else {
-		rbody.JSONError(w, http.StatusBadRequest, "Invalid channel ID. It must respect the UUID format.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidUUID", r))
 	}
 
 }

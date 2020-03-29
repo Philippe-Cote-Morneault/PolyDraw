@@ -71,7 +71,7 @@ func (h *HealthCheck) listen() {
 }
 
 func (h *HealthCheck) subscribe() {
-	h.newConnection, _, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
-	h.connectionClosed, _, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
-	h.checkReceived, _, _ = cbroadcast.Subscribe(BReceived)
+	h.newConnection, _ = cbroadcast.Subscribe(socket.BSocketAuthConnected)
+	h.connectionClosed, _ = cbroadcast.Subscribe(socket.BSocketAuthCloseClient)
+	h.checkReceived, _ = cbroadcast.Subscribe(BReceived)
 }

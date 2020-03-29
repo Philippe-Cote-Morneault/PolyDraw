@@ -5,13 +5,6 @@ import "regexp"
 var regexUsername *regexp.Regexp
 var regexEmail *regexp.Regexp
 
-type key int
-
-const (
-	//CtxUserID represent the user id of the context
-	CtxUserID key = iota
-)
-
 //Init function for the API
 func Init() {
 	regexUsername = regexp.MustCompile(`^[a-z0-9_]{4,12}$`)

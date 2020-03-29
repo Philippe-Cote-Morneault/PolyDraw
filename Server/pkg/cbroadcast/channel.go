@@ -45,23 +45,22 @@ func NonBlockingBuffer(callback func(name string)) {
 }
 
 //Subscribe to a type of event. Returns a channel needed to communicate and the closer channel to inform the subscribers if the channel is closing
-func Subscribe(name string) (Channel, chan bool, error) {
+func Subscribe(name string) (Channel, chan bool) {
 	defer mutex.Unlock()
 	mutex.Lock()
 
 	if channel, ok := channels[name]; ok {
 		reader := make(Channel, channel.bufferSize)
 		channels[name].subscribers = append(channel.subscribers, reader)
-		return reader, channels[name].closer, nil
+		return reader, channels[name].closer
 	}
 
-	return nil, nil, fmt.Errorf("The channel %s was not registered", name)
-
+	panic(fmt.Sprintf("The channel %s was not registered", name))
 }
 
 //Broadcast the data to all the listener. Make sure that this function is not broadcasting in the same go subroutine that it is listening to avoid deadlocks.
 //If you need this type of architecture make sure that you increase the size of the buffer
-func Broadcast(name string, data interface{}) error {
+func Broadcast(name string, data interface{}) {
 	mutex.Lock()
 
 	if channel, ok := channels[name]; ok {
@@ -84,17 +83,16 @@ func Broadcast(name string, data interface{}) error {
 		}
 	} else {
 		mutex.Unlock()
-		return fmt.Errorf("The channel %s was not registered", name)
+		panic(fmt.Sprintf("The channel %s was not registered", name))
 	}
-	return nil
 }
 
 //Close Send a signal to all the subscribers that the broadcast is completed
-func Close(name string) error {
+func Close(name string) {
 	defer mutex.Unlock()
 	if channel, ok := channels[name]; ok {
 		close(channel.closer)
-		return nil
+		return
 	}
-	return fmt.Errorf("The channel %s was not registered", name)
+	panic(fmt.Sprintf("The channel %s was not registered", name))
 }

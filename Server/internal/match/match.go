@@ -25,9 +25,6 @@ type IMatch interface {
 	//TryWord used to handle the requests from the client when they try a word
 	TryWord(socketID uuid.UUID, word string)
 
-	//IsDrawing is called every time one of the player is drawing on the screen. In case of a virtual player id null is used
-	IsDrawing(socketID uuid.UUID)
-
 	//HintRequested is called when a player is requesting a hint
 	HintRequested(socketID uuid.UUID)
 
@@ -39,4 +36,13 @@ type IMatch interface {
 
 	//GetWelcome returns the message that the game manager needs to send before all the users can register
 	GetWelcome() socket.RawMessage
+
+	//GetGroupID return the group id
+	GetGroupID() uuid.UUID
+
+	//GetPlayers returns the list of the actual players.
+	GetPlayers() []Player
+
+	//IsRunning returns if the game is currently running
+	IsRunning() bool
 }

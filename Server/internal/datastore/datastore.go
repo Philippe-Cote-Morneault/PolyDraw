@@ -21,9 +21,24 @@ func GetFile(key string) (*bufio.Reader, error) {
 	return bufio.NewReader(file), err
 }
 
+//Copy used to copy a file and return a key for the destination
+func Copy(source string) (string, error) {
+	file, err := GetFile(source)
+	if err != nil {
+		return "", err
+	}
+
+	dst, err := PostFile(file)
+	if err != nil {
+		return "", err
+	}
+
+	return dst, nil
+}
+
 //PostFile used to post the file name
 func PostFile(reader io.Reader) (string, error) {
-	fileName := GenerateFileKey() + ".svg"
+	fileName := GenerateFileKey()
 	file, err := os.OpenFile(GetPath(fileName), os.O_WRONLY|os.O_CREATE, 0666)
 	defer file.Close()
 	if err != nil {

@@ -12,38 +12,38 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
-//Session represents a session with authentification
-type Session struct {
-	UserID uuid.UUID
-	Token  string
+type session struct {
+	userID uuid.UUID
+	lang   int
 }
 
 var mutex sync.Mutex
-var tokenAvailable map[string]uuid.UUID  //UserID
-var sessionCache map[uuid.UUID]uuid.UUID //UserID
-var userCache map[uuid.UUID]uuid.UUID    //SocketID
+var tokenAvailable map[string]session  //token
+var sessionCache map[uuid.UUID]session //socketID
+var userCache map[uuid.UUID]uuid.UUID  //userID -> socketID
 
 //TODO move to the service and init once
 func initTokenAvailable() {
 	if tokenAvailable == nil {
-		tokenAvailable = make(map[string]uuid.UUID)
+		tokenAvailable = make(map[string]session)
 	}
 	if sessionCache == nil {
-		sessionCache = make(map[uuid.UUID]uuid.UUID)
+		sessionCache = make(map[uuid.UUID]session)
 		userCache = make(map[uuid.UUID]uuid.UUID)
 	}
 }
 
 //Register the token that the client can use for authentification
-func Register(token string, userID uuid.UUID) {
+func Register(token string, userID uuid.UUID, lang int) {
 	defer mutex.Unlock()
 	mutex.Lock()
 
 	initTokenAvailable()
-	tokenAvailable[token] = userID
+	tokenAvailable[token] = session{
+		userID: userID,
+		lang:   lang,
+	}
 	log.Printf("[Auth] -> Registering user ID: %s", userID)
-
-	//TODO cleanup of unused tokens
 }
 
 //UnRegisterSocket removes the session from the socketID
@@ -100,9 +100,9 @@ func delayUnregister(session *model.Session) {
 func GetUserIDFromToken(token string) (bool, uuid.UUID) {
 	defer mutex.Unlock()
 	mutex.Lock()
-	userID, ok := tokenAvailable[token]
+	session, ok := tokenAvailable[token]
 	if ok {
-		return true, userID
+		return true, session.userID
 	}
 	return false, uuid.Nil
 }
@@ -128,28 +128,28 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 		bytes := messageReceived.Payload.Bytes
 		token := string(bytes)
 
-		if userID, ok := tokenAvailable[token]; ok {
+		if session, ok := tokenAvailable[token]; ok {
 
-			if hasUserSession(userID) {
+			if hasUserSession(session.userID) {
 				log.Printf("[Auth] -> Connection already exists dropping %s", messageReceived.SocketID)
 				sendAuthResponse(false, messageReceived.SocketID)
 				return false
 			}
 
 			model.DB().Create(&model.Session{
-				UserID:       userID,
+				UserID:       session.userID,
 				SessionToken: token,
 				SocketID:     messageReceived.SocketID,
 			})
 
 			model.DB().Create(&model.Connection{
-				UserID:      userID,
+				UserID:      session.userID,
 				ConnectedAt: time.Now().Unix(),
 			})
 
-			sessionCache[messageReceived.SocketID] = userID //Set the value in the cache so pacquets are routed fast
-			userCache[userID] = messageReceived.SocketID
-			log.Printf("[Auth] -> Connection made socket:%s userid:%s", messageReceived.SocketID, userID)
+			sessionCache[messageReceived.SocketID] = session //Set the value in the cache so pacquets are routed fast
+			userCache[session.userID] = messageReceived.SocketID
+			log.Printf("[Auth] -> Connection made socket:%s userid:%s", messageReceived.SocketID, session.userID)
 			sendAuthResponse(true, messageReceived.SocketID)
 			cbroadcast.Broadcast(socket.BSocketAuthConnected, messageReceived.SocketID) //Broadcast only when the auth is connected
 			return true
@@ -164,6 +164,14 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 		sendAuthResponse(false, messageReceived.SocketID)
 	}
 	return ok
+}
+
+//GetLang returns the language for the socket
+func GetLang(socketID uuid.UUID) int {
+	if session, ok := sessionCache[socketID]; ok {
+		return session.lang
+	}
+	return 0
 }
 
 //GetUser returns the user associated with a session
@@ -184,10 +192,21 @@ func GetUserID(socketID uuid.UUID) (uuid.UUID, error) {
 	defer mutex.Unlock()
 	mutex.Lock()
 
-	if userID, ok := sessionCache[socketID]; ok {
-		return userID, nil
+	if session, ok := sessionCache[socketID]; ok {
+		return session.userID, nil
 	}
 	return uuid.Nil, fmt.Errorf("No user is associated with this connection")
+}
+
+//ChangeLang change the language of the sessionCache
+func ChangeLang(socketID uuid.UUID, lang int) {
+	defer mutex.Unlock()
+	mutex.Lock()
+	if _, ok := sessionCache[socketID]; ok && sessionCache[socketID].lang != lang {
+		sessionVar := sessionCache[socketID]
+		sessionVar.lang = lang
+		sessionCache[socketID] = sessionVar
+	}
 }
 
 //GetSocketID returns the user id associated with a session
@@ -222,7 +241,7 @@ func HasUserToken(userID uuid.UUID) (bool, string) {
 
 	initTokenAvailable()
 	for k, v := range tokenAvailable {
-		if v == userID {
+		if v.userID == userID {
 			return true, k
 		}
 	}

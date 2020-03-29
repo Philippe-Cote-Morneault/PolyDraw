@@ -11,7 +11,7 @@ type PlayersData struct {
 //PlayersRoundSum represent players with all the information for the round
 type PlayersRoundSum struct {
 	PlayersData
-	PointsTotal int
+	NewPoints int
 }
 
 //ResponseGameInfo represents the message for type 61
@@ -20,7 +20,7 @@ type ResponseGameInfo struct {
 	GameType  int
 	TimeImage int64
 	Laps      int
-	TotalTime int
+	TotalTime int64
 }
 
 //PlayerDrawThis used for message 69
@@ -49,17 +49,23 @@ type GameEnded struct {
 
 //GuessResponse used when the player tries to guess a word
 type GuessResponse struct {
-	Valid       bool
-	Points      int
-	PointsTotal int
+	Valid     bool
+	Points    int
+	NewPoints int
 }
 
 //WordFound used to broadcast to all other players that the word was discovered
 type WordFound struct {
-	Username    string
-	UserID      string
-	Points      int
-	PointsTotal int
+	Username  string
+	UserID    string
+	Points    int
+	NewPoints int
+}
+
+//WordFoundCoop represent the message when a word was found by all the users
+type WordFoundCoop struct {
+	WordFound
+	Word string
 }
 
 //TimeUp message used to broadcast to other players that the time is up for finding the name
@@ -79,8 +85,8 @@ type PlayerSync struct {
 	Players  []PlayersData
 	Laps     int
 	Time     int64
-	GameTime int
 	LapTotal int
+	Lives    int
 }
 
 //PlayerHasLeft used to notify all the clients that a player has left a game
@@ -100,4 +106,17 @@ type RoundSummary struct {
 	Players      []PlayersRoundSum
 	Achievements []AchievementData
 	Word         string
+}
+
+//Checkpoint used to represent a checkpoint
+type Checkpoint struct {
+	TotalTime int64
+	Bonus     int64
+}
+
+//GuessFail used when a teammate has guess wrongly
+type GuessFail struct {
+	Username string
+	UserID   string
+	Lives    int
 }

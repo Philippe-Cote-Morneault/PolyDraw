@@ -13,7 +13,8 @@ import (
 
 type matchManager struct {
 	matches    map[uuid.UUID]match.IMatch //group id
-	assignment map[uuid.UUID]uuid.UUID    //socket id -> game id
+	removed    map[uuid.UUID]bool
+	assignment map[uuid.UUID]uuid.UUID //socket id -> game id
 }
 
 var matchManagerInstance *matchManager
@@ -31,6 +32,7 @@ func (m *matchManager) Init() {
 
 	m.matches = make(map[uuid.UUID]match.IMatch)
 	m.assignment = make(map[uuid.UUID]uuid.UUID)
+	m.removed = make(map[uuid.UUID]bool)
 }
 
 //StartGame start the games with the current players in the group
@@ -39,8 +41,9 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 	switch gameInfo.GameType {
 	case 0:
 		match = &mode.FFA{}
+	case 1, 2:
+		match = &mode.Coop{}
 	}
-	//TODO add other game mode here!
 
 	if match != nil {
 		match.Init(connections, gameInfo)
@@ -59,7 +62,9 @@ func (m *matchManager) StartGame(groupID uuid.UUID, connections []uuid.UUID, gam
 
 func (m *matchManager) Ready(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
-		m.matches[groupID].Ready(socketID)
+		if _, removed := m.removed[groupID]; !removed {
+			m.matches[groupID].Ready(socketID)
+		}
 	} else {
 		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
 	}
@@ -70,7 +75,7 @@ func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 	message := m.matches[groupID].GetWelcome()
 	connections := m.matches[groupID].GetConnections()
 	for i := range connections {
-		go socket.SendRawMessageToSocketID(message, connections[i]) //In parallel because this message is not determinist
+		socket.SendQueueMessageSocketID(message, connections[i]) //In parallel because this message is not determinist
 	}
 	log.Printf("[Match] -> Welcome sent to the match | %s", groupID.String())
 
@@ -79,7 +84,9 @@ func (m *matchManager) sendWelcome(groupID uuid.UUID) {
 //Guess used when the client wants to guess a word
 func (m *matchManager) Guess(message socket.RawMessageReceived) {
 	if groupID, ok := m.assignment[message.SocketID]; ok {
-		m.matches[groupID].TryWord(message.SocketID, string(message.Payload.Bytes))
+		if _, removed := m.removed[groupID]; !removed {
+			m.matches[groupID].TryWord(message.SocketID, string(message.Payload.Bytes))
+		}
 	} else {
 		log.Printf("[Match] -> Socket not registered to any game | %s", message.SocketID.String())
 	}
@@ -88,7 +95,9 @@ func (m *matchManager) Guess(message socket.RawMessageReceived) {
 //Hint used when the client wants to have a hint for the word
 func (m *matchManager) Hint(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
-		m.matches[groupID].HintRequested(socketID)
+		if _, removed := m.removed[groupID]; !removed {
+			m.matches[groupID].HintRequested(socketID)
+		}
 	} else {
 		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
 	}
@@ -97,7 +106,9 @@ func (m *matchManager) Hint(socketID uuid.UUID) {
 //Quit quits the match
 func (m *matchManager) Quit(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
-		m.matches[groupID].Disconnect(socketID)
+		if _, removed := m.removed[groupID]; !removed {
+			m.matches[groupID].Disconnect(socketID)
+		}
 		delete(m.assignment, socketID)
 	} else {
 		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
@@ -115,6 +126,14 @@ func (m *matchManager) Close() {
 }
 
 func (m *matchManager) closeMatch(wg *sync.WaitGroup, groupID uuid.UUID) {
-	m.matches[groupID].Close()
+	if m.matches[groupID].IsRunning() {
+		m.matches[groupID].Close()
+		m.removed[groupID] = true
+	}
 	wg.Done()
+}
+
+//Remove removing the match from the list
+func (m *matchManager) Remove(matchID uuid.UUID) {
+	m.removed[matchID] = true
 }

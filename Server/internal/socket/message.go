@@ -39,6 +39,8 @@ type messageType struct {
 	ErrorResponse            int
 	UserJoinedGroup          int
 	ResponseGroupRemoved     int
+	AddVirtualPlayer         int
+	RequestKickUser          int
 	RequestGameStart         int
 	GameStarting             int
 	RequestReadyMatch        int
@@ -52,6 +54,7 @@ type messageType struct {
 	GameEnded                int
 	ResponseGuess            int
 	WordFound                int
+	WordFoundCoop            int
 	TimeUp                   int
 	ResponseHintMatch        int
 	PlayerSync               int
@@ -60,9 +63,11 @@ type messageType struct {
 	EndDrawingClient         int
 	EraseStrokeClient        int
 	PlayerHasLeftGame        int
-	RequestKickUser          int
 	RoundEndStatus           int
 	UsernameChange           int
+	Checkpoint               int
+	GuessFailUser            int
+	LanguageChange           int
 }
 
 // MessageType represents the available message mode to send to clients.
@@ -102,6 +107,7 @@ var MessageType = &messageType{
 	ResponseGroupCreated:     51,
 	ResponseGroupRemoved:     53,
 	RequestKickUser:          54,
+	AddVirtualPlayer:         56,
 	GameWelcome:              61,
 	RequestReadyMatch:        62,
 	GameStarting:             63,
@@ -114,11 +120,15 @@ var MessageType = &messageType{
 	RequestGuessWordMatch:    74,
 	ResponseGuess:            75,
 	WordFound:                77,
+	Checkpoint:               79,
 	GameEnded:                81,
 	RequestHintMatch:         82,
 	ResponseHintMatch:        83,
 	RoundEndStatus:           85,
+	WordFoundCoop:            87,
+	GuessFailUser:            89,
 	UsernameChange:           110,
+	LanguageChange:           112,
 	ErrorResponse:            255,
 }
 
