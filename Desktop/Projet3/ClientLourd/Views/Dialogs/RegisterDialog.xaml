@@ -18,9 +18,9 @@
         <materialDesign:DialogHost CloseOnClickAway="False" Identifier="RegisterDialogHost">
     <Grid>
         <StackPanel x:Name="StackPanel" Height="800" Width="500" Margin="10">
-            
-            
-            <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Sign up</TextBlock>
+
+
+                <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35" Text="{DynamicResource SignUp}"></TextBlock>
 
             <StackPanel Margin="0 20 0 20">
                 <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
@@ -28,14 +28,16 @@
                 </materialDesign:Card>
                 <TextBlock HorizontalAlignment="Center">
                     <Hyperlink Command="{Binding ChangeAvatarCommand}">
-                        Change avatar
+                        <TextBlock Text="{DynamicResource ChangeAvatar}">
+                            
+                        </TextBlock>
                     </Hyperlink>
                 </TextBlock>                
             </StackPanel>
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Username</TextBlock>
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource Username}"></TextBlock>
                 </StackPanel>
                 <TextBox x:Name="UsernameField" MaxLength="12">
                     <TextBox.Text>
@@ -51,12 +53,12 @@
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Password</TextBlock>
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource Password}"></TextBlock>
                 </StackPanel>
 
                 <PasswordBox x:Name="PasswordField1"
                              PasswordChanged="OnPasswordChanged"
-                             materialDesign:HintAssist.HelperText="At least 8 characters"
+                             materialDesign:HintAssist.HelperText="{DynamicResource PasswordValidator}"
                              MaxLength="64">
                              
                 </PasswordBox>
@@ -65,7 +67,7 @@
             <StackPanel Margin="0 20 0 20">
                 <PasswordBox x:Name="PasswordField2"
                              PasswordChanged="OnPasswordChanged"
-                             materialDesign:HintAssist.HelperText="Retype the password"
+                             materialDesign:HintAssist.HelperText="{DynamicResource PasswordRetype}"
                              MaxLength="64">
                              
                 </PasswordBox>
@@ -74,7 +76,7 @@
             
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Email</TextBlock>
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource Email}"></TextBlock>
                 </StackPanel>
                 <TextBox x:Name="EmailField" MaxLength="60">
                     <TextBox.Text>
@@ -90,7 +92,7 @@
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">First name</TextBlock>
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource FirstName}"></TextBlock>
                 </StackPanel>
                 <TextBox x:Name="FirstNameField" MaxLength="64">
                     <TextBox.Text>
@@ -106,7 +108,7 @@
 
             <StackPanel Margin="0 20 0 20">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Last name</TextBlock>
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource LastName}"></TextBlock>
                 </StackPanel>
                 <TextBox x:Name="LastNameField" MaxLength="64">
                     <TextBox.Text>
@@ -126,7 +128,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Margin="10" Grid.Column="0" Content="Sign up" HorizontalAlignment="Center"
+            <Button Margin="10" Grid.Column="0" Content="{DynamicResource SignUp}" HorizontalAlignment="Center"
                     Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
                     Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="true" DockPanel.Dock="Bottom"
                     IsDefault="True">
@@ -141,7 +143,7 @@
                 </Button.IsEnabled>
             </Button>
 
-            <Button Margin="10" Grid.Column="1" Content="Cancel" HorizontalAlignment="Center"
+            <Button Margin="10" Grid.Column="1" Content="{DynamicResource Cancel}" HorizontalAlignment="Center"
                     Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
                     Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false" DockPanel.Dock="Bottom">
 

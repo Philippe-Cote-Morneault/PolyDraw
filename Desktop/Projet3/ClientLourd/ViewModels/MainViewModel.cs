@@ -235,10 +235,12 @@ namespace ClientLourd.ViewModels
             }
         }
 
+
         public List<string> Languages
         {
             get { return EnumManager.GetAllDescriptions<Languages>(); }
         }
+        public ResourceDictionary CurrentDictionary { get; set; }
 
         public delegate void LanguageChangedHandler(object source, EventArgs args);
         public event LanguageChangedHandler LanguageChangedEvent;

@@ -147,7 +147,7 @@
 
         
         <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}">
-            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20">Team score: </TextBlock>
+            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="{DynamicResource TeamScore}"></TextBlock>
             <TextBlock VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamPoints}"></TextBlock>
             <TextBlock Opacity="0" Foreground="Green" Name="PointsGained" VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamNewPoints, StringFormat={}+{0}}" RenderTransformOrigin=".5,.5">
                 <TextBlock.RenderTransform>
@@ -230,7 +230,7 @@
                 Visibility="{Binding Path=Mode, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static enum:GameModes.FFA}}">
                 <materialDesign:PackIcon VerticalAlignment="Center" Kind="Draw" Width="24" Height="24"/>
                 <TextBlock FontSize="24">
-                    <Run Text="Turn"/>
+                    <Run Text="{DynamicResource Turn}"/>
                     <Run Text="{Binding Round}"/>
                     <Run Text="/"/>
                     <Run Text="{Binding TotalRound}"/>
@@ -238,7 +238,11 @@
             </StackPanel>
             <StackPanel Visibility="{Binding Path=Mode, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static enum:GameModes.Solo}}" Margin="10" Orientation="Horizontal">
                 <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24"/>
-                <TextBlock Text="Best score: 345" FontSize="24"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="0 0 6 0" Text="{DynamicResource BestScore}" FontSize="24"/>
+                    <TextBlock Text="345" FontSize="24"/>
+
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

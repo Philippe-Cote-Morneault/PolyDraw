@@ -64,9 +64,30 @@
     <system:String x:Key="StartGame">Start game</system:String>
     <system:String x:Key="QuitLobby">Leave lobby</system:String>
     <system:String x:Key="EmptySlot">Empty slot</system:String>
+    
+    <!-- Game creation -->
+    <system:String x:Key="CreateNewGame">Create a new game</system:String>
+    <system:String x:Key="TypeWord">Type the word to guess</system:String>
+    <system:String x:Key="WriteHints1">Write</system:String>
+    <system:String x:Key="WriteHints2">hint(s) related to the word</system:String>
+    <system:String x:Key="WordDifficulty">Select the word's level of difficulty</system:String>
+    <system:String x:Key="DrawingWay">Select the way you wish to create the game</system:String>
+
+    <system:String x:Key="ManualDraw">Draw the word</system:String>
+    <system:String x:Key="ImageUploaded">Upload an image of the word</system:String>
+    
+    <system:String x:Key="Next">Next</system:String>
+    <system:String x:Key="Previous">Previous</system:String>
+    <system:String x:Key="Confirm">Confirm</system:String>
+    <system:String x:Key="Word">Word</system:String>
+    <system:String x:Key="Hint">Hint</system:String>
+    <system:String x:Key="DrawRepresentation">Draw a representation of the word</system:String>
+    <system:String x:Key="PlayPreview">Play the preview</system:String>
+    <system:String x:Key="UploadImage">Upload an image</system:String>
+    <system:String x:Key="Upload">Upload</system:String>
 
 
-
+    <system:String x:Key="DrawingMode">Select the way the drawing will be displayed</system:String>
 
 
     <!-- Lobby creation -->
@@ -78,5 +99,39 @@
     <system:String x:Key="SelectPlayers">Select the level number of players</system:String>
     <system:String x:Key="SelectRounds">Select the number of rounds</system:String>
     <system:String x:Key="CreateLobbyButton">Create lobby</system:String>
+    
+    <!-- EditorZone -->
+    <system:String x:Key="WordIs">The word is </system:String>
+    <system:String x:Key="Guess">Guess</system:String>
+    <system:String x:Key="TypeGuess">Type your guess here</system:String>
+    <system:String x:Key="TeamateWrongGuess">Your teamate has guessed incorrectly!</system:String>
+
+    <!-- TopBar -->
+    <system:String x:Key="TeamScore">Team score: </system:String>
+    <system:String x:Key="BestScore">Best score: </system:String>
+    <system:String x:Key="Turn">Turn</system:String>
+    
+    <!-- GameViewModel -->
+    <system:String x:Key="IsDrawingNext">is drawing the next word!</system:String>
+    <system:String x:Key="YourTurnDraw">It is your turn to draw the word</system:String>
+    <system:String x:Key="TryAgain">Try again!</system:String>
+    <system:String x:Key="RightGuessCoop">has guessed correctly! The word was</system:String>
+
+    <!-- Leaderboard -->
+    <system:String x:Key="WinnerIs">The winner is</system:String>
+    <system:String x:Key="WordWas">The word was</system:String>
+
+    <!-- Login page -->
+    <system:String x:Key="Welcome">Welcome!</system:String>
+    <system:String x:Key="Login">Login</system:String>
+    <system:String x:Key="RememberMe">Remember me</system:String>
+    <system:String x:Key="Register">Register now!</system:String>
+
+    <!-- Register dialog -->
+    <system:String x:Key="SignUp">Sign up</system:String>
+    <system:String x:Key="Cancel">Cancel</system:String>
+    <system:String x:Key="PasswordRetype">Retype the password</system:String>
+
+
 
 </ResourceDictionary>

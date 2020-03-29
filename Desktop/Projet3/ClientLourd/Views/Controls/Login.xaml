@@ -18,6 +18,8 @@
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <converter:LanguageInverseConverter x:Key="LanguageInverseConverter" />
+
     </UserControl.Resources>
     <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
         <Grid
@@ -33,7 +35,14 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0">
-                <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Padding="0 10 0 10">Welcome!</TextBlock>
+
+                <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Padding="0 10 0 0" Text="{DynamicResource Welcome}"></TextBlock>
+
+                <TextBlock HorizontalAlignment="Center"  FontSize="15" Padding="0 10 20 0">
+                    <Hyperlink Command="{Binding ChangeLangCommand}">
+                        <TextBlock Text="{Binding Language, Converter={StaticResource LanguageInverseConverter}}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
 
             </StackPanel>
 
@@ -50,7 +59,7 @@
                     Margin="20 0 20 0"
                     x:Name="NameTextBox"
                     MaxLength="12"
-                    materialDesign:HintAssist.Hint="Username"
+                    materialDesign:HintAssist.Hint="{DynamicResource Username}"
                     materialDesign:HintAssist.HelperText="">
                     <TextBox.Text>
                         <Binding Path="User.Username">
@@ -69,10 +78,10 @@
                     Margin="20 0 20 0"
                     x:Name="PasswordBox"
                     MaxLength="64"
-                    materialDesign:HintAssist.Hint="Password"
+                    materialDesign:HintAssist.Hint="{DynamicResource Password}"
                     materialDesign:TextFieldAssist.HasClearButton="True"
-                    materialDesign:HintAssist.HelperText="At least 8 characters" />
-                <CheckBox Name="RememberMeCheckBox" Margin="20 20 20 0" Content="Remember me"/>
+                    materialDesign:HintAssist.HelperText="{DynamicResource PasswordValidator}" />
+                <CheckBox Name="RememberMeCheckBox" Margin="20 20 20 0" Content="{DynamicResource RememberMe}"/>
             </StackPanel>
 
             <!--Login button-->
@@ -82,7 +91,8 @@
                     IsDefault="True"
                     Margin="40 0 40 0"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                    Command="{Binding Path=LoginCommand}">
+                    Command="{Binding Path=LoginCommand}"
+                Content="{DynamicResource Login}">
                 <Button.CommandParameter>
                     <MultiBinding Converter="{StaticResource MultiBindingConverter}">
                         <Binding ElementName="NameTextBox" Path="Text" />
@@ -91,10 +101,12 @@
                         <Binding ElementName="Control" Path="IsBearerActive" />
                     </MultiBinding>
                 </Button.CommandParameter>
-                Login
+                
             </Button>
                 <TextBlock HorizontalAlignment="Center" >
-                    <Hyperlink Command="{Binding SignUpCommand}">Register now !</Hyperlink>
+                    <Hyperlink Command="{Binding SignUpCommand}">
+                        <TextBlock Text="{DynamicResource Register}"></TextBlock>
+                    </Hyperlink>
                 </TextBlock>
             </StackPanel>
 

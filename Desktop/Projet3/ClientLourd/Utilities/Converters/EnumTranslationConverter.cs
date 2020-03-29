@@ -22,11 +22,13 @@ namespace ClientLourd.Utilities.Converters
             }
         }
 
+        // Poopie code
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string enumStr = value.ToString();
             if (Language == Languages.FR.GetDescription())
             {
+                // Mode de jeu
                 if (enumStr == GameModes.FFA.ToString() || enumStr == GameModes.FFA.GetDescription())
                     return "Mêlée générale";
 
@@ -37,6 +39,7 @@ namespace ClientLourd.Utilities.Converters
                     return "Solo";
 
 
+                // Difficulties
                 if (enumStr == DifficultyLevel.Easy.ToString() || enumStr == DifficultyLevel.Easy.GetDescription())
                     return "Facile";
 
@@ -45,6 +48,32 @@ namespace ClientLourd.Utilities.Converters
 
                 if (enumStr == DifficultyLevel.Hard.ToString() || enumStr == DifficultyLevel.Hard.GetDescription())
                     return "Difficile";
+
+
+                // Potrace modes
+                if (enumStr == PotraceMode.Classic.ToString() || enumStr == PotraceMode.Classic.GetDescription())
+                    return "Mode classique (ordre de dessin)";
+
+                if (enumStr == PotraceMode.Random.ToString() || enumStr == PotraceMode.Random.GetDescription())
+                    return "Mode aléatoire";
+
+                if (enumStr == PotraceMode.RightToLeft.ToString() || enumStr == PotraceMode.RightToLeft.GetDescription())
+                    return "De droite à gauche";
+
+                if (enumStr == PotraceMode.LeftToRight.ToString() || enumStr == PotraceMode.LeftToRight.GetDescription())
+                    return "De gauche à droite";
+
+                if (enumStr == PotraceMode.TopToBottom.ToString() || enumStr == PotraceMode.TopToBottom.GetDescription())
+                    return "Du haut vers le bas";
+
+                if (enumStr == PotraceMode.BottomToTop.ToString() || enumStr == PotraceMode.BottomToTop.GetDescription())
+                    return "Du bas vers le haut";
+
+                if (enumStr == PotraceMode.InsideToOutside.ToString() || enumStr == PotraceMode.InsideToOutside.GetDescription())
+                    return "De l'intérieur vers l'extérieur";
+
+                if (enumStr == PotraceMode.OutsideToInside.ToString() || enumStr == PotraceMode.OutsideToInside.GetDescription())
+                    return "De l'extérieur vers l'intérieur";
             }
             return value;
         }

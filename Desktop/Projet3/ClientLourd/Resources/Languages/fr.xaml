@@ -66,6 +66,26 @@
     <system:String x:Key="QuitLobby">Quitter la salle d'attente</system:String>
     <system:String x:Key="EmptySlot">Place libre</system:String>
 
+    <!-- Game creation -->
+    <system:String x:Key="CreateNewGame">Crée un jeu</system:String>
+    <system:String x:Key="TypeWord">Entrez le mot à deviner</system:String>
+    <system:String x:Key="WriteHints1">Écrivez</system:String>
+    <system:String x:Key="WriteHints2">indice(s) liées au mot</system:String>
+    <system:String x:Key="WordDifficulty">Sélectionnez le niveau de difficulté du mot</system:String>
+    <system:String x:Key="DrawingWay">Sélectionnez la façon dont le jeu sera créé</system:String>
+    <system:String x:Key="ManualDraw">Dessiner le mot</system:String>
+    <system:String x:Key="ImageUploaded">Télécharger une image du mot</system:String>
+    <system:String x:Key="Next">Suivant</system:String>
+    <system:String x:Key="Previous">Précédent</system:String>
+    <system:String x:Key="Confirm">Confirmer</system:String>
+    <system:String x:Key="Word">Mot</system:String>
+    <system:String x:Key="Hint">Indice</system:String>
+    <system:String x:Key="DrawRepresentation">Dessinez une représentation du mot</system:String>
+    <system:String x:Key="PlayPreview">Jouer la prévisualisation</system:String>
+    <system:String x:Key="UploadImage">Téléchargez une image</system:String>
+    <system:String x:Key="Upload">Télécharger</system:String>
+    <system:String x:Key="DrawingMode">Sélectionnez la façon dont le dessin sera affiché</system:String>
+
 
 
     <!-- Lobby creation -->
@@ -77,5 +97,37 @@
     <system:String x:Key="SelectPlayers">Sélectionner le nombre de joueurs</system:String>
     <system:String x:Key="SelectRounds">Sélectionner le nombre de rondes</system:String>
     <system:String x:Key="CreateLobbyButton">Créer la salle d'attente</system:String>
+
+    <!-- EditorZone -->
+    <system:String x:Key="WordIs">Le mot est</system:String>
+    <system:String x:Key="Guess">Deviner</system:String>
+    <system:String x:Key="TypeGuess">Devinez ici</system:String>
+    <system:String x:Key="TeamateWrongGuess">Votre coéquipier a deviné incorrectement!</system:String>
+
+    <!-- TopBar -->
+    <system:String x:Key="TeamScore">Score de l'équipe: </system:String>
+    <system:String x:Key="BestScore">Meilleur score:</system:String>
+    <system:String x:Key="Turn">Tour</system:String>
+
+    <!-- GameViewModel -->
+    <system:String x:Key="IsDrawingNext">dessine le prochain mot!</system:String>
+    <system:String x:Key="YourTurnDraw">C'est à ton tour de dessiner le mot</system:String>
+    <system:String x:Key="TryAgain">Essaye encore!</system:String>
+    <system:String x:Key="RightGuessCoop">a deviné correctement! Le mot était</system:String>
+
+    <!-- Leaderboard -->
+    <system:String x:Key="WinnerIs">Le gagnant est</system:String>
+    <system:String x:Key="WordWas">Le mot était</system:String>
+
+    <!-- Login page -->
+    <system:String x:Key="Welcome">Bienvenue!</system:String>
+    <system:String x:Key="Login">Se connecter</system:String>
+    <system:String x:Key="RememberMe">Se souvenir de moi</system:String>
+    <system:String x:Key="Register">S'enregistrer!</system:String>
+
+    <!-- Register dialog -->
+    <system:String x:Key="SignUp">S'inscrire</system:String>
+    <system:String x:Key="Cancel">Annuler</system:String>
+    <system:String x:Key="PasswordRetype">Retaper le mot de passe</system:String>
 
 </ResourceDictionary>

@@ -228,6 +228,8 @@ namespace ClientLourd
                     break;
             }
             Resources.MergedDictionaries.Add(dict);
+            (DataContext as MainViewModel).CurrentDictionary = dict;
+
             LanguageSelector.SelectionChanged += ChangeLang;
         }
 
@@ -242,7 +244,7 @@ namespace ClientLourd
             
             if (languageSelected == Languages.FR.GetDescription())
                 dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
-            
+            (DataContext as MainViewModel).CurrentDictionary = dict;
             Resources.MergedDictionaries[0] = dict;
         }
         

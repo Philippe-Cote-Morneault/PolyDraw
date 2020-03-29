@@ -98,11 +98,11 @@
                 Orientation="Horizontal"
                 Visibility="{Binding Path=IsYourTurn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 
-                <TextBlock FontWeight="Medium" FontSize="24" Text="The word is " VerticalAlignment="Center"/>
+                <TextBlock FontWeight="Medium" FontSize="24" Margin="0 0 6 0" Text="{DynamicResource WordIs}" VerticalAlignment="Center"/>
                 <TextBlock FontWeight="Medium" FontSize="24" Text="{Binding Word}" Foreground="Red" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}"  Orientation="Horizontal">
-                <TextBlock FontSize="24" Text="Type your guess here" VerticalAlignment="Center"></TextBlock>
+                <TextBlock FontSize="24" Text="{DynamicResource TypeGuess}" VerticalAlignment="Center"></TextBlock>
                 <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}" LostFocus="OnFocusLost" GotFocus="OnFocus">
 
                     <ItemsControl.ItemsPanel>
@@ -136,16 +136,16 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <Button Command="{Binding SendGuessCommand}" IsDefault="{Binding GuessButtonIsDefault}" IsEnabled="{Binding CanStillGuess}">
-                    Guess
+                <Button Command="{Binding SendGuessCommand}" IsDefault="{Binding GuessButtonIsDefault}" IsEnabled="{Binding CanStillGuess}" Content="{DynamicResource Guess}">
+                    
                 </Button>
                 
-                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}" Content="Hint" 
+                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{DynamicResource Hint}" 
                      Style="{StaticResource MaterialDesignIconButton}" 
                      Command="{Binding Path=AskHintCommand}"
                     Margin="10 0 10 0"/>
 
-                <TextBlock Foreground="Red" Opacity="0" VerticalAlignment="Center" FontSize="25" Name="TeamateGuessedWrong">Your teamate has guessed incorrectly!</TextBlock>
+                <TextBlock Foreground="Red" Opacity="0" VerticalAlignment="Center" FontSize="25" Name="TeamateGuessedWrong" Text="{DynamicResource TeamateWrongGuess}"></TextBlock>
             </StackPanel>
         </StackPanel>
         <Grid>

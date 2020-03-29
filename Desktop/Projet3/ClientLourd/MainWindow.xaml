@@ -258,15 +258,7 @@
                                         </StackPanel>
                                     </Button>
                                 </ListViewItem>
-                                <ListViewItem>
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                            Command="{Binding Path=EditorCommand}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="Meditation" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="{DynamicResource Editor}"/>
-                                        </StackPanel>
-                                    </Button>
-                                </ListViewItem>
+
                                 
                                 
                                 <ListViewItem>
