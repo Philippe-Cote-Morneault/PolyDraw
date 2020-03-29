@@ -51,6 +51,7 @@ en:
     loginBearer: "The username and the bearer must be set."
     hintInvalid: "Hints are not available for this player. The drawing player needs to be a virtual player."
     hintScore: "You need at least 50 points for a hint."
+    hintTime: "There needs to be at least 10 seconds for a hint to be requested."
 fr:
   error:
     channelNotFound: "Le canal spécifié n'a pu être trouvé."
@@ -101,4 +102,5 @@ fr:
     loginBearer: "Le nom d'utilisateur et le bearer doivent être dans la requête."
     hintInvalid: "Les indices ne sont pas disponible pour ce joueur. Ils ne sont disponibles que pour les joueurs virtuels."
     hintScore: "Vous avez besoin de 50 pts pour demander un indice. Vous n'avez pas assez de points."
+    hintTime: "Il doit vous rester au minimum 10 secondes pour demander un indice."
 `)

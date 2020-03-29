@@ -2,6 +2,7 @@ package mode
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"strings"
 	"sync"
@@ -380,12 +381,14 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 			c.applyPenalty()
 		}
 	} else {
+		c.receiving.Lock()
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
 			Hint:  "",
-			Error: "There needs to be at least 10 seconds for a hint to be requested.",
+			Error: language.MustGet("error.hintTime", c.info.Language),
 		})
 		c.broadcast(&message)
+		c.receiving.Unlock()
 	}
 
 }
