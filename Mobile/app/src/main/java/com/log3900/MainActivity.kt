@@ -34,6 +34,7 @@ import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import com.log3900.shared.ui.dialogs.SimpleErrorDialog
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
@@ -202,10 +203,15 @@ open class MainActivity : AppCompatActivity() {
         })
     }
 
-    //override fun onBackPressed() {
-    //    super.onBackPressed()
-        //logout()
-    //}
+    override fun onBackPressed() {
+        SimpleConfirmationDialog(
+            this,
+            getString(R.string.logout),
+            getString(R.string.logout_lobby_confirm),
+            {_, _-> logout()},
+            null
+        ).show()
+    }
 
     fun startNavigationFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean = true) {
         if (!keepBackstack) {

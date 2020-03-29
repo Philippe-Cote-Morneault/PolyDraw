@@ -152,4 +152,8 @@
     <string name="team_score_title">Team Score: %1$d</string>
     <string name="empty_slot">Empty slot</string>
     <string name="match_lobby_duration_title">Duration (min)</string>
+    <string name="logout_lobby_confirm">You are about to logout. Do you wish to continue?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
 </resources>

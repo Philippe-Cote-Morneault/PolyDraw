@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import androidx.fragment.app.DialogFragment
+import com.log3900.R
 
 class SimpleConfirmationDialog : DialogFragment {
     private var dialog: AlertDialog
@@ -14,8 +15,8 @@ class SimpleConfirmationDialog : DialogFragment {
         dialog = AlertDialog.Builder(context)
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton("Yes", positiveButtonListener)
-            .setNegativeButton("No", negativeButtonListener)
+            .setPositiveButton(R.string.yes, positiveButtonListener)
+            .setNegativeButton(R.string.no, negativeButtonListener)
             .create()
     }
 
