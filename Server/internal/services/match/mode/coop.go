@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
@@ -143,7 +144,7 @@ func (c *Coop) GameLoop() {
 		Username:  c.curDrawer.Username,
 		Time:      c.timeImage,
 		DrawingID: drawingID.String(),
-		Length:    len(c.currentWord),
+		Length:    utf8.RuneCountInString(c.currentWord),
 	})
 
 	c.broadcast(&message)

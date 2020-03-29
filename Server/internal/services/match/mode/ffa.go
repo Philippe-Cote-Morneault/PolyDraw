@@ -1,7 +1,6 @@
 package mode
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"log"
 	"math"
 	"math/rand"
@@ -9,6 +8,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
@@ -148,7 +150,7 @@ func (f *FFA) GameLoop() {
 		Username:  f.curDrawer.Username,
 		Time:      f.timeImage,
 		DrawingID: drawingID.String(),
-		Length:    len(f.currentWord),
+		Length:    utf8.RuneCountInString(f.currentWord),
 	})
 	f.broadcast(&message)
 	f.timeStartImage = time.Now()
