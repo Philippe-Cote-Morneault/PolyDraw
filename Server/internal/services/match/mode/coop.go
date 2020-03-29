@@ -509,21 +509,17 @@ func (c *Coop) computeDifficulty() {
 	//Determine the time based of the difficulty
 	switch c.info.Difficulty {
 	case 0:
-		c.gameTime = 300
-		c.timeImage = 40
+		c.gameTime = 60
+		c.timeImage = 15
 		c.penalty = 10
 	case 1:
-		c.gameTime = 240
-		c.timeImage = 30
-		c.penalty = 20
-	case 2:
-		c.gameTime = 180
-		c.timeImage = 20
-		c.penalty = 30
-	case 3:
-		c.gameTime = 120
+		c.gameTime = 45
 		c.timeImage = 10
-		c.penalty = 30
+		c.penalty = 15
+	case 2:
+		c.gameTime = 30
+		c.timeImage = 10
+		c.penalty = 20
 	}
 	c.gameTime *= 1000
 	c.timeImage *= 1000
