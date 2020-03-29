@@ -26,17 +26,30 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
             Loaded += OnLoaded;
+            _random = new Random((int)DateTime.Now.Ticks);
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
+            _timer.Tick += (s, arg) => Confetti();
+        }
+
+        public void AfterLogin()
+        {
+           InitEventHandler(); 
+        }
+
+        public void AfterLogout()
+        {
+            
+        }
+
+        private void InitEventHandler()
+        {
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
             SocketClient.NewPlayerIsDrawing += SocketClientNewPlayerDrawing;
             SocketClient.RoundEnded += SocketClientOnRoundEnded;
             SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
-            _random = new Random((int)DateTime.Now.Ticks);
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
-            _timer.Tick += (s, arg) => Confetti();
         }
-
         public SessionInformations SessionInformations
         {
             get
@@ -87,9 +100,11 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
+            var e = ((MatchEventArgs) args);
             Task.Run(() =>
             {
-                StartConfetti();
+                if (e.WinnerID == SessionInformations.User.ID)
+                    StartConfetti();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
@@ -101,7 +116,8 @@ namespace ClientLourd.Views.Controls.Game
                     LeaderBoardGrid.Children.Clear();
                     LeaderBoardGrid.Visibility = Visibility.Collapsed;
                 });
-                StopConfetti();
+                if (e.WinnerID == SessionInformations.User.ID)
+                    StopConfetti();
             });
         }
 

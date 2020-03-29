@@ -27,7 +27,7 @@ using Timer = System.Timers.Timer;
 
 namespace ClientLourd.ViewModels
 {
-    public class GameViewModel : ModelBase
+    public class GameViewModel : ViewModelBase
     {
         private string _drawingID;
         private string _word;
@@ -46,9 +46,7 @@ namespace ClientLourd.ViewModels
 
         public GameViewModel()
         {
-            _players = new ObservableCollection<Player>();
-            InitEventHandler();
-            CanStillGuess = true;
+            Players = new ObservableCollection<Player>();
         }
 
         public ResourceDictionary CurrentDictionary
@@ -149,7 +147,7 @@ namespace ClientLourd.ViewModels
                 Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
                 if (e.UserID == SessionInformations.User.ID)
                 {
-                    StrokeDrawerService.Close();
+                    ResetView();
                 }
             });
         }
@@ -593,5 +591,23 @@ namespace ClientLourd.ViewModels
             });
         }
 
+        public override void AfterLogOut()
+        {
+        }
+
+        public override void AfterLogin()
+        {
+            _players = new ObservableCollection<Player>();
+            ClearCanvas();
+            InitEventHandler();
+        }
+
+        private void ResetView()
+        {
+            StrokeDrawerService.Close();
+            ClearCanvas();
+            Players.Clear();
+            Time = DateTime.MinValue;
+        }
     }
 }

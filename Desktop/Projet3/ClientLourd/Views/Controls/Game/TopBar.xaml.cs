@@ -16,14 +16,28 @@ namespace ClientLourd.Views.Controls.Game
         public TopBar()
         {
             InitializeComponent();
+        }
+
+        public void AfterLogin()
+        {
+            InitEventhandler();            
+        }
+
+        public void AfterLogout()
+        {
+            
+        }
+
+        private void InitEventhandler()
+        {
             SocketClient.MatchSync += SocketClientOnMatchSync;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
             SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
-        }
-
-       
+        }   
+        
+        
 
         private void SocketClientCoopWordGuessed(object source, EventArgs args)
         {

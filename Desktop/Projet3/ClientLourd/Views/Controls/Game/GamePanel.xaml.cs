@@ -9,5 +9,18 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
         }
+
+        public void AfterLogin()
+        {
+            ViewModel.AfterLogin();
+            TopBar.AfterLogin();
+            EditorZone.AfterLogin();
+            GameStatus.AfterLogin();
+        }
+
+        public void AfterLogout()
+        {
+            ViewModel.AfterLogOut();
+        }
     }
 }
