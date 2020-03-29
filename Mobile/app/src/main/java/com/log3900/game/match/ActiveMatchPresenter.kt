@@ -20,7 +20,7 @@ import kotlin.collections.ArrayList
 abstract class ActiveMatchPresenter : Presenter {
     protected var activeMatchView: ActiveMatchView? = null
     protected var matchManager: MatchManager
-    private var lastShownTime: String? = null
+    protected var lastShownTime: String? = null
 
     constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
         this.activeMatchView = activeMatchView
@@ -42,22 +42,26 @@ abstract class ActiveMatchPresenter : Presenter {
        // activeMatchView?.setPlayerStatus()
     }
 
-    protected open fun onMatchSynchronisation(synchronisation: Synchronisation) {
-        val currentMatch = matchManager.getCurrentMatch()
-        val formattedTime = DateFormatter.formatDateToTime(Date(synchronisation.time.toLong()))
-
+    protected fun changeRemainingTime(remainingTime: Int) {
+        val formattedTime = DateFormatter.formatDateToTime(Date(remainingTime.toLong()))
         if (lastShownTime == null || lastShownTime != formattedTime) {
             lastShownTime = formattedTime
             activeMatchView?.setTimeValue(formattedTime)
-        }
 
-        if (synchronisation.time <= 10000) {
-            activeMatchView?.pulseRemainingTime()
-            SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_timer_warning)
+            if (remainingTime <= 10000) {
+                activeMatchView?.pulseRemainingTime()
+                SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_timer_warning)
+            }
         }
     }
 
-    private fun onMatchPlayersUpdated() {
+    protected open fun onMatchSynchronisation(synchronisation: Synchronisation) {
+        val currentMatch = matchManager.getCurrentMatch()
+
+        changeRemainingTime(synchronisation.time)
+    }
+
+    protected open fun onMatchPlayersUpdated() {
         activeMatchView?.notifyPlayersChanged()
     }
 
@@ -67,8 +71,14 @@ abstract class ActiveMatchPresenter : Presenter {
     }
 
     protected open fun onGuessedWordWrong() {
+        activeMatchView?.setCanvasMessage("Try again!")
+        activeMatchView?.showCanvasMessageView(true)
         activeMatchView?.animateWordGuessedWrong()
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
+        Handler().postDelayed({
+            activeMatchView?.showCanvasMessageView(false)
+        }, 2000)
+
     }
 
     private fun onTimesUp(timesUp: TimesUp) {
@@ -79,12 +89,12 @@ abstract class ActiveMatchPresenter : Presenter {
                 Handler().postDelayed({
                     activeMatchView?.clearCanvas()
                     activeMatchView?.showCanvas()
-                }, 1500)
+                }, 500)
             }, 2000)
         }
     }
 
-    private fun onRoundEnded(roundEnded: RoundEnded) {
+    protected open fun onRoundEnded(roundEnded: RoundEnded) {
         val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
         roundEnded.players.forEach {
             playerScores.add(Pair(it.username, it.newPoints))
@@ -92,7 +102,7 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
     }
 
-    private fun onMatchEnded(matchEnded: MatchEnded) {
+    protected open fun onMatchEnded(matchEnded: MatchEnded) {
         if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
             activeMatchView?.showConfetti()
         }

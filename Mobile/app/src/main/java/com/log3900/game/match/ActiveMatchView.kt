@@ -26,5 +26,7 @@ interface ActiveMatchView {
     fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>)
     fun hideMatchEndInfoView()
     fun enableHintButton(enable: Boolean)
-    fun showRemainingTimeChangedAnimation(timeChangedValue: Int)
+    fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean)
+    fun setCanvasMessage(message: String)
+    fun showCanvasMessageView(show: Boolean)
 }

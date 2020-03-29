@@ -1,5 +1,6 @@
 package com.log3900.game.lobby
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +12,8 @@ import com.log3900.game.group.Difficulty
 import com.log3900.game.group.Group
 import com.log3900.game.group.Language
 import com.log3900.game.group.MatchMode
+import com.log3900.utils.format.DateFormatter
+import java.util.*
 
 class MatchViewHolder : RecyclerView.ViewHolder {
     private lateinit var match: Group
@@ -21,7 +24,7 @@ class MatchViewHolder : RecyclerView.ViewHolder {
     private var matchLanguageTextView: TextView
     private var matchDifficultyTextView: TextView
     private var matchHostTextView: TextView
-    private var matchRoundsTextView: TextView
+    private var matchDurationTextView: TextView
     private var matchPlayerCountTextView: TextView
     private var joinMatchButton: MaterialButton
 
@@ -31,7 +34,7 @@ class MatchViewHolder : RecyclerView.ViewHolder {
         matchLanguageTextView = itemView.findViewById(R.id.list_item_match_text_view_match_language)
         matchDifficultyTextView = itemView.findViewById(R.id.list_item_match_text_view_match_difficulty)
         matchHostTextView = itemView.findViewById(R.id.list_item_match_text_view_match_host)
-        matchRoundsTextView = itemView.findViewById(R.id.list_item_match_text_view_match_rounds)
+        matchDurationTextView = itemView.findViewById(R.id.list_item_match_text_view_match_duration)
         matchPlayerCountTextView = itemView.findViewById(R.id.list_item_match_text_view_match_player_count)
         joinMatchButton = itemView.findViewById(R.id.list_item_match_button_join)
         joinMatchButton.setOnClickListener {
@@ -48,10 +51,10 @@ class MatchViewHolder : RecyclerView.ViewHolder {
         matchLanguageTextView.text = MainApplication.instance.getContext().resources.getString(Language.stringRes(match.language))
         matchDifficultyTextView.text = MainApplication.instance.getContext().resources.getString(Difficulty.stringRes(match.difficulty))
         matchHostTextView.text = match.ownerName
-        if (match.rounds != null) {
-            matchRoundsTextView.text = match.rounds.toString()
+        if (match.gameType == MatchMode.FFA) {
+            matchDurationTextView.text = DateFormatter.formatDateToTime(Date((match.players.size * match.rounds!! * 1000 * 60).toLong()))
         } else {
-            matchRoundsTextView.text = "N/A"
+            matchDurationTextView.text = DateFormatter.formatDateToTime(Date(Difficulty.timeToPlay(match.difficulty)))
         }
         matchPlayerCountTextView.text = "${match.players.size}/${match.playersMax}"
         matchIconImageView.setImageResource(MatchMode.imageRes(match.gameType))

@@ -25,11 +25,21 @@
             app:layout_constraintWidth_percent="0.15" />
 
         <TextView
+            android:id="@+id/fragment_match_lobby_text_view_host"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/match_lobby_host_title"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_mode"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.15" />
+
+        <TextView
             android:id="@+id/fragment_match_lobby_text_view_language"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/language"
-            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_mode"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_host"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintWidth_percent="0.15"/>
@@ -45,21 +55,11 @@
             app:layout_constraintWidth_percent="0.15" />
 
         <TextView
-            android:id="@+id/fragment_match_lobby_text_view_host"
+            android:id="@+id/fragment_match_lobby_text_view_duration"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/match_lobby_host_title"
+            android:text="@string/match_lobby_duration_title"
             app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_difficulty"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_percent="0.15" />
-
-        <TextView
-            android:id="@+id/fragment_match_lobby_text_view_rounds"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/rounds"
-            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_host"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintWidth_percent="0.15" />
@@ -69,7 +69,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_group_black_24dp"
-            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_rounds"
+            app:layout_constraintStart_toEndOf="@id/fragment_match_lobby_text_view_duration"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 

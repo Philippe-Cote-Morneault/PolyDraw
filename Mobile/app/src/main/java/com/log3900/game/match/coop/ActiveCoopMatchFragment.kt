@@ -62,7 +62,7 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
     }
 
     override fun notifyPlayersChanged() {
-        teamPlayersAdapter.notifyDataSetChanged()
+        teamPlayersAdapter.notifyPlayersChanged()
     }
 
     override fun setTeamScore(score: String) {

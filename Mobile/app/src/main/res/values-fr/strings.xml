@@ -154,4 +154,5 @@
     <string name="turn">Tour</string>
     <string name="team_score_title">Score d\'équipe: %1$d</string>
     <string name="empty_slot">Place vide</string>
+    <string name="match_lobby_duration_title">Durée (min)</string>
 </resources>

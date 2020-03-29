@@ -13,14 +13,13 @@ import com.daimajia.androidanimations.library.YoYo
 import com.log3900.R
 import com.log3900.draw.DrawViewFragment
 import com.log3900.game.group.Player
-import com.log3900.game.match.UI.WordGuessingView
-import com.log3900.game.match.UI.WordToDrawView
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.Color
-import com.log3900.game.match.UI.FFAMatchEndInfoView
-import com.log3900.game.match.UI.RoundEndInfoView
+import android.util.Log
+import android.view.animation.Animation
+import com.log3900.game.match.UI.*
 
 
 abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
@@ -36,6 +35,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     private var wordToDrawView: WordToDrawView? = null
     private lateinit var roundEndInfoView: RoundEndInfoView
     private lateinit var matchEndInfoView: FFAMatchEndInfoView
+    private lateinit var canvasMessageView: CanvasMessageView
 
     protected open fun setupUI(rootView: View) {
         footer = rootView.findViewById(R.id.fragment_active_match_footer_container)
@@ -47,6 +47,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
 
         roundEndInfoView = rootView.findViewById(R.id.fragment_active_match_round_end_info_view)
         matchEndInfoView = rootView.findViewById(R.id.fragment_active_match_ffa_match_end_info_view)
+        canvasMessageView = rootView.findViewById(R.id.fragment_active_match_canvas_message_view)
     }
 
     protected open fun setupToolbar(rootView: View) {
@@ -112,13 +113,33 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     }
 
     override fun hideCanvas() {
-        YoYo.with(Techniques.RotateOutUpRight)
-            .duration(1000)
-            .playOn(drawFragment.view)
+        drawFragment.view?.clearAnimation()
+        drawFragment.view?.animation?.cancel()
+        drawFragment.view?.animate()?.cancel()
+
+        drawFragment.view!!.translationX = 0f
+        drawFragment.view!!.translationY = 0f
+        drawFragment.view!!.rotation = 0f
+        drawFragment.view!!.rotationX = 0f
+        drawFragment.view!!.rotationY = 0f
+        drawFragment.view!!.pivotX = 0f
+        drawFragment.view!!.pivotY = 0f
+
+        val anim = ObjectAnimator.ofPropertyValuesHolder(
+            drawFragment.view,
+            PropertyValuesHolder.ofFloat(View.ALPHA, 1f, 0f),
+            PropertyValuesHolder.ofFloat(View.ROTATION, 0f, 90f),
+            PropertyValuesHolder.ofFloat(View.TRANSLATION_X, 0f, 2000f)
+        )
+
+        anim.duration = 500
+        anim.start()
     }
 
     override fun showCanvas() {
         drawFragment.view?.clearAnimation()
+        drawFragment.view?.animation?.cancel()
+        drawFragment.view?.animate()?.cancel()
         if (drawFragment.view!!.alpha == 1f) {
             return
         }
@@ -131,15 +152,15 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         drawFragment.view!!.pivotX = 0f
         drawFragment.view!!.pivotY = 0f
 
-        var anim1 = ObjectAnimator.ofPropertyValuesHolder(
+        val anim = ObjectAnimator.ofPropertyValuesHolder(
             drawFragment.view,
             PropertyValuesHolder.ofFloat(View.ROTATION, 180f, 0f),
             PropertyValuesHolder.ofFloat(View.TRANSLATION_X, -drawFragment.view!!.width.toFloat(), 0f),
             PropertyValuesHolder.ofFloat(View.ALPHA,0f, 1f)
         )
-        anim1.duration = 2000
+        anim.duration = 2000
 
-        anim1.start()
+        anim.start()
     }
 
     override fun showConfetti() {
@@ -252,11 +273,43 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         guessingView?.enableHintButton(enable)
     }
 
-    override fun showRemainingTimeChangedAnimation(timeChangedValue: Int) {
-        if (timeChangedValue > 0) {
-            remainingTimeChangeTextView.setTextColor(Color.RED)
-        } else if (timeChangedValue < 0) {
+    override fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean) {
+        if (isPositive) {
             remainingTimeChangeTextView.setTextColor(Color.GREEN)
+        } else {
+            remainingTimeChangeTextView.setTextColor(Color.RED)
+        }
+
+        remainingTimeChangeTextView.text = timeChangedValue
+        remainingTimeChangeTextView.bringToFront()
+
+        val scaleUpAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            remainingTimeChangeTextView,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 2f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 2f)
+        )
+        scaleUpAnimator.duration = 2000
+
+        val alphaChangeAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            remainingTimeChangeTextView,
+            PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
+        )
+        alphaChangeAnimator.repeatCount = 1
+        alphaChangeAnimator.repeatMode = ObjectAnimator.REVERSE
+        alphaChangeAnimator.duration = 1000
+        alphaChangeAnimator.start()
+        scaleUpAnimator.start()
+    }
+
+    override fun setCanvasMessage(message: String) {
+        canvasMessageView.setMessage(message)
+    }
+
+    override fun showCanvasMessageView(show: Boolean) {
+        if (show) {
+            canvasMessageView.visibility = View.VISIBLE
+        } else {
+            canvasMessageView.visibility = View.INVISIBLE
         }
     }
 

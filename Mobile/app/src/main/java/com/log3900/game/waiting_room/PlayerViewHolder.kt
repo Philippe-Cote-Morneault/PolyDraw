@@ -99,7 +99,7 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
                     addImageView.visibility = View.INVISIBLE
                 }
                 addImageView.visibility = View.INVISIBLE
-                playerChip.setChipIconResource(R.drawable.ic_person)
+                playerChip.setChipIconResource(R.drawable.ic_robot)
             }
         } else {
             playerChip.setText(R.string.empty_slot)

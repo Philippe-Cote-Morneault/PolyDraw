@@ -9,4 +9,5 @@ interface ActiveFFAMatchView : ActiveMatchView {
     fun setPlayerStatus(playerID: UUID, statusImageRes: Int)
     fun setPlayerScores(playerScores: HashMap<UUID, Int>)
     fun clearAllPlayerStatusRes()
+    fun showPlayerScoredChangedAnimation(scoreChangedValue: String, isPositive: Boolean, position: Int)
 }

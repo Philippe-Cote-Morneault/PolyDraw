@@ -19,7 +19,6 @@ import com.log3900.user.account.AccountRepository
 
 class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragment() {
     // UI
-    private lateinit var groupNameTextInput: TextInputEditText
     private lateinit var maxPlayersTextView: TextView
     private lateinit var roundsTextView: TextView
     private lateinit var gameTypeSpinner: Spinner
@@ -50,7 +49,7 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
             .setTitle(resources.getString(R.string.create_match_dialog_title))
             .setPositiveButton(R.string.create) { _, _ ->
                     listener?.onPositiveClick(GroupCreated(
-                        groupNameTextInput.text.toString(),
+                        "",
                         maxPlayersTextView.text.toString().toInt(),
                         roundsTextView.text.toString().toInt(),
                         MatchMode.values()[gameTypeSpinner.selectedItemPosition],
@@ -70,7 +69,6 @@ class MatchCreationDialogFragment(var listener: Listener? = null) : DialogFragme
     }
 
     private fun setupView(rootView: View) {
-        groupNameTextInput = rootView.findViewById(R.id.dialog_create_match_edit_text_match_name)
         maxPlayersTextView = rootView.findViewById(R.id.dialog_create_match_text_view_max_players)
         roundsTextView = rootView.findViewById(R.id.dialog_create_match_text_view_rounds)
         gameTypeSpinner = rootView.findViewById(R.id.dialog_create_match_spinner_match_type)
