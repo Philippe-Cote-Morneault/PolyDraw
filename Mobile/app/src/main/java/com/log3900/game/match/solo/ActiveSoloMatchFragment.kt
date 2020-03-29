@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
@@ -18,6 +19,7 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
     private lateinit var teamPlayersAdapter: TeamPlayerAdapter
 
     // UI
+    private lateinit var scoreTextView: TextView
     protected lateinit var teamPlayersRecyclerView: RecyclerView
     private lateinit var remainingLivesContainer: LinearLayout
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
@@ -36,6 +38,7 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
     override fun setupToolbar(rootView: View) {
         super.setupToolbar(rootView)
 
+        scoreTextView = toolbar.findViewById(R.id.toolbar_active_solo_match_text_view_score)
         remainingLivesContainer = toolbar.findViewById(R.id.toolbar_active_solo_match_container_lives)
     }
 
@@ -57,6 +60,11 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
     override fun notifyPlayersChanged() {
         teamPlayersAdapter.notifyPlayersChanged()
     }
+
+    override fun setScore(score: String) {
+        scoreTextView.text = score
+    }
+
 
     override fun setRemainingLives(count: Int) {
         if (count == remainingLivesHearts.size) {
