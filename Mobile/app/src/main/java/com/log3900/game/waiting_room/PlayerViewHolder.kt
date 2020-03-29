@@ -12,6 +12,7 @@ import com.log3900.R
 import com.log3900.game.group.Group
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
+import com.log3900.profile.PlayerProfileDialogFragment
 import com.log3900.user.UserRepository
 import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -51,6 +52,10 @@ class PlayerViewHolder : RecyclerView.ViewHolder {
             if (!isHost) {
                 listener?.removedClicked(player!!)
             }
+        }
+
+        playerChip.setOnClickListener {
+            PlayerProfileDialogFragment.show(itemView.context, player!!.ID)
         }
     }
 

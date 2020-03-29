@@ -9,7 +9,7 @@ import com.log3900.user.account.Account
  * @return avatar_1 if index out of range
  */
 fun getAvatarID(index: Int): Int {
-    if (index > 0 && index < 17) {
+    if (index in 1..16) {
         return R.mipmap::class.java.getField("avatar_${index}").getInt(null)
     }
 
