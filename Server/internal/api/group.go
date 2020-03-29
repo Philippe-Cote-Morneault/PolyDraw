@@ -138,29 +138,32 @@ func GetGroups(w http.ResponseWriter, r *http.Request) {
 	model.DB().Model(&groups).Related(&model.User{}, "Users")
 	model.DB().Preload("Users").Preload("Owner").Where("status = ?", 0).Find(&groups)
 
-	response := make([]responseGroup, len(groups))
+	response := make([]responseGroup, 0, len(groups))
 	for i := range groups {
-		players := make([]responsePlayer, len(groups[i].Users))
-		for j := range groups[i].Users {
-			players[j] = responsePlayer{
-				ID:       groups[i].Users[j].ID.String(),
-				Username: groups[i].Users[j].Username,
-				IsCPU:    groups[i].Users[j].IsCPU,
+		lenUsers := len(groups[i].Users)
+		if lenUsers > 0 {
+			players := make([]responsePlayer, lenUsers)
+			for j := range groups[i].Users {
+				players[j] = responsePlayer{
+					ID:       groups[i].Users[j].ID.String(),
+					Username: groups[i].Users[j].Username,
+					IsCPU:    groups[i].Users[j].IsCPU,
+				}
 			}
-		}
 
-		response[i] = responseGroup{
-			ID:         groups[i].ID.String(),
-			GroupName:  groups[i].Name,
-			PlayersMax: groups[i].PlayersMax,
-			GameType:   groups[i].GameType,
-			Difficulty: groups[i].Difficulty,
-			Status:     0,
-			Language:   groups[i].Language,
-			NbRound:    groups[i].NbRound,
-			OwnerName:  groups[i].Owner.Username,
-			OwnerID:    groups[i].OwnerID.String(),
-			Players:    players,
+			response = append(response, responseGroup{
+				ID:         groups[i].ID.String(),
+				GroupName:  groups[i].Name,
+				PlayersMax: groups[i].PlayersMax,
+				GameType:   groups[i].GameType,
+				Difficulty: groups[i].Difficulty,
+				Status:     0,
+				Language:   groups[i].Language,
+				NbRound:    groups[i].NbRound,
+				OwnerName:  groups[i].Owner.Username,
+				OwnerID:    groups[i].OwnerID.String(),
+				Players:    players,
+			})
 		}
 	}
 	rbody.JSON(w, http.StatusOK, response)
