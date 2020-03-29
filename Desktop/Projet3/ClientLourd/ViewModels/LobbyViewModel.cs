@@ -42,10 +42,21 @@ namespace ClientLourd.ViewModels
         {
             Task.Run(() =>
             {
+                Lobby tmpLobby = null;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    tmpLobby = CurrentLobby;
+                });
                 Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    LeaveLobby();
+                    //If the user is still in the lobby leave it
+                    if (tmpLobby == null || CurrentLobby == null)
+                        return;
+                    if (tmpLobby.ID == CurrentLobby.ID)
+                    {
+                        LeaveLobby();
+                    }
                 });
             });
         }
@@ -167,7 +178,7 @@ namespace ClientLourd.ViewModels
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveMatch));
                 IsGameStarted = false;
             }
-
+            OnReturnChat(this);
             HomeViewModel.FetchLobbies();
             ContainedView = Utilities.Enums.Views.Home.ToString();
         }
@@ -197,6 +208,7 @@ namespace ClientLourd.ViewModels
                 if (UserIsInLobby(lobbyDeletedID) && !UserIsHost())
                 {
                     CurrentLobby = null;
+                    OnReturnChat(this);
                     ContainedView = Utilities.Enums.Views.Home.ToString();
                     DialogHost.Show(new ClosableErrorDialog($"{CurrentDictionary["HostLeft"]}"), "Default");
                 }
@@ -325,6 +337,7 @@ namespace ClientLourd.ViewModels
                 LobbyEventArgs lobbyEventArgs = (LobbyEventArgs)e;
                 if (SessionInformations.User.ID == lobbyEventArgs.UserID)
                 {
+                    OnReturnChat(this);
                     HomeViewModel.FetchLobbies();
                     ContainedView = Utilities.Enums.Views.Home.ToString();
                 }
@@ -377,8 +390,14 @@ namespace ClientLourd.ViewModels
         {
             get { return ProfileViewer.ViewPublicProfileCommand; }
         }
-
-
         
+        public delegate void LobbyEventHandler (object source, EventArgs args);
+
+        public event LobbyEventHandler ReturnChat;
+
+        protected virtual void OnReturnChat(object source)
+        {
+            ReturnChat?.Invoke(source, EventArgs.Empty);
+        }
     }
 }

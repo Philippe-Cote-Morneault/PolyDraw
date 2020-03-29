@@ -46,6 +46,7 @@ namespace ClientLourd.Views.Controls
         public Lobby()
         {
             InitializeComponent();
+            DataContext.ReturnChat += (source, args) => { returnChat(); };
         }
 
         public void AfterLogin()
@@ -62,19 +63,10 @@ namespace ClientLourd.Views.Controls
         private void InitEventHandler()
         {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
-            SocketClient.UserLeftLobby += OnUserLeftLobby;
-            SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.StartGameResponse += SocketClientOnGameResponse;
-            SocketClient.MatchEnded += SocketClientOnMatchEnded;
         }
 
-        private void SocketClientOnMatchEnded(object source, EventArgs args)
-        {
-            Task.Delay(MatchTiming.GAME_ENDED_TIMEOUT).ContinueWith((t) =>
-            {
-                Application.Current.Dispatcher.Invoke(() => { returnChat(); });
-            });
-        }
+
         private void SocketClientOnGameResponse(object source, EventArgs args)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -90,17 +82,7 @@ namespace ClientLourd.Views.Controls
             });
         }
 
-        private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
-        {
-            var e = (MatchEventArgs) args;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                if (e.UserID == SessionInformations.User.ID)
-                {
-                    returnChat();
-                }
-            });
-        }
+
 
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
@@ -116,28 +98,19 @@ namespace ClientLourd.Views.Controls
         }
         
 
-        private void OnUserLeftLobby(object sender, EventArgs e)
-        {
-            var userLeftLobbyArgs = (LobbyEventArgs)e;
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {    
-                if (SessionInformations.User.ID == userLeftLobbyArgs.UserID || (CurrentLobby != null && CurrentLobby.HostID == userLeftLobbyArgs.UserID))
-               {
-                    returnChat();
-                }
-                
-            });
-        }
 
         public void returnChat()
         {
-            //If the chat is still in the lobby view
-            if (ChatContainer.Children.Count > 0)
+            Dispatcher.Invoke(() =>
             {
-                //Remove the chat
-                MainWindow.ReturnTheChat();
-            }
+                //If the chat is still in the lobby view
+                if (ChatContainer.Children.Count > 0)
+                {
+                    //Remove the chat
+                    MainWindow.ReturnTheChat();
+                }
+            });
         }
 
         public void ExportChat()

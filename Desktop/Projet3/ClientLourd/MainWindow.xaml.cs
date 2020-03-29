@@ -152,7 +152,13 @@ namespace ClientLourd
             //Remove the chat from his parent
             ((Grid)ChatBox.Parent)?.Children.Clear();
             //Disable notification for the current channel
-            ((ChatViewModel)ChatBox.DataContext).OnChatToggle(true);
+            Task.Delay(100).ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ((ChatViewModel) ChatBox.DataContext).OnChatToggle(true);
+                });
+            });
             return ChatBox;
         }
         
@@ -164,6 +170,16 @@ namespace ClientLourd
             ((Grid)ChatBox.Parent)?.Children.Clear();
             MainWindowChatContainer.Children.Add(ChatBox);
             ChatToggleButton.IsEnabled = true;
+            //Close the chat
+            Drawer.IsRightDrawerOpen = false;
+            //enable notification for the current channel
+            Task.Delay(100).ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ((ChatViewModel)ChatBox.DataContext).OnChatToggle(false);
+                });
+            });
         }
 
         private void ExportChatAsNewWindow(object sender, RoutedEventArgs e)
