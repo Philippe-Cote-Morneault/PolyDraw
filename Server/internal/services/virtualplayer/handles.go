@@ -100,8 +100,8 @@ func RemoveGroup(groupID uuid.UUID) {
 }
 
 //AddVirtualPlayer [Current Thread] adds virtualPlayer to cache. Returns playerID, username (lobby)
-func AddVirtualPlayer(groupID, botID uuid.UUID) string {
-	playerInfos := generateVirtualPlayer()
+func AddVirtualPlayer(groupID, botID uuid.UUID, lang int) string {
+	playerInfos := generateVirtualPlayer(lang)
 	playerInfos.BotID = botID
 	playerInfos.GroupID = groupID
 	managerInstance.mutex.Lock()

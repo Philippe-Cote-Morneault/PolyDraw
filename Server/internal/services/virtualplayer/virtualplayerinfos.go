@@ -3,9 +3,11 @@ package virtualplayer
 import (
 	"log"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
@@ -19,6 +21,7 @@ type virtualPlayerInfos struct {
 	Personality       string
 	DrawingTimeFactor float64
 	Username          string
+	Language          int
 }
 
 func (v *virtualPlayerInfos) calculateDrawingTime() {
@@ -26,23 +29,23 @@ func (v *virtualPlayerInfos) calculateDrawingTime() {
 	min := 0.0
 	max := 1.0
 	switch v.Personality {
-	case "angry":
+	case "Angry":
 		min = 0.9
 		max = 1.4
 
-	case "funny":
+	case "Funny":
 		min = 0.6
 		max = 1.2
 
-	case "mean":
+	case "Mean":
 		min = 1.5
 		max = 2
 
-	case "nice":
+	case "Nice":
 		min = 0.5
 		max = 0.7
 
-	case "supportive":
+	case "Supportive":
 		min = 0.6
 		max = 0.8
 	}
@@ -50,8 +53,8 @@ func (v *virtualPlayerInfos) calculateDrawingTime() {
 
 }
 
-func generateVirtualPlayer() *virtualPlayerInfos {
-	v := &virtualPlayerInfos{Personality: []string{"angry", "funny", "mean", "nice", "supportive"}[rand.Intn(5)],
+func generateVirtualPlayer(lang int) *virtualPlayerInfos {
+	v := &virtualPlayerInfos{Language: lang, Personality: []string{"Angry", "Funny", "Mean", "Nice", "Supportive"}[rand.Intn(5)],
 		DrawingTimeFactor: 0, Username: randomdata.GenerateProfile(randomdata.RandomGender).Login.Username}
 
 	v.calculateDrawingTime()
@@ -73,44 +76,14 @@ func (v *virtualPlayerInfos) speak(channelID uuid.UUID, interactionType string) 
 	})
 }
 
-func getLines(interactionType string) *lines {
-	switch interactionType {
-	case "startGame":
-		return &iStartGameLines
-	case "endRound":
-		return &iEndRoundLines
-	case "hintRequested":
-		return &iHintLines
-	default:
-		if rand.Intn(2) == 1 {
-			return &iPlayerRefLines
-		}
-		return &iWinRatioLines
-	}
-}
-
 func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
 
-	lines := getLines(interactionType)
+	lineNumber := strconv.Itoa(rand.Intn(2) + 1)
+	line := language.MustGet("botlines."+interactionType+v.Personality+lineNumber, v.Language)
 
-	switch v.Personality {
-	case "angry":
-		return strings.ReplaceAll(lines.Angry[rand.Intn(3)], "{}", randomUsername(v.GroupID))
-
-	case "funny":
-		return strings.ReplaceAll(lines.Funny[rand.Intn(3)], "{}", randomUsername(v.GroupID))
-
-	case "mean":
-		return strings.ReplaceAll(lines.Mean[rand.Intn(3)], "{}", randomUsername(v.GroupID))
-
-	case "nice":
-		return strings.ReplaceAll(lines.Nice[rand.Intn(3)], "{}", randomUsername(v.GroupID))
-
-	case "supportive":
-		return strings.ReplaceAll(lines.Supportive[rand.Intn(3)], "{}", randomUsername(v.GroupID))
-
-	default:
-		log.Println("[VirtualPlayer] -> [Error] Bot's personnality doesn't exists. Aborting interaction...")
-		return ""
+	if interactionType == "playerRef" || interactionType == "winRatio" {
+		line = strings.ReplaceAll(line, "{}", randomUsername(v.GroupID))
 	}
+
+	return line
 }
