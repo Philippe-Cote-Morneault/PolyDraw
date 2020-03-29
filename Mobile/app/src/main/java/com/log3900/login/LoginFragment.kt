@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -115,6 +116,10 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun isRememberMeChecked(): Boolean = rememberMeCheckBox.isChecked
+
+    override fun showWelcomeBackMessage(username: String) {
+        Toast.makeText(context, "Welcome back, $username", Toast.LENGTH_LONG).show()
+    }
 
     override fun showProgresBar() {
         progressBar.visibility = View.VISIBLE

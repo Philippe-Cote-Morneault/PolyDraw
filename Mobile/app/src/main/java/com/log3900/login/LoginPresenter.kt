@@ -28,14 +28,17 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
 
     private fun loginWithBearer() {
         val bearer = BearerTokenManager.getBearer()
-        if (bearer == null) {
-            Log.d("BEAR_MAN", "Bearer is null")
+        val username = BearerTokenManager.getUsername()
+        if (bearer == null || username == null) {
+            Log.d("BEAR_MAN", "Bearer is $bearer, username is $username")
             return
         }
         Log.d("BEAR_MAN", "Found bearer: $bearer")
+        Log.d("BEAR_MAN", "Found username: $username")
 
         val json = JsonObject().apply {
             addProperty("Bearer", bearer)
+            addProperty("username", username)
         }
 
         val call = AuthenticationRestService.service.bearerAuthenticate(
@@ -50,11 +53,11 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
-                        handleSuccessAuth(bearerToken, sessionToken, userID)
+                        handleSuccessAuth(bearerToken, sessionToken, userID, true, username)
                     }
 //                    401 -> handleErrorAuth("Your session has expired. Please log in again.")
-                    else -> {
-                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
+                    else -> { // Fail silently...
+//                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
                     }
                 }
             }
@@ -106,11 +109,16 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     private fun handleSuccessAuth(
         bearer: String,
         session: String,
-        userID: String
+        userID: String,
+        isBearerAuth: Boolean = false,
+        username: String = ""
     ) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()
+                if (isBearerAuth) {
+                    loginView?.showWelcomeBackMessage(username)
+                }
                 true
             } else {
                 handleErrorAuth("Connection refused.")
@@ -181,6 +189,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                             .subscribe{
                                 if (rememberUser) {
                                     BearerTokenManager.storeBearer(bearerToken)
+                                    BearerTokenManager.storeUsername(account.username)
                                 }
                                 completable.onComplete()
                             }
@@ -197,6 +206,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                             .subscribe{
                                 if (rememberUser) {
                                     BearerTokenManager.storeBearer(bearerToken)
+                                    BearerTokenManager.storeUsername(account.username)
                                 }
                                 completable.onComplete()
                             }
