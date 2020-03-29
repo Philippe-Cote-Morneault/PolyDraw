@@ -187,8 +187,9 @@ namespace ClientLourd.ViewModels
                         if (e.UserID != Guid.Empty.ToString())
                         {
                             DialogHost.Show(new MessageDialog("Oups",
-                            $"{e.Username} delete the channel '{channel.Name}' !"));
+                            $"{e.Username} {CurrentDictionary["DeleteChannel"]} '{channel.Name}' !"));
                         }
+                        
                     }
                     UpdateChannels();
             });
@@ -338,7 +339,8 @@ namespace ClientLourd.ViewModels
 
         private async Task CreateChannel()
         {
-            var dialog = new InputDialog("Enter the name for the new channel", 20);
+            
+            var dialog = new InputDialog($"{CurrentDictionary["ChannelName"]}", 20);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
             {
@@ -386,15 +388,21 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+
+
         public void LeaveChannel(Channel channel)
         {
             if (channel.ID == GLOBAL_CHANNEL_ID )
             {
-                DialogHost.Show(new ClosableErrorDialog("You can't leave the General channel"));
+                DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["LeaveGeneral"].ToString()));
             }
             else if(channel.IsGame)
             {
-                DialogHost.Show(new ClosableErrorDialog("You can't leave the Game channel"));
+                DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["LeaveGame"].ToString()));
             }
             else
             {

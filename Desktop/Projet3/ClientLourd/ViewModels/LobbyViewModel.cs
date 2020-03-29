@@ -198,10 +198,16 @@ namespace ClientLourd.ViewModels
                 {
                     CurrentLobby = null;
                     ContainedView = Utilities.Enums.Views.Home.ToString();
-                    DialogHost.Show(new ClosableErrorDialog($"The host has left the lobby!"), "Default");
+                    DialogHost.Show(new ClosableErrorDialog($"{CurrentDictionary["HostLeft"]}"), "Default");
                 }
             });
         }
+
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+
 
         private bool UserIsInLobby(string lobbyID)
         {
@@ -341,7 +347,8 @@ namespace ClientLourd.ViewModels
 
         public async void  KickPlayer(Player player)
         {
-            ConfirmationDialog confirmationDialog = new ConfirmationDialog($"Remove player", $"Are you sure you want to remove the player {player.User.Username}?");
+
+            ConfirmationDialog confirmationDialog = new ConfirmationDialog($"{CurrentDictionary["RemovePlayerTitle"]}", $"{CurrentDictionary["RemovePlayerBody"]} {player.User.Username}?");
             confirmationDialog.Height = 300;
             confirmationDialog.MessageTextBlock.Margin = new Thickness(30, 0, 30, 0);
             var response = await DialogHost.Show(confirmationDialog, "Default");

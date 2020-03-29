@@ -62,13 +62,19 @@ namespace ClientLourd.Views.Dialogs
                   if (files != null) ViewModel.AddImageCommand.Execute(files[0]);
               }
         }
-        
+
+
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
 
         private void UploadImageClick(object sender, RoutedEventArgs e)
         {
             if(ViewModel.IsUploadModeSelected && !ViewModel.IsImageUpload)
             {
-                DialogHost.Show(new ClosableErrorDialog("Upload an image first"), "Dialog");
+                
+                DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["UploadFirst"].ToString()), "Dialog");
                 return;
             }
             
@@ -76,7 +82,7 @@ namespace ClientLourd.Views.Dialogs
             {
                 if (CanvasIsEmpty())
                 {
-                    DialogHost.Show(new ClosableErrorDialog("The canvas cannot be empty"), "Dialog");
+                    DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["CanvasEmpty"].ToString()), "Dialog");
                     return;
                 }
                 try
