@@ -356,22 +356,34 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 
 	c.receiving.Lock()
 	player := c.connections[socketID]
+	gameDuration := time.Now().Sub(c.timeStart)
+	remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
 	c.receiving.Unlock()
 
-	hintSent := virtualplayer.GetHintByBot(&match2.HintRequested{
-		GameType: c.info.GameType,
-		MatchID:  c.info.ID,
-		SocketID: socketID,
-		Player: match2.Player{
-			IsCPU:    player.IsCPU,
-			Username: player.Username,
-			ID:       player.userID,
-		},
-	})
+	if remaining > 10000 {
+		hintSent := virtualplayer.GetHintByBot(&match2.HintRequested{
+			GameType: c.info.GameType,
+			MatchID:  c.info.ID,
+			SocketID: socketID,
+			Player: match2.Player{
+				IsCPU:    player.IsCPU,
+				Username: player.Username,
+				ID:       player.userID,
+			},
+		})
 
-	if hintSent {
-		c.applyPenalty()
+		if hintSent {
+			c.applyPenalty()
+		}
+	} else {
+		message := socket.RawMessage{}
+		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
+			Hint:  "",
+			Error: "There needs to be at least 10 seconds for a hint to be requested.",
+		})
+		c.pbroadcast(&message)
 	}
+
 }
 
 //Close method used to force close the current game
