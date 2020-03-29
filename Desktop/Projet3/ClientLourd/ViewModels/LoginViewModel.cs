@@ -13,6 +13,8 @@ using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Constants;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Services.EnumService;
 
 namespace ClientLourd.ViewModels
 {
@@ -21,8 +23,18 @@ namespace ClientLourd.ViewModels
         public LoginViewModel()
         {
             AfterLogOut();
+            MainViewModel.LanguageChangedEvent += OnLanguageChanged;
         }
 
+        private void OnLanguageChanged(object source, EventArgs args)
+        {
+            NotifyPropertyChanged(nameof(Language));
+        }
+
+        public MainViewModel MainViewModel
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel);
+        }
 
         public override void AfterLogin()
         {
@@ -44,6 +56,15 @@ namespace ClientLourd.ViewModels
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+
+        public string Language
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage; }
+            set
+            {
+                (((MainWindow)Application.Current.MainWindow).DataContext as MainViewModel).SelectedLanguage =value;
+            }
         }
 
         RelayCommand<object[]> _loginCommand;
@@ -215,5 +236,28 @@ namespace ClientLourd.ViewModels
         {
             LoggedIn?.Invoke(source, EventArgs.Empty);
         }
+        
+        private RelayCommand<object> _changeLangCommand;
+
+        public ICommand ChangeLangCommand
+        {
+            get
+            {
+                return _changeLangCommand ?? (_changeLangCommand = new RelayCommand<object>(obj => ChangeLang()));
+            }
+        }
+
+        private void ChangeLang()
+        {
+            if (Language == Languages.EN.GetDescription())
+            {
+                Language = Languages.FR.GetDescription();
+            }
+            else
+            {
+                Language = Languages.EN.GetDescription();
+            }
+        }
+
     }
 }

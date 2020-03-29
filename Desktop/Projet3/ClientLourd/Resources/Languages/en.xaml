@@ -121,7 +121,16 @@
     <system:String x:Key="WinnerIs">The winner is</system:String>
     <system:String x:Key="WordWas">The word was</system:String>
 
+    <!-- Login page -->
+    <system:String x:Key="Welcome">Welcome!</system:String>
+    <system:String x:Key="Login">Login</system:String>
+    <system:String x:Key="RememberMe">Remember me</system:String>
+    <system:String x:Key="Register">Register now!</system:String>
 
+    <!-- Register dialog -->
+    <system:String x:Key="SignUp">Sign up</system:String>
+    <system:String x:Key="Cancel">Cancel</system:String>
+    <system:String x:Key="PasswordRetype">Retype the password</system:String>
 
 
 

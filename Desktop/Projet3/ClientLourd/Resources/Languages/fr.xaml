@@ -119,4 +119,15 @@
     <system:String x:Key="WinnerIs">Le gagnant est</system:String>
     <system:String x:Key="WordWas">Le mot était</system:String>
 
+    <!-- Login page -->
+    <system:String x:Key="Welcome">Bienvenue!</system:String>
+    <system:String x:Key="Login">Se connecter</system:String>
+    <system:String x:Key="RememberMe">Se souvenir de moi</system:String>
+    <system:String x:Key="Register">S'enregistrer!</system:String>
+
+    <!-- Register dialog -->
+    <system:String x:Key="SignUp">S'inscrire</system:String>
+    <system:String x:Key="Cancel">Annuler</system:String>
+    <system:String x:Key="PasswordRetype">Retaper le mot de passe</system:String>
+
 </ResourceDictionary>

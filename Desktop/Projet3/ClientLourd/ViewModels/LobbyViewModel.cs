@@ -37,6 +37,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
+
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
             Task.Run(() =>
@@ -114,6 +115,14 @@ namespace ClientLourd.ViewModels
             get
             {
                 return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations;
+            }
+        }
+
+        public string Language
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
 
@@ -362,5 +371,7 @@ namespace ClientLourd.ViewModels
             get { return ProfileViewer.ViewPublicProfileCommand; }
         }
 
+
+        
     }
 }
