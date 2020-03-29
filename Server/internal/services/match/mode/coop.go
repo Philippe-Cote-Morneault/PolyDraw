@@ -161,6 +161,7 @@ func (c *Coop) GameLoop() {
 		log.Printf("[Match] [Coop] -> The word was found, Match: %s", c.info.ID)
 	}
 
+	c.receiving.Lock()
 	timeUpMessage := socket.RawMessage{}
 	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
 		Type: 1,
@@ -169,7 +170,6 @@ func (c *Coop) GameLoop() {
 	c.broadcast(&timeUpMessage)
 
 	//End of round
-	c.receiving.Lock()
 	if c.realPlayers <= 0 {
 		c.isRunning = false
 		c.receiving.Unlock()
@@ -271,8 +271,6 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			total := c.commonScore.total
 			c.waitingResponse.Release(1)
 
-			c.receiving.Unlock()
-
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 				Valid:     true,
@@ -300,6 +298,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				Bonus:     bonus,
 			})
 			c.broadcast(&checkpoint)
+			c.receiving.Unlock()
 		} else {
 			log.Printf("[Match] [Coop] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			scoreTotal := c.commonScore.total
@@ -335,8 +334,8 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				UserID:   player.userID.String(),
 				Lives:    lives,
 			})
-			c.receiving.Unlock()
 			c.broadcast(&messageFail)
+			c.receiving.Unlock()
 		}
 
 		if lives <= 0 {
@@ -548,7 +547,6 @@ func (c *Coop) syncPlayers() {
 	}
 	checkPointTime := c.checkPointTime
 	lives := c.lives
-	c.receiving.Unlock()
 
 	message := socket.RawMessage{}
 	gameDuration := time.Now().Sub(c.timeStart)
@@ -560,6 +558,7 @@ func (c *Coop) syncPlayers() {
 		Lives:    lives,
 	})
 	c.broadcast(&message)
+	c.receiving.Unlock()
 }
 
 func (c *Coop) waitGuess() bool {
@@ -599,7 +598,6 @@ func (c *Coop) applyPenalty() {
 
 	gameDuration := time.Now().Sub(c.timeStart)
 	remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
-	c.receiving.Unlock()
 
 	checkpoint := socket.RawMessage{}
 	checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
@@ -607,6 +605,7 @@ func (c *Coop) applyPenalty() {
 		Bonus:     -c.penalty,
 	})
 	c.broadcast(&checkpoint)
+	c.receiving.Unlock()
 
 	c.syncPlayers()
 }

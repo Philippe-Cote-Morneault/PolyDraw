@@ -167,6 +167,7 @@ func (f *FFA) GameLoop() {
 	}
 
 	//Send message that the current word have expired unless it's the end of the round
+	f.receiving.Lock()
 	if f.curLap < f.lapsTotal {
 		timeUpMessage := socket.RawMessage{}
 		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
@@ -176,7 +177,6 @@ func (f *FFA) GameLoop() {
 		f.broadcast(&timeUpMessage)
 	}
 
-	f.receiving.Lock()
 	f.orderPos++
 	f.curLap++
 	if f.orderPos > len(f.players)-1 {
@@ -266,8 +266,6 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			f.scores[f.curDrawer.Order].commit(50)
 			total := f.scores[player.Order].total
 
-			f.receiving.Unlock()
-
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 				Valid:     true,
@@ -285,6 +283,8 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				NewPoints: pointsForWord,
 			})
 			f.broadcast(&broadcast)
+			f.receiving.Unlock()
+
 		} else {
 			log.Printf("[Match] [FFA] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			players := f.connections[socketID]
@@ -506,7 +506,6 @@ func (f *FFA) syncPlayers() {
 			IsCPU:    player.IsCPU,
 		}
 	}
-	f.receiving.Unlock()
 
 	message := socket.RawMessage{}
 	imageDuration := time.Now().Sub(f.timeStartImage)
@@ -517,6 +516,7 @@ func (f *FFA) syncPlayers() {
 		Time:     f.timeImage - imageDuration.Milliseconds(),
 	})
 	f.broadcast(&message)
+	f.receiving.Unlock()
 }
 
 //calculateScore based on the number of seconds of remaining and the time associated with the score
@@ -562,7 +562,6 @@ func (f *FFA) finish() {
 		return
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
-	f.receiving.Unlock()
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
 
 	//Send a message to all the players to give them the details of the game and who is the winner
@@ -575,6 +574,7 @@ func (f *FFA) finish() {
 	})
 
 	f.broadcast(&message)
+	f.receiving.Unlock()
 
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
