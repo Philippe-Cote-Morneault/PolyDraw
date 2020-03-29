@@ -179,6 +179,8 @@ func (c *Coop) GameLoop() {
 	}
 
 	//Prepare next round
+	c.sendRoundSummary()
+
 	c.orderPos++
 	c.curLap++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
@@ -607,4 +609,28 @@ func (c *Coop) applyPenalty() {
 	c.broadcast(&checkpoint)
 
 	c.syncPlayers()
+}
+
+//sendRoundSummary used to send a summary of the round
+func (c *Coop) sendRoundSummary() {
+	roundEnd := socket.RawMessage{}
+	playersDetails := make([]PlayersRoundSum, len(c.players))
+	for i := range c.players {
+		player := &c.players[i]
+		playersDetails[i] = PlayersRoundSum{
+			PlayersData: PlayersData{
+				UserID:   player.userID.String(),
+				Username: player.Username,
+				IsCPU:    player.IsCPU,
+				Points:   c.commonScore.total,
+			},
+			NewPoints: c.commonScore.current,
+		}
+	}
+	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
+		Players:      playersDetails,
+		Achievements: nil,
+		Word:         c.currentWord,
+	})
+	c.broadcast(&roundEnd)
 }
