@@ -10,10 +10,6 @@ import com.log3900.R
 
 class ProfileFragment : Fragment() {
 
-    private val profileVm: ProfileViewModel by lazy {
-        ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
