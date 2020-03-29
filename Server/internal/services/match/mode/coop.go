@@ -76,8 +76,12 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 
 //Start the game and the game loop
 func (c *Coop) Start() {
-	c.waitForPlayers()
-
+	started := c.waitForPlayers()
+	if !started {
+		log.Printf("[Match] [Coop] -> Start aborted all client could not call ready. Match: %s", c.info.ID)
+		messenger.UnRegisterGroup(&c.info, c.GetConnections())
+		return
+	}
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 
@@ -406,6 +410,12 @@ func (c *Coop) Close() {
 		c.isRunning = false
 	}
 	c.receiving.Unlock()
+
+	c.broadcast(&socket.RawMessage{
+		MessageType: byte(socket.MessageType.GameCancel),
+		Length:      0,
+		Bytes:       nil,
+	})
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }

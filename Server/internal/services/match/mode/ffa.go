@@ -73,7 +73,14 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 //Start the game mode
 func (f *FFA) Start() {
 
-	f.waitForPlayers()
+	started := f.waitForPlayers()
+	if !started {
+		log.Printf("[Match] [FFA] -> Start aborted all client could not call ready. Match: %s", f.info.ID)
+
+		drawing.UnRegisterGame(f)
+		messenger.UnRegisterGroup(&f.info, f.GetConnections())
+		return
+	}
 
 	//Generate players positions
 	f.SetOrder()
@@ -374,6 +381,11 @@ func (f *FFA) Close() {
 		f.cancelWait()
 	}
 
+	f.broadcast(&socket.RawMessage{
+		MessageType: byte(socket.MessageType.GameCancel),
+		Length:      0,
+		Bytes:       nil,
+	})
 	f.receiving.Unlock()
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
