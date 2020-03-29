@@ -41,7 +41,6 @@ namespace ClientLourd.ViewModels
         private string _canvasMessage;
         private GameModes _mode;
         private bool _roundStarted;
-        private Channel _gameChannel;
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
 
         public GameViewModel()
@@ -69,31 +68,11 @@ namespace ClientLourd.ViewModels
             SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
-            SocketClient.HintResponse += SocketClientOnHintResponse;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
         }
 
         
-        private void SocketClientOnHintResponse(object source, EventArgs args)
-        {
-            var e = (MatchEventArgs)args;
-            if (e.HasHint)
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var message = new Message(DateTime.Now, Players.First(p => p.IsDrawing).User, e.Hint);
-                    GameChannel.Messages.Add(message);
-                });
-            }
-            else
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var message = new Message(DateTime.Now, Players.First(p => p.IsDrawing).User, e.Error);
-                    GameChannel.Messages.Add(message);
-                });
-            }
-        }
+
 
         public SoundService SoundService
         {
@@ -408,15 +387,6 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public Channel GameChannel
-        {
-            get => _gameChannel;
-            set
-            {
-                _gameChannel = value;
-                NotifyPropertyChanged();
-            }
-        }
 
 
         public bool DrawerIsCPU

@@ -144,6 +144,9 @@
     <system:String x:Key="Available">Canaux disponibles</system:String>
     <system:String x:Key="Join">Rejoindre</system:String>
     <system:String x:Key="Delete">Supprimer</system:String>
+    <system:String x:Key="UserLeft">a quitté le canal</system:String>
+    <system:String x:Key="UserJoined">a rejoin le canal</system:String>
+    <system:String x:Key="HintResponse">a demandé un indice</system:String>
 
     <!-- MainWindow -->
     <system:String x:Key="OpenChat">Ouvrir le chat</system:String>
