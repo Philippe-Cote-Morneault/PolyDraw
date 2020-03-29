@@ -361,13 +361,13 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 // respHintRequest [Current Thread] sends to client hint response (virtualplayer)
 func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string, gameType int) {
 	var hintRes responseHint
+	bot, botOk := managerInstance.Bots[hintRequest.DrawerID]
+	if !botOk {
+		log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting respHintRequest", hintRequest.DrawerID)
+		return
+	}
+	hintRes.BotID = bot.BotID.String()
 	if hintOk {
-		bot, botOk := managerInstance.Bots[hintRequest.DrawerID]
-		if !botOk {
-			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting respHintRequest", hintRequest.DrawerID)
-			return
-		}
-		hintRes.BotID = bot.BotID.String()
 		hintRes.Hint = bot.getInteraction("hintRequested") + " Mon indice est : " + hint
 		hintRes.Error = ""
 	} else {
