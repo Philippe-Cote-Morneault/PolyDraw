@@ -1,5 +1,6 @@
 ﻿using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
+using ClientLourd.Services.EnumService;
 using ClientLourd.Services.RestService.Exceptions;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.ViewModels;
@@ -51,7 +52,7 @@ namespace ClientLourd.Services.RestService
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth", Method.POST);
-            request.AddParameter("Language", Language, ParameterType.HttpHeader);
+            //request.AddParameter("Language", Language, ParameterType.HttpHeader);
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username, password = password});
             var response = await Execute(request);
@@ -65,7 +66,7 @@ namespace ClientLourd.Services.RestService
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth/bearer", Method.POST);
-            request.AddParameter("Language", Language, ParameterType.HttpHeader);
+            //request.AddParameter("Language", Language, ParameterType.HttpHeader);
 
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username, Bearer=bearer});
@@ -80,6 +81,7 @@ namespace ClientLourd.Services.RestService
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth/register", Method.POST);
+            //request.AddParameter("Language", Language, ParameterType.HttpHeader);
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {Username = user.Username, FirstName=user.FirstName, LastName= user.LastName, Email=user.Email, Password = password, PictureID=user.PictureID});
             var response = await Execute(request);
@@ -93,7 +95,7 @@ namespace ClientLourd.Services.RestService
         {
             RestRequest request = new RestRequest("users", Method.PUT);
             request.RequestFormat = DataFormat.Json;
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(obj);
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
@@ -105,7 +107,7 @@ namespace ClientLourd.Services.RestService
         public async Task<List<Channel>> GetChannels()
         {
             RestRequest request = new RestRequest("chat/channels", Method.GET);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             var channels = JsonConvert.DeserializeObject<List<Channel>>(response.Content);
             channels.ForEach(c => c.Messages = new ObservableCollection<Message>());
@@ -124,7 +126,7 @@ namespace ClientLourd.Services.RestService
         public async Task<List<Message>> GetChannelMessages(string channelID, int start, int end)
         {
             RestRequest request = new RestRequest($"chat/messages/{channelID}");
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddParameter("start", start, ParameterType.QueryString);
             request.AddParameter("end", end, ParameterType.QueryString);
             var response = await Execute(request);
@@ -143,7 +145,7 @@ namespace ClientLourd.Services.RestService
         public async Task<Stats> GetStats()
         {
             RestRequest request = new RestRequest("stats");
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             return JsonConvert.DeserializeObject<Stats>(response.Content); 
         }
@@ -152,7 +154,7 @@ namespace ClientLourd.Services.RestService
         public async Task<StatsHistory> GetStats(int start, int end)
         {
             RestRequest request = new RestRequest("stats//history");
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddParameter("start", start, ParameterType.QueryString);
             request.AddParameter("end", end, ParameterType.QueryString);
             var response = await Execute(request);
@@ -164,7 +166,7 @@ namespace ClientLourd.Services.RestService
         public async Task<User> GetUserInfo(string userID)
         {
             RestRequest request = new RestRequest($"users/{userID}", Method.GET);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             return JsonConvert.DeserializeObject<User>(response.Content);
         }
@@ -173,7 +175,7 @@ namespace ClientLourd.Services.RestService
         {
             
             RestRequest request = new RestRequest($"games", Method.POST);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new {Hints =hints, Word=word, Difficulty=(int)difficultyLevel});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
@@ -184,7 +186,7 @@ namespace ClientLourd.Services.RestService
         {
             Console.WriteLine(mode.ToString());
             RestRequest request = new RestRequest( $"games/{gameID}/image", Method.PUT);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new
             {
                 Mode=(int)mode, 
@@ -198,7 +200,7 @@ namespace ClientLourd.Services.RestService
         public async Task DeleteGame(string gameID)
         {
             RestRequest request = new RestRequest($"games/{gameID}", Method.DELETE);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             Console.WriteLine("Delete game");
             var response = await Execute(request);
         }
@@ -206,7 +208,7 @@ namespace ClientLourd.Services.RestService
         public async Task PostGameImage(string gameID, string image, PotraceMode mode, double blackLevel, int brushSize)
         {
             RestRequest request = new RestRequest($"games/{gameID}/image", Method.POST);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddFile("file", image, "");
             request.AddParameter("blacklevel", blackLevel, ParameterType.GetOrPost);
             request.AddParameter("brushsize", brushSize, ParameterType.GetOrPost);
@@ -217,7 +219,7 @@ namespace ClientLourd.Services.RestService
         public async Task<string> PostGroup(int playersMax, GameModes gameType, DifficultyLevel difficulty, int nRounds)
         {
             RestRequest request = new RestRequest($"/groups", Method.POST);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
 
             request.AddJsonBody(new
             {
@@ -235,7 +237,7 @@ namespace ClientLourd.Services.RestService
         public async Task<ObservableCollection<Lobby>> GetGroup()
         {
             RestRequest request = new RestRequest($"/groups", Method.GET);
-            AddBasicHeaders(request);
+            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             List<dynamic> tmpResponse = deseralizer.Deserialize<List<dynamic>>(response);
@@ -259,6 +261,11 @@ namespace ClientLourd.Services.RestService
         {
             Task<IRestResponse> task = new Task<IRestResponse>(() =>
             {
+                Application.Current.Dispatcher.Invoke(() => 
+                {
+                    request.AddParameter("Language", (Language == Languages.EN.GetDescription()) ? "EN" : "FR", ParameterType.HttpHeader);
+                });
+
                 OnStartWaiting(this);
                 var response = _client.Execute(request);
                 OnStopWaiting(this);
@@ -280,13 +287,6 @@ namespace ClientLourd.Services.RestService
             task.Start();
             return task;
         }
-
-        private void AddBasicHeaders(RestRequest request)
-        {
-            request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
-            request.AddParameter("Language", Language, ParameterType.HttpHeader);
-        }
-
 
         public delegate void RestEventHandler(object source, EventArgs args);
 
