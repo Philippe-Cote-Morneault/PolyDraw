@@ -21,6 +21,12 @@
         <converter:LanguageInverseConverter x:Key="LanguageInverseConverter" />
 
     </UserControl.Resources>
+    <Grid>
+        <TextBlock HorizontalAlignment="Right"  FontSize="15" Margin="0 -80 50 0">
+                    <Hyperlink Command="{Binding ChangeLangCommand}">
+                        <TextBlock Text="{Binding Language, Converter={StaticResource LanguageInverseConverter}}"></TextBlock>
+                    </Hyperlink>
+                </TextBlock>
     <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
         <Grid
             IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}">
@@ -38,11 +44,7 @@
 
                 <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Padding="0 10 0 0" Text="{DynamicResource Welcome}"></TextBlock>
 
-                <TextBlock HorizontalAlignment="Center"  FontSize="15" Padding="0 10 20 0">
-                    <Hyperlink Command="{Binding ChangeLangCommand}">
-                        <TextBlock Text="{Binding Language, Converter={StaticResource LanguageInverseConverter}}"></TextBlock>
-                    </Hyperlink>
-                </TextBlock>
+                
 
             </StackPanel>
 
@@ -112,4 +114,5 @@
 
         </Grid>
     </materialDesign:Card>
+    </Grid>
 </UserControl>
