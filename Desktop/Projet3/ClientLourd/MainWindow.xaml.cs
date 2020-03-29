@@ -246,7 +246,7 @@ namespace ClientLourd
             }
             Resources.MergedDictionaries.Add(dict);
             (DataContext as MainViewModel).CurrentDictionary = dict;
-
+            (DataContext as MainViewModel).TriggerLangChangedEvent();
             LanguageSelector.SelectionChanged += ChangeLang;
         }
 
@@ -263,8 +263,10 @@ namespace ClientLourd
                 dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
             (DataContext as MainViewModel).CurrentDictionary = dict;
             Resources.MergedDictionaries[0] = dict;
+            (DataContext as MainViewModel).TriggerLangChangedEvent();
+
         }
-        
+
         public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register("ScaleValue", typeof(double), typeof(MainWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback(OnScaleValueChanged), new CoerceValueCallback(OnCoerceScaleValue)));
     
         private static object OnCoerceScaleValue(DependencyObject o, object value)

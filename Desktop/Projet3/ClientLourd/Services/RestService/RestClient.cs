@@ -51,6 +51,7 @@ namespace ClientLourd.Services.RestService
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth", Method.POST);
+            request.AddParameter("Language", Language, ParameterType.HttpHeader);
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username, password = password});
             var response = await Execute(request);
@@ -64,6 +65,8 @@ namespace ClientLourd.Services.RestService
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
             RestRequest request = new RestRequest("auth/bearer", Method.POST);
+            request.AddParameter("Language", Language, ParameterType.HttpHeader);
+
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(new {username = username, Bearer=bearer});
             var response = await Execute(request);
