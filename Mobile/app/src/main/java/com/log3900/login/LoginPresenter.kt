@@ -29,7 +29,11 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
 
     init {
         // TODO: Unsubscribe?
-        socketService.subscribeToEvent(SocketEvent.CONNECTED, socketHandler)
+        if (socketService.getSocketState() == State.CONNECTED) {
+            loginWithBearer()
+        } else {
+            socketService.subscribeToEvent(SocketEvent.CONNECTED, socketHandler)
+        }
     }
 
     private fun loginWithBearer() {
