@@ -180,4 +180,14 @@
     <!-- Input Dialogs-->
     <system:String x:Key="ChannelName">Enter the channel's name</system:String>
 
+    <!-- Connection history -->
+    <system:String x:Key="Connection">Connection</system:String>
+    <system:String x:Key="Disconnection">Disconnection</system:String>
+    <system:String x:Key="TimePlayer">Time played</system:String>
+
+    <!-- Game history -->
+    <system:String x:Key="GameMode">Game Mode</system:String>
+    <system:String x:Key="Winner">Winner</system:String>
+    <system:String x:Key="GameDuration">Game duration</system:String>
+
 </ResourceDictionary>

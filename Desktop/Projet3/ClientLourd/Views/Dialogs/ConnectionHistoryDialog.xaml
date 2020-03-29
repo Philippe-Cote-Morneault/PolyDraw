@@ -29,9 +29,9 @@
             <RowDefinition Height="80*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Connection</TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Disconnection</TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left">Time played</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left" Text="{DynamicResource Connection}"></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left" Text="{DynamicResource Disconnection}"></TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="2" Margin="20 0 0 0" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left" Text="{DynamicResource TimePlayed}"></TextBlock>
 
         <Separator Grid.Row="1" Grid.ColumnSpan="3" Margin="0 0 0 0" Style="{StaticResource MaterialDesignDarkSeparator}"/>
 

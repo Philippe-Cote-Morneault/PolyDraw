@@ -178,7 +178,15 @@
     <!-- Input Dialogs-->
     <system:String x:Key="ChannelName">Entrez le nom du canal</system:String>
 
+    <!-- Connection history -->
+    <system:String x:Key="Connection">Connexion</system:String>
+    <system:String x:Key="Disconnection">Déconnexion</system:String>
+    <system:String x:Key="TimePlayer">Temps joué</system:String>
 
+    <!-- Game history -->
+    <system:String x:Key="GameMode">Mode de la partie</system:String>
+    <system:String x:Key="Winner">Gagnant</system:String>
+    <system:String x:Key="GameDuration">Durée de la partie</system:String>
 
 
 </ResourceDictionary>

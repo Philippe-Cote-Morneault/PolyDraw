@@ -90,13 +90,12 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <materialDesign:Card Grid.Row="0">
+                    <materialDesign:Card Grid.Row="0" Margin="0 0 0 30">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="48"></RowDefinition>
@@ -127,25 +126,25 @@
                                     </Grid.RowDefinitions>
 
 
-                                    <TextBlock Margin="0 15 0 15" Grid.Row="0" HorizontalAlignment="Right" FontSize="16" Text="{DynamicResource NumberGamesPlayed}"></TextBlock>
-                                    <TextBlock Margin="0 0 0 15" Grid.Row="1" HorizontalAlignment="Right" FontSize="16" Text="{DynamicResource WinPercentage}"></TextBlock>
+                                    <TextBlock Margin="0 15 0 15" Grid.Row="0" HorizontalAlignment="Right" FontSize="20" Text="{DynamicResource NumberGamesPlayed}"></TextBlock>
+                                    <TextBlock Margin="0 0 0 15" Grid.Row="1" HorizontalAlignment="Right" FontSize="20" Text="{DynamicResource WinPercentage}"></TextBlock>
 
                                     <StackPanel Grid.Row="2">
-                                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Right" FontSize="14" Text="{DynamicResource AverageGameDuration}"></TextBlock>
-                                        <TextBlock Margin="0 0 0 15" HorizontalAlignment="Right" FontSize="16">[HH:MM:SS]</TextBlock>
+                                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Right" FontSize="20" Text="{DynamicResource AverageGameDuration}"></TextBlock>
+                                        <TextBlock Margin="0 0 0 15" HorizontalAlignment="Right" FontSize="20">[HH:MM:SS]</TextBlock>
                                     </StackPanel>
                                     <StackPanel Grid.Row="3">
-                                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Right" FontSize="16" Text="{DynamicResource TimePlayed}"></TextBlock>
-                                        <TextBlock Margin="0 0 0 15" HorizontalAlignment="Right" FontSize="16">[HH:MM:SS]</TextBlock>
+                                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Right" FontSize="20" Text="{DynamicResource TimePlayed}"></TextBlock>
+                                        <TextBlock Margin="0 0 0 15" HorizontalAlignment="Right" FontSize="20">[HH:MM:SS]</TextBlock>
                                     </StackPanel>
-                                    <TextBlock Margin="0 0 0 15" Grid.Row="4" HorizontalAlignment="Right" FontSize="16" Text="{DynamicResource BestSoloScore}"></TextBlock>
+                                    <TextBlock Margin="0 0 0 15" Grid.Row="4" HorizontalAlignment="Right" FontSize="20" Text="{DynamicResource BestSoloScore}"></TextBlock>
 
 
-                                    <TextBlock Margin="15 15 0 15" Grid.Row="0" Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.GamesPlayed}"></TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="1" Grid.Column="1"  FontSize="16"  Text="{Binding Path=Stats.WinRatio}"></TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="2"  Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.AvgGameDuration, Converter={StaticResource SecondsToTimeSpanConverter}}"></TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="3" Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.TimePlayed, Converter={StaticResource SecondsToTimeSpanConverter}}"></TextBlock>
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="4" Grid.Column="1" FontSize="16" Text="{Binding Path=Stats.BestScoreSolo}"></TextBlock>
+                                    <TextBlock Margin="15 15 0 15" Grid.Row="0" Grid.Column="1" FontSize="20" Text="{Binding Path=Stats.GamesPlayed}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="1" Grid.Column="1"  FontSize="20"  Text="{Binding Path=Stats.WinRatio}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="2"  Grid.Column="1" FontSize="20" Text="{Binding Path=Stats.AvgGameDuration, Converter={StaticResource SecondsToTimeSpanConverter}}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="3" Grid.Column="1" FontSize="20" Text="{Binding Path=Stats.TimePlayed, Converter={StaticResource SecondsToTimeSpanConverter}}"></TextBlock>
+                                    <TextBlock Margin="15 0 0 15" Grid.Row="4" Grid.Column="1" FontSize="20" Text="{Binding Path=Stats.BestScoreSolo}"></TextBlock>
 
                                 </Grid>
                             </ScrollViewer>
@@ -153,34 +152,7 @@
                         </Grid>
                     </materialDesign:Card>
 
-                    <materialDesign:Card Margin="0 10 0 10" Grid.Row="1">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="48"></RowDefinition>
-                                <RowDefinition Height="6*"></RowDefinition>
-                            </Grid.RowDefinitions>
-
-                            <StackPanel Grid.Row="0">
-                                <TextBlock Margin="25 10 0 0" Grid.Row="0" FontSize="20" FontWeight="Bold" Text="{DynamicResource Achievements}"></TextBlock>
-                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}"/>
-                            </StackPanel>
-
-                            <ScrollViewer Grid.Row="1">
-                                <StackPanel Margin="25 0 0 0" ScrollViewer.CanContentScroll="True" >
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                    <TextBlock FontSize="40">Placeholder</TextBlock>
-                                </StackPanel>
-                            </ScrollViewer>
-
-                        </Grid>
-                    </materialDesign:Card>
+                   
                 </Grid>
             </Grid>
         </Grid>
