@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 
 namespace ClientLourd.Services.SoundService
@@ -15,12 +16,24 @@ namespace ClientLourd.Services.SoundService
     {
         private static Mutex mut;
         private SoundPlayer _soundPlayer;
+        private System.Timers.Timer _spamController;
+        private bool _canPlay;
 
         public SoundService()
         {
             SoundIsOn = true;
             _soundPlayer = new SoundPlayer();
             mut = new Mutex();
+            _canPlay = true;
+            _spamController = new System.Timers.Timer(500);
+            _spamController.Elapsed += OnTimerElapsed;
+            _spamController.AutoReset = true;
+            _spamController.Start();
+        }
+
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            _canPlay = true;
         }
 
         bool _soundIsOn;
@@ -44,15 +57,19 @@ namespace ClientLourd.Services.SoundService
 
         public void PlayNotification()
         {
-            Task.Run(() => 
+            if (_canPlay)
             {
-                if (SoundIsOn)
-                {
-                    _soundPlayer.Stream = Properties.Resources.Message;
-                    _soundPlayer.PlaySync();
 
-                }
-            });
+                _canPlay = false;
+                Task.Run(() =>
+                {
+                    if (SoundIsOn)
+                    {
+                        _soundPlayer.Stream = Properties.Resources.Message;
+                        _soundPlayer.PlaySync();
+                    }
+                });
+            }
         }
 
         public void PlayWordGuessedRight()
@@ -69,14 +86,19 @@ namespace ClientLourd.Services.SoundService
         }
         public void PlayWordGuessedWrong()
         {
-            Task.Run(() =>
+            if (_canPlay)
             {
-                if (SoundIsOn)
+
+                _canPlay = false;
+                Task.Run(() =>
                 {
-                    _soundPlayer.Stream = Properties.Resources.WordGuessedWrong;
-                    _soundPlayer.PlaySync();
-                }
-            });
+                    if (SoundIsOn)
+                    {
+                        _soundPlayer.Stream = Properties.Resources.WordGuessedWrong;
+                        _soundPlayer.PlaySync();
+                    }
+                });
+            }
         }
 
         public void PlayTimerWarning()

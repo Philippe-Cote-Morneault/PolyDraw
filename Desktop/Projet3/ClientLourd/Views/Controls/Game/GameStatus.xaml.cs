@@ -77,13 +77,14 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     tmpPlayer.Score = info["Points"];
                     tmpPlayer.PointsRecentlyGained = newPoints;
-                    AnimatePointsGained(tmpPlayer.User.ID);
+                    
+                    AnimatePoints(tmpPlayer.User.ID, (tmpPlayer.PointsRecentlyGained > 0));
                 }
             }
         }
 
 
-        private void AnimatePointsGained(string playerID)
+        private void AnimatePoints(string playerID, bool pointsGained)
         {
             for (int i = 0; i < List.Items.Count; i++)
             {
@@ -92,9 +93,10 @@ namespace ClientLourd.Views.Controls.Game
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         ContentPresenter c = (ContentPresenter)List.ItemContainerGenerator.ContainerFromIndex(i);
-                        TextBlock tb = (c.ContentTemplate.FindName("PointsGainedTextBlock", c) as TextBlock);
+                        
+                        TextBlock tb = (pointsGained)? (c.ContentTemplate.FindName("PointsGainedTextBlock", c) as TextBlock): (c.ContentTemplate.FindName("PointsLostTextBlock", c) as TextBlock);
 
-                        Storyboard sb = (Storyboard)FindResource("PointsGainedAnimations");
+                        Storyboard sb = (Storyboard)FindResource("PointsAnimations");
                         for (int j = 0; j < sb.Children.Count; j++)
                         {
                             Storyboard.SetTarget(sb.Children[j], tb);
@@ -105,5 +107,6 @@ namespace ClientLourd.Views.Controls.Game
                 }
             }
         }
+
     }
 }

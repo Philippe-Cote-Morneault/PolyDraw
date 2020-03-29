@@ -60,11 +60,20 @@
             <DoubleAnimation AutoReverse="False"
                            
                 Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="0" Duration="0:0:0.5" />
+                From="1" To="1.8" Duration="0:0:0.2" />
 
             <DoubleAnimation AutoReverse="False"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="0" Duration="0:0:0.5" />
+                From="1" To="1.8" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="False"
+                           
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                From="1.8" To="0" BeginTime="0:0:0.2" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="False"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                From="1.8" To="0" BeginTime="0:0:0.2" Duration="0:0:0.2" />
 
         </Storyboard>
 
