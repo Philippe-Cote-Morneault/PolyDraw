@@ -68,9 +68,9 @@
                                     <TextBlock 
                                         HorizontalAlignment="Center" 
                                         Text="{Binding Score, StringFormat={}Score: {0}}" RenderTransformOrigin=".5,.5"
-                                        Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA|Solo, UpdateSourceTrigger=PropertyChanged}"/>
+                                        Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TextBlock Margin="15 0 0 0" x:Name="PointsGainedTextBlock" Opacity="0" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained, StringFormat={}+{0}}"
-                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA|Solo, UpdateSourceTrigger=PropertyChanged}">
+                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
                                         <TextBlock.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>
@@ -80,7 +80,7 @@
                                     </TextBlock>
 
                                     <TextBlock Margin="15 0 0 0" x:Name="PointsLostTextBlock" Opacity="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained}"
-                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA|Solo, UpdateSourceTrigger=PropertyChanged}">
+                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
                                         <TextBlock.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>

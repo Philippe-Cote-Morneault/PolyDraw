@@ -155,8 +155,10 @@
         </Grid.ColumnDefinitions>
 
         
-        <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}">
-            <TextBlock VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="{DynamicResource TeamScore}"></TextBlock>
+        <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop|Solo}">
+            <TextBlock Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}" VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="{DynamicResource TeamScore}"></TextBlock>
+            <TextBlock Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo}" VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="Score:"></TextBlock>
+
             <TextBlock VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamPoints}"></TextBlock>
             <TextBlock Opacity="0" Foreground="Green" Name="PointsGained" VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamNewPoints, StringFormat={}+{0}}" RenderTransformOrigin=".5,.5">
                 <TextBlock.RenderTransform>

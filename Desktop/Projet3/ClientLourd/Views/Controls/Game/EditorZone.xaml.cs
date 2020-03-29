@@ -278,9 +278,23 @@ namespace ClientLourd.Views.Controls.Game
                     {
                         Storyboard.SetTarget(sb.Children[j], textBoxes[i]);
                     }
+                    sb.Completed += (s, e) => ClearTextBoxes();
                     sb.Begin();
                 }
             });
+        }
+
+        private void ClearTextBoxes()
+        {
+            for (int i = 0; i < GuessTextBoxes.Items.Count; i++)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
+                    TextBox tb = (c.ContentTemplate.FindName("textbox", c) as TextBox);
+                    tb.Text = "";
+                });
+            }
         }
 
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
