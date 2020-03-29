@@ -1,5 +1,6 @@
 package com.log3900.game.match.ffa
 
+import android.os.Handler
 import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
@@ -46,6 +47,21 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         super.onPlayerTurnToDraw(playerTurnToDraw)
         activeFFAMatchView?.clearAllPlayerStatusRes()
         activeFFAMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
+
+        val drawingPlayer = FFAMatchManager.getCurrentMatch().players.find { it.ID == playerTurnToDraw.userID }
+
+        if (drawingPlayer!!.isCPU) {
+            activeFFAMatchView?.enableHintButton(true)
+        } else {
+            activeFFAMatchView?.enableHintButton(false)
+        }
+
+        activeFFAMatchView?.setCanvasMessage(drawingPlayer.username + " is drawing the next word!")
+        activeFFAMatchView?.showCanvasMessageView(true)
+
+        Handler().postDelayed({
+            activeMatchView?.showCanvasMessageView(false)
+        }, 2000)
     }
 
     override fun onRoundEnded(roundEnded: RoundEnded) {
@@ -80,6 +96,13 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         activeFFAMatchView?.showWordToDrawView()
         activeFFAMatchView?.setWordToDraw(turnToDraw.word)
         activeFFAMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
+
+        activeFFAMatchView?.setCanvasMessage("You are drawing the word ${turnToDraw.word}!")
+        activeFFAMatchView?.showCanvasMessageView(true)
+
+        Handler().postDelayed({
+            activeMatchView?.showCanvasMessageView(false)
+        }, 2000)
     }
 
     private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
