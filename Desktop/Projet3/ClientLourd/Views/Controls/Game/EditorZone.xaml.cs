@@ -293,8 +293,19 @@ namespace ClientLourd.Views.Controls.Game
                     ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
                     TextBox tb = (c.ContentTemplate.FindName("textbox", c) as TextBox);
                     tb.Text = "";
+
                 });
             }
+
+            // Focus first text box
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
+                TextBox tb = (c.ContentTemplate.FindName("textbox", c) as TextBox);
+
+                Action focusAction = () => tb.Focus();
+                Dispatcher.BeginInvoke(focusAction, DispatcherPriority.Render);
+            });
         }
 
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
