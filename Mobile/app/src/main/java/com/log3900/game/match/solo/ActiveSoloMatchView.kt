@@ -7,4 +7,5 @@ interface ActiveSoloMatchView : ActiveMatchView {
     fun setRemainingLives(count: Int)
     fun removeRemainingLife()
     fun addRemainingLife()
+    fun showScoreChangedAnimation(scoreChangedValue: String, isPositive: Boolean)
 }
