@@ -20,6 +20,67 @@ import java.net.SocketTimeoutException
 import java.util.*
 
 class LoginPresenter(var loginView: LoginView?) : Presenter {
+    private var rememberUser = false
+
+    init {
+        loginWithBearer()
+    }
+
+    private fun loginWithBearer() {
+        val bearer = BearerTokenManager.getBearer()
+        val username = BearerTokenManager.getUsername()
+        if (bearer == null || username == null) {
+            Log.d("BEAR_MAN", "Bearer is $bearer, username is $username")
+            return
+        }
+        Log.d("BEAR_MAN", "Found bearer: $bearer")
+        Log.d("BEAR_MAN", "Found username: $username")
+        val bearerLoginDialog = ProgressDialog()
+        loginView?.showProgressDialog(bearerLoginDialog)
+
+
+        val json = JsonObject().apply {
+            addProperty("Bearer", bearer)
+            addProperty("username", username)
+        }
+
+        val call = AuthenticationRestService.service.bearerAuthenticate(
+            "EN", // LanguageManager.getCurrentLanguage().languageCode,
+            json
+        )
+        Log.d("BEAR_MAN", "Sending json: $json")
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                when(response.code()) {
+                    200 -> {
+                        val sessionToken = response.body()!!.get("SessionToken").asString
+                        val bearerToken = response.body()!!.get("Bearer").asString
+                        val userID = response.body()!!.get("UserID").asString
+                        handleSuccessAuth(bearerToken, sessionToken, userID) {
+                            loginView?.showWelcomeBackMessage(username)
+                            loginView?.hideProgressDialog(bearerLoginDialog)
+                        }
+                    }
+//                    401 -> handleErrorAuth("Your session has expired. Please log in again.")
+                    else -> { // Fail silently...
+                        BearerTokenManager.resetAll()
+                        loginView?.hideProgressDialog(bearerLoginDialog)
+//                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
+                    }
+                }
+            }
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                BearerTokenManager.resetAll()
+                loginView?.hideProgressDialog(bearerLoginDialog)
+                loginView?.showErrorDialog(
+                    "Error",
+                    "Error during authentication (Bearer token)",
+                    null,
+                    null
+                )
+            }
+        })
+    }
 
     fun authenticate(username: String, password: String) {
         loginView?.showProgresBar()
@@ -36,8 +97,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
-                        handleSuccessAuth(bearerToken, sessionToken, username, userID)
-                        Log.d("SESSION_TOKEN", sessionToken)
+                        handleSuccessAuth(bearerToken, sessionToken, userID)
                     }
                         else -> {
                         handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
@@ -56,10 +116,16 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         })
     }
 
-    private fun handleSuccessAuth(bearer: String, session: String, username: String, userID: String) {
+    private fun handleSuccessAuth(
+        bearer: String,
+        session: String,
+        userID: String,
+        onMainStart: () -> Unit = {}
+    ) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()
+                onMainStart()
                 true
             } else {
                 handleErrorAuth("Connection refused.")
@@ -111,6 +177,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     }
 
     private fun storeUser(account: Account, sessionToken: String, bearerToken: String): Completable {
+        Log.d("BEAR_MAN", "Got bearer: $bearerToken")
         return Completable.create {completable ->
             AccountRepository.getInstance().getAccountByID(account.ID).subscribe(
                 {
@@ -127,6 +194,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
+                                if (rememberUser) {
+                                    BearerTokenManager.storeBearer(bearerToken)
+                                    BearerTokenManager.storeUsername(account.username)
+                                }
                                 completable.onComplete()
                             }
                     }
@@ -140,6 +211,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
+                                if (rememberUser) {
+                                    BearerTokenManager.storeBearer(bearerToken)
+                                    BearerTokenManager.storeUsername(account.username)
+                                }
                                 completable.onComplete()
                             }
                     }
@@ -170,6 +245,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         } else {
             loginView?.clearPasswordError()
         }
+    }
+
+    fun rememberUser() {
+        rememberUser = true
     }
 
     override fun destroy() {

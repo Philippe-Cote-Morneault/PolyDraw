@@ -9,6 +9,12 @@ interface AuthenticationRestService {
     @POST("/auth")
     fun authenticate(@Body data: JsonObject): Call<JsonObject>
 
+    @POST("/auth/bearer")
+    fun bearerAuthenticate(
+        @Header("Language") language: String,
+        @Body data: JsonObject
+    ): Call<JsonObject>
+
     @POST("/auth/register")
     fun register(
         @Header("Language") language: String,

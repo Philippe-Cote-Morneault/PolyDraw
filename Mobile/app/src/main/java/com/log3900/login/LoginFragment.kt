@@ -4,10 +4,13 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -31,6 +34,7 @@ class LoginFragment : Fragment(), LoginView {
     private lateinit var passwordTextInputLayout: TextInputLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var registerButton: MaterialButton
+    private lateinit var rememberMeCheckBox: CheckBox
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +73,8 @@ class LoginFragment : Fragment(), LoginView {
         registerButton.setOnClickListener {
             onRegisterButtonClick()
         }
+
+        rememberMeCheckBox = root.findViewById(R.id.activity_login_remember_me_checkbox)
     }
 
     private fun onUsernameChange() {
@@ -87,6 +93,9 @@ class LoginFragment : Fragment(), LoginView {
     private fun onLoginButtonClick() {
         KeyboardHelper.hideKeyboard(activity as Activity)
 
+        if (rememberMeCheckBox.isChecked)
+            loginPresenter?.rememberUser()
+
         loginPresenter?.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
     }
 
@@ -104,6 +113,12 @@ class LoginFragment : Fragment(), LoginView {
 
         // Commit the transaction
         transaction.commit()
+    }
+
+    private fun isRememberMeChecked(): Boolean = rememberMeCheckBox.isChecked
+
+    override fun showWelcomeBackMessage(username: String) {
+        Toast.makeText(context, "Welcome back, $username", Toast.LENGTH_LONG).show()
     }
 
     override fun showProgresBar() {
