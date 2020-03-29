@@ -29,17 +29,6 @@
         <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
 
     </Window.Resources>
-    <Window.InputBindings>
-        <KeyBinding Key="OemTilde"
-                    Command="{Binding ElementName=ChatBox, Path=DataContext.OpenDrawerCommand}">
-            <KeyBinding.CommandParameter>
-                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                    <Binding ElementName="ChatToggleButton" Path="IsEnabled" />
-                    <Binding ElementName="Drawer" />
-                </MultiBinding>
-            </KeyBinding.CommandParameter>
-        </KeyBinding>
-    </Window.InputBindings>
 
     <materialDesign:DialogHost Identifier="Default" x:Name="MainWindowDialogHost" CloseOnClickAway="False" SizeChanged="MainGrid_SizeChanged">
             <materialDesign:DialogHost.LayoutTransform>
