@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +38,8 @@ import com.log3900.shared.ui.dialogs.SimpleErrorDialog
 import com.log3900.socket.SocketService
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.ui.getAccountAvatarID
+import com.log3900.utils.ui.getAvatarID
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -145,7 +148,9 @@ open class MainActivity : AppCompatActivity() {
 
         // Header
         val header = navigationView.getHeaderView(0)
+        val currentAccount = AccountRepository.getInstance().getAccount()
         val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
+        avatar.setImageResource(getAvatarID(currentAccount.pictureID))
         avatar.setOnClickListener {
             startNavigationFragment(
                 R.id.navigation_main_profile_fragment,
@@ -153,6 +158,8 @@ open class MainActivity : AppCompatActivity() {
                 false
             )
         }
+        val username = header.findViewById<TextView>(R.id.nav_header_username)
+        username.text = currentAccount.username
 
         if (!AccountRepository.getInstance().getAccount().tutorialDone) {
             startActivity(Intent(applicationContext, TutorialActivity::class.java))
