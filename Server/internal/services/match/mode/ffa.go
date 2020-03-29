@@ -340,6 +340,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 					Username: player.Username,
 					ID:       player.userID,
 				},
+				DrawerID: f.curDrawer.userID,
 			})
 
 			if hintSent {

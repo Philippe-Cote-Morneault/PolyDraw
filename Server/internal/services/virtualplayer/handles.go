@@ -185,7 +185,7 @@ func handleStartGame(match match2.IMatch) {
 	managerInstance.Matches[groupID] = &match
 	managerInstance.mutex.Unlock()
 
-	makeBotsSpeak("startGame", groupID)
+	makeBotsSpeak("startGame", groupID, uuid.Nil)
 	// printManager("handleStartGame")
 
 }
@@ -243,7 +243,7 @@ func handleRoundEnds(groupID uuid.UUID) {
 
 	managerInstance.mutex.Unlock()
 
-	makeBotsSpeak("endRound", groupID)
+	makeBotsSpeak("endRound", groupID, uuid.Nil)
 	// printManager("handleRoundEnds")
 }
 
@@ -361,23 +361,28 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string, gameType int) {
 	var hintRes responseHint
 	if hintOk {
-		hintRes.Hint = hint
+		bot, botOk := managerInstance.Bots[hintRequest.DrawerID]
+		if !botOk {
+			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting respHintRequest", hintRequest.DrawerID)
+			return
+		}
+
+		hintRes.Hint = bot.getInteraction("hintRequested") + " Mon indice est : " + hint
 		hintRes.Error = ""
 	} else {
 		hintRes.Hint = ""
 		hintRes.Error = hint
 	}
-	// determiner le nb d'indices restant (game.hint-PlayersHints)
 	managerInstance.mutex.Lock()
 	group, ok := managerInstance.Matches[hintRequest.MatchID]
-
 	if !ok {
 		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting respHintRequest...", hintRequest.MatchID)
 		return
 	}
+
 	if gameType == 0 {
-		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, hintRequest.Player.ID)
+		hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, hintRequest.Player.ID) // pas de lock
 		hintRes.UserID = hintRequest.Player.ID.String()
 
 		message := socket.RawMessage{}
@@ -391,7 +396,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 				log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)
 			}
 
-			hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID)
+			hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID) // pas de lock
 			hintRes.UserID = playerID.String()
 
 			message := socket.RawMessage{}
@@ -401,13 +406,6 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 	}
 
 	managerInstance.mutex.Unlock()
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		makeBotsSpeak("hintRequested", hintRequest.MatchID)
-	}()
-	wg.Wait()
 }
 
 // randomUsername [Current Thread] return random username among players in match (virtualplayer)
@@ -428,7 +426,7 @@ func randomUsername(groupID uuid.UUID) string {
 }
 
 //makeBotsSpeak [New Threads] sends bot interaction to all connected users (virtualplayer)
-func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
+func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 	managerInstance.mutex.Lock()
 
 	channelID, ok := managerInstance.Channels[groupID]
@@ -448,16 +446,28 @@ func makeBotsSpeak(interactionType string, groupID uuid.UUID) {
 
 	var wg sync.WaitGroup
 	wg.Add(len(group))
-	for botID := range group {
-		bot, botOk := managerInstance.Bots[botID]
+	if speakingBotID != uuid.Nil {
+		bot, botOk := managerInstance.Bots[speakingBotID]
 		if !botOk {
-			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", botID)
+			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", speakingBotID)
 			return
 		}
 		go func(chanID uuid.UUID) {
 			defer wg.Done()
 			bot.speak(chanID, interactionType)
 		}(channelID)
+	} else {
+		for botID := range group {
+			bot, botOk := managerInstance.Bots[botID]
+			if !botOk {
+				log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", botID)
+				return
+			}
+			go func(chanID uuid.UUID) {
+				defer wg.Done()
+				bot.speak(chanID, interactionType)
+			}(channelID)
+		}
 	}
 	managerInstance.mutex.Unlock()
 	wg.Wait()

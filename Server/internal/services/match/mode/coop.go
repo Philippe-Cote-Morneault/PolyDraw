@@ -371,6 +371,7 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 				Username: player.Username,
 				ID:       player.userID,
 			},
+			DrawerID: c.curDrawer.userID,
 		})
 
 		if hintSent {
