@@ -81,6 +81,10 @@ func PostAuthToken(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
+	if request.Username == "" || request.Bearer == "" {
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.loginBearer", r))
+		return
+	}
 	var user model.User
 	model.DB().Where("bearer = ? AND username = ?", request.Bearer, request.Username).First(&user)
 
