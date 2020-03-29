@@ -10,6 +10,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
+//QueueSize size for the queue for the messages to be sent
 const QueueSize = 100
 
 // ClientSocket is a client connected to the socket
