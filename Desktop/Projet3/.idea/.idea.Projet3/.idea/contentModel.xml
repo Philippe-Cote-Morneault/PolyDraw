@@ -130,6 +130,7 @@
           <e p="TimerWarning.wav" t="Include" />
           <e p="treasure.png" t="Include" />
           <e p="WhiteLogo.png" t="Include" />
+          <e p="windows.ico" t="Include" />
           <e p="WordGuessedWrong.wav" t="Include" />
           <e p="WordGuessRight.wav" t="Include" />
         </e>
@@ -201,6 +202,7 @@
             <e p="GameModeToImageConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
+            <e p="LanguageInverseConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
             <e p="ModeToVisibilityConverter.cs" t="Include" />
@@ -327,6 +329,7 @@
             <e p="ChatWindow.xaml.cs" t="Include" />
           </e>
         </e>
+        <e p="windows.ico" t="Include" />
       </e>
       <e p="packages" t="ExcludeRecursive" />
       <e p="Projet3.sln" t="IncludeFlat" />

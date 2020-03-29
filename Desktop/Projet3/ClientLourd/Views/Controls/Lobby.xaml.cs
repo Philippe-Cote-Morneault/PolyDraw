@@ -71,13 +71,14 @@ namespace ClientLourd.Views.Controls
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Chat chat = (Chat)ChatContainer.Children[0];
-                ChatViewModel chatViewModel = (ChatViewModel) chat.DataContext; 
-                var channel = chatViewModel.Channels.FirstOrDefault(c => c.IsGame);
-                ((GameViewModel)GameView.DataContext).GameChannel = channel;
-                foreach (var player in DataContext.CurrentLobby.Players)
+                if (ChatContainer.Children.Count > 0)
                 {
-                    chatViewModel.UpdateUser(player.User);
+                    Chat chat = (Chat)ChatContainer.Children[0];
+                    ChatViewModel chatViewModel = (ChatViewModel) chat.DataContext; 
+                    foreach (var player in DataContext.CurrentLobby.Players)
+                    {
+                        chatViewModel.UpdateUser(player.User);
+                    }
                 }
             });
         }

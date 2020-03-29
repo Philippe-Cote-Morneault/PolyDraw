@@ -158,9 +158,39 @@ namespace ClientLourd.ViewModels
             SocketClient.UserLeftChannel += SocketClientOnUserLeftChannel;
             SocketClient.UserDeletedChannel += SocketClientOnUserDeletedChannel;
             SocketClient.UserChangedName += SocketClientOnUserChangedName;
+            SocketClient.HintResponse += SocketClientOnHintResponse;
             Channels = new List<Channel>();
             //We block all socket event until the channels are import
             _mutex.WaitOne();
+        }
+
+        private void SocketClientOnHintResponse(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs)args;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                //TODO update bot id 
+                User bot = _users.FirstOrDefault(u => u.ID == e.UserID);
+                User player = _users.FirstOrDefault(u => u.ID == e.UserID);
+                if (bot != null)
+                {
+                    Message message;
+                    if (e.HasHint)
+                    {
+                        if (player.ID != SessionInformations.User.ID)
+                        {
+                            var systemMessage = new Message(DateTime.Now, _admin, $"{player.Username}{CurrentDictionary["HintResponse"]}");
+                            GameChannel.Messages.Add(systemMessage);
+                        }
+                        message = new Message(DateTime.Now, bot, e.Hint);
+                    }
+                    else
+                    {
+                        message = new Message(DateTime.Now, bot, e.Error);
+                    }
+                    GameChannel.Messages.Add(message);
+                }
+            });
         }
 
         private void SocketClientOnUserChangedName(object source, EventArgs args)
@@ -205,7 +235,7 @@ namespace ClientLourd.ViewModels
                     return;
                 if (SessionInformations.User.ID != e.UserID)
                 {
-                    Message m = new Message(e.Date, _admin, $"{e.Username} left the channel");
+                    Message m = new Message(e.Date, _admin, $"{e.Username} {CurrentDictionary["UserLeft"]}");
                     channel.Messages.Add(m);
                 }
                 else if (channel.IsGame)
@@ -231,7 +261,7 @@ namespace ClientLourd.ViewModels
 
                    if (SessionInformations.User.ID != e.UserID)
                    {
-                    Message m = new Message(e.Date, _admin, $"{e.Username} joined the channel");
+                    Message m = new Message(e.Date, _admin, $"{e.Username} {CurrentDictionary["UserJoined"]}");
                     channel.Messages.Add(m);
                    }
                     channel.Users.Add(await GetUser(e.Username, e.UserID));
@@ -416,6 +446,7 @@ namespace ClientLourd.ViewModels
             NotifyPropertyChanged(nameof(Channels));
             NotifyPropertyChanged(nameof(JoinedChannels));
             NotifyPropertyChanged(nameof(AvailableChannels));
+            NotifyPropertyChanged(nameof(GameChannel));
             NotifyPropertyChanged(nameof(NewMessages));
 
             if (SelectedChannel == null || SessionInformations.User == null) return;
@@ -531,6 +562,11 @@ namespace ClientLourd.ViewModels
                     UpdateChannels();
                 }
             }
+        }
+
+        public Channel GameChannel
+        {
+            get => Channels.FirstOrDefault(c => c.IsGame);
         }
 
         private List<Channel> _channels;
