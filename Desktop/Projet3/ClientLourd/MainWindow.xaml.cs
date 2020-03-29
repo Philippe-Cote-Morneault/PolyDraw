@@ -59,6 +59,9 @@ namespace ClientLourd
                 AfterLogin(loginViewModel);
                 ChatBox.AfterLogin();
                 LoginScreen.AfterLogin();
+                Profile.AfterLogin();
+                Home.AfterLogin();
+                Lobby.AfterLogin();
             });
         }
 
@@ -68,9 +71,6 @@ namespace ClientLourd
             mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
-            Profile.AfterLogin();
-            Home.AfterLogin();
-            Lobby.AfterLogin();
 
             //TODO: Remove this comment
             //DialogHost.Show(new Tutorial(), "Default");

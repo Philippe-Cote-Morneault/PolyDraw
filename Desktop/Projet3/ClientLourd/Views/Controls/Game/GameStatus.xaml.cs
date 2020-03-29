@@ -15,9 +15,22 @@ namespace ClientLourd.Views.Controls.Game
         public GameStatus()
         {
             InitializeComponent();
+        }
+
+        public void AfterLogin()
+        {
+            InitEventHandler();
+        }
+
+        public void AfterLogout()
+        {
+            
+        }
+
+        private void InitEventHandler()
+        {
             SocketClient.RoundEnded += SocketClientOnRoundEnded;
             SocketClient.MatchSync += SocketClientOnMatchSync;
-
         }
 
         private void SocketClientOnMatchSync(object source, EventArgs args)

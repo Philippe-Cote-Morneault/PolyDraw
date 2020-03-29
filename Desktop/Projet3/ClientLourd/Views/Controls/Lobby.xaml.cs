@@ -46,20 +46,20 @@ namespace ClientLourd.Views.Controls
         public Lobby()
         {
             InitializeComponent();
-            InitSocket();
         }
 
         public void AfterLogin()
         {
-            InitSocket();
+            InitEventHandler();
             DataContext.AfterLogin();
+            GameView.AfterLogin();
         }
         public void AfterLogout()
         {
             DataContext.AfterLogOut();
         }
 
-        private void InitSocket()
+        private void InitEventHandler()
         {
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
