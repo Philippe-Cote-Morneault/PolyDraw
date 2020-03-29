@@ -23,6 +23,7 @@ type responseHint struct {
 	HintsLeft int
 	Hint      string
 	Error     string
+	BotID     string
 }
 
 type gameHints struct {
@@ -366,7 +367,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting respHintRequest", hintRequest.DrawerID)
 			return
 		}
-
+		hintRes.BotID = bot.BotID.String()
 		hintRes.Hint = bot.getInteraction("hintRequested") + " Mon indice est : " + hint
 		hintRes.Error = ""
 	} else {
