@@ -60,7 +60,7 @@ namespace ClientLourd.Services.SocketService
         public void SendMessage(Tlv tlv)
         {
             System.Diagnostics.Debug.WriteLine($"Socket ---> [{(SocketMessageTypes)tlv.Type}]");
-            _socket.Send(tlv.GetBytes());
+            _socket?.Send(tlv.GetBytes());
         }
 
 

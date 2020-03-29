@@ -59,6 +59,7 @@
         CoopWordGuessed = 87,
         CoopTeamateGuessedIncorrectly = 89,
         UserChangedName = 110,
+        ChangeLanguage = 112,
         ServerMessage = 255,
     }
 }

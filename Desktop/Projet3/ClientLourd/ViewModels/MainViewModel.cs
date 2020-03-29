@@ -54,6 +54,8 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             //TODO
+            SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }) : new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1 }));
+
 
         }
 
@@ -70,7 +72,8 @@ namespace ClientLourd.ViewModels
             SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
             SocketClient.ServerMessage += SocketClientOnServerMessage;
-            
+
+
         }
 
         private void SocketClientOnServerMessage(object source, EventArgs args)
@@ -229,6 +232,7 @@ namespace ClientLourd.ViewModels
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _selectedLanguage = value.GetEnumFromDescription<Languages>();
+                    SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }): new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1}));
                     LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                     NotifyPropertyChanged();
                 }
