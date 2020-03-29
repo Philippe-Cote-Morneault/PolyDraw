@@ -173,6 +173,8 @@
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\MatchTiming.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
+    <Compile Include="Utilities\Converters\ChannelSelectionBorderConverter.cs" />
+    <Compile Include="Utilities\Converters\ChannelSelectionToIconConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToOpacity.cs" />
     <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
     <Compile Include="Utilities\Converters\EnumTranslationConverter.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\StringLengthConverter.cs" />
     <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
     <Compile Include="Utilities\Converters\WidthToLeftMarginConverter.cs" />
     <Compile Include="Utilities\Enums\DifficultyLevel.cs" />

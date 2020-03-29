@@ -189,6 +189,8 @@
           </e>
           <e p="Converters" t="Include">
             <e p="BoolToVisibilityConverter.cs" t="Include" />
+            <e p="ChannelSelectionBorderConverter.cs" t="Include" />
+            <e p="ChannelSelectionToIconConverter.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
             <e p="ComparatorToOpacity.cs" t="Include" />
             <e p="ComparatorToVisibilityConverter.cs" t="Include" />
@@ -211,6 +213,7 @@
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
+            <e p="StringLengthConverter.cs" t="Include" />
             <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
             <e p="WidthToLeftMarginConverter.cs" t="Include" />

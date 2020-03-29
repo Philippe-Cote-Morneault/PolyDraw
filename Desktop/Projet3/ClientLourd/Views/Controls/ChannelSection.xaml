@@ -12,7 +12,12 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <converters:NotificationConverter x:Key="NotificationConverter"/>
+        <converters:ChannelSelectionBorderConverter x:Key="ChannelSelectionConverter"/>
+        <converters:ChannelSelectionToIconConverter x:Key="ChannelSelectionToIconConverter"/>
+        <converters:StringLengthConverter x:Key="StringLengthConverter"/>
     </UserControl.Resources>
+    
+    
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="10">
             <StackPanel Orientation="Horizontal">
@@ -54,6 +59,20 @@
         </StackPanel>
         <TreeView  Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
             <TreeViewItem Name="JoindedTree" IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
+                <TreeViewItem.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                    </TreeViewItem.Resources>
+                <TreeViewItem.ItemContainerStyle>
+                    <!-- Overwrite material design style -->
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeViewItem.ItemContainerStyle>
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
@@ -63,31 +82,55 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <Grid Name="ParentGrid">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Tag="{Binding}" Click="LeaveChannelClick" Header="{DynamicResource Leave}">
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Foreground="Red" Kind="Minus" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </Grid.ContextMenu>
-                            <materialDesign:Badged Grid.Column="0" Badge="{Binding Notification, Converter={StaticResource NotificationConverter}}" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Grid.Column="1" />
-                            <Button Grid.Column="2"  Margin="5"   Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
-                                <materialDesign:PackIcon Kind="MoreHoriz"/>
-                            </Button>
-                        </Grid>
+                        <Border ToolTip="{Binding Name}"  BorderBrush="{StaticResource PrimaryHueLightBrush}">
+                            <Border.BorderThickness>
+                                <MultiBinding Converter="{StaticResource ChannelSelectionConverter}">
+                                    <Binding ElementName="MainTree" Path="DataContext.SelectedChannel"/>
+                                    <Binding Path="."/>
+                                </MultiBinding>
+                            </Border.BorderThickness>
+                            <Grid Name="ParentGrid" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Tag="{Binding}" Click="LeaveChannelClick" Header="{DynamicResource Leave}">
+                                            <MenuItem.Icon>
+                                                <materialDesign:PackIcon Foreground="Red" Kind="Minus" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <materialDesign:Badged Grid.Column="0" Badge="{Binding Notification, Converter={StaticResource NotificationConverter}}" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
+                                <materialDesign:PackIcon Margin="0 0 2 0" VerticalAlignment="Center" Grid.Column="1" Kind="{Binding Path=., Converter={StaticResource ChannelSelectionToIconConverter}}"></materialDesign:PackIcon>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Name, Converter={StaticResource StringLengthConverter}, ConverterParameter=8}" Grid.Column="2" />
+                                <Button Grid.Column="3"  Margin="5"   Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
+                                    <materialDesign:PackIcon Kind="MoreHoriz"/>
+                                </Button>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
             </TreeViewItem>
             <TreeViewItem IsExpanded="True" Name="AvailableTree" ItemsSource="{Binding AvailableChannels}">
+                <TreeViewItem.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                    </TreeViewItem.Resources>
+                <TreeViewItem.ItemContainerStyle>
+                    <!-- Overwrite material design style -->
+                    <Style TargetType="{x:Type TreeViewItem}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeViewItem.ItemContainerStyle>
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Margin="5" Height="24" Width="24" VerticalAlignment="Center"
@@ -97,8 +140,9 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                            <Grid Name="ParentGrid">
+                            <Grid ToolTip="{Binding Name}" Name="ParentGrid" Margin="5">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
@@ -116,8 +160,9 @@
                                         </MenuItem>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
-                                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Name}" />
-                                <Button Grid.Column="1"   Margin="5"  Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
+                                <materialDesign:PackIcon VerticalAlignment="Center" Grid.Column="0" Kind="{Binding Path=., Converter={StaticResource ChannelSelectionToIconConverter}}"></materialDesign:PackIcon>
+                                <TextBlock Padding="5" Margin="5" VerticalAlignment="Center" Grid.Column="1" Text="{Binding Name, Converter={StaticResource StringLengthConverter}, ConverterParameter=8}" />
+                                <Button Grid.Column="2"   Margin="5"  Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
                                     <materialDesign:PackIcon Kind="MoreHoriz"/>
                                 </Button>
                             </Grid>
