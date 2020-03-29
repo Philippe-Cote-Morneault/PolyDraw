@@ -18,14 +18,14 @@
 
     <!--Home.xaml-->
     <system:String x:Key="Mode">Mode</system:String>
-    <system:String x:Key="LobbyName">Lobby name</system:String>
+    <system:String x:Key="LobbyName">Match name</system:String>
     <system:String x:Key="Language">Language</system:String>
     <system:String x:Key="Difficulty">Difficulty</system:String>
     <system:String x:Key="Host">Host</system:String>
     <system:String x:Key="Rounds">Rounds</system:String>
     <system:String x:Key="Duration">Duration (minutes)</system:String>
 
-    <system:String x:Key="CreateLobby">Create a lobby</system:String>
+    <system:String x:Key="CreateLobby">Create a match</system:String>
     <system:String x:Key="CreateGame">Create a game</system:String>
 
     <system:String x:Key="FilterMode">Filter by mode</system:String>
@@ -61,8 +61,8 @@
     <system:String x:Key="RemovePlayer">Remove player</system:String>
     <system:String x:Key="WaitingRoom">Waiting room</system:String>
     <system:String x:Key="Players">Players</system:String>
-    <system:String x:Key="StartGame">Start game</system:String>
-    <system:String x:Key="QuitLobby">Leave lobby</system:String>
+    <system:String x:Key="StartGame">Start match</system:String>
+    <system:String x:Key="QuitLobby">Leave match</system:String>
     <system:String x:Key="EmptySlot">Empty slot</system:String>
     
     <!-- Game creation -->
@@ -90,15 +90,15 @@
     <system:String x:Key="DrawingMode">Select the way the drawing will be displayed</system:String>
 
 
-    <!-- Lobby creation -->
-    <system:String x:Key="CreateNewLobby">Create a new lobby</system:String>
-    <system:String x:Key="EnterLobbyName">Enter the lobby's name</system:String>
-    <system:String x:Key="LobbyNamePlaceHolder">Lobby name</system:String>
-    <system:String x:Key="SelectLobbyMode">Select the lobby's game mode</system:String>
+    <!-- Match creation -->
+    <system:String x:Key="CreateNewLobby">Create a new match</system:String>
+    <system:String x:Key="EnterLobbyName">Enter the match's name</system:String>
+    <system:String x:Key="LobbyNamePlaceHolder">Match name</system:String>
+    <system:String x:Key="SelectLobbyMode">Select the match's game mode</system:String>
     <system:String x:Key="SelectDifficulty">Select the level of difficulty</system:String>
-    <system:String x:Key="SelectPlayers">Select the level number of players</system:String>
+    <system:String x:Key="SelectPlayers">Select the number of players</system:String>
     <system:String x:Key="SelectRounds">Select the number of rounds</system:String>
-    <system:String x:Key="CreateLobbyButton">Create lobby</system:String>
+    <system:String x:Key="CreateLobbyButton">Create match</system:String>
     
     <!-- EditorZone -->
     <system:String x:Key="WordIs">The word is </system:String>
@@ -149,7 +149,7 @@
 
     <!-- MainWindow -->
     <system:String x:Key="OpenChat">Open the chat</system:String>
-    <system:String x:Key="LeaveLobby">Leave the lobby</system:String>
+    <system:String x:Key="LeaveLobby">Leave the match</system:String>
 
     <!-- Error messages -->
     <system:String x:Key="LostConnection">You have lost connection to the server! Returning to the login page...</system:String>
@@ -158,7 +158,7 @@
     <system:String x:Key="LeaveGame">You can't leave the Game channel</system:String>
     <system:String x:Key="FileSize">You cant upload a file larger than 5MB</system:String>
     <system:String x:Key="PreviewRefused">The preview request was refused.</system:String>
-    <system:String x:Key="HostLeft">The host has left the lobby!</system:String>
+    <system:String x:Key="HostLeft">The host has left the match!</system:String>
 
     <system:String x:Key="UploadFirst">Upload an image first</system:String>
     <system:String x:Key="CanvasEmpty">The canvas cannot be empty</system:String>
