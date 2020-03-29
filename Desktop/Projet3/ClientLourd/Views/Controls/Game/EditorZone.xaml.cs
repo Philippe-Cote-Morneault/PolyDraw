@@ -100,9 +100,11 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
+            var e = ((MatchEventArgs) args);
             Task.Run(() =>
             {
-                StartConfetti();
+                if (e.WinnerID == SessionInformations.User.ID)
+                    StartConfetti();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
@@ -114,7 +116,8 @@ namespace ClientLourd.Views.Controls.Game
                     LeaderBoardGrid.Children.Clear();
                     LeaderBoardGrid.Visibility = Visibility.Collapsed;
                 });
-                StopConfetti();
+                if (e.WinnerID == SessionInformations.User.ID)
+                    StopConfetti();
             });
         }
 
