@@ -34,7 +34,7 @@ namespace ClientLourd.Models.NonBindable
         public Tlv(SocketMessageTypes type, string message)
         {
             Type = (byte) ((int) type);
-            Value = Encoding.ASCII.GetBytes(message);
+            Value = Encoding.UTF8.GetBytes(message);
         }
 
         public Tlv(SocketMessageTypes type, byte[] bytes)
