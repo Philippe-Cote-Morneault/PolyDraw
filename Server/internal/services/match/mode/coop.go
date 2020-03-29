@@ -183,11 +183,13 @@ func (c *Coop) GameLoop() {
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.commonScore.reset()
 	c.currentWord = ""
+
+	c.checkPointTime += 5000 //Time for the sleep
 	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(match2.BRoundEnds, c.info.ID)
 
-	time.Sleep(time.Millisecond * 500)
+	time.Sleep(time.Second * 5)
 	return
 }
 
