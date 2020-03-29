@@ -13,7 +13,7 @@ namespace ClientLourd.Utilities.Enums
         FFA = 0,
         [Description("Solo")]
         Solo = 1,
-        [Description("Cooperative")]
+        [Description("Coop")]
         Coop = 2,
     }
 }
