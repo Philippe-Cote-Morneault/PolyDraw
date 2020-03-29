@@ -6,14 +6,23 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.log3900.chat.Channel.Channel
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.ChatRestService
+import com.log3900.game.match.HintResponse
 import com.log3900.settings.language.LanguageManager
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
+import com.log3900.socket.Event
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
+import com.log3900.user.UserRepository
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.moshi.MatchAdapter
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
 import com.squareup.moshi.Json
@@ -22,6 +31,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,6 +56,7 @@ class MessageRepository : Service() {
     // Data
     private val messageCache: MessageCache = MessageCache()
     private val fullyLoadedHistory: HashSet<UUID> = HashSet()
+    private var matchChannel: Channel? = null
 
     companion object {
         var instance: MessageRepository? = null
@@ -172,6 +185,7 @@ class MessageRepository : Service() {
             com.log3900.socket.Event.MESSAGE_RECEIVED -> receiveMessage(socketMessage)
             com.log3900.socket.Event.JOINED_CHANNEL -> onUserJoinedChannel(socketMessage)
             com.log3900.socket.Event.LEFT_CHANNEL -> onUserLeftChannel(socketMessage)
+            com.log3900.socket.Event.HINT_RESPONSE -> onHintResponse(socketMessage)
         }
     }
 
@@ -193,14 +207,18 @@ class MessageRepository : Service() {
             socketService?.subscribeToMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
             socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
             socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
+            socketService?.subscribeToMessage(com.log3900.socket.Event.HINT_RESPONSE, socketMessageHandler!!)
+            EventBus.getDefault().register(this)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.HINT_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
+        EventBus.getDefault().unregister(this)
         socketMessageHandler = null
         socketService = null
         instance = null
@@ -271,6 +289,62 @@ class MessageRepository : Service() {
             val osMessage = android.os.Message()
             osMessage.obj = chatMessage
             notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+        }
+    }
+
+    private fun onHintResponse(message: Message) {
+        /*
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        Log.d("POTATO", "Hint response = $json")
+        val hintResponse = MatchAdapter.jsonToHintResponse(jsonObject)
+        var hint = hintResponse.hint
+
+        if (hint!!.isEmpty()) {
+            hint = hintResponse.error
+        }
+
+        if (matchChannel != null) {
+            UserRepository.getInstance().getUser(hintResponse.userID!!).subscribe(
+                {
+                    val receivedMessage = ReceivedMessage(hint!!, matchChannel!!.ID, hintResponse.userID!!, it.username, Date())
+                    val chatMessage = ChatMessage(ChatMessage.Type.RECEIVED_MESSAGE, receivedMessage, matchChannel!!.ID)
+                    addMessageToCache(chatMessage)
+                    val osMessage = android.os.Message()
+                    osMessage.obj = chatMessage
+                    notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+                },
+                {
+
+                }
+            )
+        }
+ 
+         */
+    }
+
+    private fun onChannelCreated(channel: Channel) {
+        if (channel.isGame) {
+            matchChannel = channel
+        }
+    }
+
+    private fun onChannelDeleted(channelID: UUID) {
+        if (matchChannel != null && matchChannel!!.ID == channelID) {
+            messageCache.removeEntry(channelID)
+            matchChannel = null
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.CHANNEL_CREATED -> {
+                onChannelCreated(event.data as Channel)
+            }
+            EventType.CHANNEL_DELETED -> {
+                onChannelDeleted(event.data as UUID)
+            }
         }
     }
     
