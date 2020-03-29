@@ -18,7 +18,7 @@ namespace ClientLourd.Models.Bindable
             Name = name;
             ID = id;
             IsGame = isGame;
-            IsFullyLoaded = true;
+            IsFullyLoaded = false;
             Users = new ObservableCollection<User>();
             Messages = new ObservableCollection<Message>();
         }

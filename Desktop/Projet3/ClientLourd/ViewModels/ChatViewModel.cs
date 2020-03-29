@@ -321,18 +321,25 @@ namespace ClientLourd.ViewModels
         {
             if (SelectedChannel != null && !SelectedChannel.IsFullyLoaded)
             {
-                var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
-                    SelectedChannel.UserMessageCount,
-                    SelectedChannel.UserMessageCount + numberOfMessages - 1);
-                messages.Reverse();
-                foreach (var message in messages)
+                try
                 {
-                    User u = message.User;
-                    message.User = (await GetUser(u.Username, u.ID));
+                    var messages = await RestClient.GetChannelMessages(SelectedChannel.ID,
+                        SelectedChannel.UserMessageCount,
+                        SelectedChannel.UserMessageCount + numberOfMessages - 1);
+                    messages.Reverse();
+                    foreach (var message in messages)
+                    {
+                        User u = message.User;
+                        message.User = (await GetUser(u.Username, u.ID));
+                    }
+                    SelectedChannel.Messages =
+                        new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
+                    if (messages.Count < numberOfMessages)
+                    {
+                        SelectedChannel.IsFullyLoaded = true;
+                    }
                 }
-                SelectedChannel.Messages =
-                    new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
-                if (messages.Count < numberOfMessages)
+                catch
                 {
                     SelectedChannel.IsFullyLoaded = true;
                 }
