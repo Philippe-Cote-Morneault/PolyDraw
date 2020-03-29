@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Timers;
@@ -81,6 +82,11 @@ namespace ClientLourd.Models.Bindable
                     NotifyPropertyChanged();
                 }
             }
+        }
+
+        public bool IsGeneral
+        {
+            get => ID == Guid.Empty.ToString();
         }
 
         private string _name;
