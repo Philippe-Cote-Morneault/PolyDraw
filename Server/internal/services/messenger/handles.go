@@ -155,7 +155,7 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 
 func (h *handler) broadcast(chanelID uuid.UUID, message socket.RawMessage) {
 	for socketID := range h.channelsConnections[chanelID] {
-		go socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendQueueMessageSocketID(message, socketID)
 	}
 }
 
@@ -407,7 +407,7 @@ func (h *handler) handleBotMessage(message MessageReceived) {
 		}
 		for k := range h.channelsConnections[channelID] {
 			// Send message to the socket in async way
-			go socket.SendRawMessageToSocketID(rawMessage, k)
+			socket.SendQueueMessageSocketID(rawMessage, k)
 		}
 		log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", message.Message, message.Username, message.ChannelID)
 		botID, err2 := uuid.Parse(message.UserID)

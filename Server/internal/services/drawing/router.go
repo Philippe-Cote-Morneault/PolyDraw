@@ -87,7 +87,7 @@ func (r *Router) Route(message *socket.RawMessageReceived) {
 		connections := (*matchPtr).GetConnections()
 		for i := range connections {
 			if connections[i] != message.SocketID {
-				go socket.SendRawMessageToSocketID(newMessage, connections[i])
+				socket.SendQueueMessageSocketID(newMessage, connections[i])
 			}
 		}
 	} else {

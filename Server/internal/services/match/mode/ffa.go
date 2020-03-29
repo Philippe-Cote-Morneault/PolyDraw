@@ -141,7 +141,7 @@ func (f *FFA) GameLoop() {
 		Time:      f.timeImage,
 		DrawingID: drawingID.String(),
 	})
-	socket.SendRawMessageToSocketID(message, f.curDrawer.socketID)
+	socket.SendQueueMessageSocketID(message, f.curDrawer.socketID)
 
 	message.ParseMessagePack(byte(socket.MessageType.PlayerDrawingTurn), PlayerTurnDraw{
 		UserID:    f.curDrawer.userID.String(),
@@ -150,7 +150,7 @@ func (f *FFA) GameLoop() {
 		DrawingID: drawingID.String(),
 		Length:    len(f.currentWord),
 	})
-	f.pbroadcast(&message)
+	f.broadcast(&message)
 	f.timeStartImage = time.Now()
 	log.Printf("[Match] [FFA] -> Word sent waiting for guesses, Match: %s", f.info.ID)
 	f.receiving.Unlock()
@@ -171,7 +171,7 @@ func (f *FFA) GameLoop() {
 			Type: 1,
 			Word: f.currentWord,
 		})
-		f.pbroadcast(&timeUpMessage)
+		f.broadcast(&timeUpMessage)
 	}
 
 	f.receiving.Lock()
@@ -189,7 +189,7 @@ func (f *FFA) GameLoop() {
 			Type: 2,
 			Word: f.currentWord,
 		})
-		f.pbroadcast(&timeUpMessage)
+		f.broadcast(&timeUpMessage)
 		f.receiving.Unlock()
 		return
 	}
@@ -214,7 +214,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 		UserID:   f.connections[socketID].userID.String(),
 		Username: f.connections[socketID].Username,
 	})
-	f.pbroadcast(&leaveMessage)
+	f.broadcast(&leaveMessage)
 
 	//Check if drawing
 	if f.curDrawer != nil && f.curDrawer.socketID == socketID {
@@ -228,7 +228,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 			Length:      uint16(len(bytes)),
 			Bytes:       bytes,
 		}
-		f.pbroadcast(&endDrawing)
+		f.broadcast(&endDrawing)
 	}
 	//Check the state of the game if there are enough players to finish the game
 	if (f.realPlayers - 1) < 2 {
@@ -272,7 +272,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				Points:    total,
 				NewPoints: pointsForWord,
 			})
-			socket.SendRawMessageToSocketID(response, socketID)
+			socket.SendQueueMessageSocketID(response, socketID)
 
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
@@ -282,7 +282,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				Points:    total,
 				NewPoints: pointsForWord,
 			})
-			f.pbroadcast(&broadcast)
+			f.broadcast(&broadcast)
 		} else {
 			log.Printf("[Match] [FFA] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			players := f.connections[socketID]
@@ -295,7 +295,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				NewPoints: 0,
 				Points:    scoreTotal,
 			})
-			socket.SendRawMessageToSocketID(response, socketID)
+			socket.SendQueueMessageSocketID(response, socketID)
 		}
 	} else {
 		players := f.connections[socketID]
@@ -308,7 +308,7 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			NewPoints: 0,
 			Points:    scoreTotal,
 		})
-		socket.SendRawMessageToSocketID(response, socketID)
+		socket.SendQueueMessageSocketID(response, socketID)
 	}
 }
 
@@ -323,7 +323,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 			Hint:  "",
 			Error: "Hints are not available for this player. The drawing player needs to be a virtual player.",
 		})
-		socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendQueueMessageSocketID(message, socketID)
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
 		player := f.connections[socketID]
@@ -354,7 +354,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 				Hint:  "",
 				Error: "You need at least 50 points for a hint.",
 			})
-			socket.SendRawMessageToSocketID(message, socketID)
+			socket.SendQueueMessageSocketID(message, socketID)
 			log.Printf("[Match] [FFA] -> Hint requested but not enough points. Match: %s", f.info.ID)
 		}
 
@@ -512,7 +512,7 @@ func (f *FFA) syncPlayers() {
 		LapTotal: f.lapsTotal,
 		Time:     f.timeImage - imageDuration.Milliseconds(),
 	})
-	f.pbroadcast(&message)
+	f.broadcast(&message)
 }
 
 //calculateScore based on the number of seconds of remaining and the time associated with the score
@@ -674,7 +674,7 @@ func (f *FFA) sendRoundSummary() {
 		Achievements: nil,
 		Word:         f.currentWord,
 	})
-	f.pbroadcast(&roundEnd)
+	f.broadcast(&roundEnd)
 }
 
 //GetGroupID return the group id

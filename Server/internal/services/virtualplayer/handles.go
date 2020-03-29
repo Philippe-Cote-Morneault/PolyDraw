@@ -382,7 +382,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
-		socket.SendRawMessageToSocketID(message, hintRequest.SocketID)
+		socket.SendQueueMessageSocketID(message, hintRequest.SocketID)
 	} else {
 
 		for _, socketID := range (*group).GetConnections() {
@@ -396,7 +396,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
-			socket.SendRawMessageToSocketID(message, socketID)
+			socket.SendQueueMessageSocketID(message, socketID)
 		}
 	}
 

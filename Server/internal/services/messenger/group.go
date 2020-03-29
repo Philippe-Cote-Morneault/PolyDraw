@@ -31,7 +31,7 @@ func RegisterGroup(group *model.Group) {
 //HandleJoinGroup join a group chat
 func HandleJoinGroup(group *model.Group, socketID uuid.UUID) {
 	channel := channelCache[group.ID]
-	socket.SendRawMessageToSocketID(channel.createResponse, socketID)
+	socket.SendQueueMessageSocketID(channel.createResponse, socketID)
 	instance.joinChannel(socketID, channel.channelID)
 }
 

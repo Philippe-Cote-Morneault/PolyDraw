@@ -111,20 +111,20 @@ func (g *groups) KickUser(socketID uuid.UUID, userID uuid.UUID) {
 				} else {
 					g.mutex.Unlock()
 					if !g.kickVirtualPlayer(userID) {
-						go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, language.MustGetSocket("error.userNotFound", socketID), socketID)
+						socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, language.MustGetSocket("error.userNotFound", socketID), socketID)
 					}
 				}
 			} else {
 				g.mutex.Unlock()
-				go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.groupOwner", socketID), socketID)
+				socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.groupOwner", socketID), socketID)
 			}
 		} else {
 			g.mutex.Unlock()
-			go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, language.MustGetSocket("error.groupNotFound", socketID), socketID)
+			socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 404, language.MustGetSocket("error.groupNotFound", socketID), socketID)
 		}
 	} else {
 		g.mutex.Unlock()
-		go socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.groupMembership", socketID), socketID)
+		socket.SendErrorToSocketID(socket.MessageType.RequestKickUser, 400, language.MustGetSocket("error.groupMembership", socketID), socketID)
 	}
 }
 
@@ -157,7 +157,7 @@ func (g *groups) AddGroup(group *model.Group) {
 	virtualplayer.AddGroup(group.ID)
 	g.mutex.Lock()
 	for k := range g.queue {
-		go socket.SendRawMessageToSocketID(message, k)
+		socket.SendQueueMessageSocketID(message, k)
 	}
 }
 
@@ -201,10 +201,10 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 					})
 					g.mutex.Lock()
 					for i := range g.groups[groupID] {
-						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
+						socket.SendQueueMessageSocketID(newUser, g.groups[groupID][i])
 					}
 					for k := range g.queue {
-						go socket.SendRawMessageToSocketID(newUser, k)
+						socket.SendQueueMessageSocketID(newUser, k)
 					}
 					g.mutex.Unlock()
 
@@ -219,7 +219,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 				Response: false,
 				Error:    language.MustGetSocket("error.groupIsFull", socketID),
 			})
-			socket.SendRawMessageToSocketID(message, socketID)
+			socket.SendQueueMessageSocketID(message, socketID)
 			return
 
 		}
@@ -230,7 +230,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 			Response: false,
 			Error:    language.MustGetSocket("error.groupNotFound", socketID),
 		})
-		socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendQueueMessageSocketID(message, socketID)
 	} else {
 		g.mutex.Unlock()
 
@@ -239,7 +239,7 @@ func (g *groups) JoinGroup(socketID uuid.UUID, groupID uuid.UUID) {
 			Response: false,
 			Error:    language.MustGetSocket("error.userSingleGroup", socketID),
 		})
-		socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendQueueMessageSocketID(message, socketID)
 	}
 }
 
@@ -264,10 +264,10 @@ func (g *groups) QuitGroup(socketID uuid.UUID, forced bool) {
 			IsCPU:    false,
 		})
 		for i := range g.groups[groupID] {
-			go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
+			socket.SendQueueMessageSocketID(message, g.groups[groupID][i])
 		}
 		for k := range g.queue {
-			go socket.SendRawMessageToSocketID(message, k)
+			socket.SendQueueMessageSocketID(message, k)
 		}
 		g.mutex.Unlock()
 
@@ -322,12 +322,12 @@ func (g *groups) safeDeleteGroup(groupDB *model.Group) {
 	}
 	//Broadcast a message to all the users in queue
 	for k := range g.queue {
-		go socket.SendRawMessageToSocketID(message, k)
+		socket.SendQueueMessageSocketID(message, k)
 	}
 
 	//Broadcast a message that the group was deleted and remove them from the group
 	for _, v := range g.groups[groupDB.ID] {
-		go socket.SendRawMessageToSocketID(message, v)
+		socket.SendQueueMessageSocketID(message, v)
 	}
 
 	messenger.UnRegisterGroup(groupDB, g.groups[groupDB.ID])
@@ -380,7 +380,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 							Response: false,
 							Error:    fmt.Sprintf(language.MustGetSocket("error.gameMinimum", socketID), count),
 						})
-						socket.SendRawMessageToSocketID(rawMessage, socketID)
+						socket.SendQueueMessageSocketID(rawMessage, socketID)
 						return
 					}
 				}
@@ -391,7 +391,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 					Response: true,
 				})
 				for _, v := range g.groups[groupDB.ID] {
-					go socket.SendRawMessageToSocketID(rawMessage, v)
+					socket.SendQueueMessageSocketID(rawMessage, v)
 				}
 				uuidBytes, _ := groupDB.ID.MarshalBinary()
 				message := socket.RawMessage{
@@ -403,7 +403,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				g.mutex.Lock()
 				//Broadcast a message to all the users in queue
 				for k := range g.queue {
-					go socket.SendRawMessageToSocketID(message, k)
+					socket.SendQueueMessageSocketID(message, k)
 				}
 				connections := g.groups[groupID][:]
 				g.mutex.Unlock()
@@ -427,7 +427,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 					Response: false,
 					Error:    language.MustGetSocket("error.notEnough", socketID),
 				})
-				socket.SendRawMessageToSocketID(rawMessage, socketID)
+				socket.SendQueueMessageSocketID(rawMessage, socketID)
 			}
 
 		} else {
@@ -436,7 +436,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				Response: false,
 				Error:    "Only the owner can request the game to start.",
 			})
-			socket.SendRawMessageToSocketID(rawMessage, socketID)
+			socket.SendQueueMessageSocketID(rawMessage, socketID)
 		}
 	} else {
 		rawMessage := socket.RawMessage{}
@@ -444,7 +444,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 			Response: false,
 			Error:    "The user is not associated with any group.",
 		})
-		socket.SendRawMessageToSocketID(rawMessage, socketID)
+		socket.SendQueueMessageSocketID(rawMessage, socketID)
 	}
 }
 
@@ -473,10 +473,10 @@ func (g *groups) addBotGroupID(groupDB *model.Group) {
 
 		g.mutex.Lock()
 		for i := range g.groups[groupDB.ID] {
-			go socket.SendRawMessageToSocketID(newUser, g.groups[groupDB.ID][i])
+			socket.SendQueueMessageSocketID(newUser, g.groups[groupDB.ID][i])
 		}
 		for k := range g.queue {
-			go socket.SendRawMessageToSocketID(newUser, k)
+			socket.SendQueueMessageSocketID(newUser, k)
 		}
 		g.mutex.Unlock()
 		return
@@ -526,10 +526,10 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 
 					g.mutex.Lock()
 					for i := range g.groups[groupID] {
-						go socket.SendRawMessageToSocketID(newUser, g.groups[groupID][i])
+						socket.SendQueueMessageSocketID(newUser, g.groups[groupID][i])
 					}
 					for k := range g.queue {
-						go socket.SendRawMessageToSocketID(newUser, k)
+						socket.SendQueueMessageSocketID(newUser, k)
 					}
 					g.mutex.Unlock()
 					return
@@ -542,7 +542,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 				Response: false,
 				Error:    "The user could not be found full in virtual player cache.",
 			})
-			socket.SendRawMessageToSocketID(message, socketID)
+			socket.SendQueueMessageSocketID(message, socketID)
 			return
 
 		}
@@ -552,7 +552,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 			Response: false,
 			Error:    language.MustGetSocket("error.groupIsFull", socketID),
 		})
-		socket.SendRawMessageToSocketID(message, socketID)
+		socket.SendQueueMessageSocketID(message, socketID)
 		return
 
 	}
@@ -561,7 +561,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 		Response: false,
 		Error:    "The group could not be found in DB.",
 	})
-	socket.SendRawMessageToSocketID(message, socketID)
+	socket.SendQueueMessageSocketID(message, socketID)
 	return
 
 }
@@ -579,10 +579,10 @@ func (g *groups) kickVirtualPlayer(userID uuid.UUID) bool {
 		})
 		g.mutex.Lock()
 		for i := range g.groups[groupID] {
-			go socket.SendRawMessageToSocketID(message, g.groups[groupID][i])
+			socket.SendQueueMessageSocketID(message, g.groups[groupID][i])
 		}
 		for k := range g.queue {
-			go socket.SendRawMessageToSocketID(message, k)
+			socket.SendQueueMessageSocketID(message, k)
 		}
 		g.mutex.Unlock()
 

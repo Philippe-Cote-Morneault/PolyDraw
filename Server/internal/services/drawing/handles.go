@@ -65,7 +65,7 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 
 // StartDrawing starts the drawing procedure
 func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, continueDrawing *DrawState) {
-	socket.SendRawMessageToSocketID(socket.RawMessage{
+	socket.SendQueueMessageSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.StartDrawingServer),
 		Length:      uint16(len(uuidBytes)),
 		Bytes:       uuidBytes,
@@ -73,7 +73,7 @@ func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, continueDraw
 
 	sendDrawing(socketID, draw, continueDrawing)
 
-	socket.SendRawMessageToSocketID(socket.RawMessage{
+	socket.SendQueueMessageSocketID(socket.RawMessage{
 		MessageType: byte(socket.MessageType.EndDrawingServer),
 		Length:      uint16(len(uuidBytes)),
 		Bytes:       uuidBytes,
@@ -92,7 +92,7 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 		Length:      1,
 		Bytes:       bytesResponse,
 	}
-	socket.SendRawMessageToSocketID(packet, socketID)
+	socket.SendQueueMessageSocketID(packet, socketID)
 }
 
 func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
@@ -138,7 +138,7 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 			Bytes:       payload,
 		}
 
-		socket.SendRawMessageToSocketID(packet, socketID)
+		socket.SendQueueMessageSocketID(packet, socketID)
 		//Wait 20ms between strokes
 		time.Sleep(delayDrawSending * time.Millisecond)
 	}

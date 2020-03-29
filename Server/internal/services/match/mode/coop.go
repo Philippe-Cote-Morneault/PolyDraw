@@ -146,7 +146,7 @@ func (c *Coop) GameLoop() {
 		Length:    len(c.currentWord),
 	})
 
-	c.pbroadcast(&message)
+	c.broadcast(&message)
 	c.timeStartImage = time.Now()
 	log.Printf("[Match] [Coop] -> Word sent waiting for guesses, Match: %s", c.info.ID)
 	c.receiving.Unlock()
@@ -164,7 +164,7 @@ func (c *Coop) GameLoop() {
 		Type: 1,
 		Word: c.currentWord,
 	})
-	c.pbroadcast(&timeUpMessage)
+	c.broadcast(&timeUpMessage)
 
 	//End of round
 	c.receiving.Lock()
@@ -209,7 +209,7 @@ func (c *Coop) Disconnect(socketID uuid.UUID) {
 		UserID:   player.userID.String(),
 		Username: player.Username,
 	})
-	c.pbroadcast(&leaveMessage)
+	c.broadcast(&leaveMessage)
 
 	//Remove the player
 	for i := range c.players {
@@ -273,7 +273,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				Points:    total,
 				NewPoints: pointsForWord,
 			})
-			socket.SendRawMessageToSocketID(response, socketID)
+			socket.SendQueueMessageSocketID(response, socketID)
 
 			//Broadcast to all the other players that the word was found
 			broadcast := socket.RawMessage{}
@@ -286,14 +286,14 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				},
 				Word: word,
 			})
-			c.pbroadcast(&broadcast)
+			c.broadcast(&broadcast)
 
 			checkpoint := socket.RawMessage{}
 			checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
 				TotalTime: remaining,
 				Bonus:     bonus,
 			})
-			c.pbroadcast(&checkpoint)
+			c.broadcast(&checkpoint)
 		} else {
 			log.Printf("[Match] [Coop] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			scoreTotal := c.commonScore.total
@@ -305,7 +305,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				NewPoints: 0,
 				Points:    scoreTotal,
 			})
-			socket.SendRawMessageToSocketID(response, socketID)
+			socket.SendQueueMessageSocketID(response, socketID)
 		}
 	} else {
 		scoreTotal := c.commonScore.total
@@ -319,7 +319,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			NewPoints: 0,
 			Points:    scoreTotal,
 		})
-		socket.SendRawMessageToSocketID(response, socketID)
+		socket.SendQueueMessageSocketID(response, socketID)
 
 		if player != nil {
 			c.receiving.Lock()
@@ -330,7 +330,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				Lives:    lives,
 			})
 			c.receiving.Unlock()
-			c.pbroadcast(&messageFail)
+			c.broadcast(&messageFail)
 		}
 
 		if lives <= 0 {
@@ -381,7 +381,7 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 			Hint:  "",
 			Error: "There needs to be at least 10 seconds for a hint to be requested.",
 		})
-		c.pbroadcast(&message)
+		c.broadcast(&message)
 	}
 
 }
@@ -476,7 +476,7 @@ func (c *Coop) finish() {
 		Type: 2,
 		Word: c.currentWord,
 	})
-	c.pbroadcast(&timeUpMessage)
+	c.broadcast(&timeUpMessage)
 	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 
 	c.receiving.Unlock()
@@ -554,7 +554,7 @@ func (c *Coop) syncPlayers() {
 		Time:     c.gameTime - gameDuration.Milliseconds() + checkPointTime,
 		Lives:    lives,
 	})
-	c.pbroadcast(&message)
+	c.broadcast(&message)
 }
 
 func (c *Coop) waitGuess() bool {
@@ -601,7 +601,7 @@ func (c *Coop) applyPenalty() {
 		TotalTime: remaining,
 		Bonus:     -c.penalty,
 	})
-	c.pbroadcast(&checkpoint)
+	c.broadcast(&checkpoint)
 
 	c.syncPlayers()
 }
