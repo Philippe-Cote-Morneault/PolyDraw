@@ -213,6 +213,7 @@
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
+            <e p="StringLengthConverter.cs" t="Include" />
             <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
             <e p="WidthToLeftMarginConverter.cs" t="Include" />
