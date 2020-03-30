@@ -20,6 +20,8 @@ import (
 
 var managerInstance Manager
 
+const drawingTimeBot = 10 //in Seconds
+
 type responseHint struct {
 	UserID    string
 	HintsLeft int
@@ -217,7 +219,7 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{StopDrawing: abool.New()}
+	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{StopDrawing: abool.New(), Time: drawingTimeBot}
 	managerInstance.mutex.Unlock()
 
 	time.Sleep(2500 * time.Millisecond)

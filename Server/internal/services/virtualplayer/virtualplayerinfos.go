@@ -31,23 +31,23 @@ func (v *virtualPlayerInfos) calculateDrawingTime() {
 	switch v.Personality {
 	case "Angry":
 		min = 0.9
-		max = 1.4
+		max = 1.3
 
 	case "Funny":
 		min = 0.6
 		max = 1.2
 
 	case "Mean":
-		min = 1.5
-		max = 2
+		min = 1.3
+		max = 1.4
 
 	case "Nice":
 		min = 0.5
 		max = 0.7
 
 	case "Supportive":
-		min = 0.6
-		max = 0.8
+		min = 0.7
+		max = 0.9
 	}
 	v.DrawingTimeFactor = float64(min) + rand.Float64()*float64(max-min)
 
