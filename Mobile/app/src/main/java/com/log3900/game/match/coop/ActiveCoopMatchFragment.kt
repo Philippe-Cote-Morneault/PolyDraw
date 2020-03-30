@@ -1,5 +1,9 @@
 package com.log3900.game.match.coop
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -101,9 +105,52 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
     }
 
     override fun removeRemainingLife() {
+        if (remainingLivesHearts.size == 0 || remainingLivesContainer.childCount == 0) {
+            remainingLivesContainer.removeAllViews()
+            remainingLivesHearts.clear()
+            return
+        }
+
         val viewToRemove = remainingLivesHearts[remainingLivesHearts.size - 1]
-        remainingLivesContainer.removeViewAt(remainingLivesHearts.size - 1)
         remainingLivesHearts.remove(viewToRemove)
+        viewToRemove.bringToFront()
+        viewToRemove.parent.requestLayout()
+        val scaleUpAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            viewToRemove,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.8f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.8f)
+        )
+        scaleUpAnimator.duration = 200
+
+        val scaleDownAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            viewToRemove,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 1.8f, 0f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.8f, 0f)
+        )
+        scaleDownAnimator.duration = 200
+
+        scaleDownAnimator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationEnd(animation: Animator?) {
+                remainingLivesContainer.removeViewAt(remainingLivesContainer.childCount - 1)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+                // I shall not
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) {
+                // Provide useless implementations
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+                // For something I do not need
+            }
+        })
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playSequentially(scaleUpAnimator, scaleDownAnimator)
+
+        animatorSet.start()
     }
 
     override fun onDestroy() {
