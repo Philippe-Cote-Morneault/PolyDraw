@@ -192,6 +192,7 @@
             <e p="BoolToVisibilityConverter.cs" t="Include" />
             <e p="ChannelSelectionBorderConverter.cs" t="Include" />
             <e p="ChannelSelectionToIconConverter.cs" t="Include" />
+            <e p="ChannelTypeToButtonVisibility.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
             <e p="ComparatorToOpacity.cs" t="Include" />
             <e p="ComparatorToVisibilityConverter.cs" t="Include" />
