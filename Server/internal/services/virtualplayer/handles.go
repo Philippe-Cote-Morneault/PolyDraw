@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
@@ -100,8 +101,8 @@ func RemoveGroup(groupID uuid.UUID) {
 }
 
 //AddVirtualPlayer [Current Thread] adds virtualPlayer to cache. Returns playerID, username (lobby)
-func AddVirtualPlayer(groupID, botID uuid.UUID) string {
-	playerInfos := generateVirtualPlayer()
+func AddVirtualPlayer(groupID, botID uuid.UUID, lang int) string {
+	playerInfos := generateVirtualPlayer(lang)
 	playerInfos.BotID = botID
 	playerInfos.GroupID = groupID
 	managerInstance.mutex.Lock()
@@ -354,7 +355,7 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	}
 
 	managerInstance.mutex.Unlock()
-	respHintRequest(false, hintRequest, "No more hints remaining.", hintRequest.GameType)
+	respHintRequest(false, hintRequest, "", hintRequest.GameType)
 	return false
 }
 
@@ -368,9 +369,16 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 	}
 	hintRes.BotID = bot.BotID.String()
 	if hintOk {
-		hintRes.Hint = bot.getInteraction("hintRequested") + " Mon indice est : " + hint
+		lineHint := " Mon indice est : "
+		if bot.Language == 0 {
+			lineHint = " My hint is : "
+		}
+		hintRes.Hint = bot.getInteraction("hintRequested") + lineHint + hint
 		hintRes.Error = ""
 	} else {
+		if hint == "" {
+			hint = language.MustGet("botlines.noHint"+bot.Personality, bot.Language)
+		}
 		hintRes.Hint = ""
 		hintRes.Error = hint
 	}

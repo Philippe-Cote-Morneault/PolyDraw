@@ -24,7 +24,6 @@ type VirtualPlayer struct {
 //Init the messenger service
 func (v *VirtualPlayer) Init() {
 	v.shutdown = make(chan bool)
-	initLines()
 	(&managerInstance).init()
 	v.subscribe()
 }
