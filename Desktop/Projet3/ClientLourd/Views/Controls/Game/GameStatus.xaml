@@ -35,9 +35,9 @@
         <materialDesign:Card>
             <StackPanel>
                 <!-- Bots list -->
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"  Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" >
                     <materialDesign:PackIcon Height="25" Width="25" Kind="Robot" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 18 8 0"></materialDesign:PackIcon>
-                    <TextBlock Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0 20 0 0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="Drawer"></TextBlock>
+                    <TextBlock VerticalAlignment="Center" Margin="0 20 0 0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="{DynamicResource Drawer}"></TextBlock>
                 </StackPanel>
                 
                 <Separator Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
@@ -76,7 +76,7 @@
 
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Height="25" Width="25" Kind="AccountMultiple" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 28 8 0"></materialDesign:PackIcon>
-                    <TextBlock Margin="0 30 0 0" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="Players"></TextBlock>
+                    <TextBlock Margin="0 30 0 0" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="{DynamicResource Players}"></TextBlock>
                 </StackPanel>
                 <Separator Margin="10"/>
 

@@ -117,6 +117,9 @@
     <system:String x:Key="TryAgain">Try again!</system:String>
     <system:String x:Key="RightGuessCoop">has guessed correctly! The word was</system:String>
 
+    <!--GameStatus -->
+    <system:String x:Key="Drawer">Drawer</system:String>
+
     <!-- Leaderboard -->
     <system:String x:Key="WinnerIs">The winner is</system:String>
     <system:String x:Key="WordWas">The word was</system:String>

@@ -114,6 +114,9 @@
     <system:String x:Key="YourTurnDraw">C'est à ton tour de dessiner le mot</system:String>
     <system:String x:Key="TryAgain">Essaye encore!</system:String>
     <system:String x:Key="RightGuessCoop">a deviné correctement! Le mot était</system:String>
+    
+    <!--GameStatus -->
+    <system:String x:Key="Drawer">Dessinateur</system:String>
 
     <!-- Leaderboard -->
     <system:String x:Key="WinnerIs">Le gagnant est</system:String>
