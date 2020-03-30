@@ -320,7 +320,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             context!!,
             getString(R.string.quit_match),
             getString(R.string.quit_match_confirm),
-            {_, _ -> findNavController().navigateUp()},
+            {_, _ -> findNavController().popBackStack()},
             null
         ).show()
     }

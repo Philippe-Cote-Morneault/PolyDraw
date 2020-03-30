@@ -146,7 +146,7 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
             context!!,
             getString(R.string.quit_waiting_room),
             getString(R.string.quit_waiting_room_confirm),
-            {_, _ -> findNavController().navigateUp()},
+            {_, _ -> findNavController().popBackStack()},
             null
         ).show()
     }
