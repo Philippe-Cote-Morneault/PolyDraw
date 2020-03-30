@@ -157,6 +157,11 @@ en:
     winRatioSupportive2: "Courage {}! Do not give up !"
     winRatioSupportive3: "Follow your efforts {} it will pay off, you'll see!"
 
+    noHintAngry: "You've already asked me all the available hints. What do you want from me ? You're getting on my nerves !!"
+    noHintFunny: "Oups, no more clue for you. May I offer you a drink instead ? (without alcool, of course)"
+    noHintMean: "No more hints for this draw. But to be honnest, I didn't want to give you one."
+    noHintNice: "Sorry, I don't have any remaining hints for this draw :("
+    noHintSupportive: "I don't have any remaining hints for this draw . But keep up, I konw you can figure this out !"
     
 fr:
   error:
@@ -313,4 +318,10 @@ fr:
     winRatioSupportive1: "{} il faut que tu laisses les autres gagner afin de les encourager !"
     winRatioSupportive2: "Courage {} ! Ne lâche rien !"
     winRatioSupportive3: "Poursuis tes efforts {} ça va payer, tu vas voir !"
+
+    noHintAngry: "Tu as déjà demandé tous les indices disponibles. Que veux-tu de plus ?! Tu m'énerves"
+    noHintFunny: "Oups, j'ai plus d'indices pour toi. Puis-je t'offrir un verre à la place? (sans alcool bien sûr)"
+    noHintMean: "Il n'y a plus d'indices pour ce dessin. Mais pour être honnête, je voulais pas t'en donner un."
+    noHintNice: "Désolé, je n'ai plus d'indices pour ce dessin :("
+    noHintSupportive: "Je n'ai plus d'indices pour ce dessin. Mais tiens bon, je sais que tu peux le trouver !"
 `)
