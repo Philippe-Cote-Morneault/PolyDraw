@@ -183,6 +183,7 @@
     <Compile Include="Utilities\Converters\EnumTranslationConverter.cs" />
     <Compile Include="Utilities\Converters\GameModeToImageConverter.cs" />
     <Compile Include="Utilities\Converters\LanguageInverseConverter.cs" />
+    <Compile Include="Utilities\Converters\ModeAndIsCPUToVisibility.cs" />
     <Compile Include="Utilities\Converters\ModeToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\PlayerToPositionConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />

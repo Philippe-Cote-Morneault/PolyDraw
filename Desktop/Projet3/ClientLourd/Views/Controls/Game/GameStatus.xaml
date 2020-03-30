@@ -12,6 +12,11 @@
     <UserControl.Resources>
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
         <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="CollapsedIfTrue" TrueValue="Collapsed" FalseValue="Visible"/>
+        <converter:BoolToVisibilityConverter x:Key="VisibleIfTrue" TrueValue="Visible" FalseValue="Collapsed"/>
+        <converter:ModeAndIsCPUToVisibility x:Key="ModeAndIsCPUToVisibility"/>
+
+        
         <Storyboard x:Key="PointsAnimations" >
             <DoubleAnimation 
                 Storyboard.TargetProperty="(TextBlock.Opacity)" 
@@ -29,6 +34,52 @@
     <Grid Margin="10">
         <materialDesign:Card>
             <StackPanel>
+                <!-- Bots list -->
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Height="25" Width="25" Kind="Robot" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 18 8 0"></materialDesign:PackIcon>
+                    <TextBlock Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="0 20 0 0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="Drawer"></TextBlock>
+                </StackPanel>
+                
+                <Separator Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+
+                <ItemsControl Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" AlternationCount="{Binding Players.Count}" ItemsSource="{Binding Players}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="10" Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Visibility="{Binding User.IsCPU, Converter={StaticResource VisibleIfTrue}}">
+                                <StackPanel Orientation="Horizontal" Margin="0 0 0 30">
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding User}" >
+                                        <materialDesign:Chip.Style>
+                                            <Style TargetType="materialDesign:Chip">
+                                                <Setter Property="Background" Value="WhiteSmoke" />
+                                            </Style>
+                                        </materialDesign:Chip.Style>
+                                        <materialDesign:Chip.Icon>
+                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </materialDesign:Chip.Icon>
+                                    </materialDesign:Chip>
+                                    <!-- Icon -->
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"  VerticalAlignment="Center" Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </StackPanel>
+                                <Separator/>
+
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Height="25" Width="25" Kind="AccountMultiple" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 28 8 0"></materialDesign:PackIcon>
+                    <TextBlock Margin="0 30 0 0" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="Players"></TextBlock>
+                </StackPanel>
+                <Separator Margin="10"/>
+
                 <ItemsControl AlternationCount="{Binding Players.Count}" x:Name="List" ItemsSource="{Binding Players}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -38,6 +89,13 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Vertical">
+                                <StackPanel.Visibility>
+                                    <MultiBinding Converter="{StaticResource ModeAndIsCPUToVisibility}">
+                                        <Binding Path="DataContext.Mode" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}"></Binding>
+                                        <Binding Path="User.IsCPU"></Binding>
+                                    </MultiBinding>
+                                </StackPanel.Visibility>
+                           
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding 
                                                 Path=(ItemsControl.AlternationIndex), 
@@ -92,7 +150,7 @@
 
 
                                 </StackPanel>
-                                <Separator/>
+                                <Separator Margin="0 0 0 15"/>
                             </StackPanel>
                         </DataTemplate>     
                     </ItemsControl.ItemTemplate>
