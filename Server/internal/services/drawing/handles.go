@@ -3,12 +3,14 @@ package drawing
 import (
 	"encoding/binary"
 	"encoding/xml"
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	"io/ioutil"
 	"log"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
+
 	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	"gitlab.com/jigsawcorp/log3900/internal/datastore"
 	svgmodel "gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -32,7 +34,7 @@ type Draw struct {
 
 // DrawState gives the state of drawing
 type DrawState struct {
-	ContinueDrawing bool
+	ContinueDrawing abool.AtomicBool
 }
 
 //Stroke represent a stroke to be drawn on the client canvas
@@ -60,7 +62,7 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{ContinueDrawing: true})
+	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{ContinueDrawing: abool.New().Set()})
 }
 
 // StartDrawing starts the drawing procedure
@@ -129,7 +131,7 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 
 	}
 	for _, payload := range payloads {
-		if !continueDrawing.ContinueDrawing {
+		if !continueDrawing.ContinueDrawing.IsSet() {
 			return
 		}
 		packet := socket.RawMessage{

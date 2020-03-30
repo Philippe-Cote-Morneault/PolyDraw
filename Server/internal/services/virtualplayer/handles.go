@@ -14,6 +14,7 @@ import (
 	"gitlab.com/jigsawcorp/log3900/model"
 
 	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 )
 
@@ -216,7 +217,7 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: true}
+	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: abool.New().Set()}
 	managerInstance.mutex.Unlock()
 
 	time.Sleep(2500 * time.Millisecond)
@@ -240,7 +241,7 @@ func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 
 	if drawState, ok := managerInstance.Drawing[groupID]; ok {
-		drawState.ContinueDrawing = false
+		drawState.ContinueDrawing.UnSet()
 	}
 
 	managerInstance.mutex.Unlock()
