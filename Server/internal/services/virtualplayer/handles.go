@@ -373,7 +373,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 		if bot.Language == 0 {
 			lineHint = " My hint is : "
 		}
-		hintRes.Hint = bot.getInteraction("hintRequested") + lineHint + hint
+		hintRes.Hint = bot.getInteraction("hintRequest") + lineHint + hint
 		hintRes.Error = ""
 	} else {
 		if hint == "" {
