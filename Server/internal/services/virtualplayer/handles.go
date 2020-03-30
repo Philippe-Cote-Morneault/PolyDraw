@@ -217,7 +217,7 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: abool.New().Set()}
+	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{StopDrawing: abool.New()}
 	managerInstance.mutex.Unlock()
 
 	time.Sleep(2500 * time.Millisecond)
@@ -241,7 +241,7 @@ func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 
 	if drawState, ok := managerInstance.Drawing[groupID]; ok {
-		drawState.ContinueDrawing.UnSet()
+		drawState.StopDrawing.Set()
 	}
 
 	managerInstance.mutex.Unlock()

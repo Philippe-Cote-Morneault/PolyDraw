@@ -23,7 +23,8 @@ import (
 //MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
 const maxPointsperPacket = 16000
-const delayDrawSending = 20 //in Milliseconds
+const delayDrawSending = 20     //in Milliseconds
+const drawingTimePreview = 5000 //in Milliseconds
 
 // Draw specifications that contains the informations of the sketch
 type Draw struct {
@@ -34,7 +35,8 @@ type Draw struct {
 
 // DrawState gives the state of drawing
 type DrawState struct {
-	ContinueDrawing abool.AtomicBool
+	StopDrawing *abool.AtomicBool
+	Time        int
 }
 
 //Stroke represent a stroke to be drawn on the client canvas
@@ -62,7 +64,7 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{ContinueDrawing: abool.New().Set()})
+	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: abool.New(), Time: drawingTimePreview})
 }
 
 // StartDrawing starts the drawing procedure
@@ -131,7 +133,7 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 
 	}
 	for _, payload := range payloads {
-		if !continueDrawing.ContinueDrawing.IsSet() {
+		if continueDrawing.StopDrawing.IsSet() {
 			return
 		}
 		packet := socket.RawMessage{
