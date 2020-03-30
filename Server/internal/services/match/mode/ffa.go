@@ -66,6 +66,17 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 			f.realPlayers++
 		}
 	}
+
+	switch f.info.Difficulty {
+	case 0:
+		f.timeImage = 60
+	case 1:
+		f.timeImage = 45
+	case 2:
+		f.timeImage = 30
+	}
+	f.timeImage *= 1000
+
 	drawing.RegisterGame(f)
 	cbroadcast.Broadcast(match2.BGameStarts, f)
 }
