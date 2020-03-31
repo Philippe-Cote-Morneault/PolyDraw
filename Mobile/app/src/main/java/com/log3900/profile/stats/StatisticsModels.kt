@@ -14,8 +14,8 @@ data class UserStats(
 
 data class HistoryStats(
     @Json(name = "MatchesPlayedHistory")    val gamesPlayedHistory:     List<GamePlayed>?,
-    @Json(name = "ConnectionHistory")       val connectionHistory:      List<Connection>,
-    @Json(name = "Achievements")            val achievements:           List<Achievement>
+    @Json(name = "ConnectionHistory")       val connectionHistory:      List<Connection>
+//    @Json(name = "Achievements")            val achievements:           List<Achievement>
 )
 
 data class GamePlayed(
