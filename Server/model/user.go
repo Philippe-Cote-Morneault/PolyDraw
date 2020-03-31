@@ -79,7 +79,4 @@ func FindUserByName(username string, user *User) bool {
 // AddUser add user in DB
 func AddUser(user *User) {
 	DB().Create(&user)
-
-	var stats Stats = Stats{UserID: user.ID}
-	DB().Create(&stats)
 }

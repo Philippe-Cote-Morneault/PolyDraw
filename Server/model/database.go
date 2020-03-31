@@ -74,11 +74,8 @@ func migrate() {
 	dbVar.Model(&ChatMessage{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
 
 	//Stats
-	dbVar.AutoMigrate(&Stats{})
 	dbVar.AutoMigrate(&Connection{})
 	dbVar.AutoMigrate(&MatchPlayed{})
-	dbVar.AutoMigrate(&PlayerName{})
-	dbVar.AutoMigrate(&Achievement{})
 
 	//Game
 	dbVar.AutoMigrate(&Game{})
