@@ -59,7 +59,6 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.isRunning = true
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
-	c.lives = 3
 	c.curLap = 1
 	c.checkPointTime = 0
 	c.commonScore.init()
@@ -456,6 +455,7 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 		TimeImage: c.timeImage,
 		Laps:      0,
 		TotalTime: c.gameTime,
+		Lives:     c.lives,
 	}
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
@@ -526,14 +526,17 @@ func (c *Coop) computeDifficulty() {
 	//Determine the time based of the difficulty
 	switch c.info.Difficulty {
 	case 0:
+		c.lives = 3
 		c.gameTime = 60
 		c.timeImage = 15
 		c.penalty = 10
 	case 1:
+		c.lives = 2
 		c.gameTime = 45
 		c.timeImage = 10
 		c.penalty = 15
 	case 2:
+		c.lives = 1
 		c.gameTime = 30
 		c.timeImage = 10
 		c.penalty = 20

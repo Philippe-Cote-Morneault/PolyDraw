@@ -21,6 +21,7 @@ type ResponseGameInfo struct {
 	TimeImage int64
 	Laps      int
 	TotalTime int64
+	Lives     int
 }
 
 //PlayerDrawThis used for message 69

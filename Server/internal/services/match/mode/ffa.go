@@ -433,6 +433,7 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 		TimeImage: f.timeImage,
 		Laps:      f.lapsTotal,
 		TotalTime: 0,
+		Lives:     0,
 	}
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
