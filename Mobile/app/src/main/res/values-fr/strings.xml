@@ -159,4 +159,6 @@
     <string name="quit_match_confirm">Vous êtes sur le point de quitter la partie en cours. Voulez-vous continuer?</string>
     <string name="quit_waiting_room">Quitter</string>
     <string name="quit_waiting_room_confirm">Vous êtes sur le point de quitter la salle d\'attente. Voulez-vous continuer?</string>
+    <string name="kick_player_confirmation_title">Retirer joueur</string>
+    <string name="kick_player_confirmation_message">Êtes-vous sûr que vous voulez retirer %1$s?</string>
 </resources>

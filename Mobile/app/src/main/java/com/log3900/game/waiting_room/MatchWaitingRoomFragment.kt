@@ -90,7 +90,14 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
             }
 
             override fun removedClicked(player: Player) {
-                matchWaitingRoomPresenter?.onPlayerRemoveClick(player)
+                SimpleConfirmationDialog(context!!,
+                    resources.getString(R.string.kick_player_confirmation_title),
+                    resources.getString(R.string.kick_player_confirmation_message, player.username),
+                    {_, _->
+                        matchWaitingRoomPresenter?.onPlayerRemoveClick(player)
+                    },
+                    null)
+                    .show()
             }
         })
         playersRecyclerView.apply {

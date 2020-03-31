@@ -8,38 +8,45 @@ import kotlin.collections.ArrayList
 abstract class Match(
     var players: ArrayList<Player>,
     var matchType: MatchMode,
-    var time: Int
+    var time: Int,
+    var lives: Int
 )
 
 class FFAMatch(
     players: ArrayList<Player>,
     matchType: MatchMode,
     time: Int,
+    lives: Int,
     var laps: Int
 ) : Match(
     players,
     matchType,
-    time
+    time,
+    lives
 )
 
 class CoopMatch(
     players: ArrayList<Player>,
     matchType: MatchMode,
-    time: Int
+    time: Int,
+    lives: Int
 ) : Match(
     players,
     matchType,
-    time
+    time,
+    lives
 )
 
 class SoloMatch(
     players: ArrayList<Player>,
     matchType: MatchMode,
-    time: Int
+    time: Int,
+    lives: Int
 ) : Match(
     players,
     matchType,
-    time
+    time,
+    lives
 )
 
 class PlayerTurnToDraw(
@@ -108,10 +115,10 @@ class RoundEnded(
 }
 
 class HintResponse(
-    var userID: UUID?,
-    var hint: String?,
-    var hintsLeft: Int?,
-    var error: String?
+    var hint: String,
+    var error: String,
+    var userID: UUID,
+    var botID: UUID
 )
 
 class CheckPoint(

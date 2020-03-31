@@ -12,6 +12,7 @@
         app:chipIcon="@mipmap/ic_person_colored_round"
         android:theme="@style/Theme.MaterialComponents.Light"
         android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

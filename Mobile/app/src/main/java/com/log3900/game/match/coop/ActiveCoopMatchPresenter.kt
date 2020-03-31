@@ -22,7 +22,7 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
         this.activeCoopMatchView = activeMatchView as ActiveCoopMatchView
 
         activeCoopMatchView.setTeamScore((MainApplication.instance.getContext().resources.getString(R.string.team_score_title, 0)))
-        activeCoopMatchView.setRemainingLives(3)
+        activeCoopMatchView.setRemainingLives(coopMatchManager.getCurrentMatch().lives)
         activeCoopMatchView.enableHintButton(true)
 
         matchManager.notifyReadyToPlay()

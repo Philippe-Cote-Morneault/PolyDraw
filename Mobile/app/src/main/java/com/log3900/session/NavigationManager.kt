@@ -1,5 +1,6 @@
 package com.log3900.session
 
+import android.util.Log
 import com.log3900.MainActivity
 import com.log3900.R
 import com.log3900.game.group.MatchMode
@@ -28,7 +29,9 @@ class NavigationManager {
     }
 
     private fun onMatchAboutToStart(match: Match) {
+        Log.d("POTATO", "NavigationManager::onMatchAboutToStart()")
         if (currentActivity?.navigationController?.currentDestination?.id == R.id.navigation_main_match_waiting_room_fragment) {
+            Log.d("POTATO", "NavigationManager::onMatchAboutToStart(), valid id and starting fragment")
             when (match.matchType) {
                 MatchMode.FFA -> currentActivity?.startNavigationFragment(R.id.navigation_main_active_ffa_match_fragment, null, false)
                 MatchMode.SOLO -> currentActivity?.startNavigationFragment(R.id.navigation_main_active_solo_match_fragment, null, false)
@@ -44,6 +47,9 @@ class NavigationManager {
                 onGroupJoined()
             }
             EventType.LEAVE_GROUP -> {
+                onGroupLeft()
+            }
+            EventType.GROUP_LEFT -> {
                 onGroupLeft()
             }
             EventType.GROUP_DELETED -> {

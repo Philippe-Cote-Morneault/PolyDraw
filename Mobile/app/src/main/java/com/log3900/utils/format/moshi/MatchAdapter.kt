@@ -18,6 +18,7 @@ object MatchAdapter {
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
         val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
+        val lives = matchJson.get("Lives").asInt
 
         when (matchType) {
             MatchMode.FFA -> {
@@ -25,21 +26,24 @@ object MatchAdapter {
                     players,
                     matchType,
                     timeImage,
-                    matchJson.get("Laps").asInt
+                    matchJson.get("Laps").asInt,
+                    lives
                 )
             }
             MatchMode.COOP -> {
                 return CoopMatch(
                     players,
                     matchType,
-                    timeImage
+                    timeImage,
+                    lives
                 )
             }
             MatchMode.SOLO -> {
                 return SoloMatch(
                     players,
                     matchType,
-                    timeImage
+                    timeImage,
+                    lives
                 )
             }
         }
@@ -48,6 +52,7 @@ object MatchAdapter {
             players,
             matchType,
             timeImage,
+            0,
             0
         )
     }
@@ -211,28 +216,13 @@ object MatchAdapter {
     }
 
     fun jsonToHintResponse(jsonObject: JsonObject): HintResponse {
-        var hint: String? = null
-        var error: String? = null
-        var userID: UUID? = null
-        var hintsLeft: Int? = null
+        val hint = jsonObject.get("Hint").asString
+        val error = jsonObject.get("Error").asString
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val botID = UUID.fromString(jsonObject.get("BotID").asString)
 
-        if (jsonObject.has("Hint")) {
-            hint = jsonObject.get("Hint").asString
-        }
 
-        if (jsonObject.has("Error")) {
-            error = jsonObject.get("Error").asString
-        }
-
-        if (jsonObject.has("UserID")) {
-            userID = UUID.fromString(jsonObject.get("UserID").asString)
-        }
-
-        if (jsonObject.has("HintsLeft")) {
-            hintsLeft = jsonObject.get("HintsLeft").asInt
-        }
-
-        return HintResponse(userID, hint, hintsLeft, error)
+        return HintResponse(hint, error, userID, botID)
     }
 
     fun jsonToCheckpoint(jsonObject: JsonObject): CheckPoint {
