@@ -2,15 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
-	"log"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/lobby"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	redisservice "gitlab.com/jigsawcorp/log3900/internal/services/redis"
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 	"gitlab.com/jigsawcorp/log3900/pkg/geometry"
 
@@ -82,6 +84,7 @@ func registerServices() {
 	service.Add(&lobby.Lobby{})
 	service.Add(&match.Service{})
 	service.Add(&virtualplayer.VirtualPlayer{})
+	service.Add(&stats.Stats{})
 }
 
 func lockingBroadcast(name string) {

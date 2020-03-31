@@ -10,6 +10,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
@@ -604,6 +605,10 @@ func (f *FFA) finish() {
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
+	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: f.GetConnections(), Match: &model.MatchPlayed{
+		MatchDuration: gameDuration.Milliseconds(),
+		WinnerName:    winner.Username,
+		MatchType:     0}})
 }
 
 //removePlayer remove the player and set the order

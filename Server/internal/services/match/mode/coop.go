@@ -503,6 +503,10 @@ func (c *Coop) finish() {
 	c.receiving.Unlock()
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+	// cbroadcast.Broadcast(stats.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
+	// 	MatchDuration: c.gameTime,
+	// 	WinnerName:    winner.Username,
+	// 	MatchType:     1}})
 }
 
 //computeOrder used to compute the order for the coop

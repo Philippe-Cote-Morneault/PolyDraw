@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
+
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -59,8 +61,7 @@ func UnRegisterSocket(socketID uuid.UUID) {
 
 	if session.ID != uuid.Nil {
 		go delayUnregister(&session)
-		model.UpdateDeconnection(session.UserID)
-
+		cbroadcast.Broadcast(broadcast.BSetDeconnection, socketID)
 	}
 }
 
@@ -77,7 +78,6 @@ func UnRegisterUser(userID uuid.UUID) {
 
 	if session.ID != uuid.Nil {
 		go delayUnregister(&session)
-		model.UpdateDeconnection(userID)
 	}
 }
 
@@ -151,6 +151,7 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 			userCache[session.userID] = messageReceived.SocketID
 			log.Printf("[Auth] -> Connection made socket:%s userid:%s", messageReceived.SocketID, session.userID)
 			sendAuthResponse(true, messageReceived.SocketID)
+			cbroadcast.Broadcast(broadcast.BCreateConnection, session.userID)
 			cbroadcast.Broadcast(socket.BSocketAuthConnected, messageReceived.SocketID) //Broadcast only when the auth is connected
 			return true
 		}
