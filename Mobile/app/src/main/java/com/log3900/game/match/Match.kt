@@ -115,10 +115,10 @@ class RoundEnded(
 }
 
 class HintResponse(
-    var userID: UUID?,
-    var hint: String?,
-    var hintsLeft: Int?,
-    var error: String?
+    var hint: String,
+    var error: String,
+    var userID: UUID,
+    var botID: UUID
 )
 
 class CheckPoint(

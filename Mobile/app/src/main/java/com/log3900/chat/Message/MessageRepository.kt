@@ -293,21 +293,20 @@ class MessageRepository : Service() {
     }
 
     private fun onHintResponse(message: Message) {
-        /*
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
         Log.d("POTATO", "Hint response = $json")
         val hintResponse = MatchAdapter.jsonToHintResponse(jsonObject)
         var hint = hintResponse.hint
 
-        if (hint!!.isEmpty()) {
+        if (hint.isEmpty()) {
             hint = hintResponse.error
         }
 
         if (matchChannel != null) {
-            UserRepository.getInstance().getUser(hintResponse.userID!!).subscribe(
+            UserRepository.getInstance().getUser(hintResponse.botID!!).subscribe(
                 {
-                    val receivedMessage = ReceivedMessage(hint!!, matchChannel!!.ID, hintResponse.userID!!, it.username, Date())
+                    val receivedMessage = ReceivedMessage(hint, matchChannel!!.ID, hintResponse.botID!!, it.username, Date())
                     val chatMessage = ChatMessage(ChatMessage.Type.RECEIVED_MESSAGE, receivedMessage, matchChannel!!.ID)
                     addMessageToCache(chatMessage)
                     val osMessage = android.os.Message()
@@ -319,8 +318,6 @@ class MessageRepository : Service() {
                 }
             )
         }
- 
-         */
     }
 
     private fun onChannelCreated(channel: Channel) {
