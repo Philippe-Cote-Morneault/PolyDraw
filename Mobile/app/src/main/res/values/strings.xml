@@ -189,4 +189,6 @@
     <string name="quit_match_confirm">You are about to quit the game in progress. Do you wish to continue?</string>
     <string name="quit_waiting_room">Quit</string>
     <string name="quit_waiting_room_confirm">You are about to quit the waiting room. Do you wish to continue?</string>
+    <string name="kick_player_confirmation_title">Remove player</string>
+    <string name="kick_player_confirmation_message">Are you sure you want to remove %1$s?</string>
 </resources>
