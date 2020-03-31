@@ -18,7 +18,7 @@ type Group struct {
 	OwnerID        uuid.UUID
 	Language       int `gorm:"default:0"` // 0 -> EN | 1 -> FR
 	PlayersMax     int
-	GameType       int
+	GameType       int //0 -> FFA | 1 -> solo | 2 -> coop
 	VirtualPlayers int
 	NbRound        int
 	Difficulty     int     `gorm:"default:0"`

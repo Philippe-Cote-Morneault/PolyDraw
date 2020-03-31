@@ -21,20 +21,20 @@ type VirtualPlayer struct {
 	shutdown chan bool
 }
 
-//Init the messenger service
+//Init the virtualplayer service
 func (v *VirtualPlayer) Init() {
 	v.shutdown = make(chan bool)
 	(&managerInstance).init()
 	v.subscribe()
 }
 
-//Start the messenger service
+//Start the virtualplayer service
 func (v *VirtualPlayer) Start() {
 	log.Println("[VirtualPlayer] -> Starting service")
 	go v.listen()
 }
 
-//Shutdown the messenger service
+//Shutdown the virtualplayer service
 func (v *VirtualPlayer) Shutdown() {
 	log.Println("[VirtualPlayer] -> Closing service")
 	close(v.shutdown)
@@ -116,7 +116,7 @@ func (v *VirtualPlayer) subscribe() {
 	v.chatNew, _ = cbroadcast.Subscribe(match.BChatNew)
 }
 
-//Register the broadcast for drawing
+//Register the broadcast for virtualplayer
 func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BGameStarts, match.BSize)
 	cbroadcast.Register(match.BGameEnds, match.BSize)

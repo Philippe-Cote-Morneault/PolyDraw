@@ -14,10 +14,13 @@ import (
 	"gitlab.com/jigsawcorp/log3900/model"
 
 	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 )
 
 var managerInstance Manager
+
+const drawingTimeBot = 10 //in Seconds
 
 type responseHint struct {
 	UserID    string
@@ -216,7 +219,7 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: true}
+	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{StopDrawing: abool.New(), Time: drawingTimeBot}
 	managerInstance.mutex.Unlock()
 
 	time.Sleep(2500 * time.Millisecond)
@@ -224,13 +227,11 @@ func startDrawing(round *match2.RoundStart) {
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
-	wg.Add(len(connections))
-	for _, id := range connections {
-		go func(socketID uuid.UUID) {
-			defer wg.Done()
-			drawing.StartDrawing(socketID, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
-		}(id)
-	}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
+	}()
 	wg.Wait()
 	// printManager("startDrawing")
 }
@@ -240,7 +241,7 @@ func handleRoundEnds(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 
 	if drawState, ok := managerInstance.Drawing[groupID]; ok {
-		drawState.ContinueDrawing = false
+		drawState.StopDrawing.Set()
 	}
 
 	managerInstance.mutex.Unlock()

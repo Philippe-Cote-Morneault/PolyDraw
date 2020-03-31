@@ -3,23 +3,18 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"gitlab.com/jigsawcorp/log3900/internal/context"
-	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"net/http"
 	"strconv"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats"
+
+	"gitlab.com/jigsawcorp/log3900/internal/context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
-
-type stats struct {
-	GamesPlayed     int64
-	WinRatio        float64
-	AvgGameDuration int64
-	TimePlayed      int64
-	BestScoreSolo   int64
-}
 
 type connection struct {
 	ConnectedAt   int64
@@ -30,38 +25,23 @@ type matchPlayed struct {
 	MatchDuration int64
 	WinnerName    string
 	MatchType     string
-	PlayersNames  []playerName
-}
-
-type playerName struct {
-	PlayerName string
-}
-
-type achievement struct {
-	TropheeName   string
-	Description   string
-	ObtainingDate int64
 }
 
 type history struct {
 	MatchesPlayedHistory []matchPlayed
 	ConnectionHistory    []connection
-	Achievements         []achievement
 }
 
 // GetStats returns userStats
 func GetStats(w http.ResponseWriter, r *http.Request) {
 
-	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(context.CtxUserID)))
+	userID := uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(context.CtxUserID)))
 
-	var stats stats
-	model.DB().Model(model.Stats{}).Where("id = ?", userID).Find(&stats)
-
-	// TODO: A implementer une fois avoir implementer l'ajout des Connection
-	// if  {
-	// 	rbody.JSONError(w, http.StatusNotFound, "UserID doesn't exists")
-	// 	return
-	// }
+	stats, err := stats.GetStats(userID)
+	if err != "" {
+		rbody.JSONError(w, http.StatusNotFound, err)
+		return
+	}
 
 	json.NewEncoder(w).Encode(stats)
 }
@@ -107,15 +87,19 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 	model.DB().Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&matchesPlayedHistory)
 
 	for _, match := range matchesPlayedHistory {
-		var playersNames []playerName
-		model.DB().Model(&model.PlayerName{}).Where("match_id = ?", match.ID).Find(&playersNames)
-		h.MatchesPlayedHistory = append(h.MatchesPlayedHistory, matchPlayed{MatchDuration: match.MatchDuration,
-			WinnerName: match.WinnerName, MatchType: match.MatchType, PlayersNames: playersNames})
-	}
+		var matchType string
 
-	var achievements []achievement
-	model.DB().Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&achievements)
-	h.Achievements = achievements
+		switch match.MatchType {
+		case 0:
+			matchType = "FFA"
+		case 1:
+			matchType = "Solo"
+		case 2:
+			matchType = "Coop"
+		}
+		h.MatchesPlayedHistory = append(h.MatchesPlayedHistory, matchPlayed{MatchDuration: match.MatchDuration,
+			WinnerName: match.WinnerName, MatchType: matchType})
+	}
 
 	json.NewEncoder(w).Encode(h)
 }
