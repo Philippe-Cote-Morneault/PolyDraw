@@ -21,6 +21,7 @@ import com.log3900.R
 import com.log3900.game.group.Player
 import com.log3900.game.match.ActiveMatchFragment
 import com.log3900.game.match.PlayerAdapter
+import com.log3900.game.match.UI.DrawerHolderView
 import com.log3900.game.match.ffa.ActiveFFAMatchPresenter
 import com.log3900.game.match.ffa.ActiveFFAMatchView
 
@@ -32,6 +33,7 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
     private lateinit var teamScoreTextView: TextView
     private lateinit var teamScoreChangedTextView: TextView
     private lateinit var remainingLivesContainer: LinearLayout
+    private lateinit var drawerViewHolder: DrawerHolderView
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
     protected lateinit var teamPlayersRecyclerView: RecyclerView
 
@@ -50,6 +52,11 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
         })
 
         return rootView
+    }
+
+    override fun setupUI(rootView: View) {
+        drawerViewHolder = rootView.findViewById(R.id.fragment_active_coop_match_drawer_holder_view)
+        super.setupUI(rootView)
     }
 
     override fun setupToolbar(rootView: View) {
@@ -184,6 +191,9 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
         scaleUpAnimator.start()
     }
 
+    override fun setDrawer(player: Player) {
+        drawerViewHolder.setDrawer(player)
+    }
 
     override fun onDestroy() {
         activeCoopMatchPresenter = null

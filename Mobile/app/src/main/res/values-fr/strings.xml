@@ -161,4 +161,6 @@
     <string name="quit_waiting_room_confirm">Vous êtes sur le point de quitter la salle d\'attente. Voulez-vous continuer?</string>
     <string name="kick_player_confirmation_title">Retirer joueur</string>
     <string name="kick_player_confirmation_message">Êtes-vous sûr que vous voulez retirer %1$s?</string>
+    <string name="players">Joueurs</string>
+    <string name="drawer">Dessinateur</string>
 </resources>

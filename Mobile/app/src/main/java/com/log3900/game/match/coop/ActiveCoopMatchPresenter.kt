@@ -26,6 +26,9 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
         activeCoopMatchView.setRemainingLives(coopMatchManager.getCurrentMatch().lives)
         activeCoopMatchView.enableHintButton(true)
 
+        val drawer = coopMatchManager.getCurrentMatch().players.find { it.isCPU }
+        activeCoopMatchView.setDrawer(drawer!!)
+
         matchManager.notifyReadyToPlay()
     }
 
