@@ -45,7 +45,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         }
         val bearerLoginDialog = ProgressDialog()
         loginView?.showProgressDialog(bearerLoginDialog)
-
+        loginView?.disableView()
 
         val json = JsonObject().apply {
             addProperty("Bearer", bearer)
@@ -74,6 +74,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         Log.d("BEARER", "BEARER ERROR: ${response.errorBody()?.string()}")
                         UserPrefsManager.resetAll()
                         loginView?.hideProgressDialog(bearerLoginDialog)
+                        loginView?.enableView()
 //                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
                     }
                 }
@@ -81,6 +82,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                 UserPrefsManager.resetAll()
                 loginView?.hideProgressDialog(bearerLoginDialog)
+                loginView?.enableView()
                 loginView?.showErrorDialog(
                     "Error",
                     "Error during authentication (Bearer token)",

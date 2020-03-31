@@ -4,13 +4,14 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ class LoginFragment : Fragment(), LoginView {
     // Services
     private var loginPresenter: LoginPresenter? = null
     // UI Elements
+    private lateinit var contentLayout: ConstraintLayout
     private lateinit var loginButton: MaterialButton
     private lateinit var usernameTextInput: TextInputEditText
     private lateinit var usernameTextInputLayout: TextInputLayout
@@ -50,6 +52,8 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun setupUIElements(root: View) {
+        contentLayout = root.findViewById(R.id.card_content_layout)
+
         loginButton = root.findViewById(R.id.activity_login_login_button)
         loginButton.setOnClickListener {
             onLoginButtonClick()
@@ -165,6 +169,20 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun hideProgressDialog(dialog: DialogFragment) {
         dialog.dismiss()
+    }
+
+    override fun enableView() {
+        contentLayout.children.iterator().forEach {
+            it.isEnabled = true
+        }
+        registerButton.isEnabled = true
+    }
+
+    override fun disableView() {
+        contentLayout.children.iterator().forEach {
+            it.isEnabled = false
+        }
+        registerButton.isEnabled = false
     }
 
     override fun closeView() {
