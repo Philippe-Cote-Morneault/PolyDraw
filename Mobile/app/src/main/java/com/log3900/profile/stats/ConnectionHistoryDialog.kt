@@ -20,8 +20,8 @@ class ConnectionHistoryDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
+            1200,
+            1000
         )
     }
 
