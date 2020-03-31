@@ -163,4 +163,5 @@
     <string name="kick_player_confirmation_message">Êtes-vous sûr que vous voulez retirer %1$s?</string>
     <string name="players">Joueurs</string>
     <string name="drawer">Dessinateur</string>
+    <string name="player">Joueur</string>
 </resources>

@@ -163,4 +163,5 @@
     <string name="kick_player_confirmation_message">Are you sure you want to remove %1$s?</string>
     <string name="players">Players</string>
     <string name="drawer">Drawer</string>
+    <string name="player">Player</string>
 </resources>

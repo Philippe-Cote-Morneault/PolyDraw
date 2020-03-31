@@ -27,6 +27,9 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         activeSoloMatchView.setRemainingLives(soloMatchManager.getCurrentMatch().lives)
         activeSoloMatchView.enableHintButton(true)
 
+        val drawer = soloMatchManager.getCurrentMatch().players.find { it.isCPU }
+        activeSoloMatchView.setDrawer(drawer!!)
+
         matchManager.notifyReadyToPlay()
     }
 
