@@ -27,28 +27,7 @@ const maxPointsperPacket = 16000
 const delayDrawSending = 20  //in Milliseconds
 const drawingTimePreview = 5 //in Seconds
 
-// Draw specifications that contains the informations of the sketch
-type Draw struct {
-	SVGFile           string
-	DrawingTimeFactor float64
-	Mode              int
-}
-
-// DrawState gives the state of drawing
-type DrawState struct {
-	StopDrawing *abool.AtomicBool
-	Time        float64
-}
-
-//Stroke represent a stroke to be drawn on the client canvas
-type Stroke struct {
-	ID        uuid.UUID
-	color     byte
-	isEraser  bool
-	isSquared bool
-	brushSize byte
-	points    []geometry.Point
-}
+var pendingPreviews map[uuid.UUID]*abool.AtomicBool
 
 func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	drawingID, err := uuid.FromBytes(message.Payload.Bytes)
@@ -65,7 +44,9 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	StartDrawing([]uuid.UUID{message.SocketID}, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: abool.New(), Time: drawingTimePreview})
+	pendingPreviews[message.SocketID] = abool.New()
+	StartDrawing([]uuid.UUID{message.SocketID}, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: pendingPreviews[message.SocketID], Time: drawingTimePreview})
+	removePreview(message.SocketID)
 }
 
 // StartDrawing starts the drawing procedure
@@ -269,4 +250,27 @@ func round(p *geometry.Point) {
 	if p.Y > float32(MaxUint16) {
 		p.Y = float32(MaxUint16)
 	}
+}
+
+//Stops the preview when stopPreview socket message is sent
+func stopPreview(message socket.RawMessageReceived) {
+	stopDrawing, ok := pendingPreviews[message.SocketID]
+
+	if !ok {
+		log.Printf("[Drawing] -> [Error] Cannot stop preview. Cannot find preview with socketID")
+		return
+	}
+
+	stopDrawing.Set()
+	removePreview(message.SocketID)
+}
+
+//Remove the preview in managerInstance stored in cache
+func removePreview(socketID uuid.UUID) {
+
+	if _, ok := pendingPreviews[socketID]; !ok {
+		log.Printf("[Drawing] -> [Error] Cannot remove preview from cache. Cannot find preview with socketID")
+		return
+	}
+	delete(pendingPreviews, socketID)
 }

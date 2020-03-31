@@ -68,6 +68,7 @@ type messageType struct {
 	Checkpoint               int
 	GuessFailUser            int
 	LanguageChange           int
+	StopPendingPreviews      int
 	GameCancel               int
 }
 
@@ -131,6 +132,7 @@ var MessageType = &messageType{
 	GameCancel:               91,
 	UsernameChange:           110,
 	LanguageChange:           112,
+	StopPendingPreviews:      113,
 	ErrorResponse:            255,
 }
 

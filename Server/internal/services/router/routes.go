@@ -30,6 +30,7 @@ func (r *Router) routing() {
 	r.handle(socket.MessageType.StartDrawingClient, drawing.BDrawStart)
 	r.handle(socket.MessageType.EndDrawingClient, drawing.BDrawEnd)
 	r.handle(socket.MessageType.EraseStrokeClient, drawing.BDrawErase)
+	r.handle(socket.MessageType.StopPendingPreviews, drawing.BStopPreview)
 
 	//Lobby
 	r.handle(socket.MessageType.RequestLeaveGroup, lobby.BLeaveGroup)
