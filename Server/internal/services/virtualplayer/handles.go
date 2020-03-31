@@ -228,20 +228,21 @@ func startDrawing(round *match2.RoundStart) {
 }
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
-func handleRoundEnds(groupID uuid.UUID) {
+func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 	managerInstance.mutex.Lock()
-
 	if drawState, ok := managerInstance.Drawing[groupID]; ok {
 		drawState.StopDrawing.Set()
 	}
-
 	managerInstance.mutex.Unlock()
 
-	makeBotsSpeak("endRound", groupID, uuid.Nil)
+	if makeBotSpeak {
+		makeBotsSpeak("endRound", groupID, uuid.Nil)
+	}
 }
 
 // handleEndGame [New Threads] does the endGame routine for a bot in match (match ->)
 func handleEndGame(groupID uuid.UUID) {
+	handleRoundEnds(groupID, false)
 	managerInstance.mutex.Lock()
 
 	if _, ok := managerInstance.HintsInGames[groupID]; !ok {

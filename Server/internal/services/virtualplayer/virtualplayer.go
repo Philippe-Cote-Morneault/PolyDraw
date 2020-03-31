@@ -90,7 +90,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
-			go handleRoundEnds(groupID)
+			go handleRoundEnds(groupID, true)
 
 		case data := <-v.chatNew:
 			log.Println("[VirtualPlayer] -> Receives chatNew event")
