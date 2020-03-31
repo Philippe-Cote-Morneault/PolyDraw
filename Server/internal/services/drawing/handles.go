@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"io/ioutil"
 	"log"
+	"sync"
 	"time"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
@@ -64,24 +65,33 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: abool.New(), Time: drawingTimePreview})
+	StartDrawing([]uuid.UUID{message.SocketID}, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: abool.New(), Time: drawingTimePreview})
 }
 
 // StartDrawing starts the drawing procedure
-func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, drawState *DrawState) {
-	socket.SendQueueMessageSocketID(socket.RawMessage{
-		MessageType: byte(socket.MessageType.StartDrawingServer),
-		Length:      uint16(len(uuidBytes)),
-		Bytes:       uuidBytes,
-	}, socketID)
+func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, drawState *DrawState) {
+	payloads := generateDrawing(draw, drawState.Time)
+	var wg sync.WaitGroup
+	wg.Add(len(socketsID))
+	for _, id := range socketsID {
+		go func(socketID uuid.UUID) {
+			defer wg.Done()
+			socket.SendQueueMessageSocketID(socket.RawMessage{
+				MessageType: byte(socket.MessageType.StartDrawingServer),
+				Length:      uint16(len(uuidBytes)),
+				Bytes:       uuidBytes,
+			}, socketID)
 
-	sendDrawing(socketID, draw, drawState)
+			sendDrawing(socketID, payloads, drawState.StopDrawing)
 
-	socket.SendQueueMessageSocketID(socket.RawMessage{
-		MessageType: byte(socket.MessageType.EndDrawingServer),
-		Length:      uint16(len(uuidBytes)),
-		Bytes:       uuidBytes,
-	}, socketID)
+			socket.SendQueueMessageSocketID(socket.RawMessage{
+				MessageType: byte(socket.MessageType.EndDrawingServer),
+				Length:      uint16(len(uuidBytes)),
+				Bytes:       uuidBytes,
+			}, socketID)
+		}(id)
+	}
+	wg.Wait()
 }
 
 func sendPreviewResponse(socketID uuid.UUID, response bool) {
@@ -99,7 +109,24 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 	socket.SendQueueMessageSocketID(packet, socketID)
 }
 
-func sendDrawing(socketID uuid.UUID, draw *Draw, drawState *DrawState) {
+func sendDrawing(socketID uuid.UUID, payloads [][]byte, stopDrawing *abool.AtomicBool) {
+	for _, payload := range payloads {
+		if stopDrawing.IsSet() {
+			return
+		}
+		packet := socket.RawMessage{
+			MessageType: byte(socket.MessageType.StrokeChunkServer),
+			Length:      uint16(len(payload)),
+			Bytes:       payload,
+		}
+
+		socket.SendQueueMessageSocketID(packet, socketID)
+		//Wait 20ms between strokes
+		time.Sleep(delayDrawSending * time.Millisecond)
+	}
+}
+
+func generateDrawing(draw *Draw, drawingTime float64) [][]byte {
 	file, err := datastore.GetFile(draw.SVGFile)
 	if err != nil {
 		log.Println(err)
@@ -118,7 +145,7 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, drawState *DrawState) {
 
 	var commands []svgparser.Command
 	var payloads [][]byte
-	timePerStroke := ((drawState.Time * 1000) / float64(len(xmlSvg.G.XMLPaths))) * draw.DrawingTimeFactor
+	timePerStroke := ((drawingTime * 1000) / float64(len(xmlSvg.G.XMLPaths))) * draw.DrawingTimeFactor
 	for _, path := range xmlSvg.G.XMLPaths {
 		stroke := Stroke{
 			ID:        uuid.New(),
@@ -131,22 +158,8 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, drawState *DrawState) {
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
 		s := stroke.clone()
 		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(timePerStroke))
-
 	}
-	for _, payload := range payloads {
-		if drawState.StopDrawing.IsSet() {
-			return
-		}
-		packet := socket.RawMessage{
-			MessageType: byte(socket.MessageType.StrokeChunkServer),
-			Length:      uint16(len(payload)),
-			Bytes:       payload,
-		}
-
-		socket.SendQueueMessageSocketID(packet, socketID)
-		//Wait 20ms between strokes
-		time.Sleep(delayDrawSending * time.Millisecond)
-	}
+	return payloads
 }
 
 func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, stroke *Stroke, time int) {
@@ -155,11 +168,13 @@ func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, strok
 		return
 	}
 
-	nbPointsperPacket := (delayDrawSending / time) * len(*points)
+	nbPointsperPacket := int((float64(delayDrawSending) / float64(time)) * float64(len(*points)))
 
 	if nbPointsperPacket == 0 {
-		nbPointsperPacket = 1
-	} else if nbPointsperPacket >= maxPointsperPacket {
+		nbPointsperPacket = len(*points)
+	}
+
+	if nbPointsperPacket >= maxPointsperPacket {
 		for nbPointsperPacket >= maxPointsperPacket {
 			nbPointsperPacket /= 2
 		}

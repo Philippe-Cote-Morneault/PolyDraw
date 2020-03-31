@@ -227,13 +227,11 @@ func startDrawing(round *match2.RoundStart) {
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
-	wg.Add(len(connections))
-	for _, id := range connections {
-		go func(socketID uuid.UUID) {
-			defer wg.Done()
-			drawing.StartDrawing(socketID, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
-		}(id)
-	}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
+	}()
 	wg.Wait()
 	// printManager("startDrawing")
 }
