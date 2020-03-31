@@ -22,8 +22,6 @@ import (
 	"golang.org/x/sync/semaphore"
 )
 
-const numberOfChances = 3
-
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
@@ -55,7 +53,6 @@ type Coop struct {
 func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
-	c.chances = numberOfChances
 	c.isRunning = true
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
@@ -541,6 +538,7 @@ func (c *Coop) computeDifficulty() {
 		c.timeImage = 10
 		c.penalty = 20
 	}
+	c.chances = c.lives
 	c.gameTime *= 1000
 	c.timeImage *= 1000
 	c.penalty *= 1000
