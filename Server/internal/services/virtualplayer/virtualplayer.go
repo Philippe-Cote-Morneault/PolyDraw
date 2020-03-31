@@ -90,7 +90,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
-			go handleRoundEnds(groupID)
+			go handleRoundEnds(groupID, true)
 
 		case data := <-v.chatNew:
 			log.Println("[VirtualPlayer] -> Receives chatNew event")
@@ -123,14 +123,4 @@ func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BRoundStarts, match.BSize)
 	cbroadcast.Register(match.BRoundEnds, match.BSize)
 	cbroadcast.Register(match.BChatNew, match.BSize)
-}
-
-func printManager(fromWho string) {
-	log.Printf("[VirtualPlayer] -> {PrintManager} %v: ", fromWho)
-	log.Printf("[VirtualPlayer] -> Manager.Bots : %v", managerInstance.Bots)
-	log.Printf("[VirtualPlayer] -> Manager.Channels : %v", managerInstance.Channels)
-	log.Printf("[VirtualPlayer] -> Manager.HintsInGames : %v", managerInstance.HintsInGames)
-	log.Printf("[VirtualPlayer] -> Manager.Groups : %v", managerInstance.Groups)
-	log.Printf("[VirtualPlayer] -> Manager.Matches : %v", managerInstance.Matches)
-	log.Printf("[VirtualPlayer] -> Manager.HintsPerPlayers : %v", managerInstance.HintsPerPlayers)
 }
