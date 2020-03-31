@@ -18,6 +18,7 @@ object MatchAdapter {
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
         val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
+        val lives = matchJson.get("Lives").asInt
 
         when (matchType) {
             MatchMode.FFA -> {
@@ -25,21 +26,24 @@ object MatchAdapter {
                     players,
                     matchType,
                     timeImage,
-                    matchJson.get("Laps").asInt
+                    matchJson.get("Laps").asInt,
+                    lives
                 )
             }
             MatchMode.COOP -> {
                 return CoopMatch(
                     players,
                     matchType,
-                    timeImage
+                    timeImage,
+                    lives
                 )
             }
             MatchMode.SOLO -> {
                 return SoloMatch(
                     players,
                     matchType,
-                    timeImage
+                    timeImage,
+                    lives
                 )
             }
         }
@@ -48,6 +52,7 @@ object MatchAdapter {
             players,
             matchType,
             timeImage,
+            0,
             0
         )
     }

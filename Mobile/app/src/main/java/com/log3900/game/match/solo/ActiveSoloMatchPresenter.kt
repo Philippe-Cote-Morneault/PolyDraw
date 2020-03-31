@@ -23,7 +23,7 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         this.activeSoloMatchView = activeMatchView as ActiveSoloMatchView
 
         activeSoloMatchView.setScore("Score: 0")
-        activeSoloMatchView.setRemainingLives(3)
+        activeSoloMatchView.setRemainingLives(soloMatchManager.getCurrentMatch().lives)
         activeSoloMatchView.enableHintButton(true)
 
         matchManager.notifyReadyToPlay()
