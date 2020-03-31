@@ -1,5 +1,6 @@
 package com.log3900.game.match.ffa
 
+import android.os.Handler
 import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
@@ -17,7 +18,6 @@ import kotlin.collections.HashMap
 class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     private var FFAMatchManager: FFAMatchManager
     private var activeFFAMatchView: ActiveFFAMatchView? = null
-    private var updatedScores: HashMap<UUID, Boolean> = hashMapOf()
     private var playerScores: HashMap<UUID, Int> = hashMapOf()
 
     constructor(activeFFAMatchView: ActiveFFAMatchView) : super(activeFFAMatchView, FFAMatchManager()) {
@@ -34,6 +34,17 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         super.onMatchSynchronisation(synchronisation)
         val totalRounds = FFAMatchManager.getCurrentMatch().laps
         activeFFAMatchView?.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${totalRounds}")
+        matchManager.getPlayerScores().forEach { t, u ->
+            if (!playerScores.containsKey(t)) {
+                playerScores[t] = u
+            }
+
+            if (playerScores[t] != u) {
+                val variation = u - playerScores[t]!!
+                playerScores[t] = u
+                updatePlayerScore(t, u, variation)
+            }
+        }
 
     }
 
@@ -46,29 +57,34 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         super.onPlayerTurnToDraw(playerTurnToDraw)
         activeFFAMatchView?.clearAllPlayerStatusRes()
         activeFFAMatchView?.setPlayerStatus(playerTurnToDraw.userID, R.drawable.ic_edit_black)
+
+        val drawingPlayer = FFAMatchManager.getCurrentMatch().players.find { it.ID == playerTurnToDraw.userID }
+
+        if (drawingPlayer!!.isCPU) {
+            activeFFAMatchView?.enableHintButton(true)
+        } else {
+            activeFFAMatchView?.enableHintButton(false)
+        }
+
+        activeFFAMatchView?.setCanvasMessage(drawingPlayer.username + " is drawing the next word!")
+        activeFFAMatchView?.showCanvasMessageView(true)
+
+        Handler().postDelayed({
+            activeMatchView?.showCanvasMessageView(false)
+        }, 2000)
     }
 
     override fun onRoundEnded(roundEnded: RoundEnded) {
         super.onRoundEnded(roundEnded)
 
         roundEnded.players.forEach {
-            updatePlayerScore(it.userID, it.points, it.newPoints)
-            updatedScores[it.userID] = false
-        }
-    }
-
-    override fun onMatchPlayersUpdated() {
-        super.onMatchPlayersUpdated()
-        matchManager.getPlayerScores().forEach { t, u ->
-            if (!playerScores.containsKey(t)) {
-                playerScores[t] = u
-            }
-
-            if (playerScores[t] != u) {
-                val variation = u - playerScores[t]!!
-                updatedScores[t] = false
-                playerScores[t] = u
-                updatePlayerScore(t, u, variation)
+            if (playerScores[it.userID] != it.points) {
+                var variation = it.newPoints
+                if (playerScores[it.userID] != null) {
+                    variation = it.points - playerScores[it.userID]!!
+                }
+                updatePlayerScore(it.userID, it.points, variation)
+                playerScores[it.userID] = it.points
             }
         }
     }
@@ -80,6 +96,13 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         activeFFAMatchView?.showWordToDrawView()
         activeFFAMatchView?.setWordToDraw(turnToDraw.word)
         activeFFAMatchView?.enableDrawFunctions(true, turnToDraw.drawingID)
+
+        activeFFAMatchView?.setCanvasMessage("You are drawing the word ${turnToDraw.word}!")
+        activeFFAMatchView?.showCanvasMessageView(true)
+
+        Handler().postDelayed({
+            activeMatchView?.showCanvasMessageView(false)
+        }, 2000)
     }
 
     private fun onPlayerGuessedWord(playerGuessedWord: PlayerGuessedWord) {
@@ -89,21 +112,13 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     private fun onMatchStarting() {
         matchManager.getPlayerScores().forEach { t, u ->
             playerScores[t] = u
-            updatedScores[t] = false
         }
     }
 
     private fun updatePlayerScore(playerID: UUID, newScore: Int, variation: Int) {
-        Log.d("POTATO", "ActiveFFAMatchPresenter::updatePlayerScore($playerID, $newScore, $variation)")
-        if (!updatedScores.containsKey(playerID)) {
-            updatedScores[playerID] = false
-        }
-
-        if (updatedScores[playerID]!! || variation == 0) {
+        if (variation == 0) {
             return
         }
-
-        updatedScores[playerID] = true
 
         var formattedScoreChange = "+"
         if (variation < 0) {
@@ -112,8 +127,10 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
         formattedScoreChange += variation
 
-        val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
-        activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
+        Handler().postDelayed({
+            val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
+            activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
+        }, 1000)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -20,6 +20,78 @@ import java.net.SocketTimeoutException
 import java.util.*
 
 class LoginPresenter(var loginView: LoginView?) : Presenter {
+    private var rememberUser = false
+    private val socketService = SocketService.instance!!
+    private val socketHandler = Handler {
+        loginWithBearer()
+        true
+    }
+
+    init {
+        // TODO: Unsubscribe?
+        if (socketService.getSocketState() == State.CONNECTED) {
+            loginWithBearer()
+        } else {
+            socketService.subscribeToEvent(SocketEvent.CONNECTED, socketHandler)
+        }
+    }
+
+    private fun loginWithBearer() {
+        val bearer = UserPrefsManager.getBearer()
+        val username = UserPrefsManager.getUsername()
+        Log.d("BEARER", "username: $username, bearer: $bearer")
+        if (bearer == null || username == null) {
+            return
+        }
+        val bearerLoginDialog = ProgressDialog()
+        loginView?.showProgressDialog(bearerLoginDialog)
+        loginView?.disableView()
+
+        val json = JsonObject().apply {
+            addProperty("Bearer", bearer)
+            addProperty("username", username)
+        }
+
+        val call = AuthenticationRestService.service.bearerAuthenticate(
+            "EN", // LanguageManager.getCurrentLanguage().languageCode,
+            json
+        )
+
+        call.enqueue(object : Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                when(response.code()) {
+                    200 -> {
+                        val sessionToken = response.body()!!.get("SessionToken").asString
+                        val bearerToken = response.body()!!.get("Bearer").asString
+                        val userID = response.body()!!.get("UserID").asString
+                        handleSuccessAuth(bearerToken, sessionToken, userID) {
+                            loginView?.showWelcomeBackMessage(username)
+                            loginView?.hideProgressDialog(bearerLoginDialog)
+                        }
+                    }
+//                    401 -> handleErrorAuth("Your session has expired. Please log in again.")
+                    else -> { // Fail silently...
+                        Log.d("BEARER", "BEARER ERROR: ${response.errorBody()?.string()}")
+                        UserPrefsManager.resetAll()
+                        loginView?.hideProgressDialog(bearerLoginDialog)
+                        loginView?.enableView()
+//                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
+                    }
+                }
+            }
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                UserPrefsManager.resetAll()
+                loginView?.hideProgressDialog(bearerLoginDialog)
+                loginView?.enableView()
+                loginView?.showErrorDialog(
+                    "Error",
+                    "Error during authentication (Bearer token)",
+                    null,
+                    null
+                )
+            }
+        })
+    }
 
     fun authenticate(username: String, password: String) {
         loginView?.showProgresBar()
@@ -36,11 +108,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
-                        handleSuccessAuth(bearerToken, sessionToken, username, userID)
-                        Log.d("SESSION_TOKEN", sessionToken)
+                        handleSuccessAuth(bearerToken, sessionToken, userID)
                     }
                         else -> {
-                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
+                        handleErrorAuth(response.errorBody()?.string() ?: "Internal errora")
                     }
                 }
             }
@@ -56,10 +127,16 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         })
     }
 
-    private fun handleSuccessAuth(bearer: String, session: String, username: String, userID: String) {
+    private fun handleSuccessAuth(
+        bearer: String,
+        session: String,
+        userID: String,
+        onMainStart: () -> Unit = {}
+    ) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()
+                onMainStart()
                 true
             } else {
                 handleErrorAuth("Connection refused.")
@@ -127,6 +204,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
+                                if (rememberUser) {
+                                    UserPrefsManager.storeBearer(bearerToken)
+                                    UserPrefsManager.storeUsername(account.username)
+                                }
                                 completable.onComplete()
                             }
                     }
@@ -140,6 +221,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     ).subscribe {
                         AccountRepository.getInstance().setCurrentAccount(account.ID)
                             .subscribe{
+                                if (rememberUser) {
+                                    UserPrefsManager.storeBearer(bearerToken)
+                                    UserPrefsManager.storeUsername(account.username)
+                                }
                                 completable.onComplete()
                             }
                     }
@@ -170,6 +255,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         } else {
             loginView?.clearPasswordError()
         }
+    }
+
+    fun rememberUser() {
+        rememberUser = true
     }
 
     override fun destroy() {

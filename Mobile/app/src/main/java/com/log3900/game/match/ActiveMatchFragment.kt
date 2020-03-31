@@ -19,7 +19,9 @@ import kotlin.collections.HashMap
 import android.graphics.Color
 import android.util.Log
 import android.view.animation.Animation
+import androidx.navigation.fragment.findNavController
 import com.log3900.game.match.UI.*
+import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 
 
 abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
@@ -311,6 +313,16 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         } else {
             canvasMessageView.visibility = View.INVISIBLE
         }
+    }
+
+    override fun onBackButtonPressed() {
+        SimpleConfirmationDialog(
+            context!!,
+            getString(R.string.quit_match),
+            getString(R.string.quit_match_confirm),
+            {_, _ -> findNavController().popBackStack()},
+            null
+        ).show()
     }
 
     override fun onDestroy() {

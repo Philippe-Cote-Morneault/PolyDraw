@@ -15,5 +15,8 @@ interface LoginView : ViewNavigator {
                         negativeButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?)
     fun showProgressDialog(dialog: DialogFragment)
     fun hideProgressDialog(dialog: DialogFragment)
+    fun showWelcomeBackMessage(username: String)
+    fun enableView()
+    fun disableView()
     fun closeView()
 }

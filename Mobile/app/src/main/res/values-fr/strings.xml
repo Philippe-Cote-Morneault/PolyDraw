@@ -65,7 +65,7 @@
     <string name="login_password_help">Au moin 8 caractères</string>
     <string name="login_password_hint">Mot de passe</string>
     <string name="login_reenter_password_hint">Confirmer le mot de passe</string>
-    <string name="login_remember_me">Se rappeler de moi</string>
+    <string name="login_remember_me">Mémoriser</string>
     <string name="login_signup_now">Créez-en un!</string>
     <string name="login_signup_question">Pas de compte?</string>
     <string name="login_username_error">Le nom d\'utilisateur ne peut être vide</string>
@@ -155,4 +155,13 @@
     <string name="team_score_title">Score d\'équipe: %1$d</string>
     <string name="empty_slot">Place vide</string>
     <string name="match_lobby_duration_title">Durée (min)</string>
+    <string name="logout_lobby_confirm">Vous êtes sur le point d\'être déconnecté. Voulez-vous continuer?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="quit_match">Quitter</string>
+    <string name="quit_match_confirm">Vous êtes sur le point de quitter la partie en cours. Voulez-vous continuer?</string>
+    <string name="quit_waiting_room">Quitter</string>
+    <string name="quit_waiting_room_confirm">Vous êtes sur le point de quitter la salle d\'attente. Voulez-vous continuer?</string>
+    <string name="kick_player_confirmation_title">Retirer joueur</string>
+    <string name="kick_player_confirmation_message">Êtes-vous sûr que vous voulez retirer %1$s?</string>
 </resources>

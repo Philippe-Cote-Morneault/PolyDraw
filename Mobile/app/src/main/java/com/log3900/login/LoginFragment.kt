@@ -7,7 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -24,6 +28,7 @@ class LoginFragment : Fragment(), LoginView {
     // Services
     private var loginPresenter: LoginPresenter? = null
     // UI Elements
+    private lateinit var contentLayout: ConstraintLayout
     private lateinit var loginButton: MaterialButton
     private lateinit var usernameTextInput: TextInputEditText
     private lateinit var usernameTextInputLayout: TextInputLayout
@@ -31,6 +36,7 @@ class LoginFragment : Fragment(), LoginView {
     private lateinit var passwordTextInputLayout: TextInputLayout
     private lateinit var progressBar: ProgressBar
     private lateinit var registerButton: MaterialButton
+    private lateinit var rememberMeCheckBox: CheckBox
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +52,8 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun setupUIElements(root: View) {
+        contentLayout = root.findViewById(R.id.card_content_layout)
+
         loginButton = root.findViewById(R.id.activity_login_login_button)
         loginButton.setOnClickListener {
             onLoginButtonClick()
@@ -69,6 +77,8 @@ class LoginFragment : Fragment(), LoginView {
         registerButton.setOnClickListener {
             onRegisterButtonClick()
         }
+
+        rememberMeCheckBox = root.findViewById(R.id.activity_login_remember_me_checkbox)
     }
 
     private fun onUsernameChange() {
@@ -87,6 +97,9 @@ class LoginFragment : Fragment(), LoginView {
     private fun onLoginButtonClick() {
         KeyboardHelper.hideKeyboard(activity as Activity)
 
+        if (rememberMeCheckBox.isChecked)
+            loginPresenter?.rememberUser()
+
         loginPresenter?.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
     }
 
@@ -104,6 +117,12 @@ class LoginFragment : Fragment(), LoginView {
 
         // Commit the transaction
         transaction.commit()
+    }
+
+    private fun isRememberMeChecked(): Boolean = rememberMeCheckBox.isChecked
+
+    override fun showWelcomeBackMessage(username: String) {
+        Toast.makeText(context, "Welcome back, $username", Toast.LENGTH_LONG).show()
     }
 
     override fun showProgresBar() {
@@ -150,6 +169,20 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun hideProgressDialog(dialog: DialogFragment) {
         dialog.dismiss()
+    }
+
+    override fun enableView() {
+        contentLayout.children.iterator().forEach {
+            it.isEnabled = true
+        }
+        registerButton.isEnabled = true
+    }
+
+    override fun disableView() {
+        contentLayout.children.iterator().forEach {
+            it.isEnabled = false
+        }
+        registerButton.isEnabled = false
     }
 
     override fun closeView() {

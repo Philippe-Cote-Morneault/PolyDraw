@@ -185,4 +185,13 @@
     <string name="team_score_title">Team Score: %1$d</string>
     <string name="empty_slot">Empty slot</string>
     <string name="match_lobby_duration_title">Duration (min)</string>
+    <string name="logout_lobby_confirm">You are about to logout. Do you wish to continue?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="quit_match">Quit</string>
+    <string name="quit_match_confirm">You are about to quit the game in progress. Do you wish to continue?</string>
+    <string name="quit_waiting_room">Quit</string>
+    <string name="quit_waiting_room_confirm">You are about to quit the waiting room. Do you wish to continue?</string>
+    <string name="kick_player_confirmation_title">Remove player</string>
+    <string name="kick_player_confirmation_message">Are you sure you want to remove %1$s?</string>
 </resources>

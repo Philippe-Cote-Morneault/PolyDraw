@@ -29,4 +29,5 @@ interface ActiveMatchView {
     fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean)
     fun setCanvasMessage(message: String)
     fun showCanvasMessageView(show: Boolean)
+    fun onBackButtonPressed()
 }

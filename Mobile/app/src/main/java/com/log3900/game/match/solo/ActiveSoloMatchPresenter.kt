@@ -22,7 +22,8 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         soloMatchManager = matchManager as SoloMatchManager
         this.activeSoloMatchView = activeMatchView as ActiveSoloMatchView
 
-        activeSoloMatchView.setRemainingLives(3)
+        activeSoloMatchView.setScore("Score: 0")
+        activeSoloMatchView.setRemainingLives(soloMatchManager.getCurrentMatch().lives)
         activeSoloMatchView.enableHintButton(true)
 
         matchManager.notifyReadyToPlay()
@@ -31,6 +32,7 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {
         super.onMatchSynchronisation(synchronisation)
         activeSoloMatchView?.setRemainingLives(synchronisation.lives!!)
+        activeSoloMatchView?.setScore("Score: " + synchronisation.players[0].second)
     }
 
     override fun onGuessedWordWrong() {
