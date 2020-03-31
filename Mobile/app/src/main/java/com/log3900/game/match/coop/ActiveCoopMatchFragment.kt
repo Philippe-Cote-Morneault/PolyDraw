@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
 
     // UI
     private lateinit var teamScoreTextView: TextView
+    private lateinit var teamScoreChangedTextView: TextView
     private lateinit var remainingLivesContainer: LinearLayout
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
     protected lateinit var teamPlayersRecyclerView: RecyclerView
@@ -54,6 +56,7 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
         super.setupToolbar(rootView)
 
         teamScoreTextView = toolbar.findViewById(R.id.toolbar_active_coop_match_text_view_team_score)
+        teamScoreChangedTextView = toolbar.findViewById(R.id.toolbar_active_coop_match_text_view_score_changed)
         remainingLivesContainer = toolbar.findViewById(R.id.toolbar_active_coop_match_container_lives)
     }
 
@@ -152,6 +155,35 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
 
         animatorSet.start()
     }
+
+    override fun showScoreChangedAnimation(scoreChangedValue: String, isPositive: Boolean) {
+        if (isPositive) {
+            teamScoreChangedTextView.setTextColor(Color.GREEN)
+        } else {
+            teamScoreChangedTextView.setTextColor(Color.RED)
+        }
+
+        teamScoreChangedTextView.text = scoreChangedValue
+        teamScoreChangedTextView.bringToFront()
+
+        val scaleUpAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            teamScoreChangedTextView,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 2f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 2f)
+        )
+        scaleUpAnimator.duration = 2000
+
+        val alphaChangeAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            teamScoreChangedTextView,
+            PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
+        )
+        alphaChangeAnimator.repeatCount = 1
+        alphaChangeAnimator.repeatMode = ObjectAnimator.REVERSE
+        alphaChangeAnimator.duration = 1000
+        alphaChangeAnimator.start()
+        scaleUpAnimator.start()
+    }
+
 
     override fun onDestroy() {
         activeCoopMatchPresenter = null

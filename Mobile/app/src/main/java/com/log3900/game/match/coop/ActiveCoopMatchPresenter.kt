@@ -1,5 +1,6 @@
 package com.log3900.game.match.coop
 
+import android.os.Handler
 import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
@@ -38,6 +39,14 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
         super.onGuessedWordWrong()
     }
 
+    override fun onRoundEnded(roundEnded: RoundEnded) {
+        super.onRoundEnded(roundEnded)
+
+        roundEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points, it.newPoints)
+        }
+    }
+
     private fun onCheckpoint(checkPoint: CheckPoint) {
         var formattedBonusTime = "+"
 
@@ -49,6 +58,21 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
         changeRemainingTime(checkPoint.totalTime)
 
         activeCoopMatchView?.showRemainingTimeChangedAnimation(formattedBonusTime, checkPoint.bonus > 0)
+    }
+
+    private fun updatePlayerScore(playerID: UUID, newScore: Int, variation: Int) {
+        if (variation == 0) {
+            return
+        }
+
+        var formattedScoreChange = "+"
+        if (variation < 0) {
+            formattedScoreChange = "-"
+        }
+
+        formattedScoreChange += variation
+
+        activeCoopMatchView?.showScoreChangedAnimation(formattedScoreChange, variation > 0)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
