@@ -38,12 +38,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/disconnection_title"
+        android:textColor="@color/color_on_background"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/color_on_background"
-        app:layout_constraintTop_toBottomOf="@id/connection_history_title"
+        app:layout_constraintEnd_toStartOf="@id/time_played_title"
+        app:layout_constraintHorizontal_bias="0.62"
         app:layout_constraintStart_toEndOf="@id/connection_title"
-        app:layout_constraintEnd_toStartOf="@id/time_played_title"/>
+        app:layout_constraintTop_toBottomOf="@id/connection_history_title" />
 
     <TextView
         android:id="@+id/time_played_title"
