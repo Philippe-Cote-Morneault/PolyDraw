@@ -5,16 +5,25 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.log3900.MainApplication
 import com.log3900.R
+import com.log3900.session.MonitoringService
+import com.log3900.socket.SocketService
 
 
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MainApplication.instance.startService(SocketService::class.java)
+        MainApplication.instance.startService(MonitoringService::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         createLoginFragment()
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     override fun onBackPressed() {

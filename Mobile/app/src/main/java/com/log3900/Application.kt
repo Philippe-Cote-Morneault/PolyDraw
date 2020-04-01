@@ -21,9 +21,7 @@ class MainApplication : Application() {
         super.onCreate()
 
         instance = this
-
-        startService(SocketService::class.java)
-        startService(MonitoringService::class.java)
+        
     }
 
     fun startFragment(destinationID: Int, menuItem: MenuItem?, keepBackstack: Boolean) {
