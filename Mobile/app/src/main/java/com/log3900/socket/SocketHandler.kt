@@ -43,7 +43,7 @@ object SocketHandler {
 
     fun connect() {
         socket = Socket()
-        socket.connect(InetSocketAddress("log3900.fsae.polymtl.ca", 5011), 10000)
+        socket.connect(InetSocketAddress("log3900-203.canadacentral.cloudapp.azure.com", 5001), 10000)
         inputStream = DataInputStream(socket.getInputStream())
         outputStream = DataOutputStream(socket.getOutputStream())
         state.set(State.CONNECTED)
