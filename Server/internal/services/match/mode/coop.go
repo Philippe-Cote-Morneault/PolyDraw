@@ -164,6 +164,7 @@ func (c *Coop) GameLoop() {
 	} else {
 		log.Printf("[Match] [Coop] -> The word was found, Match: %s", c.info.ID)
 	}
+	c.receivingGuesses.UnSet()
 
 	c.receiving.Lock()
 	if c.isRunning { //Do not send the message at the end of the game.
