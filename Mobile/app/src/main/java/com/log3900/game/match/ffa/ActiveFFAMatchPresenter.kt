@@ -26,6 +26,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
         activeFFAMatchView.setPlayerScores(matchManager.getPlayerScores())
         activeFFAMatchView.enableHintButton(false)
+        activeFFAMatchView.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " 1/${FFAMatchManager.getCurrentMatch().laps}")
 
         matchManager.notifyReadyToPlay()
     }
@@ -33,7 +34,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {
         super.onMatchSynchronisation(synchronisation)
         val totalRounds = FFAMatchManager.getCurrentMatch().laps
-        activeFFAMatchView?.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${totalRounds}")
+        activeFFAMatchView?.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${synchronisation.lapTotal}")
         matchManager.getPlayerScores().forEach { t, u ->
             if (!playerScores.containsKey(t)) {
                 playerScores[t] = u

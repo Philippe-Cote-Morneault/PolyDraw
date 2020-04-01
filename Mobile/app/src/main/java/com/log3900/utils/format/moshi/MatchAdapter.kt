@@ -14,7 +14,6 @@ import kotlin.collections.ArrayList
 object MatchAdapter {
     @FromJson
     fun fromJson(matchJson: JsonObject): Match {
-        Log.d("POTATO", "Convertin match $matchJson")
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
         val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
@@ -26,8 +25,8 @@ object MatchAdapter {
                     players,
                     matchType,
                     timeImage,
-                    matchJson.get("Laps").asInt,
-                    lives
+                    lives,
+                    matchJson.get("Laps").asInt
                 )
             }
             MatchMode.COOP -> {
@@ -47,14 +46,6 @@ object MatchAdapter {
                 )
             }
         }
-
-        return FFAMatch(
-            players,
-            matchType,
-            timeImage,
-            0,
-            0
-        )
     }
 
     fun jsonArrayToPlayers(ids: JsonArray): ArrayList<Player> {
