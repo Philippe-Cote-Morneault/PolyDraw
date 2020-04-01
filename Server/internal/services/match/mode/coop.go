@@ -35,8 +35,10 @@ type Coop struct {
 
 	gameTime              int64
 	checkPointTime        int64
+	minimumBonus          int
 	maximumCheckPointTime int64
 	lives                 int
+	wordFound             bool
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -57,6 +59,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
 	c.curLap = 1
+	c.wordFound = false
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
@@ -163,12 +166,14 @@ func (c *Coop) GameLoop() {
 	}
 
 	c.receiving.Lock()
-	timeUpMessage := socket.RawMessage{}
-	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
-		Type: 1,
-		Word: c.currentWord,
-	})
-	c.broadcast(&timeUpMessage)
+	if c.isRunning { //Do not send the message at the end of the game.
+		timeUpMessage := socket.RawMessage{}
+		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+			Type: 1,
+			Word: c.currentWord,
+		})
+		c.broadcast(&timeUpMessage)
+	}
 
 	//End of round
 	if c.realPlayers <= 0 {
@@ -187,6 +192,7 @@ func (c *Coop) GameLoop() {
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.commonScore.reset()
 	c.currentWord = ""
+	c.wordFound = false
 
 	c.checkPointTime += 5000 //Time for the sleep
 	c.receiving.Unlock()
@@ -254,15 +260,16 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 		if c.receivingGuesses.IsSet() {
 			imageDuration := time.Now().Sub(c.timeStartImage)
 			bonus := c.timeImage - imageDuration.Milliseconds()
+			c.wordFound = true
 
 			pointsForWord := 0
 			if bonus > 0 {
-				c.checkPointTime += bonus
 				pointsForWord = 100
 			} else {
 				pointsForWord = 50
-				bonus = 0
+				bonus = int64(c.minimumBonus)
 			}
+			c.checkPointTime += bonus
 
 			gameDuration := time.Now().Sub(c.timeStart)
 			remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
@@ -531,21 +538,25 @@ func (c *Coop) computeDifficulty() {
 		c.gameTime = 60
 		c.timeImage = 15
 		c.penalty = 10
+		c.minimumBonus = 5
 	case 1:
 		c.lives = 2
 		c.gameTime = 45
 		c.timeImage = 10
 		c.penalty = 15
+		c.minimumBonus = 4
 	case 2:
 		c.lives = 1
 		c.gameTime = 30
 		c.timeImage = 10
 		c.penalty = 20
+		c.minimumBonus = 2
 	}
 	c.chances = c.lives
 	c.gameTime *= 1000
 	c.timeImage *= 1000
 	c.penalty *= 1000
+	c.minimumBonus *= 1000
 }
 
 //syncPlayers used to send all the sync to all the players
@@ -563,16 +574,20 @@ func (c *Coop) syncPlayers() {
 			players[i].Points = c.commonScore.total
 		}
 	}
-	checkPointTime := c.checkPointTime
 	lives := c.lives
 
 	message := socket.RawMessage{}
 	gameDuration := time.Now().Sub(c.timeStart)
+	timeRemaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
+	if timeRemaining < 0 {
+		timeRemaining = 0
+	}
+
 	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
 		Players:  players,
 		Laps:     c.curLap,
 		LapTotal: 0,
-		Time:     c.gameTime - gameDuration.Milliseconds() + checkPointTime,
+		Time:     timeRemaining,
 		Lives:    lives,
 	})
 	c.broadcast(&message)
@@ -648,6 +663,7 @@ func (c *Coop) sendRoundSummary() {
 		Players:      playersDetails,
 		Achievements: nil,
 		Word:         c.currentWord,
+		Guessed:      c.wordFound,
 	})
 	c.broadcast(&roundEnd)
 }
