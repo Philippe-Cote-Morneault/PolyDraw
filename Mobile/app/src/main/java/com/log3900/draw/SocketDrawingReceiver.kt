@@ -9,6 +9,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.*
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class SocketDrawingReceiver(private val drawView: DrawViewBase) {
     private val socketService: SocketService = SocketService.instance!!
@@ -61,7 +63,8 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             withContext(Dispatchers.Default) {
                 strokeMutex.withLock {
                     val strokeInfo = BytesToStrokeConverter.unpackStrokeInfo(data)
-                    drawStrokes(strokeInfo)
+                    previewDrawStrokes(strokeInfo)
+//                    drawStrokes(strokeInfo)
                 }
             }
         }
@@ -79,6 +82,34 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             drawView.drawMove(point)
         }
         drawView.drawEnd()
+    }
+
+    private suspend fun previewDrawStrokes(strokeInfo: StrokeInfo) {
+        val points = strokeInfo.points
+        if (points.isEmpty())
+            return
+
+        val tmpPoints = mutableListOf(points.first())
+        for (i in 0 until points.size - 1) {
+            if (calculateDistance(points[i], points[i + 1]) < 20) {
+                tmpPoints.add(points[i + 1])
+            } else {
+                drawStrokes(strokeInfo.copy(strokeID = UUID.randomUUID(), points = tmpPoints))
+                tmpPoints.clear()
+                tmpPoints.add(points[i + 1])
+            }
+        }
+
+        if (tmpPoints.size > 0) {
+            drawStrokes(strokeInfo.copy(strokeID = UUID.randomUUID(), points = tmpPoints))
+        }
+    }
+
+    private fun calculateDistance(point1: DrawPoint, point2: DrawPoint): Float {
+        val xSquare = (point1.x - point2.x).pow(2)
+        val ySquare = (point1.y - point2.y).pow(2)
+
+        return sqrt(xSquare + ySquare)
     }
 
     fun onStrokeRemove(data: ByteArray) {

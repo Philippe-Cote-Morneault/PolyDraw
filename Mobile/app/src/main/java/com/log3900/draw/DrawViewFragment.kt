@@ -259,7 +259,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         } else {
             setDrawToolsVisibility(View.GONE)
         }
-
+        Log.d("DRAW_CANVAS", drawingID.toString())
         drawView.enableCanDraw(canDraw, drawingID)
     }
 
