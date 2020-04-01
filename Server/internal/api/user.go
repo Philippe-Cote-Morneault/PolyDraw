@@ -2,12 +2,13 @@ package api
 
 import (
 	"encoding/json"
+	"net/http"
+	"strings"
+
 	"gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
-	"net/http"
-	"strings"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -25,12 +26,14 @@ type singleUserResponse struct {
 	PictureID int
 	CreatedAt int64
 	UpdatedAt int64
+	isCPU     bool
 }
 
 type socketUserChange struct {
 	UserID    string
 	NewName   string
 	PictureID int
+	isCPU     bool
 }
 
 // GetUsers returns all users
@@ -53,6 +56,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 			Username:  user.Username,
 			Email:     user.Email,
 			PictureID: user.PictureID,
+			isCPU:     user.IsCPU,
 			CreatedAt: user.CreatedAt.Unix(),
 			UpdatedAt: user.CreatedAt.Unix(),
 		})
@@ -149,6 +153,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 					UserID:    user.ID.String(),
 					PictureID: user.PictureID,
 					NewName:   request.Username,
+					isCPU:     user.IsCPU,
 				})
 				messenger.BroadcastAll(message)
 			}
