@@ -3,6 +3,8 @@ package drawing
 import (
 	"log"
 
+	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	service "gitlab.com/jigsawcorp/log3900/internal/services"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
@@ -26,6 +28,7 @@ type Drawing struct {
 //Init the drawing service
 func (d *Drawing) Init() {
 	d.shutdown = make(chan bool)
+	pendingPreviews = make(map[uuid.UUID]*abool.AtomicBool)
 	d.subscribe()
 
 	d.router.Init()
