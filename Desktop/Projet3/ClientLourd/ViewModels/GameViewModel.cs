@@ -211,11 +211,14 @@ namespace ClientLourd.ViewModels
             }
             else
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                if (Mode == GameModes.FFA || HealthPoint > 1)
                 {
-                    OnNewCanavasMessage($"{CurrentDictionary["TryAgain"]}");
-                    SoundService.PlayWordGuessedWrong();
-                });
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        OnNewCanavasMessage($"{CurrentDictionary["TryAgain"]}");
+                        SoundService.PlayWordGuessedWrong();
+                    });
+                }
             }
         }
 

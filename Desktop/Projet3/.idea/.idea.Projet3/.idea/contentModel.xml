@@ -206,9 +206,11 @@
             <e p="LanguageInverseConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
+            <e p="ModeAndIsCPUToVisibility.cs" t="Include" />
             <e p="ModeToVisibilityConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
+            <e p="NumberOfHeartsToVisibilityConverter.cs" t="Include" />
             <e p="NumberToPlaceholder.cs" t="Include" />
             <e p="PlayerToPositionConverter.cs" t="Include" />
             <e p="PointsToColorConverter.cs" t="Include" />
