@@ -408,7 +408,7 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 //Close method used to force close the current game
 func (c *Coop) Close() {
 	c.receiving.Lock()
-	log.Printf("[Match] [Coop] Force match shutdown, the game will finish the last lap")
+	log.Printf("[Match] [Coop] Force match shutdown, the game will close")
 	if c.isRunning {
 		close(c.closingTimeKeeper)
 	}
@@ -416,6 +416,7 @@ func (c *Coop) Close() {
 		c.cancelWait()
 		c.isRunning = false
 	}
+	duration := time.Now().Sub(c.timeStart).Milliseconds()
 	c.receiving.Unlock()
 
 	c.broadcast(&socket.RawMessage{
@@ -423,6 +424,7 @@ func (c *Coop) Close() {
 		Length:      0,
 		Bytes:       nil,
 	})
+	c.sendGameEndMessage(duration)
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }
@@ -484,7 +486,7 @@ func (c *Coop) GetPlayers() []match2.Player {
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
 	c.receiving.Lock()
-
+	duration := time.Now().Sub(c.timeStart).Milliseconds()
 	c.isRunning = false
 	if c.cancelWait != nil {
 		c.receiving.Unlock()
@@ -503,13 +505,15 @@ func (c *Coop) finish() {
 		Word: c.currentWord,
 	})
 	c.broadcast(&timeUpMessage)
+	c.sendGameEndMessage(duration)
+
 	log.Printf("[Match] [Coop] Match is finished!, match %s", c.info.ID)
 
 	c.receiving.Unlock()
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 	// cbroadcast.Broadcast(stats.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
-	// 	MatchDuration: c.gameTime,
+	// 	MatchDuration: duration,
 	// 	WinnerName:    winner.Username,
 	// 	MatchType:     1}})
 }
@@ -642,6 +646,34 @@ func (c *Coop) applyPenalty() {
 	c.receiving.Unlock()
 
 	c.syncPlayers()
+}
+
+//sendGameEndMessage used to broadcast the end of the game
+func (c *Coop) sendGameEndMessage(duration int64) {
+	playersDetails := make([]PlayersData, len(c.players))
+	for i := range c.players {
+		player := &c.players[i]
+		var points int
+		if !player.IsCPU {
+			points = c.commonScore.total
+		} else {
+			points = 0
+		}
+		playersDetails[i] = PlayersData{
+			UserID:   player.userID.String(),
+			Username: player.Username,
+			IsCPU:    player.IsCPU,
+			Points:   points,
+		}
+	}
+	message := socket.RawMessage{}
+	message.ParseMessagePack(byte(socket.MessageType.GameEnded), GameEnded{
+		Players:    playersDetails,
+		Winner:     uuid.Nil.String(),
+		WinnerName: "",
+		Time:       duration,
+	})
+	c.broadcast(&message)
 }
 
 //sendRoundSummary used to send a summary of the round
