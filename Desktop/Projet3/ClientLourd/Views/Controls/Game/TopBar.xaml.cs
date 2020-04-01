@@ -35,9 +35,18 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.MatchCheckPoint += SocketClientMatchCheckPoint;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
             SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
-        }   
-        
-        
+            SocketClient.AreYouReady += SocketClientOnAreYouReady;
+        }
+
+        private void SocketClientOnAreYouReady(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() => 
+            {
+                AnimateHeartsReset(true);
+            });
+            
+
+        }
 
         private void SocketClientCoopWordGuessed(object source, EventArgs args)
         {
@@ -130,25 +139,26 @@ namespace ClientLourd.Views.Controls.Game
 
             if (GameViewModel.Mode == GameModes.Coop || GameViewModel.Mode == GameModes.Solo)
             {
-                if (GameViewModel.HealthPoint != 3)
+                if (GameViewModel.HealthPoint != GameViewModel.HeartsTotal)
                 {
-                    GameViewModel.HealthPoint = 3;
+                    GameViewModel.HealthPoint = GameViewModel.HeartsTotal;
+
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        AnimateHeartsReset();
+                        AnimateHeartsReset(false);
                     });
                 }
             }
         }
 
-        private void AnimateHeartsReset()
+        private void AnimateHeartsReset(bool quickly)
         {
             
             foreach(UIElement el in HeartsContainer.Children)
             {
                 if ((((el.RenderTransform as TransformGroup).Children[0]) as ScaleTransform).ScaleX < 1)
                 {
-                    Storyboard sb = (Storyboard)FindResource("HealthReset");
+                    Storyboard sb = (quickly) ? (Storyboard)FindResource("HealthResetQuick") : (Storyboard)FindResource("HealthReset");
                     foreach (DependencyObject animation in sb.Children)
                     {
                         Storyboard.SetTarget(animation, el);
@@ -158,6 +168,10 @@ namespace ClientLourd.Views.Controls.Game
                 
             }
         }
+
+
+
+
         private void SocketClientMatchCheckPoint(object sender, EventArgs args)
         {
             var e = (MatchEventArgs)args;

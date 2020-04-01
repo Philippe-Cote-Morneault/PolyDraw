@@ -41,6 +41,8 @@ namespace ClientLourd.ViewModels
         private string _canvasMessage;
         private GameModes _mode;
         private bool _roundStarted;
+        private int _nHeartsTotal;
+
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
 
         public GameViewModel()
@@ -217,8 +219,21 @@ namespace ClientLourd.ViewModels
             }
         }
 
+        public int HeartsTotal
+        {
+            get => _nHeartsTotal;
+            set
+            {
+                _nHeartsTotal = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         private void SocketClientOnAreYouReady(object source, EventArgs args)
         {
+            var e = (MatchEventArgs)args;
+            HealthPoint = e.Lives;
+            HeartsTotal = e.Lives;
             PrepareMatch();
         }
 
@@ -475,14 +490,7 @@ namespace ClientLourd.ViewModels
         {
             Word = "";
             Mode = Lobby.Mode;
-            if (_mode == GameModes.FFA)
-            {
 
-            }
-            else
-            {
-                HealthPoint = 3;
-            }
             Application.Current.Dispatcher.Invoke(() =>
             {
                 Players = Lobby.Players;
