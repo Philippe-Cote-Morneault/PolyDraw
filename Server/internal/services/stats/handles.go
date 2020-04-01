@@ -60,7 +60,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 	model.DB().Model(&model.MatchPlayed{}).Where("user_id = ?", userID).Find(&matches)
 
 	if len(matches) == 0 {
-		return DataStats{}, "No matches found with this userID"
+		return DataStats{AvgGameDuration: 0, GamesPlayed: 0, TimePlayed: 0, WinRatio: 0, BestScoreSolo: 0}, ""
 	}
 
 	gamesPlayed := int64(len(matches))
