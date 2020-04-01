@@ -33,7 +33,7 @@
         android:layout_height="match_parent"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:background="?attr/colorSecondary"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:text="Hint"
         android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
