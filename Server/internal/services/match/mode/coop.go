@@ -165,12 +165,14 @@ func (c *Coop) GameLoop() {
 	}
 
 	c.receiving.Lock()
-	timeUpMessage := socket.RawMessage{}
-	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
-		Type: 1,
-		Word: c.currentWord,
-	})
-	c.broadcast(&timeUpMessage)
+	if c.isRunning { //Do not send the message at the end of the game.
+		timeUpMessage := socket.RawMessage{}
+		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+			Type: 1,
+			Word: c.currentWord,
+		})
+		c.broadcast(&timeUpMessage)
+	}
 
 	//End of round
 	if c.realPlayers <= 0 {
