@@ -143,7 +143,7 @@ object SocketHandler {
         try {
             val typeByte = inputStream.readByte()
 
-            val length = inputStream.readShort()
+            val length = inputStream.readUnsignedShort()
 
             var values = ByteArray(length.toInt())
             var totalReadBytes = 0
