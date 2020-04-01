@@ -60,7 +60,6 @@ namespace ClientLourd.ViewModels
             SocketClient.MatchStarted += SocketClientOnMatchStarted;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
-            SocketClient.MatchCheckPoint += SocketClientOnMatchCheckPoint;
             SocketClient.AreYouReady += SocketClientOnAreYouReady;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.PlayerGuessedTheWord += SocketClientOnPlayerGuessedTheWord;
@@ -254,10 +253,6 @@ namespace ClientLourd.ViewModels
             PrepareMatch();
         }
 
-        private void SocketClientOnMatchCheckPoint(object source, EventArgs args)
-        {
-            //TODO
-        }
 
         private void SocketClientOnMatchTimesUp(object source, EventArgs args)
         {
@@ -267,9 +262,6 @@ namespace ClientLourd.ViewModels
             {
                 Time = DateTime.MinValue;
 
-            }
-            else if(e.Type == 2)
-            {
             }
             CanStillGuess = false;
         }

@@ -105,6 +105,7 @@
     <system:String x:Key="Guess">Guess</system:String>
     <system:String x:Key="TypeGuess">Type your guess here</system:String>
     <system:String x:Key="TeamateWrongGuess">Your teamate has guessed incorrectly!</system:String>
+    <system:String x:Key="CoopSoloEnding">The game is over ! Your score:</system:String>
 
     <!-- TopBar -->
     <system:String x:Key="TeamScore">Team score: </system:String>

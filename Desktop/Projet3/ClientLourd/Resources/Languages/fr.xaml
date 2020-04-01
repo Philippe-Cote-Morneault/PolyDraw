@@ -103,6 +103,7 @@
     <system:String x:Key="Guess">Deviner</system:String>
     <system:String x:Key="TypeGuess">Devinez ici</system:String>
     <system:String x:Key="TeamateWrongGuess">Votre coéquipier a deviné incorrectement!</system:String>
+    <system:String x:Key="CoopSoloEnding">La partie est terminée ! Ton score est :</system:String>
 
     <!-- TopBar -->
     <system:String x:Key="TeamScore">Score de l'équipe: </system:String>

@@ -118,5 +118,10 @@ namespace ClientLourd.Services.SocketService
         {
             get => _data["BotID"];
         }
+
+        public bool Guessed
+        {
+            get => _data["Guessed"];
+        }
     }
 }

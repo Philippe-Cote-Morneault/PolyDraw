@@ -13,6 +13,7 @@ using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Utilities.Constants;
+using ClientLourd.Utilities.Enums;
 using ClientLourd.ViewModels;
 
 namespace ClientLourd.Views.Controls.Game
@@ -80,21 +81,28 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
-            Task.Run(() =>
+            var e = (MatchEventArgs) args;
+            if (ViewModel.Mode == GameModes.FFA)
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Task.Run(() =>
                 {
-                    LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, false));
-                    LeaderBoardGrid.Visibility = Visibility.Visible;
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LeaderBoardGrid.Children.Add(new LeaderBoard(e, false));
+                        LeaderBoardGrid.Visibility = Visibility.Visible;
+                    });
+                    Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LeaderBoardGrid.Children.Clear();
+                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                    });
                 });
-                Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    LeaderBoardGrid.Children.Clear();
-                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
-                });
-            });
-
+            }
+            else if (!e.Guessed)
+            {
+                Application.Current.Dispatcher.Invoke(() => { ShowCanvasMessage($"{ViewModel.CurrentDictionary["WordWas"]} {e.Word}"); });
+            }
     }
 
 
@@ -328,6 +336,27 @@ namespace ClientLourd.Views.Controls.Game
                         sb.Begin();
                     });
                 });
+            }else if (ViewModel.Mode != GameModes.FFA)
+            {
+                //Coop and solo game end
+                Task.Run(() =>
+                {
+                    StartConfetti();
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ShowCanvasMessage($"{(string)ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}");
+                        LeaderBoardGrid.Visibility = Visibility.Visible;
+                    });
+                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LeaderBoardGrid.Children.Clear();
+                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                    });
+                    StopConfetti();
+                });
+
+                
             }
         }
 
