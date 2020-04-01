@@ -2,7 +2,6 @@ stages:
   - build
   - lint
   - package
-  - deploy
 
 Server lint:
   image: registry.gitlab.com/jigsawcorp/log3900/server-ci
@@ -69,33 +68,5 @@ Server package PROD:
     refs:
       - master
       - release
-    changes:
-      - Server/**/*
-
-Server deploy DEV:
-  tags:
-    - shell
-  stage: deploy
-  script:
-    - cd Server && make deploy
-    - curl "http://172.20.1.31/cgi-bin/deploy-dev.sh?key=$TOKEN_DEV"
-  only:
-    refs:
-      - dev-server
-    changes:
-      - Server/**/*
-
-Server deploy PROD:
-  tags:
-    - shell
-  stage: deploy
-  script:
-    - export RELEASE=True
-    - cd Server && make deploy
-    - curl "http://172.20.1.31/cgi-bin/deploy-prod.sh?key=$TOKEN_PROD"
-  only:
-    refs:
-      - release
-      - master
     changes:
       - Server/**/*
