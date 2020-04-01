@@ -14,7 +14,6 @@ type Game struct {
 
 //GameHint represents a game hint
 type GameHint struct {
-	Game   Game      `gorm:"primary_key;auto_increment:false"`
 	GameID uuid.UUID `gorm:"primary_key;auto_increment:false"`
 	Hint   string    `gorm:"primary_key;auto_increment:false"`
 }
