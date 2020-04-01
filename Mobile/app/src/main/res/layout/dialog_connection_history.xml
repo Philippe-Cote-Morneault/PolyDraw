@@ -58,24 +58,23 @@
         app:layout_constraintTop_toBottomOf="@id/connection_history_title"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_connections"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:padding="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/close_dialog_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/connection_title"
-            app:layout_constraintVertical_bias="0.0"
-        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_connections"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="10dp"
+        android:paddingBottom="70dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/close_dialog_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connection_title" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/close_dialog_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/close"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
