@@ -77,6 +77,7 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         formattedScoreChange += variation
 
         activeSoloMatchView?.showScoreChangedAnimation(formattedScoreChange, variation > 0)
+        activeSoloMatchView?.setScore("Score: " + newScore)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
