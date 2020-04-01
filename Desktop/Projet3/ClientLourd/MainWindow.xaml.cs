@@ -94,7 +94,7 @@ namespace ClientLourd
         {
             ((ViewModelBase) DataContext).AfterLogOut();
             ReturnTheChat();
-            DevConfigButton.IsChecked = true;
+            ProdConfigButton.IsChecked = true;
         }
 
 

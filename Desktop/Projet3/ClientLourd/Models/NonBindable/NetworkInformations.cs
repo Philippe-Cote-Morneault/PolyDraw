@@ -7,7 +7,8 @@ namespace ClientLourd.Models.NonBindable
     public class NetworkInformations 
     {
             
-        public const string HOST_NAME = "log3900.fsae.polymtl.ca";
+        //public const string HOST_NAME = "log3900.fsae.polymtl.ca";
+        public const string HOST_NAME = "log3900-203.canadacentral.cloudapp.azure.com";
         public const int DEV_SOCKET_PORT = 5011;
         public const int DEV_REST_PORT = 5010;
         public const int PROD_SOCKET_PORT = 5001;
@@ -17,8 +18,8 @@ namespace ClientLourd.Models.NonBindable
 
         public NetworkInformations()
         {
-            //Dev as default
-            Config = 1;
+            //prod as default
+            Config = 0;
 
         }
 
