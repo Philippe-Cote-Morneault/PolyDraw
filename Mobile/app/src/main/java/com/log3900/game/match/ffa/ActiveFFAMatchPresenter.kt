@@ -137,10 +137,8 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
         formattedScoreChange += variation
 
-        Handler().postDelayed({
-            val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
-            activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
-        }, 1000)
+        val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
+        activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
