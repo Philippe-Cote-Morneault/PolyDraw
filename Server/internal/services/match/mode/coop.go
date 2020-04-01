@@ -574,16 +574,20 @@ func (c *Coop) syncPlayers() {
 			players[i].Points = c.commonScore.total
 		}
 	}
-	checkPointTime := c.checkPointTime
 	lives := c.lives
 
 	message := socket.RawMessage{}
 	gameDuration := time.Now().Sub(c.timeStart)
+	timeRemaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
+	if timeRemaining < 0 {
+		timeRemaining = 0
+	}
+
 	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
 		Players:  players,
 		Laps:     c.curLap,
 		LapTotal: 0,
-		Time:     c.gameTime - gameDuration.Milliseconds() + checkPointTime,
+		Time:     timeRemaining,
 		Lives:    lives,
 	})
 	c.broadcast(&message)
