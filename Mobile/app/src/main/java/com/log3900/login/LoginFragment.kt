@@ -156,8 +156,7 @@ class LoginFragment : Fragment(), LoginView {
         MaterialAlertDialogBuilder(activity)
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton("Retry", positiveButtonClickListener) //{ _, _ -> onLoginButtonClick() }
-            .setNegativeButton("Cancel", negativeButtonClickListener)
+            .setPositiveButton("OK", positiveButtonClickListener)
             .setCancelable(false)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
