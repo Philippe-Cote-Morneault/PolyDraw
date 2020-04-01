@@ -122,11 +122,12 @@ func (b *base) waitForPlayers() bool {
 	cnt, cancel = context.WithTimeout(cnt, time.Second*5)
 	if b.readyMatch.Acquire(cnt, nbConnections) != nil {
 		cancel()
-		b.broadcast(&socket.RawMessage{
-			MessageType: byte(socket.MessageType.GameCancel),
-			Length:      0,
-			Bytes:       nil,
+
+		cancelMessage := socket.RawMessage{}
+		cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
+			Type: 1,
 		})
+		b.broadcast(&cancelMessage)
 		cbroadcast.Broadcast(match2.BGameEnds, b.info.ID)
 		return false
 	}

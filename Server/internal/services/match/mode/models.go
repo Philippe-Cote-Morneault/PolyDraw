@@ -124,3 +124,10 @@ type GuessFail struct {
 	UserID   string
 	Lives    int
 }
+
+//GameCancel message used to notify the client that the game has been cancelled
+//type 1 = ready fail
+//type 2 = not enough player in game
+type GameCancel struct {
+	Type int
+}

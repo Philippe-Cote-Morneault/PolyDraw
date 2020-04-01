@@ -395,11 +395,12 @@ func (f *FFA) Close() {
 		f.cancelWait()
 	}
 
-	f.broadcast(&socket.RawMessage{
-		MessageType: byte(socket.MessageType.GameCancel),
-		Length:      0,
-		Bytes:       nil,
+	cancelMessage := socket.RawMessage{}
+	cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
+		Type: 2,
 	})
+	f.broadcast(&cancelMessage)
+
 	f.receiving.Unlock()
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())

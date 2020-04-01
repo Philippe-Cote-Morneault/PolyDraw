@@ -417,14 +417,16 @@ func (c *Coop) Close() {
 		c.isRunning = false
 	}
 	duration := time.Now().Sub(c.timeStart).Milliseconds()
+
+	cancelMessage := socket.RawMessage{}
+	cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
+		Type: 2,
+	})
+	c.broadcast(&cancelMessage)
+
+	c.sendGameEndMessage(duration)
 	c.receiving.Unlock()
 
-	c.broadcast(&socket.RawMessage{
-		MessageType: byte(socket.MessageType.GameCancel),
-		Length:      0,
-		Bytes:       nil,
-	})
-	c.sendGameEndMessage(duration)
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }
