@@ -215,8 +215,22 @@ namespace ClientLourd.ViewModels
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
+                        CanStillGuess = false;
                         OnNewCanavasMessage($"{CurrentDictionary["TryAgain"]}");
                         SoundService.PlayWordGuessedWrong();
+                    });
+                    Task.Delay(2000).ContinueWith((t) =>
+                    {
+                        if (_roundStarted)
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                CanStillGuess = true;
+                                //Refresh command
+                                CommandManager.InvalidateRequerySuggested();
+                            });
+                        }
+
                     });
                 }
             }
@@ -253,6 +267,9 @@ namespace ClientLourd.ViewModels
             {
                 Time = DateTime.MinValue;
 
+            }
+            else if(e.Type == 2)
+            {
             }
             CanStillGuess = false;
         }
@@ -430,7 +447,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _askHintCommand ??
-                       (_askHintCommand = new RelayCommand<object>(channel => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint)), (c) => CanStillGuess));
+                       (_askHintCommand = new RelayCommand<object>(p => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint)), (p) => CanStillGuess));
             }
         }
         
