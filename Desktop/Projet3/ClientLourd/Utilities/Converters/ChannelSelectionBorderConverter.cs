@@ -12,7 +12,11 @@ namespace ClientLourd.Utilities.Converters
         {
             Channel selectedChannel = (Channel)values[0];
             Channel currentChannel = (Channel) values[1];
-            return selectedChannel.ID == currentChannel.ID ? new Thickness(2) : new Thickness(0);
+            if (selectedChannel != null && currentChannel != null)
+            {
+                return selectedChannel.ID == currentChannel.ID ? new Thickness(2) : new Thickness(0);
+            }
+            return new Thickness(0);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

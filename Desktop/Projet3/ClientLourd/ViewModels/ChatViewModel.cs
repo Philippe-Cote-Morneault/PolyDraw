@@ -65,13 +65,16 @@ namespace ClientLourd.ViewModels
         public void OnChatToggle(bool isOpen)
         {
             NotifyPropertyChanged(nameof(NewMessages));
-            if (isOpen)
+            if (SelectedChannel != null)
             {
-                SelectedChannel.IsSelected = true;
-            }
-            else
-            {
-                SelectedChannel.IsSelected = false;
+                if (isOpen)
+                {
+                    SelectedChannel.IsSelected = true;
+                }
+                else
+                {
+                    SelectedChannel.IsSelected = false;
+                }
             }
             
         }
@@ -459,7 +462,7 @@ namespace ClientLourd.ViewModels
             //If the current player is not in the SelectedChannel or if the SelectedChannel have been removed
             if(SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null || !Channels.Contains(SelectedChannel))
             {
-                SelectedChannel = Channels.First(c => c.ID == GLOBAL_CHANNEL_ID);
+                SelectedChannel = Channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
             }
         }
 

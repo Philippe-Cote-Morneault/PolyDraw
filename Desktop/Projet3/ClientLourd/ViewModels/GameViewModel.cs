@@ -505,6 +505,7 @@ namespace ClientLourd.ViewModels
 
             Application.Current.Dispatcher.Invoke(() =>
             {
+                ClearCanvas();
                 Players = Lobby.Players;
                 _stokesReader = new StrokesReader(Editor, SocketClient, ((EditorViewModel)Editor.DataContext).EditorInformation);
                 ChangeCanvasStatus(false);
@@ -576,7 +577,14 @@ namespace ClientLourd.ViewModels
             MatchEventArgs e = (MatchEventArgs)args;
             Application.Current.Dispatcher.Invoke(() => 
             {
-                OnNewCanavasMessage($"{e.Username} {CurrentDictionary["RightGuessCoop"]} {e.Word}.");
+                if (e.UserID == SessionInformations.User.ID)
+                {
+                    OnNewCanavasMessage((string)CurrentDictionary["RightGuessSolo"]);
+                }
+                else
+                {
+                    OnNewCanavasMessage($"{e.Username} {CurrentDictionary["RightGuessCoop"]} {e.Word}.");
+                }
 
             });
         }

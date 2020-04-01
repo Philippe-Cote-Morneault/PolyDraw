@@ -117,6 +117,7 @@
     <system:String x:Key="YourTurnDraw">It is your turn to draw the word</system:String>
     <system:String x:Key="TryAgain">Try again!</system:String>
     <system:String x:Key="RightGuessCoop">has guessed correctly! The word was</system:String>
+    <system:String x:Key="RightGuessSolo">You have guessed correctly!</system:String>
 
     <!--GameStatus -->
     <system:String x:Key="Drawer">Drawer</system:String>
