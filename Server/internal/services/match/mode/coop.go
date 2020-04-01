@@ -650,14 +650,22 @@ func (c *Coop) sendRoundSummary() {
 	playersDetails := make([]PlayersRoundSum, len(c.players))
 	for i := range c.players {
 		player := &c.players[i]
+		var points, newPoints int
+		if !player.IsCPU {
+			points = c.commonScore.total
+			newPoints = c.commonScore.current
+		} else {
+			points = 0
+			newPoints = 0
+		}
 		playersDetails[i] = PlayersRoundSum{
 			PlayersData: PlayersData{
 				UserID:   player.userID.String(),
 				Username: player.Username,
 				IsCPU:    player.IsCPU,
-				Points:   c.commonScore.total,
+				Points:   points,
 			},
-			NewPoints: c.commonScore.current,
+			NewPoints: newPoints,
 		}
 	}
 	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
