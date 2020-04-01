@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import com.log3900.game.match.UI.*
+import com.log3900.shared.ui.ThemeUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 
 
@@ -181,7 +182,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         scaleDown.repeatMode = ObjectAnimator.REVERSE
 
         val anim = ValueAnimator()
-        anim.setIntValues(Color.BLACK, Color.RED)
+        anim.setIntValues(ThemeUtils.resolveAttribute(R.attr.colorOnPrimary), Color.RED)
         anim.setEvaluator(ArgbEvaluator())
         anim.addUpdateListener { valueAnimator -> remainingTimeTextView.setTextColor(valueAnimator.animatedValue as Int) }
         for (drawable in remainingTimeTextView.compoundDrawables) {
