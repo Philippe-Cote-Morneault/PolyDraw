@@ -14,6 +14,7 @@
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:ChannelSelectionToIconConverter x:Key="ChannelSelectionToIconConverter"/>
+        <converter:LongChannelNameConverter x:Key="ChannelNameConverter"/>
         <viewModels:MainViewModel x:Key="MainViewModel" />
     </UserControl.Resources>
     <UserControl.DataContext>
@@ -86,8 +87,14 @@
                                           BorderThickness="0 0 0 1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <materialDesign:PackIcon Kind="{Binding Path=SelectedChannel, Converter={StaticResource ChannelSelectionToIconConverter}}" Height="24" Width="24" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding SelectedChannel.Name}"
-                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource ChannelNameConverter}">
+                                    <Binding Path="SelectedChannel"/>
+                                    <Binding Path="DataContext.CurrentLanguage" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <Grid DockPanel.Dock="Top" Visibility="{Binding ElementName=Control, Path=IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}">

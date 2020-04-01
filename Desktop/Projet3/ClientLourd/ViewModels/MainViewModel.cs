@@ -221,6 +221,11 @@ namespace ClientLourd.ViewModels
 
         private Languages _selectedLanguage;
 
+        public Languages CurrentLanguage
+        {
+            get => _selectedLanguage;
+        }
+
         public string SelectedLanguage
         {
             get
@@ -235,6 +240,7 @@ namespace ClientLourd.ViewModels
                     SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }): new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1}));
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(Languages));
+                    NotifyPropertyChanged(nameof(CurrentLanguage));
                     LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                 }
             }

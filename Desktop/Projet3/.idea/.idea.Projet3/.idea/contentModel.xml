@@ -204,6 +204,7 @@
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LanguageInverseConverter.cs" t="Include" />
+            <e p="LongChannelNameConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
             <e p="ModeAndIsCPUToVisibility.cs" t="Include" />
@@ -215,6 +216,7 @@
             <e p="PlayerToPositionConverter.cs" t="Include" />
             <e p="PointsToColorConverter.cs" t="Include" />
             <e p="SecondsToTimeSpanConverter.cs" t="Include" />
+            <e p="ShortChannelNameConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />

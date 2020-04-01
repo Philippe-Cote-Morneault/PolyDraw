@@ -14,7 +14,8 @@
         <converters:NotificationConverter x:Key="NotificationConverter"/>
         <converters:ChannelSelectionBorderConverter x:Key="ChannelSelectionConverter"/>
         <converters:ChannelSelectionToIconConverter x:Key="ChannelSelectionToIconConverter"/>
-        <converters:StringLengthConverter x:Key="StringLengthConverter"/>
+        <converters:ShortChannelNameConverter x:Key="ShortChannelNameConverter"/>
+        <converters:LongChannelNameConverter x:Key="LongChannelNameConverter"/>
         <converters:ChannelTypeToButtonVisibility x:Key="ChannelTypeToButtonVisibility"/>
     </UserControl.Resources>
     
@@ -83,7 +84,13 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <Border ToolTip="{Binding Name}"  BorderBrush="{StaticResource PrimaryHueLightBrush}">
+                        <Border BorderBrush="{StaticResource PrimaryHueLightBrush}">
+                                <Border.ToolTip>
+                                   <MultiBinding Converter="{StaticResource LongChannelNameConverter}">
+                                       <Binding Path="."/>
+                                       <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.CurrentLanguage"/>
+                                   </MultiBinding> 
+                                </Border.ToolTip>
                             <Border.BorderThickness>
                                 <MultiBinding Converter="{StaticResource ChannelSelectionConverter}">
                                     <Binding ElementName="MainTree" Path="DataContext.SelectedChannel"/>
@@ -108,7 +115,14 @@
                                 </Grid.ContextMenu>
                                 <materialDesign:Badged Grid.Column="0" Badge="{Binding Notification, Converter={StaticResource NotificationConverter}}" Padding="5" Margin="5" HorizontalAlignment="Left" BadgePlacementMode="Left" VerticalAlignment="Center"/> 
                                 <materialDesign:PackIcon Margin="0 0 2 0" VerticalAlignment="Center" Grid.Column="1" Kind="{Binding Path=., Converter={StaticResource ChannelSelectionToIconConverter}}"></materialDesign:PackIcon>
-                                <TextBlock VerticalAlignment="Center" Text="{Binding Name, Converter={StaticResource StringLengthConverter}, ConverterParameter=8}" Grid.Column="2" />
+                                <TextBlock VerticalAlignment="Center"  Grid.Column="2" >
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource ShortChannelNameConverter}" ConverterParameter="8">
+                                            <Binding Path="."></Binding>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.CurrentLanguage"></Binding>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                                 <Button Grid.Column="3"  Visibility="{Binding ., Converter={StaticResource ChannelTypeToButtonVisibility}}"   Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
                                     <materialDesign:PackIcon Kind="MoreHoriz"/>
                                 </Button>
@@ -141,7 +155,13 @@
                 </TreeViewItem.Header>
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                            <Grid ToolTip="{Binding Name}" Name="ParentGrid" Margin="5">
+                            <Grid  Name="ParentGrid" Margin="5">
+                                <Grid.ToolTip>
+                                   <MultiBinding Converter="{StaticResource LongChannelNameConverter}">
+                                       <Binding Path="."/>
+                                       <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.CurrentLanguage"/>
+                                   </MultiBinding> 
+                                </Grid.ToolTip>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -162,7 +182,14 @@
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 <materialDesign:PackIcon VerticalAlignment="Center" Grid.Column="0" Kind="{Binding Path=., Converter={StaticResource ChannelSelectionToIconConverter}}"></materialDesign:PackIcon>
-                                <TextBlock Padding="5" Margin="5" VerticalAlignment="Center" Grid.Column="1" Text="{Binding Name, Converter={StaticResource StringLengthConverter}, ConverterParameter=8}" />
+                                <TextBlock Padding="5" Margin="5" VerticalAlignment="Center" Grid.Column="1">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource ShortChannelNameConverter}" ConverterParameter="8">
+                                            <Binding Path="."></Binding>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.CurrentLanguage"></Binding>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                                 <Button Grid.Column="2" Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding ElementName=ParentGrid}" Click="ButtonBase_OnClick">
                                     <materialDesign:PackIcon Kind="MoreHoriz"/>
                                 </Button>
