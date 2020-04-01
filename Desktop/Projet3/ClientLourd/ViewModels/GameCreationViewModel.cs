@@ -377,13 +377,15 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public bool CancelGame()
+        public async Task<bool> CancelGame()
         {
             try
             {
                 if (!String.IsNullOrWhiteSpace(GameID))
                 {
-                    RestClient.DeleteGame(GameID);
+                    await RestClient.DeleteGame(GameID);
+                    _gameID = "";
+                    NotifyPropertyChanged(nameof(GameID));
                 }
                 return true;
             }

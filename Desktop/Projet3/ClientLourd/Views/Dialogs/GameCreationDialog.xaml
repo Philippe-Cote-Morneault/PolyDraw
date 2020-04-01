@@ -115,23 +115,39 @@
                             <TextBlock FontSize="24" FontWeight="Bold" >
                                 <Run Text="{DynamicResource DrawingWay}"/>
                             </TextBlock>
-                            <ToggleButton
-                                Name="UploadToggle"
-                                Width="40"
-                                Height="40"
-                                IsChecked="{Binding IsUploadModeSelected}"
-                                Style="{StaticResource MaterialDesignActionToggleButton}">
-                              <ToggleButton.Content>
-                                <materialDesign:PackIcon
-                                  Kind="Draw" Height="30" Width="30" />
-                              </ToggleButton.Content>
-                              <materialDesign:ToggleButtonAssist.OnContent>
-                                <materialDesign:PackIcon
-                                  Kind="Image" Height="30" Width="30" />
-                              </materialDesign:ToggleButtonAssist.OnContent>
-                            </ToggleButton>
-                                <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"  Text="{DynamicResource ManualDraw}"/>
-                                <TextBlock FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{DynamicResource ImageUploaded}"/>
+                            <UniformGrid
+                                Columns="2"
+                                Cursor="Hand"
+                                Margin="4">
+                                    <RadioButton
+                                    Style="{StaticResource MaterialDesignTabRadioButton}"
+                                    Margin="4"
+                                    Name="UploadToggle"
+                                    Width="{Binding ElementName=UploadText, Path=Width}"
+                                    Height="{Binding ElementName=UploadText, Path=Height}"
+                                    IsChecked="{Binding IsUploadModeSelected}">
+                                        <RadioButton.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Height="30" Width="30" Kind="Image" VerticalAlignment="Center"/>
+                                                <TextBlock FontSize="18" Name="UploadText" Text="{DynamicResource ImageUploaded}"/>
+                                            </StackPanel>
+                                        </RadioButton.Content>
+                                    </RadioButton>
+
+                                    <RadioButton
+                                    Style="{StaticResource MaterialDesignTabRadioButton}"
+                                    Margin="4"
+                                    Width="{Binding ElementName=UploadText, Path=Width}"
+                                    Height="{Binding ElementName=UploadText, Path=Height}"
+                                    IsChecked="True">
+                                        <RadioButton.Content>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Height="30" Width="30" Kind="Draw" VerticalAlignment="Center"/>
+                                                <TextBlock FontSize="18" Name="DrawText" Text="{DynamicResource ManualDraw}"/>
+                                            </StackPanel>
+                                    </RadioButton.Content>
+                                </RadioButton>
+                            </UniformGrid>
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>

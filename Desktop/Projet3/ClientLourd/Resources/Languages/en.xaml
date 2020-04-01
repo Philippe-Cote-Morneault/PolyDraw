@@ -74,7 +74,7 @@
     <system:String x:Key="DrawingWay">Select the way you wish to create the game</system:String>
 
     <system:String x:Key="ManualDraw">Draw the word</system:String>
-    <system:String x:Key="ImageUploaded">Upload an image of the word</system:String>
+    <system:String x:Key="ImageUploaded">Upload an image</system:String>
     
     <system:String x:Key="Next">Next</system:String>
     <system:String x:Key="Previous">Previous</system:String>

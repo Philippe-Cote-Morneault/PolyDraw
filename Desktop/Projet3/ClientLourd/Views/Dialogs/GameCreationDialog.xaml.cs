@@ -129,9 +129,9 @@ namespace ClientLourd.Views.Dialogs
         }
         
         
-        public void OnClose(object sender, EventArgs arg)
+        public async void OnClose(object sender, EventArgs arg)
         {
-            if (ViewModel.CancelGame())
+            if (await ViewModel.CancelGame())
             {
                 // Make sure its stopped although it should already be.
                 ViewModel.StrokeDrawerService.Close();
@@ -170,9 +170,9 @@ namespace ClientLourd.Views.Dialogs
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CancelCurrentGame(object sender, RoutedEventArgs e)
+        private async void CancelCurrentGame(object sender, RoutedEventArgs e)
         {
-            ViewModel.CancelGame();
+            await ViewModel.CancelGame();
         }
     }
 }
