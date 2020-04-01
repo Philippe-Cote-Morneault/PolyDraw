@@ -28,6 +28,7 @@ import com.andremion.counterfab.CounterFab
 import com.google.android.material.navigation.NavigationView
 import com.log3900.chat.ChatManager
 import com.log3900.login.LoginActivity
+import com.log3900.session.MonitoringService
 import com.log3900.settings.SettingsActivity
 import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.sound.SoundManager
@@ -59,6 +60,8 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var toolbarContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MainApplication.instance.startService(SocketService::class.java)
+        MainApplication.instance.startService(MonitoringService::class.java)
         ThemeManager.applyTheme(this)
         LanguageManager.applySavedLanguage(baseContext)
         super.onCreate(savedInstanceState)
