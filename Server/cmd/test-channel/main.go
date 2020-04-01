@@ -13,7 +13,7 @@ func main() {
 
 	go func() {
 		//Slow thread
-		a, _, _ := cbroadcast.Subscribe("test:a")
+		a, _ := cbroadcast.Subscribe("test:a")
 		time.Sleep(time.Second * 1)
 		for {
 			text := <-a
@@ -26,8 +26,8 @@ func main() {
 
 	for i := 0; i < 2; i++ {
 		go func(i int) {
-			a, c1, _ := cbroadcast.Subscribe("test:a")
-			b, _, _ := cbroadcast.Subscribe("test:b")
+			a, c1 := cbroadcast.Subscribe("test:a")
+			b, _ := cbroadcast.Subscribe("test:b")
 			fmt.Printf("Started %d \n", i)
 			for {
 				select {

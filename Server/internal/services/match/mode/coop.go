@@ -8,6 +8,8 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
@@ -19,8 +21,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"golang.org/x/sync/semaphore"
 )
-
-const numberOfChances = 3
 
 //Coop represent a cooperative game mode
 type Coop struct {
@@ -35,8 +35,10 @@ type Coop struct {
 
 	gameTime              int64
 	checkPointTime        int64
+	minimumBonus          int
 	maximumCheckPointTime int64
 	lives                 int
+	wordFound             bool
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -53,12 +55,11 @@ type Coop struct {
 func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
-	c.chances = numberOfChances
 	c.isRunning = true
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
-	c.lives = 3
 	c.curLap = 1
+	c.wordFound = false
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
@@ -75,8 +76,12 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 
 //Start the game and the game loop
 func (c *Coop) Start() {
-	c.waitForPlayers()
-
+	started := c.waitForPlayers()
+	if !started {
+		log.Printf("[Match] [Coop] -> Start aborted all client could not call ready. Match: %s", c.info.ID)
+		messenger.UnRegisterGroup(&c.info, c.GetConnections())
+		return
+	}
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
 
@@ -160,15 +165,17 @@ func (c *Coop) GameLoop() {
 		log.Printf("[Match] [Coop] -> The word was found, Match: %s", c.info.ID)
 	}
 
-	timeUpMessage := socket.RawMessage{}
-	timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
-		Type: 1,
-		Word: c.currentWord,
-	})
-	c.broadcast(&timeUpMessage)
+	c.receiving.Lock()
+	if c.isRunning { //Do not send the message at the end of the game.
+		timeUpMessage := socket.RawMessage{}
+		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
+			Type: 1,
+			Word: c.currentWord,
+		})
+		c.broadcast(&timeUpMessage)
+	}
 
 	//End of round
-	c.receiving.Lock()
 	if c.realPlayers <= 0 {
 		c.isRunning = false
 		c.receiving.Unlock()
@@ -178,11 +185,14 @@ func (c *Coop) GameLoop() {
 	}
 
 	//Prepare next round
+	c.sendRoundSummary()
+
 	c.orderPos++
 	c.curLap++
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.commonScore.reset()
 	c.currentWord = ""
+	c.wordFound = false
 
 	c.checkPointTime += 5000 //Time for the sleep
 	c.receiving.Unlock()
@@ -250,15 +260,16 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 		if c.receivingGuesses.IsSet() {
 			imageDuration := time.Now().Sub(c.timeStartImage)
 			bonus := c.timeImage - imageDuration.Milliseconds()
+			c.wordFound = true
 
 			pointsForWord := 0
 			if bonus > 0 {
-				c.checkPointTime += bonus
 				pointsForWord = 100
 			} else {
 				pointsForWord = 50
-				bonus = 0
+				bonus = int64(c.minimumBonus)
 			}
+			c.checkPointTime += bonus
 
 			gameDuration := time.Now().Sub(c.timeStart)
 			remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
@@ -267,8 +278,6 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 			c.commonScore.commit(pointsForWord)
 			total := c.commonScore.total
 			c.waitingResponse.Release(1)
-
-			c.receiving.Unlock()
 
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
@@ -297,6 +306,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				Bonus:     bonus,
 			})
 			c.broadcast(&checkpoint)
+			c.receiving.Unlock()
 		} else {
 			log.Printf("[Match] [Coop] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			scoreTotal := c.commonScore.total
@@ -332,8 +342,8 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 				UserID:   player.userID.String(),
 				Lives:    lives,
 			})
-			c.receiving.Unlock()
 			c.broadcast(&messageFail)
+			c.receiving.Unlock()
 		}
 
 		if lives <= 0 {
@@ -380,12 +390,16 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 			c.applyPenalty()
 		}
 	} else {
+		c.receiving.Lock()
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
-			Hint:  "",
-			Error: "There needs to be at least 10 seconds for a hint to be requested.",
+			Hint:   "",
+			Error:  language.MustGet("error.hintTime", c.info.Language),
+			UserID: player.userID.String(),
+			BotID:  c.curDrawer.userID.String(),
 		})
 		c.broadcast(&message)
+		c.receiving.Unlock()
 	}
 
 }
@@ -402,6 +416,12 @@ func (c *Coop) Close() {
 		c.isRunning = false
 	}
 	c.receiving.Unlock()
+
+	c.broadcast(&socket.RawMessage{
+		MessageType: byte(socket.MessageType.GameCancel),
+		Length:      0,
+		Bytes:       nil,
+	})
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }
@@ -439,6 +459,7 @@ func (c *Coop) GetWelcome() socket.RawMessage {
 		TimeImage: c.timeImage,
 		Laps:      0,
 		TotalTime: c.gameTime,
+		Lives:     c.lives,
 	}
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
@@ -486,6 +507,10 @@ func (c *Coop) finish() {
 	c.receiving.Unlock()
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+	// cbroadcast.Broadcast(stats.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
+	// 	MatchDuration: c.gameTime,
+	// 	WinnerName:    winner.Username,
+	// 	MatchType:     1}})
 }
 
 //computeOrder used to compute the order for the coop
@@ -509,25 +534,29 @@ func (c *Coop) computeDifficulty() {
 	//Determine the time based of the difficulty
 	switch c.info.Difficulty {
 	case 0:
-		c.gameTime = 300
-		c.timeImage = 40
+		c.lives = 3
+		c.gameTime = 60
+		c.timeImage = 15
 		c.penalty = 10
+		c.minimumBonus = 5
 	case 1:
-		c.gameTime = 240
-		c.timeImage = 30
-		c.penalty = 20
-	case 2:
-		c.gameTime = 180
-		c.timeImage = 20
-		c.penalty = 30
-	case 3:
-		c.gameTime = 120
+		c.lives = 2
+		c.gameTime = 45
 		c.timeImage = 10
-		c.penalty = 30
+		c.penalty = 15
+		c.minimumBonus = 4
+	case 2:
+		c.lives = 1
+		c.gameTime = 30
+		c.timeImage = 10
+		c.penalty = 20
+		c.minimumBonus = 2
 	}
+	c.chances = c.lives
 	c.gameTime *= 1000
 	c.timeImage *= 1000
 	c.penalty *= 1000
+	c.minimumBonus *= 1000
 }
 
 //syncPlayers used to send all the sync to all the players
@@ -545,20 +574,24 @@ func (c *Coop) syncPlayers() {
 			players[i].Points = c.commonScore.total
 		}
 	}
-	checkPointTime := c.checkPointTime
 	lives := c.lives
-	c.receiving.Unlock()
 
 	message := socket.RawMessage{}
 	gameDuration := time.Now().Sub(c.timeStart)
+	timeRemaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
+	if timeRemaining < 0 {
+		timeRemaining = 0
+	}
+
 	message.ParseMessagePack(byte(socket.MessageType.PlayerSync), PlayerSync{
 		Players:  players,
 		Laps:     c.curLap,
 		LapTotal: 0,
-		Time:     c.gameTime - gameDuration.Milliseconds() + checkPointTime,
+		Time:     timeRemaining,
 		Lives:    lives,
 	})
 	c.broadcast(&message)
+	c.receiving.Unlock()
 }
 
 func (c *Coop) waitGuess() bool {
@@ -598,7 +631,6 @@ func (c *Coop) applyPenalty() {
 
 	gameDuration := time.Now().Sub(c.timeStart)
 	remaining := c.gameTime - gameDuration.Milliseconds() + c.checkPointTime
-	c.receiving.Unlock()
 
 	checkpoint := socket.RawMessage{}
 	checkpoint.ParseMessagePack(byte(socket.MessageType.Checkpoint), Checkpoint{
@@ -606,6 +638,32 @@ func (c *Coop) applyPenalty() {
 		Bonus:     -c.penalty,
 	})
 	c.broadcast(&checkpoint)
+	c.receiving.Unlock()
 
 	c.syncPlayers()
+}
+
+//sendRoundSummary used to send a summary of the round
+func (c *Coop) sendRoundSummary() {
+	roundEnd := socket.RawMessage{}
+	playersDetails := make([]PlayersRoundSum, len(c.players))
+	for i := range c.players {
+		player := &c.players[i]
+		playersDetails[i] = PlayersRoundSum{
+			PlayersData: PlayersData{
+				UserID:   player.userID.String(),
+				Username: player.Username,
+				IsCPU:    player.IsCPU,
+				Points:   c.commonScore.total,
+			},
+			NewPoints: c.commonScore.current,
+		}
+	}
+	roundEnd.ParseMessagePack(byte(socket.MessageType.RoundEndStatus), RoundSummary{
+		Players:      playersDetails,
+		Achievements: nil,
+		Word:         c.currentWord,
+		Guessed:      c.wordFound,
+	})
+	c.broadcast(&roundEnd)
 }

@@ -10,7 +10,8 @@ import (
 
 //Drawing service used to route the packets and send the preview
 type Drawing struct {
-	preview cbroadcast.Channel
+	preview     cbroadcast.Channel
+	stopPreview cbroadcast.Channel
 
 	strokeChunk cbroadcast.Channel
 	drawStart   cbroadcast.Channel
@@ -52,6 +53,11 @@ func (d *Drawing) listen() {
 				//Start a new function to handle the connection
 				go d.handlePreview(message)
 			}
+		case data := <-d.stopPreview:
+			if message, ok := data.(socket.RawMessageReceived); ok {
+				//Start a new function to handle the connection
+				go stopPreview(message)
+			}
 		case data := <-d.strokeChunk:
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				go d.router.Route(&message)
@@ -77,6 +83,7 @@ func (d *Drawing) listen() {
 
 func (d *Drawing) subscribe() {
 	d.preview, _ = cbroadcast.Subscribe(BPreview)
+	d.stopPreview, _ = cbroadcast.Subscribe(BStopPreview)
 	d.strokeChunk, _ = cbroadcast.Subscribe(BStrokeChunk)
 	d.drawStart, _ = cbroadcast.Subscribe(BDrawStart)
 	d.drawEnd, _ = cbroadcast.Subscribe(BDrawEnd)

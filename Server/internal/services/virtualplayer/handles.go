@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
@@ -13,16 +14,20 @@ import (
 	"gitlab.com/jigsawcorp/log3900/model"
 
 	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
 )
 
 var managerInstance Manager
+
+const drawingTimeBot = 10 //in Seconds
 
 type responseHint struct {
 	UserID    string
 	HintsLeft int
 	Hint      string
 	Error     string
+	BotID     string
 }
 
 type gameHints struct {
@@ -58,7 +63,6 @@ func AddGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Groups[groupID] = make(map[uuid.UUID]bool)
 	managerInstance.mutex.Unlock()
-	// printManager("AddGroup")
 }
 
 //registerChannelGroup [New Thread] saves in cache the groupID corresponding to channelID (messenger->)
@@ -95,12 +99,11 @@ func RemoveGroup(groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	delete(managerInstance.Groups, groupID)
 	managerInstance.mutex.Unlock()
-	// printManager("RemoveGroup")
 }
 
 //AddVirtualPlayer [Current Thread] adds virtualPlayer to cache. Returns playerID, username (lobby)
-func AddVirtualPlayer(groupID, botID uuid.UUID) string {
-	playerInfos := generateVirtualPlayer()
+func AddVirtualPlayer(groupID, botID uuid.UUID, lang int) string {
+	playerInfos := generateVirtualPlayer(lang)
 	playerInfos.BotID = botID
 	playerInfos.GroupID = groupID
 	managerInstance.mutex.Lock()
@@ -117,8 +120,6 @@ func AddVirtualPlayer(groupID, botID uuid.UUID) string {
 	managerInstance.mutex.Unlock()
 
 	log.Println("[VirtualPlayer] -> AddVirtualPlayer")
-	// printManager("AddVirtualPlayer")
-
 	return playerInfos.Username
 }
 
@@ -172,8 +173,6 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 	model.DB().Save(&groupDB)
 
 	log.Printf("[VirtualPlayer] -> deleting bot in DB: %v", user)
-	// printManager("KickVirtualPlayer")
-
 	return groupID, bot.Username
 
 }
@@ -186,8 +185,6 @@ func handleStartGame(match match2.IMatch) {
 	managerInstance.mutex.Unlock()
 
 	makeBotsSpeak("startGame", groupID, uuid.Nil)
-	// printManager("handleStartGame")
-
 }
 
 // startDrawing [New Threads] bot draws for all player in games (match ->)
@@ -214,7 +211,7 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{ContinueDrawing: true}
+	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{StopDrawing: abool.New(), Time: drawingTimeBot}
 	managerInstance.mutex.Unlock()
 
 	time.Sleep(2500 * time.Millisecond)
@@ -222,33 +219,30 @@ func startDrawing(round *match2.RoundStart) {
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
-	wg.Add(len(connections))
-	for _, id := range connections {
-		go func(socketID uuid.UUID) {
-			defer wg.Done()
-			drawing.StartDrawing(socketID, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
-		}(id)
-	}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
+	}()
 	wg.Wait()
-	// printManager("startDrawing")
 }
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
-func handleRoundEnds(groupID uuid.UUID) {
+func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 	managerInstance.mutex.Lock()
-
 	if drawState, ok := managerInstance.Drawing[groupID]; ok {
-		drawState.ContinueDrawing = false
+		drawState.StopDrawing.Set()
 	}
-
 	managerInstance.mutex.Unlock()
 
-	makeBotsSpeak("endRound", groupID, uuid.Nil)
-	// printManager("handleRoundEnds")
+	if makeBotSpeak {
+		makeBotsSpeak("endRound", groupID, uuid.Nil)
+	}
 }
 
 // handleEndGame [New Threads] does the endGame routine for a bot in match (match ->)
 func handleEndGame(groupID uuid.UUID) {
+	handleRoundEnds(groupID, false)
 	managerInstance.mutex.Lock()
 
 	if _, ok := managerInstance.HintsInGames[groupID]; !ok {
@@ -280,7 +274,6 @@ func handleEndGame(groupID uuid.UUID) {
 	delete(managerInstance.Matches, groupID)
 	managerInstance.mutex.Unlock()
 	RemoveGroup(groupID)
-	// printManager("handleEndGame")
 }
 
 //GetVirtualPlayersInfo [Current Thread] returns botInfos from cache (match)
@@ -353,23 +346,30 @@ func GetHintByBot(hintRequest *match2.HintRequested) bool {
 	}
 
 	managerInstance.mutex.Unlock()
-	respHintRequest(false, hintRequest, "No more hints remaining.", hintRequest.GameType)
+	respHintRequest(false, hintRequest, "", hintRequest.GameType)
 	return false
 }
 
 // respHintRequest [Current Thread] sends to client hint response (virtualplayer)
 func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string, gameType int) {
 	var hintRes responseHint
+	bot, botOk := managerInstance.Bots[hintRequest.DrawerID]
+	if !botOk {
+		log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting respHintRequest", hintRequest.DrawerID)
+		return
+	}
+	hintRes.BotID = bot.BotID.String()
 	if hintOk {
-		bot, botOk := managerInstance.Bots[hintRequest.DrawerID]
-		if !botOk {
-			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v. Aborting respHintRequest", hintRequest.DrawerID)
-			return
+		lineHint := " Mon indice est : "
+		if bot.Language == 0 {
+			lineHint = " My hint is : "
 		}
-
-		hintRes.Hint = bot.getInteraction("hintRequested") + " Mon indice est : " + hint
+		hintRes.Hint = bot.getInteraction("hintRequest") + lineHint + hint
 		hintRes.Error = ""
 	} else {
+		if hint == "" {
+			hint = language.MustGet("botlines.noHint"+bot.Personality, bot.Language)
+		}
 		hintRes.Hint = ""
 		hintRes.Error = hint
 	}
@@ -397,7 +397,7 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 			}
 
 			hintRes.HintsLeft = getHintsLeft(hintRequest.MatchID, playerID) // pas de lock
-			hintRes.UserID = playerID.String()
+			hintRes.UserID = hintRequest.Player.ID.String()
 
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)

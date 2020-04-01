@@ -3,12 +3,15 @@ package drawing
 import (
 	"encoding/binary"
 	"encoding/xml"
-	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
 	"io/ioutil"
 	"log"
+	"sync"
 	"time"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/potrace"
+
 	"github.com/google/uuid"
+	"github.com/tevino/abool"
 	"gitlab.com/jigsawcorp/log3900/internal/datastore"
 	svgmodel "gitlab.com/jigsawcorp/log3900/internal/services/potrace/model"
 	"gitlab.com/jigsawcorp/log3900/internal/socket"
@@ -21,29 +24,10 @@ import (
 //MaxUint16 represents the maximum value of a uint16
 const MaxUint16 = ^uint16(0)
 const maxPointsperPacket = 16000
-const delayDrawSending = 20 //in Milliseconds
+const delayDrawSending = 20  //in Milliseconds
+const drawingTimePreview = 5 //in Seconds
 
-// Draw specifications that contains the informations of the sketch
-type Draw struct {
-	SVGFile           string
-	DrawingTimeFactor float64
-	Mode              int
-}
-
-// DrawState gives the state of drawing
-type DrawState struct {
-	ContinueDrawing bool
-}
-
-//Stroke represent a stroke to be drawn on the client canvas
-type Stroke struct {
-	ID        uuid.UUID
-	color     byte
-	isEraser  bool
-	isSquared bool
-	brushSize byte
-	points    []geometry.Point
-}
+var pendingPreviews map[uuid.UUID]*abool.AtomicBool
 
 func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	drawingID, err := uuid.FromBytes(message.Payload.Bytes)
@@ -60,24 +44,35 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	}
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
-	StartDrawing(message.SocketID, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{ContinueDrawing: true})
+	pendingPreviews[message.SocketID] = abool.New()
+	StartDrawing([]uuid.UUID{message.SocketID}, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: pendingPreviews[message.SocketID], Time: drawingTimePreview})
+	removePreview(message.SocketID)
 }
 
 // StartDrawing starts the drawing procedure
-func StartDrawing(socketID uuid.UUID, uuidBytes []byte, draw *Draw, continueDrawing *DrawState) {
-	socket.SendQueueMessageSocketID(socket.RawMessage{
-		MessageType: byte(socket.MessageType.StartDrawingServer),
-		Length:      uint16(len(uuidBytes)),
-		Bytes:       uuidBytes,
-	}, socketID)
+func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, drawState *DrawState) {
+	payloads := generateDrawing(draw, drawState.Time)
+	var wg sync.WaitGroup
+	wg.Add(len(socketsID))
+	for _, id := range socketsID {
+		go func(socketID uuid.UUID) {
+			defer wg.Done()
+			socket.SendQueueMessageSocketID(socket.RawMessage{
+				MessageType: byte(socket.MessageType.StartDrawingServer),
+				Length:      uint16(len(uuidBytes)),
+				Bytes:       uuidBytes,
+			}, socketID)
 
-	sendDrawing(socketID, draw, continueDrawing)
+			sendDrawing(socketID, payloads, drawState.StopDrawing)
 
-	socket.SendQueueMessageSocketID(socket.RawMessage{
-		MessageType: byte(socket.MessageType.EndDrawingServer),
-		Length:      uint16(len(uuidBytes)),
-		Bytes:       uuidBytes,
-	}, socketID)
+			socket.SendQueueMessageSocketID(socket.RawMessage{
+				MessageType: byte(socket.MessageType.EndDrawingServer),
+				Length:      uint16(len(uuidBytes)),
+				Bytes:       uuidBytes,
+			}, socketID)
+		}(id)
+	}
+	wg.Wait()
 }
 
 func sendPreviewResponse(socketID uuid.UUID, response bool) {
@@ -95,7 +90,24 @@ func sendPreviewResponse(socketID uuid.UUID, response bool) {
 	socket.SendQueueMessageSocketID(packet, socketID)
 }
 
-func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
+func sendDrawing(socketID uuid.UUID, payloads [][]byte, stopDrawing *abool.AtomicBool) {
+	for _, payload := range payloads {
+		if stopDrawing.IsSet() {
+			return
+		}
+		packet := socket.RawMessage{
+			MessageType: byte(socket.MessageType.StrokeChunkServer),
+			Length:      uint16(len(payload)),
+			Bytes:       payload,
+		}
+
+		socket.SendQueueMessageSocketID(packet, socketID)
+		//Wait 20ms between strokes
+		time.Sleep(delayDrawSending * time.Millisecond)
+	}
+}
+
+func generateDrawing(draw *Draw, drawingTime float64) [][]byte {
 	file, err := datastore.GetFile(draw.SVGFile)
 	if err != nil {
 		log.Println(err)
@@ -114,6 +126,7 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 
 	var commands []svgparser.Command
 	var payloads [][]byte
+	timePerStroke := ((drawingTime * 1000) / float64(len(xmlSvg.G.XMLPaths))) * draw.DrawingTimeFactor
 	for _, path := range xmlSvg.G.XMLPaths {
 		stroke := Stroke{
 			ID:        uuid.New(),
@@ -125,23 +138,9 @@ func sendDrawing(socketID uuid.UUID, draw *Draw, continueDrawing *DrawState) {
 		commands = svgparser.ParseD(path.D, nil)
 		stroke.points = strokegenerator.ExtractPointsStrokes(&commands)
 		s := stroke.clone()
-		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(float64(path.Time)*(draw.DrawingTimeFactor)))
-
+		splitPointsIntoPayloads(&payloads, &stroke.points, &s, int(timePerStroke))
 	}
-	for _, payload := range payloads {
-		if !continueDrawing.ContinueDrawing {
-			return
-		}
-		packet := socket.RawMessage{
-			MessageType: byte(socket.MessageType.StrokeChunkServer),
-			Length:      uint16(len(payload)),
-			Bytes:       payload,
-		}
-
-		socket.SendQueueMessageSocketID(packet, socketID)
-		//Wait 20ms between strokes
-		time.Sleep(delayDrawSending * time.Millisecond)
-	}
+	return payloads
 }
 
 func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, stroke *Stroke, time int) {
@@ -150,30 +149,32 @@ func splitPointsIntoPayloads(payloads *[][]byte, points *[]geometry.Point, strok
 		return
 	}
 
-	nbPoints := (delayDrawSending * len(*points)) / time
+	nbPointsperPacket := int((float64(delayDrawSending) / float64(time)) * float64(len(*points)))
 
-	if nbPoints == 0 {
-		nbPoints = 1
-	} else if nbPoints >= maxPointsperPacket {
-		for nbPoints >= maxPointsperPacket {
-			nbPoints /= 2
+	if nbPointsperPacket == 0 {
+		nbPointsperPacket = len(*points)
+	}
+
+	if nbPointsperPacket >= maxPointsperPacket {
+		for nbPointsperPacket >= maxPointsperPacket {
+			nbPointsperPacket /= 2
 		}
 	}
 
 	index := 0
-	iterations := len(*points)/nbPoints + 1
+	iterations := len(*points)/nbPointsperPacket + 1
 
 	for i := 0; i < iterations; i++ {
-		if nbPoints+index >= len(*points) {
+		if nbPointsperPacket+index >= len(*points) {
 			stroke.points = (*points)[index:]
 			*payloads = append(*payloads, stroke.Marshall())
 			break
 		}
 
-		stroke.points = (*points)[index : index+nbPoints]
+		stroke.points = (*points)[index : index+nbPointsperPacket]
 
 		*payloads = append(*payloads, stroke.Marshall())
-		index += nbPoints
+		index += nbPointsperPacket
 		stroke.points = nil
 	}
 }
@@ -249,4 +250,27 @@ func round(p *geometry.Point) {
 	if p.Y > float32(MaxUint16) {
 		p.Y = float32(MaxUint16)
 	}
+}
+
+//Stops the preview when stopPreview socket message is sent
+func stopPreview(message socket.RawMessageReceived) {
+	stopDrawing, ok := pendingPreviews[message.SocketID]
+
+	if !ok {
+		log.Printf("[Drawing] -> [Error] Cannot stop preview. Cannot find preview with socketID")
+		return
+	}
+
+	stopDrawing.Set()
+	removePreview(message.SocketID)
+}
+
+//Remove the preview in managerInstance stored in cache
+func removePreview(socketID uuid.UUID) {
+
+	if _, ok := pendingPreviews[socketID]; !ok {
+		log.Printf("[Drawing] -> [Error] Cannot remove preview from cache. Cannot find preview with socketID")
+		return
+	}
+	delete(pendingPreviews, socketID)
 }

@@ -57,3 +57,9 @@ type BotInfos struct {
 	BotID    uuid.UUID
 	Username string
 }
+
+// StatsData contains matches infos to send to stats service
+type StatsData struct {
+	Match     *model.MatchPlayed
+	SocketsID []uuid.UUID
+}

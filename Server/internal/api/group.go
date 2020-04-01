@@ -65,8 +65,8 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.Difficulty < 0 || request.Difficulty > 3 {
-		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 3.")
+	if request.Difficulty < 0 || request.Difficulty > 2 {
+		rbody.JSONError(w, http.StatusBadRequest, "The difficulty must be between 0 and 2.")
 		return
 	}
 

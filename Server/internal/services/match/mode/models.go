@@ -21,6 +21,7 @@ type ResponseGameInfo struct {
 	TimeImage int64
 	Laps      int
 	TotalTime int64
+	Lives     int
 }
 
 //PlayerDrawThis used for message 69
@@ -76,8 +77,10 @@ type TimeUp struct {
 
 //HintResponse represents the response to a hint requested by a player
 type HintResponse struct {
-	Hint  string
-	Error string
+	Hint   string
+	Error  string
+	UserID string
+	BotID  string
 }
 
 //PlayerSync used to sync all the players with a unique trusted time source
@@ -106,6 +109,7 @@ type RoundSummary struct {
 	Players      []PlayersRoundSum
 	Achievements []AchievementData
 	Word         string
+	Guessed      bool
 }
 
 //Checkpoint used to represent a checkpoint

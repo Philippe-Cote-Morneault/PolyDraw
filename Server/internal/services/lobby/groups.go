@@ -2,9 +2,10 @@ package lobby
 
 import (
 	"fmt"
-	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"sync"
+
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
@@ -453,7 +454,7 @@ func (g *groups) addBotGroupID(groupDB *model.Group) {
 	user := model.User{IsCPU: true}
 	model.AddUser(&user)
 
-	user.Username = virtualplayer.AddVirtualPlayer(groupDB.ID, user.ID)
+	user.Username = virtualplayer.AddVirtualPlayer(groupDB.ID, user.ID, groupDB.Language)
 	log.Printf("[Lobby] -> adding bot in DB: %v", user)
 
 	if user.Username != "" {
@@ -500,7 +501,7 @@ func (g *groups) AddBot(socketID uuid.UUID) {
 			user := model.User{IsCPU: true}
 			model.AddUser(&user)
 
-			user.Username = virtualplayer.AddVirtualPlayer(groupID, user.ID)
+			user.Username = virtualplayer.AddVirtualPlayer(groupID, user.ID, groupDB.Language)
 			log.Printf("[Lobby] -> adding bot in DB: %v", user)
 			if user.Username != "" {
 				//send response to client

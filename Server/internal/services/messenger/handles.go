@@ -217,7 +217,12 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 	timestamp := time.Now().Unix()
 	if message.Payload.DecodeMessagePack(&channelParsed) == nil {
 		name := channelParsed.ChannelName
-		if strings.TrimSpace(name) != "" && name != "General" && name != "Game" {
+		if strings.TrimSpace(name) != "" &&
+			name != "Général" &&
+			name != "General" &&
+			name != "Game" &&
+			name != "Active Match" &&
+			name != "Partie en cours" {
 			user, err := auth.GetUser(message.SocketID)
 			if err == nil {
 				//Check if channel already exists

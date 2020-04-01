@@ -10,6 +10,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
@@ -66,6 +67,17 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 			f.realPlayers++
 		}
 	}
+
+	switch f.info.Difficulty {
+	case 0:
+		f.timeImage = 60
+	case 1:
+		f.timeImage = 45
+	case 2:
+		f.timeImage = 30
+	}
+	f.timeImage *= 1000
+
 	drawing.RegisterGame(f)
 	cbroadcast.Broadcast(match2.BGameStarts, f)
 }
@@ -73,7 +85,14 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 //Start the game mode
 func (f *FFA) Start() {
 
-	f.waitForPlayers()
+	started := f.waitForPlayers()
+	if !started {
+		log.Printf("[Match] [FFA] -> Start aborted all client could not call ready. Match: %s", f.info.ID)
+
+		drawing.UnRegisterGame(f)
+		messenger.UnRegisterGroup(&f.info, f.GetConnections())
+		return
+	}
 
 	//Generate players positions
 	f.SetOrder()
@@ -167,6 +186,7 @@ func (f *FFA) GameLoop() {
 	}
 
 	//Send message that the current word have expired unless it's the end of the round
+	f.receiving.Lock()
 	if f.curLap < f.lapsTotal {
 		timeUpMessage := socket.RawMessage{}
 		timeUpMessage.ParseMessagePack(byte(socket.MessageType.TimeUp), TimeUp{
@@ -176,7 +196,6 @@ func (f *FFA) GameLoop() {
 		f.broadcast(&timeUpMessage)
 	}
 
-	f.receiving.Lock()
 	f.orderPos++
 	f.curLap++
 	if f.orderPos > len(f.players)-1 {
@@ -266,8 +285,6 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 			f.scores[f.curDrawer.Order].commit(50)
 			total := f.scores[player.Order].total
 
-			f.receiving.Unlock()
-
 			response := socket.RawMessage{}
 			response.ParseMessagePack(byte(socket.MessageType.ResponseGuess), GuessResponse{
 				Valid:     true,
@@ -285,6 +302,8 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 				NewPoints: pointsForWord,
 			})
 			f.broadcast(&broadcast)
+			f.receiving.Unlock()
+
 		} else {
 			log.Printf("[Match] [FFA] -> Word is alredy guessed or is not ready to receive words for socket %s", socketID)
 			players := f.connections[socketID]
@@ -318,13 +337,14 @@ func (f *FFA) TryWord(socketID uuid.UUID, word string) {
 func (f *FFA) HintRequested(socketID uuid.UUID) {
 	f.receiving.Lock()
 	if len(f.players) > 0 && !f.players[f.order[f.orderPos]].IsCPU {
-		f.receiving.Unlock()
 
 		message := socket.RawMessage{}
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
 			Hint:  "",
-			Error: "Hints are not available for this player. The drawing player needs to be a virtual player.",
+			Error: language.MustGet("error.hintInvalid", f.info.Language),
 		})
+		f.receiving.Unlock()
+
 		socket.SendQueueMessageSocketID(message, socketID)
 		log.Printf("[Match] [FFA] -> Hint requested for a non virutal player. Match: %s", f.info.ID)
 	} else {
@@ -351,12 +371,14 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 				f.syncPlayers()
 			}
 		} else {
-			f.receiving.Unlock()
 			message := socket.RawMessage{}
 			message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), HintResponse{
-				Hint:  "",
-				Error: "You need at least 50 points for a hint.",
+				Hint:   "",
+				Error:  language.MustGet("error.hintScore", f.info.Language),
+				UserID: player.userID.String(),
+				BotID:  f.curDrawer.userID.String(),
 			})
+			f.receiving.Unlock()
 			socket.SendQueueMessageSocketID(message, socketID)
 			log.Printf("[Match] [FFA] -> Hint requested but not enough points. Match: %s", f.info.ID)
 		}
@@ -373,6 +395,11 @@ func (f *FFA) Close() {
 		f.cancelWait()
 	}
 
+	f.broadcast(&socket.RawMessage{
+		MessageType: byte(socket.MessageType.GameCancel),
+		Length:      0,
+		Bytes:       nil,
+	})
 	f.receiving.Unlock()
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
@@ -407,6 +434,7 @@ func (f *FFA) GetWelcome() socket.RawMessage {
 		TimeImage: f.timeImage,
 		Laps:      f.lapsTotal,
 		TotalTime: 0,
+		Lives:     0,
 	}
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameWelcome), welcome)
@@ -505,7 +533,6 @@ func (f *FFA) syncPlayers() {
 			IsCPU:    player.IsCPU,
 		}
 	}
-	f.receiving.Unlock()
 
 	message := socket.RawMessage{}
 	imageDuration := time.Now().Sub(f.timeStartImage)
@@ -516,6 +543,7 @@ func (f *FFA) syncPlayers() {
 		Time:     f.timeImage - imageDuration.Milliseconds(),
 	})
 	f.broadcast(&message)
+	f.receiving.Unlock()
 }
 
 //calculateScore based on the number of seconds of remaining and the time associated with the score
@@ -561,7 +589,6 @@ func (f *FFA) finish() {
 		return
 	}
 	winner := f.players[f.order[bestPlayerOrder]]
-	f.receiving.Unlock()
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
 
 	//Send a message to all the players to give them the details of the game and who is the winner
@@ -574,10 +601,15 @@ func (f *FFA) finish() {
 	})
 
 	f.broadcast(&message)
+	f.receiving.Unlock()
 
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
+	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: f.GetConnections(), Match: &model.MatchPlayed{
+		MatchDuration: gameDuration.Milliseconds(),
+		WinnerName:    winner.Username,
+		MatchType:     0}})
 }
 
 //removePlayer remove the player and set the order
@@ -676,6 +708,7 @@ func (f *FFA) sendRoundSummary() {
 		Players:      playersDetails,
 		Achievements: nil,
 		Word:         f.currentWord,
+		Guessed:      false,
 	})
 	f.broadcast(&roundEnd)
 }
