@@ -109,6 +109,7 @@ type RoundSummary struct {
 	Players      []PlayersRoundSum
 	Achievements []AchievementData
 	Word         string
+	Guessed      bool
 }
 
 //Checkpoint used to represent a checkpoint

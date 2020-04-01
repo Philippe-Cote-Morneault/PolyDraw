@@ -37,6 +37,7 @@ type Coop struct {
 	checkPointTime        int64
 	maximumCheckPointTime int64
 	lives                 int
+	wordFound             bool
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -57,6 +58,7 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.orderPos = 0
 	c.nbWaitingResponses = 1
 	c.curLap = 1
+	c.wordFound = false
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
@@ -187,6 +189,7 @@ func (c *Coop) GameLoop() {
 	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.commonScore.reset()
 	c.currentWord = ""
+	c.wordFound = false
 
 	c.checkPointTime += 5000 //Time for the sleep
 	c.receiving.Unlock()
@@ -254,6 +257,7 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 		if c.receivingGuesses.IsSet() {
 			imageDuration := time.Now().Sub(c.timeStartImage)
 			bonus := c.timeImage - imageDuration.Milliseconds()
+			c.wordFound = true
 
 			pointsForWord := 0
 			if bonus > 0 {
@@ -648,6 +652,7 @@ func (c *Coop) sendRoundSummary() {
 		Players:      playersDetails,
 		Achievements: nil,
 		Word:         c.currentWord,
+		Guessed:      c.wordFound,
 	})
 	c.broadcast(&roundEnd)
 }

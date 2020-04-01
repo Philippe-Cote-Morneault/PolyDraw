@@ -708,6 +708,7 @@ func (f *FFA) sendRoundSummary() {
 		Players:      playersDetails,
 		Achievements: nil,
 		Word:         f.currentWord,
+		Guessed:      false,
 	})
 	f.broadcast(&roundEnd)
 }
