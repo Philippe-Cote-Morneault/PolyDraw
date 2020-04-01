@@ -89,6 +89,16 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         }
     }
 
+    override fun onMatchEnded(matchEnded: MatchEnded) {
+        super.onMatchEnded(matchEnded)
+
+        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
+        matchEnded.players.forEach {
+            playerScores.add(Pair(it.username, it.points))
+        }
+        activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores)
+    }
+
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
         activeFFAMatchView?.clearCanvas()
         activeFFAMatchView?.clearAllPlayerStatusRes()
