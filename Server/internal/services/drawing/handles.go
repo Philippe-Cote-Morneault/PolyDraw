@@ -262,7 +262,6 @@ func stopPreview(message socket.RawMessageReceived) {
 	}
 
 	stopDrawing.Set()
-	removePreview(message.SocketID)
 }
 
 //Remove the preview in managerInstance stored in cache
