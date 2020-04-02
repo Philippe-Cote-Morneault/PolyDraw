@@ -141,7 +141,7 @@ object SocketHandler {
 
     fun readMessage() {
         try {
-            val typeByte = inputStream.readByte()
+            val typeByte = inputStream.readUnsignedByte()
 
             val length = inputStream.readUnsignedShort()
 
