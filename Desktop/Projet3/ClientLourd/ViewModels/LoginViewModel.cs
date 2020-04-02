@@ -249,14 +249,7 @@ namespace ClientLourd.ViewModels
 
         private void ChangeLang()
         {
-            if (Language == Languages.EN.GetDescription())
-            {
-                Language = Languages.FR.GetDescription();
-            }
-            else
-            {
-                Language = Languages.EN.GetDescription();
-            }
+            Language = (Language == Languages.EN.GetDescription()) ? Languages.FR.GetDescription() : Language = Languages.EN.GetDescription();
         }
 
     }

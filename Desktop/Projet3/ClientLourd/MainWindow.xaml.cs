@@ -225,6 +225,9 @@ namespace ClientLourd
         }
 
 
+        /// <summary>
+        /// Sets language based on system language
+        /// </summary>
         private void SetLanguageDictionary()
         {
             ResourceDictionary dict = new ResourceDictionary();
@@ -243,9 +246,12 @@ namespace ClientLourd
                     ((MainViewModel)DataContext).SelectedLanguage = Languages.EN.GetDescription();
                     break;
             }
+
+
             Resources.MergedDictionaries.Add(dict);
             (DataContext as MainViewModel).CurrentDictionary = dict;
             (DataContext as MainViewModel).TriggerLangChangedEvent();
+            (DataContext as MainViewModel).IsSystemLanguage = true;
             LanguageSelector.SelectionChanged += ChangeLang;
         }
 
@@ -262,6 +268,7 @@ namespace ClientLourd
                 dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
             (DataContext as MainViewModel).CurrentDictionary = dict;
             Resources.MergedDictionaries[0] = dict;
+            (DataContext as MainViewModel).IsSystemLanguage = false;
             (DataContext as MainViewModel).TriggerLangChangedEvent();
 
         }

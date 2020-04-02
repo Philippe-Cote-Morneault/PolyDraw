@@ -14,13 +14,14 @@ using System.Media;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Services.EnumService;
 using System.Collections.Generic;
+using ClientLourd.Services.LanguageManagerService;
 
 namespace ClientLourd.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
         string _containedView;
-        
+
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
 
@@ -28,6 +29,8 @@ namespace ClientLourd.ViewModels
 
         public NetworkInformations NetworkInformations { get; set; }
         private SessionInformations _sessionInformations;
+
+        public bool IsSystemLanguage { get; set; }
 
         public SessionInformations SessionInformations
         {
@@ -54,6 +57,24 @@ namespace ClientLourd.ViewModels
         public override void AfterLogin()
         {
             //TODO
+
+            var languageManager = new LanguageManagerService(SessionInformations.User.ID);
+            
+            if (languageManager.HasLanguageSet())
+            {
+                string language = languageManager.GetLanguage();
+
+                if (language != SelectedLanguage && !IsSystemLanguage)
+                {
+                    languageManager.SetLanguage(SelectedLanguage);
+                }
+            }
+            else
+            {
+                languageManager.SetLanguage(SelectedLanguage);
+            }
+
+
             SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }) : new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1 }));
 
 
