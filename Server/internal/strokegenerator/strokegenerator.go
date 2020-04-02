@@ -36,7 +36,7 @@ func getNbParameters(command rune) int {
 
 func getStartPoint(commands *[]svgparser.Command) model.Point {
 	if unicode.ToLower((*commands)[0].Command) != 'm' {
-		// TODO : Erreur
+		log.Printf("[StrokeGenerator] Invalid first command expected a Moveto command.")
 		return model.Point{X: 0, Y: 0}
 	}
 	return model.Point{X: (*commands)[0].Parameters[0], Y: (*commands)[0].Parameters[1]}
@@ -164,7 +164,7 @@ func ExtractPointsStrokes(commands *[]svgparser.Command) []model.Point {
 				}
 			}
 		} else {
-			//TODO Error
+			log.Printf("[StrokeGenerator] Invalid number of parameters.")
 		}
 	}
 	return points

@@ -103,7 +103,7 @@ func (c *Command) parseParam(lastPoint *model.Point, size int, offsetX int, offs
 			c.EndPos = currentPoint
 		}
 	} else {
-		//TODO Error
+		log.Printf("[SvgParser] Invalid number of arguments.")
 	}
 }
 
