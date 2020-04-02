@@ -163,7 +163,6 @@ class MatchRepository : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         val synchronisation = MatchAdapter.jsonToSynchronisation(jsonObject)
         Log.d("POTATO", "Sync = $json")
-        EventBus.getDefault().post(MessageEvent(EventType.MATCH_SYNCHRONISATION, synchronisation))
 
         var playerScoresChanged = false
         synchronisation.players.forEach {
@@ -172,6 +171,8 @@ class MatchRepository : Service() {
                 playerScoresChanged = true
             }
         }
+
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_SYNCHRONISATION, synchronisation))
 
         if (playerScoresChanged) {
             EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
@@ -183,11 +184,12 @@ class MatchRepository : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         val matchEnded = MatchAdapter.jsonToMatchEnded(jsonObject)
         Log.d("POTATO", "Match ended = $json")
-        EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
 
         matchEnded.players.forEach {
             updatePlayerScore(it.userID, it.points)
         }
+
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_ENDED, matchEnded))
 
         EventBus.getDefault().post(MessageEvent(EventType.MATCH_PLAYERS_UPDATED, null))
     }

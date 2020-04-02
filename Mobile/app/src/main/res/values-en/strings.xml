@@ -151,7 +151,7 @@
     <string name="turn">Turn</string>
     <string name="team_score_title">Team Score: %1$d</string>
     <string name="empty_slot">Empty slot</string>
-    <string name="match_lobby_duration_title">Duration (min)</string>
+    <string name="match_lobby_duration_title">Duration (minutes)</string>
     <string name="logout_lobby_confirm">You are about to logout. Do you wish to continue?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -164,4 +164,6 @@
     <string name="players">Players</string>
     <string name="drawer">Drawer</string>
     <string name="player">Player</string>
+    <string name="ffa_match_end_inf_winner_is_you">You are the winner!</string>
+    <string name="type_guess_instruction">Type your guess here</string>
 </resources>

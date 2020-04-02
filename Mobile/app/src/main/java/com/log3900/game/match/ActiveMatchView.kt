@@ -23,7 +23,7 @@ interface ActiveMatchView {
     fun animateWordGuessedRight()
     fun showRoundEndInfoView(word: String, players: ArrayList<Pair<String, Int>>)
     fun hideRoundEndInfoView()
-    fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>)
+    fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>, isUser: Boolean)
     fun hideMatchEndInfoView()
     fun enableHintButton(enable: Boolean)
     fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean)

@@ -5,11 +5,25 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <TextView
+        android:id="@+id/view_word_guessing_text_view_instruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/color_black"
+        android:textSize="24sp"
+        android:layout_marginStart="30dp"
+        android:text="@string/type_guess_instruction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <LinearLayout
         android:id="@+id/view_word_guessing_edit_text_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toEndOf="@id/view_word_guessing_text_view_instruction"
         app:layout_constraintEnd_toStartOf="@id/view_word_guessing_button_guess"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +47,7 @@
         android:layout_height="match_parent"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:background="?attr/colorSecondary"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:text="Hint"
         android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"

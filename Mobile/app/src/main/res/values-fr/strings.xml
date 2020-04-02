@@ -151,7 +151,7 @@
     <string name="turn">Tour</string>
     <string name="team_score_title">Score d\'équipe: %1$d</string>
     <string name="empty_slot">Place vide</string>
-    <string name="match_lobby_duration_title">Durée (min)</string>
+    <string name="match_lobby_duration_title">Durée (minutes)</string>
     <string name="logout_lobby_confirm">Vous êtes sur le point d\'être déconnecté. Voulez-vous continuer?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
@@ -164,4 +164,6 @@
     <string name="players">Joueurs</string>
     <string name="drawer">Dessinateur</string>
     <string name="player">Joueur</string>
+    <string name="ffa_match_end_inf_winner_is_you">Vous êtes le vainqueur!</string>
+    <string name="type_guess_instruction">Devinez ici</string>
 </resources>

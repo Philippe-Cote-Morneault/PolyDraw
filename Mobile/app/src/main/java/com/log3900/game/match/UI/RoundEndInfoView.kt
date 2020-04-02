@@ -96,7 +96,10 @@ class RoundEndInfoView(context: Context, attributeSet: AttributeSet) : Constrain
 
             } else if (player.second == 0) {
                 scoreTextView.text = "+0"
-                scoreTextView.setTextColor(Color.WHITE)
+                scoreTextView.setTextColor(Color.RED)
+            } else {
+                scoreTextView.text = "-${player.second}"
+                scoreTextView.setTextColor(Color.RED)
             }
         }
     }

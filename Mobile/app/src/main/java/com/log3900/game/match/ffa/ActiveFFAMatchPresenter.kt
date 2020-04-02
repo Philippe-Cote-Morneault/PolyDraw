@@ -97,7 +97,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         matchEnded.players.forEach {
             playerScores.add(Pair(it.username, it.points))
         }
-        activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores)
+        activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores, AccountRepository.getInstance().getAccount().ID == matchEnded.winner)
     }
 
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
