@@ -88,6 +88,7 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
+                        LeaderBoardGrid.Children.Clear();
                         LeaderBoardGrid.Children.Add(new LeaderBoard(e, false));
                         LeaderBoardGrid.Visibility = Visibility.Visible;
                     });
@@ -115,6 +116,7 @@ namespace ClientLourd.Views.Controls.Game
                     StartConfetti();
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    LeaderBoardGrid.Children.Clear();
                     LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
@@ -144,6 +146,7 @@ namespace ClientLourd.Views.Controls.Game
                         VerticalAlignment = VerticalAlignment.Center,
                         HorizontalAlignment = HorizontalAlignment.Center,
                     };
+                    LeaderBoardGrid.Children.Clear();
                     LeaderBoardGrid.Children.Add(tb);
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });

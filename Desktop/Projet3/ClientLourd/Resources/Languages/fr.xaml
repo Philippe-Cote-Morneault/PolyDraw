@@ -116,6 +116,7 @@
     <system:String x:Key="TryAgain">Essaye encore!</system:String>
     <system:String x:Key="RightGuessCoop">a deviné correctement! Le mot était</system:String>
     <system:String x:Key="RightGuessSolo">Tu as deviné correctement !</system:String>
+    <system:String x:Key="RightGuessFFA">Tu as deviné correctement ! En attente des autres joueurs</system:String>
     
     <!--GameStatus -->
     <system:String x:Key="Drawer">Dessinateur</system:String>

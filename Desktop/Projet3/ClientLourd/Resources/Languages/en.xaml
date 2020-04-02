@@ -116,8 +116,9 @@
     <system:String x:Key="IsDrawingNext">is drawing the next word!</system:String>
     <system:String x:Key="YourTurnDraw">It is your turn to draw the word</system:String>
     <system:String x:Key="TryAgain">Try again!</system:String>
-    <system:String x:Key="RightGuessCoop">has guessed correctly! The word was</system:String>
-    <system:String x:Key="RightGuessSolo">You have guessed correctly!</system:String>
+    <system:String x:Key="RightGuessCoop">has guessed correctly ! The word was</system:String>
+    <system:String x:Key="RightGuessSolo">You have guessed correctly !</system:String>
+    <system:String x:Key="RightGuessFFA">You have guessed correctly ! Waiting for other players</system:String>
 
     <!--GameStatus -->
     <system:String x:Key="Drawer">Drawer</system:String>

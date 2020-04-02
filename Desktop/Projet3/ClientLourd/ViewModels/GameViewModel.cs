@@ -201,11 +201,14 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-                Player player = Players.First(p => p.User.ID == SessionInformations.User.ID);
                 Application.Current.Dispatcher.Invoke(() => 
                 {
                     CanStillGuess = false;
                     SoundService.PlayWordGuessedRight();
+                    if (Mode == GameModes.FFA)
+                    {
+                        OnNewCanavasMessage((String)CurrentDictionary["RightGuessFFA"]);
+                    }
                 });
             }
             else
