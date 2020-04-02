@@ -28,14 +28,15 @@ type Auth struct {
 	shutdown chan bool
 }
 
-//Init the messenger service
+//Init the auth service
 func (a *Auth) Init() {
 	a.shutdown = make(chan bool)
 	removingSessions = abool.New()
+	initTokenAvailable()
 	a.subscribe()
 }
 
-//Start the messenger service
+//Start the auth service
 func (a *Auth) Start() {
 	log.Println("[Auth] -> Starting service")
 	go a.listen()
@@ -43,7 +44,7 @@ func (a *Auth) Start() {
 	//TODO make a watchdog to update the database if no more data is present
 }
 
-//Shutdown the messenger service
+//Shutdown the auth service
 func (a *Auth) Shutdown() {
 	log.Println("[Auth] -> Closing service")
 	a.clearSessionDB()
@@ -51,7 +52,7 @@ func (a *Auth) Shutdown() {
 	close(a.shutdown)
 }
 
-//Register register any broadcast not used
+//Register register any broadcast
 func (a *Auth) Register() {
 	cbroadcast.Register(BLanguage, 5)
 }
@@ -59,7 +60,6 @@ func (a *Auth) Register() {
 func (a *Auth) listen() {
 	defer service.Closed()
 
-	//Message viewer
 	for {
 		select {
 		case id := <-a.close:

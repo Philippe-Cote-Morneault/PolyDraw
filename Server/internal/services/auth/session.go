@@ -24,7 +24,6 @@ var tokenAvailable map[string]session  //token
 var sessionCache map[uuid.UUID]session //socketID
 var userCache map[uuid.UUID]uuid.UUID  //userID -> socketID
 
-//TODO move to the service and init once
 func initTokenAvailable() {
 	if tokenAvailable == nil {
 		tokenAvailable = make(map[string]session)
@@ -40,7 +39,6 @@ func Register(token string, userID uuid.UUID, lang int) {
 	defer mutex.Unlock()
 	mutex.Lock()
 
-	initTokenAvailable()
 	tokenAvailable[token] = session{
 		userID: userID,
 		lang:   lang,
@@ -112,7 +110,6 @@ func IsTokenAvailable(token string) bool {
 	defer mutex.Unlock()
 	mutex.Lock()
 
-	initTokenAvailable()
 	_, ok := tokenAvailable[token]
 	return !ok
 }
@@ -122,7 +119,6 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 	defer mutex.Unlock()
 	mutex.Lock()
 
-	initTokenAvailable()
 	if messageReceived.Payload.MessageType == byte(socket.MessageType.ServerConnection) {
 
 		bytes := messageReceived.Payload.Bytes
@@ -240,7 +236,6 @@ func HasUserToken(userID uuid.UUID) (bool, string) {
 	defer mutex.Unlock()
 	mutex.Lock()
 
-	initTokenAvailable()
 	for k, v := range tokenAvailable {
 		if v.userID == userID {
 			return true, k
@@ -253,8 +248,6 @@ func HasUserToken(userID uuid.UUID) (bool, string) {
 func IsAuthenticatedQuick(socketID uuid.UUID) bool {
 	defer mutex.Unlock()
 	mutex.Lock()
-
-	initTokenAvailable()
 
 	_, ok := sessionCache[socketID]
 	return ok
