@@ -19,7 +19,8 @@ import kotlin.collections.ArrayList
 
 abstract class ActiveMatchPresenter : Presenter {
     protected var activeMatchView: ActiveMatchView? = null
-    protected var matchManager: MatchManager
+    var matchManager: MatchManager
+        private set
     protected var lastShownTime: String? = null
 
     constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
@@ -112,7 +113,7 @@ abstract class ActiveMatchPresenter : Presenter {
         activeMatchView?.clearCanvas()
         activeMatchView?.showWordGuessingView()
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
-        activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID)
+        activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID, matchManager)
     }
 
 

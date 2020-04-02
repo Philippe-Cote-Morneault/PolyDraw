@@ -27,6 +27,10 @@ import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 
 abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     protected var activeMatchPresenter: ActiveMatchPresenter? = null
+        set(value) {
+            drawFragment.drawView.socketDrawingReceiver?.matchManager = value?.matchManager
+            field = value
+        }
     private lateinit var drawFragment: DrawViewFragment
 
     // UI
@@ -68,8 +72,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         wordToDrawView?.setWordToGuess(word)
     }
 
-    override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?) {
-        drawFragment.enableDrawFunctions(enable, drawingID)
+    override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?, matchManager: MatchManager?) {
+        drawFragment.enableDrawFunctions(enable, drawingID, matchManager)
     }
 
     override fun setTimeValue(time: String) {

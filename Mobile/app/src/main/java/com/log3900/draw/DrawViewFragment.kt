@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import com.log3900.R
 import com.log3900.draw.divyanshuwidget.DrawMode
 import com.log3900.draw.divyanshuwidget.PaintOptions
+import com.log3900.game.match.MatchManager
 import kotlinx.android.synthetic.main.fragment_draw_tools.*
 import kotlinx.android.synthetic.main.fragment_draw_view.*
 import kotlinx.android.synthetic.main.view_draw_color_palette.*
@@ -251,7 +252,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         drawView.setColor(color)
     }
 
-    fun enableDrawFunctions(enable: Boolean, drawingID: UUID? = null) {
+    fun enableDrawFunctions(enable: Boolean, drawingID: UUID? = null, matchManager: MatchManager? = null) {
         canDraw = enable
         if (canDraw) {
             setDrawToolsVisibility(View.VISIBLE)
@@ -261,6 +262,7 @@ class DrawViewFragment(private var canDraw: Boolean = true) : Fragment() {
         }
         Log.d("DRAW_CANVAS", drawingID.toString())
         drawView.enableCanDraw(canDraw, drawingID)
+        drawView.socketDrawingReceiver?.matchManager = matchManager
     }
 
     fun setToDefaultValues() {
