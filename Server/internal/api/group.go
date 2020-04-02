@@ -94,12 +94,6 @@ func PostGroup(w http.ResponseWriter, r *http.Request) {
 	}
 	userid := r.Context().Value(context.CtxUserID).(uuid.UUID)
 
-	var count int64
-	model.DB().Table("groups").Where("owner_id = ? and status = ?", userid, 0).Count(&count)
-	if count != 0 {
-		rbody.JSONError(w, http.StatusConflict, language.MustGetRest("error.groupSingle", r))
-		return
-	}
 	var groupName string
 	if request.GroupName != "" {
 		groupName = request.GroupName
