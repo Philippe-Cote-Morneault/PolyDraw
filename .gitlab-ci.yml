@@ -2,6 +2,7 @@ stages:
   - build
   - lint
   - package
+  - deploy
 
 Server lint:
   image: registry.gitlab.com/jigsawcorp/log3900/server-ci
@@ -70,3 +71,30 @@ Server package PROD:
       - release
     changes:
       - Server/**/*
+
+Server deploy DEV:
+  tags:
+    - shell
+  stage: deploy
+  script:
+    - cd Server && make deploy
+  only:
+    refs:
+      - dev-server
+    changes:
+      - Server/**/*
+
+Server deploy PROD:
+  tags:
+    - shell
+  stage: deploy
+  script:
+    - export RELEASE=True
+    - cd Server && make deploy
+  only:
+    refs:
+      - release
+      - master
+    changes:
+      - Server/**/*
+      
