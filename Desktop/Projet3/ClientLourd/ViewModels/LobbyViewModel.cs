@@ -136,7 +136,7 @@ namespace ClientLourd.ViewModels
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     ReturnHome();
-                    DialogHost.Show(new ErrorDialog((string) CurrentDictionary["GameCancel"]));
+                    DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["GameCancel"]));
                 });
             }
         }

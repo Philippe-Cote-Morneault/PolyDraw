@@ -319,5 +319,29 @@ namespace ClientLourd
             double value = Math.Min(xScale, yScale);
             ScaleValue = (double)OnCoerceScaleValue(PolyDraw, value);
         }
+
+        private void LogoutItem_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.LogoutCommand.CanExecute(LoginScreen.DataContext))
+            {
+                ViewModel.LogoutCommand.Execute(LoginScreen.DataContext);
+            }
+        }
+
+        private void ProfileItem_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.MyProfileCommand.CanExecute(null))
+            {
+                ViewModel.MyProfileCommand.Execute(null);
+            }
+        }
+
+        private void HomeItem_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.HomeCommand.CanExecute(null))
+            {
+                ViewModel.HomeCommand.Execute(null);
+            }
+        }
     }
 }

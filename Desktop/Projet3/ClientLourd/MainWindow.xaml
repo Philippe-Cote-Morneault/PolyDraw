@@ -16,7 +16,7 @@
         WindowState="Maximized"
         Title="PolyDraw">
     <Window.DataContext>
-        <viewModels:MainViewModel />
+        <viewModels:MainViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
@@ -234,37 +234,27 @@
                                 </StackPanel>
                             </materialDesign:ColorZone>
                             <ListView>
-                                <ListViewItem>
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                            Command="{Binding Path=HomeCommand}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="House" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="{DynamicResource Home}"/>
-                                        </StackPanel>
-                                    </Button>
+                                <ListViewItem MouseUp="HomeItem_OnMouseUp" Name="HomeItem" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="House" Height="15" Width="15" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{DynamicResource Home}"/>
+                                    </StackPanel>
                                 </ListViewItem>
-                                <ListViewItem>
-                                    <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                            Command="{Binding Path=MyProfileCommand}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15" VerticalAlignment="Center"/>
-                                            <TextBlock Text="{DynamicResource MyProfile}"/>
-                                        </StackPanel>
-                                    </Button>
+                                <ListViewItem MouseUp="ProfileItem_OnMouseUp" Name="ProfileItem">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{DynamicResource MyProfile}"/>
+                                    </StackPanel>
                                 </ListViewItem>
 
                                 
                                 
-                                <ListViewItem>
-                                    <Button Foreground="Red" Style="{StaticResource MaterialDesignFlatButton}"
-                                            Command="{Binding Path=LogoutCommand}"
-                                            CommandParameter="{Binding ElementName=LoginScreen, Path=DataContext}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon Kind="Power" Height="15" Width="15"
-                                                                     VerticalAlignment="Center" />
-                                            <TextBlock Text="{DynamicResource Logout}" />
-                                        </StackPanel>
-                                    </Button>
+                                <ListViewItem Name="LogoutItem" MouseUp="LogoutItem_OnMouseUp">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Foreground="Red" Kind="Power" Height="15" Width="15"
+                                                                 VerticalAlignment="Center" />
+                                        <TextBlock Foreground="Red" Text="{DynamicResource Logout}" />
+                                    </StackPanel>
                                 </ListViewItem>
                             </ListView>
                         </DockPanel>
