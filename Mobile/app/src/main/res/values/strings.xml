@@ -195,4 +195,5 @@
     <string name="drawer">Drawer</string>
     <string name="player">Player</string>
     <string name="ffa_match_end_inf_winner_is_you">You are the winner!</string>
+    <string name="type_guess_instruction">Type your guess here</string>
 </resources>

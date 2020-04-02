@@ -165,4 +165,5 @@
     <string name="drawer">Dessinateur</string>
     <string name="player">Joueur</string>
     <string name="ffa_match_end_inf_winner_is_you">Vous êtes le vainqueur!</string>
+    <string name="type_guess_instruction">Devinez ici</string>
 </resources>
