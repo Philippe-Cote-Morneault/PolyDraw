@@ -170,4 +170,5 @@
     <string name="error">Error</string>
     <string name="kick_from_group_dialog_message">You have been kicked from the match</string>
     <string name="host_left_group_dialog_message">The host has left the match!</string>
+    <string name="language_picker_dialog_title">Language picker</string>
 </resources>
