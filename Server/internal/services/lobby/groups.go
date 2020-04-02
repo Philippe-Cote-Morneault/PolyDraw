@@ -154,9 +154,9 @@ func (g *groups) AddGroup(group *model.Group) {
 		Difficulty: group.Difficulty,
 	})
 	messenger.RegisterGroup(group)
-	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	virtualplayer.AddGroup(group.ID)
 	g.mutex.Lock()
+	g.groups[group.ID] = make([]uuid.UUID, 0, 4)
 	for k := range g.queue {
 		socket.SendQueueMessageSocketID(message, k)
 	}
@@ -391,6 +391,7 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 				rawMessage.ParseMessagePack(byte(socket.MessageType.ResponseGameStart), responseGen{
 					Response: true,
 				})
+				g.mutex.Lock()
 				for _, v := range g.groups[groupDB.ID] {
 					socket.SendQueueMessageSocketID(rawMessage, v)
 				}
@@ -401,7 +402,6 @@ func (g *groups) StartMatch(socketID uuid.UUID) {
 					Bytes:       uuidBytes,
 				}
 
-				g.mutex.Lock()
 				//Broadcast a message to all the users in queue
 				for k := range g.queue {
 					socket.SendQueueMessageSocketID(message, k)
@@ -489,7 +489,10 @@ func (g *groups) addBotGroupID(groupDB *model.Group) {
 
 //AddBot used to add a bot to the group
 func (g *groups) AddBot(socketID uuid.UUID) {
+	g.mutex.Lock()
 	groupID := g.assignment[socketID]
+	g.mutex.Unlock()
+
 	//Check if groups exists
 	groupDB := model.Group{}
 	model.DB().Where("id = ? and status = 0", groupID).First(&groupDB)
