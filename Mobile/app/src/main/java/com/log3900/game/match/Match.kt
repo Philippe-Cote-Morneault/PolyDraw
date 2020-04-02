@@ -125,3 +125,26 @@ class CheckPoint(
     var totalTime: Int,
     var bonus: Int
 )
+
+class TeamateGuessedWordProperly(
+    var userID: UUID,
+    var username: String,
+    var word: String,
+    var points: Int,
+    var newPoints: Int
+)
+
+class TeamateGuessWordIncorrectly(
+    var userID: UUID,
+    var username: String,
+    var lives: Int
+)
+
+class MatchCancelled(
+    var type: Type
+) {
+    enum class Type {
+        NOT_EVERYONE_JOINED,
+        NOT_ENOUGH_PLAYERS
+    }
+}

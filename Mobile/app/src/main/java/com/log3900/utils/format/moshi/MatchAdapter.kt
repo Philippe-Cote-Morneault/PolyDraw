@@ -222,4 +222,28 @@ object MatchAdapter {
 
         return CheckPoint(totalTime, bonus)
     }
+
+    fun jsonToTeamateGuessedProperly(jsonObject: JsonObject): TeamateGuessedWordProperly {
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val username = jsonObject.get("Username").asString
+        val word = jsonObject.get("Word").asString
+        val points = jsonObject.get("Points").asInt
+        val newPoints = jsonObject.get("NewPoints").asInt
+
+        return TeamateGuessedWordProperly(userID, username, word, points, newPoints)
+    }
+
+    fun jsonToTeamateGuessedInproperly(jsonObject: JsonObject): TeamateGuessWordIncorrectly {
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val username = jsonObject.get("Username").asString
+        val lives = jsonObject.get("Lives").asInt
+
+        return TeamateGuessWordIncorrectly(userID, username, lives)
+    }
+
+    fun jsonToMatchCancelled(jsonObject: JsonObject): MatchCancelled {
+        val type = MatchCancelled.Type.values()[jsonObject.get("Type").asInt + 1]
+
+        return MatchCancelled(type)
+    }
 }
