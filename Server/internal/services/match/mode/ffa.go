@@ -564,24 +564,8 @@ func (f *FFA) finish() {
 	f.receiving.Lock()
 	gameDuration := time.Now().Sub(f.timeStart)
 	log.Printf("[Match] [FFA] -> Game has ended. Match: %s", f.info.ID)
-	//Identify the winner
-	bestPlayerOrder := -1
-	bestScore := -1
 	players := make([]PlayersData, len(f.scores))
-
-	for i := range f.scores {
-		if bestScore < f.scores[i].total {
-			bestPlayerOrder = i
-			bestScore = f.scores[i].total
-		}
-		players[i] = PlayersData{
-			Username: f.players[f.order[i]].Username,
-			UserID:   f.players[f.order[i]].userID.String(),
-			Points:   f.scores[i].total,
-			IsCPU:    f.players[f.order[i]].IsCPU,
-		}
-	}
-	if bestPlayerOrder == -1 {
+	if len(f.players) <= 0 {
 		f.receiving.Unlock()
 
 		messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
@@ -589,14 +573,28 @@ func (f *FFA) finish() {
 		log.Printf("[Match] [FFA] No more players in the match. Will not send finish packet")
 		return
 	}
-	winner := f.players[f.order[bestPlayerOrder]]
+
+	for i := range f.scores {
+		players[i] = PlayersData{
+			Username: f.players[f.order[i]].Username,
+			UserID:   f.players[f.order[i]].userID.String(),
+			Points:   f.scores[i].total,
+			IsCPU:    f.players[f.order[i]].IsCPU,
+		}
+	}
+
+	sort.Slice(players, func(i, j int) bool {
+		return (players)[i].Points > (players)[j].Points
+	})
+
+	winner := players[0]
 	log.Printf("[Match] [FFA] -> Winner is %s Match: %s", winner.Username, f.info.ID)
 
 	//Send a message to all the players to give them the details of the game and who is the winner
 	message := socket.RawMessage{}
 	message.ParseMessagePack(byte(socket.MessageType.GameEnded), GameEnded{
 		Players:    players,
-		Winner:     winner.userID.String(),
+		Winner:     winner.UserID,
 		WinnerName: winner.Username,
 		Time:       gameDuration.Milliseconds(),
 	})
