@@ -103,7 +103,7 @@
             </StackPanel>
             <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}"  Orientation="Horizontal">
                 <TextBlock FontSize="24" Text="{DynamicResource TypeGuess}" VerticalAlignment="Center"></TextBlock>
-                <ItemsControl x:Name="GuessTextBoxes"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}" LostFocus="OnFocusLost" GotFocus="OnFocus">
+                <ItemsControl x:Name="GuessTextBoxes" IsEnabled="{Binding CanStillGuess}"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}" LostFocus="OnFocusLost" GotFocus="OnFocus">
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

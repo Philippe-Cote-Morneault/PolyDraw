@@ -80,7 +80,14 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
-                DialogHost.Show(new ClosableErrorDialog(((SocketErrorEventArgs)args).Message));
+                try
+                {
+                    DialogHost.Show(new ClosableErrorDialog(((SocketErrorEventArgs) args).Message));
+                }
+                catch
+                {
+                    //The message will be ignore
+                }
             });
         }
 
