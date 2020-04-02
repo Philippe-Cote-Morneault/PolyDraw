@@ -104,7 +104,11 @@ class MonitoringService : Service() {
             Event.SERVER_ERROR.eventType -> {
                 val json = MoshiPack.msgpackToJson((message.obj as com.log3900.socket.Message).data)
                 val jsonObject = JsonParser().parse(json).asJsonObject
-                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage("Error", jsonObject.get("Message").asString, null, null)))
+                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                    MainApplication.instance.getContext().getString(R.string.error),
+                    jsonObject.get("Message").asString,
+                    null,
+                    null)))
             }
         }
     }
