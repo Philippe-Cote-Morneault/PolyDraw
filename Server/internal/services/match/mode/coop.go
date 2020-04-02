@@ -216,6 +216,8 @@ func (c *Coop) Ready(socketID uuid.UUID) {
 func (c *Coop) Disconnect(socketID uuid.UUID) {
 	//Remove the player
 	c.receiving.Lock()
+	messenger.HandleQuitGroup(&c.info, socketID)
+
 	player := c.connections[socketID]
 
 	leaveMessage := socket.RawMessage{}
@@ -246,7 +248,6 @@ func (c *Coop) Disconnect(socketID uuid.UUID) {
 	}
 	c.receiving.Unlock()
 
-	messenger.HandleQuitGroup(&c.info, socketID)
 	c.syncPlayers()
 }
 

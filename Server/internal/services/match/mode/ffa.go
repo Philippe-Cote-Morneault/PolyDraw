@@ -228,8 +228,9 @@ func (f *FFA) GameLoop() {
 
 //Disconnect endpoint for when a user exits
 func (f *FFA) Disconnect(socketID uuid.UUID) {
-
 	f.receiving.Lock()
+	messenger.HandleQuitGroup(&f.info, socketID)
+
 	leaveMessage := socket.RawMessage{}
 	leaveMessage.ParseMessagePack(byte(socket.MessageType.PlayerHasLeftGame), PlayerHasLeft{
 		UserID:   f.connections[socketID].userID.String(),
@@ -268,7 +269,6 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	}
 	f.receiving.Unlock()
 
-	messenger.HandleQuitGroup(&f.info, socketID)
 	f.syncPlayers()
 }
 
