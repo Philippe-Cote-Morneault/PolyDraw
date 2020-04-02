@@ -9,7 +9,7 @@ interface ActiveMatchView {
     fun setPlayers(players: ArrayList<Player>)
     fun setWordToGuessLength(length: Int)
     fun setWordToDraw(word: String)
-    fun enableDrawFunctions(enable: Boolean, drawingID: UUID?)
+    fun enableDrawFunctions(enable: Boolean, drawingID: UUID?, matchManager: MatchManager? = null)
     fun clearCanvas()
     fun setTimeValue(time: String)
     fun showWordGuessingView()
