@@ -261,6 +261,11 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.removePlayer(f.connections[socketID], socketID)
 	f.realPlayers--
 	f.lapsTotal -= f.info.NbRound
+
+	//If the game is waiting for the player to receive an answer
+	if f.receivingGuesses.IsSet() {
+		f.waitingResponse.Release(1)
+	}
 	f.receiving.Unlock()
 
 	messenger.HandleQuitGroup(&f.info, socketID)
