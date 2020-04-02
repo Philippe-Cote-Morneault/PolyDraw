@@ -95,7 +95,7 @@ class GroupManager : Service() {
         currentGroup = group
     }
 
-    private fun onGroupLeft(groupID: UUID) {
+    private fun onGroupLeft(userLeftGroup: UserLeftGroup) {
         currentGroup = null
     }
 
@@ -156,7 +156,7 @@ class GroupManager : Service() {
                 onGroupJoined(event.data as Group)
             }
             EventType.GROUP_LEFT -> {
-                onGroupLeft(event.data as UUID)
+                onGroupLeft(event.data as UserLeftGroup)
             }
         }
     }

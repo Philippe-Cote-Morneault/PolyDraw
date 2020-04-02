@@ -236,14 +236,15 @@ class GroupRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
 
-        val userID = UUID.fromString(jsonObject.get("UserID").asString)
-        val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
+        Log.d("POTATO", "UserLeftGroup = $json")
 
-        groupCache.removeUserFromGroup(groupID, userID)
-        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_LEFT_GROUP, Pair(groupID, userID)))
+        val userLeftGroup = GroupAdapter().jsonToUserLeftGroup(jsonObject)
 
-        if (userID == AccountRepository.getInstance().getAccount().ID && groupCache.containsGroup(groupID)) {
-            EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, groupID))
+        groupCache.removeUserFromGroup(userLeftGroup.groupID, userLeftGroup.userID)
+        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_LEFT_GROUP, userLeftGroup))
+
+        if (userLeftGroup.userID == AccountRepository.getInstance().getAccount().ID && groupCache.containsGroup(userLeftGroup.groupID)) {
+            EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, userLeftGroup))
         }
     }
 

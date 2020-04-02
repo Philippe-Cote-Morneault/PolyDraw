@@ -10,6 +10,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonParser
 import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
@@ -146,6 +147,12 @@ class MonitoringService : Service() {
 
     private fun onGroupLeft() {
         MainApplication.instance.stopService(MatchRepository::class.java)
+        EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+            MainApplication.instance.getContext().getString(R.string.warning),
+            MainApplication.instance.getContext().getString(R.string.kick_from_group_dialog_message),
+            null,
+            null)
+        ))
     }
 
     private fun onMatchEnded() {

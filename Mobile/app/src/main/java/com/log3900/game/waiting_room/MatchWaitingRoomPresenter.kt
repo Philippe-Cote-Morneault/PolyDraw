@@ -5,6 +5,7 @@ import com.log3900.chat.ChatMessage
 import com.log3900.game.group.GroupManager
 import com.log3900.game.group.MatchMode
 import com.log3900.game.group.Player
+import com.log3900.game.group.UserLeftGroup
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
@@ -81,9 +82,9 @@ class MatchWaitingRoomPresenter : Presenter {
         }
     }
 
-    private fun onPlayerLeft(groupID: UUID, playerID: UUID) {
-        if (groupID == groupManager?.currentGroup?.ID) {
-            matchWaitingRoomView?.notifyPlayerLeft(playerID)
+    private fun onPlayerLeft(userLeftGroup: UserLeftGroup) {
+        if (userLeftGroup.groupID == groupManager?.currentGroup?.ID) {
+            matchWaitingRoomView?.notifyPlayerLeft(userLeftGroup.userID)
             matchWaitingRoomView?.notifyGroupUpdated(groupManager?.currentGroup!!)
         }
     }
@@ -99,8 +100,8 @@ class MatchWaitingRoomPresenter : Presenter {
                 onPlayerJoined(eventData.first, eventData.second)
             }
             EventType.PLAYER_LEFT_GROUP -> {
-                val eventData = event.data as Pair<UUID, UUID>
-                onPlayerLeft(eventData.first, eventData.second)
+                val eventData = event.data as UserLeftGroup
+                onPlayerLeft(eventData)
             }
         }
     }

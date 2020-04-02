@@ -59,4 +59,14 @@ class GroupAdapter {
 
         return arrayList
     }
+
+    fun jsonToUserLeftGroup(jsonObject: JsonObject): UserLeftGroup {
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val username = jsonObject.get("Username").asString
+        val groupID = UUID.fromString(jsonObject.get("GroupID").asString)
+        val isCPU = jsonObject.get("IsCPU").asBoolean
+        val isKicked = jsonObject.get("IsKicked").asBoolean
+
+        return UserLeftGroup(userID, username, groupID, isCPU, isKicked)
+    }
 }

@@ -166,4 +166,7 @@
     <string name="player">Player</string>
     <string name="ffa_match_end_inf_winner_is_you">You are the winner!</string>
     <string name="type_guess_instruction">Type your guess here</string>
+    <string name="warning">Warning</string>
+    <string name="error">Error</string>
+    <string name="kick_from_group_dialog_message">You have been kicked from the match</string>
 </resources>
