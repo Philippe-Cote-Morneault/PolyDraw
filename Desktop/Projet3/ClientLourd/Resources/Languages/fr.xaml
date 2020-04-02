@@ -89,6 +89,7 @@
 
     <!-- LobbyViewModel -->
     <system:String x:Key="Kicked">Vous avez été expulsé de la partie</system:String>
+    <system:String x:Key="GameCancel">La partie a été annulée</system:String>
     
     
     <!-- Lobby creation -->

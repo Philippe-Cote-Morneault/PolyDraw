@@ -58,6 +58,7 @@
         MatchRoundEnded = 85,
         CoopWordGuessed = 87,
         CoopTeamateGuessedIncorrectly = 89,
+        GameCancel = 91,
         UserChangedName = 110,
         ChangeLanguage = 112,
         ServerMessage = 255,

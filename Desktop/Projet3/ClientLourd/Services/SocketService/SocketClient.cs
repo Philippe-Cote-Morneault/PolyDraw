@@ -252,6 +252,9 @@ namespace ClientLourd.Services.SocketService
                         case SocketMessageTypes.UserChangedName:
                             OnUserChangedName(this, new ChatEventArgs(data));
                             break;
+                        case SocketMessageTypes.GameCancel:
+                            OnGameCancel(this, new MatchEventArgs(data));
+                            break;
                         default:
                             throw new InvalidDataException();
                     }                    

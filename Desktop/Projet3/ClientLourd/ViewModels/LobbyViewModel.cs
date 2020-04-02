@@ -122,8 +122,23 @@ namespace ClientLourd.ViewModels
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.StartGameResponse += OnStartGameResponse;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
+            SocketClient.GameCancel += SocketClientOnGameCancel;
             MainViewModel.LanguageChangedEvent += OnLanguageChanged;
             IsGameStarted = false;
+        }
+
+        private void SocketClientOnGameCancel(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            //The game was not able to start
+            if (e.Type == 1)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ReturnHome();
+                    DialogHost.Show(new ErrorDialog((string) CurrentDictionary["GameCancel"]));
+                });
+            }
         }
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
@@ -170,7 +185,6 @@ namespace ClientLourd.ViewModels
 
         public void LeaveLobby()
         {
-            CurrentLobby = null;
             if (!IsGameStarted)
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.QuitLobbyRequest));
             else
@@ -178,9 +192,7 @@ namespace ClientLourd.ViewModels
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveMatch));
                 IsGameStarted = false;
             }
-            OnReturnChat(this);
-            HomeViewModel.FetchLobbies();
-            ContainedView = Utilities.Enums.Views.Home.ToString();
+            ReturnHome();
         }
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
@@ -207,9 +219,7 @@ namespace ClientLourd.ViewModels
 
                 if (UserIsInLobby(lobbyDeletedID) && !UserIsHost())
                 {
-                    CurrentLobby = null;
-                    OnReturnChat(this);
-                    ContainedView = Utilities.Enums.Views.Home.ToString();
+                    ReturnHome();
                     DialogHost.Show(new ClosableErrorDialog($"{CurrentDictionary["HostLeft"]}"), "Default");
                 }
             });
@@ -337,9 +347,7 @@ namespace ClientLourd.ViewModels
                 LobbyEventArgs lobbyEventArgs = (LobbyEventArgs)e;
                 if (SessionInformations.User.ID == lobbyEventArgs.UserID)
                 {
-                    OnReturnChat(this);
-                    HomeViewModel.FetchLobbies();
-                    ContainedView = Utilities.Enums.Views.Home.ToString();
+                    ReturnHome();
                     if (lobbyEventArgs.IsKicked)
                     {
                         DialogHost.Show(new MessageDialog("Oups", (String) CurrentDictionary["Kicked"]));
@@ -402,6 +410,17 @@ namespace ClientLourd.ViewModels
         protected virtual void OnReturnChat(object source)
         {
             ReturnChat?.Invoke(source, EventArgs.Empty);
+        }
+
+        private void ReturnHome()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                CurrentLobby = null;
+                OnReturnChat(this);
+                HomeViewModel.FetchLobbies();
+                ContainedView = Utilities.Enums.Views.Home.ToString();
+            });
         }
     }
 }

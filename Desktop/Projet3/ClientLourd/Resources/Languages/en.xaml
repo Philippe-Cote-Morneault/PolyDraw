@@ -115,6 +115,7 @@
     
     <!-- LobbyViewModel -->
     <system:String x:Key="Kicked">You have been kicked from the match</system:String>
+    <system:String x:Key="GameCancel">The game has been cancelled</system:String>
     
     
     <!-- GameViewModel -->

@@ -130,7 +130,7 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler CoopWordGuessed;
         public event SocketEventHandler CoopTeamateGuessedIncorrectly;
 
-
+        public event SocketEventHandler GameCancel;
 
         protected virtual void OnMatchStarted(object source)
         {
@@ -210,6 +210,11 @@ namespace ClientLourd.Services.SocketService
         protected virtual void OnCoopTeamateGuessedIncorrectly(object source, EventArgs e)
         {
             CoopTeamateGuessedIncorrectly?.Invoke(source, e);
+        }
+        
+        protected virtual void OnGameCancel(object source, EventArgs e)
+        {
+            GameCancel?.Invoke(source, e);
         }
 
         //Lobby relate

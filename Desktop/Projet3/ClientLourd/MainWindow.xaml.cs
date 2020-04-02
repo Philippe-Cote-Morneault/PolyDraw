@@ -93,6 +93,7 @@ namespace ClientLourd
         private void AfterLogout()
         {
             ((ViewModelBase) DataContext).AfterLogOut();
+            MenuToggleButton.IsChecked = false;
             ReturnTheChat();
             ProdConfigButton.IsChecked = true;
         }
