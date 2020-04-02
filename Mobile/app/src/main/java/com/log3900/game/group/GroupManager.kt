@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.os.Message
 import android.util.Log
 import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -95,6 +96,19 @@ class GroupManager : Service() {
         currentGroup = group
     }
 
+    private fun onPlayerLeftGroup(userLeftGroup: UserLeftGroup) {
+        if (currentGroup != null && userLeftGroup.groupID == currentGroup!!.ID) {
+            if (userLeftGroup.userID == currentGroup!!.ownerID) {
+                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                    MainApplication.instance.getContext().getString(R.string.warning),
+                    MainApplication.instance.getContext().getString(R.string.host_left_group_dialog_message),
+                    null,
+                    null
+                )))
+            }
+        }
+    }
+
     private fun onGroupLeft(userLeftGroup: UserLeftGroup) {
         currentGroup = null
     }
@@ -157,6 +171,9 @@ class GroupManager : Service() {
             }
             EventType.GROUP_LEFT -> {
                 onGroupLeft(event.data as UserLeftGroup)
+            }
+            EventType.PLAYER_LEFT_GROUP -> {
+                onPlayerLeftGroup(event.data as UserLeftGroup)
             }
         }
     }

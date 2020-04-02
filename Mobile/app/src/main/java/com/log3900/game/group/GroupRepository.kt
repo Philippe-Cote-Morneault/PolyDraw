@@ -236,8 +236,6 @@ class GroupRepository : Service() {
         val json = MoshiPack.msgpackToJson(message.data)
         val jsonObject = JsonParser().parse(json).asJsonObject
 
-        Log.d("POTATO", "UserLeftGroup = $json")
-
         val userLeftGroup = GroupAdapter().jsonToUserLeftGroup(jsonObject)
 
         groupCache.removeUserFromGroup(userLeftGroup.groupID, userLeftGroup.userID)

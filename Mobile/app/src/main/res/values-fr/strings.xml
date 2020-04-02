@@ -169,4 +169,5 @@
     <string name="warning">Avertissement</string>
     <string name="error">Erreur</string>
     <string name="kick_from_group_dialog_message">Vous avez été expulsé de la partie</string>
+    <string name="host_left_group_dialog_message">L\'hôte a quitté la salle d\'attente!</string>
 </resources>
