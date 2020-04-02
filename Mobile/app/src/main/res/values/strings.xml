@@ -194,4 +194,5 @@
     <string name="players">Players</string>
     <string name="drawer">Drawer</string>
     <string name="player">Player</string>
+    <string name="ffa_match_end_inf_winner_is_you">You are the winner!</string>
 </resources>

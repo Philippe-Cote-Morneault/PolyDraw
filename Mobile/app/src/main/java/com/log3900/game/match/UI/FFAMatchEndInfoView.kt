@@ -36,8 +36,12 @@ class FFAMatchEndInfoView(context: Context, attributeSet: AttributeSet) : Constr
         }
     }
 
-    fun setWinner(winnerName: String) {
-        winnerTextView.text = MainApplication.instance.getContext().getString(R.string.ffa_match_end_info_winner_is, winnerName)
+    fun setWinner(winnerName: String, isUser: Boolean) {
+        if (isUser) {
+            winnerTextView.text = MainApplication.instance.getContext().getString(R.string.ffa_match_end_inf_winner_is_you)
+        } else {
+            winnerTextView.text = MainApplication.instance.getContext().getString(R.string.ffa_match_end_info_winner_is, winnerName)
+        }
     }
 
     fun setPlayers(players: ArrayList<Pair<String, Int>>) {

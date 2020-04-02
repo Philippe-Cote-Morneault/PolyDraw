@@ -262,8 +262,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         roundEndInfoView.visibility = View.INVISIBLE
     }
 
-    override fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>) {
-        matchEndInfoView.setWinner(winnerName)
+    override fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>, isUser: Boolean) {
+        matchEndInfoView.setWinner(winnerName, isUser)
         matchEndInfoView.setPlayers(players)
         matchEndInfoView.visibility = View.VISIBLE
     }
