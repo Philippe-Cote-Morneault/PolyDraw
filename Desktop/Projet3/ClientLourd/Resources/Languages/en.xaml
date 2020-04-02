@@ -112,6 +112,11 @@
     <system:String x:Key="BestScore">Best score: </system:String>
     <system:String x:Key="Turn">Turn</system:String>
     
+    
+    <!-- LobbyViewModel -->
+    <system:String x:Key="Kicked">You have been kicked from the match</system:String>
+    
+    
     <!-- GameViewModel -->
     <system:String x:Key="IsDrawingNext">is drawing the next word!</system:String>
     <system:String x:Key="YourTurnDraw">It is your turn to draw the word</system:String>

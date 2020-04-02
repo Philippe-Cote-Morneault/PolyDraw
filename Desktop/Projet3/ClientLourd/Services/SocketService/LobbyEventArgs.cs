@@ -81,6 +81,11 @@ namespace ClientLourd.Services.SocketService
             get { return _data["GroupID"]; }
         }
 
+        public bool IsKicked
+        {
+            get => _data["IsKicked"];
+        }
+
         // LobbyDeleted
 
         public byte[] Bytes

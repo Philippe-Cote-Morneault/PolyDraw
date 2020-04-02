@@ -87,7 +87,10 @@
     <system:String x:Key="DrawingMode">Sélectionnez la façon dont le dessin sera affiché</system:String>
 
 
-
+    <!-- LobbyViewModel -->
+    <system:String x:Key="Kicked">Vous avez été expulsé de la partie</system:String>
+    
+    
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Créer une la partie</system:String>
     <system:String x:Key="EnterLobbyName">Entrer le nom de la partie</system:String>

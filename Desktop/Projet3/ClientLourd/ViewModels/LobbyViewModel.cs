@@ -38,10 +38,6 @@ namespace ClientLourd.ViewModels
         }
 
 
-        private void SocketClientOnMatchEnded(object source, EventArgs args)
-        {
-        }
-
         private bool _isGameStarted;
         public bool IsGameStarted
         {
@@ -125,36 +121,32 @@ namespace ClientLourd.ViewModels
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
             SocketClient.UserLeftLobby += OnUserLeftLobby;
             SocketClient.StartGameResponse += OnStartGameResponse;
-            SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
             MainViewModel.LanguageChangedEvent += OnLanguageChanged;
             IsGameStarted = false;
         }
 
-        private void SocketClientOnMatchTimesUp(object source, EventArgs args)
+        private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
-            var e = (MatchEventArgs) args;
-            if (e.Type == 2)
+            Task.Run(() =>
             {
-                Task.Run(() =>
+                Lobby tmpLobby = null;
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Lobby tmpLobby = null;
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        tmpLobby = CurrentLobby;
-                    });
-                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        //If the user is still in the lobby leave it
-                        if (tmpLobby == null || CurrentLobby == null)
-                            return;
-                        if (tmpLobby.ID == CurrentLobby.ID)
-                        {
-                            LeaveLobby();
-                        }
-                    });
+                    tmpLobby = CurrentLobby;
                 });
-            }
+                Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    //If the user is still in the lobby leave it
+                    if (tmpLobby == null || CurrentLobby == null)
+                        return;
+                    if (tmpLobby.ID == CurrentLobby.ID)
+                    {
+                        LeaveLobby();
+                    }
+                });
+            });
         }
 
         private void OnLanguageChanged(object source, EventArgs args)
@@ -348,6 +340,10 @@ namespace ClientLourd.ViewModels
                     OnReturnChat(this);
                     HomeViewModel.FetchLobbies();
                     ContainedView = Utilities.Enums.Views.Home.ToString();
+                    if (lobbyEventArgs.IsKicked)
+                    {
+                        DialogHost.Show(new MessageDialog("Oups", (String) CurrentDictionary["Kicked"]));
+                    }
                 }
 
                 NotifyPropertyChanged(nameof(CurrentLobby));
