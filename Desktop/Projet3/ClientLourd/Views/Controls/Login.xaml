@@ -58,6 +58,7 @@
             <!--Username-->
             <StackPanel Grid.Row="2">
                 <TextBox
+                    TextChanged="NameTextBox_OnTextChanged"
                     Margin="20 0 20 0"
                     x:Name="NameTextBox"
                     MaxLength="12"

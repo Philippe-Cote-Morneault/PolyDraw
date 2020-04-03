@@ -16,19 +16,14 @@ namespace ClientLourd.Views.Controls
     public partial class Login : UserControl, INotifyPropertyChanged
     {
 
+        private string _oldUsername;
         private bool _isBearerActive;
+        private bool _passwordChanged;
+        private bool _usernameChanged;
 
         public bool IsBearerActive
         {
-            get => _isBearerActive;
-            set
-            {
-                if (_isBearerActive != value)
-                {
-                    _isBearerActive = value;
-                    OnPropertyChanged();
-                }
-            }
+            get => _isBearerActive && !_passwordChanged && !_usernameChanged;
         }
         public Login()
         {
@@ -40,17 +35,22 @@ namespace ClientLourd.Views.Controls
 
         public void AfterLogout()
         {
+            _isBearerActive = false;
             PasswordBox.Clear();
             ((LoginViewModel) DataContext).AfterLogOut();
             var cred = CredentialManager.ReadCredential(ApplicationInformations.Name);
             if (cred != null)
             {
                 NameTextBox.Text = cred.UserName;
+                _oldUsername = cred.UserName;
                 ((LoginViewModel) DataContext).Tokens.Bearer = cred.Password;
                 PasswordBox.Password = "MyJunkPassword";
-                IsBearerActive = true;
+                _isBearerActive = true;
                 RememberMeCheckBox.IsChecked = true;
             }
+            _passwordChanged = false;
+            _usernameChanged = false;
+            OnPropertyChanged(nameof(IsBearerActive));
         }
 
         public void Load(object sender, RoutedEventArgs e)
@@ -84,7 +84,8 @@ namespace ClientLourd.Views.Controls
 
         private void PasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
         {
-            IsBearerActive = false;
+            _passwordChanged = true;
+            OnPropertyChanged(nameof(IsBearerActive));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -93,6 +94,12 @@ namespace ClientLourd.Views.Controls
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void NameTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            _usernameChanged = NameTextBox.Text != _oldUsername;
+            OnPropertyChanged(nameof(IsBearerActive));
         }
     }
 }
