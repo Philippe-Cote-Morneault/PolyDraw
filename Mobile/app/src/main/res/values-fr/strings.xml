@@ -174,4 +174,5 @@
     <string name="kick_from_group_dialog_message">Vous avez été expulsé de la partie</string>
     <string name="host_left_group_dialog_message">L\'hôte a quitté la salle d\'attente!</string>
     <string name="language_picker_dialog_title">Sélecteur de language</string>
+    <string name="you_guessed_correctly">Vous avez deviné correctement!</string>
 </resources>
