@@ -215,7 +215,7 @@
     </system:String>
     
     <system:String x:Key="FFADescription">
-        In this game mode, every contestant plays agaisnt each other in order to gain the best score.
+        In this game mode, every contestant plays against each other in order to gain the best score.
         Each player can earn points by correctly guessing the word drawn. The number of points a player can gain
         depends on the time it took to guess the word and the number of players that have already guessed the word correctly.
         A player may also earn some points if the other players are able to guess the word he has drawn. A free-for-all match looks like this.
@@ -223,7 +223,7 @@
 
     <system:String x:Key="FFAPlayersSection">
         In the left section of the interface, the players and their respective score are shown. They are ordered by the highest to the lowest score.
-        To differentiate virtual players from human players, virtual players are given a robot as icon. Also, to highlight who the drawer of the current turn is,
+        To differentiate virtual players from human players, virtual players are given a robot as an icon. Also, to highlight who the drawer of the current turn is,
         a pencil is shown next to the drawer's name.
     </system:String>
 
@@ -234,11 +234,11 @@
     </system:String>
 
     <system:String x:Key="FFADrawer">
-        In a free-for-all match, the word that needs to be drawn by the drawer is located under the drawing zone. In order to gain some points, the drawer will have to demonstrate his drawing skills!
+        In a free-for-all match, the word that needs to be drawn is located under the drawing zone. In order to gain some points, the drawer will have to demonstrate his drawing skills!
     </system:String>
 
     <system:String x:Key="FFAGuess">
-        The other players of the match will have to use the textbox situated under the drawing zone in order guess the word. If the drawer is a virtual player, the players that are currently
+        The other players of the match will have to use the textbox situated under the drawing zone in order to guess the word. If the drawer is a virtual player, the players that are currently
         guessing can ask for a hint. The hint will be displayed in the match's chat. Since asking for a hint costs points, the players will have to be careful!
     </system:String>
 
