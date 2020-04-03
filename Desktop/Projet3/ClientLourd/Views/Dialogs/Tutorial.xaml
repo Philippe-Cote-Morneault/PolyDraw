@@ -6,7 +6,10 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              xmlns:slide="clr-namespace:ClientLourd.Views.Controls.Tutorial"
+            xmlns:ViewModels="clr-namespace:ClientLourd.ViewModels"
+
              mc:Ignorable="d">
+   
     <DockPanel MaxHeight="900">
      <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
          <materialDesign:PackIcon Kind="Close"/>

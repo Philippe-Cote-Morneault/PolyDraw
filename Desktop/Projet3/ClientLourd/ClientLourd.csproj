@@ -479,6 +479,7 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Tutorial\FFA\FFATopBarFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFAGuessFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFADrawerFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFADrawerEN.PNG" />
@@ -486,7 +487,6 @@
     <Resource Include="Resources\Tutorial\FFA\FFAPlayersEN.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFAGuessEN.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFATopBarEN.PNG" />
-    <Content Include="Resources\Tutorial\FFA\FFATopBarFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFAPlayersFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFAGameFR.PNG" />
     <Resource Include="windows.ico" />
