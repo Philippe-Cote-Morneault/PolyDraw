@@ -49,6 +49,9 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.TEAMATE_GUESSED_WORD_PROPERLY, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.TEAMATE_GUESSED_WORD_INCORRECTLY, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.MATCH_CANCELLED, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -89,6 +92,9 @@ class MatchRepository : Service() {
             Event.CHECKPOINT -> onCheckpoint(socketMessage)
             Event.ROUND_ENDED -> onRoundEnded(socketMessage)
             Event.HINT_RESPONSE -> onHintResponse(socketMessage)
+            Event.TEAMATE_GUESSED_WORD_PROPERLY -> onTeamateGuessedWordProperly(socketMessage)
+            Event.TEAMATE_GUESSED_WORD_INCORRECTLY -> onTeamateGuessedWordInproperly(socketMessage)
+            Event.MATCH_CANCELLED -> onMatchCancelled(socketMessage)
         }
     }
 
@@ -277,6 +283,9 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.MATCH_CANCELLED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.TEAMATE_GUESSED_WORD_INCORRECTLY, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.TEAMATE_GUESSED_WORD_PROPERLY, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHECKPOINT, socketMessageHandler!!)
