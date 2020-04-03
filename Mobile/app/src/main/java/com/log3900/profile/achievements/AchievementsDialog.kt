@@ -64,6 +64,7 @@ class AchievementsDialog : DialogFragment() {
 
     private suspend fun getAchievements(): List<Achievement> {
         // TODO: Error handling
-        return StatsRepository.getAchievements()
+//        return StatsRepository.getAchievements()
+        return listOf()
     }
 }
