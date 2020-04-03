@@ -91,9 +91,11 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         }
 
         if (guessingView == null) {
+            footer.bringToFront()
             guessingView = WordGuessingView(context!!)
             guessingView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(guessingView)
+            guessingView?.bringToFront()
             guessingView?.listener = object : WordGuessingView.Listener {
                 override fun onGuessPressed(text: String) {
                     activeMatchPresenter?.guessPressed(text)

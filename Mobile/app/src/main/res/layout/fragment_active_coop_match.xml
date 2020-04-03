@@ -75,6 +75,7 @@
         android:id="@+id/fragment_active_match_footer_container"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:background="@color/color_white"
         android:orientation="horizontal"
         android:layout_marginEnd="300dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,14 +84,11 @@
 
     <fragment
         android:id="@+id/fragment_active_match_draw_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="750dp"
+        android:layout_height="500dp"
         android:name="com.log3900.draw.DrawViewFragment"
-        android:layout_marginEnd="300dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_coop_match_recycler_view_team_player_list"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toEndOf="@id/fragment_active_coop_match_recycler_view_team_player_list" />
 
     <com.log3900.game.match.UI.RoundEndInfoView
         android:id="@+id/fragment_active_match_round_end_info_view"
