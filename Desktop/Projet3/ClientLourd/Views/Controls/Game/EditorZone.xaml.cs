@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -44,6 +45,7 @@ namespace ClientLourd.Views.Controls.Game
 
         private void InitEventHandler()
         {
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             SocketClient.GuessResponse += SocketClientOnGuessResponse;
             SocketClient.MatchTimesUp += SocketClientOnMatchTimesUp;
             SocketClient.MatchEnded += SocketClientOnMatchEnded;
@@ -51,6 +53,15 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.RoundEnded += SocketClientOnRoundEnded;
             SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
         }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.CanStillGuess))
+            {
+                FocusFirstTextBox();
+            }
+        }
+
         public SessionInformations SessionInformations
         {
             get
@@ -357,16 +368,6 @@ namespace ClientLourd.Views.Controls.Game
 
                 });
             }
-
-            // Focus first text box
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
-                TextBox tb = (c.ContentTemplate.FindName("textbox", c) as TextBox);
-
-                Action focusAction = () => tb.Focus();
-                Dispatcher.BeginInvoke(focusAction, DispatcherPriority.Render);
-            });
         }
 
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
