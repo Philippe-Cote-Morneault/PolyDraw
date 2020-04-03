@@ -228,12 +228,28 @@ namespace ClientLourd.Views.Controls.Game
 
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Back)
+            var tb = (TextBox) sender;
+            if (tb != null)
             {
-                var tb = (TextBox) sender;
-                if (tb != null)
+                if (e.Key == Key.Back)
                 {
-                    tb.Text = "";
+                    if (tb.Text != "")
+                    {
+                        tb.Text = "";
+                    }
+                    else
+                    {
+                        var index = (int) tb.Tag;
+                        if (index != 0)
+                        {
+                            var request = new TraversalRequest(FocusNavigationDirection.Previous);
+                            request.Wrapped = true;
+                            tb.MoveFocus(request);
+                        }
+                    }
+                }
+                else if (e.Key == Key.Left)
+                {
                     var index = (int) tb.Tag;
                     if (index != 0)
                     {
@@ -241,6 +257,17 @@ namespace ClientLourd.Views.Controls.Game
                         request.Wrapped = true;
                         tb.MoveFocus(request);
                     }
+                }
+                else if (e.Key == Key.Right)
+                {
+                    var index = (int) tb.Tag;
+                    if (index != ViewModel.Guess.Length - 1)
+                    {
+                        var request = new TraversalRequest(FocusNavigationDirection.Next);
+                        request.Wrapped = true;
+                        tb.MoveFocus(request);
+                    }
+                    
                 }
             }
         }
