@@ -208,7 +208,7 @@
     <system:String x:Key="FFADescription">
         Pour ce mode de partie, tous les joueurs s'affrontent afin obtenir le meilleur score.
         Ils peuvent gagner des points en devinant correctement le mot dessiné par le dessinateur.
-        Le nombre de points gagnés dépend du temps restant au tour et du nombre de joueurs ayant déjà deviné le mot.
+        Le nombre de points gagnés dépend du temps restant et du nombre de joueurs ayant déjà deviné le mot.
         De plus, ils peuvent gagner des points lorsque d'autres joueurs devinent correctement leur dessin.
         Voici l'interface d'une partie de mêlée générale.
     </system:String>
