@@ -238,12 +238,12 @@ class GroupRepository : Service() {
 
         val userLeftGroup = GroupAdapter().jsonToUserLeftGroup(jsonObject)
 
-        groupCache.removeUserFromGroup(userLeftGroup.groupID, userLeftGroup.userID)
-        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_LEFT_GROUP, userLeftGroup))
-
         if (userLeftGroup.userID == AccountRepository.getInstance().getAccount().ID && groupCache.containsGroup(userLeftGroup.groupID)) {
             EventBus.getDefault().post(MessageEvent(EventType.GROUP_LEFT, userLeftGroup))
         }
+
+        groupCache.removeUserFromGroup(userLeftGroup.groupID, userLeftGroup.userID)
+        EventBus.getDefault().post(MessageEvent(EventType.PLAYER_LEFT_GROUP, userLeftGroup))
     }
 
     private fun onJoinGroupResponse(message: com.log3900.socket.Message) {
