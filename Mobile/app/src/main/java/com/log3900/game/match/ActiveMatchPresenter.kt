@@ -97,8 +97,8 @@ abstract class ActiveMatchPresenter : Presenter {
 
     protected open fun onRoundEnded(roundEnded: RoundEnded) {
         val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
-        roundEnded.players.forEach {
-            playerScores.add(Pair(it.username, it.newPoints))
+        matchManager.getCurrentMatch().players.forEach { currentMatchPlayer ->
+            playerScores.add(Pair(currentMatchPlayer.username, roundEnded.players.find { currentMatchPlayer.ID == it.userID }!!.newPoints))
         }
         activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
     }
