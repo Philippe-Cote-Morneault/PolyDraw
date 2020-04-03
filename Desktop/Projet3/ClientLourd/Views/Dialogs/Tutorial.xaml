@@ -7,11 +7,11 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              xmlns:slide="clr-namespace:ClientLourd.Views.Controls.Tutorial"
              mc:Ignorable="d">
-    <DockPanel MaxHeight="500">
+    <DockPanel MaxHeight="900">
      <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
          <materialDesign:PackIcon Kind="Close"/>
      </Button>   
-    <materialDesign:Transitioner SelectedIndex="0" Width="400" Margin="10">
+    <materialDesign:Transitioner SelectedIndex="0" Width="800" Margin="10">
               <materialDesign:Transitioner.InputBindings>
                 <KeyBinding
                   Key="Left"
@@ -23,7 +23,7 @@
                         <!-- Introduction -->
                         <materialDesign:TransitionerSlide>
                             <ScrollViewer>
-                                <DockPanel Width="300">
+                                <DockPanel>
                                     <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
                                     <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
                                         <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
@@ -45,6 +45,11 @@
                                 <slide:ChatTutorial Margin="10"/>
                             </ScrollViewer>
                         </materialDesign:TransitionerSlide>
+
+                        <materialDesign:TransitionerSlide >
+                            <slide:FFATutorial Margin="10"/>
+                        </materialDesign:TransitionerSlide>
+
         </materialDesign:Transitioner>
     </DockPanel>
         

@@ -209,4 +209,30 @@
     <system:String x:Key="Winner">Winner</system:String>
     <system:String x:Key="GameDuration">Game duration</system:String>
 
+    <!-- FFA tutorial -->
+    <system:String x:Key="FFADescription">
+        Pour ce mode de partie, tous les joueurs s'affrontent afin obtenir le meilleur score.
+        Ils peuvent gagner des points en devinant correctement le mot dessiné par le dessinateur.
+        Le nombre de points gagnés dépend du temps restant au tour et du nombre de joueurs ayant déjà devinés le mot.
+        De plus, ils peuvent gagner des points lorsque d'autres joueurs devinent correctement leur dessin.
+        Voici l'interface d'une partie de mêlée générale.
+    </system:String>
+
+    <system:String x:Key="FFALeftSection">
+        Dans la section gauche de l'interface, on retrouve les joueurs et leur score. Ils sont classés en ordre décroissant en fonction de leur score.
+        Les joueurs virtuels sont représentés par un icône de robot. Pour mettre le dessinateur en évidence, un icône de crayon est placé à droite de son nom.
+    </system:String>
+
+    <system:String x:Key="FFATopBar">
+        En haut de la zone de dessin, une horloge affiche le temps restant au tour. Dépendemmant des difficultés facile medium et difficile, les tours durent chaque 1 minute, 45 secondes et 30 secondes.
+        Une fois le temps expiré, on passe au prochain tour.
+        Le tour courant et le nombre de tour total sont affichés à droite de l'horloge. Le nombre de tour total est calculé en fonction du nombre
+        de joueurs et du nombre de rondes choisi à la création de la partie. Une partie de deux rondes et 3 joueurs aura, par exemple, 6 tours.
+    </system:String>
+
+    <system:String x:Key="FFADrawer">
+        Dans une partie de mêlée générale, le mot que le dessinateur doit dessiné est affiché en bas de la zone de dessin. C'est à partir de 
+        mot que le joueur devra montrer ses talents de dessinateur!
+    </system:String>
+
 </ResourceDictionary>
