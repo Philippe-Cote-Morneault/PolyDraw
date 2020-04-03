@@ -98,18 +98,30 @@ class GroupManager : Service() {
 
     private fun onPlayerLeftGroup(userLeftGroup: UserLeftGroup) {
         if (currentGroup != null && userLeftGroup.groupID == currentGroup!!.ID) {
-            if (userLeftGroup.userID == currentGroup!!.ownerID) {
+            if (userLeftGroup.userID == currentGroup!!.ownerID && userLeftGroup.userID != AccountRepository.getInstance().getAccount().ID) {
+                MainApplication.instance.mainActivity?.closeChat()
                 EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
                     MainApplication.instance.getContext().getString(R.string.warning),
                     MainApplication.instance.getContext().getString(R.string.host_left_group_dialog_message),
                     null,
                     null
                 )))
+            } else if (userLeftGroup.userID == AccountRepository.getInstance().getAccount().ID) {
+                MainApplication.instance.mainActivity?.closeChat()
             }
         }
     }
 
     private fun onGroupLeft(userLeftGroup: UserLeftGroup) {
+        MainApplication.instance.mainActivity?.closeChat()
+        if (userLeftGroup.isKicked) {
+            EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                MainApplication.instance.getContext().getString(R.string.warning),
+                MainApplication.instance.getContext().getString(R.string.kick_from_group_dialog_message),
+                null,
+                null)
+            ))
+        }
         currentGroup = null
     }
 
