@@ -108,7 +108,6 @@ func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {
 			log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
 		} else {
 			log.Printf("[Messenger] -> Quit: User is not in the channel")
-			socket.SendErrorToSocketID(socket.MessageType.LeaveChannel, 400, language.MustGetSocket("error.userLeaveChannel", socketID), socketID)
 		}
 	} else {
 		log.Printf("[Messenger] -> Quit: Invalid channel UUID, not found")
