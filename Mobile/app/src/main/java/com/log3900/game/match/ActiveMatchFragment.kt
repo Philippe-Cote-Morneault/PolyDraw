@@ -248,8 +248,6 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             colorChangeAnimator.setEvaluator(ArgbEvaluator())
             colorChangeAnimator.addUpdateListener { valueAnimator -> editText.setTextColor(valueAnimator.animatedValue as Int) }
             colorChangeAnimator.duration = 200
-            colorChangeAnimator.repeatCount = 1
-            colorChangeAnimator.repeatMode = ObjectAnimator.REVERSE
             colorChangeAnimator.startDelay = (index * 200).toLong()
             colorChangeAnimator.start()
             scaleUpAnimator.start()
