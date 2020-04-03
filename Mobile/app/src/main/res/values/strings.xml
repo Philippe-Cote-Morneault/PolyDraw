@@ -184,7 +184,7 @@
     <string name="turn">Turn</string>
     <string name="team_score_title">Team Score: %1$d</string>
     <string name="empty_slot">Empty slot</string>
-    <string name="match_lobby_duration_title">Duration (min)</string>
+    <string name="match_lobby_duration_title">Duration (minutes)</string>
     <string name="logout_lobby_confirm">You are about to logout. Do you wish to continue?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -194,4 +194,14 @@
     <string name="quit_waiting_room_confirm">You are about to quit the waiting room. Do you wish to continue?</string>
     <string name="kick_player_confirmation_title">Remove player</string>
     <string name="kick_player_confirmation_message">Are you sure you want to remove %1$s?</string>
+    <string name="players">Players</string>
+    <string name="drawer">Drawer</string>
+    <string name="player">Player</string>
+    <string name="ffa_match_end_inf_winner_is_you">You are the winner!</string>
+    <string name="type_guess_instruction">Type your guess here</string>
+    <string name="warning">Warning</string>
+    <string name="error">Error</string>
+    <string name="kick_from_group_dialog_message">You have been kicked from the match</string>
+    <string name="host_left_group_dialog_message">The host has left the match!</string>
+    <string name="language_picker_dialog_title">Language picker</string>
 </resources>

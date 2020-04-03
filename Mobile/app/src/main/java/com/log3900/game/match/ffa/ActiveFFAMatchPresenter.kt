@@ -26,6 +26,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
         activeFFAMatchView.setPlayerScores(matchManager.getPlayerScores())
         activeFFAMatchView.enableHintButton(false)
+        activeFFAMatchView.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " 1/${FFAMatchManager.getCurrentMatch().laps}")
 
         matchManager.notifyReadyToPlay()
     }
@@ -33,7 +34,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {
         super.onMatchSynchronisation(synchronisation)
         val totalRounds = FFAMatchManager.getCurrentMatch().laps
-        activeFFAMatchView?.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${totalRounds}")
+        activeFFAMatchView?.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " ${synchronisation.laps}/${synchronisation.lapTotal}")
         matchManager.getPlayerScores().forEach { t, u ->
             if (!playerScores.containsKey(t)) {
                 playerScores[t] = u
@@ -89,6 +90,16 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         }
     }
 
+    override fun onMatchEnded(matchEnded: MatchEnded) {
+        super.onMatchEnded(matchEnded)
+
+        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
+        matchEnded.players.forEach {
+            playerScores.add(Pair(it.username, it.points))
+        }
+        activeMatchView?.showMatchEndInfoView(matchEnded.winnerName, playerScores, AccountRepository.getInstance().getAccount().ID == matchEnded.winner)
+    }
+
     private fun onTurnToDraw(turnToDraw: TurnToDraw) {
         activeFFAMatchView?.clearCanvas()
         activeFFAMatchView?.clearAllPlayerStatusRes()
@@ -127,10 +138,8 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
         formattedScoreChange += variation
 
-        Handler().postDelayed({
-            val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
-            activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
-        }, 1000)
+        val playerPosition = matchManager.getCurrentMatch().players.indexOfFirst { it.ID == playerID }
+        activeFFAMatchView?.showPlayerScoredChangedAnimation(formattedScoreChange, variation > 0, playerPosition)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

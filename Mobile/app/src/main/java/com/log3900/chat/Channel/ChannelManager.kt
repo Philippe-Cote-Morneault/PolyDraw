@@ -45,17 +45,6 @@ class ChannelManager {
     }
 
     fun createChannel(channelName: String): Boolean {
-        var foundChannel: Channel? = joinedChannels.find { it.name == channelName }
-        if (foundChannel != null) {
-            return false
-        }
-
-        foundChannel = availableChannels.find { it.name == channelName }
-
-        if (foundChannel != null) {
-            return false
-        }
-
         ChannelRepository.instance?.createChannel(channelName)
 
         return true

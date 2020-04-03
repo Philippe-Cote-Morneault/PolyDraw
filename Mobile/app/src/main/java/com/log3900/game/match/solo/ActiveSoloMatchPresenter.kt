@@ -4,6 +4,7 @@ import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.match.ActiveMatchPresenter
 import com.log3900.game.match.CheckPoint
+import com.log3900.game.match.RoundEnded
 import com.log3900.game.match.Synchronisation
 import com.log3900.game.match.coop.ActiveCoopMatchView
 import com.log3900.shared.architecture.EventType
@@ -26,6 +27,9 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         activeSoloMatchView.setRemainingLives(soloMatchManager.getCurrentMatch().lives)
         activeSoloMatchView.enableHintButton(true)
 
+        val drawer = soloMatchManager.getCurrentMatch().players.find { it.isCPU }
+        activeSoloMatchView.setDrawer(drawer!!)
+
         matchManager.notifyReadyToPlay()
     }
 
@@ -39,6 +43,14 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         super.onGuessedWordWrong()
     }
 
+    override fun onRoundEnded(roundEnded: RoundEnded) {
+        super.onRoundEnded(roundEnded)
+
+        roundEnded.players.forEach {
+            updatePlayerScore(it.userID, it.points, it.newPoints)
+        }
+    }
+
     private fun onCheckpoint(checkPoint: CheckPoint) {
         var formattedBonusTime = "+"
 
@@ -50,6 +62,22 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         changeRemainingTime(checkPoint.totalTime)
 
         activeSoloMatchView?.showRemainingTimeChangedAnimation(formattedBonusTime, checkPoint.bonus > 0)
+    }
+
+    private fun updatePlayerScore(playerID: UUID, newScore: Int, variation: Int) {
+        if (variation == 0) {
+            return
+        }
+
+        var formattedScoreChange = "+"
+        if (variation < 0) {
+            formattedScoreChange = "-"
+        }
+
+        formattedScoreChange += variation
+
+        activeSoloMatchView?.showScoreChangedAnimation(formattedScoreChange, variation > 0)
+        activeSoloMatchView?.setScore("Score: " + newScore)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

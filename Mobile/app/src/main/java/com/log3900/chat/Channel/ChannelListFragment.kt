@@ -18,6 +18,9 @@ import com.log3900.R
 import com.log3900.shared.ui.SearchViewUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
+import android.text.InputFilter
+
+
 
 class ChannelListFragment : Fragment(), ChannelListView {
     // Services
@@ -129,6 +132,7 @@ class ChannelListFragment : Fragment(), ChannelListView {
     override fun showChannelCreationDialog(positiveCallback: (channelName: String) -> Unit) {
         val editText = EditText(this.context)
         editText.setHint(resources.getString(R.string.create_channel_name_hint))
+        editText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(12))
         channelCreationDialog = AlertDialog.Builder(this.context)
             .setTitle(resources.getString(R.string.create_channel_dialog_title))
             .setView(editText)

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.game.group.Player
 import com.log3900.game.match.ActiveMatchFragment
+import com.log3900.game.match.UI.DrawerHolderView
 import com.log3900.game.match.coop.TeamPlayerAdapter
 
 class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
@@ -28,6 +29,7 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
     private lateinit var scoreTextView: TextView
     private lateinit var scoreChangedTextView: TextView
     protected lateinit var teamPlayersRecyclerView: RecyclerView
+    private lateinit var drawerViewHolder: DrawerHolderView
     private lateinit var remainingLivesContainer: LinearLayout
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
 
@@ -46,6 +48,11 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
         })
 
         return rootView
+    }
+
+    override fun setupUI(rootView: View) {
+        drawerViewHolder = rootView.findViewById(R.id.fragment_active_solo_match_drawer_holder_view)
+        super.setupUI(rootView)
     }
 
     override fun setupToolbar(rootView: View) {
@@ -179,6 +186,10 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
         alphaChangeAnimator.duration = 1000
         alphaChangeAnimator.start()
         scaleUpAnimator.start()
+    }
+
+    override fun setDrawer(player: Player) {
+        drawerViewHolder.setDrawer(player)
     }
 
     override fun onDestroy() {

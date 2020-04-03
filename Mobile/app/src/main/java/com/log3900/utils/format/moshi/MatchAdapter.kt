@@ -14,7 +14,6 @@ import kotlin.collections.ArrayList
 object MatchAdapter {
     @FromJson
     fun fromJson(matchJson: JsonObject): Match {
-        Log.d("POTATO", "Convertin match $matchJson")
         val players = jsonArrayToPlayers(matchJson.getAsJsonArray("Players")!!)
         val matchType = MatchMode.values()[matchJson.get("GameType").asInt]
         val timeImage = matchJson.get("TimeImage").asInt
@@ -26,8 +25,8 @@ object MatchAdapter {
                     players,
                     matchType,
                     timeImage,
-                    matchJson.get("Laps").asInt,
-                    lives
+                    lives,
+                    matchJson.get("Laps").asInt
                 )
             }
             MatchMode.COOP -> {
@@ -47,14 +46,6 @@ object MatchAdapter {
                 )
             }
         }
-
-        return FFAMatch(
-            players,
-            matchType,
-            timeImage,
-            0,
-            0
-        )
     }
 
     fun jsonArrayToPlayers(ids: JsonArray): ArrayList<Player> {
@@ -230,5 +221,29 @@ object MatchAdapter {
         val bonus = jsonObject.get("Bonus").asInt
 
         return CheckPoint(totalTime, bonus)
+    }
+
+    fun jsonToTeamateGuessedProperly(jsonObject: JsonObject): TeamateGuessedWordProperly {
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val username = jsonObject.get("Username").asString
+        val word = jsonObject.get("Word").asString
+        val points = jsonObject.get("Points").asInt
+        val newPoints = jsonObject.get("NewPoints").asInt
+
+        return TeamateGuessedWordProperly(userID, username, word, points, newPoints)
+    }
+
+    fun jsonToTeamateGuessedInproperly(jsonObject: JsonObject): TeamateGuessWordIncorrectly {
+        val userID = UUID.fromString(jsonObject.get("UserID").asString)
+        val username = jsonObject.get("Username").asString
+        val lives = jsonObject.get("Lives").asInt
+
+        return TeamateGuessWordIncorrectly(userID, username, lives)
+    }
+
+    fun jsonToMatchCancelled(jsonObject: JsonObject): MatchCancelled {
+        val type = MatchCancelled.Type.values()[jsonObject.get("Type").asInt + 1]
+
+        return MatchCancelled(type)
     }
 }

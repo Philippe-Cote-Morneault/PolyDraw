@@ -21,11 +21,16 @@ import android.util.Log
 import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import com.log3900.game.match.UI.*
+import com.log3900.shared.ui.ThemeUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
 
 
 abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
     protected var activeMatchPresenter: ActiveMatchPresenter? = null
+        set(value) {
+            drawFragment.drawView.socketDrawingReceiver?.matchManager = value?.matchManager
+            field = value
+        }
     private lateinit var drawFragment: DrawViewFragment
 
     // UI
@@ -67,8 +72,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         wordToDrawView?.setWordToGuess(word)
     }
 
-    override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?) {
-        drawFragment.enableDrawFunctions(enable, drawingID)
+    override fun enableDrawFunctions(enable: Boolean, drawingID: UUID?, matchManager: MatchManager?) {
+        drawFragment.enableDrawFunctions(enable, drawingID, matchManager)
     }
 
     override fun setTimeValue(time: String) {
@@ -181,7 +186,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         scaleDown.repeatMode = ObjectAnimator.REVERSE
 
         val anim = ValueAnimator()
-        anim.setIntValues(Color.BLACK, Color.RED)
+        anim.setIntValues(ThemeUtils.resolveAttribute(R.attr.colorOnPrimary), Color.RED)
         anim.setEvaluator(ArgbEvaluator())
         anim.addUpdateListener { valueAnimator -> remainingTimeTextView.setTextColor(valueAnimator.animatedValue as Int) }
         for (drawable in remainingTimeTextView.compoundDrawables) {
@@ -261,8 +266,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         roundEndInfoView.visibility = View.INVISIBLE
     }
 
-    override fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>) {
-        matchEndInfoView.setWinner(winnerName)
+    override fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>, isUser: Boolean) {
+        matchEndInfoView.setWinner(winnerName, isUser)
         matchEndInfoView.setPlayers(players)
         matchEndInfoView.visibility = View.VISIBLE
     }

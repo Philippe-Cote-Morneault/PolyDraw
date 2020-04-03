@@ -28,6 +28,7 @@ import com.andremion.counterfab.CounterFab
 import com.google.android.material.navigation.NavigationView
 import com.log3900.chat.ChatManager
 import com.log3900.login.LoginActivity
+import com.log3900.session.MonitoringService
 import com.log3900.settings.SettingsActivity
 import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.sound.SoundManager
@@ -53,13 +54,14 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var hideShowMessagesFAB: CounterFab
     private lateinit var toggleSoundEffectsButton: ImageView
-    private lateinit var toggleMusicButton: ImageView
     private lateinit var chatManager: ChatManager
     lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
     private lateinit var toolbarContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MainApplication.instance.startService(SocketService::class.java)
+        MainApplication.instance.startService(MonitoringService::class.java)
         ThemeManager.applyTheme(this)
         LanguageManager.applySavedLanguage(baseContext)
         super.onCreate(savedInstanceState)
@@ -121,16 +123,6 @@ open class MainActivity : AppCompatActivity() {
         }
 
         setSoundEffectsIcon(SoundManager.areSoundEffectsEnabled())
-
-        toggleMusicButton = findViewById(R.id.app_bar_main_image_view_music)
-        toggleMusicButton.setOnClickListener {
-            SoundManager.toggleMusic(!SoundManager.isMusicEnabled()).subscribe {
-                setMusicIcon(SoundManager.isMusicEnabled())
-            }
-        }
-
-        setMusicIcon(SoundManager.isMusicEnabled())
-
 
         setupUI()
 
@@ -261,14 +253,6 @@ open class MainActivity : AppCompatActivity() {
             toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_up_black)
         } else {
             toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_off_black)
-        }
-    }
-
-    private fun setMusicIcon(enabled: Boolean) {
-        if (enabled) {
-            toggleMusicButton.setImageResource(R.drawable.ic_music_note_black)
-        } else {
-            toggleMusicButton.setImageResource(R.drawable.ic_music_off_black)
         }
     }
 

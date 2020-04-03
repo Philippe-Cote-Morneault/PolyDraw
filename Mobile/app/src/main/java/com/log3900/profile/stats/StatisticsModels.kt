@@ -21,8 +21,8 @@ data class HistoryStats(
 data class GamePlayed(
     @Json(name = "MatchDuration")   val duration:       Int,
     @Json(name = "WinnerName")      val winner:         String,
-    @Json(name = "MatchType")       val matchType:      String,
-    @Json(name = "PlayersNames")    val playerNames:    List<PlayerName>
+    @Json(name = "MatchType")       val matchType:      String
+//    @Json(name = "PlayersNames")    val playerNames:    List<PlayerName>
 )
 
 data class Connection(

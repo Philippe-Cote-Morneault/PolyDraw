@@ -2,10 +2,13 @@ package com.log3900.settings.language
 
 import android.content.Context
 import android.content.res.Resources
+import com.google.gson.JsonObject
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.socket.Event
+import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
 import org.greenrobot.eventbus.EventBus
@@ -49,6 +52,15 @@ class LanguageManager {
         fun changeLanguage(language: Language): Completable {
             val currentAccount = AccountRepository.getInstance().getAccount()
             currentAccount.languageID = language.index
+            val currentLanguageCode = getCurrentLanguageCode()
+            val dataObject = JsonObject()
+            if (currentLanguageCode == "EN") {
+                dataObject.addProperty("Language", 0)
+            } else {
+                dataObject.addProperty("Language", 1)
+            }
+            SocketService.instance?.sendJsonMessage(Event.LANGUAGE_CHANGED, dataObject.toString())
+
             return AccountRepository.getInstance().updateAccount(currentAccount)
         }
 

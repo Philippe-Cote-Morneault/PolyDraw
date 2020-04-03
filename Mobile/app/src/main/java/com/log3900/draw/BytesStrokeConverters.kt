@@ -22,7 +22,7 @@ object BytesToStrokeConverter {
         val isEraser = data[0].toIsEraser()
         val color = data[0].toColor()
         val brushType = data[0].toBrushType()
-        val brushSize = data[Offset.BRUSH_SIZE.value].toInt()
+        val brushSize = data[Offset.BRUSH_SIZE.value].toUByte().toInt()
         val strokeID = data.sliceArray(Offset.STROKE_ID.value until Offset.USER_ID.value).getUUID()
         val userID = data.sliceArray(Offset.USER_ID.value until Offset.BRUSH_SIZE.value).getUUID()
         val points = data.sliceArray(Offset.POINTS.value until data.size).getPoints()
@@ -132,7 +132,7 @@ object StrokeToBytesConverter {
             Color.BLACK     -> 0x0
             Color.WHITE     -> 0x1
             Color.RED       -> 0x2
-            Color.GREEN     -> 0x3
+            -16744448       -> 0x3      // GREEN
             Color.BLUE      -> 0x4
             Color.YELLOW    -> 0x5
             Color.CYAN      -> 0x6

@@ -4,6 +4,7 @@ import android.util.Log
 import com.log3900.game.group.Group
 import com.log3900.game.group.GroupCreated
 import com.log3900.game.group.GroupManager
+import com.log3900.game.group.UserLeftGroup
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
@@ -77,8 +78,8 @@ class MatchLobbyPresenter : Presenter {
         matchLobbyView?.groupUpdated(groupID)
     }
 
-    private fun onPlayerLeftGroup(groupID: UUID, playerID: UUID) {
-        matchLobbyView?.groupUpdated(groupID)
+    private fun onPlayerLeftGroup(userLeftGroup: UserLeftGroup) {
+        matchLobbyView?.groupUpdated(userLeftGroup.groupID)
     }
 
     private fun subscribeToEvents() {
@@ -102,8 +103,8 @@ class MatchLobbyPresenter : Presenter {
                 onPlayerJoinedGroup(eventData.first, eventData.second)
             }
             EventType.PLAYER_LEFT_GROUP -> {
-                val eventData = event.data as Pair<UUID, UUID>
-                onPlayerLeftGroup(eventData.first, eventData.second)
+                val eventData = event.data as UserLeftGroup
+                onPlayerLeftGroup(eventData)
             }
         }
     }
