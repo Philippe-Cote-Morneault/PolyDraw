@@ -24,6 +24,7 @@ using ClientLourd.Utilities.Enums;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Views.Controls;
+using ClientLourd.Services.UserSettingsManagerService;
 
 namespace ClientLourd
 {
@@ -73,8 +74,11 @@ namespace ClientLourd
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
 
-            //TODO: Remove this comment
-            DialogHost.Show(new Tutorial(), "Default");
+            var userSettingsManager = new UserSettingsManagerService(mainViewModel.SessionInformations.User.ID);
+            if (!userSettingsManager.HasSeenTutorial())
+            {
+                DialogHost.Show(new Tutorial(), "Default");
+            }
         }
 
         private void OnUserLogout(object source, EventArgs args)

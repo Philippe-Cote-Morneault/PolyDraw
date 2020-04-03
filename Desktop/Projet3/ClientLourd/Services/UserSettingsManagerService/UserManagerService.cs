@@ -56,9 +56,10 @@ namespace ClientLourd.Services.UserSettingsManagerService
         public void OverwriteFile(bool IsLanguageDict)
         {
             var dict = (IsLanguageDict) ? _langDict : _tutoDict;
+            var filename = (IsLanguageDict) ? "UserLanguages.xaml" : "UserTutorialSeen.xaml";
             var settings = new XmlWriterSettings();
             settings.Indent = true;
-            using (XmlWriter w = XmlWriter.Create($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml", settings))
+            using (XmlWriter w = XmlWriter.Create($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\{filename}", settings))
             {
                 XamlWriter.Save(dict, w);
             }
@@ -82,6 +83,19 @@ namespace ClientLourd.Services.UserSettingsManagerService
             }
 
             OverwriteFile(true);
+        }
+
+        public bool HasSeenTutorial() 
+        {
+            if (!_tutoDict.Contains(_userID))
+            {
+                _tutoDict.Add(_userID, "True");
+                OverwriteFile(false);
+                
+                return false;
+            }
+
+            return true;
         }
 
     }
