@@ -205,4 +205,7 @@
     <string name="host_left_group_dialog_message">The host has left the match!</string>
     <string name="language_picker_dialog_title">Language picker</string>
     <string name="you_guessed_correctly">You have guessed correctly!</string>
+    <string name="solo_match_is_over_message">The match is over! Your score: %1$d</string>
+    <string name="the_word_was">The word was %1$s</string>
+    <string name="try_again">Try again!</string>
 </resources>

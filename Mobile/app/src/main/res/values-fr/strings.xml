@@ -175,4 +175,7 @@
     <string name="host_left_group_dialog_message">L\'hôte a quitté la salle d\'attente!</string>
     <string name="language_picker_dialog_title">Sélecteur de language</string>
     <string name="you_guessed_correctly">Vous avez deviné correctement!</string>
+    <string name="solo_match_is_over_message">Le match est terminé! Votre score: %1$d</string>
+    <string name="the_word_was">Le mot était %1$s</string>
+    <string name="try_again">Essayez encore!</string>
 </resources>
