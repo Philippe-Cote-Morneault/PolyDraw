@@ -92,8 +92,8 @@ open class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_main_match_lobby_fragment,
-                R.id.navigation_main_profile_fragment,
-                R.id.navigation_main_draw_view_fragment
+                R.id.navigation_main_profile_fragment
+//                R.id.navigation_main_draw_view_fragment
             ), drawerLayout)
 
         setupActionBarWithNavController(navigationController, appBarConfiguration)
