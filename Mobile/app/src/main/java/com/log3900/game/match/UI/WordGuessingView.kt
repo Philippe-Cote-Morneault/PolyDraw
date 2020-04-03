@@ -41,11 +41,37 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
 
     }
 
-    fun enableHintButton(enable: Boolean) {
-        if (enable) {
+    fun clearCurrentText() {
+        letterEditTexts.forEach {
+            it.setText("")
+        }
+    }
+
+    fun showHintButton(show: Boolean) {
+        if (show) {
             hintButton.visibility = View.VISIBLE
         } else {
             hintButton.visibility = View.GONE
+        }
+    }
+
+    fun enableActions(enable: Boolean) {
+        enableHintButton(enable)
+        enableGuessButton(enable)
+        enableEditTexts(enable)
+    }
+
+    fun enableHintButton(enable: Boolean) {
+        hintButton.isEnabled = enable
+    }
+
+    fun enableGuessButton(enable: Boolean) {
+        guessButton.isEnabled = enable
+    }
+
+    fun enableEditTexts(enable: Boolean) {
+        letterEditTexts.forEach {
+            it.isEnabled = enable
         }
     }
 
