@@ -54,31 +54,25 @@ namespace ClientLourd.ViewModels
 
         public SoundService SoundService { get; set; }
 
+        private UserSettingsManagerService _userManager;
+
         public override void AfterLogin()
         {
             //TODO
 
-            var languageManager = new UserManagerService(SessionInformations.User.ID);
-            
-            /*
-            if (languageManager.HasLanguageSet())
-            {
-                string language = languageManager.GetLanguage();
+            _userManager = new UserSettingsManagerService(SessionInformations.User.ID);
 
-                if (language != SelectedLanguage && !IsSystemLanguage)
-                {
-                    languageManager.SetLanguage(SelectedLanguage);
-                }
+            if (!IsSystemLanguage)
+            {
+                _userManager.SetLanguage(SelectedLanguage);
             }
-            else
-            {
-                languageManager.SetLanguage(SelectedLanguage);
-            }*/
 
+            else if(IsSystemLanguage && _userManager.GetLanguage() != "System")
+            {
+                SelectedLanguage = _userManager.GetLanguage();
+            }
 
             SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }) : new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1 }));
-
-
         }
 
         public override void AfterLogOut()
@@ -270,6 +264,7 @@ namespace ClientLourd.ViewModels
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(Languages));
                     NotifyPropertyChanged(nameof(CurrentLanguage));
+                    _userManager?.SetLanguage(_selectedLanguage.GetDescription());
                     LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                 }
             }

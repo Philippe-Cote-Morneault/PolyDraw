@@ -13,15 +13,14 @@ using System.Xml;
 
 namespace ClientLourd.Services.UserManagerService
 {
-    public class UserManagerService
+    public class UserSettingsManagerService
     {
 
         private ResourceDictionary _dict;
         private string _userID;
-        public UserManagerService(string userID)
+        public UserSettingsManagerService(string userID)
         {
             _userID = userID;
-
             _dict = new ResourceDictionary(); 
             _dict.Source = new Uri("..\\Resources\\UserSettings\\UserSettings.xaml", UriKind.Relative);
         }
@@ -29,14 +28,22 @@ namespace ClientLourd.Services.UserManagerService
 
         public string GetLanguage()
         {
-             return _dict["Laguage"].ToString();
+            //return _dict["Laguage"].ToString();
+            return (_dict.Contains(_userID)) ? _dict[_userID].ToString(): "System"; 
         }
 
 
         public void SetLanguage(string language)
         {
+            if (!_dict.Contains(_userID))
+            {
+                _dict.Add(_userID, language);
+            }
+            else
+            {
+                _dict[_userID] = language;
+            }
 
-            _dict["Language"] = language;
             var settings = new XmlWriterSettings();
             settings.Indent = true;
             var writer = XmlWriter.Create($"{AppDomain.CurrentDomain.BaseDirectory}..\\..\\Resources\\UserSettings\\UserSettings.xaml", settings);
