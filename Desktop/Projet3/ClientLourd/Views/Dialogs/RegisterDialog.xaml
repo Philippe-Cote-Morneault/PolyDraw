@@ -29,7 +29,6 @@
                 <TextBlock HorizontalAlignment="Center">
                     <Hyperlink Command="{Binding ChangeAvatarCommand}">
                         <TextBlock Text="{DynamicResource ChangeAvatar}">
-                            
                         </TextBlock>
                     </Hyperlink>
                 </TextBlock>                
@@ -39,11 +38,11 @@
                 <StackPanel Orientation="Horizontal">
                         <TextBlock FontWeight="Bold" Text="{DynamicResource Username}"></TextBlock>
                 </StackPanel>
-                <TextBox x:Name="UsernameField" MaxLength="12">
+                <TextBox x:Name="UsernameField" TextChanged="OnFieldChanged" MaxLength="12">
                     <TextBox.Text>
-                        <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="User.Username"  UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <rules:UsernameRule ValidatesOnTargetUpdated="True" />
+                                <rules:UsernameRule ValidatesOnTargetUpdated="False" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -57,7 +56,7 @@
                 </StackPanel>
 
                 <PasswordBox x:Name="PasswordField1"
-                             PasswordChanged="OnPasswordChanged"
+                             PasswordChanged="OnFieldChanged"
                              materialDesign:HintAssist.HelperText="{DynamicResource PasswordValidator}"
                              MaxLength="64">
                              
@@ -66,7 +65,7 @@
 
             <StackPanel Margin="0 20 0 20">
                 <PasswordBox x:Name="PasswordField2"
-                             PasswordChanged="OnPasswordChanged"
+                             PasswordChanged="OnFieldChanged"
                              materialDesign:HintAssist.HelperText="{DynamicResource PasswordRetype}"
                              MaxLength="64">
                              
@@ -78,11 +77,11 @@
                 <StackPanel Orientation="Horizontal">
                         <TextBlock FontWeight="Bold" Text="{DynamicResource Email}"></TextBlock>
                 </StackPanel>
-                <TextBox x:Name="EmailField" MaxLength="60">
+                <TextBox x:Name="EmailField" TextChanged="OnFieldChanged" MaxLength="60">
                     <TextBox.Text>
                         <Binding Path="User.Email" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
+                                <rules:EmailRule ValidatesOnTargetUpdated="False" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -94,11 +93,11 @@
                 <StackPanel Orientation="Horizontal">
                         <TextBlock FontWeight="Bold" Text="{DynamicResource FirstName}"></TextBlock>
                 </StackPanel>
-                <TextBox x:Name="FirstNameField" MaxLength="64">
+                <TextBox x:Name="FirstNameField" TextChanged="OnFieldChanged" MaxLength="64">
                     <TextBox.Text>
                         <Binding Path="User.FirstName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <rules:NameRule ValidatesOnTargetUpdated="True" />
+                                <rules:NameRule ValidatesOnTargetUpdated="False" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -110,11 +109,11 @@
                 <StackPanel Orientation="Horizontal">
                         <TextBlock FontWeight="Bold" Text="{DynamicResource LastName}"></TextBlock>
                 </StackPanel>
-                <TextBox x:Name="LastNameField" MaxLength="64">
+                <TextBox x:Name="LastNameField" TextChanged="OnFieldChanged" MaxLength="64">
                     <TextBox.Text>
                         <Binding Path="User.LastName" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <rules:NameRule ValidatesOnTargetUpdated="True" />
+                                <rules:NameRule ValidatesOnTargetUpdated="False" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -138,7 +137,7 @@
                         <Binding ElementName="LastNameField" Path="(Validation.HasError)" />
                         <Binding ElementName="EmailField" Path="(Validation.HasError)" />
                         <Binding ElementName="UsernameField" Path="(Validation.HasError)" />
-                        <Binding Path="IsPasswordInvalid" />
+                        <Binding Path="AreFieldsEmpty" />
                     </MultiBinding>
                 </Button.IsEnabled>
             </Button>

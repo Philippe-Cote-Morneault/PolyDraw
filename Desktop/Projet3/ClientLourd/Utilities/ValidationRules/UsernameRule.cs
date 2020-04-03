@@ -23,13 +23,6 @@ namespace ClientLourd.Utilities.ValidationRules
             }
         }
 
-        public string ContainedView
-        {
-            get
-            {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView;
-            }
-        }
 
         public UsernameRule()
         {
@@ -42,23 +35,16 @@ namespace ClientLourd.Utilities.ValidationRules
 
             if (loginInputValidator.StringIsEmpty(username))
             {
-                if (ContainedView == Enums.Views.Profile.ToString() && Language == Languages.EN.GetDescription())
-                {
+                if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username cannot be empty");
-                }
-                else if (ContainedView == Enums.Views.Profile.ToString() && Language == Languages.FR.GetDescription())
-                {
-                    return new ValidationResult(false, "¨Le nom d'utilisateur ne peut pas être vide.");
-                }
-                return new ValidationResult(true, "");
+                return new ValidationResult(false, "¨Le nom d'utilisateur ne peut pas être vide.");
             }
 
             if (loginInputValidator.StringIsWhiteSpace(username))
             {
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username cannot be empty.");
-                else
-                    return new ValidationResult(false, "¨Le nom d'utilisateur ne peut pas être vide.");
+                return new ValidationResult(false, "¨Le nom d'utilisateur ne peut pas être vide.");
 
             }
 
@@ -66,16 +52,14 @@ namespace ClientLourd.Utilities.ValidationRules
             {
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username must only contain alphanumeric characters.");
-                else
-                    return new ValidationResult(false, "Le nom d'utilisateur ne peut contenir que des caractères alphanumériques.");
+                return new ValidationResult(false, "Le nom d'utilisateur ne peut contenir que des caractères alphanumériques.");
             }
 
             if (!loginInputValidator.UsernameLengthIsOk(username))
             {
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username must be between 4 and 12 characters.");
-                else
-                    return new ValidationResult(false, "Le nom d'utilisateur doit avoir une longueur entre 4 et 12 caractères.");
+                return new ValidationResult(false, "Le nom d'utilisateur doit avoir une longueur entre 4 et 12 caractères.");
             }
 
             return ValidationResult.ValidResult;

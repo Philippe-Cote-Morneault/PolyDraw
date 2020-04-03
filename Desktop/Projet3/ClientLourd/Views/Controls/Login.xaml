@@ -65,9 +65,9 @@
                     materialDesign:HintAssist.Hint="{DynamicResource Username}"
                     materialDesign:HintAssist.HelperText="">
                     <TextBox.Text>
-                        <Binding Path="User.Username">
+                        <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <rules:UsernameRule ValidatesOnTargetUpdated="True" />
+                                <rules:UsernameRule ValidatesOnTargetUpdated="False" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
