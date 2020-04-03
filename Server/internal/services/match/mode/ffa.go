@@ -254,6 +254,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	}
 	//Check the state of the game if there are enough players to finish the game
 	if (f.realPlayers - 1) < 2 {
+		f.removePlayer(f.connections[socketID], socketID)
 		f.receiving.Unlock()
 		f.Close()
 		return
