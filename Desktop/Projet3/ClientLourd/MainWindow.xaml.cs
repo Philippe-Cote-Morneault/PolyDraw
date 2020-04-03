@@ -354,5 +354,10 @@ namespace ClientLourd
                 ViewModel.HomeCommand.Execute(null);
             }
         }
+
+        private void OpenTutorial(object sender, MouseButtonEventArgs e)
+        {
+            DialogHost.Show(new Tutorial(), "Default");
+        }
     }
 }

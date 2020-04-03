@@ -11,7 +11,7 @@
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
             <Button  Margin="5" Content="Ok" 
                     Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="true"/>
-            <Button  Margin="5" Content="Cancel" 
+            <Button  Margin="5" Content="{DynamicResource Cancel}" 
                     Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false"/>
         </UniformGrid>
         <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"  Style="{StaticResource MaterialDesignHeadline4TextBlock}"></TextBlock>
