@@ -29,7 +29,7 @@
                                 <DockPanel>
                                     <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
                                     <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
-                                        <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
+                                        <Button Margin="5" IsEnabled="False" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
                                             <materialDesign:PackIcon Kind="NavigateBefore"/>
                                         </Button>
                                         <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
