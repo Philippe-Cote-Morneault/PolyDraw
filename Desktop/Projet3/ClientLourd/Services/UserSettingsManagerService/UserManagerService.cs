@@ -19,27 +19,31 @@ namespace ClientLourd.Services.UserSettingsManagerService
         private ResourceDictionary _langDict;
         private ResourceDictionary _tutoDict;
 
+        private readonly static string UserLanguagesPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml";
+        private readonly static string UserTutorialPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml";
+
+
         private string _userID;
         public UserSettingsManagerService(string userID)
         {
             _userID = userID;
             
-            if (!File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml"))
+            if (!File.Exists(UserLanguagesPath))
             {
-                CreateFile($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml");
+                CreateFile(UserLanguagesPath);
             }
 
-            if (!File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml"))
+            if (!File.Exists(UserTutorialPath))
             {
-                CreateFile($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml");
+                CreateFile(UserTutorialPath);
             }
 
 
             _langDict = new ResourceDictionary();
-            _langDict.Source = new Uri($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml", UriKind.RelativeOrAbsolute);
+            _langDict.Source = new Uri(UserLanguagesPath, UriKind.RelativeOrAbsolute);
 
             _tutoDict = new ResourceDictionary();
-            _tutoDict.Source = new Uri($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml", UriKind.RelativeOrAbsolute);
+            _tutoDict.Source = new Uri(UserTutorialPath, UriKind.RelativeOrAbsolute);
 
         }
 
@@ -56,10 +60,10 @@ namespace ClientLourd.Services.UserSettingsManagerService
         public void OverwriteFile(bool IsLanguageDict)
         {
             var dict = (IsLanguageDict) ? _langDict : _tutoDict;
-            var filename = (IsLanguageDict) ? "UserLanguages.xaml" : "UserTutorialSeen.xaml";
+            var path = (IsLanguageDict) ? UserLanguagesPath : UserTutorialPath;
             var settings = new XmlWriterSettings();
             settings.Indent = true;
-            using (XmlWriter w = XmlWriter.Create($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\{filename}", settings))
+            using (XmlWriter w = XmlWriter.Create(path, settings))
             {
                 XamlWriter.Save(dict, w);
             }
