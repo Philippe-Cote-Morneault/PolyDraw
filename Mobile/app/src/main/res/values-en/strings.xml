@@ -180,4 +180,5 @@
     <string name="try_again">Try again!</string>
     <string name="ffa_guessed_correctly">You have guessed correctly! Waiting for other players</string>
     <string name="ffa_is_drawing_the_next_word">%1$s is drawing the next word!</string>
+    <string name="coop_teamate_guessed_correctly">%1$s has guessed correctly! The word was %2$s</string>
 </resources>
