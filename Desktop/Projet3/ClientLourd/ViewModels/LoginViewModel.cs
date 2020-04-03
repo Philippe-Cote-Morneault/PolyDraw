@@ -26,6 +26,12 @@ namespace ClientLourd.ViewModels
             MainViewModel.LanguageChangedEvent += OnLanguageChanged;
         }
 
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+
+
         private void OnLanguageChanged(object source, EventArgs args)
         {
             NotifyPropertyChanged(nameof(Language));
@@ -140,6 +146,8 @@ namespace ClientLourd.ViewModels
             {
                 try
                 {
+                    if(dialog.PasswordField1.Password != dialog.PasswordField2.Password)
+                        throw new Exception((string)CurrentDictionary["InvalidPassword"]);
                     dynamic data = await RestClient.Register(user, dialog.PasswordField1.Password);
                     StartLogin(user.Username, data, false);
                 }

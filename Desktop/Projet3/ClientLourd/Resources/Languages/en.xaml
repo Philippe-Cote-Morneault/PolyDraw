@@ -143,6 +143,7 @@
     <system:String x:Key="SignUp">Sign up</system:String>
     <system:String x:Key="Cancel">Cancel</system:String>
     <system:String x:Key="PasswordRetype">Retype the password</system:String>
+    <system:String x:Key="InvalidPassword">The 2 passwords are different</system:String>
 
     <!-- Chat -->
     <system:String x:Key="TypeMessage">Type your message...</system:String>

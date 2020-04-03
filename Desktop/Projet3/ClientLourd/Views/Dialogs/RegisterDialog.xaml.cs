@@ -29,11 +29,9 @@ namespace ClientLourd.Views.Dialogs
 
         private bool CheckInvalidPassword()
         {
-            if (PasswordField1.Password != PasswordField2.Password)
+            if (String.IsNullOrWhiteSpace(PasswordField1.Password))
                 return true;
-            if (String.IsNullOrWhiteSpace(PasswordField1.Password) || PasswordField1.Password.Length < 8)
-                return true;
-            if (String.IsNullOrWhiteSpace(PasswordField2.Password) || PasswordField2.Password.Length < 8)
+            if (String.IsNullOrWhiteSpace(PasswordField2.Password))
                 return true;
             return false;
         }

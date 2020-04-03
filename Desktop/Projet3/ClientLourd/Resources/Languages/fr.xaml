@@ -139,6 +139,7 @@
     <system:String x:Key="SignUp">S'inscrire</system:String>
     <system:String x:Key="Cancel">Annuler</system:String>
     <system:String x:Key="PasswordRetype">Retaper le mot de passe</system:String>
+    <system:String x:Key="InvalidPassword">Vos deux mots de passe sont différents</system:String>
 
     <!-- Chat -->
     <system:String x:Key="TypeMessage">Entrez votre message...</system:String>
