@@ -59,7 +59,7 @@
                         VerticalAlignment="Center" />
                     </Grid>
         </StackPanel>
-        <TreeView  Name="MainTree" Cursor="Hand" SelectedItemChanged="MainTree_OnSelectedItemChanged">
+        <TreeView  Name="MainTree" Cursor="Hand" MouseUp="MainTree_OnMouseUp">
             <TreeViewItem Name="JoindedTree" IsExpanded="True" ItemsSource="{Binding JoinedChannels}">
                 <TreeViewItem.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />

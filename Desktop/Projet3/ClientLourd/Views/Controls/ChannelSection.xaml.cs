@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.ViewModels;
 using ClientLourd.Views.Dialogs;
@@ -34,9 +35,8 @@ namespace ClientLourd.Views.Controls
         {
             get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
-        private async void MainTree_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private async void MainTree_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            //TODO check if the channel is available or joined
             try
             {
                 var tree = (TreeView) sender;
@@ -63,6 +63,7 @@ namespace ClientLourd.Views.Controls
             }
         }
 
+
         private async void DeleteChannelClick(object sender, RoutedEventArgs e)
         {
             Channel channel = (Channel)((MenuItem) sender).Tag;
@@ -80,5 +81,7 @@ namespace ClientLourd.Views.Controls
             grid.ContextMenu.PlacementTarget = sender as UIElement;
             grid.ContextMenu.IsOpen = true;
         }
+
+
     }
 }
