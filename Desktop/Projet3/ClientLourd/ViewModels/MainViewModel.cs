@@ -14,7 +14,7 @@ using System.Media;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Services.EnumService;
 using System.Collections.Generic;
-using ClientLourd.Services.LanguageManagerService;
+using ClientLourd.Services.UserManagerService;
 
 namespace ClientLourd.ViewModels
 {
@@ -58,8 +58,9 @@ namespace ClientLourd.ViewModels
         {
             //TODO
 
-            var languageManager = new LanguageManagerService(SessionInformations.User.ID);
+            var languageManager = new UserManagerService(SessionInformations.User.ID);
             
+            /*
             if (languageManager.HasLanguageSet())
             {
                 string language = languageManager.GetLanguage();
@@ -72,7 +73,7 @@ namespace ClientLourd.ViewModels
             else
             {
                 languageManager.SetLanguage(SelectedLanguage);
-            }
+            }*/
 
 
             SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }) : new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1 }));
