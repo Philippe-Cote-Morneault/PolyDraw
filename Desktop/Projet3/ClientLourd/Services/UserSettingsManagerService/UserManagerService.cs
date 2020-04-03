@@ -17,18 +17,55 @@ namespace ClientLourd.Services.UserSettingsManagerService
     {
 
         private ResourceDictionary _langDict;
+        private ResourceDictionary _tutoDict;
+
         private string _userID;
         public UserSettingsManagerService(string userID)
         {
             _userID = userID;
+            
+            if (!File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml"))
+            {
+                CreateFile($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml");
+            }
+
+            if (!File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml"))
+            {
+                CreateFile($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml");
+            }
+
+
             _langDict = new ResourceDictionary();
-            _langDict.Source = new Uri("..\\Resources\\UserSettings\\UserLanguages.xaml", UriKind.Relative);
+            _langDict.Source = new Uri($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml", UriKind.RelativeOrAbsolute);
+
+            _tutoDict = new ResourceDictionary();
+            _tutoDict.Source = new Uri($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml", UriKind.RelativeOrAbsolute);
+
         }
 
+        public void CreateFile(string path)
+        {  
+            var settings = new XmlWriterSettings();
+            settings.Indent = true;
+            using (XmlWriter w = XmlWriter.Create(path, settings))
+            {
+                XamlWriter.Save(new ResourceDictionary(), w);
+            }
+        }
+
+        public void OverwriteFile(bool IsLanguageDict)
+        {
+            var dict = (IsLanguageDict) ? _langDict : _tutoDict;
+            var settings = new XmlWriterSettings();
+            settings.Indent = true;
+            using (XmlWriter w = XmlWriter.Create($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml", settings))
+            {
+                XamlWriter.Save(dict, w);
+            }
+        }
 
         public string GetLanguage()
         {
-            //return _dict["Laguage"].ToString();
             return (_langDict.Contains(_userID)) ? _langDict[_userID].ToString() : "System";
         }
 
@@ -44,10 +81,7 @@ namespace ClientLourd.Services.UserSettingsManagerService
                 _langDict[_userID] = language;
             }
 
-            var settings = new XmlWriterSettings();
-            settings.Indent = true;
-            var writer = XmlWriter.Create($"{AppDomain.CurrentDomain.BaseDirectory}..\\..\\Resources\\UserSettings\\UserLanguages.xaml", settings);
-            XamlWriter.Save(_langDict, writer);
+            OverwriteFile(true);
         }
 
     }
