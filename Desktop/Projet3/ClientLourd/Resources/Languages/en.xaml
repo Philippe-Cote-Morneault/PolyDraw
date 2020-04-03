@@ -167,6 +167,7 @@
 
     <!-- MainWindow -->
     <system:String x:Key="OpenChat">Open the chat</system:String>
+    <system:String x:Key="OpenTutorial">Open the tutorial</system:String>
     <system:String x:Key="LeaveLobby">Leave the match</system:String>
 
     <!-- Error messages -->

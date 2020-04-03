@@ -14,13 +14,14 @@ using System.Media;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Services.EnumService;
 using System.Collections.Generic;
+using ClientLourd.Services.UserSettingsManagerService;
 
 namespace ClientLourd.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
         string _containedView;
-        
+
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
 
@@ -28,6 +29,8 @@ namespace ClientLourd.ViewModels
 
         public NetworkInformations NetworkInformations { get; set; }
         private SessionInformations _sessionInformations;
+
+        public bool IsSystemLanguage { get; set; }
 
         public SessionInformations SessionInformations
         {
@@ -51,12 +54,25 @@ namespace ClientLourd.ViewModels
 
         public SoundService SoundService { get; set; }
 
+        private UserSettingsManagerService _userManager;
+
         public override void AfterLogin()
         {
             //TODO
+
+            _userManager = new UserSettingsManagerService(SessionInformations.User.ID);
+
+            if (!IsSystemLanguage)
+            {
+                _userManager.SetLanguage(SelectedLanguage);
+            }
+
+            else if(IsSystemLanguage && _userManager.GetLanguage() != "System")
+            {
+                SelectedLanguage = _userManager.GetLanguage();
+            }
+
             SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }) : new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1 }));
-
-
         }
 
         public override void AfterLogOut()
@@ -248,6 +264,7 @@ namespace ClientLourd.ViewModels
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(Languages));
                     NotifyPropertyChanged(nameof(CurrentLanguage));
+                    _userManager?.SetLanguage(_selectedLanguage.GetDescription());
                     LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
                 }
             }

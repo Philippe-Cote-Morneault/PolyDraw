@@ -125,7 +125,28 @@
 
                         <!--Sound button-->
                         <Grid DockPanel.Dock="Right">
+
+                            
+
                             <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon
+                                    Cursor="Hand"
+                                    Background="{StaticResource PrimaryHueMidBrush}"
+                                    Margin="0 0 20 0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Foreground="{StaticResource MaterialDesignDarkForeground}"
+                                    Kind="QuestionMarkCircle"
+                                    Height="24"
+                                    Width="24"
+                                    ToolTip="{DynamicResource OpenTutorial}"
+
+                                    PreviewMouseLeftButtonDown="OpenTutorial">
+                                </materialDesign:PackIcon>
+
+
+
+
                                 <ComboBox 
                                     x:Name="LanguageSelector" 
                                     FontSize="17"
