@@ -7,18 +7,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.log3900.R
 import com.log3900.draw.DrawViewFragment
-import com.log3900.game.group.Player
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import android.graphics.Color
-import android.util.Log
-import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import com.log3900.game.match.UI.*
 import com.log3900.shared.ui.ThemeUtils
@@ -276,8 +269,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         matchEndInfoView.visibility = View.INVISIBLE
     }
 
-    override fun enableHintButton(enable: Boolean) {
-        guessingView?.enableHintButton(enable)
+    override fun showHintButton(enable: Boolean) {
+        guessingView?.showHintButton(enable)
     }
 
     override fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean) {
@@ -318,6 +311,14 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         } else {
             canvasMessageView.visibility = View.INVISIBLE
         }
+    }
+
+    override fun enableGuessingView(enable: Boolean) {
+        guessingView?.enableActions(enable)
+    }
+
+    override fun clearGuessingViewText() {
+        guessingView?.clearCurrentText()
     }
 
     override fun onBackButtonPressed() {
