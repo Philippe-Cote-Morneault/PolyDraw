@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using ClientLourd.Annotations;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.ViewModels;
 using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Dialogs
@@ -23,6 +24,11 @@ namespace ClientLourd.Views.Dialogs
             InitializeComponent();
         }
 
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+        
         public bool AreFieldsEmpty
         {
             get
@@ -75,5 +81,20 @@ namespace ClientLourd.Views.Dialogs
             User.Avatar = (BitmapImage) result;
         }
 
+        private async void Register(object sender, RoutedEventArgs e)
+        {
+            if (PasswordField1.Password != PasswordField2.Password)
+            {
+                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidPassword"]), "RegisterDialogHost");
+            }
+            else if (PasswordField1.Password.Length < 8)
+            {
+                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidLenghtPassword"]), "RegisterDialogHost");
+            }
+            else
+            {
+                DialogHost.CloseDialogCommand.Execute(true, this);
+            }
+        }
     }
 }

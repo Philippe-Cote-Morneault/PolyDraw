@@ -144,6 +144,7 @@
     <system:String x:Key="Cancel">Cancel</system:String>
     <system:String x:Key="PasswordRetype">Retype the password</system:String>
     <system:String x:Key="InvalidPassword">The 2 passwords are different</system:String>
+    <system:String x:Key="InvalidLenghtPassword">Your password must be at least 8 characters</system:String>
 
     <!-- Chat -->
     <system:String x:Key="TypeMessage">Type your message...</system:String>

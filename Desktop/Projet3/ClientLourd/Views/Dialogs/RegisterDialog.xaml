@@ -129,7 +129,7 @@
             </Grid.ColumnDefinitions>
             <Button Margin="10" Grid.Column="0" Content="{DynamicResource SignUp}" HorizontalAlignment="Center"
                     Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
-                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="true" DockPanel.Dock="Bottom"
+                    Click="Register"
                     IsDefault="True">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
