@@ -1,14 +1,14 @@
 package com.log3900.game.match.solo
 
+import android.os.Handler
+import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
-import com.log3900.game.match.ActiveMatchPresenter
-import com.log3900.game.match.CheckPoint
-import com.log3900.game.match.RoundEnded
-import com.log3900.game.match.Synchronisation
-import com.log3900.game.match.coop.ActiveCoopMatchView
+import com.log3900.game.match.*
+import com.log3900.settings.sound.SoundManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.DateFormatter
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -25,7 +25,7 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
 
         activeSoloMatchView.setScore("Score: 0")
         activeSoloMatchView.setRemainingLives(soloMatchManager.getCurrentMatch().lives)
-        activeSoloMatchView.enableHintButton(true)
+        activeSoloMatchView.showHintButton(true)
 
         val drawer = soloMatchManager.getCurrentMatch().players.find { it.isCPU }
         activeSoloMatchView.setDrawer(drawer!!)
@@ -35,12 +35,34 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
 
     override fun onMatchSynchronisation(synchronisation: Synchronisation) {
         super.onMatchSynchronisation(synchronisation)
+        var currentMatch = soloMatchManager.getCurrentMatch()
+        currentMatch.lives = synchronisation.lives!!
         activeSoloMatchView?.setRemainingLives(synchronisation.lives!!)
         activeSoloMatchView?.setScore("Score: " + synchronisation.players[0].second)
     }
 
     override fun onGuessedWordWrong() {
-        super.onGuessedWordWrong()
+        if (soloMatchManager.getCurrentMatch().lives > 1) {
+            activeSoloMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.try_again))
+            activeSoloMatchView?.showCanvasMessageView(true)
+        }
+        activeSoloMatchView?.enableGuessingView(false)
+        activeSoloMatchView?.animateWordGuessedWrong()
+        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
+        Handler().postDelayed({
+            activeSoloMatchView?.showCanvasMessageView(false)
+            if (canEnableGuessingView) {
+                activeSoloMatchView?.enableGuessingView(true)
+            }
+            activeSoloMatchView?.clearGuessingViewText()
+        }, 2000)
+    }
+
+    override fun onTeamateGuessedWordProperly(teamateGuessedWordProperly: TeamateGuessedWordProperly) {
+        super.onTeamateGuessedWordProperly(teamateGuessedWordProperly)
+        activeSoloMatchView?.animateWordGuessedRight()
+        activeSoloMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.you_guessed_correctly))
+        activeSoloMatchView?.showCanvasMessageView(true)
     }
 
     override fun onRoundEnded(roundEnded: RoundEnded) {
@@ -49,6 +71,31 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         roundEnded.players.forEach {
             updatePlayerScore(it.userID, it.points, it.newPoints)
         }
+
+        if (soloMatchManager.getCurrentMatch().lives == 0) {
+            activeSoloMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.the_word_was, roundEnded.word))
+            activeSoloMatchView?.showCanvasMessageView(true)
+        }
+
+        Handler().postDelayed({
+            activeMatchView?.hideCanvas()
+            activeMatchView?.hideRoundEndInfoView()
+            activeSoloMatchView?.showCanvasMessageView(false)
+            Handler().postDelayed({
+                activeMatchView?.clearCanvas()
+                activeMatchView?.showCanvas()
+            }, 500)
+        }, 2000)
+    }
+
+    override fun onMatchEnded(matchEnded: MatchEnded) {
+        activeSoloMatchView?.showConfetti()
+        val score = matchEnded.players.find { it.userID == AccountRepository.getInstance().getAccount().ID }!!.points
+        activeSoloMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.solo_match_is_over_message, score))
+        activeSoloMatchView?.showCanvasMessageView(true)
+        Handler().postDelayed({
+            activeSoloMatchView?.showCanvasMessageView(false)
+        }, 2000)
     }
 
     private fun onCheckpoint(checkPoint: CheckPoint) {
