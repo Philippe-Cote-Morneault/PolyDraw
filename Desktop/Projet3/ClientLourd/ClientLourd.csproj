@@ -167,12 +167,18 @@
     <Compile Include="Models\NonBindable\TLV.cs" />
     <Compile Include="Models\NonBindable\TokenPair.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Services\CredentialsService\CredentialManager.cs" />
     <Compile Include="Models\Bindable\Stats.cs" />
     <Compile Include="Services\DateService\Timestamp.cs" />
     <Compile Include="Services\EnumService\EnumManager.cs" />
     <Compile Include="Services\InkCanvas\StrokesReader.cs" />
     <Compile Include="Services\LocalDatabaseService\LanguageManagerService.cs" />
+    <Compile Include="Services\LocalDatabaseService\LocalDataBaseService.cs" />
     <Compile Include="Services\ProfileViewerService\ProfileViewer.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
@@ -448,11 +454,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
