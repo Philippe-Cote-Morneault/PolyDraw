@@ -247,6 +247,34 @@
         Dessiner
     </system:String>
 
-    
+    <!-- Coop tutorial -->
+
+    <system:String x:Key="CoopGame">
+        Partie Coop
+    </system:String>
+
+    <system:String x:Key="CoopDescription">
+        Dans ce mode de jeux, un groupe de joueurs humains essayent de deviner le plus de mots possibles avant que le temps expire. Les joueurs récoltent des points
+        pour chaque dessin deviné correctement. De même, lorsque l'équipe devine correctement, elle est allouée du temps supplémentaire.
+        Les mots sont tous dessinés par un joueur virtuel aléatoire. Les joueurs humains n'ont pas la possibilité de dessiner. 
+        Pour chaque dessin,l'équipe dispose d'un nombre de tentatives collectives (coeurs). Ce nombre de tentative varie en fonction de la difficulté de la partie.
+        Si jamais l'équipe épuise ses tentatives, alors elle est pénalisée par un retrait de temps et le joueur virtuel passe au dessin prochain. 
+    </system:String>
+
+    <system:String x:Key="CoopPlayersSection">
+        Dans la section gauche de l'interface, on retrouve l'équipe de joueurs humains et le joueur virtuel qui se charge de dessiner les mots à deviner.
+    </system:String>
+
+    <system:String x:Key="CoopTopBar">
+        En haut de la zone de dessin, on retrouve d'abord le score de l'équipe. Le score est collectif et les joueurs doivent travailler ensemble pour l'améliorer.
+        Ensuite, les coeurs affichent à l'équipe combien de tentatives il reste. Ces coeurs sont réinitialisés à chaque nouveau dessin du joueur virtuel. Par contre, si le nombre de tentatives
+        tombe à zéro, l'équipe est pénalisée par un retrait de temps. Puis, l'horloge montre combien de temps il reste à la partie. Contrairement aux parties FFA, le temps n'est pas réinitialisé 
+        à chaque dessin. 
+    </system:String>
+
+    <system:String x:Key="CoopGuess">
+        Au-dessous de la zone de dessin, il est possible d'essayer de deviner un mot ou de deviner un indice. Dans les parties Coop, demander un indice coûte du temps. Si un joueur demande un indice,
+        tous les joueurs pourront la visionner, contrairement en FFA.
+    </system:String>
 
 </ResourceDictionary>

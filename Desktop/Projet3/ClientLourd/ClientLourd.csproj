@@ -309,6 +309,9 @@
     <Compile Include="Views\Controls\Tutorial\ChatTutorial.xaml.cs">
       <DependentUpon>ChatTutorial.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Tutorial\CoopTutorial.xaml.cs">
+      <DependentUpon>CoopTutorial.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Tutorial\FFATutorial.xaml.cs">
       <DependentUpon>FFATutorial.xaml</DependentUpon>
     </Compile>
@@ -410,6 +413,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\Tutorial\ChatTutorial.xaml" />
+    <Page Include="Views\Controls\Tutorial\CoopTutorial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\Tutorial\FFATutorial.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -479,6 +486,16 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Tutorial\Coop\CoopGameEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopPlayersEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopTopBarEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGuessEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\HintEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGuessFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGameFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopPlayersFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopTopBarFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\HintFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFATopBarFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFAGuessFR.PNG" />
     <Resource Include="Resources\Tutorial\FFA\FFADrawerFR.PNG" />

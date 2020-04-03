@@ -53,6 +53,10 @@
                             <slide:FFATutorial Margin="10"/>
                         </materialDesign:TransitionerSlide>
 
+                        <materialDesign:TransitionerSlide >
+                            <slide:CoopTutorial Margin="10"/>
+                        </materialDesign:TransitionerSlide>
+
         </materialDesign:Transitioner>
     </DockPanel>
         

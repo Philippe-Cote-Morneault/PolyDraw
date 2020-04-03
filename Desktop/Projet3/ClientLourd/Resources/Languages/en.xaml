@@ -250,5 +250,35 @@
         Draw
     </system:String>
 
+    <!-- Coop tutorial -->
+
+    <system:String x:Key="CoopGame">
+        Coop Game
+    </system:String>
+
+    <system:String x:Key="CoopDescription">
+        In this game mode, a group of human players try to guess as many words as possible before the time expires. The group gains points for every word guessed correctly.
+        The players also receive a time bonus if a single player of their team guesses correctly. In coop matches, only the virtual player can draw a word. For every drawing, the group has a
+        collective amount of attempts. This number of attempts varies depending on the difficulty of the match. If a team exhausts its number of attempts, the virtual player
+        will start drawing another word, and the team will lose some time on the clock.
+    </system:String>
+
+    <system:String x:Key="CoopPlayersSection">
+        In this section, the players and the virtual player are displayed.
+    </system:String>
+
+    <system:String x:Key="CoopTopBar">
+        In the top bar, the team's score is displayed. The score is collective for every player on the team. Next to the score, hearts are displayed in order to represent the
+        number of remaining attempts. These hearts are reset for every new word drawn by the virtual player. If the number of remaining hearts is 0, then the team loses an amount of time
+        and the virtual player starts drawing a new word. Finally, the clock shows the player how many seconds there are left to the match. In contrary to FFA matches, the time isn't reset
+        on every new drawing.
+    </system:String>
+
+    <system:String x:Key="CoopGuess">
+        Under the drawing zone, the players can guess a word or ask for a hint. In Coop matches, asking for a hint costs time. The hint will be displayed and the chat and it will be
+        visible for every player in the group. This is different than in FFA matches, where only the player who asked for a hint could see it.
+    </system:String>
+
+
 
 </ResourceDictionary>
