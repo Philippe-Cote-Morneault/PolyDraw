@@ -39,6 +39,7 @@ class MatchWaitingRoomPresenter : Presenter {
     private fun init() {
         matchWaitingRoomView?.setGroup(groupManager?.currentGroup!!)
         matchWaitingRoomView?.setPlayers(groupManager?.currentGroup?.players!!)
+        matchWaitingRoomView?.setGameModeImageRes(MatchMode.imageRes(groupManager?.currentGroup?.gameType!!))
 
         if (groupManager?.currentGroup?.ownerID == AccountRepository.getInstance().getAccount().ID) {
             matchWaitingRoomView?.displayStartMatchButton(true)

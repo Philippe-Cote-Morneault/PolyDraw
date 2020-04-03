@@ -6,14 +6,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="25dp">
 
+    <ImageView
+        android:id="@+id/fragment_match_waiting_room_image_view_mode"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/fragment_match_waiting_room_text_view_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:textColor="@color/color_black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="@id/fragment_match_waiting_room_image_view_mode"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_match_waiting_room_image_view_mode"
+        app:layout_constraintStart_toEndOf="@id/fragment_match_waiting_room_image_view_mode"/>
+
+    <ImageView
+        android:id="@+id/fragment_match_waiting_room_image_view_difficulty"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_skull"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_mode"/>
 
     <TextView
         android:id="@+id/fragment_match_waiting_room_text_view_difficulty"
@@ -21,19 +40,40 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:textColor="@color/color_black"
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="@id/fragment_match_waiting_room_image_view_difficulty"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_match_waiting_room_image_view_difficulty"
+        app:layout_constraintStart_toEndOf="@id/fragment_match_waiting_room_image_view_difficulty" />
+
+    <ImageView
+        android:id="@+id/fragment_match_waiting_room_image_view_duration"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_mode"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:src="@drawable/ic_access_time_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_difficulty"/>
 
     <TextView
         android:id="@+id/fragment_match_waiting_room_text_view_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:textSize="30sp"
         android:textColor="@color/color_black"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_difficulty"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="@id/fragment_match_waiting_room_image_view_duration"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_match_waiting_room_image_view_duration"
+        app:layout_constraintStart_toEndOf="@id/fragment_match_waiting_room_image_view_duration"/>
+
+    <ImageView
+        android:id="@+id/fragment_match_waiting_room_image_view_language"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_language"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_duration"/>
+
 
     <TextView
         android:id="@+id/fragment_match_waiting_room_text_view_language"
@@ -41,9 +81,10 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:textColor="@color/color_black"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@id/fragment_match_waiting_room_text_view_duration"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_marginStart="15dp"
+        app:layout_constraintTop_toTopOf="@id/fragment_match_waiting_room_image_view_language"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_match_waiting_room_image_view_language"
+        app:layout_constraintStart_toEndOf="@id/fragment_match_waiting_room_image_view_language"/>
 
     <TextView
         android:id="@+id/fragment_match_waiting_room_text_view_header_players"
