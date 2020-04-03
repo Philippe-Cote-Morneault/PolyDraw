@@ -110,25 +110,48 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
             var e = ((MatchEventArgs) args);
-            Task.Run(() =>
+            if (ViewModel.Mode == GameModes.FFA)
             {
-                if (e.WinnerID == SessionInformations.User.ID)
+                Task.Run(() =>
+                {
+                    if (e.WinnerID == SessionInformations.User.ID)
+                        StartConfetti();
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LeaderBoardGrid.Children.Clear();
+                        LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
+                        LeaderBoardGrid.Visibility = Visibility.Visible;
+                    });
+                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LeaderBoardGrid.Children.Clear();
+                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                    });
+                    if (e.WinnerID == SessionInformations.User.ID)
+                        StopConfetti();
+                });
+            }
+            else
+            {
+                //Coop and solo game end
+                Task.Run(() =>
+                {
                     StartConfetti();
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    LeaderBoardGrid.Children.Clear();
-                    LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
-                    LeaderBoardGrid.Visibility = Visibility.Visible;
-                });
-                Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    LeaderBoardGrid.Children.Clear();
-                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
-                });
-                if (e.WinnerID == SessionInformations.User.ID)
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ShowCanvasMessage($"{(string)ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}");
+                        LeaderBoardGrid.Visibility = Visibility.Visible;
+                    });
+                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        LeaderBoardGrid.Children.Clear();
+                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                    });
                     StopConfetti();
-            });
+                });
+            }
         }
 
         private void ShowCanvasMessage(string message)
@@ -339,27 +362,6 @@ namespace ClientLourd.Views.Controls.Game
                         sb.Begin();
                     });
                 });
-            }else if (ViewModel.Mode != GameModes.FFA)
-            {
-                //Coop and solo game end
-                Task.Run(() =>
-                {
-                    StartConfetti();
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        ShowCanvasMessage($"{(string)ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}");
-                        LeaderBoardGrid.Visibility = Visibility.Visible;
-                    });
-                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
-                    });
-                    StopConfetti();
-                });
-
-                
             }
         }
 
