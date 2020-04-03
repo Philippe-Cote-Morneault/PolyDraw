@@ -180,7 +180,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             PropertyValuesHolder.ofFloat("scaleX", 1.4f),
             PropertyValuesHolder.ofFloat("scaleY", 1.4f)
         )
-        scaleDown.duration = 500
+        scaleDown.duration = 200
 
         scaleDown.repeatCount = 1
         scaleDown.repeatMode = ObjectAnimator.REVERSE
