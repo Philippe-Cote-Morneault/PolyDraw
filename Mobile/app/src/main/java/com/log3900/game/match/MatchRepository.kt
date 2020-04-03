@@ -244,6 +244,27 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.HINT_RESPONSE, hintResponse))
     }
 
+    private fun onTeamateGuessedWordProperly(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val teamateGuessedWordProperly = MatchAdapter.jsonToTeamateGuessedProperly(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TEAMATE_GUESSED_WORD_PROPERLY, teamateGuessedWordProperly))
+    }
+
+    private fun onTeamateGuessedWordInproperly(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val teamateGuessedWordInproperly = MatchAdapter.jsonToTeamateGuessedInproperly(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TEAMATE_GUESSED_WORD_INCORRECTLY, teamateGuessedWordInproperly))
+    }
+
+    private fun onMatchCancelled(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val matchCancelled = MatchAdapter.jsonToMatchCancelled(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_CANCELLED, matchCancelled))
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
         playerScores[playerID] = newScore
         reorderPlayers()
