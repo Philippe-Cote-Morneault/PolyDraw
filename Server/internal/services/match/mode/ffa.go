@@ -223,7 +223,7 @@ func (f *FFA) GameLoop() {
 	f.resetGuess()
 	f.receiving.Unlock()
 
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 7)
 }
 
 //Disconnect endpoint for when a user exits
