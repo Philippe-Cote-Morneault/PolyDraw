@@ -205,6 +205,10 @@
     <system:String x:Key="GameDuration">Durée de la partie</system:String>
     
     <!-- FFA tutorial -->
+
+    <system:String x:Key="FFAGame">
+        Partie FFA
+    </system:String>
     <system:String x:Key="FFADescription">
         Pour ce mode de partie, tous les joueurs s'affrontent afin obtenir le meilleur score.
         Ils peuvent gagner des points en devinant correctement le mot dessiné par le dessinateur.
@@ -212,7 +216,6 @@
         De plus, ils peuvent gagner des points lorsque d'autres joueurs devinent correctement leur dessin.
         Voici l'interface d'une partie de mêlée générale.
     </system:String>
-
     <system:String x:Key="FFAPlayersSection">
         Dans la section gauche de l'interface, on retrouve les joueurs et leur score. Ils sont classés en ordre décroissant en fonction de leur score.
         Les joueurs virtuels sont représentés par une icône de robot. Pour mettre le dessinateur en évidence, une icône de crayon est placée à droite de son nom.
@@ -232,10 +235,18 @@
 
     <system:String x:Key="FFAGuess">
         Les autres joueurs de la partie auront, quant à eux, la possibilité de deviner le mot à l'aide du champ de texte en bas de la zone
-        de dessin. Si jamais le dessinateur est un joueur virtuel, ces joueurs auront aussi la possibilité de demander un indice. Ils devront
-        par contre faire attention, car demander un indice coûte des points!
+        de dessin. Si jamais le dessinateur est un joueur virtuel, ces joueurs auront aussi la possibilité de demander un indice. L'indice sera affiché dans le chat de la partie.
+        Les joueurs devront par contre faire attention, car demander un indice coûte des points!
     </system:String>
-    
 
+    <system:String x:Key="TopBar">
+        Barre du haut
+    </system:String>
+
+    <system:String x:Key="Draw">
+        Dessiner
+    </system:String>
+
+    
 
 </ResourceDictionary>

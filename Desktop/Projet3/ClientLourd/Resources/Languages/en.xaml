@@ -210,29 +210,45 @@
     <system:String x:Key="GameDuration">Game duration</system:String>
 
     <!-- FFA tutorial -->
+    <system:String x:Key="FFAGame">
+        FFA Game
+    </system:String>
+    
     <system:String x:Key="FFADescription">
-        Pour ce mode de partie, tous les joueurs s'affrontent afin obtenir le meilleur score.
-        Ils peuvent gagner des points en devinant correctement le mot dessiné par le dessinateur.
-        Le nombre de points gagnés dépend du temps restant au tour et du nombre de joueurs ayant déjà devinés le mot.
-        De plus, ils peuvent gagner des points lorsque d'autres joueurs devinent correctement leur dessin.
-        Voici l'interface d'une partie de mêlée générale.
+        In this game mode, every contestant plays agaisnt each other in order to gain the best score.
+        Each player can earn points by correctly guessing the word drawn. The number of points a player can gain
+        depends on the time it took to guess the word and the number of players that have already guessed the word correctly.
+        A player may also earn some points if the other players are able to guess the word he has drawn. A free-for-all match looks like this.
     </system:String>
 
-    <system:String x:Key="FFALeftSection">
-        Dans la section gauche de l'interface, on retrouve les joueurs et leur score. Ils sont classés en ordre décroissant en fonction de leur score.
-        Les joueurs virtuels sont représentés par un icône de robot. Pour mettre le dessinateur en évidence, un icône de crayon est placé à droite de son nom.
+    <system:String x:Key="FFAPlayersSection">
+        In the left section of the interface, the players and their respective score are shown. They are ordered by the highest to the lowest score.
+        To differentiate virtual players from human players, virtual players are given a robot as icon. Also, to highlight who the drawer of the current turn is,
+        a pencil is shown next to the drawer's name.
     </system:String>
 
     <system:String x:Key="FFATopBar">
-        En haut de la zone de dessin, une horloge affiche le temps restant au tour. Dépendemmant des difficultés facile medium et difficile, les tours durent chaque 1 minute, 45 secondes et 30 secondes.
-        Une fois le temps expiré, on passe au prochain tour.
-        Le tour courant et le nombre de tour total sont affichés à droite de l'horloge. Le nombre de tour total est calculé en fonction du nombre
-        de joueurs et du nombre de rondes choisi à la création de la partie. Une partie de deux rondes et 3 joueurs aura, par exemple, 6 tours.
+        Above the drawing zone, a clock shows the time remaining in the current turn. Each turn lasts 1 minute (easy), 45 seconds (medium) and 30 seconds (hard) depending on the match's difficulty.
+        Once the time has expired, we go to the next turn. The current turn and the total number of turns are shown on the right of the clock. The total number of turns is calculated
+        based on the number of players and the number of rounds selected while creating the match. For example, a match of two rounds and 3 players will have 6 turns.
     </system:String>
 
     <system:String x:Key="FFADrawer">
-        Dans une partie de mêlée générale, le mot que le dessinateur doit dessiné est affiché en bas de la zone de dessin. C'est à partir de 
-        mot que le joueur devra montrer ses talents de dessinateur!
+        In a free-for-all match, the word that needs to be drawn by the drawer is located under the drawing zone. In order to gain some points, the drawer will have to demonstrate his drawing skills!
     </system:String>
+
+    <system:String x:Key="FFAGuess">
+        The other players of the match will have to use the textbox situated under the drawing zone in order guess the word. If the drawer is a virtual player, the players that are currently
+        guessing can ask for a hint. The hint will be displayed in the match's chat. Since asking for a hint costs points, the players will have to be careful!
+    </system:String>
+
+    <system:String x:Key="TopBar">
+        Top bar
+    </system:String>
+
+    <system:String x:Key="Draw">
+        Draw
+    </system:String>
+
 
 </ResourceDictionary>

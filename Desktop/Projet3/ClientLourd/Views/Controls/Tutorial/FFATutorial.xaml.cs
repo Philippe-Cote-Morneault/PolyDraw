@@ -15,14 +15,15 @@ using System.Windows.Shapes;
 
 namespace ClientLourd.Views.Controls.Tutorial
 {
-    /// <summary>
-    /// Interaction logic for FFATutorial.xaml
-    /// </summary>
     public partial class FFATutorial : UserControl
     {
         public FFATutorial()
         {
             InitializeComponent();
         }
+
+
+
+
     }
 }

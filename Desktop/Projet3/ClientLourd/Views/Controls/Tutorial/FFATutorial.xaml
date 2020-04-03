@@ -5,11 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientLourd.Views.Controls.Tutorial"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            xmlns:ViewModels="clr-namespace:ClientLourd.ViewModels"
+            xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <ViewModels:MainViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
+    </UserControl.Resources>
         <DockPanel>
-            <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Partie FFA"/>
+            <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="{DynamicResource FFAGame}"/>
             <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
                 <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
                     <materialDesign:PackIcon Kind="NavigateBefore"/>
@@ -23,56 +31,86 @@
 
                 <!-- General description -->
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 0 0 20" Text="{DynamicResource FFADescription}"/>
-                <Image Stretch="Fill" Height="400">
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="35" Margin="0 0 0 20" Text="{Binding SelectedLanguage, Mode=TwoWay}"/>
+
+
+                <Image  Visibility="{Binding SelectedLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=French, UpdateSourceTrigger=PropertyChanged}"  Stretch="Fill" Height="400">
                     <Image.Source>
                         <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGameFR.png" />
                     </Image.Source>
                 </Image>
-                
+                <Image  Visibility="{Binding SelectedLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=English, UpdateSourceTrigger=PropertyChanged}"  Stretch="Fill" Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGameEN.png" />
+                    </Image.Source>
+                </Image>
+
                 <!-- Players  -->
                 <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource Players}"/>
                 <Separator/>
 
-                <Image Margin="0 15 0 0" Height="400">
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}" Margin="0 15 0 0" Height="400">
                     <Image.Source>
                         <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAPlayersFR.png" />
+                    </Image.Source>
+                </Image>
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}" Margin="0 15 0 0" Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAPlayersEN.png" />
                     </Image.Source>
                 </Image>
 
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFAPlayersSection}"/>
 
                 <!-- Top bar -->
-                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="Barre du haut"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource TopBar}"/>
                 <Separator/>
 
-                <Image Margin="0 15 0 0" Height="40">
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}" Margin="0 15 0 0" Height="40">
                     <Image.Source>
-                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/TopBarFFAFR.png" />
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFATopBarFR.png" />
                     </Image.Source>
                 </Image>
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}" Margin="0 15 0 0" Height="40">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFATopBarEN.png" />
+                    </Image.Source>
+                </Image>
+                
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFATopBar}"/>
                 
                 <!-- Draw -->
 
-                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="Dessiner"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource Draw}"/>
                 <Separator/>
 
-                <Image Margin="0 15 0 0" Height="400">
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}" Margin="0 15 0 0" Height="400">
                     <Image.Source>
                         <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFADrawerFR.png" />
                     </Image.Source>
                 </Image>
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}" Margin="0 15 0 0" Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFADrawerEN.png" />
+                    </Image.Source>
+                </Image>
+
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFADrawer}"/>
 
 
                 <!-- Guess -->
 
-                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="Deviner"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource Guess}"/>
                 <Separator/>
 
-                <Image Margin="0 15 0 0" Height="50">
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}" Margin="0 15 0 0" Height="50">
                     <Image.Source>
                         <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGuessFR.png" />
+                    </Image.Source>
+                </Image>
+                <Image Visibility="{Binding CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}" Margin="0 15 0 0" Height="50">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGuessEN.png" />
                     </Image.Source>
                 </Image>
                 <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFAGuess}"/>
