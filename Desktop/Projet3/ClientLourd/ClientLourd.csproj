@@ -315,6 +315,9 @@
     <Compile Include="Views\Controls\Tutorial\FFATutorial.xaml.cs">
       <DependentUpon>FFATutorial.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Tutorial\SoloTutorial.xaml.cs">
+      <DependentUpon>SoloTutorial.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\AvatarSelectionDialog.xaml.cs">
       <DependentUpon>AvatarSelectionDialog.xaml</DependentUpon>
     </Compile>
@@ -421,6 +424,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Tutorial\SoloTutorial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\AvatarSelectionDialog.xaml" />
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
     <Page Include="Views\Dialogs\ConfirmationDialog.xaml" />
@@ -486,6 +493,10 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Tutorial\Solo\SoloGameEN.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloGameFR.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloTopBarEN.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloTopBarFR.PNG" />
     <Resource Include="Resources\Tutorial\Coop\CoopGameEN.PNG" />
     <Resource Include="Resources\Tutorial\Coop\CoopPlayersEN.PNG" />
     <Resource Include="Resources\Tutorial\Coop\CoopTopBarEN.PNG" />

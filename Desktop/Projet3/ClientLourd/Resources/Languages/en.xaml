@@ -239,7 +239,7 @@
 
     <system:String x:Key="FFAGuess">
         The other players of the match will have to use the textbox situated under the drawing zone in order to guess the word. If the drawer is a virtual player, the players that are currently
-        guessing can ask for a hint. The hint will be displayed in the match's chat. Since asking for a hint costs points, the players will have to be careful!
+        guessing can ask for a hint. The hint will be displayed in the match's chat. Only the player that asked for a hint will be able to see it. Since asking for a hint costs points, the players will have to be careful!
     </system:String>
 
     <system:String x:Key="TopBar">
@@ -279,6 +279,22 @@
         visible for every player in the group. This is different than in FFA matches, where only the player who asked for a hint could see it.
     </system:String>
 
+    <!-- Solo tutorial -->
+
+    <system:String x:Key="SoloGame">
+        Solo Game
+    </system:String>
+
+    <system:String x:Key="SoloDescription">
+        Solo matches are almost identical to coop matches. However, solo games are played with only one human player. This player tries to guess as many words drawn by a virtual bot as possible.
+        The match is given a time based on its difficulty. Just like in coop games, a number of attempts is given to the player. This number of attempts is once again based on the match's difficulty.
+        In solo games, the player can try to beat his personal record.
+    </system:String>
+
+
+    <system:String x:Key="SoloTopBar">
+        The top bar is similar to the one used in coop games. However, the player's personal record in solo mode is displayed next to the clock
+    </system:String>
 
 
 </ResourceDictionary>

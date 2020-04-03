@@ -44,9 +44,7 @@
                                 
                         <!-- Chat -->
                         <materialDesign:TransitionerSlide >
-                            <ScrollViewer>
                                 <slide:ChatTutorial Margin="10"/>
-                            </ScrollViewer>
                         </materialDesign:TransitionerSlide>
 
                         <materialDesign:TransitionerSlide >
@@ -55,6 +53,10 @@
 
                         <materialDesign:TransitionerSlide >
                             <slide:CoopTutorial Margin="10"/>
+                        </materialDesign:TransitionerSlide>
+
+                        <materialDesign:TransitionerSlide >
+                            <slide:SoloTutorial Margin="10"/>
                         </materialDesign:TransitionerSlide>
 
         </materialDesign:Transitioner>

@@ -235,7 +235,7 @@
 
     <system:String x:Key="FFAGuess">
         Les autres joueurs de la partie auront, quant à eux, la possibilité de deviner le mot à l'aide du champ de texte en bas de la zone
-        de dessin. Si jamais le dessinateur est un joueur virtuel, ces joueurs auront aussi la possibilité de demander un indice. L'indice sera affiché dans le chat de la partie.
+        de dessin. Si jamais le dessinateur est un joueur virtuel, ces joueurs auront aussi la possibilité de demander un indice. L'indice sera affiché dans le chat de la partie, mais seulement celui qui a demandé l'indice pourra la voir.
         Les joueurs devront par contre faire attention, car demander un indice coûte des points!
     </system:String>
 
@@ -275,6 +275,25 @@
     <system:String x:Key="CoopGuess">
         Au-dessous de la zone de dessin, il est possible d'essayer de deviner un mot ou de deviner un indice. Dans les parties Coop, demander un indice coûte du temps. Si un joueur demande un indice,
         tous les joueurs pourront la visionner, contrairement en FFA.
+    </system:String>
+
+
+    <!-- Solo tutorial -->
+
+    <system:String x:Key="SoloGame">
+        Partie Solo
+    </system:String>
+
+    <system:String x:Key="SoloDescription">
+        Les parties solo sont presque identiques aux parties Coop. Par contre, il n'est pas possible de jouer à plusieurs. Le joueur joue avec un joueur virtuel pour deviner le plus de mots possibles
+        durant un certain lapse de temps qui varie en fonction de la difficulté. Tout comme les parties Coop, le joueur est alloué un nombre de tentatives au départ en fonction de la difficulté du jeu. 
+        Dans ce mode de jeu, le joueur peut joueur afin de battre son record personnel.
+
+    </system:String>
+
+
+    <system:String x:Key="SoloTopBar">
+        La barre du haut est similaire à celle des parties Coop. En revanche, le record personnel du joueur en mode solo est affiché à gauche de l'horloge.
     </system:String>
 
 </ResourceDictionary>
