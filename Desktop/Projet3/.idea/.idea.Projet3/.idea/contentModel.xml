@@ -55,7 +55,6 @@
                   <e p="TopBar.g.cs" t="Include" />
                 </e>
                 <e p="Home.g.cs" t="Include" />
-                <e p="Lobby.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
                 <e p="Tutorial" t="Include">
@@ -175,6 +174,9 @@
           </e>
           <e p="SoundService" t="Include">
             <e p="SoundService.cs" t="Include" />
+          </e>
+          <e p="UserSettingsManagerService" t="Include">
+            <e p="UserManagerService.cs" t="Include" />
           </e>
         </e>
         <e p="Utilities" t="Include">

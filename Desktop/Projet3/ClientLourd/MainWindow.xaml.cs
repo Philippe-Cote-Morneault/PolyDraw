@@ -24,6 +24,7 @@ using ClientLourd.Utilities.Enums;
 using ClientLourd.Services.EnumService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Views.Controls;
+using ClientLourd.Services.UserSettingsManagerService;
 
 namespace ClientLourd
 {
@@ -73,8 +74,11 @@ namespace ClientLourd
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
 
-            //TODO: Remove this comment
-            DialogHost.Show(new Tutorial(), "Default");
+            var userSettingsManager = new UserSettingsManagerService(mainViewModel.SessionInformations.User.ID);
+            if (!userSettingsManager.HasSeenTutorial())
+            {
+                DialogHost.Show(new Tutorial(), "Default");
+            }
         }
 
         private void OnUserLogout(object source, EventArgs args)
@@ -225,6 +229,9 @@ namespace ClientLourd
         }
 
 
+        /// <summary>
+        /// Sets language based on system language
+        /// </summary>
         private void SetLanguageDictionary()
         {
             ResourceDictionary dict = new ResourceDictionary();
@@ -243,9 +250,12 @@ namespace ClientLourd
                     ((MainViewModel)DataContext).SelectedLanguage = Languages.EN.GetDescription();
                     break;
             }
+
+
             Resources.MergedDictionaries.Add(dict);
             (DataContext as MainViewModel).CurrentDictionary = dict;
             (DataContext as MainViewModel).TriggerLangChangedEvent();
+            (DataContext as MainViewModel).IsSystemLanguage = true;
             LanguageSelector.SelectionChanged += ChangeLang;
         }
 
@@ -262,6 +272,7 @@ namespace ClientLourd
                 dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
             (DataContext as MainViewModel).CurrentDictionary = dict;
             Resources.MergedDictionaries[0] = dict;
+            (DataContext as MainViewModel).IsSystemLanguage = false;
             (DataContext as MainViewModel).TriggerLangChangedEvent();
 
         }
@@ -342,6 +353,11 @@ namespace ClientLourd
             {
                 ViewModel.HomeCommand.Execute(null);
             }
+        }
+
+        private void OpenTutorial(object sender, MouseButtonEventArgs e)
+        {
+            DialogHost.Show(new Tutorial(), "Default");
         }
     }
 }

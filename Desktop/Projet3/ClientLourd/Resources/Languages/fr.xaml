@@ -162,6 +162,7 @@
 
     <!-- MainWindow -->
     <system:String x:Key="OpenChat">Ouvrir le chat</system:String>
+    <system:String x:Key="OpenTutorial">Ouvrir le tutoriel</system:String>
     <system:String x:Key="LeaveLobby">Quitter la salle d'attente</system:String>
     
     <!-- Error messages -->

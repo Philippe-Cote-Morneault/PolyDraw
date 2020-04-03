@@ -18,6 +18,7 @@
         <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
         <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
         <converter:GameModeToImageConverter x:Key="GameModeToImageConverter"/>
+        <converter:WidthToLeftMarginConverter x:Key="WidthToLeftMarginConverter"/>
 
     </UserControl.Resources>
     <UserControl.DataContext>
@@ -35,27 +36,29 @@
             <StackPanel Margin="30" >
                 <TextBlock Margin="0 0 0 25" FontWeight="Bold" FontSize="30" Text="{DynamicResource WaitingRoom}"></TextBlock>
                 <StackPanel Orientation="Horizontal">
-                    <Image VerticalAlignment="Top" Stretch="Uniform" Height="24" Margin="5" x:Name="image"  Source="{Binding CurrentLobby.Mode, Converter={StaticResource GameModeToImageConverter}}"/>
+                    <Image VerticalAlignment="Top" Stretch="Uniform" Height="40" x:Name="image"  Source="{Binding CurrentLobby.Mode, Converter={StaticResource GameModeToImageConverter}}" Margin="0 0 15 0"/>
+
+
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Mode}"></TextBlock>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Mode, StringFormat={}: {0}, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon   Width="24" Height="24" Margin="5" Kind="Skull"></materialDesign:PackIcon>
+                    <materialDesign:PackIcon Margin="0 0 20 20" VerticalAlignment="Center" HorizontalAlignment="Center" Kind="Skull" Height="34" Width="34"/>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Difficulty}"></TextBlock>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Difficulty, StringFormat={}: {0}, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Clock" Height="24" Width="24" Margin="5"></materialDesign:PackIcon>
+                    <materialDesign:PackIcon Margin="0 0 20 20" VerticalAlignment="Center" HorizontalAlignment="Center" Kind="ClockOutline" Height="34" Width="34"/>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Duration}"></TextBlock>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Duration, StringFormat={}: {0:mm:ss}}"></TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Language" Height="24" Width="24" Margin="5"></materialDesign:PackIcon>
+                    <materialDesign:PackIcon Margin="0 0 20 20" VerticalAlignment="Center" HorizontalAlignment="Center" Kind="Language" Height="34" Width="34"/>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Language}"></TextBlock>
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{Binding CurrentLobby.Language, StringFormat={}: {0}}"></TextBlock>
                 </StackPanel>
 
-                <TextBlock FontWeight="Bold" Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Players}"></TextBlock>
+                <TextBlock FontWeight="Bold" Margin="0 30 0 25" FontSize="24" Text="{DynamicResource Players}"></TextBlock>
 
                 <!-- Players -->
                 <ItemsControl ItemsSource="{Binding CurrentLobby.Players}">
