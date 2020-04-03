@@ -208,4 +208,6 @@
     <string name="solo_match_is_over_message">The match is over! Your score: %1$d</string>
     <string name="the_word_was">The word was %1$s</string>
     <string name="try_again">Try again!</string>
+    <string name="ffa_guessed_correctly">You have guessed correctly! Waiting for other players</string>
+    <string name="ffa_is_drawing_the_next_word">%1$s is drawing the next word!</string>
 </resources>

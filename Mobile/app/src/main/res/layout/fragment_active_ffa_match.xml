@@ -50,32 +50,29 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
-        android:layout_marginEnd="300dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintStart_toStartOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintEnd_toEndOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_active_match_draw_container"/>
 
     <com.log3900.game.match.UI.FFAMatchEndInfoView
         android:id="@+id/fragment_active_match_ffa_match_end_info_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
-        android:layout_marginEnd="300dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintStart_toStartOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintEnd_toEndOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_active_match_draw_container"/>
 
     <com.log3900.game.match.UI.CanvasMessageView
         android:id="@+id/fragment_active_match_canvas_message_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible"
-        android:layout_marginEnd="300dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
-        app:layout_constraintStart_toEndOf="@id/fragment_active_ffa_match_recycler_view_player_list"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintStart_toStartOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintEnd_toEndOf="@id/fragment_active_match_draw_container"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_active_match_draw_container"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,6 +22,7 @@ abstract class ActiveMatchPresenter : Presenter {
     var matchManager: MatchManager
         private set
     protected var lastShownTime: String? = null
+    protected var canEnableGuessingView = false
 
     constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
         this.activeMatchView = activeMatchView
@@ -69,41 +70,36 @@ abstract class ActiveMatchPresenter : Presenter {
     protected open fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_right)
         activeMatchView?.animateWordGuessedRight()
+        activeMatchView?.enableGuessingView(false)
     }
 
     protected open fun onGuessedWordWrong() {
         activeMatchView?.setCanvasMessage("Try again!")
         activeMatchView?.showCanvasMessageView(true)
+        activeMatchView?.enableGuessingView(false)
         activeMatchView?.animateWordGuessedWrong()
         SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_word_guessed_wrong)
         Handler().postDelayed({
             activeMatchView?.showCanvasMessageView(false)
+            if (canEnableGuessingView) {
+                activeMatchView?.enableGuessingView(true)
+            }
+            activeMatchView?.clearGuessingViewText()
         }, 2000)
 
     }
 
-    private fun onTimesUp(timesUp: TimesUp) {
-        if (timesUp.type == TimesUp.Type.WORD_END) {
-            Handler().postDelayed({
-                activeMatchView?.hideCanvas()
-                activeMatchView?.hideRoundEndInfoView()
-                Handler().postDelayed({
-                    activeMatchView?.clearCanvas()
-                    activeMatchView?.showCanvas()
-                }, 500)
-            }, 2000)
-        }
+    protected open fun onTimesUp(timesUp: TimesUp) {
+        canEnableGuessingView = false
+        activeMatchView?.enableGuessingView(false)
+
     }
 
     protected open fun onRoundEnded(roundEnded: RoundEnded) {
-        val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
-        matchManager.getCurrentMatch().players.forEach { currentMatchPlayer ->
-            playerScores.add(Pair(currentMatchPlayer.username, roundEnded.players.find { currentMatchPlayer.ID == it.userID }!!.newPoints))
-        }
-        activeMatchView?.showRoundEndInfoView(roundEnded.word, playerScores)
     }
 
     protected open fun onMatchEnded(matchEnded: MatchEnded) {
+        activeMatchView?.enableGuessingView(false)
         if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
             activeMatchView?.showConfetti()
         }
@@ -112,8 +108,18 @@ abstract class ActiveMatchPresenter : Presenter {
     protected open fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
         activeMatchView?.clearCanvas()
         activeMatchView?.showWordGuessingView()
+        activeMatchView?.enableGuessingView(true)
+        canEnableGuessingView = true
         activeMatchView?.setWordToGuessLength(playerTurnToDraw.wordLength)
         activeMatchView?.enableDrawFunctions(false, playerTurnToDraw.drawingID, matchManager)
+    }
+
+    protected open fun onTeamateGuessedWordProperly(teamateGuessedWordProperly: TeamateGuessedWordProperly) {
+
+    }
+
+    protected open fun onTeamateGuessedWordInproperly(teamateGuessWordIncorrectly: TeamateGuessWordIncorrectly) {
+
     }
 
 
@@ -132,6 +138,8 @@ abstract class ActiveMatchPresenter : Presenter {
             EventType.ROUND_ENDED -> onRoundEnded(event.data as RoundEnded)
             EventType.MATCH_ENDED -> onMatchEnded(event.data as MatchEnded)
             EventType.PLAYER_TURN_TO_DRAW -> onPlayerTurnToDraw(event.data as PlayerTurnToDraw)
+            EventType.TEAMATE_GUESSED_WORD_PROPERLY -> onTeamateGuessedWordProperly(event.data as TeamateGuessedWordProperly)
+            EventType.TEAMATE_GUESSED_WORD_INCORRECTLY -> onTeamateGuessedWordInproperly(event.data as TeamateGuessWordIncorrectly)
         }
     }
 

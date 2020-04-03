@@ -178,4 +178,6 @@
     <string name="solo_match_is_over_message">Le match est terminé! Votre score: %1$d</string>
     <string name="the_word_was">Le mot était %1$s</string>
     <string name="try_again">Essayez encore!</string>
+    <string name="ffa_guessed_correctly">Vous avez devinez correctement! En attente des autres joueurs</string>
+    <string name="ffa_is_drawing_the_next_word">%1$s dessine le prochain mot!</string>
 </resources>
