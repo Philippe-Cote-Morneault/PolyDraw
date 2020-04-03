@@ -27,7 +27,6 @@
                 <Style TargetType="ListBoxItem">
 
                     <!---Code that allows to select user-->
-                    <Setter Property="IsSelected" Value="{Binding Content.IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">

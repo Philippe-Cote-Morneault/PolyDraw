@@ -149,7 +149,7 @@
             </StackPanel>
         </StackPanel>
         <Grid>
-            <Grid Name="LeaderBoardGrid" Visibility="Collapsed" Height="750" Width="1125" Background="Black" Opacity="0.5"  HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="13"/>
+            <Grid Name="LeaderBoardGrid" Visibility="Collapsed" Width="{Binding ElementName=CanvasContainer, Path=ActualWidth}" Height="{Binding ElementName=CanvasContainer, Path=ActualHeight}" Background="Black" Opacity="0.5"  HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="13"/>
             
             <Grid Name="CanvasContainer"  RenderTransformOrigin=".5,.5">
                 <Grid.RenderTransform>
