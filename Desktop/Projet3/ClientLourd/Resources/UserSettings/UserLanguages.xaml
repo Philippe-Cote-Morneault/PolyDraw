@@ -2,5 +2,4 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <s:String x:Key="eaf14b68-7955-4196-8337-84a2df8fe6bc">English</s:String>
   <s:String x:Key="3aff0525-86d2-4169-9a40-f2621d47b533">French</s:String>
-  <s:String x:Key="Language">System</s:String>
 </ResourceDictionary>

@@ -14,7 +14,7 @@ using System.Media;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Services.EnumService;
 using System.Collections.Generic;
-using ClientLourd.Services.UserManagerService;
+using ClientLourd.Services.UserSettingsManagerService;
 
 namespace ClientLourd.ViewModels
 {

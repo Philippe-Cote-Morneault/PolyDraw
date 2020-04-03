@@ -177,8 +177,6 @@
     <Compile Include="Services\DateService\Timestamp.cs" />
     <Compile Include="Services\EnumService\EnumManager.cs" />
     <Compile Include="Services\InkCanvas\StrokesReader.cs" />
-    <Compile Include="Services\LocalDatabaseService\LanguageManagerService.cs" />
-    <Compile Include="Services\LocalDatabaseService\LocalDataBaseService.cs" />
     <Compile Include="Services\ProfileViewerService\ProfileViewer.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
@@ -193,6 +191,7 @@
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
     <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
     <Compile Include="Services\SoundService\SoundService.cs" />
+    <Compile Include="Services\UserSettingsManagerService\UserManagerService.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
     <Compile Include="Utilities\Constants\GameDurations.cs" />
     <Compile Include="Utilities\Constants\GUIDs.cs" />
@@ -375,7 +374,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\UserSettings\UserSettings.xaml">
+    <Page Include="Resources\UserSettings\UserLanguages.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -477,13 +476,6 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Services\LocalDatabaseService\UserSettingsDB.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Services\LocalDatabaseService\UserSettingsDB_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>UserSettingsDB.mdf</DependentUpon>
-    </Content>
     <Resource Include="windows.ico" />
     <Resource Include="Resources\windows.ico" />
     <Resource Include="Resources\robot.png" />

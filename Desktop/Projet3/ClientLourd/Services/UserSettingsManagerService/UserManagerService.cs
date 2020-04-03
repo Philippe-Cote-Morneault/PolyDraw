@@ -11,43 +11,43 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Xml;
 
-namespace ClientLourd.Services.UserManagerService
+namespace ClientLourd.Services.UserSettingsManagerService
 {
     public class UserSettingsManagerService
     {
 
-        private ResourceDictionary _dict;
+        private ResourceDictionary _langDict;
         private string _userID;
         public UserSettingsManagerService(string userID)
         {
             _userID = userID;
-            _dict = new ResourceDictionary(); 
-            _dict.Source = new Uri("..\\Resources\\UserSettings\\UserSettings.xaml", UriKind.Relative);
+            _langDict = new ResourceDictionary();
+            _langDict.Source = new Uri("..\\Resources\\UserSettings\\UserLanguages.xaml", UriKind.Relative);
         }
 
 
         public string GetLanguage()
         {
             //return _dict["Laguage"].ToString();
-            return (_dict.Contains(_userID)) ? _dict[_userID].ToString(): "System"; 
+            return (_langDict.Contains(_userID)) ? _langDict[_userID].ToString() : "System";
         }
 
 
         public void SetLanguage(string language)
         {
-            if (!_dict.Contains(_userID))
+            if (!_langDict.Contains(_userID))
             {
-                _dict.Add(_userID, language);
+                _langDict.Add(_userID, language);
             }
             else
             {
-                _dict[_userID] = language;
+                _langDict[_userID] = language;
             }
 
             var settings = new XmlWriterSettings();
             settings.Indent = true;
-            var writer = XmlWriter.Create($"{AppDomain.CurrentDomain.BaseDirectory}..\\..\\Resources\\UserSettings\\UserSettings.xaml", settings);
-            XamlWriter.Save(_dict, writer);
+            var writer = XmlWriter.Create($"{AppDomain.CurrentDomain.BaseDirectory}..\\..\\Resources\\UserSettings\\UserLanguages.xaml", settings);
+            XamlWriter.Save(_langDict, writer);
         }
 
     }
