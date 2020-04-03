@@ -142,6 +142,7 @@ abstract class ActiveMatchPresenter : Presenter {
     }
 
     override fun destroy() {
+        MainApplication.instance.mainActivity?.closeChat()
         matchManager.leaveMatch()
         EventBus.getDefault().unregister(this)
         activeMatchView = null
