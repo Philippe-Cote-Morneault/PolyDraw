@@ -347,6 +347,30 @@ namespace ClientLourd.ViewModels
             }
         }
         
+        RelayCommand<object> _closeCommand;
+        public ICommand CloseCommand
+        {
+            get
+            {
+                return _closeCommand ??
+                       (_closeCommand = new RelayCommand<object>(p => Close()));
+            }
+        }
+
+        private async void Close()
+        {
+            if (await CancelGame())
+            {
+                if (!PreviewGUIEnabled)
+                {
+                    SocketClient.SendMessage(new Tlv(SocketMessageTypes.StopPreview));
+                }
+                // Make sure its stopped although it should already be.
+                StrokeDrawerService.Close();
+                RemoveSocketListeners();
+                DialogHost.CloseDialogCommand.Execute(null, null);
+            }
+        }
         
         RelayCommand<object> _removeImageCommand;
         public ICommand RemoveImageCommand

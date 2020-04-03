@@ -61,6 +61,7 @@
         GameCancel = 91,
         UserChangedName = 110,
         ChangeLanguage = 112,
+        StopPreview = 113,
         ServerMessage = 255,
     }
 }

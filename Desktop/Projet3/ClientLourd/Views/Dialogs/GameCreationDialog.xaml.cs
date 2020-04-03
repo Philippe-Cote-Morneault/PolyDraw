@@ -129,16 +129,7 @@ namespace ClientLourd.Views.Dialogs
         }
         
         
-        public async void OnClose(object sender, EventArgs arg)
-        {
-            if (await ViewModel.CancelGame())
-            {
-                // Make sure its stopped although it should already be.
-                ViewModel.StrokeDrawerService.Close();
-                ViewModel.RemoveSocketListeners();
-                DialogHost.CloseDialogCommand.Execute(null, null);
-            }
-        }
+
 
         public void OnConfirm(object sender, EventArgs arg)
         {

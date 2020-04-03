@@ -23,7 +23,7 @@
     <materialDesign:DialogHost Identifier="Dialog">
 
         <DockPanel Height="975">
-            <Button DockPanel.Dock="Top" HorizontalAlignment="Right" IsEnabled="{Binding PreviewGUIEnabled}" Click="OnClose">
+            <Button DockPanel.Dock="Top" HorizontalAlignment="Right"  Command="{Binding CloseCommand}" >
             <materialDesign:PackIcon Kind="Close" />
         </Button>
         <materialDesign:Transitioner SelectedIndex="0">
