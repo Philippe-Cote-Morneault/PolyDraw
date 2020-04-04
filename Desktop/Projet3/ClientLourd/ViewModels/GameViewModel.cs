@@ -505,15 +505,37 @@ namespace ClientLourd.ViewModels
             Word = "";
             Mode = Lobby.Mode;
 
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(async () =>
             {
                 ClearCanvas();
                 Players = Lobby.Players;
                 _stokesReader = new StrokesReader(Editor, SocketClient,
                     ((EditorViewModel) Editor.DataContext).EditorInformation);
                 ChangeCanvasStatus(false);
+
+                if (Mode == GameModes.Solo)
+                {
+                    BestSoloScore = (int)(await RestClient.GetStats()).BestScoreSolo;
+                }           
+
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
             });
+        }
+
+        public RestClient RestClient
+        {
+            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+        }
+
+        private int _bestSoloScore;
+        public int BestSoloScore
+        {
+            get => _bestSoloScore;
+            set
+            {
+                _bestSoloScore = value;
+                NotifyPropertyChanged();
+            }
         }
 
 

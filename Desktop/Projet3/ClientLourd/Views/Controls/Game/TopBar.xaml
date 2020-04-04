@@ -288,7 +288,7 @@
                 <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="0 0 6 0" Text="{DynamicResource BestScore}" FontSize="24" />
-                    <TextBlock Text="345" FontSize="24" />
+                    <TextBlock Text="{Binding BestSoloScore}" FontSize="24" />
 
                 </StackPanel>
             </StackPanel>
