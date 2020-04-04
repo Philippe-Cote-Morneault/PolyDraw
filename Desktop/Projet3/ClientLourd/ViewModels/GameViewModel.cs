@@ -51,10 +51,9 @@ namespace ClientLourd.ViewModels
             Players = new ObservableCollection<Player>();
         }
 
-        public ResourceDictionary CurrentDictionary
-        {
-            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
-        }
+        public ResourceDictionary CurrentDictionary =>
+            Application.Current.Dispatcher.Invoke(() => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                ?.CurrentDictionary);
 
         private void InitEventHandler()
         {

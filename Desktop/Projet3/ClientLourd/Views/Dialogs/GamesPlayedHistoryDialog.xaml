@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
         <converter:SecondsToTimeSpanConverter x:Key="SecondsToTimeSpanConverter" />
+        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
     </UserControl.Resources>
 
     <Grid Height="700" Width="1200">
@@ -53,7 +54,7 @@
                 </ListView.Resources>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Caca" Width="300" DisplayMemberBinding="{Binding MatchType}" />
+                        <GridViewColumn  Width="300" DisplayMemberBinding="{Binding MatchType}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName}" />
                         <GridViewColumn Width="300" DisplayMemberBinding="{Binding PlayersName}" />
                         <GridViewColumn Width="300"
@@ -61,6 +62,26 @@
 
                     </GridView>
                 </ListView.View>
+                <!-- 
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem"
+                        BasedOn="{StaticResource {x:Type ListViewItem}}">
+                        <Style.Triggers>
+                            <DataTrigger Value="true">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource ComparatorToBooleanConverter}">
+                                        <Binding Path="WinnerID" />
+                                        <Binding Path="DataContext.SessionInformations.User.Name"
+                                                 RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
+                                <Setter Property="Background" Value="#4CAF50"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                        <Setter Property="Background" Value="#80E91E63"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                -->
             </ListView>
         </ScrollViewer>
     </Grid>
