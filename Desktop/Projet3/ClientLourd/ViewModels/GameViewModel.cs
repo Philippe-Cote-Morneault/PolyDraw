@@ -503,6 +503,7 @@ namespace ClientLourd.ViewModels
 
         private void PrepareMatch()
         {
+            TeamPoints = 0;
             Word = "";
             Mode = Lobby.Mode;
 
