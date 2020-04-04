@@ -614,6 +614,7 @@ func (f *FFA) finish() {
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: f.GetConnections(), Match: &model.MatchPlayed{
 		MatchDuration: gameDuration.Milliseconds(),
 		WinnerName:    winner.Username,
+		WinnerID:      winner.UserID,
 		MatchType:     0}})
 }
 

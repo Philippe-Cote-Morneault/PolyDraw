@@ -24,6 +24,7 @@ type connection struct {
 type matchPlayed struct {
 	MatchDuration int64
 	WinnerName    string
+	WinnerID      string
 	MatchType     string
 }
 

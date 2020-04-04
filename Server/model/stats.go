@@ -18,5 +18,6 @@ type MatchPlayed struct {
 	UserID        uuid.UUID
 	MatchDuration int64
 	WinnerName    string
+	WinnerID      string
 	MatchType     int // 0 -> FFA | 1 -> solo | 2 -> coop
 }
