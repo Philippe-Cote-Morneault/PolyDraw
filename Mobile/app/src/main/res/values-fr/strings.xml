@@ -181,4 +181,10 @@
     <string name="ffa_guessed_correctly">Vous avez devinez correctement! En attente des autres joueurs</string>
     <string name="ffa_is_drawing_the_next_word">%1$s dessine le prochain mot!</string>
     <string name="coop_teamate_guessed_correctly">%1$s a deviné le mot! Le mot était %2$s</string>
+    <string name="profile_form_error_username">Nom d\'utilisateur invalide (doit être 4–12 caractères alphanumériques)</string>
+    <string name="profile_form_error_password">Mot de passe invalide (doit être 8–64 caractères alphanumériques)</string>
+    <string name="profile_form_error_password_confirm">Le mot de passe ne correspond pas</string>
+    <string name="profile_form_error_email">Format de courriel invalide</string>
+    <string name="profile_form_error_first_name">Prénom ne peut pas être vide</string>
+    <string name="profile_form_error_last_name">Nom de famille ne peut pas être vide</string>
 </resources>
