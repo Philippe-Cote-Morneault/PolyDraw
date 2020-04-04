@@ -36,7 +36,7 @@ namespace ClientLourd.Views.Dialogs
             StatsHistory = statsHistory;
             _lastMessageIndex = lastMessageIndex;
             InitializeComponent();
-            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
+            (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
             _scrollToBottomTimer = new Timer(800);
             _scrollToBottomTimer.Elapsed += ScrollToBottom;
             _scrollToBottomTimer.Start();
@@ -44,17 +44,13 @@ namespace ClientLourd.Views.Dialogs
 
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public void ScrollToBottom(object sender, ElapsedEventArgs e)
         {
             _scrollToBottomTimer.Stop();
-            Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                ScrollViewerElement.ScrollToBottom();
-            });
-
+            Application.Current.Dispatcher.InvokeAsync(() => { ScrollViewerElement.ScrollToBottom(); });
         }
 
 
@@ -80,6 +76,7 @@ namespace ClientLourd.Views.Dialogs
                 throw new InvalidOperationException(
                     "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
             }
+
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
                 //TODO: Dont load messages if messageIndex is greater than the array length 
@@ -92,9 +89,7 @@ namespace ClientLourd.Views.Dialogs
                     scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
                 }
             }
-
         }
-
 
 
         private void AddStatsHistory(StatsHistory sh)
@@ -119,7 +114,6 @@ namespace ClientLourd.Views.Dialogs
             else
                 scrollviewer.PageDown();
             e.Handled = true;
-
         }
 
 
@@ -129,6 +123,5 @@ namespace ClientLourd.Views.Dialogs
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
 }

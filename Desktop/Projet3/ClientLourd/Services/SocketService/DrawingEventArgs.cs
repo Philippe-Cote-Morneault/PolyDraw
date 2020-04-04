@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Services.SocketService
 {
-    public class DrawingEventArgs: EventArgs
+    public class DrawingEventArgs : EventArgs
     {
-
         public DrawingEventArgs(dynamic data)
         {
             _data = data;
@@ -20,6 +19,5 @@ namespace ClientLourd.Services.SocketService
         {
             get => _data;
         }
-
     }
 }

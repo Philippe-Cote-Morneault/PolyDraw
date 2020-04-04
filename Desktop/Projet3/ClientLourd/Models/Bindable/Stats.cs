@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Models.Bindable
 {
-    public class Stats: ModelBase
+    public class Stats : ModelBase
     {
         private int _gamesPlayed;
         private double _winRatio;
         private long _avgGameDuration;
         private long _timePlayed;
         private long _bestScoreSolo;
-
 
 
         public Stats()
@@ -29,6 +28,7 @@ namespace ClientLourd.Models.Bindable
                 NotifyPropertyChanged();
             }
         }
+
         public double WinRatio
         {
             get { return _winRatio; }
@@ -68,8 +68,5 @@ namespace ClientLourd.Models.Bindable
                 NotifyPropertyChanged();
             }
         }
-
-
-
     }
 }

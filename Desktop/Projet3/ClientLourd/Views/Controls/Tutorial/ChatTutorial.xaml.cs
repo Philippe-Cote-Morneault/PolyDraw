@@ -9,14 +9,12 @@ namespace ClientLourd.Views.Controls.Tutorial
         {
             InitializeComponent();
         }
-        
+
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            
-            Grid grid = (Grid)((Button) sender).Tag;
+            Grid grid = (Grid) ((Button) sender).Tag;
             grid.ContextMenu.PlacementTarget = sender as UIElement;
             grid.ContextMenu.IsOpen = true;
         }
-        
     }
 }

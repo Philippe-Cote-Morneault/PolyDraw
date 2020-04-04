@@ -9,11 +9,11 @@ using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class PlayerToPositionConverter: IMultiValueConverter
+    public class PlayerToPositionConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var item = (Player)values[0];
+            var item = (Player) values[0];
             var items = (ObservableCollection<Player>) values[1];
             return (items.IndexOf(item) + 1).ToString();
         }

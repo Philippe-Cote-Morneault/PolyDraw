@@ -6,7 +6,7 @@ using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class ChannelTypeToButtonVisibility: IValueConverter
+    public class ChannelTypeToButtonVisibility : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -18,6 +18,7 @@ namespace ClientLourd.Utilities.Converters
                     return Visibility.Hidden;
                 }
             }
+
             return Visibility.Visible;
         }
 

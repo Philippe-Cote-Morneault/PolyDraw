@@ -37,6 +37,7 @@ namespace ClientLourd.Services.SoundService
         }
 
         bool _soundIsOn;
+
         public bool SoundIsOn
         {
             get => _soundIsOn;
@@ -59,7 +60,6 @@ namespace ClientLourd.Services.SoundService
         {
             if (_canPlay)
             {
-
                 _canPlay = false;
                 Task.Run(() =>
                 {
@@ -82,13 +82,12 @@ namespace ClientLourd.Services.SoundService
                     _soundPlayer.PlaySync();
                 }
             });
-
         }
+
         public void PlayWordGuessedWrong()
         {
             if (_canPlay)
             {
-
                 _canPlay = false;
                 Task.Run(() =>
                 {
@@ -103,7 +102,6 @@ namespace ClientLourd.Services.SoundService
 
         public void PlayTimerWarning()
         {
-
             if (SoundIsOn)
             {
                 new SoundPlayer(Properties.Resources.TimerWarning).Play();
@@ -116,12 +114,8 @@ namespace ClientLourd.Services.SoundService
 
             Task.Delay(1000).ContinueWith(_ =>
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    _soundIsOn = true;
-                }));
+                Application.Current.Dispatcher.Invoke(new Action(() => { _soundIsOn = true; }));
             });
-
         }
 
 

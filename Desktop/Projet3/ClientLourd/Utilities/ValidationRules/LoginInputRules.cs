@@ -14,12 +14,11 @@ namespace ClientLourd.Utilities.ValidationRules
 {
     class LoginInputRules
     {
-
         public string Language
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
 

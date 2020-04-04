@@ -39,7 +39,7 @@ namespace ClientLourd.Models.NonBindable
 
         public Tlv(SocketMessageTypes type, byte[] bytes)
         {
-            Type = (byte)(int)type;
+            Type = (byte) (int) type;
             Value = bytes;
         }
 
@@ -49,9 +49,9 @@ namespace ClientLourd.Models.NonBindable
             byte[] bytes = guid.ToByteArray();
             // We need to change the format since the server
             // use uuid
-            Array.Reverse(bytes,0,4);
-            Array.Reverse(bytes,4,2);
-            Array.Reverse(bytes,6,2);
+            Array.Reverse(bytes, 0, 4);
+            Array.Reverse(bytes, 4, 2);
+            Array.Reverse(bytes, 6, 2);
             Value = bytes;
         }
 

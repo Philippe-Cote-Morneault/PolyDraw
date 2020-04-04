@@ -7,266 +7,288 @@
              xmlns:enum="clr-namespace:ClientLourd.Utilities.Enums"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d"
-             >
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
-        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
-        <converter:NumberOfHeartsToVisibilityConverter x:Key="NumberOfHeartsToVisibilityConverter"/>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility" />
+        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter" />
+        <converter:NumberOfHeartsToVisibilityConverter x:Key="NumberOfHeartsToVisibilityConverter" />
 
-        <Storyboard x:Key="TimerCloseToEnd" >
-            <ColorAnimation  Duration="0:0:1" From="Black" To="Red"
-                    AutoReverse="True"
-                    AccelerationRatio="1"
-                    Storyboard.TargetName="TimeText"
-                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
-            
-            <ColorAnimation  Duration="0:0:1" From="Black" To="Red"
-                    AutoReverse="True"
-                    AccelerationRatio="1"
-                    Storyboard.TargetName="TimeIcon"
-                    Storyboard.TargetProperty="(Foreground).Color"/>
+        <Storyboard x:Key="TimerCloseToEnd">
+            <ColorAnimation Duration="0:0:1" From="Black" To="Red"
+                            AutoReverse="True"
+                            AccelerationRatio="1"
+                            Storyboard.TargetName="TimeText"
+                            Storyboard.TargetProperty="(TextBlock.Foreground).Color" />
 
-            <DoubleAnimation AutoReverse="True"
-                           Storyboard.TargetName="TimeText"  
-                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.5" Duration="0:0:0.2" />
+            <ColorAnimation Duration="0:0:1" From="Black" To="Red"
+                            AutoReverse="True"
+                            AccelerationRatio="1"
+                            Storyboard.TargetName="TimeIcon"
+                            Storyboard.TargetProperty="(Foreground).Color" />
 
             <DoubleAnimation AutoReverse="True"
                              Storyboard.TargetName="TimeText"
-                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.5" Duration="0:0:0.2" />
-
-            <DoubleAnimation AutoReverse="True"
-                           Storyboard.TargetName="TimeIcon"  
-                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.5" Duration="0:0:0.2" />
-
-            <DoubleAnimation AutoReverse="True"
-                             Storyboard.TargetName="TimeIcon"
-                Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.5" Duration="0:0:0.2" />
-
-            <DoubleAnimation AutoReverse="True"
-                             Storyboard.TargetName="TimeIcon"
-                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
-                From="0" To="-2" Duration="0:0:0.2" />
+                             Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.5" Duration="0:0:0.2" />
 
             <DoubleAnimation AutoReverse="True"
                              Storyboard.TargetName="TimeText"
-                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
-                From="0" To="-15" Duration="0:0:0.2" />
+                             Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeIcon"
+                             Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeIcon"
+                             Storyboard.TargetProperty="(RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeIcon"
+                             Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                             From="0" To="-2" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeText"
+                             Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                             From="0" To="-15" Duration="0:0:0.2" />
         </Storyboard>
-        
+
         <Storyboard x:Key="HealthLost">
             <DoubleAnimation AutoReverse="False"
-                           
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.8" Duration="0:0:0.2" />
+
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.8" Duration="0:0:0.2" />
 
             <DoubleAnimation AutoReverse="False"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.8" Duration="0:0:0.2" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.8" Duration="0:0:0.2" />
 
             <DoubleAnimation AutoReverse="False"
-                           
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1.8" To="0" BeginTime="0:0:0.2" Duration="0:0:0.2" />
+
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1.8" To="0" BeginTime="0:0:0.2" Duration="0:0:0.2" />
 
             <DoubleAnimation AutoReverse="False"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1.8" To="0" BeginTime="0:0:0.2" Duration="0:0:0.2" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1.8" To="0" BeginTime="0:0:0.2" Duration="0:0:0.2" />
 
         </Storyboard>
 
         <Storyboard x:Key="HealthReset">
             <DoubleAnimation AutoReverse="False"
-                           
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="0" To="1" Duration="0:0:1"/>
+
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="0" To="1" Duration="0:0:1" />
 
             <DoubleAnimation AutoReverse="False"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="0" To="1" Duration="0:0:1" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="0" To="1" Duration="0:0:1" />
 
         </Storyboard>
 
 
         <Storyboard x:Key="HealthResetQuick">
             <DoubleAnimation AutoReverse="False"
-                           
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="0" To="1" Duration="0:0:0.1"/>
+
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="0" To="1" Duration="0:0:0.1" />
 
             <DoubleAnimation AutoReverse="False"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="0" To="1" Duration="0:0:0.1" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="0" To="1" Duration="0:0:0.1" />
 
         </Storyboard>
 
-        <Storyboard x:Key="PointsGainedAnimations" >
-            
-            <DoubleAnimation 
+        <Storyboard x:Key="PointsGainedAnimations">
+
+            <DoubleAnimation
                 Storyboard.TargetName="PointsGained"
-                Storyboard.TargetProperty="(TextBlock.Opacity)" 
-                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+                Storyboard.TargetProperty="(TextBlock.Opacity)"
+                From="0" To="1" Duration="0:0:1" AutoReverse="True" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetName="PointsGained"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.5" Duration="0:0:2" />
+                             Storyboard.TargetName="PointsGained"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.5" Duration="0:0:2" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetName="PointsGained"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.5" Duration="0:0:2" />
+                             Storyboard.TargetName="PointsGained"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.5" Duration="0:0:2" />
         </Storyboard>
 
 
-        <Storyboard x:Key="TimeGainedAnimation" >
-            
-            <DoubleAnimation 
+        <Storyboard x:Key="TimeGainedAnimation">
+
+            <DoubleAnimation
                 Storyboard.TargetName="TimeGainText"
-                Storyboard.TargetProperty="(TextBlock.Opacity)" 
-                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+                Storyboard.TargetProperty="(TextBlock.Opacity)"
+                From="0" To="1" Duration="0:0:1" AutoReverse="True" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetName="TimeGainText"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.2" Duration="0:0:2" />
+                             Storyboard.TargetName="TimeGainText"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.2" Duration="0:0:2" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetName="TimeGainText"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.2" Duration="0:0:2" />
+                             Storyboard.TargetName="TimeGainText"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.2" Duration="0:0:2" />
 
         </Storyboard>
 
-        <Storyboard x:Key="TimeLostAnimation" >
+        <Storyboard x:Key="TimeLostAnimation">
 
-            <DoubleAnimation 
+            <DoubleAnimation
                 Storyboard.TargetName="TimeLostText"
-                Storyboard.TargetProperty="(TextBlock.Opacity)" 
-                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
-
-            <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetName="TimeLostText"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.2" Duration="0:0:2" />
+                Storyboard.TargetProperty="(TextBlock.Opacity)"
+                From="0" To="1" Duration="0:0:1" AutoReverse="True" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetName="TimeLostText"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.2" Duration="0:0:2" />
+                             Storyboard.TargetName="TimeLostText"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.2" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetName="TimeLostText"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.2" Duration="0:0:2" />
 
         </Storyboard>
     </UserControl.Resources>
-    <Grid >
+    <Grid>
         <Grid.ColumnDefinitions>
-            
+
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition/>
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        
-        <StackPanel Orientation="Horizontal" Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop|Solo}">
-            <TextBlock Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}" VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="{DynamicResource TeamScore}"></TextBlock>
-            <TextBlock Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo}" VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="Score:"></TextBlock>
 
-            <TextBlock VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamPoints}"></TextBlock>
-            <TextBlock Opacity="0" Foreground="Green" Name="PointsGained" VerticalAlignment="Center"  Margin="0 15 15 15" FontSize="20" Text="{Binding TeamNewPoints, StringFormat={}+{0}}" RenderTransformOrigin=".5,.5">
+        <StackPanel Orientation="Horizontal"
+                    Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop|Solo}">
+            <TextBlock
+                Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop}"
+                VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20"
+                Text="{DynamicResource TeamScore}" />
+            <TextBlock
+                Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo}"
+                VerticalAlignment="Center" FontWeight="Bold" Margin="15" FontSize="20" Text="Score:" />
+
+            <TextBlock VerticalAlignment="Center" Margin="0 15 15 15" FontSize="20" Text="{Binding TeamPoints}" />
+            <TextBlock Opacity="0" Foreground="Green" Name="PointsGained" VerticalAlignment="Center"
+                       Margin="0 15 15 15" FontSize="20" Text="{Binding TeamNewPoints, StringFormat={}+{0}}"
+                       RenderTransformOrigin=".5,.5">
                 <TextBlock.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform></ScaleTransform>
+                        <ScaleTransform />
                     </TransformGroup>
                 </TextBlock.RenderTransform>
             </TextBlock>
         </StackPanel>
-        
 
-        <StackPanel Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop|Solo, UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0" x:Name="HeartsContainer">
 
-            <materialDesign:PackIcon Visibility="{Binding HeartsTotal, Converter={StaticResource NumberOfHeartsToVisibilityConverter}, ConverterParameter=0, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
+        <StackPanel
+            Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Coop|Solo, UpdateSourceTrigger=PropertyChanged}"
+            VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="0"
+            x:Name="HeartsContainer">
+
+            <materialDesign:PackIcon
+                Visibility="{Binding HeartsTotal, Converter={StaticResource NumberOfHeartsToVisibilityConverter}, ConverterParameter=0, UpdateSourceTrigger=PropertyChanged}"
+                Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform></ScaleTransform>
+                        <ScaleTransform />
                     </TransformGroup>
                 </materialDesign:PackIcon.RenderTransform>
             </materialDesign:PackIcon>
-            <materialDesign:PackIcon Visibility="{Binding HeartsTotal, Converter={StaticResource NumberOfHeartsToVisibilityConverter}, ConverterParameter=1, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
+            <materialDesign:PackIcon
+                Visibility="{Binding HeartsTotal, Converter={StaticResource NumberOfHeartsToVisibilityConverter}, ConverterParameter=1, UpdateSourceTrigger=PropertyChanged}"
+                Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform></ScaleTransform>
+                        <ScaleTransform />
                     </TransformGroup>
                 </materialDesign:PackIcon.RenderTransform>
             </materialDesign:PackIcon>
-            <materialDesign:PackIcon Visibility="{Binding HeartsTotal, Converter={StaticResource NumberOfHeartsToVisibilityConverter}, ConverterParameter=2, UpdateSourceTrigger=PropertyChanged}" Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
+            <materialDesign:PackIcon
+                Visibility="{Binding HeartsTotal, Converter={StaticResource NumberOfHeartsToVisibilityConverter}, ConverterParameter=2, UpdateSourceTrigger=PropertyChanged}"
+                Foreground="Red" Height="30" Width="30" Kind="Heart" RenderTransformOrigin=".5,.5">
                 <materialDesign:PackIcon.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform></ScaleTransform>
+                        <ScaleTransform />
                     </TransformGroup>
                 </materialDesign:PackIcon.RenderTransform>
             </materialDesign:PackIcon>
         </StackPanel>
 
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
-                <materialDesign:PackIcon Name="TimeIcon" Kind="Clock" HorizontalAlignment="Center">
-                    <materialDesign:PackIcon.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </materialDesign:PackIcon.RenderTransform>
-                </materialDesign:PackIcon>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
+            <materialDesign:PackIcon Name="TimeIcon" Kind="Clock" HorizontalAlignment="Center">
+                <materialDesign:PackIcon.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </materialDesign:PackIcon.RenderTransform>
+            </materialDesign:PackIcon>
 
-            <TextBlock  Name="TimeText" Text="{Binding Path=Time, StringFormat={}{0:mm:ss}}" FontSize="30" Foreground="Black">
+            <TextBlock Name="TimeText" Text="{Binding Path=Time, StringFormat={}{0:mm:ss}}" FontSize="30"
+                       Foreground="Black">
                 <TextBlock.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-                
-        </StackPanel>
-        <TextBlock RenderTransformOrigin=".5,.5" Name="TimeGainText" Opacity="0" Text="{Binding Path=TimeGained, StringFormat={}+{0:mm:ss}}" HorizontalAlignment="Center" Foreground="Green" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.RenderTransform>
-        </TextBlock>
-        <TextBlock RenderTransformOrigin=".5,.5" Name="TimeLostText" Opacity="0" Text="{Binding Path=TimeGained, StringFormat={}-{0:mm:ss}}" HorizontalAlignment="Center" Foreground="Red" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.RenderTransform>
-        </TextBlock>
+                    <TransformGroup>
+                        <ScaleTransform />
+                        <TranslateTransform />
+                    </TransformGroup>
+                </TextBlock.RenderTransform>
+            </TextBlock>
 
+        </StackPanel>
+        <TextBlock RenderTransformOrigin=".5,.5" Name="TimeGainText" Opacity="0"
+                   Text="{Binding Path=TimeGained, StringFormat={}+{0:mm:ss}}" HorizontalAlignment="Center"
+                   Foreground="Green" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <TranslateTransform />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock RenderTransformOrigin=".5,.5" Name="TimeLostText" Opacity="0"
+                   Text="{Binding Path=TimeGained, StringFormat={}-{0:mm:ss}}" HorizontalAlignment="Center"
+                   Foreground="Red" VerticalAlignment="Bottom" Margin="180 0 0 2" FontSize="30" Grid.Column="1">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <TranslateTransform />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
 
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2">
-            <StackPanel 
+            <StackPanel
                 Margin="10"
                 Orientation="Horizontal"
                 Visibility="{Binding Path=Mode, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static enum:GameModes.FFA}}">
-                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Draw" Width="24" Height="24"/>
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Draw" Width="24" Height="24" />
                 <TextBlock FontSize="24">
-                    <Run Text="{DynamicResource Turn}"/>
-                    <Run Text="{Binding Round}"/>
-                    <Run Text="/"/>
-                    <Run Text="{Binding TotalRound}"/>
+                    <Run Text="{DynamicResource Turn}" />
+                    <Run Text="{Binding Round}" />
+                    <Run Text="/" />
+                    <Run Text="{Binding TotalRound}" />
                 </TextBlock>
             </StackPanel>
-            <StackPanel Visibility="{Binding Path=Mode, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static enum:GameModes.Solo}}" Margin="10" Orientation="Horizontal">
-                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24"/>
+            <StackPanel
+                Visibility="{Binding Path=Mode, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static enum:GameModes.Solo}}"
+                Margin="10" Orientation="Horizontal">
+                <materialDesign:PackIcon VerticalAlignment="Center" Kind="Medal" Width="24" Height="24" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="0 0 6 0" Text="{DynamicResource BestScore}" FontSize="24"/>
-                    <TextBlock Text="345" FontSize="24"/>
+                    <TextBlock Margin="0 0 6 0" Text="{DynamicResource BestScore}" FontSize="24" />
+                    <TextBlock Text="345" FontSize="24" />
 
                 </StackPanel>
             </StackPanel>

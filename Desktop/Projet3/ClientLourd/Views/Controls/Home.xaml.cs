@@ -33,7 +33,7 @@ namespace ClientLourd.Views.Controls
         {
             ViewModel.AfterLogin();
         }
-        
+
         public void AfterLogout()
         {
             ViewModel.AfterLogOut();
@@ -56,13 +56,11 @@ namespace ClientLourd.Views.Controls
 
         private void OnLobbySelection(object sender, EventArgs e)
         {
-
-            Models.Bindable.Lobby lobbySelected = (((ContentControl)sender).Content) as Models.Bindable.Lobby;
+            Models.Bindable.Lobby lobbySelected = (((ContentControl) sender).Content) as Models.Bindable.Lobby;
             if (lobbySelected != null)
             {
                 HomeViewModel.JoinLobby(lobbySelected);
             }
         }
-
     }
 }

@@ -9,7 +9,7 @@
     <system:String x:Key="FirstName">First name</system:String>
     <system:String x:Key="LastName">Last name</system:String>
     <system:String x:Key="Close">Close</system:String>
-    
+
     <!--Hamburger menu-->
     <system:String x:Key="Home">Home</system:String>
     <system:String x:Key="MyProfile">My profile</system:String>
@@ -48,7 +48,7 @@
     <system:String x:Key="AverageGameDuration">Average game duration:</system:String>
     <system:String x:Key="BestSoloScore">Best solo mode score:</system:String>
     <system:String x:Key="Achievements">Achievements</system:String>
-    
+
     <!--Edit Profile-->
     <system:String x:Key="EditProfileTitle">Edit my profile</system:String>
     <system:String x:Key="ChangeAvatar">Change avatar</system:String>
@@ -64,7 +64,7 @@
     <system:String x:Key="StartGame">Start match</system:String>
     <system:String x:Key="QuitLobby">Leave match</system:String>
     <system:String x:Key="EmptySlot">Empty slot</system:String>
-    
+
     <!-- Game creation -->
     <system:String x:Key="CreateNewGame">Create a new game</system:String>
     <system:String x:Key="TypeWord">Type the word to guess</system:String>
@@ -75,7 +75,7 @@
 
     <system:String x:Key="ManualDraw">Draw the word</system:String>
     <system:String x:Key="ImageUploaded">Upload an image</system:String>
-    
+
     <system:String x:Key="Next">Next</system:String>
     <system:String x:Key="Previous">Previous</system:String>
     <system:String x:Key="Confirm">Confirm</system:String>
@@ -99,7 +99,7 @@
     <system:String x:Key="SelectPlayers">Select the number of players</system:String>
     <system:String x:Key="SelectRounds">Select the number of rounds</system:String>
     <system:String x:Key="CreateLobbyButton">Create match</system:String>
-    
+
     <!-- EditorZone -->
     <system:String x:Key="WordIs">The word is </system:String>
     <system:String x:Key="Guess">Guess</system:String>
@@ -111,13 +111,13 @@
     <system:String x:Key="TeamScore">Team score: </system:String>
     <system:String x:Key="BestScore">Best score: </system:String>
     <system:String x:Key="Turn">Turn</system:String>
-    
-    
+
+
     <!-- LobbyViewModel -->
     <system:String x:Key="Kicked">You have been kicked from the match</system:String>
     <system:String x:Key="GameCancel">The game has been cancelled</system:String>
-    
-    
+
+
     <!-- GameViewModel -->
     <system:String x:Key="IsDrawingNext">is drawing the next word!</system:String>
     <system:String x:Key="YourTurnDraw">It is your turn to draw the word</system:String>
@@ -163,7 +163,7 @@
     <system:String x:Key="UserLeft">left the channel</system:String>
     <system:String x:Key="UserJoined">joined the channel</system:String>
     <system:String x:Key="HintResponse">ask for a hint</system:String>
-    
+
 
     <!-- MainWindow -->
     <system:String x:Key="OpenChat">Open the chat</system:String>
@@ -185,7 +185,7 @@
     <!-- Confirmation Dialogs-->
     <system:String x:Key="RemovePlayerTitle">Remove player</system:String>
     <system:String x:Key="RemovePlayerBody">Are you sure you want to remove the player</system:String>
-    
+
     <system:String x:Key="Warning">Warning</system:String>
     <system:String x:Key="WarningLeaveChannel">Are you sure you want to leave the channel</system:String>
     <system:String x:Key="WarningDeleteChannel">Are you sure you want to delete the channel</system:String>

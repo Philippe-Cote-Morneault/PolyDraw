@@ -6,7 +6,7 @@ using Brushes = System.Drawing.Brushes;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class PointsToColorConverter: IValueConverter
+    public class PointsToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -15,6 +15,7 @@ namespace ClientLourd.Utilities.Converters
             {
                 return System.Windows.Media.Brushes.Red;
             }
+
             return System.Windows.Media.Brushes.Green;
         }
 

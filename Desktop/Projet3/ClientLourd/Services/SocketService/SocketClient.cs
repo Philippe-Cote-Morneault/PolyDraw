@@ -35,7 +35,6 @@ namespace ClientLourd.Services.SocketService
 
         private void OnHealthCheck(object source, EventArgs args)
         {
-          
             //We stop the timer 
             _healthCheckTimer.Stop();
             try
@@ -50,7 +49,6 @@ namespace ClientLourd.Services.SocketService
 
             //Restart the timer
             _healthCheckTimer.Start();
-            
         }
 
         /// <summary>
@@ -59,7 +57,7 @@ namespace ClientLourd.Services.SocketService
         /// <param name="tlv"></param>
         public void SendMessage(Tlv tlv)
         {
-            System.Diagnostics.Debug.WriteLine($"Socket ---> [{(SocketMessageTypes)tlv.Type}]");
+            System.Diagnostics.Debug.WriteLine($"Socket ---> [{(SocketMessageTypes) tlv.Type}]");
             _socket?.Send(tlv.GetBytes());
         }
 
@@ -124,7 +122,7 @@ namespace ClientLourd.Services.SocketService
                     int count = 0;
                     while (count < 3)
                     {
-                       count += _stream.Read(typeAndLength, count, 3 - count);
+                        count += _stream.Read(typeAndLength, count, 3 - count);
                     }
 
                     SocketMessageTypes type = (SocketMessageTypes) typeAndLength[0];
@@ -138,9 +136,10 @@ namespace ClientLourd.Services.SocketService
                         {
                             count += _stream.Read(bytes, count, length - count);
                         }
+
                         data = RetreiveData(type, bytes);
-                        
                     }
+
                     System.Diagnostics.Debug.WriteLine($"socket <--- [{type}]");
                     switch (type)
                     {
@@ -257,7 +256,7 @@ namespace ClientLourd.Services.SocketService
                             break;
                         default:
                             throw new InvalidDataException();
-                    }                    
+                    }
                 }
                 catch
                 {
@@ -278,10 +277,10 @@ namespace ClientLourd.Services.SocketService
                 case SocketMessageTypes.LobbyDeleted:
                 case SocketMessageTypes.UserDeletedStroke:
                     return bytes;
-                    
+
                 //Message pack;
                 default:
-                     return MessagePackSerializer.Deserialize<dynamic>(bytes, ContractlessStandardResolver.Options);
+                    return MessagePackSerializer.Deserialize<dynamic>(bytes, ContractlessStandardResolver.Options);
             }
         }
 
@@ -297,7 +296,6 @@ namespace ClientLourd.Services.SocketService
         {
             Console.WriteLine($"Connection lost");
             OnConnectionLost(this);
-            
         }
     }
 }

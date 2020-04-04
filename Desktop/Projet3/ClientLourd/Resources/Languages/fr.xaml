@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="test">Salut</system:String>
-    
+
     <!--Common-->
     <system:String x:Key="Username">Nom d'utilisateur</system:String>
     <system:String x:Key="Password">Mot de passe</system:String>
@@ -10,13 +10,13 @@
     <system:String x:Key="FirstName">Prénom</system:String>
     <system:String x:Key="LastName">Nom</system:String>
     <system:String x:Key="Close">Fermer</system:String>
-    
+
     <!--Hamburger menu-->
     <system:String x:Key="Home">Accueil</system:String>
     <system:String x:Key="MyProfile">Mon profil</system:String>
     <system:String x:Key="Editor">Editeur</system:String>
     <system:String x:Key="Logout">Déconnexion</system:String>
-    
+
     <!--Home.xaml-->
     <system:String x:Key="Mode">Mode</system:String>
     <system:String x:Key="LobbyName">Nom de la salle d'attente</system:String>
@@ -56,7 +56,7 @@
     <system:String x:Key="Update">Modifier</system:String>
     <system:String x:Key="RevertOriginal">[Retourner à l'original]</system:String>
     <system:String x:Key="PasswordValidator">Au moins 8 caractères</system:String>
-    
+
     <!-- Waiting room -->
     <system:String x:Key="AddVirtualPlayer">Ajouter un joueur virtuel</system:String>
     <system:String x:Key="RemovePlayer">Retirer le joueur</system:String>
@@ -90,8 +90,8 @@
     <!-- LobbyViewModel -->
     <system:String x:Key="Kicked">Vous avez été expulsé de la partie</system:String>
     <system:String x:Key="GameCancel">La partie a été annulée</system:String>
-    
-    
+
+
     <!-- Lobby creation -->
     <system:String x:Key="CreateNewLobby">Créer une la partie</system:String>
     <system:String x:Key="EnterLobbyName">Entrer le nom de la partie</system:String>
@@ -121,7 +121,7 @@
     <system:String x:Key="RightGuessCoop">a deviné correctement! Le mot était</system:String>
     <system:String x:Key="RightGuessSolo">Tu as deviné correctement !</system:String>
     <system:String x:Key="RightGuessFFA">Tu as deviné correctement ! En attente des autres joueurs</system:String>
-    
+
     <!--GameStatus -->
     <system:String x:Key="Drawer">Dessinateur</system:String>
 
@@ -164,7 +164,7 @@
     <system:String x:Key="OpenChat">Ouvrir le chat</system:String>
     <system:String x:Key="OpenTutorial">Ouvrir le tutoriel</system:String>
     <system:String x:Key="LeaveLobby">Quitter la salle d'attente</system:String>
-    
+
     <!-- Error messages -->
     <system:String x:Key="LostConnection">Vous avez perdu connexion au serveur! Retournons à la page de connexion...</system:String>
     <system:String x:Key="Error">Erreur!</system:String>

@@ -30,7 +30,8 @@ namespace ClientLourd.Views.Dialogs
         public GameCreationDialog()
         {
             InitializeComponent();
-            Loaded += (sender, args) => {
+            Loaded += (sender, args) =>
+            {
                 ViewModel.AddSocketListeners();
                 ViewModel.CurrentCanvas = PreviewCanvas;
                 ViewModel.StrokeDrawerService = new ServerStrokeDrawerService(PreviewCanvas, true);
@@ -47,37 +48,37 @@ namespace ClientLourd.Views.Dialogs
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             //TODO update the filter
-            openFileDialog.Filter =  "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png *.bmp) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png; *.bmp";
+            openFileDialog.Filter =
+                "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png *.bmp) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png; *.bmp";
             if (openFileDialog.ShowDialog() == true)
-            { 
+            {
                 ViewModel.AddImageCommand.Execute(openFileDialog.FileName);
             }
         }
 
         private void DropFile(object sender, DragEventArgs e)
         {
-              if (e.Data.GetDataPresent(DataFormats.FileDrop))
-              {
-                  string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                  if (files != null) ViewModel.AddImageCommand.Execute(files[0]);
-              }
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                if (files != null) ViewModel.AddImageCommand.Execute(files[0]);
+            }
         }
 
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
         private void UploadImageClick(object sender, RoutedEventArgs e)
         {
-            if(ViewModel.IsUploadModeSelected && !ViewModel.IsImageUpload)
+            if (ViewModel.IsUploadModeSelected && !ViewModel.IsImageUpload)
             {
-                
                 DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["UploadFirst"].ToString()), "Dialog");
                 return;
             }
-            
+
             if (!ViewModel.IsUploadModeSelected)
             {
                 if (CanvasIsEmpty())
@@ -85,23 +86,23 @@ namespace ClientLourd.Views.Dialogs
                     DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["CanvasEmpty"].ToString()), "Dialog");
                     return;
                 }
+
                 try
                 {
                     CreateSVGFile(EditorView.GenerateXMLDoc());
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     DialogHost.Show(new ClosableErrorDialog(ex), "Dialog");
                 }
             }
-                
+
             ViewModel.UploadImageCommand.Execute(null);
-            
         }
 
-        private bool CanvasIsEmpty() 
+        private bool CanvasIsEmpty()
         {
-            foreach(Stroke stroke in EditorView.Canvas.Strokes)
+            foreach (Stroke stroke in EditorView.Canvas.Strokes)
             {
                 if ((stroke.GetPropertyData(GUIDs.eraser) as string) == "False")
                 {
@@ -123,18 +124,15 @@ namespace ClientLourd.Views.Dialogs
             }
         }
 
-        public void ClearPreviewCanvas(object sender,EventArgs arg)
+        public void ClearPreviewCanvas(object sender, EventArgs arg)
         {
             PreviewCanvas.Strokes.Clear();
         }
-        
-        
 
 
         public void OnConfirm(object sender, EventArgs arg)
         {
             DialogHost.CloseDialogCommand.Execute(null, null);
-
         }
 
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
@@ -147,6 +145,7 @@ namespace ClientLourd.Views.Dialogs
                 tb.MoveFocus(request);
             }
         }
+
         /// <summary>
         /// Clear the canvas after the first next
         /// </summary>
@@ -156,6 +155,7 @@ namespace ClientLourd.Views.Dialogs
         {
             EditorView.Canvas.Strokes.Clear();
         }
+
         /// <summary>
         /// Call when the previous button is use
         /// </summary>

@@ -9,7 +9,5 @@ namespace ClientLourd.Views.Dialogs
         {
             InitializeComponent();
         }
-        
-        
     }
 }

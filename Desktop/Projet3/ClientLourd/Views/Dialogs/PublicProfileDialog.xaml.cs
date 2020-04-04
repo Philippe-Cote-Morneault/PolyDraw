@@ -20,19 +20,16 @@ namespace ClientLourd.Views.Dialogs
 {
     public partial class PublicProfileDialog : UserControl
     {
-
         public PublicProfileDialog(User user)
         {
             InitializeComponent();
             PublicProfileViewModel.User = user;
-            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
+            (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
         }
 
         private PublicProfileViewModel PublicProfileViewModel
         {
             get => DataContext as PublicProfileViewModel;
         }
-
-
     }
 }

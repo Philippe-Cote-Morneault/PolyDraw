@@ -36,6 +36,7 @@ namespace ClientLourd.Views.Controls
                 throw new InvalidOperationException(
                     "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
             }
+
             if (e.ExtentHeightChange == 0 && e.ViewportHeightChange == 0 && scroll.VerticalOffset == 0)
             {
                 ICommand loadHistory = ((ChatViewModel) DataContext).LoadHistoryCommand;
@@ -48,7 +49,6 @@ namespace ClientLourd.Views.Controls
             {
                 scroll.ScrollToVerticalOffset(scroll.ViewportHeight);
             }
- 
         }
     }
 }

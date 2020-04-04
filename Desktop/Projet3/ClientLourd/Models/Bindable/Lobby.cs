@@ -9,26 +9,25 @@ using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.Models.Bindable
 {
-    public class Lobby: ModelBase
+    public class Lobby : ModelBase
     {
         public Lobby(
-            
             string gameID,
-            string host, 
-            string hostID, 
+            string host,
+            string hostID,
             ObservableCollection<Player> players,
-            GameModes gameMode, 
-            DifficultyLevel difficulty, 
+            GameModes gameMode,
+            DifficultyLevel difficulty,
             int playersCount,
             int nPlayersMax,
             Languages language,
             int nbRounds
-            )
+        )
         {
             PlayersCount = playersCount;
             Players = players;
             PlayersMax = nPlayersMax;
-            
+
             ID = gameID;
             Host = host;
             HostID = hostID;
@@ -39,6 +38,7 @@ namespace ClientLourd.Models.Bindable
 
             Duration = CalculateDuration();
         }
+
         public string ID { get; set; }
 
         public string HostID { get; set; }
@@ -50,21 +50,23 @@ namespace ClientLourd.Models.Bindable
         public int Rounds { get; set; }
 
         private int _playersCount;
-        public int PlayersCount 
-        { 
-            get => _playersCount; 
-            set 
-            { 
-                _playersCount = value; NotifyPropertyChanged();
-                
-                
+
+        public int PlayersCount
+        {
+            get => _playersCount;
+            set
+            {
+                _playersCount = value;
+                NotifyPropertyChanged();
+
+
                 Duration = CalculateDuration();
-            
             }
         }
 
 
         private DateTime _duration;
+
         public DateTime Duration
         {
             get => _duration;
@@ -76,18 +78,20 @@ namespace ClientLourd.Models.Bindable
         }
 
         private string _host;
-        public string Host 
-        { 
+
+        public string Host
+        {
             get => _host;
             set
             {
                 _host = value;
                 NotifyPropertyChanged();
-            } 
+            }
         }
 
         private DifficultyLevel _difficulty;
-        public DifficultyLevel Difficulty 
+
+        public DifficultyLevel Difficulty
         {
             get => _difficulty;
             set
@@ -100,14 +104,23 @@ namespace ClientLourd.Models.Bindable
         private ObservableCollection<Player> _players;
 
         GameModes _mode;
-        public GameModes Mode { get => _mode; set { _mode = value; NotifyPropertyChanged(); } }
 
-        public ObservableCollection<Player> Players 
+        public GameModes Mode
+        {
+            get => _mode;
+            set
+            {
+                _mode = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<Player> Players
         {
             get { return _players; }
             set
             {
-                if ( value != _players) 
+                if (value != _players)
                 {
                     _players = value;
                     NotifyPropertyChanged();
@@ -115,7 +128,7 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-        public DateTime CalculateDuration() 
+        public DateTime CalculateDuration()
         {
             if (Mode == GameModes.FFA)
             {

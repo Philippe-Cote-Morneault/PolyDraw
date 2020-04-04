@@ -15,32 +15,29 @@ namespace ClientLourd.Views.Controls
     /// </summary>
     public partial class Lobby : UserControl
     {
-
         public MainWindow MainWindow
         {
-            get
-            {
-                return (MainWindow)Application.Current.MainWindow;
-            }
+            get { return (MainWindow) Application.Current.MainWindow; }
         }
 
         public SocketClient SocketClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
         public SessionInformations SessionInformations
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    ?.SessionInformations;
             }
         }
 
 
         public Models.Bindable.Lobby CurrentLobby
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
         }
 
         public Lobby()
@@ -55,6 +52,7 @@ namespace ClientLourd.Views.Controls
             DataContext.AfterLogin();
             GameView.AfterLogin();
         }
+
         public void AfterLogout()
         {
             DataContext.AfterLogOut();
@@ -73,8 +71,8 @@ namespace ClientLourd.Views.Controls
             {
                 if (ChatContainer.Children.Count > 0)
                 {
-                    Chat chat = (Chat)ChatContainer.Children[0];
-                    ChatViewModel chatViewModel = (ChatViewModel) chat.DataContext; 
+                    Chat chat = (Chat) ChatContainer.Children[0];
+                    ChatViewModel chatViewModel = (ChatViewModel) chat.DataContext;
                     foreach (var player in DataContext.CurrentLobby.Players)
                     {
                         chatViewModel.UpdateUser(player.User);
@@ -84,21 +82,14 @@ namespace ClientLourd.Views.Controls
         }
 
 
-
-
         private void OnJoinLobbyResponse(object sender, EventArgs e)
         {
-            var joinLobbyArgs = (LobbyEventArgs)e;
+            var joinLobbyArgs = (LobbyEventArgs) e;
             if (joinLobbyArgs.Response)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ExportChat();
-                });
+                Application.Current.Dispatcher.Invoke(() => { ExportChat(); });
             }
         }
-        
-
 
 
         public void returnChat()
@@ -120,10 +111,7 @@ namespace ClientLourd.Views.Controls
             ChatContainer.Children.Add(chat);
             Task.Delay(50).ContinueWith(_ =>
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    chat.MessageTextBox.Focus();
-                }));
+                Application.Current.Dispatcher.Invoke(new Action(() => { chat.MessageTextBox.Focus(); }));
             });
         }
     }

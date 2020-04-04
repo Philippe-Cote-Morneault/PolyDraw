@@ -14,8 +14,8 @@ namespace ClientLourd.Utilities.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            GameModes mode = (GameModes)values[0];
-            bool isCPU = (bool)values[1];
+            GameModes mode = (GameModes) values[0];
+            bool isCPU = (bool) values[1];
 
             if (mode == GameModes.FFA || !isCPU)
             {

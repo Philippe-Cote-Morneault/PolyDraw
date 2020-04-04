@@ -9,14 +9,13 @@ using System.Windows.Input;
 
 namespace ClientLourd.Services.SocketService
 {
-    class StrokeSentEventArgs: EventArgs
+    class StrokeSentEventArgs : EventArgs
     {
         private StrokeInfo _strokeInfo;
 
         public StrokeSentEventArgs(dynamic data)
         {
             _strokeInfo = new StrokeInfo(data);
-
         }
 
         public StrokeInfo StrokeInfo

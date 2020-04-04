@@ -28,14 +28,14 @@ namespace ClientLourd.ViewModels
         {
         }
 
-        private RelayCommand<InkCanvasEditingMode > _changeToolCommand;
+        private RelayCommand<InkCanvasEditingMode> _changeToolCommand;
 
         public ICommand ChangeToolCommand
         {
             get
             {
                 return _changeToolCommand ??
-                       (_changeToolCommand = new RelayCommand<InkCanvasEditingMode >(tool =>
+                       (_changeToolCommand = new RelayCommand<InkCanvasEditingMode>(tool =>
                        {
                            EditorInformation.SelectedTool = tool;
                        }));
@@ -70,6 +70,7 @@ namespace ClientLourd.ViewModels
                        }));
             }
         }
+
         public override void AfterLogOut()
         {
             //TODO 

@@ -4,9 +4,8 @@ using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Models.NonBindable
 {
-    public class NetworkInformations 
+    public class NetworkInformations
     {
-            
         //public const string HOST_NAME = "log3900.fsae.polymtl.ca";
         public const string HOST_NAME = "log3900-203.canadacentral.cloudapp.azure.com";
         public const int DEV_SOCKET_PORT = 5011;
@@ -20,7 +19,6 @@ namespace ClientLourd.Models.NonBindable
         {
             //prod as default
             Config = 0;
-
         }
 
         public int Config { get; set; }
@@ -36,13 +34,14 @@ namespace ClientLourd.Models.NonBindable
                         return Dns.GetHostAddresses(HOST_NAME)[0];
                     case 2:
                         return IPAddress.Parse("127.0.0.1");
-                        
+
                     default:
                         throw new InvalidDataException("Invalid network configuration");
-                }    
+                }
             }
         }
-        public int RestPort 
+
+        public int RestPort
         {
             get
             {
@@ -56,10 +55,11 @@ namespace ClientLourd.Models.NonBindable
                         return LOCAL_REST_PORT;
                     default:
                         throw new InvalidDataException("Invalid network configuration");
-                }    
+                }
             }
         }
-        public int SocketPort 
+
+        public int SocketPort
         {
             get
             {
@@ -73,9 +73,8 @@ namespace ClientLourd.Models.NonBindable
                         return LOCAL_SOCKET_PORT;
                     default:
                         throw new InvalidDataException("Invalid network configuration");
-                }    
+                }
             }
         }
-
     }
 }

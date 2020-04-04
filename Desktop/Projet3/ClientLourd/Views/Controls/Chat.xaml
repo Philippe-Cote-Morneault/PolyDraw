@@ -13,20 +13,19 @@
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
-        <converter:ChannelSelectionToIconConverter x:Key="ChannelSelectionToIconConverter"/>
-        <converter:LongChannelNameConverter x:Key="ChannelNameConverter"/>
+        <converter:ChannelSelectionToIconConverter x:Key="ChannelSelectionToIconConverter" />
+        <converter:LongChannelNameConverter x:Key="ChannelNameConverter" />
         <viewModels:MainViewModel x:Key="MainViewModel" />
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:ChatViewModel />
     </UserControl.DataContext>
     <DockPanel>
-           
+
         <!-- ChannelSection -->
         <local:ChannelSection DockPanel.Dock="Left" />
         <!--Chat bottom section-->
-        <DockPanel Background="White" DockPanel.Dock="Bottom"
-                   >
+        <DockPanel Background="White" DockPanel.Dock="Bottom">
 
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <!--send button-->
@@ -86,18 +85,22 @@
                 <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" BorderBrush="Gray"
                                           BorderThickness="0 0 0 1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="{Binding Path=SelectedChannel, Converter={StaticResource ChannelSelectionToIconConverter}}" Height="24" Width="24" VerticalAlignment="Center" />
+                        <materialDesign:PackIcon
+                            Kind="{Binding Path=SelectedChannel, Converter={StaticResource ChannelSelectionToIconConverter}}"
+                            Height="24" Width="24" VerticalAlignment="Center" />
                         <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}">
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource ChannelNameConverter}">
-                                    <Binding Path="SelectedChannel"/>
-                                    <Binding Path="DataContext.CurrentLanguage" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"/>
+                                    <Binding Path="SelectedChannel" />
+                                    <Binding Path="DataContext.CurrentLanguage"
+                                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
                     </StackPanel>
                 </materialDesign:ColorZone>
-                <Grid DockPanel.Dock="Top" Visibility="{Binding ElementName=Control, Path=IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid DockPanel.Dock="Top"
+                      Visibility="{Binding ElementName=Control, Path=IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <ProgressBar
                         Height="24"
                         Width="24"

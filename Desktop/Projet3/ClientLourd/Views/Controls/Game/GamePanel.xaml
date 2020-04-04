@@ -9,11 +9,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d">
     <UserControl.DataContext>
-        <viewModels:GameViewModel x:Name="ViewModel"/>
+        <viewModels:GameViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <DockPanel>
-        <local:TopBar x:Name="TopBar" DockPanel.Dock="Top"/>
-        <local:GameStatus x:Name="GameStatus" DockPanel.Dock="Left"/>
+        <local:TopBar x:Name="TopBar" DockPanel.Dock="Top" />
+        <local:GameStatus x:Name="GameStatus" DockPanel.Dock="Left" />
         <local:EditorZone x:Name="EditorZone" />
     </DockPanel>
 </UserControl>

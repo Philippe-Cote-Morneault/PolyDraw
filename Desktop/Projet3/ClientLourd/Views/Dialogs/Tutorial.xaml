@@ -8,44 +8,46 @@
              xmlns:slide="clr-namespace:ClientLourd.Views.Controls.Tutorial"
              mc:Ignorable="d">
     <DockPanel MaxHeight="500">
-     <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
-         <materialDesign:PackIcon Kind="Close"/>
-     </Button>   
-    <materialDesign:Transitioner SelectedIndex="0" Width="400" Margin="10">
-              <materialDesign:Transitioner.InputBindings>
+        <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
+            <materialDesign:PackIcon Kind="Close" />
+        </Button>
+        <materialDesign:Transitioner SelectedIndex="0" Width="400" Margin="10">
+            <materialDesign:Transitioner.InputBindings>
                 <KeyBinding
-                  Key="Left"
-                  Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" />
+                    Key="Left"
+                    Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" />
                 <KeyBinding
-                  Key="Right"
-                  Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
-              </materialDesign:Transitioner.InputBindings>
-                        <!-- Introduction -->
-                        <materialDesign:TransitionerSlide>
-                            <ScrollViewer>
-                                <DockPanel Width="300">
-                                    <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
-                                    <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
-                                        <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
-                                            <materialDesign:PackIcon Kind="NavigateBefore"/>
-                                        </Button>
-                                        <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
-                                            <materialDesign:PackIcon Kind="NavigateNext"/>
-                                        </Button>
-                                    </StackPanel>
-                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
-                                </DockPanel>
-                            </ScrollViewer>
-                        </materialDesign:TransitionerSlide>
-                        
-                                
-                        <!-- Chat -->
-                        <materialDesign:TransitionerSlide >
-                            <ScrollViewer>
-                                <slide:ChatTutorial Margin="10"/>
-                            </ScrollViewer>
-                        </materialDesign:TransitionerSlide>
+                    Key="Right"
+                    Command="{x:Static materialDesign:Transitioner.MoveNextCommand}" />
+            </materialDesign:Transitioner.InputBindings>
+            <!-- Introduction -->
+            <materialDesign:TransitionerSlide>
+                <ScrollViewer>
+                    <DockPanel Width="300">
+                        <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32"
+                                   Text="Tutorial" />
+                        <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
+                                <materialDesign:PackIcon Kind="NavigateBefore" />
+                            </Button>
+                            <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                                <materialDesign:PackIcon Kind="NavigateNext" />
+                            </Button>
+                        </StackPanel>
+                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16"
+                                   Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
+                    </DockPanel>
+                </ScrollViewer>
+            </materialDesign:TransitionerSlide>
+
+
+            <!-- Chat -->
+            <materialDesign:TransitionerSlide>
+                <ScrollViewer>
+                    <slide:ChatTutorial Margin="10" />
+                </ScrollViewer>
+            </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
     </DockPanel>
-        
+
 </UserControl>

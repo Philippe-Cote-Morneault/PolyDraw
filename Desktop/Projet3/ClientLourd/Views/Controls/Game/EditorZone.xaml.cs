@@ -28,19 +28,18 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
             Loaded += OnLoaded;
-            _random = new Random((int)DateTime.Now.Ticks);
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
+            _random = new Random((int) DateTime.Now.Ticks);
+            _timer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(10)};
             _timer.Tick += (s, arg) => Confetti();
         }
 
         public void AfterLogin()
         {
-           InitEventHandler(); 
+            InitEventHandler();
         }
 
         public void AfterLogout()
         {
-            
         }
 
         private void InitEventHandler()
@@ -68,7 +67,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
                         ?.SessionInformations;
                 });
             }
@@ -76,18 +75,17 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientTeamateGuessedWrong(object source, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
 
             if (e.UserID != SessionInformations.User.ID)
             {
-                Application.Current.Dispatcher.Invoke(() => 
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Storyboard sb = (Storyboard)FindResource("TeamateGuessedWrong");
+                    Storyboard sb = (Storyboard) FindResource("TeamateGuessedWrong");
 
                     sb.Begin();
                 });
             }
-                
         }
 
         private void SocketClientOnRoundEnded(object source, EventArgs args)
@@ -113,9 +111,12 @@ namespace ClientLourd.Views.Controls.Game
             }
             else if (!e.Guessed)
             {
-                Application.Current.Dispatcher.Invoke(() => { ShowCanvasMessage($"{ViewModel.CurrentDictionary["WordWas"]} {e.Word}"); });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ShowCanvasMessage($"{ViewModel.CurrentDictionary["WordWas"]} {e.Word}");
+                });
             }
-    }
+        }
 
 
         private void SocketClientOnMatchEnded(object source, EventArgs args)
@@ -130,7 +131,7 @@ namespace ClientLourd.Views.Controls.Game
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs)args, true));
+                        LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs) args, true));
                         LeaderBoardGrid.Visibility = Visibility.Visible;
                     });
                     Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
@@ -151,7 +152,8 @@ namespace ClientLourd.Views.Controls.Game
                     StartConfetti();
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        ShowCanvasMessage($"{(string)ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}");
+                        ShowCanvasMessage(
+                            $"{(string) ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}");
                         LeaderBoardGrid.Visibility = Visibility.Visible;
                     });
                     Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
@@ -199,7 +201,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
                         ?.SocketClient;
                 });
             }
@@ -228,7 +230,7 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     var request = new TraversalRequest(FocusNavigationDirection.Next);
                     request.Wrapped = true;
-                    tb.MoveFocus(request); 
+                    tb.MoveFocus(request);
                 }
             }
             else
@@ -278,33 +280,26 @@ namespace ClientLourd.Views.Controls.Game
                         request.Wrapped = true;
                         tb.MoveFocus(request);
                     }
-                    
                 }
             }
         }
 
         private void SocketClientOnGuessResponse(object sender, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
 
-            
+
             if (e.Valid)
             {
-                Task.Run(() =>
-                {   
-                    PlayRightGuessAnimation(GetTextBoxes());        
-                });
+                Task.Run(() => { PlayRightGuessAnimation(GetTextBoxes()); });
             }
             else
             {
-                Task.Run(() =>
-                {
-                    PlayWrongGuessAnimation(GetTextBoxes());
-                });
+                Task.Run(() => { PlayWrongGuessAnimation(GetTextBoxes()); });
             }
         }
 
-        private List<TextBox> GetTextBoxes() 
+        private List<TextBox> GetTextBoxes()
         {
             List<TextBox> textBoxes = new List<TextBox>();
 
@@ -312,7 +307,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
+                    ContentPresenter c = (ContentPresenter) GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
                     textBoxes.Add(c.ContentTemplate.FindName("textbox", c) as TextBox);
                 });
             }
@@ -320,17 +315,18 @@ namespace ClientLourd.Views.Controls.Game
             return textBoxes;
         }
 
-        private void PlayRightGuessAnimation(List<TextBox> textBoxes) 
+        private void PlayRightGuessAnimation(List<TextBox> textBoxes)
         {
             for (int i = 0; i < textBoxes.Count; i++)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Storyboard sb = (Storyboard)FindResource("GuessRight");
+                    Storyboard sb = (Storyboard) FindResource("GuessRight");
                     for (int j = 0; j < sb.Children.Count; j++)
                     {
                         Storyboard.SetTarget(sb.Children[j], textBoxes[i]);
                     }
+
                     sb.Begin();
                 });
                 Thread.Sleep(200);
@@ -339,10 +335,9 @@ namespace ClientLourd.Views.Controls.Game
 
         private void PlayWrongGuessAnimation(List<TextBox> textBoxes)
         {
-
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Storyboard sb = (Storyboard)FindResource("GuessWrong");
+                Storyboard sb = (Storyboard) FindResource("GuessWrong");
 
                 for (int i = 0; i < textBoxes.Count; i++)
                 {
@@ -350,6 +345,7 @@ namespace ClientLourd.Views.Controls.Game
                     {
                         Storyboard.SetTarget(sb.Children[j], textBoxes[i]);
                     }
+
                     sb.Completed += (s, e) => ClearTextBoxes();
                     sb.Begin();
                 }
@@ -362,17 +358,16 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
+                    ContentPresenter c = (ContentPresenter) GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
                     TextBox tb = (c.ContentTemplate.FindName("textbox", c) as TextBox);
                     tb.Text = "";
-
                 });
             }
         }
 
         private void SocketClientOnMatchTimesUp(object sender, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
             if (e.Type == 1)
             {
                 Task.Run(() =>
@@ -380,13 +375,13 @@ namespace ClientLourd.Views.Controls.Game
                     Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Storyboard sb = (Storyboard)FindResource("NextRoundBegin");
+                        Storyboard sb = (Storyboard) FindResource("NextRoundBegin");
                         sb.Begin();
                     });
                     Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Storyboard sb = (Storyboard)FindResource("NextRoundEnd");
+                        Storyboard sb = (Storyboard) FindResource("NextRoundEnd");
                         sb.Begin();
                     });
                 });
@@ -403,15 +398,14 @@ namespace ClientLourd.Views.Controls.Game
         {
             _timer.Stop();
         }
-       
 
-        private void Confetti() 
+
+        private void Confetti()
         {
-
-            int canvasTop = -(int)(CanvasContainer.ActualHeight / 2) + 60;
-            int canvasBottom = (int)(CanvasContainer.ActualHeight / 2);
-            int canvasTopLeft = -(int)CanvasContainer.ActualWidth / 2;
-            int canvasTopRight = (int)CanvasContainer.ActualWidth / 2;
+            int canvasTop = -(int) (CanvasContainer.ActualHeight / 2) + 60;
+            int canvasBottom = (int) (CanvasContainer.ActualHeight / 2);
+            int canvasTopLeft = -(int) CanvasContainer.ActualWidth / 2;
+            int canvasTopRight = (int) CanvasContainer.ActualWidth / 2;
 
             int x = _random.Next(canvasTopLeft, canvasTopRight);
             int y = canvasTop;
@@ -421,28 +415,28 @@ namespace ClientLourd.Views.Controls.Game
             TransformGroup transformGroup = new TransformGroup();
             transformGroup.Children.Add(new ScaleTransform(s, s));
             transformGroup.Children.Add(new RotateTransform(r));
-            transformGroup.Children.Add(new TranslateTransform(x,y));
+            transformGroup.Children.Add(new TranslateTransform(x, y));
 
             Confetti confetti = new Confetti()
-            {   
+            {
                 RenderTransformOrigin = new Point(0.5, 0.5),
                 RenderTransform = transformGroup,
             };
-            
+
             CanvasContainer.Children.Add(confetti);
 
             Duration d = new Duration(TimeSpan.FromSeconds(_random.Next(1, 4)));
 
             int endY = canvasBottom;
-            DoubleAnimation ay = new DoubleAnimation {From=y, To = endY, Duration = d };
+            DoubleAnimation ay = new DoubleAnimation {From = y, To = endY, Duration = d};
             Storyboard.SetTarget(ay, confetti);
             Storyboard.SetTargetProperty(ay, new PropertyPath("(RenderTransform).Children[2].(TranslateTransform.Y)"));
 
             int endR = r + _random.Next(90, 360);
-            DoubleAnimation ar = new DoubleAnimation {From=r, To = endR, Duration = d };
+            DoubleAnimation ar = new DoubleAnimation {From = r, To = endR, Duration = d};
             Storyboard.SetTarget(ar, confetti);
             Storyboard.SetTargetProperty(ar, new PropertyPath("(RenderTransform).Children[1].(RotateTransform.Angle)"));
-            
+
             Storyboard story = new Storyboard();
             story.Completed += (sender, e) => CanvasContainer.Children.Remove(confetti);
             story.Children.Add(ay);
@@ -473,9 +467,10 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     try
                     {
-                        ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
+                        ContentPresenter c =
+                            (ContentPresenter) GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(0);
                         TextBox textBox = (c.ContentTemplate.FindName("textbox", c) as TextBox);
-                        if(textBox != null)
+                        if (textBox != null)
                         {
                             textBox.Focus();
                         }
@@ -500,7 +495,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 if (Convert.ToChar(GuessTextBoxes.Items[i]) == '\0')
                 {
-                    ContentPresenter c = (ContentPresenter)GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
+                    ContentPresenter c = (ContentPresenter) GuessTextBoxes.ItemContainerGenerator.ContainerFromIndex(i);
                     TextBox tb = c.ContentTemplate.FindName("textbox", c) as TextBox;
 
                     Action focusAction = () => tb.Focus();

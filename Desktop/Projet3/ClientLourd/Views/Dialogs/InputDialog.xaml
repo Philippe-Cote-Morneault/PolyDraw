@@ -8,14 +8,20 @@
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <converter:StringEmptyToBooleanConverter x:Key="StringEmptyToBooleanConverter"/>
+        <converter:StringEmptyToBooleanConverter x:Key="StringEmptyToBooleanConverter" />
     </UserControl.Resources>
     <DockPanel Margin="10">
-        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
+        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock"
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button Margin="5" IsEnabled="{Binding ElementName=FieldTextBox, Path=Text, Converter={StaticResource StringEmptyToBooleanConverter}}" CommandParameter="true" Command="materialDesign:DialogHost.CloseDialogCommand"  Content="{DynamicResource Confirm}"/>
-            <Button Margin="5" CommandParameter="false" Command="materialDesign:DialogHost.CloseDialogCommand" Content="{DynamicResource Cancel}"/>
+            <Button Margin="5"
+                    IsEnabled="{Binding ElementName=FieldTextBox, Path=Text, Converter={StaticResource StringEmptyToBooleanConverter}}"
+                    CommandParameter="true" Command="materialDesign:DialogHost.CloseDialogCommand"
+                    Content="{DynamicResource Confirm}" />
+            <Button Margin="5" CommandParameter="false" Command="materialDesign:DialogHost.CloseDialogCommand"
+                    Content="{DynamicResource Cancel}" />
         </UniformGrid>
-        <TextBox Text="{Binding Result, Mode=TwoWay}" Name="FieldTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>
+        <TextBox Text="{Binding Result, Mode=TwoWay}" Name="FieldTextBox"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </DockPanel>
 </UserControl>

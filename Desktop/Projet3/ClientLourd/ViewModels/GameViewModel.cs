@@ -52,7 +52,7 @@ namespace ClientLourd.ViewModels
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
         private void InitEventHandler()
@@ -72,15 +72,14 @@ namespace ClientLourd.ViewModels
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
         }
 
-        
-
 
         public SoundService SoundService
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
         private DateTime _timeGained;
+
         public DateTime TimeGained
         {
             get { return _timeGained; }
@@ -96,15 +95,15 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnUserDeleteStroke(object source, EventArgs args)
         {
-            Application.Current.Dispatcher.Invoke(delegate 
+            Application.Current.Dispatcher.Invoke(delegate
             {
                 var e = (DrawingEventArgs) args;
-                
+
 
                 byte[] idTodelete = e.Data.Clone();
-                
 
-                if(BitConverter.IsLittleEndian)
+
+                if (BitConverter.IsLittleEndian)
                     Array.Reverse(idTodelete);
 
                 Editor.Canvas.RemoveStroke(new Guid(idTodelete));
@@ -135,26 +134,24 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            
 
-            
 
             if (Mode == GameModes.FFA)
             {
                 Time = e.Time;
             }
-            
+
             _roundStarted = true;
             CanStillGuess = true;
             //TODO: if solo or coop
-            
+
 
             Players.ToList().ForEach(p => p.IsDrawing = false);
             Players.ToList().ForEach(p => p.GuessedTheWord = false);
             Player player = Players.FirstOrDefault(p => p.User.ID == e.UserID);
             player.IsDrawing = true;
 
-           StrokeDrawerService.ChangeMode(player.User.IsCPU);
+            StrokeDrawerService.ChangeMode(player.User.IsCPU);
 
             NotifyPropertyChanged(nameof(DrawerIsCPU));
             if (SessionInformations.User.ID != e.UserID && Mode == GameModes.FFA)
@@ -164,15 +161,15 @@ namespace ClientLourd.ViewModels
                     OnNewCanavasMessage($"{e.Username} {CurrentDictionary["IsDrawingNext"]}");
                 });
             }
+
             Guess = new char[e.WordLength];
         }
 
         private void SocketClientOnYourTurnToDraw(object source, EventArgs args)
         {
-            
             var e = (MatchEventArgs) args;
             //Enable the canvas
-            Word = e.Word; 
+            Word = e.Word;
             _drawingID = e.DrawingID;
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -201,13 +198,13 @@ namespace ClientLourd.ViewModels
             var e = (MatchEventArgs) args;
             if (e.Valid)
             {
-                Application.Current.Dispatcher.Invoke(() => 
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     CanStillGuess = false;
                     SoundService.PlayWordGuessedRight();
                     if (Mode == GameModes.FFA)
                     {
-                        OnNewCanavasMessage((String)CurrentDictionary["RightGuessFFA"]);
+                        OnNewCanavasMessage((String) CurrentDictionary["RightGuessFFA"]);
                     }
                 });
             }
@@ -232,7 +229,6 @@ namespace ClientLourd.ViewModels
                                 CommandManager.InvalidateRequerySuggested();
                             });
                         }
-
                     });
                 }
             }
@@ -250,7 +246,7 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnAreYouReady(object source, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
             HealthPoint = e.Lives;
             HeartsTotal = e.Lives;
             PrepareMatch();
@@ -264,8 +260,8 @@ namespace ClientLourd.ViewModels
             if (Mode == GameModes.FFA)
             {
                 Time = DateTime.MinValue;
-
             }
+
             CanStillGuess = false;
         }
 
@@ -280,7 +276,7 @@ namespace ClientLourd.ViewModels
         {
             StrokeDrawerService.Start();
         }
-        
+
         public Lobby Lobby
         {
             get
@@ -292,6 +288,7 @@ namespace ClientLourd.ViewModels
                 });
             }
         }
+
         public SessionInformations SessionInformations
         {
             get
@@ -309,10 +306,10 @@ namespace ClientLourd.ViewModels
             get
             {
                 return Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
-                            ?.SocketClient;
-                    });
+                {
+                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                        ?.SocketClient;
+                });
             }
         }
 
@@ -324,14 +321,14 @@ namespace ClientLourd.ViewModels
         public ObservableCollection<Player> Players
         {
             get => _players;
-            
+
             set
             {
                 _players = value;
                 NotifyPropertyChanged();
             }
         }
-        
+
         public char[] Guess
         {
             get => _guess;
@@ -348,6 +345,7 @@ namespace ClientLourd.ViewModels
         }
 
         private bool _canStillGuess;
+
         public bool CanStillGuess
         {
             get => _canStillGuess;
@@ -368,7 +366,7 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged(nameof(IsYourTurn));
             }
         }
-        
+
         public long TotalRound
         {
             get => _totalRound;
@@ -378,6 +376,7 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
         public long Round
         {
             get => _round;
@@ -387,6 +386,7 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
         public DateTime Time
         {
             get => _time;
@@ -418,23 +418,22 @@ namespace ClientLourd.ViewModels
         }
 
 
-
         public bool DrawerIsCPU
         {
             get
             {
                 var player = Players.FirstOrDefault(p => p.IsDrawing);
-                if(player != null)
+                if (player != null)
                 {
                     return player.User.IsCPU;
                 }
+
                 return false;
-            } 
-            
+            }
         }
 
         public Editor Editor { get; set; }
-        
+
         RelayCommand<object> _askHintCommand;
 
         public ICommand AskHintCommand
@@ -442,12 +441,13 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _askHintCommand ??
-                       (_askHintCommand = new RelayCommand<object>(p => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint)), (p) => CanStillGuess));
+                       (_askHintCommand = new RelayCommand<object>(
+                           p => SocketClient.SendMessage(new Tlv(SocketMessageTypes.AskForHint)),
+                           (p) => CanStillGuess));
             }
         }
-        
-        
-        
+
+
         RelayCommand<object> _sendGuessCommand;
 
         public ICommand SendGuessCommand
@@ -458,15 +458,15 @@ namespace ClientLourd.ViewModels
                        (_sendGuessCommand = new RelayCommand<object>(channel => SendGuess()));
             }
         }
-        
-        
-        
+
+
         private void PrepareNextRound()
         {
             ChangeCanvasStatus(false);
             _roundStarted = false;
             Word = "";
         }
+
         private void SendGuess()
         {
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.GuessTheWord, new string(Guess)));
@@ -491,7 +491,6 @@ namespace ClientLourd.ViewModels
             else
             {
                 _stokesReader.Stop();
-                
             }
 
             Task.Run(() =>
@@ -511,7 +510,8 @@ namespace ClientLourd.ViewModels
             {
                 ClearCanvas();
                 Players = Lobby.Players;
-                _stokesReader = new StrokesReader(Editor, SocketClient, ((EditorViewModel)Editor.DataContext).EditorInformation);
+                _stokesReader = new StrokesReader(Editor, SocketClient,
+                    ((EditorViewModel) Editor.DataContext).EditorInformation);
                 ChangeCanvasStatus(false);
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));
             });
@@ -521,11 +521,10 @@ namespace ClientLourd.ViewModels
         public delegate void CanvasMessageHandler(string message);
 
         public event CanvasMessageHandler NewCanavasMessage;
-        
-        
 
 
         private bool _guessButtonIsDefault;
+
         public bool GuessButtonIsDefault
         {
             get => _guessButtonIsDefault;
@@ -548,6 +547,7 @@ namespace ClientLourd.ViewModels
         }
 
         int _teamPoints;
+
         public int TeamPoints
         {
             get => _teamPoints;
@@ -562,6 +562,7 @@ namespace ClientLourd.ViewModels
         }
 
         int _teamNewPoints;
+
         public int TeamNewPoints
         {
             get => _teamNewPoints;
@@ -577,19 +578,17 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientCoopWordGuessed(object source, EventArgs args)
         {
-
-            MatchEventArgs e = (MatchEventArgs)args;
-            Application.Current.Dispatcher.Invoke(() => 
+            MatchEventArgs e = (MatchEventArgs) args;
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 if (e.UserID == SessionInformations.User.ID)
                 {
-                    OnNewCanavasMessage((string)CurrentDictionary["RightGuessSolo"]);
+                    OnNewCanavasMessage((string) CurrentDictionary["RightGuessSolo"]);
                 }
                 else
                 {
                     OnNewCanavasMessage($"{e.Username} {CurrentDictionary["RightGuessCoop"]} {e.Word}.");
                 }
-
             });
         }
 

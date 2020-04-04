@@ -12,7 +12,7 @@ namespace ClientLourd.Views.Dialogs
             FieldTextBox.Focus();
             FieldTextBox.MaxLength = maxLength;
         }
-        
+
         public string Result { get; set; }
     }
 }

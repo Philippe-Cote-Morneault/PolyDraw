@@ -22,11 +22,12 @@ namespace ClientLourd.Services.RestService
         private RestSharp.RestClient _client;
         private string _sessionToken;
         private NetworkInformations _networkInformations;
+
         public string Language
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
 
@@ -61,7 +62,7 @@ namespace ClientLourd.Services.RestService
             _sessionToken = data["SessionToken"];
             return data;
         }
-        
+
         public async Task<Dictionary<string, object>> Bearer(string username, string bearer)
         {
             _client.BaseUrl = new Uri($"http://{_networkInformations.IP}:{_networkInformations.RestPort}");
@@ -69,7 +70,7 @@ namespace ClientLourd.Services.RestService
             //request.AddParameter("Language", Language, ParameterType.HttpHeader);
 
             request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new {username = username, Bearer=bearer});
+            request.AddJsonBody(new {username = username, Bearer = bearer});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             dynamic data = deseralizer.Deserialize<dynamic>(response);
@@ -83,7 +84,11 @@ namespace ClientLourd.Services.RestService
             RestRequest request = new RestRequest("auth/register", Method.POST);
             //request.AddParameter("Language", Language, ParameterType.HttpHeader);
             request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new {Username = user.Username, FirstName=user.FirstName, LastName= user.LastName, Email=user.Email, Password = password, PictureID=user.PictureID});
+            request.AddJsonBody(new
+            {
+                Username = user.Username, FirstName = user.FirstName, LastName = user.LastName, Email = user.Email,
+                Password = password, PictureID = user.PictureID
+            });
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             dynamic data = deseralizer.Deserialize<dynamic>(response);
@@ -103,7 +108,7 @@ namespace ClientLourd.Services.RestService
             return data;
         }
 
-        
+
         public async Task<List<Channel>> GetChannels()
         {
             RestRequest request = new RestRequest("chat/channels", Method.GET);
@@ -133,12 +138,13 @@ namespace ClientLourd.Services.RestService
             var deseralizer = new JsonDeserializer();
             List<Message> messages = new List<Message>();
             var objects = deseralizer.Deserialize<List<dynamic>>(response);
-            var messagesInformations = ((Dictionary<string, object>)objects[0])["Messages"];
-            foreach (var message in (List<dynamic>)messagesInformations)
+            var messagesInformations = ((Dictionary<string, object>) objects[0])["Messages"];
+            foreach (var message in (List<dynamic>) messagesInformations)
             {
                 User user = new User(message["Username"], message["UserID"], false);
-                messages.Add(new Message((int)message["Timestamp"], user, message["Message"]));
+                messages.Add(new Message((int) message["Timestamp"], user, message["Message"]));
             }
+
             return messages;
         }
 
@@ -147,7 +153,7 @@ namespace ClientLourd.Services.RestService
             RestRequest request = new RestRequest("stats");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
-            return JsonConvert.DeserializeObject<Stats>(response.Content); 
+            return JsonConvert.DeserializeObject<Stats>(response.Content);
         }
 
 
@@ -162,7 +168,6 @@ namespace ClientLourd.Services.RestService
         }
 
 
-
         public async Task<User> GetUserInfo(string userID)
         {
             RestRequest request = new RestRequest($"users/{userID}", Method.GET);
@@ -173,28 +178,26 @@ namespace ClientLourd.Services.RestService
 
         public async Task<string> PostGameInformations(string word, string[] hints, DifficultyLevel difficultyLevel)
         {
-            
             RestRequest request = new RestRequest($"games", Method.POST);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
-            request.AddJsonBody(new {Hints =hints, Word=word, Difficulty=(int)difficultyLevel});
+            request.AddJsonBody(new {Hints = hints, Word = word, Difficulty = (int) difficultyLevel});
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             return deseralizer.Deserialize<dynamic>(response)["GameID"];
         }
 
-        public async Task PutGameInformations(string gameID, PotraceMode mode,double blackLevel, int brushSize)
+        public async Task PutGameInformations(string gameID, PotraceMode mode, double blackLevel, int brushSize)
         {
             Console.WriteLine(mode.ToString());
-            RestRequest request = new RestRequest( $"games/{gameID}/image", Method.PUT);
+            RestRequest request = new RestRequest($"games/{gameID}/image", Method.PUT);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new
             {
-                Mode=(int)mode, 
-                BlackLevel=blackLevel, 
-                BrushSize=brushSize,
+                Mode = (int) mode,
+                BlackLevel = blackLevel,
+                BrushSize = brushSize,
             });
             var response = await Execute(request);
-
         }
 
         public async Task DeleteGame(string gameID)
@@ -224,8 +227,8 @@ namespace ClientLourd.Services.RestService
             request.AddJsonBody(new
             {
                 PlayersMax = playersMax,
-                GameType = (int)gameType,
-                Difficulty = (int)difficulty,
+                GameType = (int) gameType,
+                Difficulty = (int) difficulty,
                 NbRound = nRounds
             });
             var response = await Execute(request);
@@ -241,19 +244,23 @@ namespace ClientLourd.Services.RestService
             var response = await Execute(request);
             var deseralizer = new JsonDeserializer();
             List<dynamic> tmpResponse = deseralizer.Deserialize<List<dynamic>>(response);
-            ObservableCollection<Lobby> groups = JsonConvert.DeserializeObject<ObservableCollection<Lobby>>(response.Content);
+            ObservableCollection<Lobby> groups =
+                JsonConvert.DeserializeObject<ObservableCollection<Lobby>>(response.Content);
             for (int i = 0; i < groups.Count; i++)
             {
                 for (int j = 0; j < groups[i].Players.Count; j++)
                 {
-                    groups[i].Players[j].User = new User((tmpResponse[i] as dynamic)["Players"][j]["Username"], (tmpResponse[i] as dynamic)["Players"][j]["ID"], false);
+                    groups[i].Players[j].User = new User((tmpResponse[i] as dynamic)["Players"][j]["Username"],
+                        (tmpResponse[i] as dynamic)["Players"][j]["ID"], false);
                 }
-                groups[i].Rounds = (int)tmpResponse[i]["NbRound"];
-                groups[i].Mode = (GameModes)tmpResponse[i]["GameType"];
+
+                groups[i].Rounds = (int) tmpResponse[i]["NbRound"];
+                groups[i].Mode = (GameModes) tmpResponse[i]["GameType"];
                 groups[i].Host = tmpResponse[i]["OwnerName"];
                 groups[i].HostID = tmpResponse[i]["OwnerID"];
                 groups[i].PlayersCount = groups[i].Players.Count;
             }
+
             return groups;
         }
 
@@ -261,9 +268,10 @@ namespace ClientLourd.Services.RestService
         {
             Task<IRestResponse> task = new Task<IRestResponse>(() =>
             {
-                Application.Current.Dispatcher.Invoke(() => 
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    request.AddParameter("Language", (Language == Languages.EN.GetDescription()) ? "EN" : "FR", ParameterType.HttpHeader);
+                    request.AddParameter("Language", (Language == Languages.EN.GetDescription()) ? "EN" : "FR",
+                        ParameterType.HttpHeader);
                 });
 
                 OnStartWaiting(this);

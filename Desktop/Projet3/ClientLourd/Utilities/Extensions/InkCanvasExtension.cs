@@ -17,7 +17,6 @@ namespace ClientLourd.Utilities.Extensions
         {
             try
             {
-                
                 if (lastStroke != null && lastStroke.StylusPoints.Count <= 500)
                 {
                     if ((string) lastStroke.GetPropertyData(GUIDs.ID) == strokeInfo.StrokeID.ToString())
@@ -26,6 +25,7 @@ namespace ClientLourd.Utilities.Extensions
                         return lastStroke;
                     }
                 }
+
                 Stroke stroke = CreateStroke(strokeInfo);
                 inkCanvas.Strokes.Add(stroke);
                 return stroke;
@@ -36,7 +36,7 @@ namespace ClientLourd.Utilities.Extensions
             }
         }
 
-       
+
         public static void RemoveStroke(this InkCanvas inkCanvas, Guid strokeID)
         {
             FindStrokes(inkCanvas, strokeID).ForEach(s => inkCanvas.Strokes.Remove(s));
@@ -47,12 +47,12 @@ namespace ClientLourd.Utilities.Extensions
             List<Stroke> findstrokes = new List<Stroke>();
             foreach (Stroke stroke in inkCanvas.Strokes)
             {
-                if(stroke.GetPropertyData(GUIDs.ID).ToString() == strokeID.ToString())
+                if (stroke.GetPropertyData(GUIDs.ID).ToString() == strokeID.ToString())
                 {
                     findstrokes.Add(stroke);
                 }
             }
-            
+
             return findstrokes;
         }
 

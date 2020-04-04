@@ -5,11 +5,11 @@ namespace ClientLourd.Models.Bindable
 {
     public class SessionInformations : ModelBase
     {
-
         public SessionInformations()
         {
             User = new User("", Guid.Empty.ToString(), false);
         }
+
         private User _user;
 
         public User User

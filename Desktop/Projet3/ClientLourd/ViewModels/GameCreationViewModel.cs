@@ -26,7 +26,7 @@ using ClientLourd.Services.ServerStrokeDrawerService;
 namespace ClientLourd.ViewModels
 {
     public class GameCreationViewModel : ViewModelBase
-    {        
+    {
         public ServerStrokeDrawerService StrokeDrawerService { get; set; }
         private int _numberStrokesReceived;
         private Game _game;
@@ -38,7 +38,7 @@ namespace ClientLourd.ViewModels
             PreviewGUIEnabled = true;
             BlackLevelThreshold = 50;
             BrushSize = 12;
-            NumberOfHints = new List<int>(){1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            NumberOfHints = new List<int>() {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             SelectedNumberOfHints = 1;
         }
 
@@ -74,10 +74,10 @@ namespace ClientLourd.ViewModels
         }
 
         private void SocketClientOnServerEndsDrawing(object source, EventArgs args)
-        { 
+        {
             StrokeDrawerService.TotalMessagesSent = _numberStrokesReceived;
         }
-        
+
         private void SocketClientOnDrawingPreviewResponse(object source, EventArgs args)
         {
             Application.Current.Dispatcher.Invoke(delegate
@@ -87,7 +87,6 @@ namespace ClientLourd.ViewModels
                     DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["PreviewRefused"].ToString()), "Dialog");
                 }
             });
-
         }
 
         private void SocketClientOnServerStrokeSent(object source, EventArgs args)
@@ -97,26 +96,31 @@ namespace ClientLourd.ViewModels
                 _numberStrokesReceived++;
                 StrokeDrawerService?.Enqueue((args as StrokeSentEventArgs).StrokeInfo);
             }
-            
         }
-        
-        public override void AfterLogOut() { throw new System.NotImplementedException(); }
-        public override void AfterLogin() { throw new System.NotImplementedException(); }
-        
-        
+
+        public override void AfterLogOut()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void AfterLogin()
+        {
+            throw new System.NotImplementedException();
+        }
+
+
         public RestClient RestClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
-        
+
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
 
-
-        public string SelectedMode 
+        public string SelectedMode
         {
             get { return _selectedMode.GetDescription(); }
             set
@@ -126,11 +130,12 @@ namespace ClientLourd.ViewModels
                     _selectedMode = value.GetEnumFromDescription<PotraceMode>();
                     NotifyPropertyChanged();
                 }
-            } 
+            }
         }
 
         public List<int> NumberOfHints { get; set; }
         private int _selectedNumberOfHints;
+
         public int SelectedNumberOfHints
         {
             get => _selectedNumberOfHints;
@@ -147,7 +152,7 @@ namespace ClientLourd.ViewModels
         {
             get => new ObservableCollection<Hint>(Game.Hints.Take(SelectedNumberOfHints));
         }
-        
+
         private PotraceMode _selectedMode;
 
 
@@ -155,12 +160,12 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                
                 var list = EnumManager.GetAllDescriptions<PotraceMode>();
                 if (IsUploadModeSelected)
                 {
                     list.Remove(PotraceMode.Classic.GetDescription());
                 }
+
                 return list;
             }
         }
@@ -169,19 +174,16 @@ namespace ClientLourd.ViewModels
 
         public string SelectedDifficulty
         {
-            get
-            {
-                return _selectedDifficulty.GetDescription();
-            }
+            get { return _selectedDifficulty.GetDescription(); }
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _selectedDifficulty = value.GetEnumFromDescription<DifficultyLevel>();
                 }
-            } 
+            }
         }
-        
+
         public List<string> DifficultyLevels
         {
             get { return EnumManager.GetAllDescriptions<DifficultyLevel>(); }
@@ -205,6 +207,7 @@ namespace ClientLourd.ViewModels
         private string _image;
 
         public bool IsUploadModeSelected { get; set; }
+
         public bool IsImageUpload
         {
             get { return !string.IsNullOrWhiteSpace(_image); }
@@ -242,75 +245,78 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public int BlackLevelThreshold { get;  set;}
+        public int BlackLevelThreshold { get; set; }
         public int BrushSize { get; set; }
-        
+
         RelayCommand<object> _validateGameCommand;
 
         public ICommand ValidateGameCommand
         {
             get
             {
-                return _validateGameCommand??
+                return _validateGameCommand ??
                        (_validateGameCommand = new RelayCommand<object>(param => ValidateGame()));
             }
         }
+
         private async Task ValidateGame()
         {
             try
             {
-                _gameID = await RestClient.PostGameInformations(Game.Word, Hints.Select(h => h.Text).ToArray(), _selectedDifficulty);
+                _gameID = await RestClient.PostGameInformations(Game.Word, Hints.Select(h => h.Text).ToArray(),
+                    _selectedDifficulty);
                 //If the game is valid move to the next slide
-                Transitioner.MoveNextCommand.Execute(null,null);
-               
+                Transitioner.MoveNextCommand.Execute(null, null);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
             }
         }
-        
-        
+
+
         RelayCommand<object> _uploadImageCommand;
 
         public ICommand UploadImageCommand
         {
             get
             {
-                return _uploadImageCommand??
+                return _uploadImageCommand ??
                        (_uploadImageCommand = new RelayCommand<object>(param => UploadImage(param)));
             }
         }
 
 
-        private async  Task UploadImage(object param)
+        private async Task UploadImage(object param)
         {
             try
             {
                 if (IsUploadModeSelected)
                 {
                     SelectedMode = PotraceMode.LeftToRight.GetDescription();
-                    await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight, BlackLevelThreshold / 100.0, BrushSize);
+                    await RestClient.PostGameImage(_gameID, _image, PotraceMode.LeftToRight,
+                        BlackLevelThreshold / 100.0, BrushSize);
                 }
 
                 else
                 {
                     SelectedMode = PotraceMode.Classic.GetDescription();
-                    await RestClient.PostGameImage(_gameID, DrawnImagePath, PotraceMode.Classic, BlackLevelThreshold / 100.0, BrushSize);
+                    await RestClient.PostGameImage(_gameID, DrawnImagePath, PotraceMode.Classic,
+                        BlackLevelThreshold / 100.0, BrushSize);
                 }
 
                 NotifyPropertyChanged(nameof(PotraceModes));
                 NotifyPropertyChanged(nameof(BlackLevelThreshold));
                 NotifyPropertyChanged(nameof(BrushSize));
                 //If the game is valid move to the next slide
-                Transitioner.MoveNextCommand.Execute(null,null);
+                Transitioner.MoveNextCommand.Execute(null, null);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
             }
         }
-        
+
         RelayCommand<string> _addImageCommand;
 
         public ICommand AddImageCommand
@@ -321,8 +327,9 @@ namespace ClientLourd.ViewModels
                        (_addImageCommand = new RelayCommand<string>(image => AddImage(image)));
             }
         }
-        
+
         RelayCommand<object> _playPreviewCommand;
+
         public ICommand PlayPreviewCommand
         {
             get
@@ -337,7 +344,7 @@ namespace ClientLourd.ViewModels
             try
             {
                 CurrentCanvas.Strokes.Clear();
-                await RestClient.PutGameInformations(GameID, _selectedMode,BlackLevelThreshold / 100.0, BrushSize);
+                await RestClient.PutGameInformations(GameID, _selectedMode, BlackLevelThreshold / 100.0, BrushSize);
                 Console.WriteLine($"Played preview mode: {_selectedMode}");
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
             }
@@ -346,8 +353,9 @@ namespace ClientLourd.ViewModels
                 await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
             }
         }
-        
+
         RelayCommand<object> _closeCommand;
+
         public ICommand CloseCommand
         {
             get
@@ -365,14 +373,16 @@ namespace ClientLourd.ViewModels
                 {
                     SocketClient.SendMessage(new Tlv(SocketMessageTypes.StopPreview));
                 }
+
                 // Make sure its stopped although it should already be.
                 StrokeDrawerService.Close();
                 RemoveSocketListeners();
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
         }
-        
+
         RelayCommand<object> _removeImageCommand;
+
         public ICommand RemoveImageCommand
         {
             get
@@ -384,7 +394,7 @@ namespace ClientLourd.ViewModels
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
         private void AddImage(string image)
@@ -411,9 +421,10 @@ namespace ClientLourd.ViewModels
                     _gameID = "";
                     NotifyPropertyChanged(nameof(GameID));
                 }
+
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Application.Current.Dispatcher.Invoke(() => { DialogHost.Show(new ClosableErrorDialog(e), "Dialog"); });
                 return false;

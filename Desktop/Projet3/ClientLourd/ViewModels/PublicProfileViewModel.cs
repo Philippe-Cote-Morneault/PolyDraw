@@ -13,10 +13,7 @@ namespace ClientLourd.ViewModels
 
         public User User
         {
-            get 
-            { 
-                return _user;
-            }
+            get { return _user; }
             set
             {
                 _user = value;
@@ -35,8 +32,5 @@ namespace ClientLourd.ViewModels
         {
             throw new NotImplementedException();
         }
-
-
-
     }
 }

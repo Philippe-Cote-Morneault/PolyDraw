@@ -9,7 +9,7 @@ using ClientLourd.Services.DateService;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class TimeDifferenceConverter: IMultiValueConverter
+    class TimeDifferenceConverter : IMultiValueConverter
     {
         /// <summary>
         /// Returns the time elapsed between two dates. Value is the disconnection time and parameter is the connected time.
@@ -21,10 +21,10 @@ namespace ClientLourd.Utilities.Converters
         /// <returns></returns>
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            DateTime dtDisconnection = Timestamp.UnixTimeStampToDateTime((long)value[0]);
-            DateTime dtConnection = Timestamp.UnixTimeStampToDateTime((long)value[1]);
+            DateTime dtDisconnection = Timestamp.UnixTimeStampToDateTime((long) value[0]);
+            DateTime dtConnection = Timestamp.UnixTimeStampToDateTime((long) value[1]);
 
-            
+
             return (dtConnection - dtDisconnection).ToString();
         }
 

@@ -8,6 +8,7 @@ namespace ClientLourd.Models.Bindable
         {
             Text = "";
         }
+
         private string _text;
 
         public string Text
@@ -25,6 +26,7 @@ namespace ClientLourd.Models.Bindable
         }
 
         private bool _isSelected;
+
         public bool IsSelected
         {
             get => _isSelected;

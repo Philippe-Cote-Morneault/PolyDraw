@@ -17,6 +17,7 @@ namespace ClientLourd.Views.Dialogs
     public partial class RegisterDialog : UserControl, INotifyPropertyChanged
     {
         public User User { get; set; }
+
         public RegisterDialog(User user)
         {
             User = user;
@@ -26,9 +27,9 @@ namespace ClientLourd.Views.Dialogs
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
-        
+
         public bool AreFieldsEmpty
         {
             get
@@ -37,16 +38,15 @@ namespace ClientLourd.Views.Dialogs
                     return true;
                 if (String.IsNullOrWhiteSpace(PasswordField2.Password))
                     return true;
-                if(String.IsNullOrWhiteSpace(FirstNameField.Text))
+                if (String.IsNullOrWhiteSpace(FirstNameField.Text))
                     return true;
-                if(String.IsNullOrWhiteSpace(LastNameField.Text))
+                if (String.IsNullOrWhiteSpace(LastNameField.Text))
                     return true;
-                if(String.IsNullOrWhiteSpace(EmailField.Text))
+                if (String.IsNullOrWhiteSpace(EmailField.Text))
                     return true;
-                if(String.IsNullOrWhiteSpace(UsernameField.Text))
+                if (String.IsNullOrWhiteSpace(UsernameField.Text))
                     return true;
                 return false;
-                
             }
         }
 
@@ -85,11 +85,13 @@ namespace ClientLourd.Views.Dialogs
         {
             if (PasswordField1.Password != PasswordField2.Password)
             {
-                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidPassword"]), "RegisterDialogHost");
+                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidPassword"]),
+                    "RegisterDialogHost");
             }
             else if (PasswordField1.Password.Length < 8)
             {
-                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidLenghtPassword"]), "RegisterDialogHost");
+                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidLenghtPassword"]),
+                    "RegisterDialogHost");
             }
             else
             {

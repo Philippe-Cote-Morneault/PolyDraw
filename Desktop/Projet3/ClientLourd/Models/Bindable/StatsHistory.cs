@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClientLourd.Models.Bindable
 {
-    public class StatsHistory: ModelBase
+    public class StatsHistory : ModelBase
     {
         private LinkedList<ConnectionDisconnection> _connectionHistory;
         private LinkedList<MatchPlayed> _matchesPlayed;
@@ -42,19 +42,15 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
-
-
-
     }
 
-    public class ConnectionDisconnection: ModelBase
+    public class ConnectionDisconnection : ModelBase
     {
         private long _connectedAt;
         private long _disconnectedAt;
 
         public ConnectionDisconnection()
         {
-
         }
 
         public long ConnectedAt
@@ -93,9 +89,9 @@ namespace ClientLourd.Models.Bindable
         private string _winnerName;
         private string _matchType;
         private string[] _playersName;
+
         public MatchPlayed()
         {
-
         }
 
         public long MatchDuration
@@ -111,7 +107,7 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-        
+
         public string WinnerName
         {
             get { return _winnerName; }

@@ -13,7 +13,7 @@ namespace ClientLourd.Utilities.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int nHeartsTotal = (int)value;
+            int nHeartsTotal = (int) value;
             int heartIndex = int.Parse(parameter.ToString());
 
             return (nHeartsTotal > heartIndex) ? Visibility.Visible : Visibility.Collapsed;

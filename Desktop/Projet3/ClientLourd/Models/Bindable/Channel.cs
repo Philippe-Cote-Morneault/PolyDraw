@@ -12,6 +12,7 @@ namespace ClientLourd.Models.Bindable
         {
             InitTimer();
         }
+
         public Channel(string name, string id, bool isGame)
         {
             InitTimer();
@@ -24,6 +25,7 @@ namespace ClientLourd.Models.Bindable
         }
 
         private Timer _clearMessageTimer;
+
         private void InitTimer()
         {
             IsFullyLoaded = false;
@@ -38,7 +40,7 @@ namespace ClientLourd.Models.Bindable
                 }
             };
         }
-        
+
         public bool IsFullyLoaded { get; set; }
 
         public ObservableCollection<User> Users
@@ -104,6 +106,7 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
         private ObservableCollection<Message> _messages;
 
         private void MessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -114,6 +117,7 @@ namespace ClientLourd.Models.Bindable
                 {
                     Notification++;
                 }
+
                 if (Messages.Count > 1 && Messages[Messages.Count - 1].Date < Messages[Messages.Count - 2].Date)
                 {
                     Messages = new ObservableCollection<Message>(Messages.OrderBy(m => m.Date));
@@ -140,6 +144,7 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
         private int _notification;
 
         public bool IsSelected
@@ -171,7 +176,7 @@ namespace ClientLourd.Models.Bindable
             get => _isGame;
             set
             {
-                if(value != _isGame)
+                if (value != _isGame)
                 {
                     _isGame = value;
                     NotifyPropertyChanged();
@@ -180,6 +185,5 @@ namespace ClientLourd.Models.Bindable
         }
 
         private bool _isGame;
-
     }
 }

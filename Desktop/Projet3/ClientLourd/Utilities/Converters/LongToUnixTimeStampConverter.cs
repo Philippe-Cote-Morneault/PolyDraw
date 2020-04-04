@@ -9,7 +9,7 @@ using ClientLourd.Services.DateService;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class LongToUnixTimeStampConverter: IValueConverter
+    class LongToUnixTimeStampConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,9 +19,7 @@ namespace ClientLourd.Utilities.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && !(bool)value;
+            return value != null && !(bool) value;
         }
-
     }
 }
-

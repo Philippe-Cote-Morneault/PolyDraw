@@ -14,7 +14,7 @@ namespace ClientLourd.Utilities.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var gameMode = (GameModes)value;
+            var gameMode = (GameModes) value;
 
             if (gameMode == GameModes.Coop)
                 return new BitmapImage(new Uri($"/ClientLourd;component/Resources/treasure.png", UriKind.Relative));
@@ -22,7 +22,7 @@ namespace ClientLourd.Utilities.Converters
                 return new BitmapImage(new Uri($"/ClientLourd;component/Resources/swords.png", UriKind.Relative));
             if (gameMode == GameModes.Solo)
                 return new BitmapImage(new Uri($"/ClientLourd;component/Resources/sword.png", UriKind.Relative));
-            
+
             throw new Exception("Not image corresponding to game mode");
         }
 

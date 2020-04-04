@@ -24,12 +24,10 @@ namespace ClientLourd.ViewModels
     class LobbyViewModel : ViewModelBase
     {
         private bool _canStart;
+
         public bool CanStart
         {
-            get
-            {
-                return _canStart;
-            }
+            get { return _canStart; }
             set
             {
                 _canStart = value;
@@ -39,6 +37,7 @@ namespace ClientLourd.ViewModels
 
 
         private bool _isGameStarted;
+
         public bool IsGameStarted
         {
             get => _isGameStarted;
@@ -48,61 +47,56 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
         public SocketClient SocketClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
+
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public string ContainedView
         {
-            get
-            {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView;
-            }
-            set
-            {
-                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value;
-            }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView; }
+            set { (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value; }
         }
 
         public MainWindow MainWindow
         {
-            get
-            {
-                return (MainWindow)Application.Current.MainWindow;
-            }
+            get { return (MainWindow) Application.Current.MainWindow; }
         }
 
 
         public HomeViewModel HomeViewModel
         {
-            get
-            {
-                return (((MainWindow)Application.Current.MainWindow)?.Home?.DataContext as HomeViewModel);
-            }
+            get { return (((MainWindow) Application.Current.MainWindow)?.Home?.DataContext as HomeViewModel); }
         }
 
 
         public Lobby CurrentLobby
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
-            set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; NotifyPropertyChanged(); }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
+            set
+            {
+                (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value;
+                NotifyPropertyChanged();
+            }
         }
 
         public MainViewModel MainViewModel
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel);
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
         }
 
         public SessionInformations SessionInformations
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    ?.SessionInformations;
             }
         }
 
@@ -110,7 +104,7 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
 
@@ -146,10 +140,7 @@ namespace ClientLourd.ViewModels
             Task.Run(() =>
             {
                 Lobby tmpLobby = null;
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    tmpLobby = CurrentLobby;
-                });
+                Application.Current.Dispatcher.Invoke(() => { tmpLobby = CurrentLobby; });
                 Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -177,10 +168,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand LeaveLobbyCommand
         {
-            get
-            {
-                return _leaveLobbyCommand ?? (_leaveLobbyCommand = new RelayCommand<object>(obj => LeaveLobby()));
-            }
+            get { return _leaveLobbyCommand ?? (_leaveLobbyCommand = new RelayCommand<object>(obj => LeaveLobby())); }
         }
 
         public void LeaveLobby()
@@ -192,12 +180,13 @@ namespace ClientLourd.ViewModels
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.LeaveMatch));
                 IsGameStarted = false;
             }
+
             ReturnHome();
         }
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
         {
-            var joinLobbyArgs = (LobbyEventArgs)e;
+            var joinLobbyArgs = (LobbyEventArgs) e;
             if (joinLobbyArgs.Response)
             {
                 Application.Current.Dispatcher.Invoke(() =>
@@ -213,7 +202,7 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var lobbyDeletedArgs = (LobbyEventArgs)e;
+                var lobbyDeletedArgs = (LobbyEventArgs) e;
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
 
@@ -227,7 +216,7 @@ namespace ClientLourd.ViewModels
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
 
@@ -268,10 +257,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand StartGameCommand
         {
-            get
-            {
-                return _startGameCommand ?? (_startGameCommand = new RelayCommand<object>(obj => StartGame()));
-            }
+            get { return _startGameCommand ?? (_startGameCommand = new RelayCommand<object>(obj => StartGame())); }
         }
 
         private void StartGame()
@@ -299,7 +285,6 @@ namespace ClientLourd.ViewModels
 
             if (CurrentLobby != null)
             {
-
                 foreach (Player player in CurrentLobby.Players)
                 {
                     if (!player.User.IsCPU)
@@ -317,7 +302,7 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                var gameStartedArgs = (LobbyEventArgs)e;
+                var gameStartedArgs = (LobbyEventArgs) e;
                 if (gameStartedArgs.Response)
                 {
                     IsGameStarted = true;
@@ -326,13 +311,11 @@ namespace ClientLourd.ViewModels
                 {
                     DialogHost.Show(new ClosableErrorDialog($"{gameStartedArgs.Error}"), "Default");
                 }
-
             });
         }
 
         private void OnUserJoinedLobby(object sender, EventArgs e)
         {
-
             Application.Current.Dispatcher.Invoke(() =>
             {
                 NotifyPropertyChanged(nameof(CurrentLobby));
@@ -344,7 +327,7 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LobbyEventArgs lobbyEventArgs = (LobbyEventArgs)e;
+                LobbyEventArgs lobbyEventArgs = (LobbyEventArgs) e;
                 if (SessionInformations.User.ID == lobbyEventArgs.UserID)
                 {
                     ReturnHome();
@@ -370,10 +353,10 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        public async void  KickPlayer(Player player)
+        public async void KickPlayer(Player player)
         {
-
-            ConfirmationDialog confirmationDialog = new ConfirmationDialog($"{CurrentDictionary["RemovePlayerTitle"]}", $"{CurrentDictionary["RemovePlayerBody"]} {player.User.Username}?");
+            ConfirmationDialog confirmationDialog = new ConfirmationDialog($"{CurrentDictionary["RemovePlayerTitle"]}",
+                $"{CurrentDictionary["RemovePlayerBody"]} {player.User.Username}?");
             confirmationDialog.Height = 300;
             confirmationDialog.MessageTextBlock.Margin = new Thickness(30, 0, 30, 0);
             var response = await DialogHost.Show(confirmationDialog, "Default");
@@ -389,21 +372,22 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _addVirtualPlayerCommand ?? (_addVirtualPlayerCommand = new RelayCommand<Player>(obj => AddVirtualPlayer()));
+                return _addVirtualPlayerCommand ??
+                       (_addVirtualPlayerCommand = new RelayCommand<Player>(obj => AddVirtualPlayer()));
             }
         }
 
         public void AddVirtualPlayer()
         {
-            SocketClient.SendMessage(new Tlv(SocketMessageTypes.AddVirtualPlayer, new { nbVirtualPlayer = 1 }));
+            SocketClient.SendMessage(new Tlv(SocketMessageTypes.AddVirtualPlayer, new {nbVirtualPlayer = 1}));
         }
 
         public ICommand ViewPublicProfile
         {
             get { return ProfileViewer.ViewPublicProfileCommand; }
         }
-        
-        public delegate void LobbyEventHandler (object source, EventArgs args);
+
+        public delegate void LobbyEventHandler(object source, EventArgs args);
 
         public event LobbyEventHandler ReturnChat;
 

@@ -6,7 +6,7 @@ namespace ClientLourd.Services.SocketService
     public class SocketEventsPublisher
     {
         public delegate void SocketEventHandler(object source, EventArgs args);
-        
+
         //General event
         public event SocketEventHandler StartWaiting;
         public event SocketEventHandler StopWaiting;
@@ -16,19 +16,22 @@ namespace ClientLourd.Services.SocketService
         public event SocketEventHandler HealthCheck;
         public event SocketEventHandler ConnectionLost;
 
-        
+
         protected virtual void OnServerDisconnected(object source)
         {
             ServerDisconnected?.Invoke(source, EventArgs.Empty);
         }
+
         protected virtual void OnServerMessage(object source, EventArgs e)
         {
             ServerMessage?.Invoke(source, e);
         }
+
         protected virtual void OnConnectionLost(object source)
         {
             ConnectionLost?.Invoke(source, EventArgs.Empty);
         }
+
         protected virtual void OnConnectionResponse(object source)
         {
             ConnectionResponse?.Invoke(source, EventArgs.Empty);
@@ -48,17 +51,19 @@ namespace ClientLourd.Services.SocketService
         {
             StopWaiting?.Invoke(source, EventArgs.Empty);
         }
-        
+
         //Chat relate event
         public event SocketEventHandler MessageReceived;
         public event SocketEventHandler UserJoinedChannel;
         public event SocketEventHandler UserLeftChannel;
         public event SocketEventHandler UserCreatedChannel;
         public event SocketEventHandler UserDeletedChannel;
+
         protected virtual void OnUserDeletedChannel(object source, EventArgs e)
         {
             UserDeletedChannel?.Invoke(source, e);
         }
+
         protected virtual void OnUserCreatedChannel(object source, EventArgs e)
         {
             UserCreatedChannel?.Invoke(source, e);
@@ -79,15 +84,13 @@ namespace ClientLourd.Services.SocketService
         {
             MessageReceived?.Invoke(source, e);
         }
-        
-        
+
+
         //Canvas relate message
         public event SocketEventHandler ServerStrokeSent;
         public event SocketEventHandler ServerStartsDrawing;
         public event SocketEventHandler ServerEndsDrawing;
         public event SocketEventHandler DrawingPreviewResponse;
-        
-
 
 
         protected virtual void OnServerStrokeSent(object source, EventArgs e)
@@ -110,8 +113,8 @@ namespace ClientLourd.Services.SocketService
         {
             DrawingPreviewResponse?.Invoke(source, e);
         }
-        
-        
+
+
         //Match relate event
         public event SocketEventHandler PlayerLeftMatch;
         public event SocketEventHandler NewPlayerIsDrawing;
@@ -136,11 +139,12 @@ namespace ClientLourd.Services.SocketService
         {
             MatchStarted?.Invoke(source, EventArgs.Empty);
         }
+
         protected virtual void OnAreYouReady(object source, EventArgs e)
         {
             AreYouReady?.Invoke(source, e);
         }
-        
+
         protected virtual void OnMatchEnded(object source, EventArgs e)
         {
             MatchEnded?.Invoke(source, e);
@@ -185,7 +189,7 @@ namespace ClientLourd.Services.SocketService
         {
             PlayerGuessedTheWord?.Invoke(source, e);
         }
-        
+
         protected virtual void OnUserDeleteStroke(object source, EventArgs e)
         {
             UserDeleteStroke?.Invoke(source, e);
@@ -195,8 +199,8 @@ namespace ClientLourd.Services.SocketService
         {
             HintResponse?.Invoke(source, e);
         }
-        
-        
+
+
         protected virtual void OnRoundEnded(object source, EventArgs e)
         {
             RoundEnded?.Invoke(source, e);
@@ -211,7 +215,7 @@ namespace ClientLourd.Services.SocketService
         {
             CoopTeamateGuessedIncorrectly?.Invoke(source, e);
         }
-        
+
         protected virtual void OnGameCancel(object source, EventArgs e)
         {
             GameCancel?.Invoke(source, e);
@@ -254,8 +258,8 @@ namespace ClientLourd.Services.SocketService
         {
             StartGameResponse?.Invoke(source, e);
         }
-        
-        
+
+
         public event SocketEventHandler UserChangedName;
 
         protected virtual void OnUserChangedName(object source, EventArgs e)

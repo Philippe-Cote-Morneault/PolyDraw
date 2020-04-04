@@ -34,19 +34,20 @@ namespace ClientLourd.ViewModels
         {
             get { return Channels.Sum(c => c.Notification); }
         }
-        
+
         /// <summary>
         /// Use to update virtual player information 
         /// </summary>
         /// <param name="user"></param>
         public void UpdateUser(User user)
         {
-            User findUser = _users.FirstOrDefault(u => u.ID == user.ID);            
+            User findUser = _users.FirstOrDefault(u => u.ID == user.ID);
             if (findUser == null)
             {
                 _users.Add(user);
                 return;
             }
+
             //Update the avatar
             findUser.Avatar = user.Avatar;
         }
@@ -59,6 +60,7 @@ namespace ClientLourd.ViewModels
                 user = (await RestClient.GetUserInfo(id));
                 _users.Add(user);
             }
+
             return user;
         }
 
@@ -76,12 +78,11 @@ namespace ClientLourd.ViewModels
                     SelectedChannel.IsSelected = false;
                 }
             }
-            
         }
 
         public SoundService SoundService
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SoundService; }
         }
 
         public SessionInformations SessionInformations
@@ -117,6 +118,7 @@ namespace ClientLourd.ViewModels
                         //Remove the selection for the old channel
                         _selectedChannel.IsSelected = false;
                     }
+
                     _selectedChannel = value;
                     if (_selectedChannel != null)
                     {
@@ -126,6 +128,7 @@ namespace ClientLourd.ViewModels
                             LoadHistory(25);
                         }
                     }
+
                     NotifyPropertyChanged();
                     NotifyPropertyChanged("NewMessages");
                 }
@@ -169,7 +172,7 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnHintResponse(object source, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
             Application.Current.Dispatcher.Invoke(() =>
             {
                 User bot = _users.FirstOrDefault(u => u.ID == e.BotID);
@@ -181,15 +184,18 @@ namespace ClientLourd.ViewModels
                     {
                         if (player.ID != SessionInformations.User.ID)
                         {
-                            var systemMessage = new Message(DateTime.Now, _admin, $"{player.Username} {CurrentDictionary["HintResponse"]}");
+                            var systemMessage = new Message(DateTime.Now, _admin,
+                                $"{player.Username} {CurrentDictionary["HintResponse"]}");
                             GameChannel.Messages.Add(systemMessage);
                         }
+
                         message = new Message(DateTime.Now, bot, e.Hint);
                     }
                     else
                     {
                         message = new Message(DateTime.Now, bot, e.Error);
                     }
+
                     GameChannel.Messages.Add(message);
                 }
             });
@@ -209,21 +215,21 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                    var e = (ChatEventArgs) args;
-                    Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
-                    if (channel == null)
-                        return;
-                    Channels.Remove(channel);
-                    if (SelectedChannel == channel)
+                var e = (ChatEventArgs) args;
+                Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                if (channel == null)
+                    return;
+                Channels.Remove(channel);
+                if (SelectedChannel == channel)
+                {
+                    if (e.UserID != Guid.Empty.ToString())
                     {
-                        if (e.UserID != Guid.Empty.ToString())
-                        {
-                            DialogHost.Show(new MessageDialog("Oups",
+                        DialogHost.Show(new MessageDialog("Oups",
                             $"{e.Username} {CurrentDictionary["DeleteChannel"]} '{channel.Name}' !"));
-                        }
-                        
                     }
-                    UpdateChannels();
+                }
+
+                UpdateChannels();
             });
         }
 
@@ -244,8 +250,9 @@ namespace ClientLourd.ViewModels
                 {
                     Channels.Remove(channel);
                 }
+
                 var user = channel.Users.FirstOrDefault(u => u.ID == e.UserID);
-                if(user != null)
+                if (user != null)
                     channel.Users.Remove(user);
                 UpdateChannels();
             });
@@ -255,24 +262,27 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                    var e = (ChatEventArgs) args;
-                    Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
-                   if(channel == null){ 
-                       return;
-                   }
+                var e = (ChatEventArgs) args;
+                Channel channel = Channels.FirstOrDefault(c => c.ID == e.ChannelId);
+                if (channel == null)
+                {
+                    return;
+                }
 
-                   if (SessionInformations.User.ID != e.UserID)
-                   {
+                if (SessionInformations.User.ID != e.UserID)
+                {
                     Message m = new Message(e.Date, _admin, $"{e.Username} {CurrentDictionary["UserJoined"]}");
                     channel.Messages.Add(m);
-                   }
-                    channel.Users.Add(await GetUser(e.Username, e.UserID));
-                    // Select this channel if I am the user concern
-                    if (e.UserID == SessionInformations.User.ID)
-                    {
-                        SelectedChannel = channel;
-                    }
-                    UpdateChannels();
+                }
+
+                channel.Users.Add(await GetUser(e.Username, e.UserID));
+                // Select this channel if I am the user concern
+                if (e.UserID == SessionInformations.User.ID)
+                {
+                    SelectedChannel = channel;
+                }
+
+                UpdateChannels();
             });
         }
 
@@ -287,6 +297,7 @@ namespace ClientLourd.ViewModels
                 {
                     JoinChannel(newChannel);
                 }
+
                 UpdateChannels();
             });
         }
@@ -295,19 +306,20 @@ namespace ClientLourd.ViewModels
         {
             var args = (ChatEventArgs) e;
             //TODO cache user 
-            await App.Current.Dispatcher.InvokeAsync(async() =>
+            await App.Current.Dispatcher.InvokeAsync(async () =>
             {
                 if (SessionInformations.User.ID != args.UserID)
                 {
                     SoundService.PlayNotification();
                 }
+
                 Message m = new Message(args.Date, await GetUser(args.Username, args.UserID), args.Message);
                 Channels.First(c => c.ID == args.ChannelId).Messages.Add(m);
                 NotifyPropertyChanged(nameof(NewMessages));
             });
         }
-        
-        
+
+
         RelayCommand<int> _loadHistoryCommand;
 
         public ICommand LoadHistoryCommand
@@ -315,7 +327,8 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _loadHistoryCommand ??
-                       (_loadHistoryCommand = new RelayCommand<int>(numberOfMessages => LoadHistory(numberOfMessages), numberOfMessage => SelectedChannel!= null && SelectedChannel.Messages.Count > 0));
+                       (_loadHistoryCommand = new RelayCommand<int>(numberOfMessages => LoadHistory(numberOfMessages),
+                           numberOfMessage => SelectedChannel != null && SelectedChannel.Messages.Count > 0));
             }
         }
 
@@ -334,6 +347,7 @@ namespace ClientLourd.ViewModels
                         User u = message.User;
                         message.User = (await GetUser(u.Username, u.ID));
                     }
+
                     SelectedChannel.Messages =
                         new ObservableCollection<Message>(messages.Concat(SelectedChannel.Messages));
                     if (messages.Count < numberOfMessages)
@@ -347,7 +361,7 @@ namespace ClientLourd.ViewModels
                 }
             }
         }
-        
+
         RelayCommand<Channel> _deleteChannelCommand;
 
         public ICommand DeleteChannelCommand
@@ -363,7 +377,7 @@ namespace ClientLourd.ViewModels
         {
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.DeleteChannel, new Guid(channel.ID)));
         }
-        
+
 
         RelayCommand<object> _createChannelCommand;
 
@@ -378,7 +392,6 @@ namespace ClientLourd.ViewModels
 
         private async Task CreateChannel()
         {
-            
             var dialog = new InputDialog($"{CurrentDictionary["ChannelName"]}", 20);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
@@ -429,17 +442,17 @@ namespace ClientLourd.ViewModels
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
 
         public void LeaveChannel(Channel channel)
         {
-            if (channel.ID == GLOBAL_CHANNEL_ID )
+            if (channel.ID == GLOBAL_CHANNEL_ID)
             {
                 DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["LeaveGeneral"].ToString()));
             }
-            else if(channel.IsGame)
+            else if (channel.IsGame)
             {
                 DialogHost.Show(new ClosableErrorDialog(CurrentDictionary["LeaveGame"].ToString()));
             }
@@ -460,7 +473,8 @@ namespace ClientLourd.ViewModels
 
             if (SelectedChannel == null || SessionInformations.User == null) return;
             //If the current player is not in the SelectedChannel or if the SelectedChannel have been removed
-            if(SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null || !Channels.Contains(SelectedChannel))
+            if (SelectedChannel.Users.FirstOrDefault(u => u.ID == SessionInformations.User.ID) == null ||
+                !Channels.Contains(SelectedChannel))
             {
                 SelectedChannel = Channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
             }
@@ -473,7 +487,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _openDrawerCommand ?? (_openDrawerCommand =
-                           new RelayCommand<object[]>(param => OpenChatDrawer(param), param => (bool) param[0]));
+                    new RelayCommand<object[]>(param => OpenChatDrawer(param), param => (bool) param[0]));
             }
         }
 
@@ -517,6 +531,7 @@ namespace ClientLourd.ViewModels
         }
 
         private string _channelFilter;
+
         public string ChannelFilter
         {
             get { return _channelFilter.ToLower(); }
@@ -534,13 +549,15 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                var channels =  new ObservableCollection<Channel>(_channels.Where(c =>
-                   c.Name.ToLower().Contains(ChannelFilter) && c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                var channels = new ObservableCollection<Channel>(_channels.Where(c =>
+                    c.Name.ToLower().Contains(ChannelFilter) &&
+                    c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
                 var globalChannel = channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
                 if (globalChannel != null)
                 {
                     channels.Move(channels.IndexOf(globalChannel), 0);
                 }
+
                 return channels;
             }
         }
@@ -549,13 +566,15 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                var channels =  new ObservableCollection<Channel>(_channels.Where(c =>
-                   c.Name.ToLower().Contains(ChannelFilter) && !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
+                var channels = new ObservableCollection<Channel>(_channels.Where(c =>
+                    c.Name.ToLower().Contains(ChannelFilter) &&
+                    !c.Users.Select(m => m.ID).Contains(SessionInformations.User.ID)).OrderBy(c => c.Name));
                 var globalChannel = channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID);
                 if (globalChannel != null)
                 {
                     channels.Move(channels.IndexOf(globalChannel), 0);
                 }
+
                 return channels;
             }
         }
@@ -582,9 +601,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand ViewPublicProfile
         {
-            get { return ProfileViewer.ViewPublicProfileCommand; } 
+            get { return ProfileViewer.ViewPublicProfileCommand; }
         }
-
-
     }
 }

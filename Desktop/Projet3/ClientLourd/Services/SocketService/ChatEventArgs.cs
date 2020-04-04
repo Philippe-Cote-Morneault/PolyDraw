@@ -36,11 +36,12 @@ namespace ClientLourd.Services.SocketService
         {
             get { return _data["Message"]; }
         }
-        
+
         public string UserID
         {
             get { return _data["UserID"]; }
         }
+
         public string Username
         {
             get { return _data["Username"]; }
@@ -50,6 +51,5 @@ namespace ClientLourd.Services.SocketService
         {
             get { return _data["NewName"]; }
         }
-
     }
 }

@@ -8,23 +8,26 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              mc:Ignorable="d">
     <DockPanel Name="MainDockPanel">
-        <TextBlock DockPanel.Dock="Top" FontSize="24" Margin="10" HorizontalAlignment="Center" FontWeight="Bold" Text="Select your avatar" />
-        <Button Command="{Binding QuitCommand}" Width="200" HorizontalAlignment="Center" Margin="10" DockPanel.Dock="Bottom"  Content="Confirm" />
-        <ItemsControl Name="AvartarList"  ItemsSource="{Binding Avatars}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Width="400"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Click="ButtonBase_OnClick" Style="{StaticResource MaterialDesignFlatButton}" Width="100" Height="100">
-                            <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                                <Image Source="{Binding .}" />
-                            </materialDesign:Card>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>   
+        <TextBlock DockPanel.Dock="Top" FontSize="24" Margin="10" HorizontalAlignment="Center" FontWeight="Bold"
+                   Text="Select your avatar" />
+        <Button Command="{Binding QuitCommand}" Width="200" HorizontalAlignment="Center" Margin="10"
+                DockPanel.Dock="Bottom" Content="Confirm" />
+        <ItemsControl Name="AvartarList" ItemsSource="{Binding Avatars}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Width="400" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Click="ButtonBase_OnClick" Style="{StaticResource MaterialDesignFlatButton}" Width="100"
+                            Height="100">
+                        <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3">
+                            <Image Source="{Binding .}" />
+                        </materialDesign:Card>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </DockPanel>
 </UserControl>

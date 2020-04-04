@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class EditingModeConverter: IValueConverter
+    public class EditingModeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

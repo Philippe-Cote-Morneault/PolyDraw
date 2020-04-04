@@ -12,8 +12,8 @@ namespace ClientLourd.Utilities.Converters
     class MinimumEraserSizeToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        { 
-            return ((int)value <= 8) ? Visibility.Collapsed : Visibility.Visible;
+        {
+            return ((int) value <= 8) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

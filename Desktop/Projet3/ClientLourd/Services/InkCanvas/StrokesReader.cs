@@ -37,19 +37,20 @@ namespace ClientLourd.Services.InkCanvas
         private Mutex _mutex;
 
         private EditorInformation _information;
-        
+
         public StrokesReader(Editor editor, SocketClient socket, EditorInformation information)
         {
             _information = information;
             _mutex = new Mutex();
             _editor = editor;
             _socket = socket;
-            _editor.Canvas.AddHandler(UIElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler(CanvasOnMouseDown), true);
+            _editor.Canvas.AddHandler(UIElement.MouseLeftButtonDownEvent,
+                new MouseButtonEventHandler(CanvasOnMouseDown), true);
             _points = new List<Point>();
             _timer = new Timer(SEND_RATE);
             _timer.Elapsed += TimerOnElapsed;
         }
-        
+
         public void Start(string drawingID)
         {
             _drawingID = new Guid(drawingID);
@@ -60,7 +61,6 @@ namespace ClientLourd.Services.InkCanvas
             _editor.StrokedAdded += EditorOnStokeAdded;
             _timer.Start();
         }
-
 
 
         public void Stop()
@@ -83,11 +83,12 @@ namespace ClientLourd.Services.InkCanvas
             stroke.AddPropertyData(GUIDs.ID, _currentStrokeID.ToString());
             SendStroke(true);
         }
-        
+
         private void EditorOnStrokeDeleted(object sender, EventArgs args)
         {
             Stroke stroke = (Stroke) sender;
-            _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke, new Guid(stroke.GetPropertyData(GUIDs.ID).ToString())));
+            _socket.SendMessage(new Tlv(SocketMessageTypes.DeleteStroke,
+                new Guid(stroke.GetPropertyData(GUIDs.ID).ToString())));
         }
 
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
@@ -101,7 +102,7 @@ namespace ClientLourd.Services.InkCanvas
             if (_information.SelectedTool == InkCanvasEditingMode.EraseByStroke)
                 return;
             _mutex.WaitOne();
-            if(_currentStrokeID != Guid.Empty)
+            if (_currentStrokeID != Guid.Empty)
             {
                 byte[] message = new byte[POINTS_OFFSET + 4 * _points.Count];
                 message[0] = (byte) (GetColorValue() + GetToolValue() + GetTipValue());
@@ -114,36 +115,41 @@ namespace ClientLourd.Services.InkCanvas
                 message[BRUSH_SIZE_OFFSET] = (byte) _information.BrushSize;
                 for (int i = 0; i < _points.Count; i++)
                 {
-                    int x = _points[i].X < 0? 0 : (int) _points[i].X;
-                    int y = _points[i].Y < 0? 0 : (int) _points[i].Y;
+                    int x = _points[i].X < 0 ? 0 : (int) _points[i].X;
+                    int y = _points[i].Y < 0 ? 0 : (int) _points[i].Y;
                     message[POINTS_OFFSET + 4 * i] = GetIntByte(1, x);
                     message[POINTS_OFFSET + 4 * i + 1] = GetIntByte(0, x);
                     message[POINTS_OFFSET + 4 * i + 2] = GetIntByte(1, y);
                     message[POINTS_OFFSET + 4 * i + 3] = GetIntByte(0, y);
                 }
+
                 _socket.SendMessage(new Tlv(SocketMessageTypes.UserStrokeSent, message));
                 if (startNewStroke)
                 {
                     _currentStrokeID = Guid.Empty;
                 }
+
                 _points.Clear();
             }
+
             _mutex.ReleaseMutex();
         }
 
         private byte GetIntByte(int n, int value)
         {
-            return (byte)((value >> (8*n)) & 0xff);
+            return (byte) ((value >> (8 * n)) & 0xff);
         }
 
         private void CanvasOnMouseDown(object sender, MouseButtonEventArgs e)
         {
             _mutex.WaitOne();
-            if (((EditorViewModel) _editor.DataContext).EditorInformation.SelectedTool != InkCanvasEditingMode.EraseByStroke)
+            if (((EditorViewModel) _editor.DataContext).EditorInformation.SelectedTool !=
+                InkCanvasEditingMode.EraseByStroke)
             {
                 _currentStrokeID = Guid.NewGuid();
                 _points.Add(e.GetPosition(_editor.Canvas));
             }
+
             _mutex.ReleaseMutex();
         }
 
@@ -154,6 +160,7 @@ namespace ClientLourd.Services.InkCanvas
             {
                 _points.Add(e.GetPosition(_editor.Canvas));
             }
+
             _mutex.ReleaseMutex();
         }
 
@@ -177,8 +184,10 @@ namespace ClientLourd.Services.InkCanvas
                 case InkCanvasEditingMode.EraseByPoint:
                     return 1 << 7;
             }
+
             throw new InvalidOperationException();
         }
+
         private int GetColorValue()
         {
             if (_information.SelectedColor == Colors.Black)
@@ -199,7 +208,5 @@ namespace ClientLourd.Services.InkCanvas
                 return 7;
             throw new InvalidOperationException("the color is not selected");
         }
-        
-        
     }
 }

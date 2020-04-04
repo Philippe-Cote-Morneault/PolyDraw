@@ -12,7 +12,7 @@
                                  HorizontalAlignment="Center" />
         <StackPanel Orientation="Vertical">
             <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                       TextWrapping="Wrap" Text="{DynamicResource Error}"/>
+                       TextWrapping="Wrap" Text="{DynamicResource Error}" />
             <TextBlock TextAlignment="Center" HorizontalAlignment="Center"
                        Style="{StaticResource MaterialDesignHeadline5TextBlock}" TextWrapping="Wrap"
                        Text="{Binding Path=Error, UpdateSourceTrigger=PropertyChanged}" />

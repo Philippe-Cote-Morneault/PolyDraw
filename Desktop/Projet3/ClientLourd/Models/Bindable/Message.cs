@@ -15,6 +15,7 @@ namespace ClientLourd.Models.Bindable
             User = user;
             Content = content;
         }
+
         public Message(int timestamp, User user, string content)
         {
             Date = Timestamp.UnixTimeStampToDateTime(timestamp);

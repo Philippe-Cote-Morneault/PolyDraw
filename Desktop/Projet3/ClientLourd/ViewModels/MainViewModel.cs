@@ -67,12 +67,14 @@ namespace ClientLourd.ViewModels
                 _userManager.SetLanguage(SelectedLanguage);
             }
 
-            else if(IsSystemLanguage && _userManager.GetLanguage() != "System")
+            else if (IsSystemLanguage && _userManager.GetLanguage() != "System")
             {
                 SelectedLanguage = _userManager.GetLanguage();
             }
 
-            SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }) : new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1 }));
+            SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN)
+                ? new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 0})
+                : new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 1}));
         }
 
         public override void AfterLogOut()
@@ -88,8 +90,6 @@ namespace ClientLourd.ViewModels
             SocketClient.StopWaiting += (source, args) => { IsWaiting = false; };
             SocketClient.ConnectionLost += SocketClientOnConnectionLost;
             SocketClient.ServerMessage += SocketClientOnServerMessage;
-
-
         }
 
         private void SocketClientOnServerMessage(object source, EventArgs args)
@@ -121,18 +121,19 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
-        
+
         private RelayCommand<string> _changeNetworkCommand;
+
         public ICommand ChangeNetworkCommand
         {
             get
             {
                 return _changeNetworkCommand ??
-                       (_changeNetworkCommand = new RelayCommand<string>(config => NetworkInformations.Config = int.Parse(config)));
+                       (_changeNetworkCommand =
+                           new RelayCommand<string>(config => NetworkInformations.Config = int.Parse(config)));
             }
         }
-        
-        
+
 
         private RelayCommand<LoginViewModel> _logoutCommand;
 
@@ -184,10 +185,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand MyProfileCommand
         {
-            get
-            {
-                return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile()));
-            }
+            get { return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile())); }
         }
 
         private void MyProfile()
@@ -199,10 +197,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand HomeCommand
         {
-            get
-            {
-                return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home()));
-            }
+            get { return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home())); }
         }
 
         private void Home()
@@ -215,10 +210,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand EditorCommand
         {
-            get
-            {
-                return _editorCommand ?? (_editorCommand = new RelayCommand<object>(obj => Editor()));
-            }
+            get { return _editorCommand ?? (_editorCommand = new RelayCommand<object>(obj => Editor())); }
         }
 
         private void Editor()
@@ -251,16 +243,15 @@ namespace ClientLourd.ViewModels
 
         public string SelectedLanguage
         {
-            get
-            {
-                return _selectedLanguage.GetDescription();
-            }
+            get { return _selectedLanguage.GetDescription(); }
             set
             {
                 if (!string.IsNullOrWhiteSpace(value) && _selectedLanguage.GetDescription() != value)
                 {
                     _selectedLanguage = value.GetEnumFromDescription<Languages>();
-                    SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN) ? new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 0 }): new Tlv(SocketMessageTypes.ChangeLanguage, new { Language = 1}));
+                    SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN)
+                        ? new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 0})
+                        : new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 1}));
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(Languages));
                     NotifyPropertyChanged(nameof(CurrentLanguage));
@@ -272,7 +263,7 @@ namespace ClientLourd.ViewModels
 
         public void TriggerLangChangedEvent()
         {
-           LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
+            LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
 
@@ -280,10 +271,11 @@ namespace ClientLourd.ViewModels
         {
             get { return EnumManager.GetAllDescriptions<Languages>(); }
         }
+
         public ResourceDictionary CurrentDictionary { get; set; }
 
         public delegate void LanguageChangedHandler(object source, EventArgs args);
-        public event LanguageChangedHandler LanguageChangedEvent;
 
+        public event LanguageChangedHandler LanguageChangedEvent;
     }
 }

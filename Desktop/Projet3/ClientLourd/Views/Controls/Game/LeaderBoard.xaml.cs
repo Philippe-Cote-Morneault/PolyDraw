@@ -32,6 +32,7 @@ namespace ClientLourd.Views.Controls.Game
                 Word = e.Word;
                 OnPropertyChanged(nameof(Word));
             }
+
             foreach (dynamic info in e.Players)
             {
                 Player p = new Player(false, info["UserID"], info["Username"]);
@@ -41,13 +42,15 @@ namespace ClientLourd.Views.Controls.Game
                     var points = info["NewPoints"];
                     p.PointsRecentlyGained = points;
                 }
+
                 Players.Add(p);
             }
+
             Players = new ObservableCollection<Player>(Players.OrderByDescending(p => p.Score));
             OnPropertyChanged(nameof(Players));
         }
 
-        
+
         public ObservableCollection<Player> Players { get; set; }
         public string Word { get; set; }
         public string Winner { get; set; }

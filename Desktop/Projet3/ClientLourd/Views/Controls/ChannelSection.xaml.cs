@@ -23,18 +23,20 @@ namespace ClientLourd.Views.Controls
 
         private async void LeaveChannelClick(object sender, RoutedEventArgs e)
         {
-
-            Channel channel = (Channel)((MenuItem) sender).Tag;
-            var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}", $"{CurrentDictionary["WarningLeaveChannel"]} {channel.Name}?"));
+            Channel channel = (Channel) ((MenuItem) sender).Tag;
+            var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}",
+                $"{CurrentDictionary["WarningLeaveChannel"]} {channel.Name}?"));
             if (bool.Parse(result.ToString()))
             {
                 ((ChatViewModel) DataContext).LeaveChannelCommand.Execute(channel);
             }
         }
+
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
+
         private async void MainTree_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             try
@@ -45,7 +47,8 @@ namespace ClientLourd.Views.Controls
                 {
                     if (AvailableTree.Items.Contains(channel))
                     {
-                        var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}", $"{CurrentDictionary["JoinChannelWarning1"]} {channel.Name} {CurrentDictionary["JoinChannelWarning2"]}"));
+                        var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}",
+                            $"{CurrentDictionary["JoinChannelWarning1"]} {channel.Name} {CurrentDictionary["JoinChannelWarning2"]}"));
                         if (bool.Parse(result.ToString()))
                         {
                             ((ChatViewModel) DataContext).JoinChannelCommand.Execute(channel);
@@ -66,8 +69,9 @@ namespace ClientLourd.Views.Controls
 
         private async void DeleteChannelClick(object sender, RoutedEventArgs e)
         {
-            Channel channel = (Channel)((MenuItem) sender).Tag;
-            var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}", $"{CurrentDictionary["WarningDeleteChannel"]} {channel.Name}?"));
+            Channel channel = (Channel) ((MenuItem) sender).Tag;
+            var result = await DialogHost.Show(new ConfirmationDialog($"{CurrentDictionary["Warning"]}",
+                $"{CurrentDictionary["WarningDeleteChannel"]} {channel.Name}?"));
             if (bool.Parse(result.ToString()))
             {
                 ((ChatViewModel) DataContext).DeleteChannelCommand.Execute(channel);
@@ -76,12 +80,9 @@ namespace ClientLourd.Views.Controls
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            
-            Grid grid = (Grid)((Button) sender).Tag;
+            Grid grid = (Grid) ((Button) sender).Tag;
             grid.ContextMenu.PlacementTarget = sender as UIElement;
             grid.ContextMenu.IsOpen = true;
         }
-
-
     }
 }

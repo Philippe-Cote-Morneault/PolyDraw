@@ -5,15 +5,16 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class SingleComparatorToVisibility: IValueConverter
+    public class SingleComparatorToVisibility : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-             if (value != null && (parameter != null && (value.ToString() == parameter.ToString())))
-             {
-                 return Visibility.Visible;
-             }
-             return Visibility.Collapsed;
+            if (value != null && (parameter != null && (value.ToString() == parameter.ToString())))
+            {
+                return Visibility.Visible;
+            }
+
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

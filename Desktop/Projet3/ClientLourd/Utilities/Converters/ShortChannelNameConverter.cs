@@ -6,9 +6,8 @@ using ClientLourd.Utilities.Enums;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class ShortChannelNameConverter: IMultiValueConverter
+    public class ShortChannelNameConverter : IMultiValueConverter
     {
-        
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             string name = "";
@@ -22,19 +21,20 @@ namespace ClientLourd.Utilities.Converters
             }
             else if (channel.ID == Guid.Empty.ToString())
             {
-                name =  language == Languages.EN ? "General" : "Général";
+                name = language == Languages.EN ? "General" : "Général";
             }
             else
             {
                 name = channel.Name;
             }
+
             int length = int.Parse(parameter.ToString());
             if (name.Length <= length)
             {
                 return name;
             }
+
             return $"{name.Substring(0, length)}...";
-            
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

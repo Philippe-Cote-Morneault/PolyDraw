@@ -6,42 +6,34 @@ namespace ClientLourd.Models.Bindable
 {
     public class EditorInformation : ModelBase
     {
-
         public EditorInformation()
         {
             BrushSize = 12;
             SelectedTool = InkCanvasEditingMode.Ink;
-            SelectedTip= StylusTip.Ellipse;
-            SelectedColor= Colors.Black;
+            SelectedTip = StylusTip.Ellipse;
+            SelectedColor = Colors.Black;
             IsAnEraser = false;
         }
 
-        
 
         private StrokeCollection _strokes = new StrokeCollection();
-        
+
         private DrawingAttributes _drawingAttributes = new DrawingAttributes();
-        
-        public DrawingAttributes DrawingAttribtes 
+
+        public DrawingAttributes DrawingAttribtes
         {
-            get
-            {
-                return _drawingAttributes;
-            }
+            get { return _drawingAttributes; }
             set
             {
                 _drawingAttributes = value;
                 NotifyPropertyChanged();
             }
         }
-        
+
 
         public StrokeCollection Strokes
         {
-            get
-            {
-                return _strokes;
-            }
+            get { return _strokes; }
             set
             {
                 _strokes = value;
@@ -65,6 +57,7 @@ namespace ClientLourd.Models.Bindable
                 {
                     IsAnEraser = false;
                 }
+
                 _selectedTool = value;
                 NotifyPropertyChanged();
             }
@@ -105,10 +98,9 @@ namespace ClientLourd.Models.Bindable
             get { return _brushSize; }
             set
             {
-                
                 _brushSize = value;
                 DrawingAttribtes.Width = BrushSize;
-                DrawingAttribtes.Height =BrushSize;
+                DrawingAttribtes.Height = BrushSize;
                 NotifyPropertyChanged();
             }
         }

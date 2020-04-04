@@ -5,10 +5,11 @@ using System.Linq;
 
 namespace ClientLourd.Models.Bindable
 {
-    public class Game: ModelBase
+    public class Game : ModelBase
     {
         private ObservableCollection<Hint> _hints;
         private string _word;
+
         public Game()
         {
             Word = "";
@@ -31,6 +32,7 @@ namespace ClientLourd.Models.Bindable
         {
             get { return string.IsNullOrWhiteSpace(Word) || Hints.Where(h => h.IsSelected).Any(h => !h.IsValid); }
         }
+
         public string Word
         {
             get => _word;
@@ -44,6 +46,7 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
         public ObservableCollection<Hint> Hints
         {
             get => _hints;
@@ -62,12 +65,11 @@ namespace ClientLourd.Models.Bindable
                             }
                         };
                     }
+
                     NotifyPropertyChanged(nameof(IsInformationInvalid));
                     NotifyPropertyChanged();
                 }
             }
         }
-        
-
     }
 }

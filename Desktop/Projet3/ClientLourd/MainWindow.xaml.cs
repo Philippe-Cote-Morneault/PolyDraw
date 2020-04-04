@@ -46,9 +46,9 @@ namespace ClientLourd
             Application.Current.Dispatcher.Invoke(() =>
             {
                 DialogHost.CloseDialogCommand.Execute(null, MainWindowDialogHost);
-                
-                MainWindowDialogHost.ShowDialog(new ClosableErrorDialog(((MainViewModel)DataContext).CurrentDictionary["LostConnection"].ToString()));
 
+                MainWindowDialogHost.ShowDialog(new ClosableErrorDialog(((MainViewModel) DataContext)
+                    .CurrentDictionary["LostConnection"].ToString()));
             });
         }
 
@@ -116,11 +116,10 @@ namespace ClientLourd
                 Thread.Sleep(100);
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    ChatBox.OnChatToggle(ChatToggleButton.IsChecked != null && (bool)ChatToggleButton.IsChecked);
+                    ChatBox.OnChatToggle(ChatToggleButton.IsChecked != null && (bool) ChatToggleButton.IsChecked);
                 });
             });
         }
-
 
 
         public ChatWindow ChatWindow { get; set; }
@@ -153,7 +152,7 @@ namespace ClientLourd
             //Hide the chat button
             ChatToggleButton.IsEnabled = false;
             //Remove the chat from his parent
-            ((Grid)ChatBox.Parent)?.Children.Clear();
+            ((Grid) ChatBox.Parent)?.Children.Clear();
             //Disable notification for the current channel
             Task.Delay(100).ContinueWith((t) =>
             {
@@ -164,13 +163,13 @@ namespace ClientLourd
             });
             return ChatBox;
         }
-        
+
         /// <summary>
         /// Return the chat to the mainwindow if the parent is null or a grid
         /// </summary>
         public void ReturnTheChat()
         {
-            ((Grid)ChatBox.Parent)?.Children.Clear();
+            ((Grid) ChatBox.Parent)?.Children.Clear();
             MainWindowChatContainer.Children.Add(ChatBox);
             ChatToggleButton.IsEnabled = true;
             //Close the chat
@@ -180,7 +179,7 @@ namespace ClientLourd
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ((ChatViewModel)ChatBox.DataContext).OnChatToggle(false);
+                    ((ChatViewModel) ChatBox.DataContext).OnChatToggle(false);
                 });
             });
         }
@@ -239,15 +238,15 @@ namespace ClientLourd
             {
                 case "en-US":
                     dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
-                    ((MainViewModel)DataContext).SelectedLanguage = Languages.EN.GetDescription();
+                    ((MainViewModel) DataContext).SelectedLanguage = Languages.EN.GetDescription();
                     break;
                 case "fr-CA":
                     dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
-                    ((MainViewModel)DataContext).SelectedLanguage = Languages.FR.GetDescription();
+                    ((MainViewModel) DataContext).SelectedLanguage = Languages.FR.GetDescription();
                     break;
                 default:
                     dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
-                    ((MainViewModel)DataContext).SelectedLanguage = Languages.EN.GetDescription();
+                    ((MainViewModel) DataContext).SelectedLanguage = Languages.EN.GetDescription();
                     break;
             }
 
@@ -267,68 +266,66 @@ namespace ClientLourd
 
             if (languageSelected == Languages.EN.GetDescription())
                 dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
-            
+
             if (languageSelected == Languages.FR.GetDescription())
                 dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
             (DataContext as MainViewModel).CurrentDictionary = dict;
             Resources.MergedDictionaries[0] = dict;
             (DataContext as MainViewModel).IsSystemLanguage = false;
             (DataContext as MainViewModel).TriggerLangChangedEvent();
-
         }
 
-        public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register("ScaleValue", typeof(double), typeof(MainWindow), new UIPropertyMetadata(1.0, new PropertyChangedCallback(OnScaleValueChanged), new CoerceValueCallback(OnCoerceScaleValue)));
-    
+        public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register("ScaleValue",
+            typeof(double), typeof(MainWindow),
+            new UIPropertyMetadata(1.0, new PropertyChangedCallback(OnScaleValueChanged),
+                new CoerceValueCallback(OnCoerceScaleValue)));
+
         private static object OnCoerceScaleValue(DependencyObject o, object value)
         {
             MainWindow mainWindow = o as MainWindow;
             if (mainWindow != null)
-                return mainWindow.OnCoerceScaleValue((double)value);
+                return mainWindow.OnCoerceScaleValue((double) value);
             else
                 return value;
         }
-    
+
         private static void OnScaleValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             MainWindow mainWindow = o as MainWindow;
             if (mainWindow != null)
-                mainWindow.OnScaleValueChanged((double)e.OldValue, (double)e.NewValue);
+                mainWindow.OnScaleValueChanged((double) e.OldValue, (double) e.NewValue);
         }
-    
+
         protected virtual double OnCoerceScaleValue(double value)
         {
             if (double.IsNaN(value))
                 return 1.0f;
-    
+
             value = Math.Max(0.1, value);
             return value;
         }
-    
+
         protected virtual void OnScaleValueChanged(double oldValue, double newValue)
         {
-    
         }
-    
+
         public double ScaleValue
-        {            
-            get => (double)GetValue(ScaleValueProperty);
-            set
-            {
-                SetValue(ScaleValueProperty, value);
-            }
+        {
+            get => (double) GetValue(ScaleValueProperty);
+            set { SetValue(ScaleValueProperty, value); }
         }
-    
+
         private void MainGrid_SizeChanged(object sender, EventArgs e)
         {
             CalculateScale();
         }
-    
+
         private void CalculateScale()
         {
             double yScale = ActualHeight / 1080;
             double xScale = ActualWidth / 1920;
             double value = Math.Min(xScale, yScale);
-            ScaleValue = (double)OnCoerceScaleValue(PolyDraw, value);
+            ScaleValue = (double) OnCoerceScaleValue(PolyDraw, value);
         }
 
         private void LogoutItem_OnMouseUp(object sender, MouseButtonEventArgs e)

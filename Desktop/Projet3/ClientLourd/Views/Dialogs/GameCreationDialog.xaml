@@ -9,271 +9,309 @@
              xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
-             mc:Ignorable="d"
-             >
+             mc:Ignorable="d">
     <UserControl.DataContext>
-        <viewModels:GameCreationViewModel/>
+        <viewModels:GameCreationViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter"/>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-        <converters:EnumTranslationConverter x:Key="EnumTranslationConverter"></converters:EnumTranslationConverter>
+        <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <converters:EnumTranslationConverter x:Key="EnumTranslationConverter" />
 
     </UserControl.Resources>
     <materialDesign:DialogHost Identifier="Dialog">
 
         <DockPanel Height="975">
-            <Button DockPanel.Dock="Top" HorizontalAlignment="Right"  Command="{Binding CloseCommand}" >
-            <materialDesign:PackIcon Kind="Close" />
-        </Button>
-        <materialDesign:Transitioner SelectedIndex="0">
-            <!-- Word slide-->
-            <materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                      <materialDesign:SlideOutWipe/>
+            <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
+                <materialDesign:PackIcon Kind="Close" />
+            </Button>
+            <materialDesign:Transitioner SelectedIndex="0">
+                <!-- Word slide-->
+                <materialDesign:TransitionerSlide>
+                    <materialDesign:TransitionerSlide.BackwardWipe>
+                        <materialDesign:SlideOutWipe />
                     </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                      <materialDesign:SlideWipe/>
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideWipe />
                     </materialDesign:TransitionerSlide.ForwardWipe>
-                <DockPanel >
-                    <Button Margin="5" DockPanel.Dock="Bottom" Command="{Binding ValidateGameCommand}" Click="ClearCanvasClick"  Content="{DynamicResource Next}">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
-                                <Binding ElementName="WordBox" Path="(Validation.HasError)" />
-                                <Binding Path="Game.IsInformationInvalid"/>
-                            </MultiBinding>
-                        </Button.IsEnabled>
-                    </Button>
-                    
-                    <StackPanel>
-                            <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35" Text="{DynamicResource CreateNewGame}"></TextBlock>
+                    <DockPanel>
+                        <Button Margin="5" DockPanel.Dock="Bottom" Command="{Binding ValidateGameCommand}"
+                                Click="ClearCanvasClick" Content="{DynamicResource Next}">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}"
+                                              Mode="TwoWay">
+                                    <Binding ElementName="WordBox" Path="(Validation.HasError)" />
+                                    <Binding Path="Game.IsInformationInvalid" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
 
-                        <StackPanel Margin="0 20 0 20">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="TagText" Width="24" Height="24" Margin="5" />
-                                    <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Text="{DynamicResource TypeWord}"></TextBlock>
+                        <StackPanel>
+                            <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35"
+                                       Text="{DynamicResource CreateNewGame}" />
+
+                            <StackPanel Margin="0 20 0 20">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="TagText" Width="24" Height="24" Margin="5" />
+                                    <TextBlock HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"
+                                               Text="{DynamicResource TypeWord}" />
+                                </StackPanel>
+                                <TextBox MaxLength="20" HorizontalAlignment="Center" Width="400"
+                                         materialDesign:HintAssist.Hint="{DynamicResource Word}" Name="WordBox">
+                                    <TextBox.Text>
+                                        <Binding Path="Game.Word" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <rules:WordRules />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
-                            <TextBox MaxLength="20" HorizontalAlignment="Center" Width="400"
-                                     materialDesign:HintAssist.Hint="{DynamicResource Word}" Name="WordBox">
-                                <TextBox.Text>
-                                    <Binding Path="Game.Word" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <rules:WordRules />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
-                            </TextBox>
-                        </StackPanel>
-                        <StackPanel Margin="0 20 0 20">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="HelpCircle" VerticalAlignment="Bottom" Width="24" Height="24" Margin="5" />
-                                <TextBlock  FontSize="24" HorizontalAlignment="Center" FontWeight="Bold">
-                                    <Run Text="{DynamicResource WriteHints1}"/>  
-                                    <ComboBox ItemsSource="{Binding NumberOfHints}" SelectedItem="{Binding SelectedNumberOfHints}"/>
-                                    <Run Text="{DynamicResource WriteHints2}"/>
-                                    <Run Foreground="Red"
-                                         FontWeight="Bold"
-                                         Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
-                                </TextBlock>
+                            <StackPanel Margin="0 20 0 20">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="HelpCircle" VerticalAlignment="Bottom" Width="24"
+                                                             Height="24" Margin="5" />
+                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold">
+                                        <Run Text="{DynamicResource WriteHints1}" />
+                                        <ComboBox ItemsSource="{Binding NumberOfHints}"
+                                                  SelectedItem="{Binding SelectedNumberOfHints}" />
+                                        <Run Text="{DynamicResource WriteHints2}" />
+                                        <Run Foreground="Red"
+                                             FontWeight="Bold"
+                                             Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <ScrollViewer MaxHeight="150">
+                                    <ItemsControl ItemsSource="{Binding Hints}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center"
+                                                         Width="400"
+                                                         KeyDown="UIElement_OnKeyDown"
+                                                         materialDesign:HintAssist.Hint="{DynamicResource Hint}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Text" UpdateSourceTrigger="PropertyChanged" />
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
                             </StackPanel>
-                            <ScrollViewer MaxHeight="150">
-                                <ItemsControl ItemsSource="{Binding Hints}">
-                                    <ItemsControl.ItemTemplate>
+                            <StackPanel Margin="0 20 0 20">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Skull" Width="24" Height="24" Margin="5" />
+                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold">
+                                        <Run Text="{DynamicResource WordDifficulty}" />
+                                        <Run
+                                            Foreground="Red"
+                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <ComboBox Width="400" ItemsSource="{Binding DifficultyLevels}"
+                                          SelectedItem="{Binding SelectedDifficulty}">
+                                    <ComboBox.ItemTemplate>
                                         <DataTemplate>
-                                        <TextBox MaxLength="30" Margin="5" HorizontalAlignment="Center" Width="400"
-                                                 KeyDown="UIElement_OnKeyDown"
-                                                 materialDesign:HintAssist.Hint="{DynamicResource Hint}">
-                                            <TextBox.Text>
-                                                <Binding Path="Text" UpdateSourceTrigger="PropertyChanged"/>
-                                            </TextBox.Text>
-                                        </TextBox>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource EnumTranslationConverter}}" />
                                         </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </StackPanel>
-                        <StackPanel Margin="0 20 0 20">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Skull" Width="24" Height="24" Margin="5" />
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold">
-                                   <Run Text="{DynamicResource WordDifficulty}"/> 
-                                    <Run   
-                                       Foreground="Red"
-                                       Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
-                                </TextBlock>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </StackPanel>
-                            <ComboBox Width="400" ItemsSource="{Binding DifficultyLevels}"  SelectedItem="{Binding SelectedDifficulty}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource EnumTranslationConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
-                        
-                        <StackPanel HorizontalAlignment="Center"  Margin="0 20 0 20">
-                            <TextBlock FontSize="24" FontWeight="Bold" >
-                                <Run Text="{DynamicResource DrawingWay}"/>
-                            </TextBlock>
-                            <UniformGrid
-                                Columns="2"
-                                Cursor="Hand"
-                                Margin="4">
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0 20 0 20">
+                                <TextBlock FontSize="24" FontWeight="Bold">
+                                    <Run Text="{DynamicResource DrawingWay}" />
+                                </TextBlock>
+                                <UniformGrid
+                                    Columns="2"
+                                    Cursor="Hand"
+                                    Margin="4">
                                     <RadioButton
-                                    Style="{StaticResource MaterialDesignTabRadioButton}"
-                                    Margin="4"
-                                    Name="UploadToggle"
-                                    Width="{Binding ElementName=UploadText, Path=Width}"
-                                    Height="{Binding ElementName=UploadText, Path=Height}"
-                                    IsChecked="{Binding IsUploadModeSelected}">
+                                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                                        Margin="4"
+                                        Name="UploadToggle"
+                                        Width="{Binding ElementName=UploadText, Path=Width}"
+                                        Height="{Binding ElementName=UploadText, Path=Height}"
+                                        IsChecked="{Binding IsUploadModeSelected}">
                                         <RadioButton.Content>
                                             <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon Height="30" Width="30" Kind="Image" VerticalAlignment="Center"/>
-                                                <TextBlock FontSize="18" Name="UploadText" Text="{DynamicResource ImageUploaded}"/>
+                                                <materialDesign:PackIcon Height="30" Width="30" Kind="Image"
+                                                                         VerticalAlignment="Center" />
+                                                <TextBlock FontSize="18" Name="UploadText"
+                                                           Text="{DynamicResource ImageUploaded}" />
                                             </StackPanel>
                                         </RadioButton.Content>
                                     </RadioButton>
 
                                     <RadioButton
-                                    Style="{StaticResource MaterialDesignTabRadioButton}"
-                                    Margin="4"
-                                    Width="{Binding ElementName=UploadText, Path=Width}"
-                                    Height="{Binding ElementName=UploadText, Path=Height}"
-                                    IsChecked="True">
+                                        Style="{StaticResource MaterialDesignTabRadioButton}"
+                                        Margin="4"
+                                        Width="{Binding ElementName=UploadText, Path=Width}"
+                                        Height="{Binding ElementName=UploadText, Path=Height}"
+                                        IsChecked="True">
                                         <RadioButton.Content>
                                             <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon Height="30" Width="30" Kind="Draw" VerticalAlignment="Center"/>
-                                                <TextBlock FontSize="18" Name="DrawText" Text="{DynamicResource ManualDraw}"/>
+                                                <materialDesign:PackIcon Height="30" Width="30" Kind="Draw"
+                                                                         VerticalAlignment="Center" />
+                                                <TextBlock FontSize="18" Name="DrawText"
+                                                           Text="{DynamicResource ManualDraw}" />
                                             </StackPanel>
-                                    </RadioButton.Content>
-                                </RadioButton>
-                            </UniformGrid>
+                                        </RadioButton.Content>
+                                    </RadioButton>
+                                </UniformGrid>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </DockPanel>
-                <!-- Drawing or upload slide-->
-            </materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide >
+                    </DockPanel>
+                    <!-- Drawing or upload slide-->
+                </materialDesign:TransitionerSlide>
+                <materialDesign:TransitionerSlide>
                     <materialDesign:TransitionerSlide.BackwardWipe>
-                      <materialDesign:SlideOutWipe/>
+                        <materialDesign:SlideOutWipe />
                     </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                      <materialDesign:SlideWipe/>
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideWipe />
                     </materialDesign:TransitionerSlide.ForwardWipe>
-                    <DockPanel >
+                    <DockPanel>
                         <Grid DockPanel.Dock="Bottom">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Click="CancelCurrentGame" Content="{DynamicResource Previous}" />
-                            <Button Grid.Column="1" Margin="5" Click="UploadImageClick" Content="{DynamicResource Next}" />
+                            <Button Grid.Column="0" Margin="5"
+                                    Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                                    Click="CancelCurrentGame" Content="{DynamicResource Previous}" />
+                            <Button Grid.Column="1" Margin="5" Click="UploadImageClick"
+                                    Content="{DynamicResource Next}" />
                         </Grid>
                         <!-- Editor -->
-                        <StackPanel Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"  DockPanel.Dock="Top" Orientation="Vertical">
-                            <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel
+                            Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}"
+                            DockPanel.Dock="Top" Orientation="Vertical">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Draw" />
                                 <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
                                            Text="{DynamicResource DrawRepresentation}" Margin="0 0 10 0" />
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red"
+                                <TextBlock FontSize="24" HorizontalAlignment="Center" TextWrapping="Wrap"
+                                           Foreground="Red"
                                            FontWeight="Bold"
                                            Text="{Binding ElementName=WordBox, Path=Text, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </StackPanel>
-                        <Grid Name="EditorGrid" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}">
-                            <controls:Editor x:Name="EditorView"/>
+                        <Grid Name="EditorGrid"
+                              Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource InverseBoolToVisConverter}}">
+                            <controls:Editor x:Name="EditorView" />
                         </Grid>
                         <!-- Upload image  -->
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                                <StackPanel  HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
-                                    <TextBlock Margin="0 0 10 0" FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                               Text="{DynamicResource UploadImage}" />
-                                <Button Click="AddImageClick" Content="{DynamicResource Upload}"></Button>
-                                </StackPanel>
-                                <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding  Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                    <TextBlock VerticalAlignment="Center"  Style="{StaticResource MaterialDesignButtonTextBlock}"  Text="{Binding Path=Image}"/>
-                                    <Button Command="{Binding RemoveImageCommand}"   Style="{StaticResource MaterialDesignFlatButton}" Content="{materialDesign:PackIcon Kind=Delete}" />
-                                </StackPanel>
-                            </StackPanel >
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <materialDesign:PackIcon Margin="5" Width="24" Height="24" Kind="Image" />
+                                <TextBlock Margin="0 0 10 0" FontSize="24" HorizontalAlignment="Center"
+                                           FontWeight="Bold"
+                                           Text="{DynamicResource UploadImage}" />
+                                <Button Click="AddImageClick" Content="{DynamicResource Upload}" />
+                            </StackPanel>
+                            <StackPanel Margin="5" Orientation="Horizontal" HorizontalAlignment="Center"
+                                        Visibility="{Binding  Path=IsImageUpload, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock VerticalAlignment="Center"
+                                           Style="{StaticResource MaterialDesignButtonTextBlock}"
+                                           Text="{Binding Path=Image}" />
+                                <Button Command="{Binding RemoveImageCommand}"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Content="{materialDesign:PackIcon Kind=Delete}" />
+                            </StackPanel>
+                        </StackPanel>
                     </DockPanel>
-            </materialDesign:TransitionerSlide>
-            
-            <!-- preview slide-->
-            <materialDesign:TransitionerSlide>
-                <materialDesign:TransitionerSlide.BackwardWipe>
-                      <materialDesign:SlideOutWipe/>
+                </materialDesign:TransitionerSlide>
+
+                <!-- preview slide-->
+                <materialDesign:TransitionerSlide>
+                    <materialDesign:TransitionerSlide.BackwardWipe>
+                        <materialDesign:SlideOutWipe />
                     </materialDesign:TransitionerSlide.BackwardWipe>
-                <materialDesign:TransitionerSlide.ForwardWipe>
-                      <materialDesign:SlideWipe/>
+                    <materialDesign:TransitionerSlide.ForwardWipe>
+                        <materialDesign:SlideWipe />
                     </materialDesign:TransitionerSlide.ForwardWipe>
-                <materialDesign:DrawerHost Name="CurrentDrawer">
+                    <materialDesign:DrawerHost Name="CurrentDrawer">
                         <materialDesign:DrawerHost.RightDrawerContent>
-                        <!-- Upload image settings-->
-                            <StackPanel  HorizontalAlignment="Center" Orientation="Vertical"   >
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
+                            <!-- Upload image settings-->
+                            <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                     <StackPanel Margin="10" Orientation="Vertical">
                                         <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                                   Text="Black level threshold (%)"/>
+                                                   Text="Black level threshold (%)" />
                                         <Slider
-                                          Minimum="0"
-                                          Maximum="100"
-                                          Style="{StaticResource MaterialDesignDiscreteSlider}"
-                                          Value="{Binding BlackLevelThreshold}"/>
+                                            Minimum="0"
+                                            Maximum="100"
+                                            Style="{StaticResource MaterialDesignDiscreteSlider}"
+                                            Value="{Binding BlackLevelThreshold}" />
                                     </StackPanel>
                                     <StackPanel Margin="10" Orientation="Vertical">
                                         <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                                   Text="Brush size"/>
+                                                   Text="Brush size" />
                                         <Slider
-                                          Minimum="1"
-                                          Maximum="100"
-                                          Value="{Binding BrushSize}"
-                                          Style="{StaticResource MaterialDesignDiscreteSlider}"/>
+                                            Minimum="1"
+                                            Maximum="100"
+                                            Value="{Binding BrushSize}"
+                                            Style="{StaticResource MaterialDesignDiscreteSlider}" />
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
                         </materialDesign:DrawerHost.RightDrawerContent>
-                    <DockPanel>
-                        <Grid DockPanel.Dock="Bottom">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Margin="5" Click="ClearPreviewCanvas" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" IsEnabled="{Binding PreviewGUIEnabled}" Content="{DynamicResource Previous}" />
-                            <Button Grid.Column="1" Margin="5" Click="OnConfirm" IsEnabled="{Binding PreviewGUIEnabled}" Content="{DynamicResource Confirm}" />
-                        </Grid>
-                        <!-- Play preview -->
-                        <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Orientation="Vertical">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="{DynamicResource DrawingMode}"/>
-                                    <ComboBox IsEnabled="{Binding PreviewGUIEnabled}" SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=PotraceModes}" Margin="10 3 10 10" materialDesign:HintAssist.Hint="Preview effect">
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Margin="5" Click="ClearPreviewCanvas"
+                                        Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}"
+                                        IsEnabled="{Binding PreviewGUIEnabled}" Content="{DynamicResource Previous}" />
+                                <Button Grid.Column="1" Margin="5" Click="OnConfirm"
+                                        IsEnabled="{Binding PreviewGUIEnabled}" Content="{DynamicResource Confirm}" />
+                            </Grid>
+                            <!-- Play preview -->
+                            <StackPanel HorizontalAlignment="Center" DockPanel.Dock="Top" Orientation="Vertical">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
+                                               Text="{DynamicResource DrawingMode}" />
+                                    <ComboBox IsEnabled="{Binding PreviewGUIEnabled}"
+                                              SelectedItem="{Binding Path=SelectedMode, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding Path=PotraceModes}" Margin="10 3 10 10"
+                                              materialDesign:HintAssist.Hint="Preview effect">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding Converter={StaticResource EnumTranslationConverter}}"/>
+                                                <TextBlock
+                                                    Text="{Binding Converter={StaticResource EnumTranslationConverter}}" />
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <Button Content="{materialDesign:PackIcon Kind=Play}"
+                                            ToolTip="{DynamicResource PlayPreview}"
+                                            IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center"
+                                            Command="{Binding PlayPreviewCommand}" />
+                                    <ToggleButton
+                                        Margin="5"
+                                        HorizontalAlignment="Right"
+                                        Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        IsChecked="{Binding ElementName=CurrentDrawer, Path=IsRightDrawerOpen, Mode=TwoWay}"
+                                        Content="{materialDesign:PackIcon Kind=Settings}"
+                                        Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}" />
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Button Content="{materialDesign:PackIcon Kind=Play}" ToolTip="{DynamicResource PlayPreview}"  IsEnabled="{Binding PreviewGUIEnabled}" HorizontalAlignment="Center" Command="{Binding PlayPreviewCommand}" />
-                                <ToggleButton 
-                                    Margin="5"
-                                    HorizontalAlignment="Right"
-                                    Visibility="{Binding ElementName=UploadToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                    IsChecked="{Binding ElementName=CurrentDrawer, Path=IsRightDrawerOpen, Mode=TwoWay}"
-                                    Content="{materialDesign:PackIcon Kind=Settings}"
-                                    Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"/>
-                            </StackPanel>
-                        </StackPanel>
-                        <!-- preview -->
-                        <materialDesign:Card Width="1125" Height="750" materialDesign:ShadowAssist.ShadowDepth="Depth4" DockPanel.Dock="Right" Margin="5">
-                            <InkCanvas x:Name="PreviewCanvas" Width="1125" Height="750" IsEnabled="False" />
-                        </materialDesign:Card>
-                    </DockPanel>
-                </materialDesign:DrawerHost>
-            </materialDesign:TransitionerSlide>
-        </materialDesign:Transitioner>
-    </DockPanel>
+                            <!-- preview -->
+                            <materialDesign:Card Width="1125" Height="750"
+                                                 materialDesign:ShadowAssist.ShadowDepth="Depth4"
+                                                 DockPanel.Dock="Right" Margin="5">
+                                <InkCanvas x:Name="PreviewCanvas" Width="1125" Height="750" IsEnabled="False" />
+                            </materialDesign:Card>
+                        </DockPanel>
+                    </materialDesign:DrawerHost>
+                </materialDesign:TransitionerSlide>
+            </materialDesign:Transitioner>
+        </DockPanel>
     </materialDesign:DialogHost>
 </UserControl>

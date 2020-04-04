@@ -13,13 +13,13 @@ using System.Windows.Controls;
 
 namespace ClientLourd.Utilities.ValidationRules
 {
-    class LobbyNameRule: ValidationRule
+    class LobbyNameRule : ValidationRule
     {
         public string Language
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
 
@@ -30,14 +30,15 @@ namespace ClientLourd.Utilities.ValidationRules
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string lobbyName = (string)value;
+            string lobbyName = (string) value;
 
             if (!IsAlphaNumerical(lobbyName))
             {
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The lobby name must be alphanumeric.");
                 else
-                    return new ValidationResult(false, "Le nom de la salle d'attente ne doit contenir que des caractères alphanumériques.");
+                    return new ValidationResult(false,
+                        "Le nom de la salle d'attente ne doit contenir que des caractères alphanumériques.");
             }
 
             return ValidationResult.ValidResult;

@@ -11,18 +11,18 @@ using ClientLourd.Properties;
 
 namespace ClientLourd.Utilities.ValidationRules
 {
-    public class WordRules: ValidationRule
+    public class WordRules : ValidationRule
     {
         public string Language
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-
             string word = (string) value;
             if (word.Length > 20)
             {
@@ -39,6 +39,7 @@ namespace ClientLourd.Utilities.ValidationRules
                 else
                     return new ValidationResult(false, "Le mot ne peut pas être vide");
             }
+
             Regex spaceRegex = new Regex(@"\s");
             if (spaceRegex.IsMatch(word))
             {
@@ -46,11 +47,9 @@ namespace ClientLourd.Utilities.ValidationRules
                     return new ValidationResult(false, "White space characters are not allowed");
                 else
                     return new ValidationResult(false, "Les espaces ne sont pas des caractères permis");
-
-
             }
-            
-            return new ValidationResult(true,"");
+
+            return new ValidationResult(true, "");
         }
     }
 }

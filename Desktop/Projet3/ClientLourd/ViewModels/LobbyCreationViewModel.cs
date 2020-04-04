@@ -18,7 +18,7 @@ using System.Windows.Input;
 
 namespace ClientLourd.ViewModels
 {
-    public class LobbyCreationViewModel: ViewModelBase
+    public class LobbyCreationViewModel : ViewModelBase
     {
         public LobbyCreationViewModel()
         {
@@ -32,31 +32,28 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    ?.SessionInformations;
             }
         }
 
 
         public SocketClient SocketClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
-        
 
         private DifficultyLevel _selectedDifficulty;
 
         public string SelectedDifficulty
         {
-            get
-            {
-                return _selectedDifficulty.GetDescription();
-            }
+            get { return _selectedDifficulty.GetDescription(); }
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
@@ -82,17 +79,17 @@ namespace ClientLourd.ViewModels
                 if (!string.IsNullOrWhiteSpace(value))
                 {
                     _selectedMode = value.GetEnumFromDescription<GameModes>();
-                    
+
                     if (_selectedMode == GameModes.Coop)
                     {
                         SelectedNumberOfPlayers = 4;
                     }
-                    
+
                     if (_selectedMode == GameModes.Solo)
                     {
                         SelectedNumberOfPlayers = 1;
                     }
-                    
+
                     if (_selectedMode == GameModes.FFA)
                     {
                         SelectedNumberOfPlayers = 8;
@@ -111,6 +108,7 @@ namespace ClientLourd.ViewModels
 
 
         private int _selectedNumberOfPlayers;
+
         public int SelectedNumberOfPlayers
         {
             get => _selectedNumberOfPlayers;
@@ -129,13 +127,13 @@ namespace ClientLourd.ViewModels
             get
             {
                 if (SelectedMode == GameModes.Solo.GetDescription())
-                    return new List<int>() { 1 };
+                    return new List<int>() {1};
 
                 if (SelectedMode == GameModes.FFA.GetDescription())
-                    return new List<int>() { 8, 7, 6, 5, 4, 3, 2 };
+                    return new List<int>() {8, 7, 6, 5, 4, 3, 2};
 
                 if (SelectedMode == GameModes.Coop.GetDescription())
-                    return new List<int>() { 4, 3, 2 };
+                    return new List<int>() {4, 3, 2};
 
                 NotifyPropertyChanged();
                 return new List<int>();
@@ -144,6 +142,7 @@ namespace ClientLourd.ViewModels
 
 
         private int _selectedNumberOfRounds;
+
         public int SelectedNumberOfRounds
         {
             get => _selectedNumberOfRounds;
@@ -159,13 +158,9 @@ namespace ClientLourd.ViewModels
 
         public List<int> NumberOfRoundsList
         {
-            get { return new List<int>() {1,2,3,4,5 }; }
+            get { return new List<int>() {1, 2, 3, 4, 5}; }
         }
 
-
-
-
-       
 
         public override void AfterLogOut()
         {
@@ -179,7 +174,9 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _createLobbyCommand ?? (_createLobbyCommand = new RelayCommand<string>(lobbyName => CreateLobby(), lobbyName => LobbyNameValid(lobbyName)));
+                return _createLobbyCommand ?? (_createLobbyCommand =
+                    new RelayCommand<string>(lobbyName => CreateLobby(),
+                        lobbyName => LobbyNameValid(lobbyName)));
             }
         }
 
@@ -187,7 +184,8 @@ namespace ClientLourd.ViewModels
         {
             try
             {
-                await RestClient.PostGroup(SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(), SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>(), SelectedNumberOfRounds);
+                await RestClient.PostGroup(SelectedNumberOfPlayers, SelectedMode.GetEnumFromDescription<GameModes>(),
+                    SelectedDifficulty.GetEnumFromDescription<DifficultyLevel>(), SelectedNumberOfRounds);
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
@@ -195,7 +193,7 @@ namespace ClientLourd.ViewModels
                 await DialogHost.Show(new ClosableErrorDialog(e), "Dialog");
             }
         }
-        
+
         private bool LobbyNameValid(string lobbyName)
         {
             return LobbyNameRule.IsAlphaNumerical(lobbyName);
@@ -213,7 +211,8 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _closeDialog ?? (_closeDialog = new RelayCommand<object>(param => DialogHost.CloseDialogCommand.Execute(null, null)));
+                return _closeDialog ?? (_closeDialog =
+                    new RelayCommand<object>(param => DialogHost.CloseDialogCommand.Execute(null, null)));
             }
         }
     }

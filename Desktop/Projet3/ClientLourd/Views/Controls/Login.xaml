@@ -22,98 +22,98 @@
 
     </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Right"  FontSize="15" Margin="0 -80 50 0">
-                    <Hyperlink Command="{Binding ChangeLangCommand}">
-                        <TextBlock Text="{Binding Language, Converter={StaticResource LanguageInverseConverter}}"></TextBlock>
-                    </Hyperlink>
-                </TextBlock>
-    <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
-        <Grid
-            IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}">
-            <Grid.RowDefinitions>
+        <TextBlock HorizontalAlignment="Right" FontSize="15" Margin="0 -80 50 0">
+            <Hyperlink Command="{Binding ChangeLangCommand}">
+                <TextBlock Text="{Binding Language, Converter={StaticResource LanguageInverseConverter}}" />
+            </Hyperlink>
+        </TextBlock>
+        <materialDesign:Card MaxHeight="600" Width="300" Margin="0 20 0 20">
+            <Grid
+                IsEnabled="{Binding Path=IsWaiting, ElementName=Control, Converter={StaticResource InverseBooleanConverter}, UpdateSourceTrigger=PropertyChanged}">
+                <Grid.RowDefinitions>
 
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
 
-            </Grid.RowDefinitions>
+                </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0">
+                <StackPanel Grid.Row="0">
 
-                <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Padding="0 10 0 0" Text="{DynamicResource Welcome}"></TextBlock>
+                    <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Padding="0 10 0 0"
+                               Text="{DynamicResource Welcome}" />
 
-                
 
-            </StackPanel>
+                </StackPanel>
 
-            <!--Logo-->
-            <StackPanel Grid.Row="1">
-                <!-- Might change if we translate  ClientLourd in English-->
-                <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
-                       Source="../../Resources/blacklogo.png" />
-            </StackPanel>
+                <!--Logo-->
+                <StackPanel Grid.Row="1">
+                    <!-- Might change if we translate  ClientLourd in English-->
+                    <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
+                           Source="../../Resources/blacklogo.png" />
+                </StackPanel>
 
-            <!--Username-->
-            <StackPanel Grid.Row="2">
-                <TextBox
-                    TextChanged="NameTextBox_OnTextChanged"
-                    Margin="20 0 20 0"
-                    x:Name="NameTextBox"
-                    MaxLength="12"
-                    materialDesign:HintAssist.Hint="{DynamicResource Username}"
-                    materialDesign:HintAssist.HelperText="">
-                    <TextBox.Text>
-                        <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:UsernameRule ValidatesOnTargetUpdated="False" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
+                <!--Username-->
+                <StackPanel Grid.Row="2">
+                    <TextBox
+                        TextChanged="NameTextBox_OnTextChanged"
+                        Margin="20 0 20 0"
+                        x:Name="NameTextBox"
+                        MaxLength="12"
+                        materialDesign:HintAssist.Hint="{DynamicResource Username}"
+                        materialDesign:HintAssist.HelperText="">
+                        <TextBox.Text>
+                            <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <rules:UsernameRule ValidatesOnTargetUpdated="False" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
 
-            <!--Password-->
-            <StackPanel Grid.Row="3">
-                <PasswordBox
-                    PasswordChanged="PasswordBox_OnPasswordChanged"
-                    Margin="20 0 20 0"
-                    x:Name="PasswordBox"
-                    MaxLength="64"
-                    materialDesign:HintAssist.Hint="{DynamicResource Password}"
-                    materialDesign:TextFieldAssist.HasClearButton="True"
-                    materialDesign:HintAssist.HelperText="{DynamicResource PasswordValidator}" />
-                <CheckBox Name="RememberMeCheckBox" Margin="20 20 20 0" Content="{DynamicResource RememberMe}"/>
-            </StackPanel>
+                <!--Password-->
+                <StackPanel Grid.Row="3">
+                    <PasswordBox
+                        PasswordChanged="PasswordBox_OnPasswordChanged"
+                        Margin="20 0 20 0"
+                        x:Name="PasswordBox"
+                        MaxLength="64"
+                        materialDesign:HintAssist.Hint="{DynamicResource Password}"
+                        materialDesign:TextFieldAssist.HasClearButton="True"
+                        materialDesign:HintAssist.HelperText="{DynamicResource PasswordValidator}" />
+                    <CheckBox Name="RememberMeCheckBox" Margin="20 20 20 0" Content="{DynamicResource RememberMe}" />
+                </StackPanel>
 
-            <!--Login button-->
-            <StackPanel Grid.Row="4">
-                
-            <Button 
-                    IsDefault="True"
-                    Margin="40 0 40 0"
-                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                    Command="{Binding Path=LoginCommand}"
-                Content="{DynamicResource Login}">
-                <Button.CommandParameter>
-                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
-                        <Binding ElementName="NameTextBox" Path="Text" />
-                        <Binding ElementName="PasswordBox" />
-                        <Binding ElementName="RememberMeCheckBox" Path="IsChecked" />
-                        <Binding ElementName="Control" Path="IsBearerActive" />
-                    </MultiBinding>
-                </Button.CommandParameter>
-                
-            </Button>
-                <TextBlock HorizontalAlignment="Center" >
-                    <Hyperlink Command="{Binding SignUpCommand}">
-                        <TextBlock Text="{DynamicResource Register}"></TextBlock>
-                    </Hyperlink>
-                </TextBlock>
-            </StackPanel>
+                <!--Login button-->
+                <StackPanel Grid.Row="4">
 
-        </Grid>
-    </materialDesign:Card>
+                    <Button
+                        IsDefault="True"
+                        Margin="40 0 40 0"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        Command="{Binding Path=LoginCommand}"
+                        Content="{DynamicResource Login}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                <Binding ElementName="NameTextBox" Path="Text" />
+                                <Binding ElementName="PasswordBox" />
+                                <Binding ElementName="RememberMeCheckBox" Path="IsChecked" />
+                                <Binding ElementName="Control" Path="IsBearerActive" />
+                            </MultiBinding>
+                        </Button.CommandParameter>
+
+                    </Button>
+                    <TextBlock HorizontalAlignment="Center">
+                        <Hyperlink Command="{Binding SignUpCommand}">
+                            <TextBlock Text="{DynamicResource Register}" />
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+            </Grid>
+        </materialDesign:Card>
     </Grid>
 </UserControl>

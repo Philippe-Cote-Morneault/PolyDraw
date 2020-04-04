@@ -10,63 +10,78 @@
              Name="Control"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
-        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
-        <converter:BoolToVisibilityConverter x:Key="CollapsedIfTrue" TrueValue="Collapsed" FalseValue="Visible"/>
-        <converter:BoolToVisibilityConverter x:Key="VisibleIfTrue" TrueValue="Visible" FalseValue="Collapsed"/>
-        <converter:ModeAndIsCPUToVisibility x:Key="ModeAndIsCPUToVisibility"/>
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter" />
+        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter" />
+        <converter:BoolToVisibilityConverter x:Key="CollapsedIfTrue" TrueValue="Collapsed" FalseValue="Visible" />
+        <converter:BoolToVisibilityConverter x:Key="VisibleIfTrue" TrueValue="Visible" FalseValue="Collapsed" />
+        <converter:ModeAndIsCPUToVisibility x:Key="ModeAndIsCPUToVisibility" />
 
-        
-        <Storyboard x:Key="PointsAnimations" >
-            <DoubleAnimation 
-                Storyboard.TargetProperty="(TextBlock.Opacity)" 
-                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
 
-            <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="2.5" Duration="0:0:2" />
+        <Storyboard x:Key="PointsAnimations">
+            <DoubleAnimation
+                Storyboard.TargetProperty="(TextBlock.Opacity)"
+                From="0" To="1" Duration="0:0:1" AutoReverse="True" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="2.5" Duration="0:0:2" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="2.5" Duration="0:0:2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="2.5" Duration="0:0:2" />
         </Storyboard>
     </UserControl.Resources>
     <Grid Margin="10">
         <materialDesign:Card>
             <StackPanel>
                 <!-- Bots list -->
-                <StackPanel Orientation="Horizontal"  Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" >
-                    <materialDesign:PackIcon Height="25" Width="25" Kind="Robot" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 18 8 0"></materialDesign:PackIcon>
-                    <TextBlock VerticalAlignment="Center" Margin="0 20 0 0" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="{DynamicResource Drawer}"></TextBlock>
+                <StackPanel Orientation="Horizontal"
+                            Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}">
+                    <materialDesign:PackIcon Height="25" Width="25" Kind="Robot" VerticalAlignment="Center"
+                                             HorizontalAlignment="Center" Margin="20 18 8 0" />
+                    <TextBlock VerticalAlignment="Center" Margin="0 20 0 0" FontSize="20" HorizontalAlignment="Center"
+                               FontWeight="Bold" Text="{DynamicResource Drawer}" />
                 </StackPanel>
-                
-                <Separator Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
-                <ItemsControl Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}" AlternationCount="{Binding Players.Count}" ItemsSource="{Binding Players}">
+                <Separator
+                    Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}"
+                    Margin="10" />
+
+                <ItemsControl
+                    Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}"
+                    AlternationCount="{Binding Players.Count}" ItemsSource="{Binding Players}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Margin="10" Orientation="Vertical"/>
+                            <StackPanel Margin="10" Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical" Visibility="{Binding User.IsCPU, Converter={StaticResource VisibleIfTrue}}">
+                            <StackPanel Orientation="Vertical"
+                                        Visibility="{Binding User.IsCPU, Converter={StaticResource VisibleIfTrue}}">
                                 <StackPanel Orientation="Horizontal" Margin="0 0 0 30">
-                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding User}" >
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                         Content="{Binding User.Username}"
+                                                         Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                         CommandParameter="{Binding User}">
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
                                                 <Setter Property="Background" Value="WhiteSmoke" />
                                             </Style>
                                         </materialDesign:Chip.Style>
                                         <materialDesign:Chip.Icon>
-                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
                                         </materialDesign:Chip.Icon>
                                     </materialDesign:Chip>
                                     <!-- Icon -->
-                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"  VerticalAlignment="Center" Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"
+                                                             VerticalAlignment="Center"
+                                                             Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"
+                                                             VerticalAlignment="Center"
+                                                             Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </StackPanel>
-                                <Separator/>
+                                <Separator />
 
                             </StackPanel>
 
@@ -75,15 +90,17 @@
                 </ItemsControl>
 
                 <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Height="25" Width="25" Kind="AccountMultiple" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 28 8 0"></materialDesign:PackIcon>
-                    <TextBlock Margin="0 30 0 0" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Text="{DynamicResource Players}"></TextBlock>
+                    <materialDesign:PackIcon Height="25" Width="25" Kind="AccountMultiple" VerticalAlignment="Center"
+                                             HorizontalAlignment="Center" Margin="20 28 8 0" />
+                    <TextBlock Margin="0 30 0 0" VerticalAlignment="Center" FontSize="20" HorizontalAlignment="Center"
+                               FontWeight="Bold" Text="{DynamicResource Players}" />
                 </StackPanel>
-                <Separator Margin="10"/>
+                <Separator Margin="10" />
 
                 <ItemsControl AlternationCount="{Binding Players.Count}" x:Name="List" ItemsSource="{Binding Players}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Margin="10" Orientation="Vertical"/>
+                            <StackPanel Margin="10" Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -91,72 +108,85 @@
                             <StackPanel Orientation="Vertical">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ModeAndIsCPUToVisibility}">
-                                        <Binding Path="DataContext.Mode" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}"></Binding>
-                                        <Binding Path="User.IsCPU"></Binding>
+                                        <Binding Path="DataContext.Mode"
+                                                 RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" />
+                                        <Binding Path="User.IsCPU" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
-                           
+
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding 
+                                    <TextBlock
+                                        Text="{Binding 
                                                 Path=(ItemsControl.AlternationIndex), 
                                                 Converter={StaticResource MathAddConverter},
                                                 ConverterParameter=1,
                                                 StringFormat={}#{0},
                                                 RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                               Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}"
-                                                
-                                         
-                                   
-                                         FontSize="24" Margin="5"/>
-                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1" Content="{Binding User.Username}" Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding User}" >
+                                        Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}"
+
+
+                                        FontSize="24" Margin="5" />
+                                    <materialDesign:Chip materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                                                         Content="{Binding User.Username}"
+                                                         Command="{Binding Path=DataContext.ViewPublicProfile, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                                         CommandParameter="{Binding User}">
                                         <materialDesign:Chip.Style>
                                             <Style TargetType="materialDesign:Chip">
                                                 <Setter Property="Background" Value="WhiteSmoke" />
                                             </Style>
                                         </materialDesign:Chip.Style>
                                         <materialDesign:Chip.Icon>
-                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}"/>                                            
+                                            <Image Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
                                         </materialDesign:Chip.Icon>
                                     </materialDesign:Chip>
                                     <!-- Icon -->
-                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"  VerticalAlignment="Center" Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"  VerticalAlignment="Center" Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"
+                                                             VerticalAlignment="Center"
+                                                             Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"
+                                                             VerticalAlignment="Center"
+                                                             Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </StackPanel>
                                 <StackPanel Height="30" Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock 
-                                        HorizontalAlignment="Center" 
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
                                         Text="{Binding Score, StringFormat={}Score: {0}}" RenderTransformOrigin=".5,.5"
-                                        Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TextBlock Margin="15 0 0 0" x:Name="PointsGainedTextBlock" Opacity="0" Foreground="Green" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained, StringFormat={}+{0}}"
+                                        Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Margin="15 0 0 0" x:Name="PointsGainedTextBlock" Opacity="0"
+                                               Foreground="Green" HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Text="{Binding PointsRecentlyGained, StringFormat={}+{0}}"
                                                Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
                                         <TextBlock.RenderTransform>
                                             <TransformGroup>
-                                                <ScaleTransform/>
-                                                <TranslateTransform Y="-15"></TranslateTransform>
+                                                <ScaleTransform />
+                                                <TranslateTransform Y="-15" />
                                             </TransformGroup>
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
 
-                                    <TextBlock Margin="15 0 0 0" x:Name="PointsLostTextBlock" Opacity="0" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding PointsRecentlyGained}"
+                                    <TextBlock Margin="15 0 0 0" x:Name="PointsLostTextBlock" Opacity="0"
+                                               Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Text="{Binding PointsRecentlyGained}"
                                                Visibility="{Binding Path=DataContext.Mode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
                                         <TextBlock.RenderTransform>
                                             <TransformGroup>
-                                                <ScaleTransform/>
-                                                <TranslateTransform Y="-15"></TranslateTransform>
-                                                <TranslateTransform X="-45"></TranslateTransform>
+                                                <ScaleTransform />
+                                                <TranslateTransform Y="-15" />
+                                                <TranslateTransform X="-45" />
                                             </TransformGroup>
                                         </TextBlock.RenderTransform>
                                     </TextBlock>
 
 
                                 </StackPanel>
-                                <Separator Margin="0 0 0 15"/>
+                                <Separator Margin="0 0 0 15" />
                             </StackPanel>
-                        </DataTemplate>     
+                        </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
         </materialDesign:Card>
-        
+
     </Grid>
 </UserControl>

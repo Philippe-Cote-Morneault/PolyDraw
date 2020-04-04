@@ -6,7 +6,7 @@ using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class ChannelSelectionToIconConverter: IValueConverter
+    public class ChannelSelectionToIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

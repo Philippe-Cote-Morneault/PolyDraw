@@ -15,19 +15,22 @@ namespace ClientLourd.Services.UserSettingsManagerService
 {
     public class UserSettingsManagerService
     {
-
         private ResourceDictionary _langDict;
         private ResourceDictionary _tutoDict;
 
-        private readonly static string UserLanguagesPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml";
-        private readonly static string UserTutorialPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml";
+        private readonly static string UserLanguagesPath =
+            $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserLanguages.xaml";
+
+        private readonly static string UserTutorialPath =
+            $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\UserTutorialSeen.xaml";
 
 
         private string _userID;
+
         public UserSettingsManagerService(string userID)
         {
             _userID = userID;
-            
+
             if (!File.Exists(UserLanguagesPath))
             {
                 CreateFile(UserLanguagesPath);
@@ -44,11 +47,10 @@ namespace ClientLourd.Services.UserSettingsManagerService
 
             _tutoDict = new ResourceDictionary();
             _tutoDict.Source = new Uri(UserTutorialPath, UriKind.RelativeOrAbsolute);
-
         }
 
         public void CreateFile(string path)
-        {  
+        {
             var settings = new XmlWriterSettings();
             settings.Indent = true;
             using (XmlWriter w = XmlWriter.Create(path, settings))
@@ -89,18 +91,17 @@ namespace ClientLourd.Services.UserSettingsManagerService
             OverwriteFile(true);
         }
 
-        public bool HasSeenTutorial() 
+        public bool HasSeenTutorial()
         {
             if (!_tutoDict.Contains(_userID))
             {
                 _tutoDict.Add(_userID, "True");
                 OverwriteFile(false);
-                
+
                 return false;
             }
 
             return true;
         }
-
     }
 }

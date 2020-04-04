@@ -14,17 +14,17 @@ namespace ClientLourd.Utilities.ValidationRules
 {
     class NameRule : ValidationRule
     {
-
         public string Language
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string name = (string)value;
+            string name = (string) value;
 
 
             if (String.IsNullOrWhiteSpace(name))

@@ -24,7 +24,6 @@ namespace ClientLourd.Views.Controls.Game
 
         public void AfterLogout()
         {
-            
         }
 
         private void InitEventHandler()
@@ -35,13 +34,13 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientOnMatchSync(object source, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
             UpdatePlayersScore(e.Players);
         }
 
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
-            var e = (MatchEventArgs)args;
+            var e = (MatchEventArgs) args;
             UpdatePlayersScore(e.Players);
         }
 
@@ -51,24 +50,23 @@ namespace ClientLourd.Views.Controls.Game
             {
                 return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
                         ?.SocketClient;
                 });
             }
         }
-       
 
 
         public GameViewModel GameViewModel
         {
-            get => Application.Current.Dispatcher.Invoke(() => { return (GameViewModel)DataContext; });
+            get => Application.Current.Dispatcher.Invoke(() => { return (GameViewModel) DataContext; });
         }
 
         private void UpdatePlayersScore(dynamic playersInfo)
         {
             foreach (dynamic info in playersInfo)
             {
-                var dic = (Dictionary<object, object>)info;
+                var dic = (Dictionary<object, object>) info;
                 if (!dic.ContainsKey("Points") || !dic.ContainsKey("UserID"))
                     break;
                 var tmpPlayer = GameViewModel.Players.FirstOrDefault(p => p.User.ID == info["UserID"]);
@@ -77,7 +75,7 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     tmpPlayer.Score = info["Points"];
                     tmpPlayer.PointsRecentlyGained = newPoints;
-                    
+
                     AnimatePoints(tmpPlayer.User.ID, (tmpPlayer.PointsRecentlyGained > 0));
                 }
             }
@@ -92,21 +90,23 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        ContentPresenter c = (ContentPresenter)List.ItemContainerGenerator.ContainerFromIndex(i);
-                        
-                        TextBlock tb = (pointsGained)? (c.ContentTemplate.FindName("PointsGainedTextBlock", c) as TextBlock): (c.ContentTemplate.FindName("PointsLostTextBlock", c) as TextBlock);
+                        ContentPresenter c = (ContentPresenter) List.ItemContainerGenerator.ContainerFromIndex(i);
 
-                        Storyboard sb = (Storyboard)FindResource("PointsAnimations");
+                        TextBlock tb = (pointsGained)
+                            ? (c.ContentTemplate.FindName("PointsGainedTextBlock", c) as TextBlock)
+                            : (c.ContentTemplate.FindName("PointsLostTextBlock", c) as TextBlock);
+
+                        Storyboard sb = (Storyboard) FindResource("PointsAnimations");
                         for (int j = 0; j < sb.Children.Count; j++)
                         {
                             Storyboard.SetTarget(sb.Children[j], tb);
                         }
+
                         sb.Completed += (sender, ev) => GameViewModel.OrderPlayers();
                         sb.Begin();
                     });
                 }
             }
         }
-
     }
 }

@@ -22,11 +22,6 @@ using GongSolutions.Wpf.DragDrop.Utilities;
 
 namespace ClientLourd.Views.Controls
 {
-    
-    
-
-
-
     /// <summary>
     /// Interaction logic for Editor.xaml
     /// </summary>
@@ -76,10 +71,12 @@ namespace ClientLourd.Views.Controls
             if (millisecondsTakenToDraw > 5000)
                 millisecondsTakenToDraw = 5000;
 
-            stroke.AddPropertyData(GUIDs.time, (int)millisecondsTakenToDraw);
+            stroke.AddPropertyData(GUIDs.time, (int) millisecondsTakenToDraw);
             stroke.AddPropertyData(GUIDs.brushSize, ViewModel.EditorInformation.BrushSize.ToString());
-            stroke.AddPropertyData(GUIDs.brushType, (ViewModel.EditorInformation.SelectedTip.ToString() == "Ellipse") ? "circle": "square");
-            stroke.AddPropertyData(GUIDs.eraser, (ViewModel.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
+            stroke.AddPropertyData(GUIDs.brushType,
+                (ViewModel.EditorInformation.SelectedTip.ToString() == "Ellipse") ? "circle" : "square");
+            stroke.AddPropertyData(GUIDs.eraser,
+                (ViewModel.EditorInformation.SelectedTool == InkCanvasEditingMode.EraseByPoint).ToString());
             stroke.AddPropertyData(GUIDs.color, ColorToNumber(stroke.DrawingAttributes.Color.ToString()).ToString());
             OnStrokeAdded(stroke);
         }
@@ -88,12 +85,12 @@ namespace ClientLourd.Views.Controls
 
         public event EditEventHandler StrokeDeleted;
         public event EditEventHandler StrokedAdded;
-        
+
         protected virtual void OnStrokeDeleted(object sender)
         {
             StrokeDeleted?.Invoke(sender, EventArgs.Empty);
         }
-        
+
         protected virtual void OnStrokeAdded(object sender)
         {
             StrokedAdded?.Invoke(sender, EventArgs.Empty);
@@ -126,37 +123,40 @@ namespace ClientLourd.Views.Controls
 
         private void ToolsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-                if(Canvas != null)
+            if (Canvas != null)
+            {
+                var tag = (ToolsList.SelectedItem as ListBoxItem)?.Tag;
+                if (tag != null)
                 {
-                    var tag = (ToolsList.SelectedItem as ListBoxItem)?.Tag;
-                    if (tag != null)
-                    {
-                        InkCanvasEditingMode tool = tag is InkCanvasEditingMode ? (InkCanvasEditingMode) tag : InkCanvasEditingMode.None;
+                    InkCanvasEditingMode tool = tag is InkCanvasEditingMode
+                        ? (InkCanvasEditingMode) tag
+                        : InkCanvasEditingMode.None;
 
-                        if (ViewModel != null)
+                    if (ViewModel != null)
+                    {
+                        if (tool == InkCanvasEditingMode.EraseByPoint)
                         {
-                            if (tool == InkCanvasEditingMode.EraseByPoint)
+                            Canvas.UseCustomCursor = true;
+                            Canvas.Cursor = _pointEraser;
+                        }
+                        else
+                        {
+                            Canvas.UseCustomCursor = false;
+                            if (_selectedColor != null)
                             {
-                                Canvas.UseCustomCursor = true;
-                                Canvas.Cursor = _pointEraser;
+                                Color c = (Color) ((Ellipse) _selectedColor.Content).Tag;
+                                ViewModel.EditorInformation.SelectedColor = c;
                             }
                             else
                             {
-                                Canvas.UseCustomCursor = false;
-                                if (_selectedColor != null)
-                                {
-                                    Color c = (Color)((Ellipse) _selectedColor.Content).Tag;
-                                    ViewModel.EditorInformation.SelectedColor = c;
-                                }
-                                else
-                                {
-                                    ViewModel.EditorInformation.SelectedColor = Colors.Black;
-                                }
+                                ViewModel.EditorInformation.SelectedColor = Colors.Black;
                             }
-                            ViewModel.ChangeToolCommand.Execute(tool);
                         }
+
+                        ViewModel.ChangeToolCommand.Execute(tool);
                     }
                 }
+            }
         }
 
         private void TipsList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -175,10 +175,11 @@ namespace ClientLourd.Views.Controls
             {
                 _selectedColor.Background = Brushes.Transparent;
             }
+
             var button = (Button) sender;
             _selectedColor = button;
             _selectedColor.Background = Brushes.Gray;
-            Color c = (Color)((Ellipse) _selectedColor.Content).Tag;
+            Color c = (Color) ((Ellipse) _selectedColor.Content).Tag;
             ViewModel?.ChangeColorCommand.Execute(c);
         }
 
@@ -202,18 +203,18 @@ namespace ClientLourd.Views.Controls
 
             return -1;
         }
-        
-        
+
+
         public XmlDocument GenerateXMLDoc()
         {
             var svg = new SvgDocument();
-            
+
             // Add polydram namespace
             svg.CustomAttributes.Add("xmlns:polydraw", "http://example.org/polydraw");
 
             var colorServer = new SvgColourServer(System.Drawing.Color.Black);
-            var group = new SvgGroup { Fill = colorServer, Stroke = colorServer };
-            
+            var group = new SvgGroup {Fill = colorServer, Stroke = colorServer};
+
             svg.Children.Add(group);
 
             for (int i = 0; i < Canvas.Strokes.Count; i++)
@@ -238,7 +239,7 @@ namespace ClientLourd.Views.Controls
                         {
                             data = data.Remove(data.Length - 1);
                         }
-                        
+
 
                         group.Children.Add(GenerateSVGPath(stroke, data, i));
                     }
@@ -252,10 +253,10 @@ namespace ClientLourd.Views.Controls
 
             var xmlDocument = new XmlDocument();
             xmlDocument.Load(memoryStream);
-          
+
             return xmlDocument;
         }
-        
+
         /// <summary>
         /// Generates a <path/> from a stroke and data (d). 
         /// </summary>
@@ -268,8 +269,12 @@ namespace ClientLourd.Views.Controls
             var svgPath = new SvgPath
             {
                 PathData = SvgPathBuilder.Parse(data),
-                Fill = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
-                Stroke = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A, stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B)),
+                Fill = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A,
+                    stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G,
+                    stroke.DrawingAttributes.Color.B)),
+                Stroke = new SvgColourServer(System.Drawing.Color.FromArgb(stroke.DrawingAttributes.Color.A,
+                    stroke.DrawingAttributes.Color.R, stroke.DrawingAttributes.Color.G,
+                    stroke.DrawingAttributes.Color.B)),
                 ID = Guid.NewGuid().ToString()
             };
 
@@ -290,22 +295,21 @@ namespace ClientLourd.Views.Controls
             var p = e.GetPosition(Canvas);
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (p.X < 0 || p.X > Canvas.Width || p.Y < 0|| p.Y > Canvas.Height)
+                if (p.X < 0 || p.X > Canvas.Width || p.Y < 0 || p.Y > Canvas.Height)
                 {
                     e.Handled = true;
                 }
             }
-            System.Windows.Controls.Canvas.SetTop(EraserIndicator,p.Y - BrushSizeSlider.Value/2);
-            System.Windows.Controls.Canvas.SetLeft(EraserIndicator,p.X - BrushSizeSlider.Value/2);
- 
-            
+
+            System.Windows.Controls.Canvas.SetTop(EraserIndicator, p.Y - BrushSizeSlider.Value / 2);
+            System.Windows.Controls.Canvas.SetLeft(EraserIndicator, p.X - BrushSizeSlider.Value / 2);
         }
 
         private void Editor_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Delta > 0 && BrushSizeSlider.Value + 5 < BrushSizeSlider.Maximum)
                 BrushSizeSlider.Value += 5;
-            else if(e.Delta < 0 && BrushSizeSlider.Value -5 > BrushSizeSlider.Minimum)
+            else if (e.Delta < 0 && BrushSizeSlider.Value - 5 > BrushSizeSlider.Minimum)
                 BrushSizeSlider.Value -= 5;
         }
     }

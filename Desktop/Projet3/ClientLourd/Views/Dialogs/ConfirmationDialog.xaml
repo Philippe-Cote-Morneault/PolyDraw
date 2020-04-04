@@ -5,16 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
-             mc:Ignorable="d"
-             >
+             mc:Ignorable="d">
     <DockPanel Margin="10">
         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-            <Button  Margin="5" Content="Ok" 
-                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="true"/>
-            <Button  Margin="5" Content="{DynamicResource Cancel}" 
-                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false"/>
+            <Button Margin="5" Content="Ok"
+                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="true" />
+            <Button Margin="5" Content="{DynamicResource Cancel}"
+                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false" />
         </UniformGrid>
-        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"  Style="{StaticResource MaterialDesignHeadline4TextBlock}"></TextBlock>
-        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
+        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"
+                   Style="{StaticResource MaterialDesignHeadline4TextBlock}" />
+        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   TextAlignment="Center" Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
     </DockPanel>
 </UserControl>

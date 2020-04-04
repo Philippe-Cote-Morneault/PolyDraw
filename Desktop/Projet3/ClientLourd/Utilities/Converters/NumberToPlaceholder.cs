@@ -11,7 +11,6 @@ namespace ClientLourd.Utilities.Converters
 {
     class NumberToPlaceholder : IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
@@ -19,14 +18,14 @@ namespace ClientLourd.Utilities.Converters
                 return new User[1];
             }
 
-            Lobby currentLobby = (Lobby)value;
+            Lobby currentLobby = (Lobby) value;
             int nPlaceHolder = currentLobby.PlayersMax - currentLobby.Players.Count;
 
             if (nPlaceHolder < 0)
                 return null;
 
             User[] users = new User[nPlaceHolder];
-            for(int i = 0; i < nPlaceHolder; i++)
+            for (int i = 0; i < nPlaceHolder; i++)
             {
                 users[i] = new User("Empty slot", "", false);
             }

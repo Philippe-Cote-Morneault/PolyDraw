@@ -20,10 +20,12 @@ namespace ClientLourd.Utilities.Converters
             {
                 return language == Languages.EN ? "Active Match" : "Partie en cours";
             }
+
             if (channel.ID == Guid.Empty.ToString())
             {
                 return language == Languages.EN ? "General" : "Général";
             }
+
             return channel.Name;
         }
 

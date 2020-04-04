@@ -10,155 +10,165 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Storyboard x:Key="GuessRight" >
-            <ColorAnimation  Duration="0:0:1" From="Black" To="Green"
-                    AutoReverse="False"
-                    AccelerationRatio="1"
-                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+        <Storyboard x:Key="GuessRight">
+            <ColorAnimation Duration="0:0:1" From="Black" To="Green"
+                            AutoReverse="False"
+                            AccelerationRatio="1"
+                            Storyboard.TargetProperty="(TextBlock.Foreground).Color" />
 
             <DoubleAnimation AutoReverse="True"
 
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
-                From="0" To="-10" Duration="0:0:0.1" />
-            
-            <DoubleAnimation AutoReverse="True"
-
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
-                From="0" To="10" Duration="0:0:0.1" BeginTime="0:0:0.2" />
-            
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
+                             From="0" To="-10" Duration="0:0:0.1" />
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
-                From="1" To="1.5" Duration="0:0:0.2" />
+
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[1].(RotateTransform.Angle)"
+                             From="0" To="10" Duration="0:0:0.1" BeginTime="0:0:0.2" />
+
 
             <DoubleAnimation AutoReverse="True"
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
-                From="1" To="1.5" Duration="0:0:0.2" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleX)"
+                             From="1" To="1.5" Duration="0:0:0.2" />
+
+            <DoubleAnimation AutoReverse="True"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[0].(ScaleTransform.ScaleY)"
+                             From="1" To="1.5" Duration="0:0:0.2" />
         </Storyboard>
 
         <Storyboard x:Key="TeamateGuessedWrong">
-            <DoubleAnimation 
+            <DoubleAnimation
                 Storyboard.TargetName="TeamateGuessedWrong"
-                Storyboard.TargetProperty="(TextBlock.Opacity)" 
-                From="0" To="1" Duration="0:0:1" AutoReverse="True"  />
+                Storyboard.TargetProperty="(TextBlock.Opacity)"
+                From="0" To="1" Duration="0:0:1" AutoReverse="True" />
         </Storyboard>
-        
-        <Storyboard x:Key="GuessWrong" >
-            <ColorAnimation  Duration="0:0:0.5" From="Black" To="Red"
-                    AutoReverse="True"
-                    Storyboard.TargetProperty="(TextBlock.Foreground).Color"/>
+
+        <Storyboard x:Key="GuessWrong">
+            <ColorAnimation Duration="0:0:0.5" From="Black" To="Red"
+                            AutoReverse="True"
+                            Storyboard.TargetProperty="(TextBlock.Foreground).Color" />
 
             <DoubleAnimation AutoReverse="True"
 
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
-                From="0" To="-10" Duration="0:0:0.1" />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
+                             From="0" To="-10" Duration="0:0:0.1" />
 
             <DoubleAnimation AutoReverse="True"
 
-                Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
-                From="0" To="10" Duration="0:0:0.1" 
-                BeginTime="0:0:0.2"
-                             />
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).Children[2].(TranslateTransform.X)"
+                             From="0" To="10" Duration="0:0:0.1"
+                             BeginTime="0:0:0.2" />
 
         </Storyboard>
 
 
-        <Storyboard x:Key="NextRoundBegin" >
+        <Storyboard x:Key="NextRoundBegin">
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
-                Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
-                From="0" To="180" Duration="0:0:2" />
+                             Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
+                             From="0" To="180" Duration="0:0:2" />
 
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
-                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
-                From="0" To="3000" Duration="0:0:2" />
+                             Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                             From="0" To="3000" Duration="0:0:2" />
         </Storyboard>
 
-        <Storyboard x:Key="NextRoundEnd" >
+        <Storyboard x:Key="NextRoundEnd">
 
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
-                Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
-                From="270" To="0" Duration="0:0:0.5" />
+                             Storyboard.TargetProperty="(RenderTransform).Children[0].(RotateTransform.Angle)"
+                             From="270" To="0" Duration="0:0:0.5" />
 
             <DoubleAnimation AutoReverse="False"
                              Storyboard.TargetName="CanvasContainer"
-                Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
-                From="-3000" To="0" Duration="0:0:0.5" />
+                             Storyboard.TargetProperty="(RenderTransform).Children[1].(TranslateTransform.X)"
+                             From="-3000" To="0" Duration="0:0:0.5" />
         </Storyboard>
     </UserControl.Resources>
-    
+
     <DockPanel Margin="10">
-        <StackPanel 
+        <StackPanel
             Orientation="Horizontal"
-                DockPanel.Dock="Bottom">
-            <StackPanel 
+            DockPanel.Dock="Bottom">
+            <StackPanel
                 Height="50"
                 Orientation="Horizontal"
                 Visibility="{Binding Path=IsYourTurn, Converter={StaticResource BooleanToVisibilityConverter}}">
-                
-                <TextBlock FontWeight="Medium" FontSize="24" Margin="0 0 6 0" Text="{DynamicResource WordIs}" VerticalAlignment="Center"/>
-                <TextBlock FontWeight="Medium" FontSize="24" Text="{Binding Word}" Foreground="Red" VerticalAlignment="Center"/>
+
+                <TextBlock FontWeight="Medium" FontSize="24" Margin="0 0 6 0" Text="{DynamicResource WordIs}"
+                           VerticalAlignment="Center" />
+                <TextBlock FontWeight="Medium" FontSize="24" Text="{Binding Word}" Foreground="Red"
+                           VerticalAlignment="Center" />
             </StackPanel>
-            <StackPanel Height="50" Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}"  Orientation="Horizontal">
-                <TextBlock FontSize="24" Text="{DynamicResource TypeGuess}" VerticalAlignment="Center"></TextBlock>
-                <ItemsControl x:Name="GuessTextBoxes" IsEnabled="{Binding CanStillGuess}"  AlternationCount="{Binding Guess.Length}"  ItemsSource="{Binding Guess}" LostFocus="OnFocusLost" GotFocus="OnFocus">
+            <StackPanel Height="50"
+                        Visibility="{Binding Path=IsYourTurn, Converter={StaticResource InverseBoolToVisConverter}}"
+                        Orientation="Horizontal">
+                <TextBlock FontSize="24" Text="{DynamicResource TypeGuess}" VerticalAlignment="Center" />
+                <ItemsControl x:Name="GuessTextBoxes" IsEnabled="{Binding CanStillGuess}"
+                              AlternationCount="{Binding Guess.Length}" ItemsSource="{Binding Guess}"
+                              LostFocus="OnFocusLost" GotFocus="OnFocus">
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="5 0 5 0"></StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5 0 5 0" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            
-                            <TextBox  x:Name="textbox" FontSize="24" Tag="{Binding 
+
+                            <TextBox x:Name="textbox" FontSize="24"
+                                     Tag="{Binding 
                                      Path=(ItemsControl.AlternationIndex), 
-                                     RelativeSource={RelativeSource Mode=TemplatedParent}}" 
-                                     PreviewKeyDown="UIElement_OnKeyDown" 
+                                     RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                     PreviewKeyDown="UIElement_OnKeyDown"
                                      TextChanged="TextBoxBase_OnTextChanged"
                                      PreviewMouseLeftButtonDown="SelectFirstEmptyTextBox"
-                                     FontWeight="Bold" 
+                                     FontWeight="Bold"
                                      Margin="3"
-                                     Width="20" 
+                                     Width="20"
                                      MaxLength="1"
                                      Foreground="Black">
                                 <TextBox.RenderTransform>
                                     <TransformGroup>
-                                        <ScaleTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform/>
+                                        <ScaleTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform />
                                     </TransformGroup>
-                                    
+
                                 </TextBox.RenderTransform>
                             </TextBox>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <Button Command="{Binding SendGuessCommand}" IsDefault="{Binding GuessButtonIsDefault}" IsEnabled="{Binding CanStillGuess}" Content="{DynamicResource Guess}">
-                    
-                </Button>
-                
-                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}" Content="{DynamicResource Hint}" 
-                     Style="{StaticResource MaterialDesignIconButton}" 
-                     Command="{Binding Path=AskHintCommand}"
-                    Margin="10 0 10 0"/>
+                <Button Command="{Binding SendGuessCommand}" IsDefault="{Binding GuessButtonIsDefault}"
+                        IsEnabled="{Binding CanStillGuess}" Content="{DynamicResource Guess}" />
 
-                <TextBlock Foreground="Red" Opacity="0" VerticalAlignment="Center" FontSize="25" Name="TeamateGuessedWrong" Text="{DynamicResource TeamateWrongGuess}"></TextBlock>
+                <Button Visibility="{Binding DrawerIsCPU, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Content="{DynamicResource Hint}"
+                        Style="{StaticResource MaterialDesignIconButton}"
+                        Command="{Binding Path=AskHintCommand}"
+                        Margin="10 0 10 0" />
+
+                <TextBlock Foreground="Red" Opacity="0" VerticalAlignment="Center" FontSize="25"
+                           Name="TeamateGuessedWrong" Text="{DynamicResource TeamateWrongGuess}" />
             </StackPanel>
         </StackPanel>
         <Grid>
-            <Grid Name="LeaderBoardGrid" Visibility="Collapsed" Width="{Binding ElementName=CanvasContainer, Path=ActualWidth}" Height="{Binding ElementName=CanvasContainer, Path=ActualHeight}" Background="Black" Opacity="0.5"  HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="13"/>
-            
-            <Grid Name="CanvasContainer"  RenderTransformOrigin=".5,.5">
+            <Grid Name="LeaderBoardGrid" Visibility="Collapsed"
+                  Width="{Binding ElementName=CanvasContainer, Path=ActualWidth}"
+                  Height="{Binding ElementName=CanvasContainer, Path=ActualHeight}" Background="Black" Opacity="0.5"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" ZIndex="13" />
+
+            <Grid Name="CanvasContainer" RenderTransformOrigin=".5,.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
-                        <RotateTransform/>
-                        <TranslateTransform/>
+                        <RotateTransform />
+                        <TranslateTransform />
                     </TransformGroup>
                 </Grid.RenderTransform>
-                <control:Editor x:Name="DrawingEditor"/>
+                <control:Editor x:Name="DrawingEditor" />
             </Grid>
 
         </Grid>

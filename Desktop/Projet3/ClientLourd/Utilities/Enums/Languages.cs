@@ -9,9 +9,7 @@ namespace ClientLourd.Utilities.Enums
 {
     public enum Languages
     {
-        [Description("English")]
-        EN = 0,
-        [Description("French")]
-        FR = 1,
+        [Description("English")] EN = 0,
+        [Description("French")] FR = 1,
     }
 }

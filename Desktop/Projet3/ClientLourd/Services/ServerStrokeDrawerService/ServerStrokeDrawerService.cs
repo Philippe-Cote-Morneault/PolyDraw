@@ -16,6 +16,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
     {
         // Used to know when all the strokes sent from the server were drawn
         public delegate void PreviewDrawingDoneHandler(object source, EventArgs args);
+
         public event PreviewDrawingDoneHandler PreviewDrawingDoneEvent;
         private int _messageDequeuedCounter;
         public int TotalMessagesSent { get; set; }
@@ -27,7 +28,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
         private Stroke _lastStroke;
 
         public ServerStrokeDrawerService(System.Windows.Controls.InkCanvas canvas, bool IsPreview)
-        {   
+        {
             _canvas = canvas;
             _isPreview = IsPreview;
             _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
@@ -66,7 +67,6 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
 
             if (!_strokeInfoQueue.IsEmpty)
             {
-
                 Application.Current.Dispatcher.Invoke(delegate
                 {
                     StrokeInfo strokeInfo;
@@ -84,14 +84,15 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
                         }
                     }
                 });
-
             }
+
             if (_isPreview && AllStrokesWereDrawn())
             {
                 PreviewDrawingDoneEvent.Invoke(source, EventArgs.Empty);
                 ResetPreviewCounters();
                 return;
             }
+
             Start();
         }
 

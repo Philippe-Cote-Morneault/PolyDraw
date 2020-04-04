@@ -155,5 +155,3 @@ namespace ClientLourd.Models.NonBindable
         }
     }
 }
-
-

@@ -15,7 +15,6 @@ namespace ClientLourd.Views.Controls
     /// </summary>
     public partial class Login : UserControl, INotifyPropertyChanged
     {
-
         private string _oldUsername;
         private bool _isBearerActive;
         private bool _passwordChanged;
@@ -25,12 +24,12 @@ namespace ClientLourd.Views.Controls
         {
             get => _isBearerActive && !_passwordChanged && !_usernameChanged;
         }
+
         public Login()
         {
             InitializeComponent();
             AfterLogout();
             Loaded += Load;
-                
         }
 
         public void AfterLogout()
@@ -48,6 +47,7 @@ namespace ClientLourd.Views.Controls
                 _isBearerActive = true;
                 RememberMeCheckBox.IsChecked = true;
             }
+
             _passwordChanged = false;
             _usernameChanged = false;
             OnPropertyChanged(nameof(IsBearerActive));

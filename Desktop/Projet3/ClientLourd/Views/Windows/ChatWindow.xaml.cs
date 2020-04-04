@@ -15,12 +15,12 @@ namespace ClientLourd.Views.Windows
 
         public ResourceDictionary CurrentDictionary
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
         public MainViewModel MainViewModel
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel);
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
         }
 
 

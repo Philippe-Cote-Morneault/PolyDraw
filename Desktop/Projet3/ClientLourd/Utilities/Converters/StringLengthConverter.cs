@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class StringLengthConverter: IValueConverter
+    public class StringLengthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -16,11 +16,11 @@ namespace ClientLourd.Utilities.Converters
                 {
                     return text;
                 }
+
                 return $"{text.Substring(0, length)}...";
             }
 
             return "";
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

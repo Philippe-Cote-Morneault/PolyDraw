@@ -26,7 +26,7 @@
         ServerEndsDrawing = 35,
         DrawingPreviewRequest = 36,
         DrawingPreviewResponse = 37,
-        DeleteStroke = 38, 
+        DeleteStroke = 38,
         UserDeletedStroke = 39,
         JoinLobbyRequest = 40,
         JoinLobbyResponse = 41,

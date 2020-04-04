@@ -24,42 +24,37 @@ namespace ClientLourd.ViewModels
 
         public string ContainedView
         {
-            get
-            {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView;
-            }
-            set
-            {
-                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value;
-            }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.ContainedView; }
+            set { (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = value; }
         }
 
 
         public SocketClient SocketClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
         }
 
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public SessionInformations SessionInformations
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    ?.SessionInformations;
             }
         }
 
         public Lobby CurrentLobby
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
-            set { (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentLobby; }
+            set { (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel).CurrentLobby = value; }
         }
 
-        
+
         public MainViewModel MainViewModel
         {
             get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
@@ -67,9 +62,8 @@ namespace ClientLourd.ViewModels
 
         public async override void AfterLogin()
         {
-            
             FetchLobbies();
-            
+
             SocketClient.LobbyCreated += OnLobbyCreated;
             SocketClient.JoinLobbyResponse += OnJoinLobbyResponse;
             SocketClient.UserJoinedLobby += OnUserJoinedLobby;
@@ -82,18 +76,16 @@ namespace ClientLourd.ViewModels
             _languageFilteredAscending = false;
             _durationFilteredAscending = false;
             MainViewModel.LanguageChangedEvent += OnLanguageChanged;
-
         }
 
         private void OnLanguageChanged(object source, EventArgs args)
         {
-            
             foreach (Lobby lobby in Lobbies)
             {
                 // Line below doesnt work for some reason (binding is trash in WPF)
                 // NotifyPropertyChanged(nameof(lobby.Difficulty));
                 lobby.Difficulty = lobby.Difficulty;
-                    
+
                 lobby.Mode = lobby.Mode;
             }
         }
@@ -101,8 +93,6 @@ namespace ClientLourd.ViewModels
         public override void AfterLogOut()
         {
             //??
-
-
         }
 
         public ObservableCollection<Lobby> Lobbies
@@ -127,7 +117,6 @@ namespace ClientLourd.ViewModels
         private bool IsCreatedByUser(string ownerID)
         {
             return ownerID == SessionInformations.User.ID;
-
         }
 
 
@@ -135,26 +124,24 @@ namespace ClientLourd.ViewModels
 
         private void FilterMode()
         {
-
             if (!_modeFilteredAscending)
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int)lobby.Mode).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int) lobby.Mode).ToList());
                 _modeFilteredAscending = true;
             }
             else
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int)lobby.Mode).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int) lobby.Mode)
+                    .ToList());
                 _modeFilteredAscending = false;
             }
         }
-
 
 
         private bool _hostFilteredAscending;
 
         private void FilterHost()
         {
-
             if (!_hostFilteredAscending)
             {
                 Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => lobby.Host).ToList());
@@ -172,7 +159,6 @@ namespace ClientLourd.ViewModels
 
         private void FilterPlayerCount()
         {
-
             if (!_playerCountFilteredAscending)
             {
                 Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => lobby.PlayersCount).ToList());
@@ -180,40 +166,43 @@ namespace ClientLourd.ViewModels
             }
             else
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => lobby.PlayersCount).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => lobby.PlayersCount)
+                    .ToList());
                 _playerCountFilteredAscending = false;
             }
         }
 
         private bool _durationFilteredAscending;
 
-        private void FilterDuration() 
+        private void FilterDuration()
         {
             if (!_durationFilteredAscending)
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => TimeSpan.FromTicks(lobby.Duration.Ticks).TotalMinutes).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies
+                    .OrderBy((lobby) => TimeSpan.FromTicks(lobby.Duration.Ticks).TotalMinutes).ToList());
                 _durationFilteredAscending = true;
             }
             else
             {
-
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => TimeSpan.FromTicks(lobby.Duration.Ticks).TotalMinutes).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies
+                    .OrderByDescending((lobby) => TimeSpan.FromTicks(lobby.Duration.Ticks).TotalMinutes).ToList());
                 _durationFilteredAscending = false;
             }
         }
 
         private bool _languageFilteredAscending;
-        
+
         private void FilterLanguage()
         {
             if (!_languageFilteredAscending)
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int)lobby.Language).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int) lobby.Language).ToList());
                 _languageFilteredAscending = true;
             }
             else
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int)lobby.Language).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int) lobby.Language)
+                    .ToList());
                 _languageFilteredAscending = false;
             }
         }
@@ -223,15 +212,15 @@ namespace ClientLourd.ViewModels
 
         private void FilterDifficulty()
         {
-
             if (!_difficultyFilteredAscending)
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int)lobby.Difficulty).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderBy((lobby) => (int) lobby.Difficulty).ToList());
                 _difficultyFilteredAscending = true;
             }
             else
             {
-                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int)lobby.Difficulty).ToList());
+                Lobbies = new ObservableCollection<Lobby>(Lobbies.OrderByDescending((lobby) => (int) lobby.Difficulty)
+                    .ToList());
                 _difficultyFilteredAscending = false;
             }
         }
@@ -242,7 +231,8 @@ namespace ClientLourd.ViewModels
         {
             get
             {
-                return _filterLobbies ?? (_filterLobbies = new RelayCommand<string>(attribute => FilterLobbies(attribute)));
+                return _filterLobbies ??
+                       (_filterLobbies = new RelayCommand<string>(attribute => FilterLobbies(attribute)));
             }
         }
 
@@ -263,7 +253,7 @@ namespace ClientLourd.ViewModels
                 FilterDuration();
         }
 
-        public void JoinLobby(Lobby lobby) 
+        public void JoinLobby(Lobby lobby)
         {
             CurrentLobby = lobby;
             SocketClient.SendMessage(new Tlv(SocketMessageTypes.JoinLobbyRequest, new Guid(lobby.ID)));
@@ -271,7 +261,7 @@ namespace ClientLourd.ViewModels
 
         private void OnLobbyCreated(object sender, EventArgs e)
         {
-            var lobbyCreated = (LobbyEventArgs)e;
+            var lobbyCreated = (LobbyEventArgs) e;
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 Lobby lobby = new Lobby(
@@ -279,28 +269,27 @@ namespace ClientLourd.ViewModels
                     lobbyCreated.OwnerName,
                     lobbyCreated.OwnerID,
                     lobbyCreated.Players,
-                    (GameModes)lobbyCreated.Mode,
-                    (DifficultyLevel)lobbyCreated.Difficulty,
+                    (GameModes) lobbyCreated.Mode,
+                    (DifficultyLevel) lobbyCreated.Difficulty,
                     lobbyCreated.Players.Count,
                     lobbyCreated.PlayersMax,
                     lobbyCreated.Language,
                     lobbyCreated.Rounds
-                    );
+                );
                 Lobbies.Insert(0, lobby);
                 if (IsCreatedByUser(lobbyCreated.OwnerID))
                 {
                     CurrentLobby = lobby;
                     CurrentLobby.Host = lobbyCreated.OwnerName;
                 }
-
             });
         }
 
         private void OnLobbyDeleted(object sender, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => 
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                var lobbyDeletedArgs = (LobbyEventArgs)e;
+                var lobbyDeletedArgs = (LobbyEventArgs) e;
 
                 string lobbyDeletedID = new Guid(lobbyDeletedArgs.Bytes).ToString();
 
@@ -310,6 +299,7 @@ namespace ClientLourd.ViewModels
                 {
                     Lobbies.Remove(lobbyToDelete);
                 }
+
                 FetchLobbies();
             });
         }
@@ -317,20 +307,21 @@ namespace ClientLourd.ViewModels
 
         private Lobby FindLobby(string lobbyID)
         {
-            foreach(Lobby lobby in Lobbies)
+            foreach (Lobby lobby in Lobbies)
             {
                 if (lobby.ID == lobbyID)
                 {
                     return lobby;
                 }
             }
+
             return null;
         }
 
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
         {
-            var joinLobbyArgs = (LobbyEventArgs)e;
+            var joinLobbyArgs = (LobbyEventArgs) e;
 
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -347,19 +338,20 @@ namespace ClientLourd.ViewModels
 
         private void OnUserJoinedLobby(object sender, EventArgs e)
         {
-            var userJoinedLobbyArgs = (LobbyEventArgs)e;
+            var userJoinedLobbyArgs = (LobbyEventArgs) e;
 
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 var lobbyModified = Lobbies.Single(lobby => lobby.ID == userJoinedLobbyArgs.GroupID);
 
 
-
                 if (!LobbyContainsPlayer(lobbyModified, userJoinedLobbyArgs))
                 {
-                    lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID, userJoinedLobbyArgs.Username));
+                    lobbyModified.Players.Add(new Player(userJoinedLobbyArgs.IsCPU, userJoinedLobbyArgs.UserID,
+                        userJoinedLobbyArgs.Username));
                     lobbyModified.PlayersCount = lobbyModified.Players.Count;
                 }
+
                 SetUsersInfo(lobbyModified);
             });
         }
@@ -376,15 +368,16 @@ namespace ClientLourd.ViewModels
                     }
                     else
                     {
-                        player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png", UriKind.Relative));
+                        player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png",
+                            UriKind.Relative));
                     }
                 }
             }
         }
 
-        private bool LobbyContainsPlayer(Lobby lobby,LobbyEventArgs userJoinedLobbyArgs)
+        private bool LobbyContainsPlayer(Lobby lobby, LobbyEventArgs userJoinedLobbyArgs)
         {
-            foreach(Player player in lobby.Players)
+            foreach (Player player in lobby.Players)
             {
                 if (player.User.ID == userJoinedLobbyArgs.UserID)
                 {
@@ -397,20 +390,20 @@ namespace ClientLourd.ViewModels
 
         private bool LobbyExists(string lobbyID)
         {
-            foreach(Lobby lobby in Lobbies)
+            foreach (Lobby lobby in Lobbies)
             {
                 if (lobby.ID == lobbyID)
                 {
                     return true;
                 }
             }
-            
+
             return false;
         }
 
         private void OnUserLeftLobby(object sender, EventArgs e)
         {
-            var userLeftLobbyArgs = (LobbyEventArgs)e;
+            var userLeftLobbyArgs = (LobbyEventArgs) e;
 
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -419,7 +412,8 @@ namespace ClientLourd.ViewModels
                     var lobbyModif = Lobbies.Single(lobby => lobby.ID == userLeftLobbyArgs.GroupID);
                     if (LobbyContainsPlayer(lobbyModif, userLeftLobbyArgs))
                     {
-                        var userToRemove = lobbyModif.Players.Single(player => player.User.ID == userLeftLobbyArgs.UserID);
+                        var userToRemove =
+                            lobbyModif.Players.Single(player => player.User.ID == userLeftLobbyArgs.UserID);
                         lobbyModif.Players.Remove(userToRemove);
                         lobbyModif.PlayersCount = lobbyModif.Players.Count;
                     }
@@ -428,7 +422,3 @@ namespace ClientLourd.ViewModels
         }
     }
 }
-
-
-   
-

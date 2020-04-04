@@ -19,25 +19,26 @@
         <viewModels:MainViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter"/>
-        <converter:BoolToVisibilityConverter x:Key="VisibleIfFalseConverter" TrueValue="Collapsed" FalseValue="Visible"/>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <converter:BoolToVisibilityConverter x:Key="VisibleIfFalseConverter" TrueValue="Collapsed" FalseValue="Visible" />
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:ToggleVisibilityConverter x:Key="ToggleVisibilityConverter" />
-        <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter"/>
-        <converter:NotificationConverter x:Key="NotificationConverter"/>
-        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
-        <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
+        <converter:ContainedViewVisibilityConverter x:Key="ContainedViewVisibilityConverter" />
+        <converter:NotificationConverter x:Key="NotificationConverter" />
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter" />
+        <converter:EnumTranslationConverter x:Key="EnumTranslationConverter" />
 
     </Window.Resources>
 
-    <materialDesign:DialogHost Identifier="Default" x:Name="MainWindowDialogHost" CloseOnClickAway="False" SizeChanged="MainGrid_SizeChanged">
-            <materialDesign:DialogHost.LayoutTransform>
-                    <ScaleTransform 
-                                    CenterX="0"
-                                    CenterY="0"
-                                    ScaleX="{Binding ElementName=PolyDraw, Path=ScaleValue}"
-                                    ScaleY="{Binding ElementName=PolyDraw, Path=ScaleValue}" />
-            </materialDesign:DialogHost.LayoutTransform>
+    <materialDesign:DialogHost Identifier="Default" x:Name="MainWindowDialogHost" CloseOnClickAway="False"
+                               SizeChanged="MainGrid_SizeChanged">
+        <materialDesign:DialogHost.LayoutTransform>
+            <ScaleTransform
+                CenterX="0"
+                CenterY="0"
+                ScaleX="{Binding ElementName=PolyDraw, Path=ScaleValue}"
+                ScaleY="{Binding ElementName=PolyDraw, Path=ScaleValue}" />
+        </materialDesign:DialogHost.LayoutTransform>
         <Grid>
             <WrapPanel ZIndex="1"
                        Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -60,8 +61,7 @@
                                       Visibility="{Binding ElementName=LeaveButton, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}"
                                       Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                       HorizontalAlignment="Right" Margin="16"
-                                      Name="MenuToggleButton">
-                        </ToggleButton>
+                                      Name="MenuToggleButton" />
                         <!--Back arrow for lobbies and game-->
                         <materialDesign:PackIcon
                             Foreground="{StaticResource MaterialDesignDarkForeground}"
@@ -75,8 +75,7 @@
                             ToolTip="{DynamicResource LeaveLobby}"
                             Margin="16"
                             Cursor="Hand"
-                            MouseUp="LeaveLobby"
-                       />
+                            MouseUp="LeaveLobby" />
 
                         <!-- Use for hiding the button when the chat is export-->
                         <Grid DockPanel.Dock="Right"
@@ -126,7 +125,6 @@
                         <!--Sound button-->
                         <Grid DockPanel.Dock="Right">
 
-                            
 
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
@@ -141,22 +139,20 @@
                                     Width="24"
                                     ToolTip="{DynamicResource OpenTutorial}"
 
-                                    PreviewMouseLeftButtonDown="OpenTutorial">
-                                </materialDesign:PackIcon>
+                                    PreviewMouseLeftButtonDown="OpenTutorial" />
 
 
-
-
-                                <ComboBox 
-                                    x:Name="LanguageSelector" 
+                                <ComboBox
+                                    x:Name="LanguageSelector"
                                     FontSize="17"
-                                    ItemsSource="{Binding Languages}"  
+                                    ItemsSource="{Binding Languages}"
                                     SelectedItem="{Binding SelectedLanguage, UpdateSourceTrigger=PropertyChanged}"
                                     Margin="0 0 20 0"
                                     Visibility="{Binding ElementName=LobbyContainer, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Converter={StaticResource EnumTranslationConverter}}"/>
+                                            <TextBlock
+                                                Text="{Binding Converter={StaticResource EnumTranslationConverter}}" />
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
@@ -174,10 +170,10 @@
                                     Height="24"
                                     Width="24">
                                     <materialDesign:PackIcon.InputBindings>
-                                        <MouseBinding Gesture="LeftClick" 
-                                        Command="{Binding Path=ToggleSoundCommand}"/>
-                                        <MouseBinding Gesture="LeftDoubleClick" 
-                                        Command="{Binding Path=ToggleSoundCommand}"/>
+                                        <MouseBinding Gesture="LeftClick"
+                                                      Command="{Binding Path=ToggleSoundCommand}" />
+                                        <MouseBinding Gesture="LeftDoubleClick"
+                                                      Command="{Binding Path=ToggleSoundCommand}" />
 
                                     </materialDesign:PackIcon.InputBindings>
                                 </materialDesign:PackIcon>
@@ -195,10 +191,10 @@
                                     Height="24"
                                     Width="24">
                                     <materialDesign:PackIcon.InputBindings>
-                                        <MouseBinding Gesture="LeftClick" 
-                                        Command="{Binding Path=ToggleSoundCommand}"/>
-                                        <MouseBinding Gesture="LeftDoubleClick" 
-                                        Command="{Binding Path=ToggleSoundCommand}"/>
+                                        <MouseBinding Gesture="LeftClick"
+                                                      Command="{Binding Path=ToggleSoundCommand}" />
+                                        <MouseBinding Gesture="LeftDoubleClick"
+                                                      Command="{Binding Path=ToggleSoundCommand}" />
                                     </materialDesign:PackIcon.InputBindings>
                                 </materialDesign:PackIcon>
                             </StackPanel>
@@ -208,7 +204,7 @@
                                Source="Resources/WhiteLogo.png" />
                     </DockPanel>
                 </materialDesign:ColorZone>
-                
+
                 <!--Drawers-->
                 <materialDesign:DrawerHost
                     x:Name="Drawer"
@@ -217,16 +213,19 @@
 
                     <Grid Name="ControlSelector">
 
-                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
-                            <controls:Profile x:Name="Profile"/>
-                        </DockPanel>
-                        
-                        <DockPanel Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Home'}">
-                            <controls:Home x:Name="Home"/>
+                        <DockPanel
+                            Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Profile'}">
+                            <controls:Profile x:Name="Profile" />
                         </DockPanel>
 
-                        <DockPanel x:Name="LobbyContainer" Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">
-                            <controls:Lobby x:Name="Lobby"/>
+                        <DockPanel
+                            Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Home'}">
+                            <controls:Home x:Name="Home" />
+                        </DockPanel>
+
+                        <DockPanel x:Name="LobbyContainer"
+                                   Visibility="{Binding ContainedView, Converter={StaticResource ContainedViewVisibilityConverter}, ConverterParameter='Lobby'}">
+                            <controls:Lobby x:Name="Lobby" />
                         </DockPanel>
 
                     </Grid>
@@ -236,7 +235,8 @@
                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=3}"
                             x:Name="RightDrawerContent">
                             <Grid x:Name="MainWindowChatContainer">
-                                <controls:Chat x:Name="ChatBox" IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}"/>
+                                <controls:Chat x:Name="ChatBox"
+                                               IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
                             </Grid>
                         </DockPanel>
                     </materialDesign:DrawerHost.RightDrawerContent>
@@ -246,8 +246,10 @@
                         <DockPanel>
                             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" Padding="10">
                                 <StackPanel Orientation="Vertical">
-                                    <materialDesign:Card Height="100" Padding="5" Width="100" materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center">
-                                        <Image Source="{Binding SessionInformations.User.Avatar}"/>
+                                    <materialDesign:Card Height="100" Padding="5" Width="100"
+                                                         materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                                         HorizontalAlignment="Center">
+                                        <Image Source="{Binding SessionInformations.User.Avatar}" />
                                     </materialDesign:Card>
                                     <TextBlock Text="{Binding SessionInformations.User.Username}"
                                                HorizontalAlignment="Center"
@@ -255,21 +257,22 @@
                                 </StackPanel>
                             </materialDesign:ColorZone>
                             <ListView>
-                                <ListViewItem MouseUp="HomeItem_OnMouseUp" Name="HomeItem" >
+                                <ListViewItem MouseUp="HomeItem_OnMouseUp" Name="HomeItem">
                                     <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="House" Height="15" Width="15" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{DynamicResource Home}"/>
+                                        <materialDesign:PackIcon Kind="House" Height="15" Width="15"
+                                                                 VerticalAlignment="Center" />
+                                        <TextBlock Text="{DynamicResource Home}" />
                                     </StackPanel>
                                 </ListViewItem>
                                 <ListViewItem MouseUp="ProfileItem_OnMouseUp" Name="ProfileItem">
                                     <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{DynamicResource MyProfile}"/>
+                                        <materialDesign:PackIcon Kind="UserCircle" Height="15" Width="15"
+                                                                 VerticalAlignment="Center" />
+                                        <TextBlock Text="{DynamicResource MyProfile}" />
                                     </StackPanel>
                                 </ListViewItem>
 
-                                
-                                
+
                                 <ListViewItem Name="LogoutItem" MouseUp="LogoutItem_OnMouseUp">
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Foreground="Red" Kind="Power" Height="15" Width="15"
@@ -284,16 +287,20 @@
 
                 </materialDesign:DrawerHost>
             </DockPanel>
-            
-            
+
+
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <Button Click="ConfigButton_OnClick" Name="ConfigButton" Style="{StaticResource MaterialDesignFlatButton}" Width="100" Height="100" DockPanel.Dock="Top" HorizontalAlignment="Left">
+                <Button Click="ConfigButton_OnClick" Name="ConfigButton"
+                        Style="{StaticResource MaterialDesignFlatButton}" Width="100" Height="100" DockPanel.Dock="Top"
+                        HorizontalAlignment="Left">
                     <StackPanel Name="NetworkConfig" Visibility="Hidden">
-                            <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="0" IsChecked="True" Name="ProdConfigButton" Content="Prod" />
-                            <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="1" IsChecked="False" Name="DevConfigButton"  Content="Dev"/>
-                            <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="2"  Content="Local"/>
+                        <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="0" IsChecked="True"
+                                     Name="ProdConfigButton" Content="Prod" />
+                        <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="1" IsChecked="False"
+                                     Name="DevConfigButton" Content="Dev" />
+                        <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="2" Content="Local" />
                     </StackPanel>
                 </Button>
                 <controls:Login x:Name="LoginScreen"

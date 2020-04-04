@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-﻿namespace ClientLourd.Models.Bindable
+namespace ClientLourd.Models.Bindable
 {
-    public class Player: ModelBase
+    public class Player : ModelBase
     {
         private User _user;
         private bool _isDrawing;
@@ -22,9 +22,8 @@ using System.Threading.Tasks;
 
         public Player()
         {
-
         }
-        
+
         public User User
         {
             get => _user;
@@ -37,7 +36,7 @@ using System.Threading.Tasks;
                 }
             }
         }
-        
+
 
         public long Score
         {
@@ -64,7 +63,7 @@ using System.Threading.Tasks;
                 }
             }
         }
-        
+
         public bool IsDrawing
         {
             get => _isDrawing;
@@ -74,7 +73,6 @@ using System.Threading.Tasks;
                 {
                     _isDrawing = value;
                     NotifyPropertyChanged();
-                    
                 }
             }
         }

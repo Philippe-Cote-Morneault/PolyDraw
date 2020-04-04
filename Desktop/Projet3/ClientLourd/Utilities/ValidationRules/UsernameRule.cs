@@ -14,12 +14,11 @@ namespace ClientLourd.Utilities.ValidationRules
 {
     class UsernameRule : ValidationRule
     {
-
         public string Language
         {
             get
             {
-                return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
             }
         }
 
@@ -45,21 +44,22 @@ namespace ClientLourd.Utilities.ValidationRules
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username cannot be empty.");
                 return new ValidationResult(false, "¨Le nom d'utilisateur ne peut pas être vide.");
-
             }
 
             if (!loginInputValidator.IsAlphaNumeric(username))
             {
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username must only contain alphanumeric characters.");
-                return new ValidationResult(false, "Le nom d'utilisateur ne peut contenir que des caractères alphanumériques.");
+                return new ValidationResult(false,
+                    "Le nom d'utilisateur ne peut contenir que des caractères alphanumériques.");
             }
 
             if (!loginInputValidator.UsernameLengthIsOk(username))
             {
                 if (Language == Languages.EN.GetDescription())
                     return new ValidationResult(false, "The username must be between 4 and 12 characters.");
-                return new ValidationResult(false, "Le nom d'utilisateur doit avoir une longueur entre 4 et 12 caractères.");
+                return new ValidationResult(false,
+                    "Le nom d'utilisateur doit avoir une longueur entre 4 et 12 caractères.");
             }
 
             return ValidationResult.ValidResult;

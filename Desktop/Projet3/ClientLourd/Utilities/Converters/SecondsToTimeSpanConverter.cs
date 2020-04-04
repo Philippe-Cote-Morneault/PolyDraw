@@ -9,12 +9,12 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class SecondsToTimeSpanConverter: IValueConverter
+    class SecondsToTimeSpanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double seconds = System.Convert.ToDouble(value);
-            
+
             return TimeSpan.FromSeconds(seconds).ToString();
         }
 
@@ -24,4 +24,3 @@ namespace ClientLourd.Utilities.Converters
         }
     }
 }
-

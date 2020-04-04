@@ -17,21 +17,20 @@ namespace ClientLourd.Utilities.Converters
             string parameterString = parameter as string;
             if (!string.IsNullOrEmpty(parameterString))
             {
-                string[] parameters = parameterString.Split(new char[] { '|' });
-                foreach(string param in parameters)
+                string[] parameters = parameterString.Split(new char[] {'|'});
+                foreach (string param in parameters)
                 {
                     if (Enum.TryParse(param, out GameModes res))
                     {
-                        if (res == (GameModes)value)
+                        if (res == (GameModes) value)
                         {
                             return Visibility.Visible;
                         }
                     }
                 }
-
             }
-            return Visibility.Collapsed;
 
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

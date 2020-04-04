@@ -7,5 +7,4 @@
         public const int MEDIUM_GAME = 4;
         public const int HARD_GAME = 3;
     }
-    
 }

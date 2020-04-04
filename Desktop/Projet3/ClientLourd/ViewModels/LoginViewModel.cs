@@ -27,7 +27,6 @@ namespace ClientLourd.ViewModels
         }
 
 
-
         private void OnLanguageChanged(object source, EventArgs args)
         {
             NotifyPropertyChanged(nameof(Language));
@@ -35,7 +34,7 @@ namespace ClientLourd.ViewModels
 
         public MainViewModel MainViewModel
         {
-            get => (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel);
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
         }
 
         public override void AfterLogin()
@@ -62,10 +61,13 @@ namespace ClientLourd.ViewModels
 
         public string Language
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage; }
+            get
+            {
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+            }
             set
             {
-                (((MainWindow)Application.Current.MainWindow).DataContext as MainViewModel).SelectedLanguage =value;
+                (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SelectedLanguage = value;
             }
         }
 
@@ -126,7 +128,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _signUpCommand ?? (_signUpCommand =
-                           new RelayCommand<object>(param => SignUp()));
+                    new RelayCommand<object>(param => SignUp()));
             }
         }
 
@@ -136,6 +138,7 @@ namespace ClientLourd.ViewModels
             {
                 user = new User();
             }
+
             var dialog = new RegisterDialog(user);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
@@ -145,14 +148,13 @@ namespace ClientLourd.ViewModels
                     dynamic data = await RestClient.Register(user, dialog.PasswordField1.Password);
                     StartLogin(user.Username, data, false);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     await DialogHost.Show(new ClosableErrorDialog(e), "Default");
                     IsLoggedIn = false;
                     SignUp(user);
                 }
             }
-
         }
 
         public ICommand LoginCommand
@@ -160,7 +162,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _loginCommand ?? (_loginCommand =
-                           new RelayCommand<object[]>(param => Authentify(param), param => CredentialsValid(param)));
+                    new RelayCommand<object[]>(param => Authentify(param), param => CredentialsValid(param)));
             }
         }
 
@@ -181,6 +183,7 @@ namespace ClientLourd.ViewModels
             {
                 CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
             }
+
             OnLogin(this);
         }
 
@@ -201,6 +204,7 @@ namespace ClientLourd.ViewModels
                 {
                     data = await RestClient.Login(username, password);
                 }
+
                 await StartLogin(username, data, rememberMeIsActive);
             }
             catch (Exception e)
@@ -238,21 +242,19 @@ namespace ClientLourd.ViewModels
         {
             LoggedIn?.Invoke(source, EventArgs.Empty);
         }
-        
+
         private RelayCommand<object> _changeLangCommand;
 
         public ICommand ChangeLangCommand
         {
-            get
-            {
-                return _changeLangCommand ?? (_changeLangCommand = new RelayCommand<object>(obj => ChangeLang()));
-            }
+            get { return _changeLangCommand ?? (_changeLangCommand = new RelayCommand<object>(obj => ChangeLang())); }
         }
 
         private void ChangeLang()
         {
-            Language = (Language == Languages.EN.GetDescription()) ? Languages.FR.GetDescription() : Language = Languages.EN.GetDescription();
+            Language = (Language == Languages.EN.GetDescription())
+                ? Languages.FR.GetDescription()
+                : Language = Languages.EN.GetDescription();
         }
-
     }
 }

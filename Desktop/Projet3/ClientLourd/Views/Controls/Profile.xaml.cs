@@ -29,7 +29,7 @@ namespace ClientLourd.Views.Controls
         {
             ViewModel.GetAllStats();
         }
-        
+
         public void AfterLogin()
         {
             ViewModel.AfterLogin();
@@ -39,7 +39,5 @@ namespace ClientLourd.Views.Controls
         {
             ViewModel.AfterLogOut();
         }
-
-
     }
 }

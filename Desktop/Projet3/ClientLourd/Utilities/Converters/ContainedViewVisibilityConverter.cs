@@ -13,11 +13,10 @@ namespace ClientLourd.Utilities.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string currentView = (string)value;
-            string viewParameter = (string)parameter;
-         
-            return (currentView == viewParameter) ? Visibility.Visible: Visibility.Collapsed;
-            
+            string currentView = (string) value;
+            string viewParameter = (string) parameter;
+
+            return (currentView == viewParameter) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
