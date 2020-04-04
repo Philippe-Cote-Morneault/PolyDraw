@@ -296,4 +296,37 @@
         La barre du haut est similaire à celle des parties Coop. En revanche, le record personnel du joueur en mode solo est affiché à gauche de l'horloge.
     </system:String>
 
+    <!-- Tutorial -->
+    <system:String x:Key="Tutorial">Tutoriel</system:String>
+    <system:String x:Key="TutorialText1">
+        Bienvenue sur PolyDraw! PolyDraw est une application qui permet à ses utilisateurs de faire plusieurs choses.
+        Puisque l'aspect le plus important de l'application est celui des parties que l'on peut jouer, ce tutoriel tentera de vous aidez à mieux comprendre comment
+        les différents modes de parties qu'offre PolyDraw fonctionnent. L'application offre trois différents modes de parties, soient mêlée générale (FFA), coop et solo.
+        Les modes sont tous un peu similaires. Ils orbitent autour du même concept: un joueur doit correctement deviner le mot dessiné par autre utilisateur, qu'il soit humain ou virtuel.
+        Avant de commencer, passons sur des aspects qui seront importants à la compréhension des différents modes de parties.
+      
+    </system:String>
+
+    <system:String x:Key="TutorialText2">
+        À chaque fois que l'on joint une partie, l'utilsateur sera automatiquement ajouté au canal "Partie en cours". C'est ici qu'il pourra clavarder avec les autres joueurs de la partie.
+        Quand l'utilisateur quittera la partie il sera également automatiquement retiré du canal!
+         
+    </system:String>
+
+
+    <system:String x:Key="TutorialText3">
+        C'est joueurs sont appelés des joueurs virtuels. Ils ont comme particuliarité une icône de robot et ils peuvent parler! Dans les parties FFA, l'hôte peut ajouter ou retirer des
+        joueurs virtuels s'il le désire. En coop et en solo, les joueurs virtuels se joindront automatiquement à vos parties. Ces joueurs peuvent seulement dessiner. Ils ne peuvent
+        pas deviner. Utilisez les à votre avantage, ils peuvent être utiles lorsqu'on a besoin d'un indice!
+       
+    </system:String>
+
+    <system:String x:Key="VirtualPlayers">
+        Joueurs Virtuels
+    </system:String>
+
+    <system:String x:Key="ActiveMatch">
+        Canal de la Partie Active
+    </system:String>
+
 </ResourceDictionary>

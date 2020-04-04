@@ -493,6 +493,10 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Tutorial\Bot.PNG" />
+    <Resource Include="Resources\Tutorial\bot2.PNG" />
+    <Resource Include="Resources\Tutorial\GameChatEN.PNG" />
+    <Resource Include="Resources\Tutorial\GameChatFR.PNG" />
     <Resource Include="Resources\Tutorial\Solo\SoloGameEN.PNG" />
     <Resource Include="Resources\Tutorial\Solo\SoloGameFR.PNG" />
     <Resource Include="Resources\Tutorial\Solo\SoloTopBarEN.PNG" />

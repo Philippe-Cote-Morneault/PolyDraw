@@ -7,9 +7,13 @@
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              xmlns:slide="clr-namespace:ClientLourd.Views.Controls.Tutorial"
             xmlns:ViewModels="clr-namespace:ClientLourd.ViewModels"
+             xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
 
              mc:Ignorable="d">
-   
+    <UserControl.Resources>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
+    </UserControl.Resources>
+    
     <DockPanel MaxHeight="900">
      <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
          <materialDesign:PackIcon Kind="Close"/>
@@ -25,7 +29,6 @@
               </materialDesign:Transitioner.InputBindings>
                         <!-- Introduction -->
                         <materialDesign:TransitionerSlide>
-                            <ScrollViewer>
                                 <DockPanel>
                                     <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
                                     <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
@@ -36,9 +39,42 @@
                                             <materialDesign:PackIcon Kind="NavigateNext"/>
                                         </Button>
                                     </StackPanel>
-                                    <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
+                                    <ScrollViewer>
+                                        <StackPanel>
+                                            <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Margin="10" FontSize="16" Text="{DynamicResource TutorialText1}"/>
+                                            <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource ActiveMatch}"/>
+                                            <Separator Margin="10 0 10 20"/>
+                                            <Image  
+                                                Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                                                Stretch="Fill"
+                                                Height="500">   
+                                                <Image.Source>
+                                                    <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/GameChatFR.png" />
+                                                </Image.Source>
+                                            </Image>
+                                            <Image  Margin="50 0 50 0"
+                                                Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                                                Stretch="Fill"
+                                                Height="500"
+                                                >
+                                                <Image.Source>
+                                                     <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/GameChatEN.png" />
+                                                </Image.Source>
+                                            </Image>
+                                            <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Margin="20" FontSize="16" Text="{DynamicResource TutorialText2}"/>
+                            
+                                            <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource VirtualPlayers}"/>
+                                            <Separator Margin="10 0 10 20"/>
+                                            <Image Stretch="Fill" Height="300" Width="300">
+                                                <Image.Source>
+                                                    <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/bot2.png" />
+                                                </Image.Source>
+                                            </Image>
+                                            <TextBlock TextAlignment="Justify" TextWrapping="Wrap" Margin="20" FontSize="16" Text="{DynamicResource TutorialText3}"/>
+
+                                        </StackPanel>
+                                    </ScrollViewer>        
                                 </DockPanel>
-                            </ScrollViewer>
                         </materialDesign:TransitionerSlide>
                         
                                 

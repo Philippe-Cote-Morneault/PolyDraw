@@ -296,5 +296,34 @@
         The top bar is similar to the one used in coop games. However, the player's personal record in solo mode is displayed next to the clock
     </system:String>
 
+    <!-- Tutorial -->
+
+    <system:String x:Key="Tutorial">Tutoriel</system:String>
+    <system:String x:Key="TutorialText1">
+        Welcome to PolyDraw! PolyDraw is an application that allows the user to do multiple things. 
+        Since the heart of the application is the games it provides, the present tutorial will aim to help you understand how the game modes of PolyDraw work. 
+        PolyDraw offers three different game modes. These game modes are as follows: free-for-all, coop and solo. Every match mode is somewhat similar. They orbit around the same concept:
+        a player must correctly guess a word that is drawn by another user. That user can be human or virtual. Before we get started, let's look at some simple stuff that will be useful to know.        
+    </system:String>
+
+    <system:String x:Key="TutorialText2">
+        Whenever you join a match, you will automatically join the "Active Match" channel. 
+        Here, all the players in your game will be able to talk to each other. You will join this channel by default when you join a match.
+        Once you quit the match, you will also be automatically removed from the channel.
+    </system:String>
+
+
+    <system:String x:Key="TutorialText3">
+        These players are virtual players. They have the icon of a robot and they can talk! In a free-for-all game, the host can add and remove as many virtual player as he wants. 
+        In solo and coop modes, these players are automatically joined to your game. They act as drawers and cannot guess. They are also useful when in need of a hint!
+    </system:String>
+
+    <system:String x:Key="VirtualPlayers">
+        Virtual Players
+    </system:String>
+
+    <system:String x:Key="ActiveMatch">
+        Active Match Channel
+    </system:String>
 
 </ResourceDictionary>
