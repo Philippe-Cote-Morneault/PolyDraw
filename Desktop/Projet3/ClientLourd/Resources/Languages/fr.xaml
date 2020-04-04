@@ -1,6 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--Exception-->
+    <system:String x:Key="ApplicationClose">L'application va fermer</system:String>
+    <system:String x:Key="RequestFailed">La requête n'a pas pu être acheminée au serveur</system:String>
+    
     <system:String x:Key="test">Salut</system:String>
 
     <!--Common-->
