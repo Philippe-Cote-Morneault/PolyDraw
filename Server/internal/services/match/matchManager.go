@@ -1,9 +1,11 @@
 package match
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/match"
 	"log"
 	"sync"
+
+	"gitlab.com/jigsawcorp/log3900/internal/match"
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 	"github.com/google/uuid"
 	"gitlab.com/jigsawcorp/log3900/internal/services/match/mode"
@@ -107,6 +109,7 @@ func (m *matchManager) Hint(socketID uuid.UUID) {
 func (m *matchManager) Quit(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
 		if _, removed := m.removed[groupID]; !removed {
+			cbroadcast.Broadcast(match.BPlayerLeft, socketID)
 			m.matches[groupID].Disconnect(socketID)
 		}
 		delete(m.assignment, socketID)
