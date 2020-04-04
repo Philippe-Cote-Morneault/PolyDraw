@@ -362,15 +362,7 @@ namespace ClientLourd.ViewModels
             {
                 if (player.User.Avatar == null)
                 {
-                    if (!player.User.IsCPU)
-                    {
-                        player.User = await RestClient.GetUserInfo(player.User.ID);
-                    }
-                    else
-                    {
-                        player.User.Avatar = new BitmapImage(new Uri($"/ClientLourd;component/Resources/robot.png",
-                            UriKind.Relative));
-                    }
+                    player.User = await RestClient.GetUserInfo(player.User.ID);
                 }
             }
         }
