@@ -250,8 +250,10 @@ namespace ClientLourd.Services.RestService
             {
                 for (int j = 0; j < groups[i].Players.Count; j++)
                 {
-                    groups[i].Players[j].User = new User(tmpResponse[i]["Players"][j]["Username"],
-                        (tmpResponse[i] as dynamic)["Players"][j]["ID"], tmpResponse[i]["Players"]["IsCPU"]);
+                    string username = tmpResponse[i]["Players"][j]["Username"];
+                    string id = tmpResponse[i]["Players"][j]["ID"];
+                    bool isCPU = tmpResponse[i]["Players"][j]["IsCPU"];
+                    groups[i].Players[j].User = new User(username, id, isCPU);
                 }
 
                 groups[i].Rounds = (int) tmpResponse[i]["NbRound"];

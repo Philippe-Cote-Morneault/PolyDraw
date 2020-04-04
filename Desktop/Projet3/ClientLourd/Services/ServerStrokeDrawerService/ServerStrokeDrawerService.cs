@@ -67,23 +67,24 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
 
             if (!_strokeInfoQueue.IsEmpty)
             {
-                Application.Current.Dispatcher.Invoke(delegate
-                {
-                    StrokeInfo strokeInfo;
-                    _strokeInfoQueue.TryDequeue(out strokeInfo);
-                    if (strokeInfo != null && strokeInfo.PointCollection.Count > 0)
+                if (Application.Current.Dispatcher != null)
+                    Application.Current.Dispatcher.Invoke(delegate
                     {
-                        if (_isPreview)
+                        StrokeInfo strokeInfo;
+                        _strokeInfoQueue.TryDequeue(out strokeInfo);
+                        if (strokeInfo != null && strokeInfo.PointCollection.Count > 0)
                         {
-                            _canvas.AddStrokePreview(strokeInfo);
-                            _messageDequeuedCounter++;
+                            if (_isPreview)
+                            {
+                                _canvas.AddStrokePreview(strokeInfo);
+                                _messageDequeuedCounter++;
+                            }
+                            else
+                            {
+                                _lastStroke = _canvas.AddStroke(strokeInfo, _lastStroke);
+                            }
                         }
-                        else
-                        {
-                            _lastStroke = _canvas.AddStroke(strokeInfo, _lastStroke);
-                        }
-                    }
-                });
+                    });
             }
 
             if (_isPreview && AllStrokesWereDrawn())

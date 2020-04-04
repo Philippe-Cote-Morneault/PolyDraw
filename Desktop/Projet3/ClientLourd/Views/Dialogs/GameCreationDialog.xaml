@@ -17,11 +17,23 @@
         <converters:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <converters:EnumTranslationConverter x:Key="EnumTranslationConverter" />
-
     </UserControl.Resources>
+    
+    <Grid >
+        <WrapPanel ZIndex="2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Visibility="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar
+                        Height="24"
+                        Width="24"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Value="0"
+                        IsIndeterminate="True" />
+        </WrapPanel>
     <materialDesign:DialogHost Identifier="Dialog">
 
-        <DockPanel Height="975">
+        <DockPanel  Height="975">
             <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
                 <materialDesign:PackIcon Kind="Close" />
             </Button>
@@ -34,7 +46,7 @@
                     <materialDesign:TransitionerSlide.ForwardWipe>
                         <materialDesign:SlideWipe />
                     </materialDesign:TransitionerSlide.ForwardWipe>
-                    <DockPanel>
+                    <DockPanel IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}">
                         <Button Margin="5" DockPanel.Dock="Bottom" Command="{Binding ValidateGameCommand}"
                                 Click="ClearCanvasClick" Content="{DynamicResource Next}">
                             <Button.IsEnabled>
@@ -172,7 +184,7 @@
                     <materialDesign:TransitionerSlide.ForwardWipe>
                         <materialDesign:SlideWipe />
                     </materialDesign:TransitionerSlide.ForwardWipe>
-                    <DockPanel>
+                    <DockPanel IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}">
                         <Grid DockPanel.Dock="Bottom">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -236,7 +248,7 @@
                     <materialDesign:DrawerHost Name="CurrentDrawer">
                         <materialDesign:DrawerHost.RightDrawerContent>
                             <!-- Upload image settings-->
-                            <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                            <StackPanel IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}" HorizontalAlignment="Center" Orientation="Vertical">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                     <StackPanel Margin="10" Orientation="Vertical">
                                         <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
@@ -259,7 +271,7 @@
                                 </StackPanel>
                             </StackPanel>
                         </materialDesign:DrawerHost.RightDrawerContent>
-                        <DockPanel>
+                        <DockPanel IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}">
                             <Grid DockPanel.Dock="Bottom">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
@@ -314,4 +326,5 @@
             </materialDesign:Transitioner>
         </DockPanel>
     </materialDesign:DialogHost>
+    </Grid>
 </UserControl>
