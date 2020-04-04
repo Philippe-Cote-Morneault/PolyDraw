@@ -4,6 +4,7 @@ using ClientLourd.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -75,8 +76,11 @@ namespace ClientLourd.Views.Controls.Game
                 {
                     tmpPlayer.Score = info["Points"];
                     tmpPlayer.PointsRecentlyGained = newPoints;
-
-                    AnimatePoints(tmpPlayer.User.ID, (tmpPlayer.PointsRecentlyGained > 0));
+                    GameViewModel.OrderPlayers();
+                    Task.Delay(100).ContinueWith((t) =>
+                    {
+                        AnimatePoints(tmpPlayer.User.ID, (tmpPlayer.PointsRecentlyGained > 0));
+                    });
                 }
             }
         }
@@ -102,7 +106,6 @@ namespace ClientLourd.Views.Controls.Game
                             Storyboard.SetTarget(sb.Children[j], tb);
                         }
 
-                        sb.Completed += (sender, ev) => GameViewModel.OrderPlayers();
                         sb.Begin();
                     });
                 }
