@@ -60,6 +60,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 
 	gamesPlayed := int64(len(matches))
 	nbWins := 0
+	nbFFA := 0
 	timePlayed := int64(0)
 	bestScoreSolo := int64(math.MaxInt64)
 	for _, match := range matches {
@@ -67,9 +68,11 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 		if match.MatchType == 1 && match.MatchDuration < bestScoreSolo {
 			bestScoreSolo = match.MatchDuration
 		}
-
-		if user.Username == match.WinnerName {
-			nbWins++
+		if match.MatchType == 0 {
+			nbFFA++
+			if user.Username == match.WinnerName {
+				nbWins++
+			}
 		}
 
 		timePlayed += match.MatchDuration
@@ -79,7 +82,11 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 		bestScoreSolo = 0
 	}
 
-	winRatio := float64(nbWins) / float64(len(matches))
+	winRatio := float64(0)
+
+	if nbFFA != 0 {
+		winRatio = float64(nbWins) / float64(nbFFA)
+	}
 
 	return DataStats{AvgGameDuration: float64(timePlayed) / float64(gamesPlayed), GamesPlayed: gamesPlayed, TimePlayed: timePlayed, WinRatio: winRatio, BestScoreSolo: bestScoreSolo}, ""
 }
