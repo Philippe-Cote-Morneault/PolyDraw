@@ -101,7 +101,7 @@ namespace ClientLourd.Views.Controls.Game
                         LeaderBoardGrid.Children.Add(new LeaderBoard(e, false));
                         LeaderBoardGrid.Visibility = Visibility.Visible;
                     });
-                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
+                    Thread.Sleep(MatchTiming.ROUND_END_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         LeaderBoardGrid.Children.Clear();
