@@ -28,7 +28,6 @@ import com.log3900.login.register.RegisterFragment
 import com.log3900.settings.LocaleLanguageHelper
 import com.log3900.utils.ui.KeyboardHelper
 import kotlinx.android.synthetic.main.fragment_login.*
-import java.util.*
 
 class LoginFragment : Fragment(), LoginView {
     // Services
@@ -226,16 +225,14 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     fun changeResLanguage(language: String) {
-        loginButton.text = getString(R.string.login_button)
         LocaleLanguageHelper.getLocalizedResources(context!!, language).apply {
             activity_login_text_view_welcome.text = getString(R.string.login_welcome)
             activity_login_text_input_layout_username.hint = getString(R.string.login_username_hint)
             activity_login_text_input_layout_password.hint = getString(R.string.login_password_hint)
+            loginButton.text = getString(R.string.login_button)
             activity_login_remember_me_checkbox.text = getString(R.string.login_remember_me)
             register_question_text.text = getString(R.string.login_signup_question)
             registerButton.text = getString(R.string.login_signup_now)
         }
-
-//        activity_login_text_view_welcome.text = language
     }
 }

@@ -13,11 +13,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.MainActivity
 import com.log3900.R
+import com.log3900.login.LoginActivity
 import com.log3900.profile.ModifyAvatarDialog
 import com.log3900.profile.ModifyAvatarDialogLauncher
+import com.log3900.settings.LocaleLanguageHelper
 import com.log3900.shared.architecture.ViewNavigator
 import com.log3900.shared.ui.ProfileView
 import com.log3900.utils.ui.getAvatarID
+import kotlinx.android.synthetic.main.fragment_register.*
 import kotlin.random.Random
 
 class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, ViewNavigator {
@@ -45,6 +48,9 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        changeResLanguage((activity as LoginActivity).currentLanguageCode)
+    }
 
     fun setUpUi(root: View) {
         registerBtn = root.findViewById(R.id.register_button)
@@ -204,5 +210,21 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
 
     fun setConfirmPasswordError(error: String?) {
         confirmPasswordInput.error = error
+    }
+
+    fun changeResLanguage(language: String) {
+        LocaleLanguageHelper.getLocalizedResources(context!!, language).apply {
+            register_text.text = getString(R.string.register)
+            modify_avatar_button.text = getString(R.string.modify)
+            username_input_layout.hint = getString(R.string.login_username_hint)
+            password_input_layout.hint = getString(R.string.login_password_hint)
+            password_input_verify_layout.hint = getString(R.string.login_reenter_password_hint)
+            email_input_layout.hint = getString(R.string.email_hint)
+            name_input_layout.hint = getString(R.string.firstname)
+            surname_input_layout.hint = getString(R.string.lastname)
+            backBtn.text = getString(R.string.back)
+            registerBtn.text = getString(R.string.register)
+            all_required_text.text = getString(R.string.all_required)
+        }
     }
 }

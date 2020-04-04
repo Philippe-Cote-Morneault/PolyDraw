@@ -98,6 +98,7 @@ class LoginActivity : AppCompatActivity() {
         var currentFragment = supportFragmentManager.findFragmentByTag(REGISTER_FRAGMENT_TAG)
         if (currentFragment != null && currentFragment is RegisterFragment && currentFragment.isVisible) {
 //            currentFragment
+            currentFragment.changeResLanguage(currentLanguageCode)
             Log.d("LANGUAGE", "Found register")
         } else {
             currentFragment = supportFragmentManager.findFragmentByTag(LOGIN_FRAGMENT_TAG)
