@@ -150,6 +150,7 @@ namespace ClientLourd.Services.RestService
 
         public async Task<Stats> GetStats()
         {
+            Console.WriteLine("appeler get stats");
             RestRequest request = new RestRequest("stats");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
@@ -159,6 +160,8 @@ namespace ClientLourd.Services.RestService
 
         public async Task<StatsHistory> GetStats(int start, int end)
         {
+            Console.WriteLine("appeler get stats history");
+
             RestRequest request = new RestRequest("stats//history");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddParameter("start", start, ParameterType.QueryString);

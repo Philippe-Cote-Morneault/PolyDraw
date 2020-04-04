@@ -14,7 +14,7 @@ namespace ClientLourd.Utilities.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double time = System.Convert.ToDouble(value);
-            return Timestamp.UnixTimeStampToDateTime(time).ToString();
+            return (time == 0)? "-" : Timestamp.UnixTimeStampToDateTime(time).ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
