@@ -17,6 +17,7 @@ using ClientLourd.Services.ServerStrokeDrawerService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.Utilities.Constants;
 using ClientLourd.Utilities.Enums;
 using ClientLourd.Utilities.Extensions;
 using ClientLourd.Views.Controls;
@@ -518,7 +519,7 @@ namespace ClientLourd.ViewModels
         }
 
 
-        public delegate void CanvasMessageHandler(string message);
+        public delegate void CanvasMessageHandler(string message, int time);
 
         public event CanvasMessageHandler NewCanavasMessage;
 
@@ -541,9 +542,9 @@ namespace ClientLourd.ViewModels
             get { return ProfileViewer.ViewPublicProfileCommand; }
         }
 
-        protected virtual void OnNewCanavasMessage(string message)
+        protected virtual void OnNewCanavasMessage(string message, int time = MatchTiming.ANNIMATION_TIMEOUT)
         {
-            NewCanavasMessage?.Invoke(message);
+            NewCanavasMessage?.Invoke(message, time);
         }
 
         int _teamPoints;

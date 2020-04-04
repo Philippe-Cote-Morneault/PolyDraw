@@ -31,6 +31,13 @@ namespace ClientLourd.Views.Controls.Game
         {
             SocketClient.RoundEnded += SocketClientOnRoundEnded;
             SocketClient.MatchSync += SocketClientOnMatchSync;
+            SocketClient.MatchEnded += SocketClientOnMatchEnded;
+        }
+
+        private void SocketClientOnMatchEnded(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            UpdatePlayersScore(e.Players);
         }
 
         private void SocketClientOnMatchSync(object source, EventArgs args)

@@ -153,7 +153,7 @@ namespace ClientLourd.Views.Controls.Game
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         ShowCanvasMessage(
-                            $"{(string) ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}");
+                            $"{(string) ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}", MatchTiming.GAME_ENDED_TIMEOUT);
                         LeaderBoardGrid.Visibility = Visibility.Visible;
                     });
                     Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
@@ -167,7 +167,7 @@ namespace ClientLourd.Views.Controls.Game
             }
         }
 
-        private void ShowCanvasMessage(string message)
+        private void ShowCanvasMessage(string message, int time = MatchTiming.ANNIMATION_TIMEOUT)
         {
             Task.Run(() =>
             {
@@ -186,7 +186,7 @@ namespace ClientLourd.Views.Controls.Game
                     LeaderBoardGrid.Children.Add(tb);
                     LeaderBoardGrid.Visibility = Visibility.Visible;
                 });
-                Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
+                Thread.Sleep(time);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     LeaderBoardGrid.Children.Clear();
