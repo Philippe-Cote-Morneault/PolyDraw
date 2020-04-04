@@ -294,7 +294,13 @@ namespace ClientLourd.Services.RestService
                     case HttpStatusCode.Forbidden:
                         throw new RestNotFoundException(deseralizer.Deserialize<dynamic>(response)["Error"]);
                     default:
-                        throw new RestException("The request failed");
+                        string message = "";
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            var d = ((MainWindow) Application.Current.MainWindow).ViewModel.CurrentDictionary;
+                            message = (string) d["RequestFailed"];
+                        });
+                        throw new RestException(message);
                 }
             });
             task.Start();
