@@ -256,7 +256,7 @@
                                                Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
                                 </StackPanel>
                             </materialDesign:ColorZone>
-                            <ListView>
+                            <ListView Cursor="Hand">
                                 <ListViewItem MouseUp="HomeItem_OnMouseUp" Name="HomeItem">
                                     <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="House" Height="15" Width="15"
