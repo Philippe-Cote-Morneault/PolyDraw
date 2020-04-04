@@ -66,8 +66,7 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-        // TODO: Change to DisconnectedAt
-        public long DeconnectedAt
+        public long DisconnectedAt
         {
             get { return _disconnectedAt; }
             set

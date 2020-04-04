@@ -21,11 +21,15 @@ namespace ClientLourd.Utilities.Converters
         /// <returns></returns>
         public object Convert(object[] value, Type targetType, object parameter, CultureInfo culture)
         {
-            DateTime dtDisconnection = Timestamp.UnixTimeStampToDateTime((long) value[0]);
-            DateTime dtConnection = Timestamp.UnixTimeStampToDateTime((long) value[1]);
+            DateTime dtConnection = Timestamp.UnixTimeStampToDateTime((long) value[0]);
+            DateTime dtDisconnection = Timestamp.UnixTimeStampToDateTime((long) value[1]);
+            
+            if ((long)value[1] == 0)
+            {
+                return new TimeSpan((DateTime.Now - dtConnection).Hours, (DateTime.Now - dtConnection).Minutes, (DateTime.Now - dtConnection).Seconds).ToString();
+            }
 
-
-            return (dtConnection - dtDisconnection).ToString();
+            return (dtDisconnection - dtConnection).ToString();
         }
 
 

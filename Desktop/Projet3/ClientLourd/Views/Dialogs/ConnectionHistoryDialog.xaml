@@ -55,7 +55,7 @@
                         <GridViewColumn Width="200"
                                         DisplayMemberBinding="{Binding ConnectedAt, Converter={StaticResource LongToUnixTimeStampConverter}}" />
                         <GridViewColumn Width="200"
-                                        DisplayMemberBinding="{Binding DeconnectedAt,  Converter={StaticResource LongToUnixTimeStampConverter}}" />
+                                        DisplayMemberBinding="{Binding DisconnectedAt,  Converter={StaticResource LongToUnixTimeStampConverter}}" />
                         <GridViewColumn Width="200">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -63,7 +63,7 @@
                                         <TextBlock.Text>
                                             <MultiBinding Converter="{StaticResource TimeDifferenceConverter}">
                                                 <Binding Path="ConnectedAt" />
-                                                <Binding Path="DeconnectedAt" />
+                                                <Binding Path="DisconnectedAt" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>

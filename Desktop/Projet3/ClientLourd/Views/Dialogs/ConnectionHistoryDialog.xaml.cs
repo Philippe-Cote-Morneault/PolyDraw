@@ -40,6 +40,7 @@ namespace ClientLourd.Views.Dialogs
             (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
 
             StatsHistory = statsHistory;
+
             _lastMessageIndex = lastMessageIndex;
 
             InitializeComponent();

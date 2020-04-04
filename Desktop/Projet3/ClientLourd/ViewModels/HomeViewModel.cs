@@ -358,7 +358,7 @@ namespace ClientLourd.ViewModels
 
         private async void SetUsersInfo(Lobby lobby)
         {
-            foreach (Player player in lobby.Players)
+            foreach (Player player in lobby.Players.ToList())
             {
                 if (player.User.Avatar == null)
                 {
