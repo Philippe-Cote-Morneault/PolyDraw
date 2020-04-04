@@ -181,7 +181,7 @@ namespace ClientLourd.ViewModels
                 IsGameStarted = false;
             }
 
-            //ReturnHome();
+            ReturnHome();
         }
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
