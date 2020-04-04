@@ -98,5 +98,12 @@ class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var group
             return Difficulty.timeToPlay(difficulty)
         }
     }
-
 }
+
+class UserLeftGroup(
+    var userID: UUID,
+    var username: String,
+    var groupID: UUID,
+    var isCPU: Boolean,
+    var isKicked: Boolean
+)

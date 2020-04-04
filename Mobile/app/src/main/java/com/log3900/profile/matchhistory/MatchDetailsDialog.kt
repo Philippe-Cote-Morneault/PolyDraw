@@ -57,10 +57,10 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         val duration: TextView = root.findViewById(R.id.match_duration_value)
         duration.text = formatDuration(match.duration)
 
-        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
-        match.playerNames.forEach {
-            playersLayout.addPlayer(it)
-        }
+//        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
+//        match.playerNames.forEach {
+//            playersLayout.addPlayer(it)
+//        }
 
         val closeButton: MaterialButton = root.findViewById(R.id.close_dialog_button)
         closeButton.setOnClickListener {

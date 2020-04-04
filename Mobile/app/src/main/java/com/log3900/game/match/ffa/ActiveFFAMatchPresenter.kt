@@ -1,13 +1,11 @@
 package com.log3900.game.match.ffa
 
 import android.os.Handler
-import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.match.*
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-import com.log3900.shared.architecture.Presenter
 import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -25,7 +23,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         this.activeFFAMatchView = activeMatchView as ActiveFFAMatchView
 
         activeFFAMatchView.setPlayerScores(matchManager.getPlayerScores())
-        activeFFAMatchView.enableHintButton(false)
+        activeFFAMatchView.showHintButton(false)
         activeFFAMatchView.setTurnsValue(MainApplication.instance.getString(R.string.turn) + " 1/${FFAMatchManager.getCurrentMatch().laps}")
 
         matchManager.notifyReadyToPlay()
@@ -52,6 +50,11 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
     override fun onGuessedWordRight(playerGuessedWord: PlayerGuessedWord) {
         super.onGuessedWordRight(playerGuessedWord)
         activeFFAMatchView?.setPlayerStatus(playerGuessedWord.userID, R.drawable.ic_green_check)
+        activeFFAMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.ffa_guessed_correctly))
+        activeFFAMatchView?.showCanvasMessageView(true)
+        Handler().postDelayed({
+            activeFFAMatchView?.showCanvasMessageView(false)
+        }, 2000)
     }
 
     override fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
@@ -62,12 +65,12 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         val drawingPlayer = FFAMatchManager.getCurrentMatch().players.find { it.ID == playerTurnToDraw.userID }
 
         if (drawingPlayer!!.isCPU) {
-            activeFFAMatchView?.enableHintButton(true)
+            activeFFAMatchView?.showHintButton(true)
         } else {
-            activeFFAMatchView?.enableHintButton(false)
+            activeFFAMatchView?.showHintButton(false)
         }
 
-        activeFFAMatchView?.setCanvasMessage(drawingPlayer.username + " is drawing the next word!")
+        activeFFAMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.ffa_is_drawing_the_next_word, drawingPlayer.username))
         activeFFAMatchView?.showCanvasMessageView(true)
 
         Handler().postDelayed({
@@ -77,6 +80,13 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
 
     override fun onRoundEnded(roundEnded: RoundEnded) {
         super.onRoundEnded(roundEnded)
+
+        val scores: ArrayList<Pair<String, Int>> = arrayListOf()
+        matchManager.getCurrentMatch().players.forEach { currentMatchPlayer ->
+            scores.add(Pair(currentMatchPlayer.username, roundEnded.players.find { currentMatchPlayer.ID == it.userID }!!.newPoints))
+        }
+        activeFFAMatchView?.showCanvasMessageView(false)
+        activeMatchView?.showRoundEndInfoView(roundEnded.word, scores)
 
         roundEnded.players.forEach {
             if (playerScores[it.userID] != it.points) {
@@ -88,10 +98,22 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
                 playerScores[it.userID] = it.points
             }
         }
+
+        Handler().postDelayed({
+            activeFFAMatchView?.hideCanvas()
+            activeFFAMatchView?.hideRoundEndInfoView()
+            activeFFAMatchView?.showCanvasMessageView(false)
+            Handler().postDelayed({
+                activeFFAMatchView?.clearCanvas()
+                activeFFAMatchView?.showCanvas()
+            }, 500)
+        }, 2000)
     }
 
     override fun onMatchEnded(matchEnded: MatchEnded) {
         super.onMatchEnded(matchEnded)
+
+        activeFFAMatchView?.showCanvasMessageView(false)
 
         val playerScores: ArrayList<Pair<String, Int>> = arrayListOf()
         matchEnded.players.forEach {

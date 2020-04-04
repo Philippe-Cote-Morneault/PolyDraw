@@ -4,9 +4,13 @@ import android.app.LauncherActivity
 import android.app.Service
 import android.content.Intent
 import android.os.*
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.daveanthonythomas.moshipack.MoshiPack
+import com.google.gson.JsonParser
 import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
@@ -14,6 +18,7 @@ import com.log3900.game.group.GroupManager
 import com.log3900.game.group.GroupRepository
 import com.log3900.game.match.MatchRepository
 import com.log3900.settings.language.LanguageManager
+import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.ui.dialogs.ErrorDialog
@@ -54,10 +59,9 @@ class MonitoringService : Service() {
                 true
             }
             socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
-
             socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
-
             socketService?.subscribeToMessage(Event.SERVER_RESPONSE, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.SERVER_ERROR, socketMessageHandler!!)
             Looper.loop()
         }).start()
 
@@ -66,6 +70,7 @@ class MonitoringService : Service() {
 
     override fun onDestroy() {
         EventBus.getDefault().unregister(this)
+        socketService?.unsubscribeFromMessage(Event.SERVER_ERROR, socketMessageHandler!!)
         socketService?.unsubscribeFromEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
         socketService?.unsubscribeFromMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.SERVER_RESPONSE, socketMessageHandler!!)
@@ -95,6 +100,15 @@ class MonitoringService : Service() {
                 if ((message.obj as com.log3900.socket.Message).data[0].toInt() == 1) {
                     onAuthentication()
                 }
+            }
+            Event.SERVER_ERROR.eventType -> {
+                val json = MoshiPack.msgpackToJson((message.obj as com.log3900.socket.Message).data)
+                val jsonObject = JsonParser().parse(json).asJsonObject
+                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                    MainApplication.instance.getContext().getString(R.string.error),
+                    jsonObject.get("Message").asString,
+                    null,
+                    null)))
             }
         }
     }

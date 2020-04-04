@@ -7,18 +7,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.log3900.R
 import com.log3900.draw.DrawViewFragment
-import com.log3900.game.group.Player
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import android.graphics.Color
-import android.util.Log
-import android.view.animation.Animation
 import androidx.navigation.fragment.findNavController
 import com.log3900.game.match.UI.*
 import com.log3900.shared.ui.ThemeUtils
@@ -91,9 +84,11 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         }
 
         if (guessingView == null) {
+            footer.bringToFront()
             guessingView = WordGuessingView(context!!)
             guessingView?.layoutParams = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             footer.addView(guessingView)
+            guessingView?.bringToFront()
             guessingView?.listener = object : WordGuessingView.Listener {
                 override fun onGuessPressed(text: String) {
                     activeMatchPresenter?.guessPressed(text)
@@ -180,7 +175,7 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             PropertyValuesHolder.ofFloat("scaleX", 1.4f),
             PropertyValuesHolder.ofFloat("scaleY", 1.4f)
         )
-        scaleDown.duration = 500
+        scaleDown.duration = 200
 
         scaleDown.repeatCount = 1
         scaleDown.repeatMode = ObjectAnimator.REVERSE
@@ -248,8 +243,6 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             colorChangeAnimator.setEvaluator(ArgbEvaluator())
             colorChangeAnimator.addUpdateListener { valueAnimator -> editText.setTextColor(valueAnimator.animatedValue as Int) }
             colorChangeAnimator.duration = 200
-            colorChangeAnimator.repeatCount = 1
-            colorChangeAnimator.repeatMode = ObjectAnimator.REVERSE
             colorChangeAnimator.startDelay = (index * 200).toLong()
             colorChangeAnimator.start()
             scaleUpAnimator.start()
@@ -276,8 +269,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         matchEndInfoView.visibility = View.INVISIBLE
     }
 
-    override fun enableHintButton(enable: Boolean) {
-        guessingView?.enableHintButton(enable)
+    override fun showHintButton(enable: Boolean) {
+        guessingView?.showHintButton(enable)
     }
 
     override fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean) {
@@ -318,6 +311,14 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         } else {
             canvasMessageView.visibility = View.INVISIBLE
         }
+    }
+
+    override fun enableGuessingView(enable: Boolean) {
+        guessingView?.enableActions(enable)
+    }
+
+    override fun clearGuessingViewText() {
+        guessingView?.clearCurrentText()
     }
 
     override fun onBackButtonPressed() {

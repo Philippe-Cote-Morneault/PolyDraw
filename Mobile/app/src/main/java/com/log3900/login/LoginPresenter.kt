@@ -133,6 +133,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         userID: String,
         onMainStart: () -> Unit = {}
     ) {
+        Log.d("SESSION_TOKEN", session)
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 startMainActivity()

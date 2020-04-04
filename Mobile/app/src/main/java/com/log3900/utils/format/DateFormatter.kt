@@ -24,5 +24,8 @@ class DateFormatter {
             return dateFormat.format(date)
         }
 
+        fun formatFullDate(date: Date): String = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date)
+
+        fun formatFullTime(date: Date): String = SimpleDateFormat("HH:mm:ss").format(date)
     }
 }

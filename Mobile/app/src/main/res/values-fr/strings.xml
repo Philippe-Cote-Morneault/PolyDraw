@@ -51,6 +51,8 @@
     <string name="connected_at">Connecté à</string>
     <string name="connection_history">Historique de connexion</string>
     <string name="connection_history_title">Historique de connexion:</string>
+    <string name="connection_title">Connexion</string>
+    <string name="disconnection_title">Déconnexion</string>
     <string name="disconnected_at">Déconnecté à</string>
     <string name="email">Courriel</string>
     <string name="email_hint">Courriel</string>
@@ -104,6 +106,7 @@
     <string name="statistics">Statistiques</string>
     <string name="surname_hint">Nom de famille</string>
     <string name="time_played_title">Temps joué:</string>
+    <string name="time_played">Temps joué</string>
     <string name="tutorial">Tutoriel</string>
     <string name="tutorial_button_next">Suivant</string>
     <string name="tutorial_button_previous">Précédent</string>
@@ -166,4 +169,16 @@
     <string name="player">Joueur</string>
     <string name="ffa_match_end_inf_winner_is_you">Vous êtes le vainqueur!</string>
     <string name="type_guess_instruction">Devinez ici</string>
+    <string name="warning">Avertissement</string>
+    <string name="error">Erreur</string>
+    <string name="kick_from_group_dialog_message">Vous avez été expulsé de la partie</string>
+    <string name="host_left_group_dialog_message">L\'hôte a quitté la salle d\'attente!</string>
+    <string name="language_picker_dialog_title">Sélecteur de language</string>
+    <string name="you_guessed_correctly">Vous avez deviné correctement!</string>
+    <string name="solo_match_is_over_message">Le match est terminé! Votre score: %1$d</string>
+    <string name="the_word_was">Le mot était %1$s</string>
+    <string name="try_again">Essayez encore!</string>
+    <string name="ffa_guessed_correctly">Vous avez devinez correctement! En attente des autres joueurs</string>
+    <string name="ffa_is_drawing_the_next_word">%1$s dessine le prochain mot!</string>
+    <string name="coop_teamate_guessed_correctly">%1$s a deviné le mot! Le mot était %2$s</string>
 </resources>

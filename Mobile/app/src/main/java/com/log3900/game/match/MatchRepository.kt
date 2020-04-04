@@ -49,6 +49,9 @@ class MatchRepository : Service() {
         socketService?.subscribeToMessage(Event.CHECKPOINT, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.subscribeToMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.TEAMATE_GUESSED_WORD_PROPERLY, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.TEAMATE_GUESSED_WORD_INCORRECTLY, socketMessageHandler!!)
+        socketService?.subscribeToMessage(Event.MATCH_CANCELLED, socketMessageHandler!!)
     }
 
     fun getCurrentMatch(): Match? {
@@ -89,6 +92,9 @@ class MatchRepository : Service() {
             Event.CHECKPOINT -> onCheckpoint(socketMessage)
             Event.ROUND_ENDED -> onRoundEnded(socketMessage)
             Event.HINT_RESPONSE -> onHintResponse(socketMessage)
+            Event.TEAMATE_GUESSED_WORD_PROPERLY -> onTeamateGuessedWordProperly(socketMessage)
+            Event.TEAMATE_GUESSED_WORD_INCORRECTLY -> onTeamateGuessedWordInproperly(socketMessage)
+            Event.MATCH_CANCELLED -> onMatchCancelled(socketMessage)
         }
     }
 
@@ -244,6 +250,27 @@ class MatchRepository : Service() {
         EventBus.getDefault().post(MessageEvent(EventType.HINT_RESPONSE, hintResponse))
     }
 
+    private fun onTeamateGuessedWordProperly(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val teamateGuessedWordProperly = MatchAdapter.jsonToTeamateGuessedProperly(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TEAMATE_GUESSED_WORD_PROPERLY, teamateGuessedWordProperly))
+    }
+
+    private fun onTeamateGuessedWordInproperly(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val teamateGuessedWordInproperly = MatchAdapter.jsonToTeamateGuessedInproperly(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.TEAMATE_GUESSED_WORD_INCORRECTLY, teamateGuessedWordInproperly))
+    }
+
+    private fun onMatchCancelled(message: com.log3900.socket.Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val matchCancelled = MatchAdapter.jsonToMatchCancelled(jsonObject)
+        EventBus.getDefault().post(MessageEvent(EventType.MATCH_CANCELLED, matchCancelled))
+    }
+
     private fun updatePlayerScore(playerID: UUID, newScore: Int) {
         playerScores[playerID] = newScore
         reorderPlayers()
@@ -256,6 +283,9 @@ class MatchRepository : Service() {
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(Event.MATCH_CANCELLED, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.TEAMATE_GUESSED_WORD_INCORRECTLY, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.TEAMATE_GUESSED_WORD_PROPERLY, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.HINT_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.ROUND_ENDED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(Event.CHECKPOINT, socketMessageHandler!!)
