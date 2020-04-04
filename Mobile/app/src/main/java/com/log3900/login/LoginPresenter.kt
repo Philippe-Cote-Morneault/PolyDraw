@@ -198,9 +198,13 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                             sessionToken = sessionToken,
                             bearerToken = bearerToken,
                             tutorialDone = it.tutorialDone,
-                            themeID = it.themeID,
-                            languageID =  LanguageManager.getLanguageIDByCode(language), // it.languageID,
                             soundEffectsOn = it.soundEffectsOn,
+                            themeID = it.themeID,
+                            languageID = if (language == "") {
+                                it.languageID
+                            } else {
+                                LanguageManager.getLanguageIDByCode(language) // it.languageID,
+                            },
                             musicOn = it.musicOn
                         )
                     ).subscribe {
