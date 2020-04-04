@@ -1,8 +1,11 @@
 package com.log3900.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +25,9 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
 import com.log3900.login.register.RegisterFragment
+import com.log3900.settings.LocaleLanguageHelper
 import com.log3900.utils.ui.KeyboardHelper
+import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : Fragment(), LoginView {
     // Services
@@ -51,6 +56,10 @@ class LoginFragment : Fragment(), LoginView {
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        changeResLanguage((activity as LoginActivity).currentLanguageCode)
+    }
+
     private fun setupUIElements(root: View) {
         contentLayout = root.findViewById(R.id.card_content_layout)
 
@@ -58,6 +67,7 @@ class LoginFragment : Fragment(), LoginView {
         loginButton.setOnClickListener {
             onLoginButtonClick()
         }
+        loginButton.isEnabled = false
 
         usernameTextInput = root.findViewById(R.id.activity_login_text_input_username)
         usernameTextInput.doAfterTextChanged {
@@ -82,16 +92,26 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun onUsernameChange() {
-        loginPresenter?.validateUsername(usernameTextInput.text.toString())
+//        if (loginPresenter?.validateUsername(usernameTextInput.text.toString())!!)
+        enableLoginIfAllValid()
     }
 
     private fun onPasswordChange() {
-        loginPresenter?.validatePassword(passwordTextInput.text.toString())
+//        if (loginPresenter?.validatePassword(passwordTextInput.text.toString())!!)
+        enableLoginIfAllValid()
     }
 
     override fun onResume() {
         super.onResume()
         loginPresenter?.resume()
+    }
+
+    private fun enableLoginIfAllValid() {
+        val username = usernameTextInput.text.toString()
+        val password = passwordTextInput.text.toString()
+
+        loginButton.isEnabled =
+            loginPresenter?.validateUsername(username)!! && loginPresenter?.validatePassword(password)!!
     }
 
     private fun onLoginButtonClick() {
@@ -100,7 +120,11 @@ class LoginFragment : Fragment(), LoginView {
         if (rememberMeCheckBox.isChecked)
             loginPresenter?.rememberUser()
 
-        loginPresenter?.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
+        loginPresenter?.authenticate(
+            usernameTextInput.text.toString(),
+            passwordTextInput.text.toString(),
+            (activity as LoginActivity).currentLanguageCode
+        )
     }
 
     private fun onRegisterButtonClick() {
@@ -113,13 +137,11 @@ class LoginFragment : Fragment(), LoginView {
 
         // Tag is used in LoginActivity to handle the back button
         transaction.replace(R.id.card_view, newFragment, "REGISTER_FRAGMENT")
-        transaction.addToBackStack("LOGIN_FRAGMENT")    // This is probably unecessary
+        transaction.addToBackStack(null)
 
         // Commit the transaction
         transaction.commit()
     }
-
-    private fun isRememberMeChecked(): Boolean = rememberMeCheckBox.isChecked
 
     override fun showWelcomeBackMessage(username: String) {
         Toast.makeText(context, "Welcome back, $username", Toast.LENGTH_LONG).show()
@@ -136,11 +158,11 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun setUsernameError(error: String) {
-        usernameTextInputLayout.error = error
+//        usernameTextInputLayout.error = error
     }
 
     override fun setPasswordError(error: String) {
-        passwordTextInputLayout.error = error
+//        passwordTextInputLayout.error = error
     }
 
     override fun clearPasswordError() {
@@ -204,5 +226,17 @@ class LoginFragment : Fragment(), LoginView {
         }
         startActivity(intent)
         activity?.finish()
+    }
+
+    fun changeResLanguage(language: String) {
+        LocaleLanguageHelper.getLocalizedResources(context!!, language).apply {
+            activity_login_text_view_welcome.text = getString(R.string.login_welcome)
+            activity_login_text_input_layout_username.hint = getString(R.string.login_username_hint)
+            activity_login_text_input_layout_password.hint = getString(R.string.login_password_hint)
+            loginButton.text = getString(R.string.login_button)
+            activity_login_remember_me_checkbox.text = getString(R.string.login_remember_me)
+            register_question_text.text = getString(R.string.login_signup_question)
+            registerButton.text = getString(R.string.login_signup_now)
+        }
     }
 }

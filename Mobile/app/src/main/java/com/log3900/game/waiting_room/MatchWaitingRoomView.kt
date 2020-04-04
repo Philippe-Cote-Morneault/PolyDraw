@@ -13,4 +13,5 @@ interface MatchWaitingRoomView {
     fun notifyGroupUpdated(group: Group)
     fun notifyPlayerJoined(playerID: UUID)
     fun notifyPlayerLeft(playerID: UUID)
+    fun setGameModeImageRes(imageRes: Int)
 }

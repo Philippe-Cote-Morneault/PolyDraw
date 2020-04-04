@@ -15,11 +15,11 @@
             app:destination="@id/navigation_main_profile_fragment"
             app:popUpTo="@id/navigation_main_profile_fragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_nav_home_to_drawViewFragment"
-            app:destination="@id/navigation_main_draw_view_fragment"
-            app:popUpTo="@id/navigation_main_draw_view_fragment"
-            app:popUpToInclusive="true"/>
+<!--        <action-->
+<!--            android:id="@+id/action_nav_home_to_drawViewFragment"-->
+<!--            app:destination="@id/navigation_main_draw_view_fragment"-->
+<!--            app:popUpTo="@id/navigation_main_draw_view_fragment"-->
+<!--            app:popUpToInclusive="true"/>-->
         <action
             android:id="@+id/action_navigation_main_match_lobby_fragment_to_match_waiting_room_fragment"
             app:destination="@id/navigation_main_match_waiting_room_fragment" />
@@ -33,34 +33,34 @@
             app:destination="@id/navigation_main_match_lobby_fragment"
             app:popUpTo="@id/navigation_main_match_lobby_fragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_profileFragment_to_drawViewFragment"
-            app:destination="@id/navigation_main_draw_view_fragment"
-            app:popUpTo="@id/navigation_main_draw_view_fragment"
-            app:popUpToInclusive="true"/>
+<!--        <action-->
+<!--            android:id="@+id/action_profileFragment_to_drawViewFragment"-->
+<!--            app:destination="@id/navigation_main_draw_view_fragment"-->
+<!--            app:popUpTo="@id/navigation_main_draw_view_fragment"-->
+<!--            app:popUpToInclusive="true"/>-->
         <action
             android:id="@+id/action_navigation_main_profile_fragment_to_match_waiting_room_fragment"
             app:destination="@id/navigation_main_match_waiting_room_fragment" />
     </fragment>
-    <fragment
-        android:id="@+id/navigation_main_draw_view_fragment"
-        android:name="com.log3900.draw.temp.DoubleDrawViewFragment"
-        android:label="DrawViewFragment" >
-        <!--        android:name="com.log3900.draw.DrawViewFragment"-->
-        <action
-            android:id="@+id/action_drawViewFragment_to_profileFragment"
-            app:destination="@id/navigation_main_profile_fragment"
-            app:popUpTo="@id/navigation_main_profile_fragment"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_drawViewFragment_to_nav_home2"
-            app:destination="@id/navigation_main_match_lobby_fragment"
-            app:popUpTo="@id/navigation_main_match_lobby_fragment"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_navigation_main_draw_view_fragment_to_match_waiting_room_fragment"
-            app:destination="@id/navigation_main_match_waiting_room_fragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_main_draw_view_fragment"-->
+<!--        android:name="com.log3900.draw.temp.DoubleDrawViewFragment"-->
+<!--        android:label="DrawViewFragment" >-->
+<!--        &lt;!&ndash;        android:name="com.log3900.draw.DrawViewFragment"&ndash;&gt;-->
+<!--        <action-->
+<!--            android:id="@+id/action_drawViewFragment_to_profileFragment"-->
+<!--            app:destination="@id/navigation_main_profile_fragment"-->
+<!--            app:popUpTo="@id/navigation_main_profile_fragment"-->
+<!--            app:popUpToInclusive="true"/>-->
+<!--        <action-->
+<!--            android:id="@+id/action_drawViewFragment_to_nav_home2"-->
+<!--            app:destination="@id/navigation_main_match_lobby_fragment"-->
+<!--            app:popUpTo="@id/navigation_main_match_lobby_fragment"-->
+<!--            app:popUpToInclusive="true"/>-->
+<!--        <action-->
+<!--            android:id="@+id/action_navigation_main_draw_view_fragment_to_match_waiting_room_fragment"-->
+<!--            app:destination="@id/navigation_main_match_waiting_room_fragment" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/navigation_main_match_waiting_room_fragment"
         android:name="com.log3900.game.waiting_room.MatchWaitingRoomFragment"

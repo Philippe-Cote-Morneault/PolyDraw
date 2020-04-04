@@ -25,9 +25,11 @@ interface ActiveMatchView {
     fun hideRoundEndInfoView()
     fun showMatchEndInfoView(winnerName: String, players: ArrayList<Pair<String, Int>>, isUser: Boolean)
     fun hideMatchEndInfoView()
-    fun enableHintButton(enable: Boolean)
+    fun showHintButton(enable: Boolean)
     fun showRemainingTimeChangedAnimation(timeChangedValue: String, isPositive: Boolean)
     fun setCanvasMessage(message: String)
     fun showCanvasMessageView(show: Boolean)
     fun onBackButtonPressed()
+    fun enableGuessingView(enable: Boolean)
+    fun clearGuessingViewText()
 }

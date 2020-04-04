@@ -174,4 +174,17 @@
     <string name="kick_from_group_dialog_message">You have been kicked from the match</string>
     <string name="host_left_group_dialog_message">The host has left the match!</string>
     <string name="language_picker_dialog_title">Language picker</string>
+    <string name="you_guessed_correctly">You have guessed correctly!</string>
+    <string name="solo_match_is_over_message">The match is over! Your score: %1$d</string>
+    <string name="the_word_was">The word was %1$s</string>
+    <string name="try_again">Try again!</string>
+    <string name="ffa_guessed_correctly">You have guessed correctly! Waiting for other players</string>
+    <string name="ffa_is_drawing_the_next_word">%1$s is drawing the next word!</string>
+    <string name="coop_teamate_guessed_correctly">%1$s has guessed correctly! The word was %2$s</string>
+    <string name="profile_form_error_username">Invalid name (must be 4–12 alphanumeric characters)</string>
+    <string name="profile_form_error_password">Invalid password (must be 8–64 alphanumeric characters)</string>
+    <string name="profile_form_error_password_confirm">Password doesn\'t match</string>
+    <string name="profile_form_error_email">Invalid email format</string>
+    <string name="profile_form_error_first_name">First name cannot be empty</string>
+    <string name="profile_form_error_last_name">Last name cannot be empty</string>
 </resources>

@@ -242,7 +242,7 @@ object MatchAdapter {
     }
 
     fun jsonToMatchCancelled(jsonObject: JsonObject): MatchCancelled {
-        val type = MatchCancelled.Type.values()[jsonObject.get("Type").asInt + 1]
+        val type = MatchCancelled.Type.values()[jsonObject.get("Type").asInt - 1]
 
         return MatchCancelled(type)
     }

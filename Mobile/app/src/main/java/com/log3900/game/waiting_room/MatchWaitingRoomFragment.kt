@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -32,6 +33,7 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     // UI
     private lateinit var startMatchButton: MaterialButton
     private lateinit var leaveMatchButton: MaterialButton
+    private lateinit var matchModeImageView: ImageView
     private lateinit var matchModeTextView: TextView
     private lateinit var difficultyTextView: TextView
     private lateinit var durationTextView: TextView
@@ -58,6 +60,7 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
     private fun setupUi(rootView: View) {
         startMatchButton = rootView.findViewById(R.id.fragment_match_waiting_room_button_start_match)
         leaveMatchButton = rootView.findViewById(R.id.fragment_match_waiting_room_button_leave_match)
+        matchModeImageView = rootView.findViewById(R.id.fragment_match_waiting_room_image_view_mode)
         matchModeTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_mode)
         difficultyTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_difficulty)
         durationTextView = rootView.findViewById(R.id.fragment_match_waiting_room_text_view_duration)
@@ -146,6 +149,10 @@ class MatchWaitingRoomFragment : Fragment(), MatchWaitingRoomView {
 
     override fun notifyPlayerLeft(playerID: UUID) {
         playersAdapter.playerRemoved(playerID)
+    }
+
+    override fun setGameModeImageRes(imageRes: Int) {
+        matchModeImageView.setImageResource(imageRes)
     }
 
     fun onBackButtonPressed() {

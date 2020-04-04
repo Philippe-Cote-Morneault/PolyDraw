@@ -58,6 +58,7 @@ open class MainActivity : AppCompatActivity() {
     lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
     private lateinit var toolbarContainer: LinearLayout
+    private var isChatOpen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.instance.startService(SocketService::class.java)
@@ -72,6 +73,7 @@ open class MainActivity : AppCompatActivity() {
             .subscribe(
                 {
                     chatManager = it
+                    closeChat()
                 },
                 {
 
@@ -90,8 +92,8 @@ open class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_main_match_lobby_fragment,
-                R.id.navigation_main_profile_fragment,
-                R.id.navigation_main_draw_view_fragment
+                R.id.navigation_main_profile_fragment
+//                R.id.navigation_main_draw_view_fragment
             ), drawerLayout)
 
         setupActionBarWithNavController(navigationController, appBarConfiguration)
@@ -102,16 +104,10 @@ open class MainActivity : AppCompatActivity() {
 
         hideShowMessagesFAB = findViewById(R.id.hideShowMessage)
         hideShowMessagesFAB.setOnClickListener{
-            var chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
-            when(chatView!!.visibility){
-                View.INVISIBLE -> {
-                    chatManager.openChat()
-                    chatView.visibility = View.VISIBLE
-                }
-                View.VISIBLE -> {
-                    chatView.visibility = View.INVISIBLE
-                    chatManager.closeChat()
-                }
+            if (isChatOpen) {
+                closeChat()
+            } else {
+                openChat()
             }
         }
 
@@ -128,9 +124,21 @@ open class MainActivity : AppCompatActivity() {
 
         navigationController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.navigation_main_active_ffa_match_fragment -> switchToolbar(R.layout.toolbar_active_ffa_match)
-                R.id.navigation_main_active_solo_match_fragment -> switchToolbar(R.layout.toolbar_active_solo_match)
-                R.id.navigation_main_active_coop_match_fragment -> switchToolbar(R.layout.toolbar_active_coop_match)
+                R.id.navigation_main_active_ffa_match_fragment -> {
+                    switchToolbar(R.layout.toolbar_active_ffa_match)
+                    openChat()
+                }
+                R.id.navigation_main_active_solo_match_fragment -> {
+                    switchToolbar(R.layout.toolbar_active_solo_match)
+                    openChat()
+                }
+                R.id.navigation_main_active_coop_match_fragment -> {
+                    switchToolbar(R.layout.toolbar_active_coop_match)
+                    openChat()
+                }
+                R.id.navigation_main_match_waiting_room_fragment -> {
+                    openChat()
+                }
                 else -> switchToolbar(R.layout.toolbar_activity_main)
             }
         }
@@ -178,7 +186,13 @@ open class MainActivity : AppCompatActivity() {
         super.onResume()
         if (ThemeManager.hasActivityThemeChanged(this) || LanguageManager.hasContextLanguageChanged(baseContext)) {
             this.recreate()
-            chatManager.openChat()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (::chatManager.isInitialized) {
+            closeChat()
         }
     }
 
@@ -253,6 +267,24 @@ open class MainActivity : AppCompatActivity() {
             toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_up_black)
         } else {
             toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_off_black)
+        }
+    }
+
+    fun openChat() {
+        if (!isChatOpen) {
+            val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
+            chatManager.openChat()
+            chatView?.visibility = View.VISIBLE
+            isChatOpen = true
+        }
+    }
+
+    fun closeChat() {
+        if (isChatOpen) {
+            val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
+            chatView?.visibility = View.INVISIBLE
+            chatManager.closeChat()
+            isChatOpen = false
         }
     }
 
