@@ -2,6 +2,7 @@ package com.log3900.login.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -189,27 +190,32 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
     }
 
     override fun setUsernameError(error: String?) {
-        usernameInput.error = error
+        usernameInput.error = error?.let { getStringLocale(R.string.profile_form_error_username) }
     }
 
     override fun setPasswordError(error: String?) {
-        passwordInput.error = error
+        passwordInput.error = error?.let { getStringLocale(R.string.profile_form_error_password) }
     }
 
     override fun setEmailError(error: String?) {
-        emailInput.error = error
+        emailInput.error = error?.let { getStringLocale(R.string.profile_form_error_email) }
     }
 
     override fun setFirstnameError(error: String?) {
-        firstnameInput.error = error
+        firstnameInput.error = error?.let { getStringLocale(R.string.profile_form_error_first_name) }
     }
 
     override fun setLastnameError(error: String?) {
-        lastnameInput.error = error
+        lastnameInput.error = error?.let { getStringLocale(R.string.profile_form_error_last_name) }
     }
 
     fun setConfirmPasswordError(error: String?) {
-        confirmPasswordInput.error = error
+        confirmPasswordInput.error = error?.let { getStringLocale(R.string.profile_form_error_password_confirm) }
+    }
+
+    private fun getStringLocale(id: Int): String {
+        return LocaleLanguageHelper.getLocalizedResources(context!!,
+            (activity as LoginActivity).currentLanguageCode).getString(id)
     }
 
     fun changeResLanguage(language: String) {
@@ -225,6 +231,28 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
             backBtn.text = getString(R.string.back)
             registerBtn.text = getString(R.string.register)
             all_required_text.text = getString(R.string.all_required)
+
+            if (usernameInput.error != null) {
+                usernameInput.error = getString(R.string.profile_form_error_username)
+            }
+            if (passwordInput.error != null) {
+                passwordInput.error = getString(R.string.profile_form_error_password)
+            }
+            if (confirmPasswordInput.error != null) {
+                confirmPasswordInput.error = getString(R.string.profile_form_error_password_confirm)
+            }
+            if (emailInput.error != null) {
+                emailInput.error = getString(R.string.profile_form_error_email)
+            }
+            if (firstnameInput.error != null) {
+                firstnameInput.error = getString(R.string.profile_form_error_first_name)
+            }
+            if (lastnameInput.error != null) {
+                lastnameInput.error = getString(R.string.profile_form_error_last_name)
+            }
+            if (usernameInput.error != null) {
+                usernameInput.error = getString(R.string.profile_form_error_username)
+            }
         }
     }
 }
