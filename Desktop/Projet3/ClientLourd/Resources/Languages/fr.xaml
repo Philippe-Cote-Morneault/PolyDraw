@@ -328,5 +328,25 @@
     <system:String x:Key="ActiveMatch">
         Canal de la Partie Active
     </system:String>
+    <system:String x:Key="HomeView">
+        Vue d'accueil
+    </system:String>
+
+    <system:String x:Key="HomeViewText1">
+        Dans cette vue, un utilisateur peut joindre une des parties existantes. Pour joindre une partie, un utilisateur n'a qu'à cliquer dessus.
+        Une fois avoir rejoint le groupe, l'hôte peut commencer la partie si assez de joueurs sont présents.
+        Au-dessous de cette vue, deux boutons sont affichés.
+   
+
+    </system:String>
+
+    <system:String x:Key="HomeViewText2">
+        Le premier bouton permet à un utilisateur de créer une partie. Une partie est une salle d'attente
+        contenant les joueurs voulant jouer ensemble. Le deuxième bouton permet de créer un jeu. Un jeu
+        est l'ensemble d'un mot, ses indices et son dessin. Quand un joueur crée un jeu, il permet au joueur virtuel
+        d'utiliser le jeu lors d'une partie.
+    </system:String>
+
+
 
 </ResourceDictionary>

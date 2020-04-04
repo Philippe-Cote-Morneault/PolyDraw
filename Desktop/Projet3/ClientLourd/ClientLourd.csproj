@@ -493,6 +493,10 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Tutorial\HomeButtonsEN.PNG" />
+    <Resource Include="Resources\Tutorial\HomeButtonsFR.PNG" />
+    <Resource Include="Resources\Tutorial\HomeViewEN.PNG" />
+    <Resource Include="Resources\Tutorial\HomeViewFR.PNG" />
     <Resource Include="Resources\Tutorial\Bot.PNG" />
     <Resource Include="Resources\Tutorial\bot2.PNG" />
     <Resource Include="Resources\Tutorial\GameChatEN.PNG" />

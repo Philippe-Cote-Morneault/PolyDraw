@@ -326,4 +326,22 @@
         Active Match Channel
     </system:String>
 
+    <system:String x:Key="HomeView">
+        Home View
+    </system:String>
+
+    <system:String x:Key="HomeViewText1">
+        In this view, a user can join one of the existing matches. To join a match, the user simply needs to click on it.
+        Once a user has joined the match, the host can start the match if enough players are present.
+        At the bottom of the view 2 buttons, are displayed. 
+        
+    </system:String>
+
+    <system:String x:Key="HomeViewText2">
+        The first one allows the user to create a match. A match is 
+        a waiting room where all the players that wish to play together wait.
+        The second button allows a user to create a game. A game is the combination of a word, its hints and its drawing.
+        When a user creates a game, he allows a virtual player to draw the word created in a match.
+    </system:String>
+
 </ResourceDictionary>
