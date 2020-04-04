@@ -30,7 +30,7 @@
                         <!-- Introduction -->
                         <materialDesign:TransitionerSlide>
                                 <DockPanel>
-                                    <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Tutorial"/>
+                                    <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="{DynamicResource Tutorial}"/>
                                     <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
                                         <Button Margin="5" IsEnabled="False" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
                                             <materialDesign:PackIcon Kind="NavigateBefore"/>

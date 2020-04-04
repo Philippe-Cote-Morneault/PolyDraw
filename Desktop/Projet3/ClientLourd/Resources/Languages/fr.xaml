@@ -254,10 +254,10 @@
     </system:String>
 
     <system:String x:Key="CoopDescription">
-        Dans ce mode de jeux, un groupe de joueurs humains essayent de deviner le plus de mots possibles avant que le temps expire. Les joueurs récoltent des points
+        Dans ce mode de jeux, un groupe de joueurs humains essayent de deviner le plus de mots possible avant que le temps expire. Les joueurs récoltent des points
         pour chaque dessin deviné correctement. De même, lorsque l'équipe devine correctement, elle est allouée du temps supplémentaire.
         Les mots sont tous dessinés par un joueur virtuel aléatoire. Les joueurs humains n'ont pas la possibilité de dessiner. 
-        Pour chaque dessin,l'équipe dispose d'un nombre de tentatives collectives (coeurs). Ce nombre de tentative varie en fonction de la difficulté de la partie.
+        Pour chaque dessin,l'équipe dispose d'un nombre de tentatives collectives (coeurs). Ce nombre de tentatives varie en fonction de la difficulté de la partie.
         Si jamais l'équipe épuise ses tentatives, alors elle est pénalisée par un retrait de temps et le joueur virtuel passe au dessin prochain. 
     </system:String>
 
@@ -285,9 +285,9 @@
     </system:String>
 
     <system:String x:Key="SoloDescription">
-        Les parties solo sont presque identiques aux parties Coop. Par contre, il n'est pas possible de jouer à plusieurs. Le joueur joue avec un joueur virtuel pour deviner le plus de mots possibles
-        durant un certain lapse de temps qui varie en fonction de la difficulté. Tout comme les parties Coop, le joueur est alloué un nombre de tentatives au départ en fonction de la difficulté du jeu. 
-        Dans ce mode de jeu, le joueur peut joueur afin de battre son record personnel.
+        Les parties solo sont presque identiques aux parties Coop. Par contre, il n'est pas possible de jouer à plusieurs. Le joueur joue avec un joueur virtuel pour deviner le plus de mots possible
+        durant un certain temps qui varie en fonction de la difficulté. Tout comme les parties Coop, le joueur est alloué un nombre de tentatives au départ en fonction de la difficulté du jeu. 
+        Dans ce mode de jeu, le joueur peut jouer afin de battre son record personnel.
 
     </system:String>
 
@@ -300,24 +300,24 @@
     <system:String x:Key="Tutorial">Tutoriel</system:String>
     <system:String x:Key="TutorialText1">
         Bienvenue sur PolyDraw! PolyDraw est une application qui permet à ses utilisateurs de faire plusieurs choses.
-        Puisque l'aspect le plus important de l'application est celui des parties que l'on peut jouer, ce tutoriel tentera de vous aidez à mieux comprendre comment
-        les différents modes de parties qu'offre PolyDraw fonctionnent. L'application offre trois différents modes de parties, soient mêlée générale (FFA), coop et solo.
+        Puisque l'aspect le plus important de l'application est celui des parties que l'on peut jouer, ce tutoriel tentera de vous aider à mieux comprendre comment
+        les différents modes de parties qu'offre PolyDraw fonctionnent. L'application offre trois différents modes de parties, soit mêlée générale (FFA), coop et solo.
         Les modes sont tous un peu similaires. Ils orbitent autour du même concept: un joueur doit correctement deviner le mot dessiné par autre utilisateur, qu'il soit humain ou virtuel.
         Avant de commencer, passons sur des aspects qui seront importants à la compréhension des différents modes de parties.
       
     </system:String>
 
     <system:String x:Key="TutorialText2">
-        À chaque fois que l'on joint une partie, l'utilsateur sera automatiquement ajouté au canal "Partie en cours". C'est ici qu'il pourra clavarder avec les autres joueurs de la partie.
-        Quand l'utilisateur quittera la partie il sera également automatiquement retiré du canal!
+        À chaque fois que l'on joint une partie, l'utilisateur sera automatiquement ajouté au canal "Partie en cours". C'est ici qu'il pourra clavarder avec les autres joueurs de la partie.
+        Quand l'utilisateur quittera la partie, il sera également automatiquement retiré du canal!
          
     </system:String>
 
 
     <system:String x:Key="TutorialText3">
-        C'est joueurs sont appelés des joueurs virtuels. Ils ont comme particuliarité une icône de robot et ils peuvent parler! Dans les parties FFA, l'hôte peut ajouter ou retirer des
+        Ces joueurs sont appelés des joueurs virtuels. Ils ont comme particularité une icône de robot et ils peuvent parler! Dans les parties FFA, l'hôte peut ajouter ou retirer des
         joueurs virtuels s'il le désire. En coop et en solo, les joueurs virtuels se joindront automatiquement à vos parties. Ces joueurs peuvent seulement dessiner. Ils ne peuvent
-        pas deviner. Utilisez les à votre avantage, ils peuvent être utiles lorsqu'on a besoin d'un indice!
+        pas deviner. Utilisez-les à votre avantage, ils peuvent être utiles lorsqu'on a besoin d'un indice!
        
     </system:String>
 
