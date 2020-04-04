@@ -83,11 +83,6 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
             }
         })
 
-        val languageCode = LanguageManager.getAvailableLanguages()
-            .find { it.languageCode == language }?.index
-            ?: LanguageManager.LANGUAGE.SYSTEM.ordinal
-
-
         AccountRepository.getInstance().createAccount(
             Account(
                 tokenData.userID,
@@ -99,7 +94,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 tokenData.session,
                 tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
                 0,
-                languageCode,
+                LanguageManager.getLanguageIDByCode(language),
                 false,
                 true,
                 true

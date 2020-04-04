@@ -120,7 +120,11 @@ class LoginFragment : Fragment(), LoginView {
         if (rememberMeCheckBox.isChecked)
             loginPresenter?.rememberUser()
 
-        loginPresenter?.authenticate(usernameTextInput.text.toString(), passwordTextInput.text.toString())
+        loginPresenter?.authenticate(
+            usernameTextInput.text.toString(),
+            passwordTextInput.text.toString(),
+            (activity as LoginActivity).currentLanguageCode
+        )
     }
 
     private fun onRegisterButtonClick() {

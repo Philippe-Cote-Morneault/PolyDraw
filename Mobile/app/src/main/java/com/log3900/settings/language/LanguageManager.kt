@@ -34,6 +34,13 @@ class LanguageManager {
             return languages
         }
 
+        fun getLanguageIDByCode(code: String): Int {
+            return languages
+                .find { it.languageCode == code }
+                ?.index
+                ?: LANGUAGE.SYSTEM.ordinal
+        }
+
         fun getCurrentLanguage(): Language {
             return try {
                 languages[AccountRepository.getInstance().getAccount().languageID]

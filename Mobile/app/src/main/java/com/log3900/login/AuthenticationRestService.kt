@@ -7,7 +7,10 @@ import retrofit2.http.*
 
 interface AuthenticationRestService {
     @POST("/auth")
-    fun authenticate(@Body data: JsonObject): Call<JsonObject>
+    fun authenticate(
+        @Header("Language") language: String,
+        @Body data: JsonObject
+    ): Call<JsonObject>
 
     @POST("/auth/bearer")
     fun bearerAuthenticate(

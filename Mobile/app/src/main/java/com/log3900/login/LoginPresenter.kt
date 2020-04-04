@@ -93,14 +93,14 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         })
     }
 
-    fun authenticate(username: String, password: String) {
+    fun authenticate(username: String, password: String, language: String) {
         loginView?.showProgresBar()
 
         val authJson = JsonObject()
         authJson.addProperty("Username", username)
         authJson.addProperty("Password", password)
 
-        val call = AuthenticationRestService.service.authenticate(authJson)
+        val call = AuthenticationRestService.service.authenticate(language, authJson)
         call.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 when(response.code()) {
@@ -108,10 +108,10 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         val sessionToken = response.body()!!.get("SessionToken").asString
                         val bearerToken = response.body()!!.get("Bearer").asString
                         val userID = response.body()!!.get("UserID").asString
-                        handleSuccessAuth(bearerToken, sessionToken, userID)
+                        handleSuccessAuth(bearerToken, sessionToken, userID, language)
                     }
                         else -> {
-                        handleErrorAuth(response.errorBody()?.string() ?: "Internal errora")
+                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
                     }
                 }
             }
@@ -131,6 +131,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         bearer: String,
         session: String,
         userID: String,
+        language: String = "",
         onMainStart: () -> Unit = {}
     ) {
         Log.d("SESSION_TOKEN", session)
@@ -145,7 +146,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
             }
         })
 
-        getUserInfo(session, bearer, userID).subscribe {
+        getUserInfo(session, bearer, userID, language).subscribe {
             SocketService.instance?.sendMessage(
                 Event.SOCKET_CONNECTION,
                 session.toByteArray(Charsets.UTF_8))
@@ -158,7 +159,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
 //        storeUser(account, session, bearer)
     }
 
-    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String): Completable {
+    private fun getUserInfo(sessionToken: String, bearerToken: String, userID: String, language: String): Completable {
         println("Getting user info...")
         return Completable.create {
             val call = AuthenticationRestService.service.getUserInfo(sessionToken, userID)
@@ -168,7 +169,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         200 -> {
                             println("Sucessful user response")
                             val account = parseJsonAccount(response.body()!!)
-                            storeUser(account, sessionToken, bearerToken)
+                            storeUser(account, sessionToken, bearerToken, language)
                                 .subscribe {
                                     it.onComplete()
                                 }
@@ -188,7 +189,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         }
     }
 
-    private fun storeUser(account: Account, sessionToken: String, bearerToken: String): Completable {
+    private fun storeUser(account: Account, sessionToken: String, bearerToken: String, language: String): Completable {
         return Completable.create {completable ->
             AccountRepository.getInstance().getAccountByID(account.ID).subscribe(
                 {
@@ -198,7 +199,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                             bearerToken = bearerToken,
                             tutorialDone = it.tutorialDone,
                             themeID = it.themeID,
-                            languageID =  it.languageID,
+                            languageID =  LanguageManager.getLanguageIDByCode(language), // it.languageID,
                             soundEffectsOn = it.soundEffectsOn,
                             musicOn = it.musicOn
                         )
