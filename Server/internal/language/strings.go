@@ -68,7 +68,7 @@ en:
 
     startgameNice1: "Before the game begins, I wish you all good luck!"
     startgameNice2: "The game will start, have fun and may the best win!"
-    startgameNice3: "I have a feeling we will have fun! Let's go !"
+    startgameNice3: "I have a feeling we will have fun! Let's go team!"
 
     startgameSupportive1: "Before the game begins, remember that the important thing is to participate. Everyone is a winner in the end !"
     startgameSupportive2: "Making mistakes is worth trying! So give everything for this game!"
@@ -98,15 +98,15 @@ en:
 
     playerRefAngry1: "I don't know why, but I don't like {}."
     playerRefAngry2: "It annoys me even confined, {} always plays."
-    playerRefAngry3: "Please someone to kick-out {}? He annoys me."
+    playerRefAngry3: "Please someone to kick-out {}? I can smell this player from here."
 
-    playerRefFunny1: "Hey {} ! Always up for a bowling game after the game?"
-    playerRefFunny2: "Hey {} !  Can you lend me your body please? I want to go swimming, but my motherboard isn't water-resistant."
-    playerRefFunny3: "I had a joke on {}. But if I say it, then you will say that I'm a racist ..."
+    playerRefFunny1: "Hey {}! Always up for a bowling game after the game?"
+    playerRefFunny2: "Hey {}! Can you lend me your body please? I want to go swimming, but my motherboard isn't water-resistant."
+    playerRefFunny3: "I had a joke on {}. But if I say it, then you will say that I'm a racist..."
 
-    playerRefMean1: "It's hopeless for {} ..."
+    playerRefMean1: "It's hopeless for {}..."
     playerRefMean2: "I'll hack you {} and retrieve your personal information!"
-    playerRefMean3: "Well we can pretend that {} is not playing. It wouldn't change much ..."
+    playerRefMean3: "Well we can pretend that {} is not playing. It wouldn't change much..."
 
     playerRefNice1: "I love to play with {}!"
     playerRefNice2: "What a blast to play with {}"
@@ -119,7 +119,7 @@ en:
 
     hintRequestAngry1: "A clue ?!! It pisses me off!!"
     hintRequestAngry2: "I hope that you'll find it with this clue. You're making me furious!!!"
-    hintRequestAngry3: "The hint is useless! Why even bother asking!!"
+    hintRequestAngry3: "The hint is useless! Why even bother asking?!"
 
     hintRequestFunny1: "Someone ordered a not overcooked clue?"
     hintRequestFunny2: "Oh a clue! Or should I say, January 10? Damn this joke would have worked in french."
@@ -141,27 +141,27 @@ en:
     winRatioAngry2: "I don't even know why I'm playing, {} will win anyway!!!"
     winRatioAngry3: "Can someone kick out {}? He has won enough games! We don't need to help him ANYMORE!"
 
-    winRatioFunny1: "{} is the MVP of the game! (MVP isn't the concept of Dropbox obviously)."
+    winRatioFunny1: "{} is the MVP of the game! (MVP isn't the concept of Dropbox obviously. I've forgot it anyway)."
     winRatioFunny2: "This is the story of {} that plays a game and who wins. (My jokes are automated, it's not my fault if they are bad...)"
     winRatioFunny3: "When I saw the number of games {} won, I lost track. (I mean Threads of course. I'm a bot that lives in a world of semaphores and mutexes.)"
 
-    winRatioMean1: "Hey {} ! It isn't because you won the most games, that you're going to win this one."
+    winRatioMean1: "Hey {}! It isn't because you won the most games, that you're going to win this one."
     winRatioMean2: "The goal is to make lose {}, he won enough games like that !!"
     winRatioMean3: "{} is the player to shoot! We must bring down his winning ratio."
 
     winRatioNice1: "{} is the best player in the game!"
-    winRatioNice2: "Hey {} ! According to your win ratio you're on track to win this game too."
+    winRatioNice2: "Hey {}! According to your win ratio you're on track to win this game too."
     winRatioNice3: "We can all applaud {}! He has the best win ratio among us!"
 
-    winRatioSupportive1: "Hey {} ! You have to let the others win in order to encourage them!"
+    winRatioSupportive1: "Hey {}! You have to let the others win in order to encourage them!"
     winRatioSupportive2: "Courage {}! Don't give up !"
     winRatioSupportive3: "Follow your efforts {} it will pay off, you'll see!"
 
-    noHintAngry: "You've already asked me all the available hints. What do you want from me ? You're pissing me off !!"
-    noHintFunny: "Oups, no more clue for you. May I offer you a drink instead ? (without alcool, of course. Thanks Tanguy)"
+    noHintAngry: "You've already asked me all the available hints. What do you want from me? You're pissing me off!!"
+    noHintFunny: "Oups, no more clue for you. May I offer you a drink instead? (without alcool, of course. Thanks Tanguy!)"
     noHintMean: "No more hints for this drawing. But to be honnest, I didn't want to give you one."
-    noHintNice: "Sorry, I don't have any more hints for this drawing :("
-    noHintSupportive: "I don't have any remaining hints for this drawing. But keep it up, I konw you can figure this out !"
+    noHintNice: "Sorry, I don't have any more hints for this drawing. :("
+    noHintSupportive: "I don't have any remaining hints for this drawing. But keep it up, I know you can figure this out !"
     
 fr:
   error:
