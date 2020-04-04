@@ -17,6 +17,7 @@ type VirtualPlayer struct {
 	roundStarts cbroadcast.Channel
 	roundEnds   cbroadcast.Channel
 	chatNew     cbroadcast.Channel
+	playerLeft  cbroadcast.Channel
 
 	shutdown chan bool
 }
@@ -74,12 +75,6 @@ func (v *VirtualPlayer) listen() {
 			}
 
 			if round.Drawer.IsCPU {
-				log.Println("[VirtualPlayer] -> About to call startDrawing")
-				log.Printf("[VirtualPlayer] -> round : %v", round)
-				log.Printf("[VirtualPlayer] -> round.Drawer : %v", round.Drawer)
-				log.Printf("[VirtualPlayer] -> round.Game : %v", round.Game)
-				log.Printf("[VirtualPlayer] -> round.Game.Hints : %v", round.Game.Hints)
-				log.Printf("[VirtualPlayer] -> round.Game.Image : %v", *(round.Game.Image))
 				go startDrawing(&round)
 			}
 
@@ -101,6 +96,15 @@ func (v *VirtualPlayer) listen() {
 			}
 			go registerChannelGroup(chat.MatchID, chat.ChatID)
 
+		case data := <-v.playerLeft:
+			log.Println("[VirtualPlayer] -> Receives playerLeft event")
+			socketID, ok := data.(uuid.UUID)
+			if !ok {
+				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid.UUID struct")
+				break
+			}
+			go stopDrawingOfSocket(socketID)
+
 		case <-v.shutdown:
 			return
 		}
@@ -114,6 +118,7 @@ func (v *VirtualPlayer) subscribe() {
 	v.roundStarts, _ = cbroadcast.Subscribe(match.BRoundStarts)
 	v.roundEnds, _ = cbroadcast.Subscribe(match.BRoundEnds)
 	v.chatNew, _ = cbroadcast.Subscribe(match.BChatNew)
+	v.playerLeft, _ = cbroadcast.Subscribe(match.BPlayerLeft)
 }
 
 //Register the broadcast for virtualplayer
@@ -123,4 +128,5 @@ func (v *VirtualPlayer) Register() {
 	cbroadcast.Register(match.BRoundStarts, match.BSize)
 	cbroadcast.Register(match.BRoundEnds, match.BSize)
 	cbroadcast.Register(match.BChatNew, match.BSize)
+	cbroadcast.Register(match.BPlayerLeft, match.BSize)
 }

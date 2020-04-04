@@ -45,16 +45,16 @@ func (d *Drawing) handlePreview(message socket.RawMessageReceived) {
 	sendPreviewResponse(message.SocketID, true)
 	uuidBytes, _ := drawingID.MarshalBinary()
 	pendingPreviews[message.SocketID] = abool.New()
-	StartDrawing([]uuid.UUID{message.SocketID}, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTimeFactor: 1, Mode: game.Image.Mode}, &DrawState{StopDrawing: pendingPreviews[message.SocketID], Time: drawingTimePreview})
+	StartDrawing([]uuid.UUID{message.SocketID}, uuidBytes, &Draw{SVGFile: game.Image.SVGFile, DrawingTime: drawingTimePreview, Mode: game.Image.Mode}, []*abool.AtomicBool{pendingPreviews[message.SocketID]})
 	removePreview(message.SocketID)
 }
 
 // StartDrawing starts the drawing procedure
-func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, drawState *DrawState) {
-	payloads := generateDrawing(draw, drawState.Time)
+func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, stopDrawings []*abool.AtomicBool) {
+	payloads := generateDrawing(draw)
 	var wg sync.WaitGroup
 	wg.Add(len(socketsID))
-	for _, id := range socketsID {
+	for i, id := range socketsID {
 		go func(socketID uuid.UUID) {
 			defer wg.Done()
 			socket.SendQueueMessageSocketID(socket.RawMessage{
@@ -63,7 +63,7 @@ func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, drawState
 				Bytes:       uuidBytes,
 			}, socketID)
 
-			sendDrawing(socketID, payloads, drawState.StopDrawing)
+			sendDrawing(socketID, payloads, stopDrawings[i])
 
 			socket.SendQueueMessageSocketID(socket.RawMessage{
 				MessageType: byte(socket.MessageType.EndDrawingServer),
@@ -107,7 +107,7 @@ func sendDrawing(socketID uuid.UUID, payloads [][]byte, stopDrawing *abool.Atomi
 	}
 }
 
-func generateDrawing(draw *Draw, drawingTime float64) [][]byte {
+func generateDrawing(draw *Draw) [][]byte {
 	file, err := datastore.GetFile(draw.SVGFile)
 	if err != nil {
 		log.Println(err)
@@ -126,7 +126,7 @@ func generateDrawing(draw *Draw, drawingTime float64) [][]byte {
 
 	var commands []svgparser.Command
 	var payloads [][]byte
-	timePerStroke := ((drawingTime * 1000) / float64(len(xmlSvg.G.XMLPaths))) * draw.DrawingTimeFactor
+	timePerStroke := (draw.DrawingTime * 1000) / float64(len(xmlSvg.G.XMLPaths))
 	for _, path := range xmlSvg.G.XMLPaths {
 		stroke := Stroke{
 			ID:        uuid.New(),

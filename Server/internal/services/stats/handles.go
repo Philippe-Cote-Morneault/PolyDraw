@@ -32,12 +32,7 @@ func updateMatchesPlayed(stats match.StatsData) {
 	}
 }
 
-func setDeconnection(socketID uuid.UUID) {
-	userID, err := auth.GetUserID(socketID)
-	if err != nil {
-		log.Printf("[Stats] -> [Error] Can't find userID from socketID: %v.", socketID)
-		return
-	}
+func setDeconnection(userID uuid.UUID) {
 	var c model.Connection
 	model.DB().Model(&model.Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
 	model.DB().Model(&model.Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
@@ -81,7 +76,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 	}
 	// Si on ne trouve pas de game solo
 	if bestScoreSolo == int64(math.MaxInt64) {
-		bestScoreSolo = -1
+		bestScoreSolo = 0
 	}
 
 	winRatio := float64(nbWins) / float64(len(matches))
