@@ -76,6 +76,7 @@ func migrate() {
 	//Stats
 	dbVar.AutoMigrate(&Connection{})
 	dbVar.AutoMigrate(&MatchPlayed{})
+	dbVar.AutoMigrate(&MatchPlayedMembership{})
 
 	//Game
 	dbVar.AutoMigrate(&Game{})
