@@ -303,7 +303,7 @@
 
     <!-- Tutorial -->
 
-    <system:String x:Key="Tutorial">Tutoriel</system:String>
+    <system:String x:Key="Tutorial">Tutorial</system:String>
     <system:String x:Key="TutorialText1">
         Welcome to PolyDraw! PolyDraw is an application that allows the user to do multiple things. 
         Since the heart of the application is the games it provides, the present tutorial will aim to help you understand how the game modes of PolyDraw work. 
