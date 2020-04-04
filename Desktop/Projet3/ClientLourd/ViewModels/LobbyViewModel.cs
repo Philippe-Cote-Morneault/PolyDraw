@@ -181,7 +181,7 @@ namespace ClientLourd.ViewModels
                 IsGameStarted = false;
             }
 
-            ReturnHome();
+            //ReturnHome();
         }
 
         private void OnJoinLobbyResponse(object sender, EventArgs e)
@@ -402,8 +402,11 @@ namespace ClientLourd.ViewModels
             {
                 CurrentLobby = null;
                 OnReturnChat(this);
-                HomeViewModel.FetchLobbies();
                 ContainedView = Utilities.Enums.Views.Home.ToString();
+                Task.Delay(100).ContinueWith((t) =>
+                {
+                    Application.Current.Dispatcher.Invoke(() => { HomeViewModel.FetchLobbies(); });
+                });
             });
         }
     }

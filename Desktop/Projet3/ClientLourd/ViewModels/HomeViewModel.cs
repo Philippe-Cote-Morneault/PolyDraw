@@ -358,12 +358,20 @@ namespace ClientLourd.ViewModels
 
         private async void SetUsersInfo(Lobby lobby)
         {
-            foreach (Player player in lobby.Players.ToList())
+            try
             {
-                if (player.User.Avatar == null)
+                foreach (Player player in lobby.Players)
                 {
-                    player.User = await RestClient.GetUserInfo(player.User.ID);
+                    if (player.User.Avatar == null)
+                    {
+                        player.User = await RestClient.GetUserInfo(player.User.ID);
+                    }
                 }
+            }
+            catch
+            {
+                //backlog #43
+                SetUsersInfo(lobby);
             }
         }
 

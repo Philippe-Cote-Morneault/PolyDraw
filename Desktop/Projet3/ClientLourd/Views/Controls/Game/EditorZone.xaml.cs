@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,6 +24,7 @@ namespace ClientLourd.Views.Controls.Game
     {
         private Random _random;
         private DispatcherTimer _timer;
+        private System.Timers.Timer _canvasAnimationsTimer;
 
         public EditorZone()
         {
@@ -88,25 +90,42 @@ namespace ClientLourd.Views.Controls.Game
             }
         }
 
+        private void AddCanvasMessage(UIElement element, int time)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LeaderBoardGrid.Children.Clear();
+                LeaderBoardGrid.Children.Add(element);
+                LeaderBoardGrid.Visibility = Visibility.Visible;
+            });
+            if (_canvasAnimationsTimer != null && _canvasAnimationsTimer.Enabled)
+            {
+                //If the timer is start, stop it
+                _canvasAnimationsTimer.Stop();
+            }
+            _canvasAnimationsTimer = new System.Timers.Timer(time);
+            _canvasAnimationsTimer.Elapsed += CanvasAnimationsTimerOnElapsed;
+            _canvasAnimationsTimer.Start();
+        }
+
+        private void CanvasAnimationsTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            _canvasAnimationsTimer.Stop();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                LeaderBoardGrid.Children.Clear();
+                LeaderBoardGrid.Visibility = Visibility.Collapsed;
+            });
+        }
+
         private void SocketClientOnRoundEnded(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
             if (ViewModel.Mode == GameModes.FFA)
             {
-                Task.Run(() =>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Children.Add(new LeaderBoard(e, false));
-                        LeaderBoardGrid.Visibility = Visibility.Visible;
-                    });
-                    Thread.Sleep(MatchTiming.ROUND_END_TIMEOUT);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
-                    });
+                    AddCanvasMessage(new LeaderBoard(e, false), MatchTiming.ROUND_END_TIMEOUT);
                 });
             }
             else if (!e.Guessed)
@@ -130,16 +149,10 @@ namespace ClientLourd.Views.Controls.Game
                         StartConfetti();
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Children.Add(new LeaderBoard((MatchEventArgs) args, true));
-                        LeaderBoardGrid.Visibility = Visibility.Visible;
+                        AddCanvasMessage(new LeaderBoard((MatchEventArgs) args, true),
+                            MatchTiming.GAME_ENDED_TIMEOUT);
                     });
                     Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
-                    });
                     if (e.WinnerID == SessionInformations.User.ID)
                         StopConfetti();
                 });
@@ -150,18 +163,9 @@ namespace ClientLourd.Views.Controls.Game
                 Task.Run(() =>
                 {
                     StartConfetti();
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        ShowCanvasMessage(
-                            $"{(string) ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}", MatchTiming.GAME_ENDED_TIMEOUT);
-                        LeaderBoardGrid.Visibility = Visibility.Visible;
-                    });
+                    ShowCanvasMessage(
+                        $"{(string) ViewModel.CurrentDictionary["CoopSoloEnding"]} {ViewModel.TeamPoints}", MatchTiming.GAME_ENDED_TIMEOUT);
                     Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        LeaderBoardGrid.Children.Clear();
-                        LeaderBoardGrid.Visibility = Visibility.Collapsed;
-                    });
                     StopConfetti();
                 });
             }
@@ -182,15 +186,7 @@ namespace ClientLourd.Views.Controls.Game
                         VerticalAlignment = VerticalAlignment.Center,
                         HorizontalAlignment = HorizontalAlignment.Center,
                     };
-                    LeaderBoardGrid.Children.Clear();
-                    LeaderBoardGrid.Children.Add(tb);
-                    LeaderBoardGrid.Visibility = Visibility.Visible;
-                });
-                Thread.Sleep(time);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    LeaderBoardGrid.Children.Clear();
-                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                    AddCanvasMessage(tb, time);
                 });
             });
         }
@@ -456,12 +452,12 @@ namespace ClientLourd.Views.Controls.Game
 
         private void SocketClientNewPlayerDrawing(object sender, EventArgs e)
         {
-            FocusFirstTextBox();
+            //FocusFirstTextBox();
         }
 
         private void FocusFirstTextBox()
         {
-            Task.Delay(100).ContinueWith(_ =>
+            Task.Delay(1000).ContinueWith(_ =>
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
