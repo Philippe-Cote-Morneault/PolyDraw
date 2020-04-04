@@ -9,7 +9,7 @@
              mc:Ignorable="d">
     <DockPanel Name="MainDockPanel">
         <TextBlock DockPanel.Dock="Top" FontSize="24" Margin="10" HorizontalAlignment="Center" FontWeight="Bold"
-                   Text="Select your avatar" />
+                   Text="{DynamicResource SelectAvatar}" />
         <Button Command="{Binding QuitCommand}" Width="200" HorizontalAlignment="Center" Margin="10"
                 DockPanel.Dock="Bottom" Content="Confirm" />
         <ItemsControl Name="AvartarList" ItemsSource="{Binding Avatars}">
