@@ -18,7 +18,7 @@ private const val LOGIN_FRAGMENT_TAG = "LOGIN_FRAGMENT"
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var languageButton: MaterialButton
-    private var currentLanguageCode = MainApplication.instance.getContext().resources.configuration.locales.get(0).language.also { Log.d("LANGUAGE", "Start: $it") }
+    var currentLanguageCode = MainApplication.instance.getContext().resources.configuration.locales.get(0).language.also { Log.d("LANGUAGE", "Start: $it") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.instance.startService(SocketService::class.java)

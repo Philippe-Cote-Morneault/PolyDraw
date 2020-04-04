@@ -57,6 +57,10 @@ class LoginFragment : Fragment(), LoginView {
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        changeResLanguage((activity as LoginActivity).currentLanguageCode)
+    }
+
     private fun setupUIElements(root: View) {
         contentLayout = root.findViewById(R.id.card_content_layout)
 
@@ -64,6 +68,7 @@ class LoginFragment : Fragment(), LoginView {
         loginButton.setOnClickListener {
             onLoginButtonClick()
         }
+        loginButton.isEnabled = false
 
         usernameTextInput = root.findViewById(R.id.activity_login_text_input_username)
         usernameTextInput.doAfterTextChanged {
@@ -88,16 +93,26 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     private fun onUsernameChange() {
-        loginPresenter?.validateUsername(usernameTextInput.text.toString())
+//        if (loginPresenter?.validateUsername(usernameTextInput.text.toString())!!)
+        enableLoginIfAllValid()
     }
 
     private fun onPasswordChange() {
-        loginPresenter?.validatePassword(passwordTextInput.text.toString())
+//        if (loginPresenter?.validatePassword(passwordTextInput.text.toString())!!)
+        enableLoginIfAllValid()
     }
 
     override fun onResume() {
         super.onResume()
         loginPresenter?.resume()
+    }
+
+    private fun enableLoginIfAllValid() {
+        val username = usernameTextInput.text.toString()
+        val password = passwordTextInput.text.toString()
+
+        loginButton.isEnabled =
+            loginPresenter?.validateUsername(username)!! && loginPresenter?.validatePassword(password)!!
     }
 
     private fun onLoginButtonClick() {
@@ -124,8 +139,6 @@ class LoginFragment : Fragment(), LoginView {
         // Commit the transaction
         transaction.commit()
     }
-
-    private fun isRememberMeChecked(): Boolean = rememberMeCheckBox.isChecked
 
     override fun showWelcomeBackMessage(username: String) {
         Toast.makeText(context, "Welcome back, $username", Toast.LENGTH_LONG).show()

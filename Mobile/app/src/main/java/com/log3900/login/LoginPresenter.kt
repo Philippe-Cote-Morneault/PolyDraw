@@ -241,19 +241,23 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
         loginView?.navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 
-    fun validateUsername(username: String) {
+    fun validateUsername(username: String): Boolean {
         if (!Validator.validateUsername(username)) {
             loginView?.setUsernameError("Invalid name (must be ${Validator.minUsernameLength}-${Validator.maxUsernameLength} alphanumeric characters)")
+            return false
         } else {
             loginView?.clearUsernameError()
+            return true
         }
     }
 
-    fun validatePassword(password: String) {
+    fun validatePassword(password: String): Boolean {
         if (!Validator.validatePassword(password)) {
             loginView?.setPasswordError("Invalid password (must be ${Validator.minPasswordLength}-${Validator.maxPasswordLength} characters)")
+            return false
         } else {
             loginView?.clearPasswordError()
+            return true
         }
     }
 
