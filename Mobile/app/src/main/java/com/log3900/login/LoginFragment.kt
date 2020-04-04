@@ -1,8 +1,11 @@
 package com.log3900.login
 
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +25,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
 import com.log3900.login.register.RegisterFragment
+import com.log3900.settings.LocaleLanguageHelper
 import com.log3900.utils.ui.KeyboardHelper
+import kotlinx.android.synthetic.main.fragment_login.*
+import java.util.*
 
 class LoginFragment : Fragment(), LoginView {
     // Services
@@ -113,7 +119,7 @@ class LoginFragment : Fragment(), LoginView {
 
         // Tag is used in LoginActivity to handle the back button
         transaction.replace(R.id.card_view, newFragment, "REGISTER_FRAGMENT")
-        transaction.addToBackStack("LOGIN_FRAGMENT")    // This is probably unecessary
+        transaction.addToBackStack(null)
 
         // Commit the transaction
         transaction.commit()
@@ -136,11 +142,11 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun setUsernameError(error: String) {
-        usernameTextInputLayout.error = error
+//        usernameTextInputLayout.error = error
     }
 
     override fun setPasswordError(error: String) {
-        passwordTextInputLayout.error = error
+//        passwordTextInputLayout.error = error
     }
 
     override fun clearPasswordError() {
@@ -204,5 +210,19 @@ class LoginFragment : Fragment(), LoginView {
         }
         startActivity(intent)
         activity?.finish()
+    }
+
+    fun changeResLanguage(language: String) {
+        loginButton.text = getString(R.string.login_button)
+        LocaleLanguageHelper.getLocalizedResources(context!!, language).apply {
+            activity_login_text_view_welcome.text = getString(R.string.login_welcome)
+            activity_login_text_input_layout_username.hint = getString(R.string.login_username_hint)
+            activity_login_text_input_layout_password.hint = getString(R.string.login_password_hint)
+            activity_login_remember_me_checkbox.text = getString(R.string.login_remember_me)
+            register_question_text.text = getString(R.string.login_signup_question)
+            registerButton.text = getString(R.string.login_signup_now)
+        }
+
+//        activity_login_text_view_welcome.text = language
     }
 }

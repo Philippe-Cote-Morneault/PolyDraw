@@ -12,6 +12,7 @@ import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
 import io.reactivex.Completable
 import org.greenrobot.eventbus.EventBus
+import java.lang.Exception
 import java.util.*
 
 class LanguageManager {
@@ -34,7 +35,11 @@ class LanguageManager {
         }
 
         fun getCurrentLanguage(): Language {
-            return languages[AccountRepository.getInstance().getAccount().languageID]
+            return try {
+                languages[AccountRepository.getInstance().getAccount().languageID]
+            } catch(e: Exception) {
+                languages[0]
+            }
         }
 
         fun getCurrentLanguageCode(): String {
