@@ -70,7 +70,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 		}
 		if match.MatchType == 0 {
 			nbFFA++
-			if user.Username == match.WinnerName {
+			if user.ID.String() == match.WinnerID {
 				nbWins++
 			}
 		}
