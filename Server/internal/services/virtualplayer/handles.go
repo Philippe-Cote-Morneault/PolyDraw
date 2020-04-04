@@ -261,6 +261,7 @@ func handleEndGame(groupID uuid.UUID) {
 	for _, socketID := range (*managerInstance.Matches[groupID]).GetConnections() {
 		playerID, err := auth.GetUserID(socketID)
 		if err != nil {
+			managerInstance.mutex.Unlock()
 			log.Printf("[VirtualPlayer] -> [Error] Can't find userID from socketID: %v. Aborting handleEndGame...", socketID)
 			return
 		}
@@ -279,11 +280,11 @@ func handleEndGame(groupID uuid.UUID) {
 //GetVirtualPlayersInfo [Current Thread] returns botInfos from cache (match)
 func GetVirtualPlayersInfo(groupID uuid.UUID) []match2.BotInfos {
 	var botsInfos []match2.BotInfos
+	defer managerInstance.mutex.Unlock()
 	managerInstance.mutex.Lock()
 	bots, ok := managerInstance.Groups[groupID]
 
 	if !ok {
-		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find groupId : %v. Aborting getVirtualPlayersInfo...", groupID)
 		return nil
 	}
@@ -296,7 +297,6 @@ func GetVirtualPlayersInfo(groupID uuid.UUID) []match2.BotInfos {
 		}
 		botsInfos = append(botsInfos, match2.BotInfos{BotID: botInfos.BotID, Username: botInfos.Username})
 	}
-	managerInstance.mutex.Unlock()
 	log.Printf("[VirtualPlayer] GetVirtualPlayersInfos returns %v", botsInfos)
 	return botsInfos
 }
@@ -449,6 +449,7 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 	if speakingBotID != uuid.Nil {
 		bot, botOk := managerInstance.Bots[speakingBotID]
 		if !botOk {
+			managerInstance.mutex.Unlock()
 			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", speakingBotID)
 			return
 		}
@@ -460,6 +461,7 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 		for botID := range group {
 			bot, botOk := managerInstance.Bots[botID]
 			if !botOk {
+				managerInstance.mutex.Unlock()
 				log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", botID)
 				return
 			}
