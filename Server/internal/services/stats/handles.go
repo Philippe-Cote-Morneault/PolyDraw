@@ -21,14 +21,14 @@ type DataStats struct {
 }
 
 func updateMatchesPlayed(stats match.StatsData) {
+	model.DB().Create(stats.Match)
 	for _, socketID := range stats.SocketsID {
 		userID, err := auth.GetUserID(socketID)
 		if err != nil {
 			log.Printf("[Stats] -> [Error] Can't find userID from socketID: %v.", socketID)
 			continue
 		}
-		stats.Match.UserID = userID
-		model.DB().Create(&(*stats.Match))
+		model.DB().Create(&model.MatchPlayedMembership{UserID: userID, MatchID: stats.Match.ID})
 	}
 }
 
@@ -52,7 +52,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 	}
 
 	var matches []model.MatchPlayed
-	model.DB().Model(&model.MatchPlayed{}).Where("user_id = ?", userID).Find(&matches)
+	model.DB().Model(&model.MatchPlayed{}).Joins("JOIN match_played_memberships ON match_played_memberships.match_id = match_playeds.id AND match_played_memberships.user_id = ?", userID).Find(&matches)
 
 	if len(matches) == 0 {
 		return DataStats{AvgGameDuration: 0, GamesPlayed: 0, TimePlayed: 0, WinRatio: 0, BestScoreSolo: 0}, ""

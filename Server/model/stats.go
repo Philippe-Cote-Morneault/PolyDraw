@@ -15,9 +15,14 @@ type Connection struct {
 //MatchPlayed represents the summary of the game
 type MatchPlayed struct {
 	Base
-	UserID        uuid.UUID
 	MatchDuration int64
 	WinnerName    string
 	WinnerID      string
 	MatchType     int // 0 -> FFA | 1 -> solo | 2 -> coop
+}
+
+//MatchPlayedMembership represents the membership between a match and user
+type MatchPlayedMembership struct {
+	MatchID uuid.UUID `gorm:"primary_key;auto_increment:false"`
+	UserID  uuid.UUID `gorm:"primary_key;auto_increment:false"`
 }

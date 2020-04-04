@@ -26,11 +26,21 @@ type matchPlayed struct {
 	WinnerName    string
 	WinnerID      string
 	MatchType     string
+	Players       []player
+}
+
+type player struct {
+	Username string
+	UserID   string
 }
 
 type history struct {
 	MatchesPlayedHistory []matchPlayed
 	ConnectionHistory    []connection
+}
+
+type allan struct {
+	matchID string
 }
 
 // GetStats returns userStats
@@ -81,11 +91,16 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 	var h history
 
 	var connectionHistory []connection
-	model.DB().Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&connectionHistory)
+	model.DB().Model(&model.Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&connectionHistory)
 	h.ConnectionHistory = connectionHistory
 
+	for i := len(h.ConnectionHistory)/2 - 1; i >= 0; i-- {
+		opp := len(h.ConnectionHistory) - 1 - i
+		h.ConnectionHistory[i], h.ConnectionHistory[opp] = h.ConnectionHistory[opp], h.ConnectionHistory[i]
+	}
+
 	var matchesPlayedHistory []model.MatchPlayed
-	model.DB().Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&matchesPlayedHistory)
+	model.DB().Model(&model.MatchPlayed{}).Joins("JOIN match_played_memberships ON match_played_memberships.match_id = match_playeds.id AND match_played_memberships.user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&matchesPlayedHistory)
 
 	for _, match := range matchesPlayedHistory {
 		var matchType string
@@ -99,8 +114,26 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 			matchType = "Coop"
 		}
 		h.MatchesPlayedHistory = append(h.MatchesPlayedHistory, matchPlayed{MatchDuration: match.MatchDuration,
-			WinnerName: match.WinnerName, MatchType: matchType})
+			WinnerName: match.WinnerName, WinnerID: match.WinnerID, MatchType: matchType, Players: getPlayersInMatch(match.ID)})
+	}
+
+	for i := len(h.MatchesPlayedHistory)/2 - 1; i >= 0; i-- {
+		opp := len(h.MatchesPlayedHistory) - 1 - i
+		h.MatchesPlayedHistory[i], h.MatchesPlayedHistory[opp] = h.MatchesPlayedHistory[opp], h.MatchesPlayedHistory[i]
 	}
 
 	json.NewEncoder(w).Encode(h)
+}
+
+func getPlayersInMatch(matchID uuid.UUID) []player {
+	var players []player
+	var users []model.User
+	model.DB().Model(&model.User{}).Joins("JOIN match_played_memberships ON match_played_memberships.user_id = users.id AND match_played_memberships.match_id = ?", matchID).Find(&users)
+
+	for _, user := range users {
+		if user.ID != uuid.Nil {
+			players = append(players, player{UserID: user.ID.String(), Username: user.Username})
+		}
+	}
+	return players
 }
