@@ -13,8 +13,8 @@
             <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
                 <materialDesign:PackIcon Kind="NavigateBefore"/>
             </Button>
-            <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
-                <materialDesign:PackIcon Kind="NavigateNext"/>
+            <Button Margin="5" IsEnabled="False" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                <materialDesign:PackIcon  Kind="NavigateNext"/>
             </Button>
         </StackPanel>
         <ScrollViewer>
