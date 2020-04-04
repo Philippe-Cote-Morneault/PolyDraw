@@ -168,7 +168,7 @@ namespace ClientLourd.Views.Controls.Game
             if (e.Bonus > 0)
             {
                 GameViewModel.TimeGained = DateTime.MinValue.AddMilliseconds(e.Bonus);
-                GameViewModel.Time = GameViewModel.Time.AddMilliseconds(e.Bonus);
+                GameViewModel.Time = e.TotalTime;
                 Application.Current.Dispatcher.Invoke(() => { AnimateTimeGained(); });
             }
             else if (e.Bonus < 0)

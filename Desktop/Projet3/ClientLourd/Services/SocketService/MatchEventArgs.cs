@@ -127,5 +127,10 @@ namespace ClientLourd.Services.SocketService
         {
             get => _data["Guessed"];
         }
+
+        public DateTime TotalTime
+        {
+            get => DateTime.MinValue.AddMilliseconds(_data["TotalTime"]);
+        } 
     }
 }
