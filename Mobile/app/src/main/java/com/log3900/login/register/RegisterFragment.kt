@@ -125,7 +125,8 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
             avatarIndex,
             emailInput.text.toString(),
             firstnameInput.text.toString(),
-            lastnameInput.text.toString()
+            lastnameInput.text.toString(),
+            (activity as LoginActivity).currentLanguageCode
         )
     }
 

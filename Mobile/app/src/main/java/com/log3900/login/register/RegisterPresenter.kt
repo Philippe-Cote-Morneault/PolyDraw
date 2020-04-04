@@ -24,12 +24,12 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
     override val profileView = registerFragment
 
     fun register(username: String, password: String, pictureID: Int, email: String,
-                 firstName: String, lastName: String) {
-        sendRegisterRequest(username, password, pictureID, email, firstName, lastName)
+                 firstName: String, lastName: String, language: String) {
+        sendRegisterRequest(username, password, pictureID, email, firstName, lastName, language)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ tokenData ->
                 onRegisterSuccess(username, password, pictureID, email,
-                    firstName, lastName, tokenData)
+                    firstName, lastName, language, tokenData)
             },
                 { err ->
                     profileView.onRegisterError(err.toString())
@@ -38,7 +38,8 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
     }
 
     private fun sendRegisterRequest(username: String, password: String, pictureID: Int,
-                                    email: String, firstName: String, lastName: String)
+                                    email: String, firstName: String, lastName: String,
+                                    language: String)
     : Single<TokenData> {
         return Single.create {
             val accountInfo = JsonObject().apply {
@@ -51,7 +52,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
             }
 
             // TODO: Language
-            val call = AuthenticationRestService.service.register("EN", accountInfo)
+            val call = AuthenticationRestService.service.register(language, accountInfo)
             call.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                     if (response.isSuccessful && response.body() != null) {
@@ -70,7 +71,8 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
     }
 
     private fun onRegisterSuccess(username: String, password: String, pictureID: Int, email: String,
-                                  firstName: String, lastName: String, tokenData: TokenData) {
+                                  firstName: String, lastName: String, language: String,
+                                  tokenData: TokenData) {
         SocketService.instance?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
             if ((it.obj as Message).data[0].toInt() == 1) {
                 profileView.onRegisterSuccess()
@@ -80,6 +82,11 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 false
             }
         })
+
+        val languageCode = LanguageManager.getAvailableLanguages()
+            .find { it.languageCode == language }?.index
+            ?: LanguageManager.LANGUAGE.SYSTEM.ordinal
+
 
         AccountRepository.getInstance().createAccount(
             Account(
@@ -92,7 +99,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                 tokenData.session,
                 tokenData.bearer ?: "", // TODO: Actually handle the missing bearer token
                 0,
-                LanguageManager.LANGUAGE.SYSTEM.ordinal,
+                languageCode,
                 false,
                 true,
                 true
