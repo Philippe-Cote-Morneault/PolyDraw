@@ -343,6 +343,7 @@ namespace ClientLourd
         {
             if (ViewModel.MyProfileCommand.CanExecute(null))
             {
+                Profile.UpdateStats();
                 ViewModel.MyProfileCommand.Execute(null);
             }
         }

@@ -25,6 +25,11 @@ namespace ClientLourd.Views.Controls
             InitializeComponent();
         }
 
+        public void UpdateStats()
+        {
+            ViewModel.GetAllStats();
+        }
+        
         public void AfterLogin()
         {
             ViewModel.AfterLogin();

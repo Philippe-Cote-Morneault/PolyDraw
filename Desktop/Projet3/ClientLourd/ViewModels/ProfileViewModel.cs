@@ -32,13 +32,18 @@ namespace ClientLourd.ViewModels
         
         }
 
+        public void GetAllStats()
+        {
+            Task task2 = GetUserStats();
+            Task task3 = GetUserStats(0, _end);
+        }
+
 
         public override void AfterLogin()
         {
             _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
             Task task1 = GetUserInfo(_sessionInformations.User.ID);
-            Task task2 = GetUserStats();
-            Task task3 = GetUserStats(0, _end);
+            GetAllStats();
         }
 
         private async Task GetUserInfo(string userID)
