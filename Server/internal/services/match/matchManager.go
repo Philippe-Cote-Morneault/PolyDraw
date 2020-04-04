@@ -108,10 +108,8 @@ func (m *matchManager) Hint(socketID uuid.UUID) {
 //Quit quits the match
 func (m *matchManager) Quit(socketID uuid.UUID) {
 	if groupID, ok := m.assignment[socketID]; ok {
-		if _, removed := m.removed[groupID]; !removed {
-			cbroadcast.Broadcast(match.BPlayerLeft, socketID)
-			m.matches[groupID].Disconnect(socketID)
-		}
+		cbroadcast.Broadcast(match.BPlayerLeft, socketID)
+		m.matches[groupID].Disconnect(socketID)
 		delete(m.assignment, socketID)
 	} else {
 		log.Printf("[Match] -> Socket not registered to any game | %s", socketID.String())
