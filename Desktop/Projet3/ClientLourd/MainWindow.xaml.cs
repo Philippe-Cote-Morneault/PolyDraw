@@ -355,6 +355,7 @@ namespace ClientLourd
 
         private void OpenTutorial(object sender, MouseButtonEventArgs e)
         {
+            // For some reason, binding SelectedLanguage in 
             DialogHost.Show(new Tutorial(), "Default");
         }
     }
