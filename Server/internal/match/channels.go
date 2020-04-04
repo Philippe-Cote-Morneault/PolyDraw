@@ -6,19 +6,22 @@ import (
 )
 
 //BGameStarts message to indicate when game starts
-const BGameStarts = "drawing:gamestarts"
+const BGameStarts = "virtualplayer:gamestarts"
 
 //BGameEnds message to indicate when game ends
-const BGameEnds = "drawing:gameEnds"
+const BGameEnds = "virtualplayer:gameEnds"
 
 //BRoundStarts message to indicate when round starts
-const BRoundStarts = "drawing:roundstarts"
+const BRoundStarts = "virtualplayer:roundstarts"
 
 //BRoundEnds message to indicate when round ends
-const BRoundEnds = "drawing:roundends"
+const BRoundEnds = "virtualplayer:roundends"
 
 //BChatNew message used to inform the virtual player of the new chat channel id
-const BChatNew = "drawing:chatnew"
+const BChatNew = "virtualplayer:chatnew"
+
+//BPlayerLeft message used to inform the virtual player that player left
+const BPlayerLeft = "virtualplayer:playerleft"
 
 //BSize buffer size for the drawing service
 const BSize = 5

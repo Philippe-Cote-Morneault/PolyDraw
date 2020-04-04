@@ -59,7 +59,6 @@ func UnRegisterSocket(socketID uuid.UUID) {
 
 	if session.ID != uuid.Nil {
 		go delayUnregister(&session)
-		cbroadcast.Broadcast(broadcast.BSetDeconnection, socketID)
 	}
 }
 
@@ -90,6 +89,7 @@ func delayUnregister(session *model.Session) {
 	delete(tokenAvailable, session.SessionToken)
 	delete(sessionCache, session.SocketID)
 	delete(userCache, session.UserID)
+	cbroadcast.Broadcast(broadcast.BSetDeconnection, session.UserID)
 	model.DB().Delete(session) //Remove the session
 
 }
@@ -138,16 +138,12 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 				SocketID:     messageReceived.SocketID,
 			})
 
-			model.DB().Create(&model.Connection{
-				UserID:      session.userID,
-				ConnectedAt: time.Now().Unix(),
-			})
+			cbroadcast.Broadcast(broadcast.BCreateConnection, session.userID)
 
 			sessionCache[messageReceived.SocketID] = session //Set the value in the cache so pacquets are routed fast
 			userCache[session.userID] = messageReceived.SocketID
 			log.Printf("[Auth] -> Connection made socket:%s userid:%s", messageReceived.SocketID, session.userID)
 			sendAuthResponse(true, messageReceived.SocketID)
-			cbroadcast.Broadcast(broadcast.BCreateConnection, session.userID)
 			cbroadcast.Broadcast(socket.BSocketAuthConnected, messageReceived.SocketID) //Broadcast only when the auth is connected
 			return true
 		}

@@ -17,8 +17,8 @@ import (
 )
 
 type connection struct {
-	ConnectedAt   int64
-	DeconnectedAt int64
+	ConnectedAt    int64
+	DisconnectedAt int64
 }
 
 type matchPlayed struct {

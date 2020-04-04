@@ -2,6 +2,7 @@ package mode
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 	"log"
 	"strings"
 	"sync"
@@ -408,6 +409,8 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 
 //Close method used to force close the current game
 func (c *Coop) Close() {
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+
 	c.receiving.Lock()
 	log.Printf("[Match] [Coop] Force match shutdown, the game will close")
 	if c.isRunning {
@@ -429,7 +432,6 @@ func (c *Coop) Close() {
 	c.receiving.Unlock()
 
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
-	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 }
 
 //GetConnections method used to return all the connections of the players
@@ -488,6 +490,7 @@ func (c *Coop) GetPlayers() []match2.Player {
 
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
+	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 	c.receiving.Lock()
 	duration := time.Now().Sub(c.timeStart).Milliseconds()
 	c.isRunning = false
@@ -514,11 +517,16 @@ func (c *Coop) finish() {
 
 	c.receiving.Unlock()
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
-	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
-	// cbroadcast.Broadcast(stats.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
-	// 	MatchDuration: duration,
-	// 	WinnerName:    winner.Username,
-	// 	MatchType:     1}})
+
+	matchType := 1
+
+	if len(c.connections) > 1 {
+		matchType = 2
+	}
+
+	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
+		MatchDuration: duration,
+		MatchType:     matchType}})
 }
 
 //computeOrder used to compute the order for the coop

@@ -394,6 +394,7 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 
 //Close forces the game to stop completely. Graceful shutdown
 func (f *FFA) Close() {
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	f.receiving.Lock()
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
@@ -410,7 +411,6 @@ func (f *FFA) Close() {
 	f.receiving.Unlock()
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections())
-	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 }
 
 //GetConnections returns all the socketID of the match
@@ -567,6 +567,7 @@ func (f *FFA) calculateScore() int {
 
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
+	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	f.receiving.Lock()
 	gameDuration := time.Now().Sub(f.timeStart)
 	log.Printf("[Match] [FFA] -> Game has ended. Match: %s", f.info.ID)
@@ -611,7 +612,6 @@ func (f *FFA) finish() {
 
 	drawing.UnRegisterGame(f)
 	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
-	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: f.GetConnections(), Match: &model.MatchPlayed{
 		MatchDuration: gameDuration.Milliseconds(),
 		WinnerName:    winner.Username,

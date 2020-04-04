@@ -44,7 +44,7 @@ type Manager struct {
 	Groups          map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
 	Matches         map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
 	HintsPerPlayers map[uuid.UUID]map[string]bool     //playerID -> []indices
-	Drawing         map[uuid.UUID]*drawing.DrawState  //groupID -> continueDrawing
+	Drawing         map[uuid.UUID]*abool.AtomicBool   //socketID -> stopDrawing
 
 }
 
@@ -55,7 +55,7 @@ func (m *Manager) init() {
 	m.Matches = make(map[uuid.UUID]*match2.IMatch)
 	m.HintsInGames = make(map[uuid.UUID]*gameHints)
 	m.HintsPerPlayers = make(map[uuid.UUID]map[string]bool)
-	m.Drawing = make(map[uuid.UUID]*drawing.DrawState)
+	m.Drawing = make(map[uuid.UUID]*abool.AtomicBool)
 }
 
 //AddGroup [Current Thread] adds the group to cache (lobby)
@@ -211,7 +211,6 @@ func startDrawing(round *match2.RoundStart) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting drawing...", (*round).MatchID)
 		return
 	}
-	managerInstance.Drawing[(*round).MatchID] = &drawing.DrawState{StopDrawing: abool.New(), Time: drawingTimeBot}
 	managerInstance.mutex.Unlock()
 
 	time.Sleep(2500 * time.Millisecond)
@@ -219,10 +218,12 @@ func startDrawing(round *match2.RoundStart) {
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
+	stopDrawings := initializeDrawingStates(connections)
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTimeFactor: bot.DrawingTimeFactor, Mode: round.Game.Image.Mode}, managerInstance.Drawing[(*round).MatchID])
+		drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTime: bot.DrawingTimeFactor * drawingTimeBot, Mode: round.Game.Image.Mode}, stopDrawings)
 	}()
 	wg.Wait()
 }
@@ -230,8 +231,20 @@ func startDrawing(round *match2.RoundStart) {
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
 func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 	managerInstance.mutex.Lock()
-	if drawState, ok := managerInstance.Drawing[groupID]; ok {
-		drawState.StopDrawing.Set()
+	match, groupOk := managerInstance.Matches[groupID]
+	if !groupOk {
+		managerInstance.mutex.Unlock()
+		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting handleRoundEnds...", groupID)
+		return
+	}
+	connections := (*match).GetConnections()
+
+	for _, connection := range connections {
+		if stopDrawing, ok := managerInstance.Drawing[connection]; ok {
+			stopDrawing.Set()
+		} else {
+			log.Printf("[VirtualPlayer] -> [Error] Can't find socketID : %v. Can't stop drawing procdeure...", connection)
+		}
 	}
 	managerInstance.mutex.Unlock()
 
@@ -490,4 +503,29 @@ func getHintsLeft(groupID, playerID uuid.UUID) int {
 	}
 
 	return len(hintsInGame.Hints) - hintAsked
+}
+func initializeDrawingStates(connections []uuid.UUID) []*abool.AtomicBool {
+	var stopDrawings []*abool.AtomicBool
+
+	managerInstance.mutex.Lock()
+
+	for _, connection := range connections {
+		a := abool.New()
+		managerInstance.Drawing[connection] = a
+		stopDrawings = append(stopDrawings, a)
+	}
+	managerInstance.mutex.Unlock()
+	return stopDrawings
+}
+
+func stopDrawingOfSocket(socketID uuid.UUID) {
+	managerInstance.mutex.Lock()
+	stopDrawing, ok := managerInstance.Drawing[socketID]
+	managerInstance.mutex.Unlock()
+
+	if !ok {
+		log.Printf("[VirtualPlayer] -> [Error] Can't find socketID : %v. Can't stop drawing procedure...", socketID)
+		return
+	}
+	stopDrawing.Set()
 }

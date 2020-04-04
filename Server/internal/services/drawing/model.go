@@ -2,21 +2,14 @@ package drawing
 
 import (
 	"github.com/google/uuid"
-	"github.com/tevino/abool"
 	geometry "gitlab.com/jigsawcorp/log3900/pkg/geometry/model"
 )
 
 // Draw specifications that contains the informations of the sketch
 type Draw struct {
-	SVGFile           string
-	DrawingTimeFactor float64
-	Mode              int
-}
-
-// DrawState gives the state of drawing
-type DrawState struct {
-	StopDrawing *abool.AtomicBool
-	Time        float64
+	SVGFile     string
+	DrawingTime float64
+	Mode        int
 }
 
 //Stroke represent a stroke to be drawn on the client canvas
