@@ -603,5 +603,10 @@ namespace ClientLourd.ViewModels
         {
             get { return ProfileViewer.ViewPublicProfileCommand; }
         }
+
+        public bool ChatFocused
+        {
+            get; set;
+        }
     }
 }

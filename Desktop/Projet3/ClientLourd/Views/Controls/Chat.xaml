@@ -31,6 +31,7 @@
                 <!--send button-->
                 <Button Margin="5"
                         IsDefault="{Binding ElementName=MessageTextBox, Path=IsFocused}"
+                        
                         ToolTip="{DynamicResource SendMessage}"
                         Style="{DynamicResource MaterialDesignToolForegroundButton}"
 
@@ -67,6 +68,8 @@
                         MaxLines="2"
                         MinLines="2"
                         Name="MessageTextBox"
+                        GotFocus="OnFocus"
+                        LostFocus="OnFocusLost"
                         MaxLength="1000" />
 
                     <!--Character counter-->

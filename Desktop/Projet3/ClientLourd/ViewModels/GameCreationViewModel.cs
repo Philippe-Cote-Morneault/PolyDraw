@@ -345,7 +345,6 @@ namespace ClientLourd.ViewModels
             {
                 CurrentCanvas.Strokes.Clear();
                 await RestClient.PutGameInformations(GameID, _selectedMode, BlackLevelThreshold / 100.0, BrushSize);
-                Console.WriteLine($"Played preview mode: {_selectedMode}");
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.DrawingPreviewRequest, new Guid(GameID)));
             }
             catch (Exception e)

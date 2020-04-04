@@ -30,8 +30,8 @@ namespace ClientLourd.Views.Controls.Game
         {
             InitializeComponent();
             Loaded += OnLoaded;
-            _random = new Random((int) DateTime.Now.Ticks);
-            _timer = new DispatcherTimer {Interval = TimeSpan.FromMilliseconds(10)};
+            _random = new Random((int)DateTime.Now.Ticks);
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             _timer.Tick += (s, arg) => Confetti();
         }
 
@@ -59,7 +59,14 @@ namespace ClientLourd.Views.Controls.Game
         {
             if (e.PropertyName == nameof(ViewModel.CanStillGuess))
             {
-                FocusFirstTextBox();
+                Application.Current.Dispatcher.Invoke(() => 
+                {
+                    if (!ChatViewModel.ChatFocused)
+                    {
+                        FocusFirstTextBox();
+                    }
+                });
+                
             }
         }
 
@@ -69,9 +76,17 @@ namespace ClientLourd.Views.Controls.Game
             {
                 return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)
                         ?.SessionInformations;
                 });
+            }
+        }
+
+        public ChatViewModel ChatViewModel
+        {
+            get
+            {
+                return (((MainWindow)Application.Current.MainWindow)?.ChatBox?.DataContext as ChatViewModel);
             }
         }
 

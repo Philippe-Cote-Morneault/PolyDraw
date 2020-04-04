@@ -150,7 +150,6 @@ namespace ClientLourd.Services.RestService
 
         public async Task<Stats> GetStats()
         {
-            Console.WriteLine("appeler get stats");
             RestRequest request = new RestRequest("stats");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             var response = await Execute(request);
@@ -160,8 +159,6 @@ namespace ClientLourd.Services.RestService
 
         public async Task<StatsHistory> GetStats(int start, int end)
         {
-            Console.WriteLine("appeler get stats history");
-
             RestRequest request = new RestRequest("stats//history");
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddParameter("start", start, ParameterType.QueryString);
@@ -191,7 +188,6 @@ namespace ClientLourd.Services.RestService
 
         public async Task PutGameInformations(string gameID, PotraceMode mode, double blackLevel, int brushSize)
         {
-            Console.WriteLine(mode.ToString());
             RestRequest request = new RestRequest($"games/{gameID}/image", Method.PUT);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
             request.AddJsonBody(new
@@ -207,7 +203,6 @@ namespace ClientLourd.Services.RestService
         {
             RestRequest request = new RestRequest($"games/{gameID}", Method.DELETE);
             request.AddParameter("SessionToken", _sessionToken, ParameterType.HttpHeader);
-            Console.WriteLine("Delete game");
             var response = await Execute(request);
         }
 
