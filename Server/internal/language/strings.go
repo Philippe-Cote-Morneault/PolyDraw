@@ -54,13 +54,13 @@ en:
     hintTime: "There needs to be at least 10 seconds for a hint to be requested."
 
   botlines:
-    startgameAngry1: "I hate this game and I do not like the players in the group. Bad game at all!"
+    startgameAngry1: "I hate this game and I don't like the players in the group. It's an horrible game!"
     startgameAngry2: "Sick of this game, but well I'm going to play since we're confined."
-    startgameAngry3: "The game will start, I hope I have fun because it usually does not amuse me."
+    startgameAngry3: "The game will start, I hope I have fun because it usually doesn't amuse me."
 
     startgameFunny1: "The game will start, fasten your seatbelts ... Or should I say your keyboards and mouses!"
     startgameFunny2: "Well, I took a new resolution before the game begins: 1080p xD. Enjoy the game ;) !"
-    startgameFunny3: "The game will begin. Protect your screen, there are cheaters who want to raise their stats!"
+    startgameFunny3: "The game will begin. Protect your screen, there are cheaters who wants to raise their stats!"
 
     startgameMean1: "Before the game begins, I wish you all to lose."
     startgameMean2: "The game will start, I hope your machine will run out of battery before the end!"
@@ -68,100 +68,100 @@ en:
 
     startgameNice1: "Before the game begins, I wish you all good luck!"
     startgameNice2: "The game will start, have fun and may the best win!"
-    startgameNice3: "I feel we will have fun! Let's go !"
+    startgameNice3: "I have a feeling we will have fun! Let's go team!"
 
     startgameSupportive1: "Before the game begins, remember that the important thing is to participate. Everyone is a winner in the end !"
     startgameSupportive2: "Making mistakes is worth trying! So give everything for this game!"
     startgameSupportive3: "If you feel like giving up, act like that the stats will count in your GPA. It'll give you a boost!"
 
 
-    endRoundAngry1: "I still do not like this game !!!!"
-    endRoundAngry2: "Still confined even after the round. I guess that we have to continue ..."
-    endRoundAngry3: "The round was bad. But I feel that the next will be worse."
+    endRoundAngry1: "I still don't like this game !!!!"
+    endRoundAngry2: "Still confined even after the round. I guess that we'll have to continue ..."
+    endRoundAngry3: "The round was horrible. I have a feeling that the next one will be worse."
 
-    endRoundFunny1: "The round is finished. No one is yet ko I hope?"
-    endRoundFunny2: "Before the next round begins, may I go to the toilet please? I have to empty my RAM."
-    endRoundFunny3: "Wow was this round physical. Looks like I've moved mountains. And yes, you will be surprised what a virtual bot can do."
+    endRoundFunny1: "The round is finished. No one is KO yet I suppose?"
+    endRoundFunny2: "Before the next round begins, may I go to the bathroom please? I have to empty my RAM."
+    endRoundFunny3: "Wow this round was intense. Looks like I've moved mountains. You would be surprised what a virtual bot can do."
 
-    endRoundMean1: "The round is finished and for me, you all lost because you are all bad."
-    endRoundMean2: "Your battery made it for this round, but it will crash the next one (at least I hope)."
+    endRoundMean1: "I'm done with this round!  All of you have lost because you're bad."
+    endRoundMean2: "Your battery made it through this round, but it will crash the next one? I sure hope so!"
     endRoundMean3: "What was this round guys? I have rarely seen players that bad."
 
-    endRoundNice1: "This round was so cool. Let's go to the next aren't we ?"
-    endRoundNice2: "Wow what round. I really took pleasure."
+    endRoundNice1: "This round was so cool, wasn'it? Let's go to the next!!"
+    endRoundNice2: "Wow what round. I really enjoyed it! We should do it again."
     endRoundNice3: "This round was good, but I'm sure the next one will be even better!"
 
     endRoundSupportive1: "Everyone did very well in this round. Congratulations and let's go to the next!"
-    endRoundSupportive2: "Even if you make mistakes, do not worry. You will do better the next time."
-    endRoundSupportive3: "Come on do not give up ! Your GPA is still in play!"
+    endRoundSupportive2: "Even if you make mistakes, don't worry. You'll do better the next time."
+    endRoundSupportive3: "Come on don't give up! Your GPA is still in play!"
 
 
-    playerRefAngry1: "I do not know why, but I do not like {}."
+    playerRefAngry1: "I don't know why, but I don't like {}."
     playerRefAngry2: "It annoys me even confined, {} always plays."
-    playerRefAngry3: "Please someone to kick-out {}? He annoys me."
+    playerRefAngry3: "Please someone to kick-out {}? I can smell this player from here."
 
-    playerRefFunny1: "Hey {} ! Always up for a bowling game after the game?"
-    playerRefFunny2: "Hey {} !  Can you lend me your body please? I want to go swimming but my motherboard is not water-resistant."
-    playerRefFunny3: "I had a joke on {}. But if I say it, then you will say that I am a racist ..."
+    playerRefFunny1: "Hey {}! Always up for a bowling game after the game?"
+    playerRefFunny2: "Hey {}! Can you lend me your body please? I want to go swimming, but my motherboard isn't water-resistant."
+    playerRefFunny3: "I had a joke on {}. But if I say it, then you will say that I'm a racist..."
 
-    playerRefMean1: "It's hopeless for {} ..."
+    playerRefMean1: "It's hopeless for {}..."
     playerRefMean2: "I'll hack you {} and retrieve your personal information!"
-    playerRefMean3: "Well we can pretend that {} is not playing. It wouldn't change much ..."
+    playerRefMean3: "Well we can pretend that {} is not playing. It wouldn't change much..."
 
     playerRefNice1: "I love to play with {}!"
-    playerRefNice2: "What a pleasure to play in the presence of {}"
+    playerRefNice2: "What a blast to play with {}"
     playerRefNice3: "Oh so cool that {} is with us in this game!"
 
-    playerRefSupportive1: "Well done {}, keep it!"
-    playerRefSupportive2: "Courage {}! Do not give up !"
-    playerRefSupportive3: "Follow your efforts {} it will pay off, you'll see!"
+    playerRefSupportive1: "Well done {}, keep it up!"
+    playerRefSupportive2: "Courage {}! Don't give up !"
+    playerRefSupportive3: "Keep going {} it will pay off, you'll see!"
 
 
-    hintRequestAngry1: "A clue ?!! It annoys me !!"
-    hintRequestAngry2: "I hope that you'll find it with this clue, instead I'm going to get angry"
-    hintRequestAngry3: "The hint is useless! It annoys me !!"
+    hintRequestAngry1: "A clue ?!! It pisses me off!!"
+    hintRequestAngry2: "I hope that you'll find it with this clue. You're making me furious!!!"
+    hintRequestAngry3: "The hint is useless! Why even bother asking?!"
 
     hintRequestFunny1: "Someone ordered a not overcooked clue?"
     hintRequestFunny2: "Oh a clue! Or should I say, January 10? Damn this joke would have worked in french."
-    hintRequestFunny3: "Wild hint approaching. I repeat, wild hint approaching."
+    hintRequestFunny3: "A wild hint is approaching. I repeat, a wild hint is approaching."
 
-    hintRequestMean1: "Tssss you are desperate enough to ask for a hint?"
-    hintRequestMean2: "Let's be honest, the hint will not change anything in your incompetence of finding the word."
-    hintRequestMean3: "Someone asked for a clue? Ahaha I was convinced that you were not up to play this game."
+    hintRequestMean1: "Pfff, you're desperate enough to ask for a hint?"
+    hintRequestMean2: "Let's be honest! The hint won't change anything in your incompetence in this game."
+    hintRequestMean3: "Someone asked for a clue? Hahaha I was convinced that you were AKF!"
 
-    hintRequestNice1: "I hope that this hint will be able to help you."
+    hintRequestNice1: "There, I hope that this hint will be able to help you."
     hintRequestNice2: "Oh cool, a new clue!"
-    hintRequestNice3: "This hint will surely be useful to you!"
+    hintRequestNice3: "This hint will be useful to you. I'm sure!"
 
     hintRequestSupportive1: "Good initiative for asking a clue! Keep it up!"
     hintRequestSupportive2: "This hint will help you to find the word! Keep looking!"
-    hintRequestSupportive3: "Do not lose hope, that clue might help you!"
+    hintRequestSupportive3: "Don't lose hope, that clue might help you!"
 
-    winRatioAngry1: "Hey {} ! You think you are the strongest because you won the most games? You are getting on my nerves !!!"
-    winRatioAngry2: "I do not even know why I'm playing, {} who will win !!!"
-    winRatioAngry3: "Someone to kick-out {}? He has already won enough games like that !!"
+    winRatioAngry1: "Hey {} ! You think you're the strongest because you won the most games? You are getting on my nerves !!!"
+    winRatioAngry2: "I don't even know why I'm playing, {} will win anyway!!!"
+    winRatioAngry3: "Can someone kick out {}? He has won enough games! We don't need to help him ANYMORE!"
 
-    winRatioFunny1: "{} Is the MVP of the game! (MVP is not the concept of Dropbox obviously)"
-    winRatioFunny2: "This is the story of {} that plays a game. And who wins. (My jokes are automated, it's not my fault ...)"
-    winRatioFunny3: "When I see the number of game {} won, I lose track. (I mean Threads of course. We do not forget that I am a only a bot)"
+    winRatioFunny1: "{} is the MVP of the game! (MVP isn't the concept of Dropbox obviously. I've forgot it anyway)."
+    winRatioFunny2: "This is the story of {} that plays a game and who wins. (My jokes are automated, it's not my fault if they are bad...)"
+    winRatioFunny3: "When I saw the number of games {} won, I lost track. (I mean Threads of course. I'm a bot that lives in a world of semaphores and mutexes.)"
 
-    winRatioMean1: "Hey {} ! It is not because you won the most games, that you're going to win that one."
-    winRatioMean2: "The goal is to make lose {}, he earned enough games like that !!"
+    winRatioMean1: "Hey {}! It isn't because you won the most games, that you're going to win this one."
+    winRatioMean2: "The goal is to make lose {}, he won enough games like that !!"
     winRatioMean3: "{} is the player to shoot! We must bring down his winning ratio."
 
     winRatioNice1: "{} is the best player in the game!"
-    winRatioNice2: "Hey {} ! According to your win ratio you're on track to win this game too."
-    winRatioNice3: "We can all applaud {}! He has the better win ratio among us!"
+    winRatioNice2: "Hey {}! According to your win ratio you're on track to win this game too."
+    winRatioNice3: "We can all applaud {}! He has the best win ratio among us!"
 
-    winRatioSupportive1: "Hey {} ! You have to let the other win in order to encourage them!"
-    winRatioSupportive2: "Courage {}! Do not give up !"
+    winRatioSupportive1: "Hey {}! You have to let the others win in order to encourage them!"
+    winRatioSupportive2: "Courage {}! Don't give up !"
     winRatioSupportive3: "Follow your efforts {} it will pay off, you'll see!"
 
-    noHintAngry: "You've already asked me all the available hints. What do you want from me ? You're getting on my nerves !!"
-    noHintFunny: "Oups, no more clue for you. May I offer you a drink instead ? (without alcool, of course)"
-    noHintMean: "No more hints for this draw. But to be honnest, I didn't want to give you one."
-    noHintNice: "Sorry, I don't have any remaining hints for this draw :("
-    noHintSupportive: "I don't have any remaining hints for this draw . But keep up, I konw you can figure this out !"
+    noHintAngry: "You've already asked me all the available hints. What do you want from me? You're pissing me off!!"
+    noHintFunny: "Oups, no more clue for you. May I offer you a drink instead? (without alcool, of course. Thanks Tanguy!)"
+    noHintMean: "No more hints for this drawing. But to be honnest, I didn't want to give you one."
+    noHintNice: "Sorry, I don't have any more hints for this drawing. :("
+    noHintSupportive: "I don't have any remaining hints for this drawing. But keep it up, I know you can figure this out !"
     
 fr:
   error:
@@ -241,7 +241,7 @@ fr:
     endRoundAngry2: "Toujours confiné, même après le round. I guess qu'il faut qu'on continue..."
     endRoundAngry3: "Le round était nul. Mais je sens que le prochain va être pire."
     
-    endRoundFunny1: "Le round est fini. Personne n'est encore ko j'espère ?"
+    endRoundFunny1: "Le round est fini. Personne n'est encore KO j'espère ?"
     endRoundFunny2: "Avant que le prochain round commence, je peux aller aux toilettes svp ? Je dois vider ma RAM."
     endRoundFunny3: "Wow c'était physique ce round. On dirait que j'ai soulevé des montagnes. Et oui, vous serez surpris de ce qu'un bot virtuel peut faire."
     

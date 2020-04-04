@@ -581,12 +581,13 @@ func (f *FFA) finish() {
 		return
 	}
 
-	for i := range f.scores {
+	for i := range f.players {
+		player := &f.players[i]
 		players[i] = PlayersData{
-			Username: f.players[f.order[i]].Username,
-			UserID:   f.players[f.order[i]].userID.String(),
-			Points:   f.scores[i].total,
-			IsCPU:    f.players[f.order[i]].IsCPU,
+			UserID:   player.userID.String(),
+			Username: player.Username,
+			IsCPU:    player.IsCPU,
+			Points:   f.scores[player.Order].total,
 		}
 	}
 
