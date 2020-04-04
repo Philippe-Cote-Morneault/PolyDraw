@@ -18,10 +18,22 @@
         <converter:SingleCompartorToBooleanConverter x:Key="SingleCompartorToBooleanConverter" />
         <converter:ComparatorToOpacity x:Key="ComparatorToOpacity" />
         <converter:EnumTranslationConverter x:Key="EnumTranslationConverter" />
+        <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
     </UserControl.Resources>
-
-    <materialDesign:DialogHost Identifier="Dialog" Width="800">
+    <Grid IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}">
+        <WrapPanel ZIndex="2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Visibility="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar
+                        Height="24"
+                        Width="24"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Value="0"
+                        IsIndeterminate="True" />
+        </WrapPanel>
+        <materialDesign:DialogHost Identifier="Dialog" Width="800">
 
         <StackPanel>
             <Button HorizontalAlignment="Right" Command="{Binding CloseDialogCommand}">
@@ -88,4 +100,5 @@
                     Content="{DynamicResource CreateLobbyButton}" />
         </StackPanel>
     </materialDesign:DialogHost>
+    </Grid>
 </UserControl>
