@@ -101,12 +101,6 @@
                 </DockPanel>
             </materialDesign:TransitionerSlide>
 
-
-            <!-- Chat -->
-            <materialDesign:TransitionerSlide >
-                <slide:ChatTutorial Margin="10"/>
-            </materialDesign:TransitionerSlide>
-
             <materialDesign:TransitionerSlide >
                 <slide:FFATutorial Margin="10"/>
             </materialDesign:TransitionerSlide>
@@ -119,6 +113,9 @@
                 <slide:SoloTutorial Margin="10"/>
             </materialDesign:TransitionerSlide>
 
+            <materialDesign:TransitionerSlide >
+                <slide:ChatTutorial Margin="10"/>
+            </materialDesign:TransitionerSlide>
         </materialDesign:Transitioner>
     </DockPanel>
 
