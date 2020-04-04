@@ -101,7 +101,7 @@ namespace ClientLourd.Views.Controls.Game
                         LeaderBoardGrid.Children.Add(new LeaderBoard(e, false));
                         LeaderBoardGrid.Visibility = Visibility.Visible;
                     });
-                    Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
+                    Thread.Sleep(MatchTiming.GAME_ENDED_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         LeaderBoardGrid.Children.Clear();
@@ -113,7 +113,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ShowCanvasMessage($"{ViewModel.CurrentDictionary["WordWas"]} {e.Word}");
+                    ShowCanvasMessage($"{ViewModel.CurrentDictionary["WordWas"]} {e.Word}", MatchTiming.ROUND_END_TIMEOUT);
                 });
             }
         }
@@ -372,7 +372,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 Task.Run(() =>
                 {
-                    Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
+                    Thread.Sleep(MatchTiming.ROUND_END_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Storyboard sb = (Storyboard) FindResource("NextRoundBegin");

@@ -269,7 +269,6 @@ namespace ClientLourd.ViewModels
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
             var e = (MatchEventArgs) args;
-            //TODO show leaderboard
             StrokeDrawerService.Stop();
         }
 
@@ -584,11 +583,11 @@ namespace ClientLourd.ViewModels
             {
                 if (e.UserID == SessionInformations.User.ID)
                 {
-                    OnNewCanavasMessage((string) CurrentDictionary["RightGuessSolo"]);
+                    OnNewCanavasMessage((string) CurrentDictionary["RightGuessSolo"], MatchTiming.ROUND_END_TIMEOUT);
                 }
                 else
                 {
-                    OnNewCanavasMessage($"{e.Username} {CurrentDictionary["RightGuessCoop"]} {e.Word}.");
+                    OnNewCanavasMessage($"{e.Username} {CurrentDictionary["RightGuessCoop"]} {e.Word}.", MatchTiming.ROUND_END_TIMEOUT);
                 }
             });
         }
