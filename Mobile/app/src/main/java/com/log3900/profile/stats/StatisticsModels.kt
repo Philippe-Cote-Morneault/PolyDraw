@@ -27,7 +27,7 @@ data class GamePlayed(
 
 data class Connection(
     @Json(name = "ConnectedAt")     val connectedAt:    Int,
-    @Json(name = "DeconnectedAt")   val disconnectedAt: Int
+    @Json(name = "DisconnectedAt")  val disconnectedAt: Int
 )
 
 data class Achievement(
