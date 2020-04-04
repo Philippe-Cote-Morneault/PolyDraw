@@ -39,7 +39,7 @@
                             Visibility="{Binding Mode, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}">
                     <materialDesign:PackIcon Height="25" Width="25" Kind="Robot" VerticalAlignment="Center"
                                              HorizontalAlignment="Center" Margin="20 18 8 0" />
-                    <TextBlock VerticalAlignment="Center" Margin="0 20 0 0" FontSize="20" HorizontalAlignment="Center"
+                    <TextBlock VerticalAlignment="Center" Margin="0 20 0 0" FontSize="17" HorizontalAlignment="Center"
                                FontWeight="Bold" Text="{DynamicResource Drawer}" />
                 </StackPanel>
 

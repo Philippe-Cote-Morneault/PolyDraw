@@ -203,6 +203,150 @@
     <system:String x:Key="GameMode">Mode de la partie</system:String>
     <system:String x:Key="Winner">Gagnant</system:String>
     <system:String x:Key="GameDuration">Durée de la partie</system:String>
+    
+    <!-- FFA tutorial -->
+
+    <system:String x:Key="FFAGame">
+        Partie FFA
+    </system:String>
+    <system:String x:Key="FFADescription">
+        Pour ce mode de partie, tous les joueurs s'affrontent afin obtenir le meilleur score.
+        Ils peuvent gagner des points en devinant correctement le mot dessiné par le dessinateur.
+        Le nombre de points gagnés dépend du temps restant et du nombre de joueurs ayant déjà deviné le mot.
+        De plus, ils peuvent gagner des points lorsque d'autres joueurs devinent correctement leur dessin.
+        Voici l'interface d'une partie de mêlée générale.
+    </system:String>
+    <system:String x:Key="FFAPlayersSection">
+        Dans la section gauche de l'interface, on retrouve les joueurs et leur score. Ils sont classés en ordre décroissant en fonction de leur score.
+        Les joueurs virtuels sont représentés par une icône de robot. Pour mettre le dessinateur en évidence, une icône de crayon est placée à droite de son nom.
+    </system:String>
+
+    <system:String x:Key="FFATopBar">
+        En haut de la zone de dessin, une horloge affiche le temps restant au tour. Dépendemmant des difficultés facile, moyen et difficile, les tours durent 1 minute, 45 secondes et 30 secondes respectivement.
+        Une fois le temps expiré, on passe au prochain tour.
+        Le tour courant et le nombre de tours total sont affichés à droite de l'horloge. Le nombre de tours total est calculé en fonction du nombre
+        de joueurs et du nombre de rondes choisi à la création de la partie. Une partie de deux rondes et de 3 joueurs aura, par exemple, 6 tours.
+    </system:String>
+
+    <system:String x:Key="FFADrawer">
+        Dans une partie de mêlée générale, le mot que le dessinateur doit dessiner est affiché en bas de la zone de dessin. C'est à partir de 
+        mot que le joueur devra montrer ses talents de dessinateur!
+    </system:String>
+
+    <system:String x:Key="FFAGuess">
+        Les autres joueurs de la partie auront, quant à eux, la possibilité de deviner le mot à l'aide du champ de texte en bas de la zone
+        de dessin. Si jamais le dessinateur est un joueur virtuel, ces joueurs auront aussi la possibilité de demander un indice. L'indice sera affiché dans le chat de la partie, mais seulement celui qui a demandé l'indice pourra la voir.
+        Les joueurs devront par contre faire attention, car demander un indice coûte des points!
+    </system:String>
+
+    <system:String x:Key="TopBar">
+        Barre du haut
+    </system:String>
+
+    <system:String x:Key="Draw">
+        Dessiner
+    </system:String>
+
+    <!-- Coop tutorial -->
+
+    <system:String x:Key="CoopGame">
+        Partie Coop
+    </system:String>
+
+    <system:String x:Key="CoopDescription">
+        Dans ce mode de jeux, un groupe de joueurs humains essayent de deviner le plus de mots possible avant que le temps expire. Les joueurs récoltent des points
+        pour chaque dessin deviné correctement. De même, lorsque l'équipe devine correctement, elle est allouée du temps supplémentaire.
+        Les mots sont tous dessinés par un joueur virtuel aléatoire. Les joueurs humains n'ont pas la possibilité de dessiner. 
+        Pour chaque dessin,l'équipe dispose d'un nombre de tentatives collectives (coeurs). Ce nombre de tentatives varie en fonction de la difficulté de la partie.
+        Si jamais l'équipe épuise ses tentatives, alors elle est pénalisée par un retrait de temps et le joueur virtuel passe au dessin prochain. 
+    </system:String>
+
+    <system:String x:Key="CoopPlayersSection">
+        Dans la section gauche de l'interface, on retrouve l'équipe de joueurs humains et le joueur virtuel qui se charge de dessiner les mots à deviner.
+    </system:String>
+
+    <system:String x:Key="CoopTopBar">
+        En haut de la zone de dessin, on retrouve d'abord le score de l'équipe. Le score est collectif et les joueurs doivent travailler ensemble pour l'améliorer.
+        Ensuite, les coeurs affichent à l'équipe combien de tentatives il reste. Ces coeurs sont réinitialisés à chaque nouveau dessin du joueur virtuel. Par contre, si le nombre de tentatives
+        tombe à zéro, l'équipe est pénalisée par un retrait de temps. Puis, l'horloge montre combien de temps il reste à la partie. Contrairement aux parties FFA, le temps n'est pas réinitialisé 
+        à chaque dessin. 
+    </system:String>
+
+    <system:String x:Key="CoopGuess">
+        Au-dessous de la zone de dessin, il est possible d'essayer de deviner un mot ou de deviner un indice. Dans les parties Coop, demander un indice coûte du temps. Si un joueur demande un indice,
+        tous les joueurs pourront la visionner, contrairement en FFA.
+    </system:String>
+
+
+    <!-- Solo tutorial -->
+
+    <system:String x:Key="SoloGame">
+        Partie Solo
+    </system:String>
+
+    <system:String x:Key="SoloDescription">
+        Les parties solo sont presque identiques aux parties Coop. Par contre, il n'est pas possible de jouer à plusieurs. Le joueur joue avec un joueur virtuel pour deviner le plus de mots possible
+        durant un certain temps qui varie en fonction de la difficulté. Tout comme les parties Coop, le joueur est alloué un nombre de tentatives au départ en fonction de la difficulté du jeu. 
+        Dans ce mode de jeu, le joueur peut jouer afin de battre son record personnel.
+
+    </system:String>
+
+
+    <system:String x:Key="SoloTopBar">
+        La barre du haut est similaire à celle des parties Coop. En revanche, le record personnel du joueur en mode solo est affiché à gauche de l'horloge.
+    </system:String>
+
+    <!-- Tutorial -->
+    <system:String x:Key="Tutorial">Tutoriel</system:String>
+    <system:String x:Key="TutorialText1">
+        Bienvenue sur PolyDraw! PolyDraw est une application qui permet à ses utilisateurs de faire plusieurs choses.
+        Puisque l'aspect le plus important de l'application est celui des parties que l'on peut jouer, ce tutoriel tentera de vous aider à mieux comprendre comment
+        les différents modes de parties qu'offre PolyDraw fonctionnent. L'application offre trois différents modes de parties, soit mêlée générale (FFA), coop et solo.
+        Les modes sont tous un peu similaires. Ils orbitent autour du même concept: un joueur doit correctement deviner le mot dessiné par autre utilisateur, qu'il soit humain ou virtuel.
+        Avant de commencer, passons sur des aspects qui seront importants à la compréhension des différents modes de parties.
+      
+    </system:String>
+
+    <system:String x:Key="TutorialText2">
+        À chaque fois que l'on joint une partie, l'utilisateur sera automatiquement ajouté au canal "Partie en cours". C'est ici qu'il pourra clavarder avec les autres joueurs de la partie.
+        Quand l'utilisateur quittera la partie, il sera également automatiquement retiré du canal!
+         
+    </system:String>
+
+
+    <system:String x:Key="TutorialText3">
+        Ces joueurs sont appelés des joueurs virtuels. Ils ont comme particularité une icône de robot et ils peuvent parler! Dans les parties FFA, l'hôte peut ajouter ou retirer des
+        joueurs virtuels s'il le désire. En coop et en solo, les joueurs virtuels se joindront automatiquement à vos parties. Ces joueurs peuvent seulement dessiner. Ils ne peuvent
+        pas deviner. Utilisez-les à votre avantage, ils peuvent être utiles lorsqu'on a besoin d'un indice!
+       
+    </system:String>
+
+    <system:String x:Key="VirtualPlayers">
+        Joueurs Virtuels
+    </system:String>
+
+    <system:String x:Key="ActiveMatch">
+        Canal de la Partie Active
+    </system:String>
+    <system:String x:Key="HomeView">
+        Vue d'accueil
+    </system:String>
+
+    <system:String x:Key="HomeViewText1">
+        Dans cette vue, un utilisateur peut joindre une des parties existantes. Pour joindre une partie, un utilisateur n'a qu'à cliquer dessus.
+        Une fois avoir rejoint le groupe, l'hôte peut commencer la partie si assez de joueurs sont présents.
+        Au-dessous de cette vue, deux boutons sont affichés.
+   
+
+    </system:String>
+
+    <system:String x:Key="HomeViewText2">
+        Le premier bouton permet à un utilisateur de créer une partie. Une partie est une salle d'attente
+        contenant les joueurs voulant jouer ensemble. Le deuxième bouton permet de créer un jeu. Un jeu
+        est l'ensemble d'un mot, ses indices et son dessin. Quand un joueur crée un jeu, il permet au joueur virtuel
+        d'utiliser le jeu lors d'une partie.
+    </system:String>
+
 
 
 </ResourceDictionary>
