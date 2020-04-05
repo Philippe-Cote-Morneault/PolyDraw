@@ -75,6 +75,7 @@ namespace ClientLourd.Services.InkCanvas
                 _editor.StrokeDeleted -= EditorOnStrokeDeleted;
                 _editor.StrokedAdded -= EditorOnStokeAdded;
                 _drawingID = Guid.Empty;
+                _currentStrokeID = Guid.Empty;
             }
         }
 

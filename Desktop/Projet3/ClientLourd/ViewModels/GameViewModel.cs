@@ -494,7 +494,7 @@ namespace ClientLourd.ViewModels
 
             Task.Run(() =>
             {
-                Thread.Sleep(500);
+                Thread.Sleep(200);
                 ClearCanvas();
             });
         }
