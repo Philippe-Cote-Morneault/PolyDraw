@@ -96,25 +96,25 @@ en:
     endRoundSupportive3: "Come on don't give up! Your GPA is still in play!"
 
 
-    playerRefAngry1: "I don't know why, but I don't like {}."
-    playerRefAngry2: "It annoys me even confined, {} always plays."
-    playerRefAngry3: "Please someone to kick-out {}? I can smell this player from here."
+    playerRefAngry1: "I don't know why, but I don't like {}. Your in game duration is []. I can't stand you anymore."
+    playerRefAngry2: "It annoys me even confined, {} always plays. Your in game duration is []. I can't stand you anymore."
+    playerRefAngry3: "Please someone to kick-out {}? I can smell this player from here. Your in game duration is []. I can't stand you anymore."
 
-    playerRefFunny1: "Hey {}! Always up for a bowling game after the game?"
-    playerRefFunny2: "Hey {}! Can you lend me your body please? I want to go swimming, but my motherboard isn't water-resistant."
-    playerRefFunny3: "I had a joke on {}. But if I say it, then you will say that I'm a racist..."
+    playerRefFunny1: "Hey {}! Always up for a bowling game after the game? Your in game duration is []. You're such a geek :D."
+    playerRefFunny2: "Hey {}! Can you lend me your body please? I want to go swimming, but my motherboard isn't water-resistant. Your in game duration is []. You're such a geek :D."
+    playerRefFunny3: "I had a joke on {}. But if I say it, then you will say that I'm a racist... Your in game duration is []. You're such a geek :D."
 
-    playerRefMean1: "It's hopeless for {}..."
-    playerRefMean2: "I'll hack you {} and retrieve your personal information!"
-    playerRefMean3: "Well we can pretend that {} is not playing. It wouldn't change much..."
+    playerRefMean1: "It's hopeless for {}... Your in game duration is []. Don't like you since second 1."
+    playerRefMean2: "I'll hack you {} and retrieve your personal information! Your in game duration is []. Don't like you since second 1."
+    playerRefMean3: "Well we can pretend that {} is not playing. It wouldn't change much... Your in game duration is []. Don't like you since second 1."
 
-    playerRefNice1: "I love to play with {}!"
-    playerRefNice2: "What a blast to play with {}"
-    playerRefNice3: "Oh so cool that {} is with us in this game!"
+    playerRefNice1: "I love to play with {}! Your in game duration is []. Glad you like this game !."
+    playerRefNice2: "What a blast to play with {}. Your in game duration is []. Glad you like this game !."
+    playerRefNice3: "Oh so cool that {} is with us in this game! Your in game duration is []. Glad you like this game !."
 
-    playerRefSupportive1: "Well done {}, keep it up!"
-    playerRefSupportive2: "Courage {}! Don't give up !"
-    playerRefSupportive3: "Keep going {} it will pay off, you'll see!"
+    playerRefSupportive1: "Well done {}! Your in game duration is [], keep it up!"
+    playerRefSupportive2: "Courage {}! Your in game duration is [], don't give up !"
+    playerRefSupportive3: "Your in game duration is []. Keep going {} it will pay off, you'll see!"
 
 
     hintRequestAngry1: "A clue ?!! It pisses me off!!"
@@ -137,25 +137,25 @@ en:
     hintRequestSupportive2: "This hint will help you to find the word! Keep looking!"
     hintRequestSupportive3: "Don't lose hope, that clue might help you!"
 
-    winRatioAngry1: "Hey {} ! You think you're the strongest because you won the most games? You are getting on my nerves !!!"
-    winRatioAngry2: "I don't even know why I'm playing, {} will win anyway!!!"
-    winRatioAngry3: "Can someone kick out {}? He has won enough games! We don't need to help him ANYMORE!"
+    winRatioAngry1: "Hey {} ! You think you're the strongest because you won the most games? You are getting on my nerves !!! (WinRatio of : [])"
+    winRatioAngry2: "I don't even know why I'm playing, {} will win anyway!!! (WinRatio of : [])"
+    winRatioAngry3: "Can someone kick out {}? He has won enough games! We don't need to help him ANYMORE! (WinRatio of : [])"
 
-    winRatioFunny1: "{} is the MVP of the game! (MVP isn't the concept of Dropbox obviously. I've forgot it anyway)."
-    winRatioFunny2: "This is the story of {} that plays a game and who wins. (My jokes are automated, it's not my fault if they are bad...)"
-    winRatioFunny3: "When I saw the number of games {} won, I lost track. (I mean Threads of course. I'm a bot that lives in a world of semaphores and mutexes.)"
+    winRatioFunny1: "{} is the MVP of the game! (MVP isn't the concept of Dropbox obviously. I've forgot it anyway). (WinRatio of : [])"
+    winRatioFunny2: "This is the story of {} that plays a game and who wins. (My jokes are automated, it's not my fault if they are bad...) (WinRatio of : [])"
+    winRatioFunny3: "When I saw the number of games {} won, I lost track. (I mean Threads of course. I'm a bot that lives in a world of semaphores and mutexes.) (WinRatio of : [])"
 
-    winRatioMean1: "Hey {}! It isn't because you won the most games, that you're going to win this one."
-    winRatioMean2: "The goal is to make lose {}, he won enough games like that !!"
-    winRatioMean3: "{} is the player to shoot! We must bring down his winning ratio."
+    winRatioMean1: "Hey {}! It isn't because you won the most games, that you're going to win this one. (WinRatio of : [])"
+    winRatioMean2: "The goal is to make lose {}, he won enough games like that !! (WinRatio of : [])"
+    winRatioMean3: "{} is the player to shoot! We must bring down his winning ratio. (WinRatio of : [])"
 
-    winRatioNice1: "{} is the best player in the game!"
-    winRatioNice2: "Hey {}! According to your win ratio you're on track to win this game too."
-    winRatioNice3: "We can all applaud {}! He has the best win ratio among us!"
+    winRatioNice1: "{} is the best player in the game! (WinRatio of : [])"
+    winRatioNice2: "Hey {}! According to your win ratio you're on track to win this game too. (WinRatio of : [])"
+    winRatioNice3: "We can all applaud {}! He has the best win ratio among us! (WinRatio of : [])"
 
-    winRatioSupportive1: "Hey {}! You have to let the others win in order to encourage them!"
-    winRatioSupportive2: "Courage {}! Don't give up !"
-    winRatioSupportive3: "Follow your efforts {} it will pay off, you'll see!"
+    winRatioSupportive1: "Hey {}! You have to let the others win in order to encourage them! (WinRatio of : [])"
+    winRatioSupportive2: "Courage {}! Don't give up ! (WinRatio of : [])"
+    winRatioSupportive3: "Follow your efforts {} it will pay off, you'll see! (WinRatio of : [])"
 
     noHintAngry: "You've already asked me all the available hints. What do you want from me? You're pissing me off!!"
     noHintFunny: "Oups, no more clue for you. May I offer you a drink instead? (without alcool, of course. Thanks Tanguy!)"
@@ -258,25 +258,25 @@ fr:
     endRoundSupportive3: "Aller on lâche rien ! Ton GPA est toujours en jeu !"
     
     
-    playerRefAngry1: "Je sais pas pourquoi mais {}, je ne l'aime pas."
-    playerRefAngry2: "Ça m'énerve même confiné {} joue toujours."
-    playerRefAngry3: "Bon on peut kick-out {} svp ? Il m'enerve."
+    playerRefAngry1: "Je sais pas pourquoi mais {}, je ne l'aime pas. Ton temps total de jeu est de []. Je ne te supporte plus."
+    playerRefAngry2: "Ça m'énerve même confiné {} joue toujours. Ton temps total de jeu est de []. Je ne te supporte plus."
+    playerRefAngry3: "Bon on peut kick-out {} svp ? Il m'enerve. Ton temps total de jeu est de []. Je ne te supporte plus."
     
-    playerRefFunny1: "Hey {} ! Toujours partant pour faire un bowling après la partie ?"
-    playerRefFunny2: "{} peux-tu me preter ton corps stp ? Je veux aller à la piscine mais ma carte mère est pas resistante à l'eau."
-    playerRefFunny3: "J'avais une blague sur {} mais après on va dire que je suis raciste ..."
+    playerRefFunny1: "Hey {} ! Toujours partant pour faire un bowling après la partie ? Ton temps total de jeu est de []. Tu es un geek :D."
+    playerRefFunny2: "{} peux-tu me preter ton corps stp ? Je veux aller à la piscine mais ma carte mère est pas resistante à l'eau. Ton temps total de jeu est de []. Tu es un geek :D."
+    playerRefFunny3: "J'avais une blague sur {} mais après on va dire que je suis raciste ... Ton temps total de jeu est de []. Tu es un geek :D."
     
-    playerRefMean1: "Hey {} ! Tu es nul !"
-    playerRefMean2: "Je vais hack {} et récupèrer tes informations personnelles !"
-    playerRefMean3: "Bon on peut faire comme si que {} jouait pas. Ça serait pareil ..."
+    playerRefMean1: "Hey {} ! Tu es nul ! Ton temps total de jeu est de []. Je ne t'aime pas depuis la première seconde."
+    playerRefMean2: "Je vais hack {} et récupèrer tes informations personnelles ! Ton temps total de jeu est de []. Je ne t'aime pas depuis la première seconde."
+    playerRefMean3: "Bon on peut faire comme si que {} jouait pas. Ça serait pareil ... Ton temps total de jeu est de []. Je ne t'aime pas depuis la première seconde."
     
-    playerRefNice1: "J'adore faire des parties avec {} !"
-    playerRefNice2: "Quel plaisir de jouer en présence de {}"
-    playerRefNice3: "Oh trop cool que {} soit avec nous dans cette partie !"
+    playerRefNice1: "J'adore faire des parties avec {} ! Ton temps total de jeu est de []. Content que tu apprécis le jeu !"
+    playerRefNice2: "Quel plaisir de jouer en présence de {}. Ton temps total de jeu est de []. Content que tu apprécis le jeu !"
+    playerRefNice3: "Oh trop cool que {} soit avec nous dans cette partie ! Ton temps total de jeu est de []. Content que tu apprécis le jeu !"
     
-    playerRefSupportive1: "Bien joué {}, continue comme ça !"
-    playerRefSupportive2: "Courage {} ! Ne lâche rien !"
-    playerRefSupportive3: "Poursuis tes efforts {} ça va payer, tu vas voir !"
+    playerRefSupportive1: "Ton temps total de jeu est de []. Bien joué {}, continue comme ça !"
+    playerRefSupportive2: "Ton temps total de jeu est de []. Courage {} ! Ne lâche rien !"
+    playerRefSupportive3: "Ton temps total de jeu est de []. Poursuis tes efforts {} ça va payer, tu vas voir !"
     
     
     hintRequestAngry1: "Un indice ?!! Ça m'énerve !!"
