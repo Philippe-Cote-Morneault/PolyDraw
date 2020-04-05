@@ -59,7 +59,7 @@ open class MainActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var toolbarContainer: LinearLayout
     private lateinit var chatOuterContainer: LinearLayout
-    private var isChatOpen = true
+    private var isChatOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.instance.startService(SocketService::class.java)
@@ -74,7 +74,6 @@ open class MainActivity : AppCompatActivity() {
             .subscribe(
                 {
                     chatManager = it
-                    closeChat()
                 },
                 {
 
