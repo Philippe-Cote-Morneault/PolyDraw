@@ -205,12 +205,17 @@ func (c *Coop) GameLoop() {
 	c.currentWord = ""
 	c.wordFound = false
 
-	c.checkPointTime += 5000 //Time for the sleep
-	c.receiving.Unlock()
+	running := c.isRunning
 
+	if running {
+		c.checkPointTime += 5000 //Time for the sleep
+	}
+	c.receiving.Unlock()
 	cbroadcast.Broadcast(match2.BRoundEnds, c.info.ID)
 
-	time.Sleep(time.Second * 5)
+	if running {
+		time.Sleep(time.Second * 5)
+	}
 	return
 }
 
