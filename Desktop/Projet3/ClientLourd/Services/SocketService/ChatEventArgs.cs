@@ -51,5 +51,10 @@ namespace ClientLourd.Services.SocketService
         {
             get { return _data["NewName"]; }
         }
+
+        public int PictureID
+        {
+            get => (int)_data["PictureID"];
+        }
     }
 }

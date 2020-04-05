@@ -270,6 +270,7 @@
             <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
             <e p="WidthToLeftMarginConverter.cs" t="Include" />
+            <e p="WinnerNameConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
             <e p="DifficultyLevel.cs" t="Include" />

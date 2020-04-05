@@ -39,27 +39,17 @@
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <TextBlock
                             Visibility="{Binding ElementName=LeaderBoardList, Path=DataContext.GameEnded, Converter={StaticResource InverseBoolToVisConverter}}"
                             TextAlignment="Center" FontSize="30" HorizontalAlignment="Center" Foreground="White"
                             FontWeight="Medium">
-                            <Run>
-                                <Run.Text>
-                                    <MultiBinding StringFormat="{}#{0}"
-                                                  Converter="{StaticResource PlayerToPositionConverter}">
-                                        <Binding Path="." UpdateSourceTrigger="PropertyChanged" />
-                                        <Binding ElementName="LeaderBoardList" Path="DataContext.Players"
-                                                 UpdateSourceTrigger="PropertyChanged" />
-                                    </MultiBinding>
-                                </Run.Text>
-                            </Run>
                             <Run Text="{Binding Path=User.Username}" />
                             <Run Text="{Binding Path=PointsRecentlyGained, StringFormat={}+{0}}"
                                  Foreground="{Binding Path=PointsRecentlyGained, Converter={StaticResource PointsToColorConverter}}" />
                         </TextBlock>
-
-                        <TextBlock
+                        
+                        <TextBlock 
                             Visibility="{Binding ElementName=LeaderBoardList, Path=DataContext.GameEnded, Converter={StaticResource BooleanToVisibilityConverter}}"
                             TextAlignment="Center" FontSize="30" HorizontalAlignment="Center" Foreground="White"
                             FontWeight="Medium">
