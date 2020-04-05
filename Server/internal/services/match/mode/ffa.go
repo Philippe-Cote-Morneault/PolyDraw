@@ -221,6 +221,12 @@ func (f *FFA) GameLoop() {
 
 	f.currentWord = ""
 	f.resetGuess()
+
+	if !f.isRunning {
+		f.receiving.Unlock()
+		return
+	}
+
 	f.receiving.Unlock()
 
 	time.Sleep(time.Second * 7)
