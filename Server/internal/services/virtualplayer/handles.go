@@ -213,7 +213,7 @@ func startDrawing(round *match2.RoundStart) {
 	}
 	managerInstance.mutex.Unlock()
 
-	time.Sleep(2500 * time.Millisecond)
+	time.Sleep(1700 * time.Millisecond)
 
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
