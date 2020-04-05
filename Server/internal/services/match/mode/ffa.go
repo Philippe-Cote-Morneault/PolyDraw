@@ -1,6 +1,7 @@
 package mode
 
 import (
+	"github.com/tevino/abool"
 	"log"
 	"math"
 	"math/rand"
@@ -46,6 +47,7 @@ type FFA struct {
 	receiving   sync.Mutex
 	hasFoundIt  map[uuid.UUID]bool
 	clientGuess int
+	isClosed    *abool.AtomicBool
 }
 
 //Init initialize the game mode
@@ -57,6 +59,8 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.funcSyncPlayer = f.syncPlayers
 
 	f.scores = make([]score, len(f.players))
+	f.isClosed = abool.New()
+	f.isClosed.UnSet()
 
 	f.curLap = 1
 	f.lapsTotal = len(f.players) * f.info.NbRound
@@ -403,22 +407,29 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 
 //Close forces the game to stop completely. Graceful shutdown
 func (f *FFA) Close() {
-	f.receiving.Lock()
-	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
-	f.isRunning = false
-	if f.cancelWait != nil {
-		f.cancelWait()
+	if !f.isClosed.IsSet() {
+		f.isClosed.Set()
+
+		f.receiving.Lock()
+		log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
+		f.isRunning = false
+		if f.cancelWait != nil {
+			f.cancelWait()
+		}
+
+		cancelMessage := socket.RawMessage{}
+		cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
+			Type: 2,
+		})
+		f.broadcast(&cancelMessage)
+
+		f.receiving.Unlock()
+		drawing.UnRegisterGame(f)
+		messenger.UnRegisterGroup(&f.info, f.GetConnections())
+	} else {
+		log.Printf("[Match] [FFA] Match already closed!")
 	}
 
-	cancelMessage := socket.RawMessage{}
-	cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
-		Type: 2,
-	})
-	f.broadcast(&cancelMessage)
-
-	f.receiving.Unlock()
-	drawing.UnRegisterGame(f)
-	messenger.UnRegisterGroup(&f.info, f.GetConnections())
 }
 
 //GetConnections returns all the socketID of the match
@@ -576,6 +587,8 @@ func (f *FFA) calculateScore() int {
 //finish when the match terminates announce winner
 func (f *FFA) finish() {
 	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
+	f.isClosed.Set()
+
 	f.receiving.Lock()
 	gameDuration := time.Now().Sub(f.timeStart)
 	log.Printf("[Match] [FFA] -> Game has ended. Match: %s", f.info.ID)

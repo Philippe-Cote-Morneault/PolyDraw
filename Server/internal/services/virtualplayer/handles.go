@@ -240,8 +240,8 @@ func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting handleRoundEnds...", groupID)
 		return
 	}
-	connections := (*match).GetConnections()
 	managerInstance.mutex.Unlock()
+	connections := (*match).GetConnections()
 
 	stopAllDrawingProcedures(connections)
 
@@ -262,13 +262,18 @@ func handleEndGame(groupID uuid.UUID) {
 	}
 	delete(managerInstance.HintsInGames, groupID)
 
-	if _, ok := managerInstance.Matches[groupID]; !ok {
+	match, ok := managerInstance.Matches[groupID]
+
+	if !ok {
 		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting handleEndGame...", groupID)
 		return
 	}
+	managerInstance.mutex.Unlock()
 
-	for _, socketID := range (*managerInstance.Matches[groupID]).GetConnections() {
+	connections := (*match).GetConnections()
+	managerInstance.mutex.Lock()
+	for _, socketID := range connections {
 		playerID, err := auth.GetUserID(socketID)
 		if err != nil {
 			managerInstance.mutex.Unlock()
@@ -399,8 +404,11 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 		message.ParseMessagePack(byte(socket.MessageType.ResponseHintMatch), hintRes)
 		socket.SendQueueMessageSocketID(message, hintRequest.SocketID)
 	} else {
+		managerInstance.mutex.Unlock()
 
-		for _, socketID := range (*group).GetConnections() {
+		connections := (*group).GetConnections()
+		managerInstance.mutex.Lock()
+		for _, socketID := range connections {
 			playerID, err := auth.GetUserID(socketID)
 			if err != nil {
 				log.Printf("[VirtualPlayer] -> [Error] Can't send hint Respond to userID :%v ", playerID)

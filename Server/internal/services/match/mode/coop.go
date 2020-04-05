@@ -44,6 +44,7 @@ type Coop struct {
 	maximumCheckPointTime int64
 	lives                 int
 	wordFound             bool
+	penalty               int64
 
 	receiving        sync.Mutex
 	timeStart        time.Time
@@ -53,7 +54,7 @@ type Coop struct {
 
 	closingTimeKeeper chan struct{}
 	lastLoop          chan struct{}
-	penalty           int64
+	isClosed          *abool.AtomicBool
 }
 
 //Init creates the coop game mode
@@ -65,6 +66,10 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.nbWaitingResponses = 1
 	c.curLap = 1
 	c.wordFound = false
+
+	c.isClosed = abool.New()
+	c.isClosed.UnSet()
+
 	c.checkPointTime = 0
 	c.commonScore.init()
 	c.orderVirtual = make([]*players, info.VirtualPlayers)
@@ -414,40 +419,49 @@ func (c *Coop) HintRequested(socketID uuid.UUID) {
 
 //Close method used to force close the current game
 func (c *Coop) Close() {
-	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+	if !c.isClosed.IsSet() {
+		cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+		c.isClosed.Set()
 
-	c.receiving.Lock()
-	log.Printf("[Match] [Coop] Force match shutdown, the game will close")
-	if c.isRunning {
-		close(c.closingTimeKeeper)
+		c.receiving.Lock()
+		log.Printf("[Match] [Coop] Force match shutdown, the game will close")
+		if c.isRunning {
+			close(c.closingTimeKeeper)
+		}
+		if c.cancelWait != nil {
+			c.cancelWait()
+			c.isRunning = false
+		}
+		duration := time.Now().Sub(c.timeStart).Milliseconds()
+
+		matchType := 1
+
+		if len(c.connections) > 1 {
+			matchType = 2
+		}
+		total := c.commonScore.total
+		c.receiving.Unlock()
+
+		cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
+			MatchDuration:  duration,
+			MatchType:      matchType,
+			PointsSoloCoop: int64(total)}})
+
+		cancelMessage := socket.RawMessage{}
+		cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
+			Type: 2,
+		})
+
+		c.receiving.Lock()
+		c.broadcast(&cancelMessage)
+
+		c.sendGameEndMessage(duration)
+		c.receiving.Unlock()
+
+		messenger.UnRegisterGroup(&c.info, c.GetConnections())
+	} else {
+		log.Printf("[Match] [Coop] Match already closed!")
 	}
-	if c.cancelWait != nil {
-		c.cancelWait()
-		c.isRunning = false
-	}
-	duration := time.Now().Sub(c.timeStart).Milliseconds()
-
-	matchType := 1
-
-	if len(c.connections) > 1 {
-		matchType = 2
-	}
-
-	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
-		MatchDuration:  duration,
-		MatchType:      matchType,
-		PointsSoloCoop: int64(c.commonScore.total)}})
-
-	cancelMessage := socket.RawMessage{}
-	cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
-		Type: 2,
-	})
-	c.broadcast(&cancelMessage)
-
-	c.sendGameEndMessage(duration)
-	c.receiving.Unlock()
-
-	messenger.UnRegisterGroup(&c.info, c.GetConnections())
 }
 
 //GetConnections method used to return all the connections of the players
@@ -507,8 +521,11 @@ func (c *Coop) GetPlayers() []match2.Player {
 //finish used to properly finish the coop mode
 func (c *Coop) finish() {
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
+	c.isClosed.Set()
+
 	c.receiving.Lock()
 	duration := time.Now().Sub(c.timeStart).Milliseconds()
+	total := c.commonScore.total
 	c.isRunning = false
 	if c.cancelWait != nil {
 		c.receiving.Unlock()
@@ -528,7 +545,7 @@ func (c *Coop) finish() {
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
 		MatchDuration:  duration,
 		MatchType:      matchType,
-		PointsSoloCoop: int64(c.commonScore.total)}})
+		PointsSoloCoop: int64(total)}})
 
 	c.receiving.Lock()
 	//Send the time's up message
