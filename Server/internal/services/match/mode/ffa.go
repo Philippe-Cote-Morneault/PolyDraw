@@ -396,7 +396,6 @@ func (f *FFA) HintRequested(socketID uuid.UUID) {
 
 //Close forces the game to stop completely. Graceful shutdown
 func (f *FFA) Close() {
-	cbroadcast.Broadcast(match2.BGameEnds, f.info.ID)
 	f.receiving.Lock()
 	log.Printf("[Match] [FFA] Force match shutdown, the game will finish the last lap")
 	f.isRunning = false
