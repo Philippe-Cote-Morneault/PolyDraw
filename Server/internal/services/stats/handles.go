@@ -17,7 +17,7 @@ type DataStats struct {
 	WinRatio        float64
 	AvgGameDuration float64
 	TimePlayed      int64
-	BestScoreSolo   int
+	BestScoreSolo   int64
 }
 
 func updateMatchesPlayed(stats match.StatsData) {
@@ -62,7 +62,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 	nbWins := 0
 	nbFFA := 0
 	timePlayed := int64(0)
-	bestScoreSolo := int(math.MaxInt8)
+	bestScoreSolo := int64(math.MaxInt64)
 	for _, match := range matches {
 		//Cherche minimum score solo
 		if match.MatchType == 1 && match.PointsSoloCoop < bestScoreSolo {
@@ -77,7 +77,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 		timePlayed += match.MatchDuration
 	}
 	// Si on ne trouve pas de game solo
-	if bestScoreSolo == int(math.MaxInt8) {
+	if bestScoreSolo == int64(math.MaxInt64) {
 		bestScoreSolo = 0
 	}
 

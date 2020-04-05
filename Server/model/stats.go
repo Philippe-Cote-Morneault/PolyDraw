@@ -19,7 +19,7 @@ type MatchPlayed struct {
 	WinnerName     string
 	WinnerID       string
 	MatchType      int // 0 -> FFA | 1 -> solo | 2 -> coop
-	PointsSoloCoop int
+	PointsSoloCoop int64
 }
 
 //MatchPlayedMembership represents the membership between a match and user
