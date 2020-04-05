@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClientLourd.Views.Dialogs"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
-
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              xmlns:extensions="clr-namespace:ClientLourd.Utilities.Extensions"
@@ -15,6 +15,10 @@
         <converter:TimeDifferenceConverter x:Key="TimeDifferenceConverter" />
 
     </UserControl.Resources>
+    <DockPanel>
+        <Button DockPanel.Dock="Top" HorizontalAlignment="Right" Command="materialDesign:DialogHost.CloseDialogCommand">
+            <materialDesign:PackIcon Kind="Close"/>
+        </Button>
     <Grid Height="700" Width="600">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -77,4 +81,5 @@
             </ListView>
         </ScrollViewer>
     </Grid>
+    </DockPanel>
 </UserControl>
