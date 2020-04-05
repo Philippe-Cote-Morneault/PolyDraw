@@ -7,6 +7,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.DialogFragment
 import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
@@ -17,8 +18,8 @@ class LanguagePickerDialog(val languageChangedCallback: () -> Unit) : DialogFrag
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var selectedLanguage = LanguageManager.getCurrentLanguage()
         val dialogBuilder = AlertDialog.Builder(activity)
-            .setTitle("Language Picker")
-            .setPositiveButton("Save") { _, _ ->
+            .setTitle(MainApplication.instance.getContext().getString(R.string.select_language_instruction))
+            .setPositiveButton(MainApplication.instance.getContext().getString(R.string.save)) { _, _ ->
                 LanguageManager.changeLanguage(selectedLanguage)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
@@ -26,7 +27,7 @@ class LanguagePickerDialog(val languageChangedCallback: () -> Unit) : DialogFrag
                         EventBus.getDefault().post(MessageEvent(EventType.LANGUAGE_CHANGED, null))
                 }
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(MainApplication.instance.getContext().getString(R.string.cancel)) { _, _ ->
 
             }
             .setSingleChoiceItems(languagesToCharArray(LanguageManager.getAvailableLanguages()), selectedLanguage.index) { _, pos ->

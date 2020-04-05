@@ -187,4 +187,6 @@
     <string name="profile_form_error_email">Invalid email format</string>
     <string name="profile_form_error_first_name">First name cannot be empty</string>
     <string name="profile_form_error_last_name">Last name cannot be empty</string>
+    <string name="save">Save</string>
+    <string name="select_language_instruction">Language selection</string>
 </resources>
