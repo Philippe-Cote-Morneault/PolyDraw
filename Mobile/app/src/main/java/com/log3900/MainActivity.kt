@@ -58,6 +58,7 @@ open class MainActivity : AppCompatActivity() {
     lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
     private lateinit var toolbarContainer: LinearLayout
+    private lateinit var chatOuterContainer: LinearLayout
     private var isChatOpen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +85,7 @@ open class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         toolbarContainer = findViewById<LinearLayout>(R.id.app_bar_main_toolbar_content_container)
+        chatOuterContainer = findViewById(R.id.activity_main_chat_fragment_outer_container)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
@@ -272,17 +274,17 @@ open class MainActivity : AppCompatActivity() {
 
     fun openChat() {
         if (!isChatOpen) {
-            val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
+            //val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
             chatManager.openChat()
-            chatView?.visibility = View.VISIBLE
+            chatOuterContainer.visibility = View.VISIBLE
             isChatOpen = true
         }
     }
 
     fun closeChat() {
         if (isChatOpen) {
-            val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
-            chatView?.visibility = View.INVISIBLE
+            //val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
+            chatOuterContainer.visibility = View.INVISIBLE
             chatManager.closeChat()
             isChatOpen = false
         }
