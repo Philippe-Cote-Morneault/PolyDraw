@@ -22,6 +22,7 @@ using System.Timers;
 using ClientLourd.Models.Bindable;
 using ClientLourd.ViewModels;
 using ClientLourd.Services.RestService;
+using System.Collections.ObjectModel;
 
 namespace ClientLourd.Views.Dialogs
 {

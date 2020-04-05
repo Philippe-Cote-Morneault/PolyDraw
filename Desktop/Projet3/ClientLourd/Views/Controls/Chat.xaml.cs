@@ -44,5 +44,16 @@ namespace ClientLourd.Views.Controls
         {
             ((ChatViewModel) DataContext).AfterLogin();
         }
+
+        public void OnFocusLost(object sender, EventArgs e)
+        {
+            (DataContext as ChatViewModel).ChatFocused = false;
+        }
+
+        public void OnFocus(object sender, EventArgs e)
+        {
+            (DataContext as ChatViewModel).ChatFocused = true;
+
+        }
     }
 }
