@@ -401,7 +401,7 @@ namespace ClientLourd.ViewModels
 
         private async Task CreateChannel()
         {
-            var dialog = new InputDialog($"{CurrentDictionary["ChannelName"]}", 20);
+            var dialog = new InputDialog($"{CurrentDictionary["ChannelName"]}", 12);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
             {
