@@ -59,9 +59,9 @@ class ProfileStatsFragment : Fragment() {
                 .setScale(2, RoundingMode.HALF_EVEN)
             winRatio.text = "$winRatioValue%"
 
-            val avgGameDurationDate = Date(round(userStats.averageGameDuration * 1000).toLong())
+            val avgGameDurationDate = Date(round(userStats.averageGameDuration).toLong())
             Log.d("STATS_PROFILE", avgGameDurationDate.time.toString())
-            avgGameDuration.text = DateFormatter.formatFullTime(avgGameDurationDate)
+            avgGameDuration.text = DateFormatter.formatDateToTime(avgGameDurationDate)
 
             timePlayed.text = userStats.timePlayed.toString()
             bestSoloScore.text = userStats.bestScoreSolo.toString()
