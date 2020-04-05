@@ -27,8 +27,8 @@ const BSize = 5
 func (m *Drawing) Register() {
 	cbroadcast.Register(BPreview, BSize)
 	cbroadcast.Register(BStopPreview, BSize)
-	cbroadcast.Register(BStrokeChunk, BSize)
-	cbroadcast.Register(BDrawStart, BSize)
-	cbroadcast.Register(BDrawEnd, BSize)
-	cbroadcast.Register(BDrawErase, BSize)
+	cbroadcast.Register(BStrokeChunk, 100)
+	cbroadcast.Register(BDrawStart, 50)
+	cbroadcast.Register(BDrawEnd, 50)
+	cbroadcast.Register(BDrawErase, 50)
 }

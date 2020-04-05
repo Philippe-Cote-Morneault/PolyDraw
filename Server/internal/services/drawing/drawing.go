@@ -63,19 +63,19 @@ func (d *Drawing) listen() {
 			}
 		case data := <-d.strokeChunk:
 			if message, ok := data.(socket.RawMessageReceived); ok {
-				go d.router.Route(&message)
+				d.router.Route(&message)
 			}
 		case data := <-d.drawStart:
 			if message, ok := data.(socket.RawMessageReceived); ok {
-				go d.router.Route(&message)
+				d.router.Route(&message)
 			}
 		case data := <-d.drawEnd:
 			if message, ok := data.(socket.RawMessageReceived); ok {
-				go d.router.Route(&message)
+				d.router.Route(&message)
 			}
 		case data := <-d.drawErase:
 			if message, ok := data.(socket.RawMessageReceived); ok {
-				go d.router.Route(&message)
+				d.router.Route(&message)
 			}
 		case <-d.shutdown:
 			return
