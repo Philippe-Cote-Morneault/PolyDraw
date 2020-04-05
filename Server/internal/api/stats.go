@@ -39,10 +39,6 @@ type history struct {
 	ConnectionHistory    []connection
 }
 
-type allan struct {
-	matchID string
-}
-
 // GetStats returns userStats
 func GetStats(w http.ResponseWriter, r *http.Request) {
 
