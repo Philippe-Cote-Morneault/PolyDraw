@@ -44,6 +44,29 @@ namespace ClientLourd.Views.Controls.Game
         {
         }
 
+        public void StopAnimation()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    StopConfetti();
+                    LeaderBoardGrid.Children.Clear();
+                    LeaderBoardGrid.Visibility = Visibility.Collapsed;
+                    if (_canvasAnimationsTimer != null && _canvasAnimationsTimer.Enabled)
+                    {
+                        //If the timer is start, stop it
+                        _canvasAnimationsTimer.Stop();
+                    }
+                }
+                catch
+                {
+                    //
+                }
+            });
+
+        }
+
         private void InitEventHandler()
         {
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;

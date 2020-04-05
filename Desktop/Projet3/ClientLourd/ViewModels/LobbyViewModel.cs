@@ -390,7 +390,12 @@ namespace ClientLourd.ViewModels
         public delegate void LobbyEventHandler(object source, EventArgs args);
 
         public event LobbyEventHandler ReturnChat;
+        public event LobbyEventHandler LeaveMatch;
 
+        protected virtual void OnLeaveMatch(object source)
+        {
+            LeaveMatch?.Invoke(source, EventArgs.Empty);
+        }
         protected virtual void OnReturnChat(object source)
         {
             ReturnChat?.Invoke(source, EventArgs.Empty);
@@ -400,6 +405,7 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                OnLeaveMatch(this);
                 CurrentLobby = null;
                 OnReturnChat(this);
                 ContainedView = Utilities.Enums.Views.Home.ToString();

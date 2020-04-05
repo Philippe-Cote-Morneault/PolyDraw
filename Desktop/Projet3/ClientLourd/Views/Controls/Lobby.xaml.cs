@@ -44,6 +44,12 @@ namespace ClientLourd.Views.Controls
         {
             InitializeComponent();
             DataContext.ReturnChat += (source, args) => { returnChat(); };
+            DataContext.LeaveMatch += DataContextOnLeaveMatch;
+        }
+
+        private void DataContextOnLeaveMatch(object source, EventArgs args)
+        {
+            GameView.EditorZone.StopAnimation();
         }
 
         public void AfterLogin()
