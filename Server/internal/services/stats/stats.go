@@ -61,16 +61,16 @@ func (s *Stats) listen() {
 				log.Println("[Stats] -> [Error] Error while parsing uuid")
 				break
 			}
-			go setDeconnection(socketID)
+			go setDisconnection(socketID)
 
 		case data := <-s.createConnection:
 			log.Println("[Stats] -> Receives createConnection event")
-			userID, ok := data.(uuid.UUID)
+			socketID, ok := data.(uuid.UUID)
 			if !ok {
 				log.Println("[Stats] -> [Error] Error while parsing ChatNew struct")
 				break
 			}
-			go createConnection(userID)
+			go createConnection(socketID)
 
 		case <-s.shutdown:
 			return
