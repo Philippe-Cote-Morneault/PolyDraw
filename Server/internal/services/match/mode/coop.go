@@ -39,6 +39,8 @@ type Coop struct {
 	gameTime              int64
 	checkPointTime        int64
 	minimumBonus          int
+	minimumScore          int
+	checkpointScore       int
 	maximumCheckPointTime int64
 	lives                 int
 	wordFound             bool
@@ -270,9 +272,9 @@ func (c *Coop) TryWord(socketID uuid.UUID, word string) {
 
 			pointsForWord := 0
 			if bonus > 0 {
-				pointsForWord = 100
+				pointsForWord = c.checkpointScore
 			} else {
-				pointsForWord = 50
+				pointsForWord = c.minimumScore
 				bonus = int64(c.minimumBonus)
 			}
 			c.checkPointTime += bonus
@@ -559,18 +561,27 @@ func (c *Coop) computeDifficulty() {
 		c.timeImage = 15
 		c.penalty = 10
 		c.minimumBonus = 5
+
+		c.minimumScore = 50
+		c.checkpointScore = 100
 	case 1:
 		c.lives = 2
 		c.gameTime = 45
 		c.timeImage = 10
 		c.penalty = 15
 		c.minimumBonus = 4
+
+		c.minimumScore = 100
+		c.checkpointScore = 200
 	case 2:
 		c.lives = 1
 		c.gameTime = 30
 		c.timeImage = 10
 		c.penalty = 20
 		c.minimumBonus = 2
+
+		c.minimumScore = 200
+		c.checkpointScore = 400
 	}
 	c.chances = c.lives
 	c.gameTime *= 1000
