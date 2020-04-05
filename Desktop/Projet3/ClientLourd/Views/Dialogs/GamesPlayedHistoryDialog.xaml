@@ -65,15 +65,18 @@
                         <GridViewColumn Width="300">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel>
                                         <ListView ItemsSource="{Binding Players}">
+                                            <ListView.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel/>
+                                                </ItemsPanelTemplate>
+                                            </ListView.ItemsPanel>
                                             <ListView.ItemTemplate>
                                                 <DataTemplate >
                                                     <TextBlock  Text="{Binding Username}"></TextBlock>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
-                                    </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
