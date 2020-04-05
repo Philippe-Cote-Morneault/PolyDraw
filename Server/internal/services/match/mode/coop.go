@@ -432,16 +432,20 @@ func (c *Coop) Close() {
 	if len(c.connections) > 1 {
 		matchType = 2
 	}
+	total := c.commonScore.total
+	c.receiving.Unlock()
 
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
 		MatchDuration:  duration,
 		MatchType:      matchType,
-		PointsSoloCoop: c.commonScore.total}})
+		PointsSoloCoop: total}})
 
 	cancelMessage := socket.RawMessage{}
 	cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
 		Type: 2,
 	})
+
+	c.receiving.Lock()
 	c.broadcast(&cancelMessage)
 
 	c.sendGameEndMessage(duration)
@@ -509,6 +513,7 @@ func (c *Coop) finish() {
 	cbroadcast.Broadcast(match2.BGameEnds, c.info.ID)
 	c.receiving.Lock()
 	duration := time.Now().Sub(c.timeStart).Milliseconds()
+	total := c.commonScore.total
 	c.isRunning = false
 	if c.cancelWait != nil {
 		c.receiving.Unlock()
@@ -528,7 +533,7 @@ func (c *Coop) finish() {
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
 		MatchDuration:  duration,
 		MatchType:      matchType,
-		PointsSoloCoop: c.commonScore.total}})
+		PointsSoloCoop: total}})
 
 	c.receiving.Lock()
 	//Send the time's up message
