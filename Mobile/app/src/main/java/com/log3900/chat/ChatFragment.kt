@@ -36,6 +36,8 @@ class ChatFragment : Fragment(), ChatView {
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
 
+    private var autoScroll = true
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView: View = inflater.inflate(R.layout.fragment_chat, container, false)
 
@@ -75,6 +77,20 @@ class ChatFragment : Fragment(), ChatView {
                 chatPresenter?.onKeyboardChange(false)
             }
         }
+
+        messagesRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy < 0) {
+                    autoScroll = false
+                } else {
+                    if (!recyclerView.canScrollVertically(1)) {
+                        autoScroll = true
+                    }
+                }
+            }
+        })
 
     }
 
@@ -136,7 +152,10 @@ class ChatFragment : Fragment(), ChatView {
     }
 
     override fun notifyNewMessage() {
-        messagesViewAdapter.messageInserted()
+        if (autoScroll) {
+            scrollMessage(true)
+        }
+        //messagesViewAdapter.messageInserted()
     }
 
     override fun setChatMessages(messages: LinkedList<ChatMessage>) {
