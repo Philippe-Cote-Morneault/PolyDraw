@@ -67,7 +67,7 @@
                                              Kind="Language" Height="34" Width="34" />
                     <TextBlock Margin="0 0 0 25" FontSize="24" Text="{DynamicResource Language}" />
                     <TextBlock Margin="0 0 0 25" FontSize="24"
-                               Text="{Binding CurrentLobby.Language, StringFormat={}: {0}}" />
+                               Text="{Binding CurrentLobby.LanguageDesc, Converter={StaticResource EnumTranslationConverter}, StringFormat={}: {0}}" />
                 </StackPanel>
 
                 <TextBlock FontWeight="Bold" Margin="0 30 0 25" FontSize="24" Text="{DynamicResource Players}" />

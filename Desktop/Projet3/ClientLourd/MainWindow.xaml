@@ -136,6 +136,8 @@
                                     Foreground="{StaticResource MaterialDesignDarkForeground}"
                                     Kind="QuestionMarkCircle"
                                     Height="24"
+                                    Visibility="{Binding ElementName=LeaveButton, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}"
+
                                     Width="24"
                                     ToolTip="{DynamicResource OpenTutorial}"
 
