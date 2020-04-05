@@ -63,7 +63,10 @@ class ProfileStatsFragment : Fragment() {
             Log.d("STATS_PROFILE", avgGameDurationDate.time.toString())
             avgGameDuration.text = DateFormatter.formatDateToTime(avgGameDurationDate)
 
-            timePlayed.text = userStats.timePlayed.toString()
+            val timePlayedDate = Date(userStats.timePlayed)
+            Log.d("STATS_PROFILE", "Played ${userStats.timePlayed}")
+            timePlayed.text = DateFormatter.formatFullTime(timePlayedDate)
+
             bestSoloScore.text = userStats.bestScoreSolo.toString()
         }
     }
