@@ -333,6 +333,11 @@ class MessageRepository : Service() {
         }
     }
 
+    private fun onLanguageChanged() {
+        messageCache.changeEventMessagesToLanguage(LanguageManager.getCurrentLanguageCode())
+        EventBus.getDefault().post(MessageEvent(EventType.ALL_MESSAGES_CHANGED, null))
+    }
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
@@ -341,6 +346,9 @@ class MessageRepository : Service() {
             }
             EventType.CHANNEL_DELETED -> {
                 onChannelDeleted(event.data as UUID)
+            }
+            EventType.LANGUAGE_CHANGED -> {
+                onLanguageChanged()
             }
         }
     }

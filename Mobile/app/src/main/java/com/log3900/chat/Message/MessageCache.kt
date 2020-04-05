@@ -1,6 +1,9 @@
 package com.log3900.chat.Message
 
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.ChatMessage
+import com.log3900.settings.language.LanguageManager
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -54,5 +57,21 @@ class MessageCache {
 
     fun setHistoryFetchedState(channelID: UUID, isLoaded: Boolean) {
         loadedHistory[channelID] = isLoaded
+    }
+
+    fun changeEventMessagesToLanguage(languageCode: String) {
+        chatMessages.forEach { channel: UUID, channelMessages: LinkedList<ChatMessage> ->
+            channelMessages.forEach {
+                if (it.type == ChatMessage.Type.EVENT_MESSAGE) {
+                    val oldEventMessage = it.message as EventMessage
+                    val username = oldEventMessage.message.substring(0, oldEventMessage.message.indexOf(" "))
+                    if (oldEventMessage.message.contains("left") || oldEventMessage.message.contains("quitté")) {
+                        oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_user_left_channel_message, username)
+                    } else {
+                        oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_user_joined_channel_message, username)
+                    }
+                }
+            }
+        }
     }
 }

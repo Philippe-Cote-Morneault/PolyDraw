@@ -11,6 +11,7 @@ enum class EventType {
     // Message
     RECEIVED_MESSAGE,
     UNREAD_MESSAGES_CHANGED,
+    ALL_MESSAGES_CHANGED,
     // Group
     GROUP_CREATED,
     GROUP_DELETED,

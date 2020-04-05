@@ -124,6 +124,9 @@ class ChatPresenter : Presenter {
             EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED -> {
                 onActiveChannelMessageReceived(event.data as ChatMessage)
             }
+            EventType.ALL_MESSAGES_CHANGED -> {
+
+            }
         }
     }
 
