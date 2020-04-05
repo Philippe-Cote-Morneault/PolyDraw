@@ -218,6 +218,7 @@ func startDrawing(round *match2.RoundStart) {
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
+	stopAllDrawingProcedures(connections)
 	stopDrawings := initializeDrawingStates(connections)
 
 	wg.Add(1)
@@ -238,15 +239,9 @@ func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 		return
 	}
 	connections := (*match).GetConnections()
-
-	for _, connection := range connections {
-		if stopDrawing, ok := managerInstance.Drawing[connection]; ok {
-			stopDrawing.Set()
-		} else {
-			log.Printf("[VirtualPlayer] -> [Error] Can't find socketID : %v. Can't stop drawing procdeure...", connection)
-		}
-	}
 	managerInstance.mutex.Unlock()
+
+	stopAllDrawingProcedures(connections)
 
 	if makeBotSpeak {
 		makeBotsSpeak("endRound", groupID, uuid.Nil)
@@ -528,4 +523,16 @@ func stopDrawingOfSocket(socketID uuid.UUID) {
 		return
 	}
 	stopDrawing.Set()
+}
+
+func stopAllDrawingProcedures(connections []uuid.UUID) {
+	managerInstance.mutex.Lock()
+	for _, connection := range connections {
+		if stopDrawing, ok := managerInstance.Drawing[connection]; ok {
+			stopDrawing.Set()
+		} else {
+			log.Printf("[VirtualPlayer] -> [Error] Can't find socketID : %v. Can't stop drawing procdeure...", connection)
+		}
+	}
+	managerInstance.mutex.Unlock()
 }
