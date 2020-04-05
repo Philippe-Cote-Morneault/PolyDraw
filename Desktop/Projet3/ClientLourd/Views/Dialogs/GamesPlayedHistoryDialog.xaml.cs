@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using ClientLourd.Services.RestService;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -96,6 +97,7 @@ namespace ClientLourd.Views.Dialogs
         {
             foreach (MatchPlayed matchPlayedlayed in sh.MatchesPlayedHistory)
             {
+               
                 StatsHistory.MatchesPlayedHistory.AddFirst(matchPlayedlayed);
             }
 

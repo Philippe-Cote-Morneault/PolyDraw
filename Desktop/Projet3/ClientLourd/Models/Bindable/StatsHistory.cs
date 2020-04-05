@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace ClientLourd.Models.Bindable
         {
             _connectionHistory = new LinkedList<ConnectionDisconnection>();
             _matchesPlayed = new LinkedList<MatchPlayed>();
+            
         }
 
         public LinkedList<ConnectionDisconnection> ConnectionHistory
@@ -91,6 +93,7 @@ namespace ClientLourd.Models.Bindable
 
         public MatchPlayed()
         {
+            _players = new ObservableCollection<Players>();
         }
 
         public long MatchDuration
@@ -145,5 +148,31 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
+        private ObservableCollection<Players> _players;
+        public ObservableCollection<Players> Players
+        {
+            get { return _players; }
+            set
+            {
+                if (value != _players)
+                {
+                    _players = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+    }
+
+    public class Players : ModelBase
+    {
+        public Players()
+        {
+
+        }
+
+
+        public string UserID { get; set; }
+        public string Username { get; set; }
     }
 }

@@ -12,6 +12,8 @@
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
         <converter:SecondsToTimeSpanConverter x:Key="SecondsToTimeSpanConverter" />
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
+        <converter:WinnerNameConverter x:Key="WinnerNameConverter"/>
+
     </UserControl.Resources>
 
     <Grid Height="700" Width="1200">
@@ -55,8 +57,22 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn  Width="300" DisplayMemberBinding="{Binding MatchType}" />
-                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName}" />
-                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding PlayersName}" />
+                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding WinnerName, Converter={StaticResource WinnerNameConverter}}" />
+                        <GridViewColumn Width="300">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <ListView ItemsSource="{Binding Players}">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate >
+                                                    <TextBlock  Text="{Binding Username}"></TextBlock>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Width="300"
                                         DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource SecondsToTimeSpanConverter}}" />
 
