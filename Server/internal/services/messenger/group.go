@@ -74,5 +74,7 @@ func UnRegisterGroup(group *model.Group, connections []uuid.UUID) {
 
 //BroadcastAll sends a message to all the connections
 func BroadcastAll(message socket.RawMessage) {
+	instance.mutex.RLock()
 	instance.broadcast(uuid.Nil, message)
+	instance.mutex.RUnlock()
 }

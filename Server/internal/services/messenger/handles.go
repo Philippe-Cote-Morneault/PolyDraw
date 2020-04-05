@@ -1,10 +1,12 @@
 package messenger
 
 import (
-	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"strings"
+	"sync"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 
 	"gitlab.com/jigsawcorp/log3900/internal/match"
 	match2 "gitlab.com/jigsawcorp/log3900/internal/match"
@@ -18,6 +20,7 @@ import (
 
 type handler struct {
 	channelsConnections map[uuid.UUID]map[uuid.UUID]bool //channelID - socketID
+	mutex               sync.RWMutex
 }
 
 func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawMessage) {
@@ -32,10 +35,10 @@ func (h *handler) createGroupChannel(group *model.Group) (uuid.UUID, socket.RawM
 		MatchID: group.ID,
 		ChatID:  channel.ID,
 	})
-
+	h.mutex.Lock()
 	//Init the hashmap for the connections
 	h.channelsConnections[channel.ID] = make(map[uuid.UUID]bool)
-
+	h.mutex.Unlock()
 	//Create request
 	response := ChannelCreateResponse{
 		ChannelName: channel.Name,
@@ -71,10 +74,11 @@ func (h *handler) deleteGroupChannel(group *model.Group) {
 			log.Printf("[Messenger] -> Destroy: Can't pack message. Dropping packet!")
 			return
 		}
-
+		h.mutex.Lock()
 		h.broadcast(channel.ID, rawMessage)
 
 		delete(h.channelsConnections, channel.ID)
+		h.mutex.Unlock()
 		model.DB().Delete(&channel)
 	}
 
@@ -87,6 +91,7 @@ func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {
 	model.DB().Preload("Users").Where("id = ?", channelID).First(&channel)
 	if channel.ID != uuid.Nil {
 		user, _ := auth.GetUser(socketID)
+		h.mutex.Lock()
 		if _, ok := h.channelsConnections[channel.ID][socketID]; ok {
 			model.DB().Model(&channel).Association("Users").Delete(user)
 
@@ -99,14 +104,17 @@ func (h *handler) quitChannel(socketID uuid.UUID, channelID uuid.UUID) {
 			}
 			rawMessage := socket.RawMessage{}
 			if rawMessage.ParseMessagePack(byte(socket.MessageType.UserLeftChannel), quitResponse) != nil {
+				h.mutex.Unlock()
 				log.Printf("[Messenger] -> Quit: Can't pack message. Dropping packet!")
 				return
 			}
 
 			h.broadcast(channel.ID, rawMessage)
 			delete(h.channelsConnections[channelID], socketID)
+			h.mutex.Unlock()
 			log.Printf("[Messenger] -> Quit: User %s quit %s", user.ID.String(), channelID)
 		} else {
+			h.mutex.Unlock()
 			log.Printf("[Messenger] -> Quit: User is not in the channel")
 		}
 	} else {
@@ -122,6 +130,7 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 
 	if channel.ID != uuid.Nil {
 		user, _ := auth.GetUser(socketID)
+		h.mutex.Lock()
 		if _, ok := h.channelsConnections[channel.ID][socketID]; !ok {
 			joinServer := ChannelJoin{
 				UserID:    user.ID.String(),
@@ -132,6 +141,7 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 
 			rawMessage := socket.RawMessage{}
 			if rawMessage.ParseMessagePack(byte(socket.MessageType.UserJoinedChannel), joinServer) != nil {
+				h.mutex.Unlock()
 				log.Printf("[Messenger] -> Join: Can't pack message. Dropping packet!")
 				return
 			}
@@ -141,8 +151,10 @@ func (h *handler) joinChannel(socketID uuid.UUID, channelID uuid.UUID) {
 			h.channelsConnections[channel.ID][socketID] = true
 
 			h.broadcast(channel.ID, rawMessage)
+			h.mutex.Unlock()
 			log.Printf("[Messenger] -> Join: User %s join %s", user.ID.String(), channelID)
 		} else {
+			h.mutex.Unlock()
 			log.Printf("[Messenger] -> Join: User is already joined to the channel")
 			socket.SendErrorToSocketID(socket.MessageType.JoinChannel, 409, language.MustGetSocket("error.userJoinChannel", socketID), socketID)
 		}
@@ -181,6 +193,7 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 		}
 		channelID, err := uuid.Parse(messageParsed.ChannelID)
 		if err == nil {
+			h.mutex.RLock()
 			if _, ok := h.channelsConnections[channelID][message.SocketID]; ok {
 				messageToFoward := MessageReceived{
 					ChannelID: messageParsed.ChannelID,
@@ -191,13 +204,16 @@ func (h *handler) handleMessgeSent(message socket.RawMessageReceived) {
 				}
 				rawMessage := socket.RawMessage{}
 				if rawMessage.ParseMessagePack(byte(socket.MessageType.MessageReceived), messageToFoward) != nil {
+					h.mutex.RUnlock()
 					log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
 					return
 				}
 				h.broadcast(channelID, rawMessage)
+				h.mutex.RUnlock()
 				log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", messageParsed.Message, user.Username, messageParsed.ChannelID)
 				model.AddMessage(messageParsed.Message, channelID, user.ID, timestamp)
 			} else {
+				h.mutex.RUnlock()
 				log.Printf("[Messenger] -> Receive: The user needs to join the channel first. Dropping packet!")
 				socket.SendErrorToSocketID(socket.MessageType.MessageSent, 409, language.MustGetSocket("error.userJoinFirst", message.SocketID), message.SocketID)
 			}
@@ -233,9 +249,9 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 					}
 					model.DB().Create(&channel)
 
+					h.mutex.Lock()
 					//Init the hashmap for the connections
 					h.channelsConnections[channel.ID] = make(map[uuid.UUID]bool)
-
 					//Create request
 					response := ChannelCreateResponse{
 						ChannelName: name,
@@ -247,11 +263,13 @@ func (h *handler) handleCreateChannel(message socket.RawMessageReceived) {
 					}
 					rawMessage := socket.RawMessage{}
 					if rawMessage.ParseMessagePack(byte(socket.MessageType.UserCreateChannel), response) != nil {
+						h.mutex.Unlock()
 						log.Printf("[Messenger] -> Create: Can't pack message. Dropping packet!")
 						return
 					}
 
 					h.broadcast(uuid.Nil, rawMessage)
+					h.mutex.Unlock()
 					log.Printf("[Messenger] -> Create: channel %s created", channelParsed.ChannelName)
 				} else {
 					log.Printf("[Messenger] -> Create: Channel already exists. Dropping packet!")
@@ -312,7 +330,11 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 
 			if channel.ID != uuid.Nil {
 				user, _ := auth.GetUser(message.SocketID)
+
+				h.mutex.Lock()
 				delete(h.channelsConnections, channel.ID)
+				h.mutex.Unlock()
+
 				model.DB().Model(&channel).Delete(&channel)
 
 				//Create a destroy message
@@ -327,8 +349,10 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 					log.Printf("[Messenger] -> Destroy: Can't pack message. Dropping packet!")
 					return
 				}
-
+				h.mutex.RLock()
 				h.broadcast(uuid.Nil, rawMessage)
+				h.mutex.RUnlock()
+
 				log.Printf("[Messenger] -> Destroy: Removed channel %s", channelID)
 			} else {
 				log.Printf("[Messenger] -> Destroy: Invalid channel UUID, not found")
@@ -345,7 +369,9 @@ func (h *handler) handleDestroyChannel(message socket.RawMessageReceived) {
 }
 
 func (h *handler) handleConnect(socketID uuid.UUID) {
+	h.mutex.Lock()
 	h.channelsConnections[uuid.Nil][socketID] = true
+	h.mutex.Unlock()
 
 	user, _ := auth.GetUser(socketID)
 
@@ -364,16 +390,22 @@ func (h *handler) handleConnect(socketID uuid.UUID) {
 		log.Printf("[Messenger] -> Connect: Can't pack message. Dropping packet!")
 		return
 	}
+
+	h.mutex.Lock()
 	h.broadcast(uuid.Nil, rawMessage)
 
 	//Update the cache
 	for _, channel := range channels {
 		h.channelsConnections[channel.ID][socketID] = true
 	}
+	h.mutex.Unlock()
 }
 
 func (h *handler) handleDisconnect(socketID uuid.UUID) {
+	h.mutex.Lock()
 	delete(h.channelsConnections[uuid.Nil], socketID)
+	h.mutex.Unlock()
+
 	user, _ := auth.GetUser(socketID)
 
 	var channels []model.ChatChannel
@@ -391,6 +423,7 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 		log.Printf("[Messenger] -> Disconnect: Can't pack message. Dropping packet!")
 		return
 	}
+	h.mutex.Lock()
 	h.broadcast(uuid.Nil, rawMessage)
 
 	//Update the cache
@@ -399,6 +432,7 @@ func (h *handler) handleDisconnect(socketID uuid.UUID) {
 			delete(h.channelsConnections[channel.ID], socketID)
 		}
 	}
+	h.mutex.Unlock()
 }
 
 func (h *handler) handleBotMessage(message MessageReceived) {
@@ -409,10 +443,12 @@ func (h *handler) handleBotMessage(message MessageReceived) {
 			log.Printf("[Messenger] -> Receive: Can't pack message. Dropping packet!")
 			return
 		}
+		h.mutex.RLock()
 		for k := range h.channelsConnections[channelID] {
 			// Send message to the socket in async way
 			socket.SendQueueMessageSocketID(rawMessage, k)
 		}
+		h.mutex.RUnlock()
 		log.Printf("[Messenger] -> Receive: \"%s\" Username: \"%s\" ChannelID: %s", message.Message, message.Username, message.ChannelID)
 		botID, err2 := uuid.Parse(message.UserID)
 		if err2 == nil {
