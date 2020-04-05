@@ -10,7 +10,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
-        <converter:SecondsToTimeSpanConverter x:Key="SecondsToTimeSpanConverter" />
+        <converter:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter" />
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
         <converter:WinnerNameConverter x:Key="WinnerNameConverter"/>
 
@@ -74,7 +74,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Width="300"
-                                        DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource SecondsToTimeSpanConverter}}" />
+                                        DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
 
                     </GridView>
                 </ListView.View>

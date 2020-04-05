@@ -215,7 +215,7 @@
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
     <Compile Include="Utilities\Converters\NumberToPlaceholder.cs" />
     <Compile Include="Utilities\Converters\PointsToColorConverter.cs" />
-    <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
+    <Compile Include="Utilities\Converters\MillisecondsToTimeSpanConverter.cs" />
     <Compile Include="Utilities\Converters\ShortChannelNameConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
