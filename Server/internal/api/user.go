@@ -34,6 +34,7 @@ type socketUserChange struct {
 	NewName   string
 	PictureID int
 	IsCPU     bool
+	OldName   string
 }
 
 // GetUsers returns all users
@@ -77,6 +78,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 	}
 	userid := r.Context().Value(context.CtxUserID)
 	var user model.User
+	var oldUsername string
 	model.DB().Where("id = ?", userid).First(&user)
 	if user.ID != uuid.Nil {
 		updated := false
@@ -104,6 +106,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 				rbody.JSONError(w, http.StatusConflict, language.MustGetRest("error.usernameExists", r))
 				return
 			}
+			oldUsername = user.Username
 			user.Username = request.Username
 			updated = true
 		}
@@ -152,6 +155,7 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 				message.ParseMessagePack(byte(socket.MessageType.UsernameChange), socketUserChange{
 					UserID:    user.ID.String(),
 					PictureID: user.PictureID,
+					OldName:   oldUsername,
 					NewName:   user.Username,
 					IsCPU:     user.IsCPU,
 				})
