@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -140,6 +141,37 @@ namespace ClientLourd.ViewModels
         public ChatViewModel()
         {
             AfterLogOut();
+            ((MainWindow)Application.Current.MainWindow).ViewModel.LanguageChangedEvent += ViewModelOnLanguageChangedEvent;
+        }
+
+        private void ViewModelOnLanguageChangedEvent(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                StringBuilder sb;
+                if (OldDictionary == null)
+                    return;
+                string oldJoined = (string)OldDictionary["UserJoined"]; 
+                string oldLeft = (string)OldDictionary["UserLeft"];
+                string newJoined = (string)CurrentDictionary["UserLeft"];
+                string newLeft = (string)CurrentDictionary["UserLeft"];
+                foreach (var c in _channels.ToList())
+                {
+                    foreach (var m in c.Messages.ToList().Where(m => m.User == _admin))
+                    {
+                        sb = new StringBuilder(m.Content);
+                        if (m.Content.Contains(oldJoined))
+                        {
+                            sb.Replace(oldJoined, newJoined);
+                        }
+                        else if (m.Content.Contains(oldLeft))
+                        {
+                            sb.Replace(oldLeft, newLeft);
+                        }
+                        m.Content = sb.ToString();
+                    }
+                }
+            });
         }
 
         public override void AfterLogin()
@@ -453,6 +485,10 @@ namespace ClientLourd.ViewModels
             get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
+        public ResourceDictionary OldDictionary
+        {
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.OldDictionary;
+        }
 
         public void LeaveChannel(Channel channel)
         {

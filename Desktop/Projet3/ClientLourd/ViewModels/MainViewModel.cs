@@ -273,7 +273,7 @@ namespace ClientLourd.ViewModels
         }
 
         public ResourceDictionary CurrentDictionary { get; set; }
-
+        public ResourceDictionary OldDictionary { get; set; }
         public delegate void LanguageChangedHandler(object source, EventArgs args);
 
         public event LanguageChangedHandler LanguageChangedEvent;

@@ -263,6 +263,7 @@ namespace ClientLourd
 
         public void ChangeLang(object sender, EventArgs e)
         {
+            ViewModel.OldDictionary = ViewModel.CurrentDictionary;                
             ComboBox cmb = sender as ComboBox;
             string languageSelected = cmb.SelectedItem.ToString();
             ResourceDictionary dict = new ResourceDictionary();
