@@ -26,14 +26,14 @@ type singleUserResponse struct {
 	PictureID int
 	CreatedAt int64
 	UpdatedAt int64
-	isCPU     bool
+	IsCPU     bool
 }
 
 type socketUserChange struct {
 	UserID    string
 	NewName   string
 	PictureID int
-	isCPU     bool
+	IsCPU     bool
 }
 
 // GetUsers returns all users
@@ -56,7 +56,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 			Username:  user.Username,
 			Email:     user.Email,
 			PictureID: user.PictureID,
-			isCPU:     user.IsCPU,
+			IsCPU:     user.IsCPU,
 			CreatedAt: user.CreatedAt.Unix(),
 			UpdatedAt: user.CreatedAt.Unix(),
 		})
@@ -152,8 +152,8 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 				message.ParseMessagePack(byte(socket.MessageType.UsernameChange), socketUserChange{
 					UserID:    user.ID.String(),
 					PictureID: user.PictureID,
-					NewName:   request.Username,
-					isCPU:     user.IsCPU,
+					NewName:   user.Username,
+					IsCPU:     user.IsCPU,
 				})
 				messenger.BroadcastAll(message)
 			}
