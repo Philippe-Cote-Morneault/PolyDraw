@@ -349,4 +349,5 @@
         When a user creates a game, he allows a virtual player to draw the word created in a match.
     </system:String>
 
+    <system:String x:Key="EndTutorial">Start playing</system:String>
 </ResourceDictionary>

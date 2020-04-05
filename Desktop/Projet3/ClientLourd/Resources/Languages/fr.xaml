@@ -352,6 +352,6 @@
         d'utiliser le jeu lors d'une partie.
     </system:String>
 
-
+    <system:String x:Key="EndTutorial">Commencer à jouer</system:String>
 
 </ResourceDictionary>
