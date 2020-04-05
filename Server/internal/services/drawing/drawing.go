@@ -52,6 +52,7 @@ func (d *Drawing) listen() {
 	for {
 		select {
 		case data := <-d.preview:
+			log.Println("[Drawing] -> Receives preview request")
 			if message, ok := data.(socket.RawMessageReceived); ok {
 				//Start a new function to handle the connection
 				go d.handlePreview(message)

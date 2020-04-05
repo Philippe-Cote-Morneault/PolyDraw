@@ -57,6 +57,8 @@ func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, stopDrawi
 	for i, id := range socketsID {
 		go func(socketID uuid.UUID) {
 			defer wg.Done()
+			log.Println("[Drawing] -> Server starts drawing")
+
 			socket.SendQueueMessageSocketID(socket.RawMessage{
 				MessageType: byte(socket.MessageType.StartDrawingServer),
 				Length:      uint16(len(uuidBytes)),
@@ -65,6 +67,7 @@ func StartDrawing(socketsID []uuid.UUID, uuidBytes []byte, draw *Draw, stopDrawi
 
 			sendDrawing(socketID, payloads, stopDrawings[i])
 
+			log.Println("[Drawing] -> Server ends drawing")
 			socket.SendQueueMessageSocketID(socket.RawMessage{
 				MessageType: byte(socket.MessageType.EndDrawingServer),
 				Length:      uint16(len(uuidBytes)),
