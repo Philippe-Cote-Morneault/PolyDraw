@@ -6,9 +6,9 @@ import com.squareup.moshi.Json
 // TODO: Best score solo
 data class UserStats(
     @Json(name = "GamesPlayed")             val gamesPlayed:            Int,
-    @Json(name = "WinRatio")                val winRation:              Double,
-    @Json(name = "AvgGameDuration")         val averageGameDuration:    Int,
-    @Json(name = "TimePlayed")              val timePlayed:             Int,
+    @Json(name = "WinRatio")                val winRatio:              Double,
+    @Json(name = "AvgGameDuration")         val averageGameDuration:    Double,
+    @Json(name = "TimePlayed")              val timePlayed:             Long,
     @Json(name = "BestScoreSolo")           val bestScoreSolo:          Int
 )
 
