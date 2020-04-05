@@ -262,12 +262,13 @@ func handleEndGame(groupID uuid.UUID) {
 	}
 	delete(managerInstance.HintsInGames, groupID)
 
-	if _, ok := managerInstance.Matches[groupID]; !ok {
+	match, ok := managerInstance.Matches[groupID]
+
+	if !ok {
 		managerInstance.mutex.Unlock()
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting handleEndGame...", groupID)
 		return
 	}
-	match := managerInstance.Matches[groupID]
 	managerInstance.mutex.Unlock()
 
 	connections := (*match).GetConnections()

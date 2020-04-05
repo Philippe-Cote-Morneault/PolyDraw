@@ -17,7 +17,7 @@ type DataStats struct {
 	WinRatio        float64
 	AvgGameDuration float64
 	TimePlayed      int64
-	BestScoreSolo   int
+	BestScoreSolo   int64
 }
 
 func updateMatchesPlayed(stats match.StatsData) {
@@ -32,14 +32,14 @@ func updateMatchesPlayed(stats match.StatsData) {
 	}
 }
 
-func setDeconnection(userID uuid.UUID) {
+func setDisconnection(socketID uuid.UUID) {
 	var c model.Connection
-	model.DB().Model(&model.Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
+	model.DB().Model(&model.Connection{}).Where("socket_id = ?", socketID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
 	model.DB().Model(&model.Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
 }
 
-func createConnection(userID uuid.UUID) {
-	model.DB().Create(&model.Connection{UserID: userID, ConnectedAt: time.Now().Unix()})
+func createConnection(socketID uuid.UUID) {
+	model.DB().Create(&model.Connection{SocketID: socketID, ConnectedAt: time.Now().Unix()})
 }
 
 // GetStats find in BD all stats of user
@@ -62,7 +62,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 	nbWins := 0
 	nbFFA := 0
 	timePlayed := int64(0)
-	bestScoreSolo := int(math.MaxInt8)
+	bestScoreSolo := int64(math.MaxInt64)
 	for _, match := range matches {
 		//Cherche minimum score solo
 		if match.MatchType == 1 && match.PointsSoloCoop < bestScoreSolo {
@@ -77,7 +77,7 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 		timePlayed += match.MatchDuration
 	}
 	// Si on ne trouve pas de game solo
-	if bestScoreSolo == int(math.MaxInt8) {
+	if bestScoreSolo == int64(math.MaxInt64) {
 		bestScoreSolo = 0
 	}
 
