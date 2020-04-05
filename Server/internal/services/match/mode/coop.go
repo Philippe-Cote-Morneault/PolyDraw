@@ -2,6 +2,7 @@ package mode
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 	"log"
 	"strings"
@@ -218,6 +219,7 @@ func (c *Coop) Disconnect(socketID uuid.UUID) {
 	//Remove the player
 	c.receiving.Lock()
 	messenger.HandleQuitGroup(&c.info, socketID)
+	drawing.UnRegisterSession(socketID)
 
 	player := c.connections[socketID]
 

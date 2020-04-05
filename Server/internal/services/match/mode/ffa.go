@@ -231,6 +231,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.receiving.Lock()
 	log.Printf("[Match] [FFA] -> Received disconnect from %s", socketID)
 	messenger.HandleQuitGroup(&f.info, socketID)
+	drawing.UnRegisterSession(socketID)
 
 	leaveMessage := socket.RawMessage{}
 	leaveMessage.ParseMessagePack(byte(socket.MessageType.PlayerHasLeftGame), PlayerHasLeft{
