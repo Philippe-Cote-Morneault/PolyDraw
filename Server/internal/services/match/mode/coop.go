@@ -427,6 +427,17 @@ func (c *Coop) Close() {
 	}
 	duration := time.Now().Sub(c.timeStart).Milliseconds()
 
+	matchType := 1
+
+	if len(c.connections) > 1 {
+		matchType = 2
+	}
+
+	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
+		MatchDuration:  duration,
+		MatchType:      matchType,
+		PointsSoloCoop: c.commonScore.total}})
+
 	cancelMessage := socket.RawMessage{}
 	cancelMessage.ParseMessagePack(byte(socket.MessageType.GameCancel), GameCancel{
 		Type: 2,
@@ -508,6 +519,17 @@ func (c *Coop) finish() {
 		c.receiving.Unlock()
 	}
 
+	matchType := 1
+
+	if len(c.connections) > 1 {
+		matchType = 2
+	}
+
+	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
+		MatchDuration:  duration,
+		MatchType:      matchType,
+		PointsSoloCoop: c.commonScore.total}})
+
 	c.receiving.Lock()
 	//Send the time's up message
 	timeUpMessage := socket.RawMessage{}
@@ -522,17 +544,6 @@ func (c *Coop) finish() {
 
 	c.receiving.Unlock()
 	messenger.UnRegisterGroup(&c.info, c.GetConnections())
-
-	matchType := 1
-
-	if len(c.connections) > 1 {
-		matchType = 2
-	}
-
-	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
-		MatchDuration:  duration,
-		MatchType:      matchType,
-		PointsSoloCoop: c.commonScore.total}})
 }
 
 //computeOrder used to compute the order for the coop

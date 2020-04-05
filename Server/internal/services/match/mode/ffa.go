@@ -618,13 +618,13 @@ func (f *FFA) finish() {
 	f.broadcast(&message)
 	f.receiving.Unlock()
 
-	drawing.UnRegisterGame(f)
-	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: f.GetConnections(), Match: &model.MatchPlayed{
 		MatchDuration: gameDuration.Milliseconds(),
 		WinnerName:    winner.Username,
 		WinnerID:      winner.UserID,
 		MatchType:     0}})
+	drawing.UnRegisterGame(f)
+	messenger.UnRegisterGroup(&f.info, f.GetConnections()) //Remove the chat messenger
 }
 
 //removePlayer remove the player and set the order
