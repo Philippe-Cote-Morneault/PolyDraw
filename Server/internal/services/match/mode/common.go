@@ -2,9 +2,10 @@ package mode
 
 import (
 	"context"
-	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 	"log"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/virtualplayer"
 
@@ -109,7 +110,6 @@ func (b *base) broadcast(message *socket.RawMessage) {
 	for i := range b.connections {
 		socket.SendQueueMessageSocketID(*message, b.connections[i].socketID)
 	}
-	log.Printf("[Match] -> Message %d broadcasted, Match: %s, Data: %v", message.MessageType, b.info.ID, *message)
 }
 
 //Wait for all the clients to be ready

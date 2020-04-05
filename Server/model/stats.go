@@ -15,10 +15,11 @@ type Connection struct {
 //MatchPlayed represents the summary of the game
 type MatchPlayed struct {
 	Base
-	MatchDuration int64
-	WinnerName    string
-	WinnerID      string
-	MatchType     int // 0 -> FFA | 1 -> solo | 2 -> coop
+	MatchDuration  int64
+	WinnerName     string
+	WinnerID       string
+	MatchType      int // 0 -> FFA | 1 -> solo | 2 -> coop
+	PointsSoloCoop int
 }
 
 //MatchPlayedMembership represents the membership between a match and user

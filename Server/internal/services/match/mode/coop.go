@@ -2,13 +2,16 @@ package mode
 
 import (
 	"context"
-	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
-	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 	"log"
 	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
+
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 
@@ -527,8 +530,9 @@ func (c *Coop) finish() {
 	}
 
 	cbroadcast.Broadcast(broadcast.BUpdateMatch, match2.StatsData{SocketsID: c.GetConnections(), Match: &model.MatchPlayed{
-		MatchDuration: duration,
-		MatchType:     matchType}})
+		MatchDuration:  duration,
+		MatchType:      matchType,
+		PointsSoloCoop: c.commonScore.total}})
 }
 
 //computeOrder used to compute the order for the coop
