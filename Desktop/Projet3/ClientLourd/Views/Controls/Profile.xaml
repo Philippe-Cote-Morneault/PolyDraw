@@ -14,7 +14,9 @@
         <viewModels:ProfileViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converter:SecondsToTimeSpanConverter x:Key="SecondsToTimeSpanConverter" />
+        <converter:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter" />
+        <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
+
     </UserControl.Resources>
 
     <Grid Margin="40 10 40 10">
@@ -155,9 +157,9 @@
                                     <TextBlock Margin="15 0 0 15" Grid.Row="1" Grid.Column="1" FontSize="20"
                                                Text="{Binding Path=Stats.WinRatio, StringFormat=P2}" />
                                     <TextBlock Margin="15 0 0 15" Grid.Row="2" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.AvgGameDuration, Converter={StaticResource SecondsToTimeSpanConverter}}" />
+                                               Text="{Binding Path=Stats.AvgGameDuration, Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
                                     <TextBlock Margin="15 0 0 15" Grid.Row="3" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.TimePlayed, Converter={StaticResource SecondsToTimeSpanConverter}}" />
+                                               Text="{Binding Path=Stats.TimePlayed, Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
                                     <TextBlock Margin="15 0 0 15" Grid.Row="4" Grid.Column="1" FontSize="20"
                                                Text="{Binding Path=Stats.BestScoreSolo}" />
 

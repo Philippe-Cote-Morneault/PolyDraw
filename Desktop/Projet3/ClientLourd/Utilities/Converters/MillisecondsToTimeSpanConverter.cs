@@ -9,13 +9,15 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class SecondsToTimeSpanConverter : IValueConverter
+    class MillisecondsToTimeSpanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double seconds = System.Convert.ToDouble(value);
+            TimeSpan ts = TimeSpan.FromMilliseconds(seconds);
 
-            return TimeSpan.FromSeconds(seconds).ToString();
+
+            return new TimeSpan(ts.Hours, ts.Minutes, ts.Seconds);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
