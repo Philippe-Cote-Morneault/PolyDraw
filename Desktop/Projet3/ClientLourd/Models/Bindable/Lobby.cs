@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClientLourd.Utilities.Constants;
+using ClientLourd.Services.EnumService;
 
 namespace ClientLourd.Models.Bindable
 {
@@ -47,6 +48,10 @@ namespace ClientLourd.Models.Bindable
 
         public int PlayersMax { get; set; }
 
+        public string LanguageDesc
+        {
+            get => Language.GetDescription();
+        }
         public int Rounds { get; set; }
 
         private int _playersCount;
