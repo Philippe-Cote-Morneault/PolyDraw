@@ -24,4 +24,8 @@ class UserCache {
     fun containsUser(userID: UUID): Boolean {
         return users.containsKey(userID)
     }
+
+    fun clearCache() {
+        users.clear()
+    }
 }
