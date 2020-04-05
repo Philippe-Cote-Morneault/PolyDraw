@@ -23,7 +23,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun setClickListeners() {
         findPreference<Preference>("theme")?.setOnPreferenceClickListener {
-            ThemePickerFragment().show(fragmentManager!! , "ThemePickerFragment")
+            ThemePickerFragment{
+                Handler().postDelayed({
+                    if (ThemeManager.hasActivityThemeChanged(activity!!)) {
+                        activity?.recreate()
+                    }
+                }, 500)
+            }.show(fragmentManager!! , "ThemePickerFragment")
             true
         }
 
