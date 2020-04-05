@@ -176,7 +176,12 @@ class ChatManager : Service() {
             return
         }
 
-        SoundManager.playSoundEffect(MainApplication.instance.getContext(), R.raw.sound_effect_new_message)
+        if (chatMessage.type != ChatMessage.Type.EVENT_MESSAGE) {
+            SoundManager.playSoundEffect(
+                MainApplication.instance.getContext(),
+                R.raw.sound_effect_new_message
+            )
+        }
     }
 
     @Subscribe
