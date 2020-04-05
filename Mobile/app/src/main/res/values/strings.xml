@@ -220,4 +220,5 @@
     <string name="save">Save</string>
     <string name="select_language_instruction">Language selection</string>
     <string name="theme_selection_instruction">Theme selection</string>
+    <string name="hint">Hint</string>
 </resources>
