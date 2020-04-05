@@ -86,6 +86,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
             scores.add(Pair(currentMatchPlayer.username, roundEnded.players.find { currentMatchPlayer.ID == it.userID }!!.newPoints))
         }
         activeFFAMatchView?.showCanvasMessageView(false)
+        activeFFAMatchView?.enableDrawFunctions(false, null)
         activeMatchView?.showRoundEndInfoView(roundEnded.word, scores)
 
         roundEnded.players.forEach {
