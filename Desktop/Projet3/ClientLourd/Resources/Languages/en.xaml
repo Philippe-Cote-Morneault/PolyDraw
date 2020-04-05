@@ -166,6 +166,7 @@
     <system:String x:Key="Join">Join</system:String>
     <system:String x:Key="Delete">Delete</system:String>
     <system:String x:Key="UserLeft">left the channel</system:String>
+    <system:String x:Key="UserChanged">has changed his username to</system:String>
     <system:String x:Key="UserJoined">joined the channel</system:String>
     <system:String x:Key="HintResponse">ask for a hint</system:String>
 

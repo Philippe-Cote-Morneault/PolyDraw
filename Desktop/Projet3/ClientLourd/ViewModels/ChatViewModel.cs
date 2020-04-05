@@ -154,9 +154,11 @@ namespace ClientLourd.ViewModels
                 string oldJoined = (string)OldDictionary["UserJoined"]; 
                 string oldLeft = (string)OldDictionary["UserLeft"];
                 string oldHint = (string)OldDictionary["HintResponse"];
+                string oldUserChanged =(string)OldDictionary["UserChanged"];
                 string newHint = (string)CurrentDictionary["HintResponse"];
                 string newJoined = (string)CurrentDictionary["UserLeft"];
                 string newLeft = (string)CurrentDictionary["UserLeft"];
+                string newUserChanged =(string)CurrentDictionary["UserChanged"];
                 foreach (var c in _channels.ToList())
                 {
                     foreach (var m in c.Messages.ToList().Where(m => m.User == _admin))
@@ -173,6 +175,10 @@ namespace ClientLourd.ViewModels
                         else if (m.Content.Contains(oldHint))
                         {
                             sb.Replace(oldHint, newHint);
+                        }
+                        else if (m.Content.Contains(oldUserChanged))
+                        {
+                            sb.Replace(oldUserChanged, newUserChanged);
                         }
                         m.Content = sb.ToString();
                     }
@@ -245,16 +251,22 @@ namespace ClientLourd.ViewModels
         {
             var e = (ChatEventArgs) args;
             var user = _users.FirstOrDefault(u => u.ID == e.UserID);
-            if (user != null)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                if (!String.IsNullOrWhiteSpace(e.OldName))
+                    Channels.FirstOrDefault(c => c.ID == GLOBAL_CHANNEL_ID)?.Messages.Add(new Message(DateTime.Now, _admin, $"{e.OldName} {(string)CurrentDictionary["UserChanged"]} {e.NewName}"));
+                if (user != null)
                 {
                     user.Username = e.NewName;
                     user.PictureID = e.PictureID;
-                    //clear the bearer
-                    CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
-                });
-            }
+                    if (user.ID == SessionInformations.User.ID)
+                    {
+                        //clear the bearer
+                        CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
+                    }
+                }
+                NotifyPropertyChanged(nameof(NewMessages));
+            });
         }
 
         private void SocketClientOnUserDeletedChannel(object source, EventArgs args)
