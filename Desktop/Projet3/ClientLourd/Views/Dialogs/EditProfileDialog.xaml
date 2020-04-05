@@ -15,11 +15,22 @@
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
         <converter:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter" />
+        <converter:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
 
     <materialDesign:DialogHost Identifier="EditProfileHost" x:Name="EditProfileHost" CloseOnClickAway="False">
-        <Grid>
-
+        <Grid IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}">
+            <WrapPanel ZIndex="2"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Visibility="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <ProgressBar
+                            Height="24"
+                            Width="24"
+                            Style="{StaticResource MaterialDesignCircularProgressBar}"
+                            Value="0"
+                            IsIndeterminate="True" />
+            </WrapPanel>
             <StackPanel x:Name="StackPanel" Height="700" Width="500" Margin="10">
 
 
@@ -177,12 +188,12 @@
 
             </StackPanel>
 
-            <Grid Margin="0 0 0 5" VerticalAlignment="Bottom">
+            <Grid   Margin="0 0 0 5" VerticalAlignment="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Margin="10" Grid.Column="0" Content="{DynamicResource Update}" HorizontalAlignment="Center"
+                <Button  Margin="10" Grid.Column="0" Content="{DynamicResource Update}" HorizontalAlignment="Center"
                         Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
                         Command="{Binding EditProfileCommand}" DockPanel.Dock="Bottom"
                         IsDefault="True">

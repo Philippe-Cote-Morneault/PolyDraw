@@ -259,11 +259,6 @@ namespace ClientLourd.ViewModels
                 {
                     user.Username = e.NewName;
                     user.PictureID = e.PictureID;
-                    if (user.ID == SessionInformations.User.ID)
-                    {
-                        //clear the bearer
-                        CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
-                    }
                 }
                 NotifyPropertyChanged(nameof(NewMessages));
             });

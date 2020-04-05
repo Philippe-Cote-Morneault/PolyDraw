@@ -103,6 +103,7 @@ namespace ClientLourd.Views.Dialogs
             try
             {
                 await RestClient.PutProfile(GetModifiedObj());
+                
                 // Update infos
                 User.Username = UserClone.Username;
                 User.Avatar = UserClone.Avatar;
@@ -111,9 +112,10 @@ namespace ClientLourd.Views.Dialogs
                 User.Email = UserClone.Email;
                 User = UserClone;
                 // Update de credentials store
-                if (CredentialManager.ReadCredential(ApplicationInformations.Name) != null)
+                var cred = CredentialManager.ReadCredential(ApplicationInformations.Name);
+                if (cred != null)
                 {
-                    CredentialManager.WriteCredential(ApplicationInformations.Name, User.Username, NewPassword);
+                    CredentialManager.WriteCredential(ApplicationInformations.Name, User.Username,cred.Password);
                 }
 
                 DialogHost.CloseDialogCommand.Execute(null, null);
