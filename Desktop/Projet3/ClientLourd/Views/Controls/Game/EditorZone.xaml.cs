@@ -248,6 +248,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 ViewModel.Guess[index] = '\0';
             }
+            ViewModel.GuessChanged();
         }
 
         private void UIElement_OnKeyDown(object sender, KeyEventArgs e)
@@ -293,6 +294,7 @@ namespace ClientLourd.Views.Controls.Game
                     }
                 }
             }
+            ViewModel.GuessChanged();
         }
 
         private void SocketClientOnGuessResponse(object sender, EventArgs args)

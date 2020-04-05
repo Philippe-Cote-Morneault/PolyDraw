@@ -72,6 +72,11 @@ namespace ClientLourd.ViewModels
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
         }
 
+        public void GuessChanged()
+        {
+            NotifyPropertyChanged(nameof(IsWordComplete));
+        }
+
 
         public SoundService SoundService
         {
@@ -352,6 +357,20 @@ namespace ClientLourd.ViewModels
             {
                 _canStillGuess = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsWordComplete));
+            }
+        }
+
+        public bool IsWordComplete
+        {
+            get
+            {
+                if (Guess != null && Guess.Length > 0)
+                {
+                    return Guess.All(Char.IsLetterOrDigit) && CanStillGuess;
+                }
+
+                return false;
             }
         }
 
