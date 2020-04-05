@@ -47,7 +47,9 @@ enum class EventType {
     SHOW_ERROR_MESSAGE,
     // Settings
     LANGUAGE_CHANGED,
-    THEME_CHANGED
+    THEME_CHANGED,
+    // MISC
+    USER_UPDATED
 
 }
 data class MessageEvent(var type: EventType, var data: Any?)

@@ -86,6 +86,7 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
                 .subscribe(
                 {
                     messageHeader.chipIcon = ResourcesCompat.getDrawable(MainApplication.instance.resources, getAvatarID(it.pictureID), null)
+                    usernameTextView.text = it.username
                 },
                 {
                 }

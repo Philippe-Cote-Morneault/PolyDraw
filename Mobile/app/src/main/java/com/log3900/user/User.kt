@@ -10,6 +10,7 @@ class User(@Json(name = "ID") var ID: UUID, @Json(name = "FirstName") var firstN
 class UsernameChanged(
     var userID: UUID,
     var pictureID: Int,
+    var oldUsername: String,
     var newUsername: String,
     var isCPU: Boolean
 )

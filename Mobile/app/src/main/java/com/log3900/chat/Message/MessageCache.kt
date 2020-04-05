@@ -65,10 +65,32 @@ class MessageCache {
                 if (it.type == ChatMessage.Type.EVENT_MESSAGE) {
                     val oldEventMessage = it.message as EventMessage
                     val username = oldEventMessage.message.substring(0, oldEventMessage.message.indexOf(" "))
-                    if (oldEventMessage.message.contains("left") || oldEventMessage.message.contains("quitté")) {
+                    if (oldEventMessage.type == EventMessage.Type.USER_LEFT_CHANNEL) {
                         oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_user_left_channel_message, username)
-                    } else {
+                    } else if (oldEventMessage.type == EventMessage.Type.USER_JOINED_CHANNEL) {
                         oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_user_joined_channel_message, username)
+                    } else {
+                        val splitMessage = oldEventMessage.message.split(" ")
+                        val newUsername = splitMessage[splitMessage.size - 1]
+                        oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_username_changed, username, newUsername)
+                    }
+                }
+            }
+        }
+    }
+
+    fun changeEventMessagesForNewUsername(oldUsername: String, newUsername: String) {
+        chatMessages.forEach { channel: UUID, channelMessages: LinkedList<ChatMessage> ->
+            channelMessages.forEach {
+                if (it.type == ChatMessage.Type.EVENT_MESSAGE && (it.message as EventMessage).type != EventMessage.Type.USERNAME_CHANGED) {
+                    val oldEventMessage = it.message as EventMessage
+                    val username = oldEventMessage.message.substring(0, oldEventMessage.message.indexOf(" "))
+                    if (username == oldUsername) {
+                        if (oldEventMessage.type == EventMessage.Type.USER_JOINED_CHANNEL) {
+                            oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_user_joined_channel_message, newUsername)
+                        } else {
+                            oldEventMessage.message = MainApplication.instance.getContext().getString(R.string.chat_user_left_channel_message, newUsername)
+                        }
                     }
                 }
             }

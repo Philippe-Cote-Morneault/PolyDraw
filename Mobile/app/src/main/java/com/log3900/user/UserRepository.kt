@@ -11,6 +11,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.log3900.chat.Message.MessageRepository
 import com.log3900.settings.language.LanguageManager
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.account.AccountRepository
@@ -21,6 +23,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.reactivex.Single
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,9 +57,11 @@ class UserRepository  : Service() {
             val request =  Single.create<User> {
                 getUserFromRest(userID).subscribe(
                     { user ->
-                        userCache.addUser(user)
+                        if (!userCache.containsUser(userID)) {
+                            userCache.addUser(user)
+                        }
                         ongoingRequests.remove(userID)
-                        it.onSuccess(user)
+                        it.onSuccess(userCache.getUser(userID))
                     },
                     {
                     }
@@ -108,6 +113,18 @@ class UserRepository  : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         Log.d("POTATO", "UserRepository::onUsernameChanged = $json")
         val usernameChanged = UserAdapter.jsonToUsernameChanged(jsonObject)
+        if (!userCache.containsUser(usernameChanged.userID)) {
+            getUser(usernameChanged.userID).subscribe { user ->
+                user.username = usernameChanged.newUsername
+                user.pictureID = usernameChanged.pictureID
+                EventBus.getDefault().post(MessageEvent(EventType.USER_UPDATED, usernameChanged.userID))
+            }
+        } else {
+            val user = userCache.getUser(usernameChanged.userID)
+            user.username = usernameChanged.newUsername
+            user.pictureID = usernameChanged.pictureID
+            EventBus.getDefault().post(MessageEvent(EventType.USER_UPDATED, usernameChanged.userID))
+        }
     }
 
     private fun handleSocketMessage(message: android.os.Message) {

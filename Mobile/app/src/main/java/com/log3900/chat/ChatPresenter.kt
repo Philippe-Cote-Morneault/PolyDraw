@@ -7,6 +7,7 @@ import com.log3900.chat.Message.SentMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
+import com.log3900.socket.Message
 import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,6 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class ChatPresenter : Presenter {
     private var chatView: ChatView?
@@ -127,6 +129,9 @@ class ChatPresenter : Presenter {
             EventType.ALL_MESSAGES_CHANGED -> {
 
             }
+            EventType.USER_UPDATED -> {
+                onUserUpdated(event.data as UUID)
+            }
         }
     }
 
@@ -151,6 +156,10 @@ class ChatPresenter : Presenter {
         if (!loadingMessages) {
             chatView?.notifyNewMessage()
         }
+    }
+
+    private fun onUserUpdated(userID: UUID) {
+        chatView?.notifyMessagesUpdated(userID)
     }
 
     override fun resume() {
