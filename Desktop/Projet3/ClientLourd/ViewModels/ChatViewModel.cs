@@ -211,8 +211,7 @@ namespace ClientLourd.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (!string.IsNullOrEmpty(e.NewName))
-                        user.Username = e.NewName;
+                    user.Username = e.NewName;
                     user.PictureID = e.PictureID;
                     //clear the bearer
                     CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
