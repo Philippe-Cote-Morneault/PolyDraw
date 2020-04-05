@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Models.NonBindable;
+using ClientLourd.Services.CredentialsService;
 using ClientLourd.Services.SocketService;
 using ClientLourd.Utilities.Commands;
 using ClientLourd.Utilities.Enums;
@@ -17,6 +18,7 @@ using MaterialDesignThemes.Wpf;
 using ClientLourd.Services.RestService;
 using ClientLourd.Services.SoundService;
 using ClientLourd.Services.ProfileViewerService;
+using ClientLourd.Utilities.Constants;
 
 namespace ClientLourd.ViewModels
 {
@@ -207,7 +209,14 @@ namespace ClientLourd.ViewModels
             var user = _users.FirstOrDefault(u => u.ID == e.UserID);
             if (user != null)
             {
-                user.Username = e.NewName;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (!string.IsNullOrEmpty(e.NewName))
+                        user.Username = e.NewName;
+                    user.PictureID = e.PictureID;
+                    //clear the bearer
+                    CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
+                });
             }
         }
 
