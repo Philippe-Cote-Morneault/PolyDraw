@@ -191,4 +191,5 @@
     <string name="select_language_instruction">Sélection de langue</string>
     <string name="theme_selection_instruction">Sélection de thème</string>
     <string name="hint">Indice</string>
+    <string name="home">Acceuil</string>
 </resources>

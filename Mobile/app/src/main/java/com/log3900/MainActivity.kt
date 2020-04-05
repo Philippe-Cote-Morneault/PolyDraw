@@ -173,7 +173,7 @@ open class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (navigationController.currentDestination?.label == "Lobby") {
+                if (navigationController.currentDestination?.id == R.id.navigation_main_match_lobby_fragment) {
                     showLogoutDialog()
                 } else {
                     navigationController.navigateUp()
