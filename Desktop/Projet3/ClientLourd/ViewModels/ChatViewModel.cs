@@ -153,6 +153,8 @@ namespace ClientLourd.ViewModels
                     return;
                 string oldJoined = (string)OldDictionary["UserJoined"]; 
                 string oldLeft = (string)OldDictionary["UserLeft"];
+                string oldHint = (string)OldDictionary["HintResponse"];
+                string newHint = (string)CurrentDictionary["HintResponse"];
                 string newJoined = (string)CurrentDictionary["UserLeft"];
                 string newLeft = (string)CurrentDictionary["UserLeft"];
                 foreach (var c in _channels.ToList())
@@ -167,6 +169,10 @@ namespace ClientLourd.ViewModels
                         else if (m.Content.Contains(oldLeft))
                         {
                             sb.Replace(oldLeft, newLeft);
+                        }
+                        else if (m.Content.Contains(oldHint))
+                        {
+                            sb.Replace(oldHint, newHint);
                         }
                         m.Content = sb.ToString();
                     }
