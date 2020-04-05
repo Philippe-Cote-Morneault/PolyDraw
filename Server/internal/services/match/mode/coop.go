@@ -11,8 +11,6 @@ import (
 	"gitlab.com/jigsawcorp/log3900/internal/services/drawing"
 	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
 
-	"gitlab.com/jigsawcorp/log3900/internal/services/stats/broadcast"
-
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
