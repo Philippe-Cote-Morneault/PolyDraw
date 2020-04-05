@@ -67,6 +67,7 @@ namespace ClientLourd.Services.InkCanvas
         {
             if (_drawingID != Guid.Empty)
             {
+                _points.Clear();
                 _socket.SendMessage(new Tlv(SocketMessageTypes.EndDrawing, _drawingID));
                 _timer.Stop();
                 _editor.Canvas.MouseMove -= CanvasOnMouseMove;
