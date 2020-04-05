@@ -2,7 +2,6 @@ package virtualplayer
 
 import (
 	"log"
-	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -25,7 +24,7 @@ type virtualPlayerInfos struct {
 }
 
 func (v *virtualPlayerInfos) calculateDrawingTime() {
-	rand.Seed(time.Now().UnixNano())
+	managerInstance.rand.Seed(time.Now().UnixNano())
 	min := 0.0
 	max := 1.0
 	switch v.Personality {
@@ -49,12 +48,12 @@ func (v *virtualPlayerInfos) calculateDrawingTime() {
 		min = 0.7
 		max = 0.9
 	}
-	v.DrawingTimeFactor = float64(min) + rand.Float64()*float64(max-min)
+	v.DrawingTimeFactor = float64(min) + managerInstance.rand.Float64()*float64(max-min)
 
 }
 
 func generateVirtualPlayer(lang int) *virtualPlayerInfos {
-	v := &virtualPlayerInfos{Language: lang, Personality: []string{"Angry", "Funny", "Mean", "Nice", "Supportive"}[rand.Intn(5)],
+	v := &virtualPlayerInfos{Language: lang, Personality: []string{"Angry", "Funny", "Mean", "Nice", "Supportive"}[managerInstance.rand.Intn(5)],
 		DrawingTimeFactor: 0, Username: randomdata.GenerateProfile(randomdata.RandomGender).Login.Username}
 
 	v.calculateDrawingTime()
@@ -78,7 +77,7 @@ func (v *virtualPlayerInfos) speak(channelID uuid.UUID, interactionType string) 
 
 func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
 
-	lineNumber := strconv.Itoa(rand.Intn(2) + 1)
+	lineNumber := strconv.Itoa(managerInstance.rand.Intn(2) + 1)
 	line := language.MustGet("botlines."+interactionType+v.Personality+lineNumber, v.Language)
 
 	if interactionType == "playerRef" || interactionType == "winRatio" {

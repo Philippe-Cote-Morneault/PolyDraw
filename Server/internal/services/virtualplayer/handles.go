@@ -38,6 +38,7 @@ type gameHints struct {
 // Manager represents a struct that manage all virtual players
 type Manager struct {
 	mutex           sync.Mutex
+	rand            *rand.Rand
 	Bots            map[uuid.UUID]*virtualPlayerInfos //botID -> virtualPlayerInfos
 	Channels        map[uuid.UUID]uuid.UUID           //groupID -> channelID
 	HintsInGames    map[uuid.UUID]*gameHints          //groupID -> gameHints
@@ -49,6 +50,7 @@ type Manager struct {
 }
 
 func (m *Manager) init() {
+	m.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 	m.Bots = make(map[uuid.UUID]*virtualPlayerInfos)
 	m.Channels = make(map[uuid.UUID]uuid.UUID)
 	m.Groups = make(map[uuid.UUID]map[uuid.UUID]bool)
