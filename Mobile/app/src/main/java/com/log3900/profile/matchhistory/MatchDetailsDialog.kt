@@ -13,7 +13,6 @@ import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
 import com.log3900.profile.stats.Player
 import com.log3900.utils.format.DateFormatter
-import com.log3900.utils.format.formatDuration
 import java.util.*
 
 class MatchDetailsDialog(private val match: GamePlayed, private val username: String)
@@ -56,7 +55,7 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         } else {
             result.text = "-"
         }
-        
+
         val winner: TextView = root.findViewById(R.id.match_winner_value)
         winner.text = if (match.winnerName.isEmpty()) "-" else match.winnerName
 
@@ -64,10 +63,10 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         val durationDate = Date(match.duration)
         duration.text = DateFormatter.formatFullTime(durationDate)
 
-//        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
-//        match.playerNames.forEach {
-//            playersLayout.addPlayer(it)
-//        }
+        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
+        match.players.forEach {
+            playersLayout.addPlayer(it)
+        }
 
         val closeButton: MaterialButton = root.findViewById(R.id.close_dialog_button)
         closeButton.setOnClickListener {
@@ -75,9 +74,9 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         }
     }
 
-    private fun LinearLayout.addPlayer(playerName: Player) {
+    private fun LinearLayout.addPlayer(player: Player) {
         val nameView = TextView(activity)
-        nameView.text = playerName.name
+        nameView.text = player.name
         this.addView(nameView)
     }
 
