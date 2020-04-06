@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.formatDuration
 
 class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
@@ -42,7 +43,7 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
 
         holder.matchType.text = match.matchType.toUpperCase()
 
-        val matchWon = (username == match.winnerName)
+        val matchWon = (AccountRepository.getInstance().getAccount().ID.toString() == match.winnerID)
         val matchResultColorBackground = ContextCompat.getColor(context,
             if (matchWon)
                 R.color.color_win_background
