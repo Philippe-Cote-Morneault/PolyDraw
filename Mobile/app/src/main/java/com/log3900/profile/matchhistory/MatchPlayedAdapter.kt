@@ -43,6 +43,18 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
 
         holder.matchType.text = match.matchType.toUpperCase()
 
+        holder.matchDuration.text = formatDuration(match.duration)
+
+        holder.itemView.setOnClickListener {
+            startMatchDetailsDialog(match)
+        }
+
+        if (match.matchType == "FFA") {
+            holder.setStyleFromMatchResult(match)
+        }
+    }
+
+    private fun ViewHolder.setStyleFromMatchResult(match: GamePlayed) {
         val matchWon = (AccountRepository.getInstance().getAccount().ID.toString() == match.winnerID)
         val matchResultColorBackground = ContextCompat.getColor(context,
             if (matchWon)
@@ -57,25 +69,17 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
                 R.color.color_loss_text
         )
 
-        holder.matchResult.text =
+        matchResult.text =
             if (matchWon)
                 "WIN"
             else
                 "LOSS"
-        holder.matchResult.setTextColor(matchResultColorText)
 
-        holder.matchDuration.text = formatDuration(match.duration)
-
-        holder.setBackgroundColor(matchResultColorBackground)
-
-        holder.itemView.setOnClickListener {
-            startMatchDetailsDialog(match)
-        }
+        matchResult.setTextColor(matchResultColorText)
+        setBackgroundColor(matchResultColorBackground)
     }
 
     override fun getItemCount(): Int = matchesPlayed.size
-
-
 
     private fun startMatchDetailsDialog(match: GamePlayed) {
         val activity = context as FragmentActivity
