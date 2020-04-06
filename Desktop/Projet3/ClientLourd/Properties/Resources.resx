@@ -130,6 +130,9 @@
   <data name="Message" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Message.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="pen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pen.cur;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="PointEraser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PointEraser.cur;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

@@ -18,6 +18,7 @@
         <converter:EditingModeConverter x:Key="EditorModeConverter" />
         <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility" />
         <converter:MinimumEraserSizeToVisibilityConverter x:Key="MinimumEraserSizeToVisibilityConverter" />
+        <converter:EditingModeToVisibility x:Key="EditingModeToVisibility"/>
     </UserControl.Resources>
     <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth4">
         <DockPanel>
@@ -154,9 +155,12 @@
 
 
                     <Grid Name="EraserIndicator"
-                          Visibility="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static InkCanvasEditingMode.EraseByPoint}}">
+                          Visibility="{Binding Path=EditorInformation.SelectedTool, Converter={StaticResource EditingModeToVisibility}}">
                         <Grid
                             Visibility="{Binding Path=EditorInformation.BrushSize, Converter={StaticResource MinimumEraserSizeToVisibilityConverter}}">
+                            <Grid
+                                Visibility="{Binding ShowCursor, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                >
                             <Ellipse
                                 Visibility="{Binding Path=EditorInformation.SelectedTip, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter={x:Static StylusTip.Ellipse}}"
                                 Name="Ellipse" StrokeThickness="1" Stroke="LightSlateGray"
@@ -167,6 +171,7 @@
                                 Name="Rectangle" StrokeThickness="1" Stroke="LightSlateGray"
                                 Height="{Binding Path=EditorInformation.BrushSize}"
                                 Width="{Binding Path=EditorInformation.BrushSize}" />
+                            </Grid>
                         </Grid>
                     </Grid>
 

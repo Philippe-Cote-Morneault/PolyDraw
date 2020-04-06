@@ -28,6 +28,20 @@ namespace ClientLourd.ViewModels
         {
         }
 
+        private bool _showCursor;
+        public bool ShowCursor
+        {
+            get { return _showCursor; }
+            set
+            {
+                if (_showCursor != value)
+                {
+                    _showCursor = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         private RelayCommand<InkCanvasEditingMode> _changeToolCommand;
 
         public ICommand ChangeToolCommand

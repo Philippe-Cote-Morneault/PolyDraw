@@ -262,6 +262,16 @@ namespace ClientLourd.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] pen {
+            get {
+                object obj = ResourceManager.GetObject("pen", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] PointEraser {
             get {
                 object obj = ResourceManager.GetObject("PointEraser", resourceCulture);

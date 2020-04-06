@@ -494,10 +494,12 @@ namespace ClientLourd.ViewModels
             if (isEnable)
             {
                 _stokesReader.Start(_drawingID);
+                Application.Current.Dispatcher.Invoke(() => { Editor.ShowCursor(); });
             }
             else
             {
                 _stokesReader.Stop();
+                Application.Current.Dispatcher.Invoke(() => { Editor.HideCursor(); });
             }
 
             Task.Run(() =>

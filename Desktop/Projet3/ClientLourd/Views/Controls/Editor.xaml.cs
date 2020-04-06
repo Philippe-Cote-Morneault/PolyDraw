@@ -29,12 +29,24 @@ namespace ClientLourd.Views.Controls
     {
         DateTime _strokeStart;
         private Cursor _pointEraser = CursorHelper.FromByteArray(Properties.Resources.PointEraser);
+        private Cursor _penCursor = CursorHelper.FromByteArray(Properties.Resources.pen);
 
         public Editor()
         {
             InitializeComponent();
             Loaded += OnLoad;
         }
+
+        public void HideCursor()
+        {
+            ViewModel.ShowCursor = false;
+        }
+        
+        public void ShowCursor()
+        {
+            ViewModel.ShowCursor = true;
+        }
+        
 
         private EditorViewModel ViewModel
         {
@@ -46,6 +58,8 @@ namespace ClientLourd.Views.Controls
         {
             // Bubble inkCanvas event so we can capture it
             Canvas.AddHandler(InkCanvas.MouseLeftButtonDownEvent, new MouseButtonEventHandler(SaveDrawDebutTime), true);
+            Canvas.Cursor = _penCursor;
+            Canvas.UseCustomCursor = true;
             ViewModel.SelectPen += (o, args) => { SelectPen(); };
         }
 
@@ -134,6 +148,7 @@ namespace ClientLourd.Views.Controls
 
                     if (ViewModel != null)
                     {
+                        Canvas.UseCustomCursor = false;
                         if (tool == InkCanvasEditingMode.EraseByPoint)
                         {
                             Canvas.UseCustomCursor = true;
@@ -141,7 +156,12 @@ namespace ClientLourd.Views.Controls
                         }
                         else
                         {
-                            Canvas.UseCustomCursor = false;
+                            if (tool == InkCanvasEditingMode.Ink)
+                            {
+                                Canvas.UseCustomCursor = true;
+                                Canvas.Cursor = _penCursor;
+                            }
+                            
                             if (_selectedColor != null)
                             {
                                 Color c = (Color) ((Ellipse) _selectedColor.Content).Tag;

@@ -74,7 +74,7 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
 
             if (!_strokeInfoQueue.IsEmpty)
             {
-                if (Application.Current.Dispatcher != null)
+                if (Application.Current != null && Application.Current.Dispatcher != null)
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         StrokeInfo strokeInfo;

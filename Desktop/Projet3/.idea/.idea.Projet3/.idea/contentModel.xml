@@ -123,6 +123,7 @@
           </e>
           <e p="LogoMakr_4YSBb4.png" t="Include" />
           <e p="Message.wav" t="Include" />
+          <e p="pen.cur" t="Include" />
           <e p="PointEraser.cur" t="Include" />
           <e p="poly.png" t="Include" />
           <e p="robot.png" t="Include" />
@@ -243,6 +244,7 @@
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
             <e p="EditingModeConverter.cs" t="Include" />
+            <e p="EditingModeToVisibility.cs" t="Include" />
             <e p="EnumTranslationConverter.cs" t="Include" />
             <e p="GameModeToImageConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />

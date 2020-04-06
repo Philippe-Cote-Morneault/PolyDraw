@@ -197,6 +197,7 @@
     <Compile Include="Utilities\Constants\GUIDs.cs" />
     <Compile Include="Utilities\Constants\MatchTiming.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
+    <Compile Include="Utilities\Converters\EditingModeToVisibility.cs" />
     <Compile Include="Utilities\Converters\LongChannelNameConverter.cs" />
     <Compile Include="Utilities\Converters\ChannelSelectionBorderConverter.cs" />
     <Compile Include="Utilities\Converters\ChannelSelectionToIconConverter.cs" />
@@ -554,6 +555,7 @@
     <Resource Include="Resources\Avatar\16.jpg" />
     <None Include="Resources\PointEraser.cur" />
     <None Include="Resources\Message.wav" />
+    <Resource Include="Resources\pen.cur" />
     <Content Include="Resources\poly.png" />
   </ItemGroup>
   <ItemGroup>
