@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+
+	"gitlab.com/jigsawcorp/log3900/internal/match"
 	"gitlab.com/jigsawcorp/log3900/internal/services/stats"
 	"gitlab.com/jigsawcorp/log3900/model"
 
@@ -124,7 +125,7 @@ func (v *virtualPlayerInfos) sendStatsInteraction(groupID uuid.UUID, match *matc
 	managerInstance.mutex.Unlock()
 
 	if !ok {
-		log.Printf("[Virtual Player -> [Error] Can't find channelID with groupID : %v. Aborting sendStatsInteraction...", groupID)
+		log.Printf("[VirtualPlayer -> [Error] Can't find channelID with groupID : %v. Aborting sendStatsInteraction...", groupID)
 	}
 	v.speak(channelID, line)
 }
@@ -135,13 +136,18 @@ func getRandomUserID(groupID uuid.UUID) uuid.UUID {
 	if match, ok := managerInstance.Matches[groupID]; ok {
 		managerInstance.mutex.Unlock()
 		connections := (*match).GetConnections()
-		i := managerInstance.rand.Intn(len(connections))
-		userID, isOk := auth.GetUserID(connections[i])
-		if isOk != nil {
-			log.Printf("[Virtual Player] [Error] Can't find userID of in game socketID : %v", userID)
-			return uuid.Nil
+		if len(connections) > 0 {
+			i := managerInstance.rand.Intn(len(connections))
+			userID, isOk := auth.GetUserID(connections[i])
+			if isOk != nil {
+				log.Printf("[VirtualPlayer] [Error] Can't find userID of in game socketID : %v", userID)
+				return uuid.Nil
+			}
+			return userID
 		}
-		return userID
+		log.Printf("[VirtualPlayer] [Error] No connections for getRandomUserID")
+
+		return uuid.Nil
 	}
 
 	managerInstance.mutex.Unlock()
@@ -149,18 +155,18 @@ func getRandomUserID(groupID uuid.UUID) uuid.UUID {
 }
 
 func statsLinesLoop(groupID uuid.UUID) {
-	log.Println("[Virtual Player] Starting stats loop")
+	log.Println("[VirtualPlayer] Starting stats loop")
 	for {
 		time.Sleep(sendStatsDelay * time.Second)
 		managerInstance.mutex.Lock()
 		match, ok := managerInstance.Matches[groupID]
 		if !ok {
 			managerInstance.mutex.Unlock()
-			log.Println("[Virtual Player] Stopping statLinesLoop")
+			log.Println("[VirtualPlayer] Stopping statLinesLoop")
 			return
 		}
 
-		log.Println("[Virtual Player] Sending stat interaction")
+		log.Println("[VirtualPlayer] Sending stat interaction")
 		for _, bot := range managerInstance.Bots {
 			go bot.sendStatsInteraction(groupID, match)
 			break
