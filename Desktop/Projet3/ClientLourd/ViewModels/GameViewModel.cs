@@ -66,7 +66,6 @@ namespace ClientLourd.ViewModels
             SocketClient.MatchSync += SocketClientOnMatchSync;
             SocketClient.YourTurnToDraw += SocketClientOnYourTurnToDraw;
             SocketClient.NewPlayerIsDrawing += SocketClientOnNewPlayerIsDrawing;
-            SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
@@ -123,18 +122,7 @@ namespace ClientLourd.ViewModels
             }
         }
 
-        private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
-        {
-            var e = (MatchEventArgs) args;
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
-                if (e.UserID == SessionInformations.User.ID)
-                {
-                    ResetView();
-                }
-            });
-        }
+
 
         private void SocketClientOnNewPlayerIsDrawing(object source, EventArgs args)
         {
@@ -496,6 +484,7 @@ namespace ClientLourd.ViewModels
             {
                 Editor.SelectPen();
                 Editor.Canvas.Strokes.Clear();
+                StrokeDrawerService.Reset();
             });
         }
 
@@ -643,7 +632,7 @@ namespace ClientLourd.ViewModels
             InitEventHandler();
         }
 
-        private void ResetView()
+        public void ResetView()
         {
             StrokeDrawerService.Close();
             ClearCanvas();

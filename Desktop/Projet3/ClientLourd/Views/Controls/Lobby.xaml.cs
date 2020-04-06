@@ -50,6 +50,7 @@ namespace ClientLourd.Views.Controls
         private void DataContextOnLeaveMatch(object source, EventArgs args)
         {
             GameView.EditorZone.StopAnimation();
+            GameView.ViewModel.ResetView();
         }
 
         public void AfterLogin()

@@ -61,6 +61,13 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
             _isPreview = (isPreview);
         }
 
+        public void Reset()
+        {
+            _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
+            TotalMessagesSent = -1;
+            _messageDequeuedCounter = 0;
+        }
+
         private void Draw(object source, EventArgs args)
         {
             Stop();
@@ -115,10 +122,8 @@ namespace ClientLourd.Services.ServerStrokeDrawerService
 
         public void Close()
         {
-            _strokeInfoQueue = new ConcurrentQueue<StrokeInfo>();
             Stop();
-            TotalMessagesSent = -1;
-            _messageDequeuedCounter = 0;
+            Reset();
         }
     }
 }

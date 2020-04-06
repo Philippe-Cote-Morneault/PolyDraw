@@ -417,6 +417,7 @@ namespace ClientLourd.Views.Controls.Game
                     Thread.Sleep(MatchTiming.ANNIMATION_TIMEOUT);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
+                        DrawingEditor.Canvas.Strokes.Clear();
                         Storyboard sb = (Storyboard) FindResource("NextRoundEnd");
                         sb.Begin();
                     });
