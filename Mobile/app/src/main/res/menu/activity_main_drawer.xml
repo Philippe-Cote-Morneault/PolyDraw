@@ -7,7 +7,7 @@
         <item
             android:id="@+id/navigation_main_match_lobby_fragment"
             android:icon="@drawable/ic_menu_home"
-            android:title="@string/fragment_match_lobby_title" />
+            android:title="@string/home" />
 
         <item
             android:id="@+id/navigation_main_profile_fragment"

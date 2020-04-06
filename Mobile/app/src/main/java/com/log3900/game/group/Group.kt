@@ -20,9 +20,9 @@ enum class Difficulty {
 
         fun timeToPlay(item: Difficulty): Long {
             when (item) {
-                EASY -> return 5 * 1000 * 60
-                MEDIUM -> return 4 * 1000 * 60
-                HARD -> return 3 * 1000 * 60
+                EASY -> return 1000 * 60
+                MEDIUM -> return 1000 * 45
+                HARD -> return 1000 * 30
             }
         }
     }

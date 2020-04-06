@@ -93,7 +93,7 @@ class ChannelSection : Section, Filterable {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val query = constraint.toString()
                 if (query.isEmpty()) {
-                    channelGroup.filteredChannels = channelGroup.channels
+                    channelGroup.filteredChannels = channelGroup.channels.clone() as ArrayList<Channel>
                 } else {
                     val filteredList = arrayListOf<Channel>()
                     channelGroup.channels.forEach {

@@ -14,4 +14,5 @@ interface ChatView {
     fun showProgressDialog(dialog: DialogFragment)
     fun hideProgressDialog(dialog: DialogFragment)
     fun notifyMessagesPrepended(count: Int)
+    fun notifyMessagesUpdated(userChanged: UUID)
 }

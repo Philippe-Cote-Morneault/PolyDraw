@@ -58,7 +58,8 @@ open class MainActivity : AppCompatActivity() {
     lateinit var navigationController: NavController
     private lateinit var navigationView: NavigationView
     private lateinit var toolbarContainer: LinearLayout
-    private var isChatOpen = true
+    private lateinit var chatOuterContainer: LinearLayout
+    private var isChatOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.instance.startService(SocketService::class.java)
@@ -73,7 +74,6 @@ open class MainActivity : AppCompatActivity() {
             .subscribe(
                 {
                     chatManager = it
-                    closeChat()
                 },
                 {
 
@@ -84,6 +84,7 @@ open class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         toolbarContainer = findViewById<LinearLayout>(R.id.app_bar_main_toolbar_content_container)
+        chatOuterContainer = findViewById(R.id.activity_main_chat_fragment_outer_container)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
@@ -173,7 +174,7 @@ open class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (navigationController.currentDestination?.label == "Lobby") {
+                if (navigationController.currentDestination?.id == R.id.navigation_main_match_lobby_fragment) {
                     showLogoutDialog()
                 } else {
                     navigationController.navigateUp()
@@ -272,17 +273,17 @@ open class MainActivity : AppCompatActivity() {
 
     fun openChat() {
         if (!isChatOpen) {
-            val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
+            //val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
             chatManager.openChat()
-            chatView?.visibility = View.VISIBLE
+            chatOuterContainer.visibility = View.VISIBLE
             isChatOpen = true
         }
     }
 
     fun closeChat() {
         if (isChatOpen) {
-            val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
-            chatView?.visibility = View.INVISIBLE
+            //val chatView = (supportFragmentManager.findFragmentById(R.id.activity_main_chat_fragment_container) as Fragment).view
+            chatOuterContainer.visibility = View.INVISIBLE
             chatManager.closeChat()
             isChatOpen = false
         }

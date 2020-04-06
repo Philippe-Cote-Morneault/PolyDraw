@@ -37,15 +37,26 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:navGraph="@navigation/mobile_navigation" />
 
-            <fragment
-                android:id="@+id/activity_main_chat_fragment_container"
-                android:name="com.log3900.chat.ChatFragment"
+            <LinearLayout
+                android:id="@+id/activity_main_chat_fragment_outer_container"
+                android:orientation="horizontal"
+                android:visibility="invisible"
                 android:layout_width="300dp"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0">
+                <fragment
+                    android:id="@+id/activity_main_chat_fragment_container"
+                    android:name="com.log3900.chat.ChatFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

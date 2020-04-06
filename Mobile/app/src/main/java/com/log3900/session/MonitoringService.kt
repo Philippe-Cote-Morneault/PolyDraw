@@ -25,6 +25,7 @@ import com.log3900.shared.ui.dialogs.ErrorDialog
 import com.log3900.socket.Event
 import com.log3900.socket.SocketEvent
 import com.log3900.socket.SocketService
+import com.log3900.user.UserRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -129,6 +130,7 @@ class MonitoringService : Service() {
 
     fun onAuthentication() {
         LanguageManager.applySavedLanguage(MainApplication.instance.baseContext)
+        MainApplication.instance.startService(UserRepository::class.java)
         MainApplication.instance.startService(MessageRepository::class.java)
         MainApplication.instance.startService(ChannelRepository::class.java)
         MainApplication.instance.startService(ChatManager::class.java)
@@ -164,6 +166,7 @@ class MonitoringService : Service() {
         MainApplication.instance.stopService(ChatManager::class.java)
         MainApplication.instance.stopService(ChannelRepository::class.java)
         MainApplication.instance.stopService(MessageRepository::class.java)
+        MainApplication.instance.stopService(UserRepository::class.java)
     }
 
     private fun restartService(service: Class<*>) {

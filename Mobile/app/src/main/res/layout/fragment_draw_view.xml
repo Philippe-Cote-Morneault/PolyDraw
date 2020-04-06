@@ -18,7 +18,6 @@
             android:id="@+id/draw_view_canvas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
             android:background="@drawable/border_background"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -25,6 +25,7 @@ import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.moshi.MatchAdapter
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
+import com.log3900.utils.format.moshi.UserAdapter
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -186,6 +187,7 @@ class MessageRepository : Service() {
             com.log3900.socket.Event.JOINED_CHANNEL -> onUserJoinedChannel(socketMessage)
             com.log3900.socket.Event.LEFT_CHANNEL -> onUserLeftChannel(socketMessage)
             com.log3900.socket.Event.HINT_RESPONSE -> onHintResponse(socketMessage)
+            com.log3900.socket.Event.USERNAME_CHANGED -> onUsernameChanged(socketMessage)
         }
     }
 
@@ -208,12 +210,14 @@ class MessageRepository : Service() {
             socketService?.subscribeToMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
             socketService?.subscribeToMessage(com.log3900.socket.Event.LEFT_CHANNEL, socketMessageHandler!!)
             socketService?.subscribeToMessage(com.log3900.socket.Event.HINT_RESPONSE, socketMessageHandler!!)
+            socketService?.subscribeToMessage(com.log3900.socket.Event.USERNAME_CHANGED, socketMessageHandler!!)
             EventBus.getDefault().register(this)
             Looper.loop()
         }).start()
     }
 
     override fun onDestroy() {
+        socketService?.unsubscribeFromMessage(com.log3900.socket.Event.USERNAME_CHANGED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.HINT_RESPONSE, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.MESSAGE_RECEIVED, socketMessageHandler!!)
         socketService?.unsubscribeFromMessage(com.log3900.socket.Event.JOINED_CHANNEL, socketMessageHandler!!)
@@ -264,7 +268,7 @@ class MessageRepository : Service() {
         val userJoinedChannelMessage = moshi.unpack(message.data) as UserJoinedChannelMessage
 
         if (userJoinedChannelMessage.userID != AccountRepository.getInstance().getAccount().ID) {
-            val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
+            val messageEvent = EventMessage(EventMessage.Type.USER_JOINED_CHANNEL, String.format(resources.getString(com.log3900.R.string.chat_user_joined_channel_message), userJoinedChannelMessage.username))
             val chatMessage = ChatMessage.fromEventMessage(messageEvent, userJoinedChannelMessage.channelID)
             addMessageToCache(chatMessage)
             val osMessage = android.os.Message()
@@ -283,7 +287,7 @@ class MessageRepository : Service() {
         if (userLeftChannelMessage.userID == AccountRepository.getInstance().getAccount().ID) {
             messageCache.removeEntry(userLeftChannelMessage.channelID)
         } else {
-            val messageEvent = EventMessage(String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
+            val messageEvent = EventMessage(EventMessage.Type.USER_LEFT_CHANNEL, String.format(resources.getString(com.log3900.R.string.chat_user_left_channel_message), userLeftChannelMessage.username))
             val chatMessage = ChatMessage.fromEventMessage(messageEvent, userLeftChannelMessage.channelID)
             addMessageToCache(chatMessage)
             val osMessage = android.os.Message()
@@ -320,6 +324,23 @@ class MessageRepository : Service() {
         }
     }
 
+    private fun onUsernameChanged(message: Message) {
+        val json = MoshiPack.msgpackToJson(message.data)
+        val jsonObject = JsonParser().parse(json).asJsonObject
+        val usernameChanged = UserAdapter.jsonToUsernameChanged(jsonObject)
+
+        if (usernameChanged.oldUsername!= "" && usernameChanged.newUsername != usernameChanged.oldUsername) {
+            val messageEvent = EventMessage(EventMessage.Type.USERNAME_CHANGED, String.format(resources.getString(com.log3900.R.string.chat_username_changed), usernameChanged.oldUsername, usernameChanged.newUsername))
+            val chatMessage = ChatMessage.fromEventMessage(messageEvent, Channel.GENERAL_CHANNEL_ID)
+            messageCache.changeEventMessagesForNewUsername(usernameChanged.oldUsername, usernameChanged.newUsername)
+            addMessageToCache(chatMessage)
+            val osMessage = android.os.Message()
+            osMessage.obj = chatMessage
+            notifySubscribers(Event.CHAT_MESSAGE_RECEIVED, osMessage)
+            EventBus.getDefault().post(MessageEvent(EventType.ALL_MESSAGES_CHANGED, null))
+        }
+    }
+
     private fun onChannelCreated(channel: Channel) {
         if (channel.isGame) {
             matchChannel = channel
@@ -333,6 +354,11 @@ class MessageRepository : Service() {
         }
     }
 
+    private fun onLanguageChanged() {
+        messageCache.changeEventMessagesToLanguage(LanguageManager.getCurrentLanguageCode())
+        EventBus.getDefault().post(MessageEvent(EventType.ALL_MESSAGES_CHANGED, null))
+    }
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
@@ -341,6 +367,9 @@ class MessageRepository : Service() {
             }
             EventType.CHANNEL_DELETED -> {
                 onChannelDeleted(event.data as UUID)
+            }
+            EventType.LANGUAGE_CHANGED -> {
+                onLanguageChanged()
             }
         }
     }
