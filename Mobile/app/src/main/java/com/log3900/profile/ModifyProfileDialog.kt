@@ -101,7 +101,7 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
             originalAccount.soundEffectsOn,
             originalAccount.musicOn
         )
-        modifyProfilePresenter.updateAccountInfo(updatedAccount, password)
+        modifyProfilePresenter.updateAccountInfo(originalAccount, updatedAccount, password)
     }
 
 
