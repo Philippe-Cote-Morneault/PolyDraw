@@ -79,6 +79,12 @@ namespace ClientLourd.Views.Controls.Game
             SocketClient.NewPlayerIsDrawing += SocketClientNewPlayerDrawing;
             SocketClient.RoundEnded += SocketClientOnRoundEnded;
             SocketClient.CoopTeamateGuessedIncorrectly += SocketClientTeamateGuessedWrong;
+            SocketClient.HintResponse += SocketClientOnHintResponse;
+        }
+
+        private void SocketClientOnHintResponse(object source, EventArgs args)
+        {
+            FocusFirstTextBox();
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -506,7 +512,7 @@ namespace ClientLourd.Views.Controls.Game
 
         private void FocusFirstTextBox()
         {
-            Task.Delay(1000).ContinueWith(_ =>
+            Task.Delay(500).ContinueWith(_ =>
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
