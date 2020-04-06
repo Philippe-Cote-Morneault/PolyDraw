@@ -328,6 +328,7 @@ namespace ClientLourd.ViewModels
             {
                 _guess = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsWordComplete));
             }
         }
 
