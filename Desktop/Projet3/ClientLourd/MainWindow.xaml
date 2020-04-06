@@ -294,17 +294,6 @@
             <!--Login screen-->
             <DockPanel
                 Visibility="{Binding ElementName=MainDockPanel, Path=Visibility, Converter={StaticResource ToggleVisibilityConverter}}">
-                <Button Click="ConfigButton_OnClick" Name="ConfigButton"
-                        Style="{StaticResource MaterialDesignFlatButton}" Width="100" Height="100" DockPanel.Dock="Top"
-                        HorizontalAlignment="Left">
-                    <StackPanel Name="NetworkConfig" Visibility="Hidden">
-                        <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="0" IsChecked="True"
-                                     Name="ProdConfigButton" Content="Prod" />
-                        <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="1" IsChecked="False"
-                                     Name="DevConfigButton" Content="Dev" />
-                        <RadioButton Command="{Binding ChangeNetworkCommand}" CommandParameter="2" Content="Local" />
-                    </StackPanel>
-                </Button>
                 <controls:Login x:Name="LoginScreen"
                                 IsWaiting="{Binding ElementName=PolyDraw, Path=DataContext.IsWaiting, UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>

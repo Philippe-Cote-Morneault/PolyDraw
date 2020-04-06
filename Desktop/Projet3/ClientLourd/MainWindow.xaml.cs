@@ -102,7 +102,6 @@ namespace ClientLourd
                 ChatWindow.Close();
             else
                 ReturnTheChat();
-            ProdConfigButton.IsChecked = true;
         }
 
 
@@ -207,18 +206,7 @@ namespace ClientLourd
             });
         }
 
-        private void ConfigButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (NetworkConfig.Visibility == Visibility.Hidden)
-            {
-                NetworkConfig.Visibility = Visibility.Visible;
-                ConfigButton.Click -= ConfigButton_OnClick;
-            }
-            else
-            {
-                NetworkConfig.Visibility = Visibility.Hidden;
-            }
-        }
+
 
         private void CreateGame(object sender, RoutedEventArgs e)
         {
