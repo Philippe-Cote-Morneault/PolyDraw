@@ -11,8 +11,9 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
-import com.log3900.profile.stats.PlayerName
-import com.log3900.utils.format.formatDuration
+import com.log3900.profile.stats.Player
+import com.log3900.utils.format.DateFormatter
+import java.util.*
 
 class MatchDetailsDialog(private val match: GamePlayed, private val username: String)
     : DialogFragment() {
@@ -44,23 +45,28 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         type.text = match.matchType
 
         val result: TextView = root.findViewById(R.id.match_result_value)
-        result.text = resources.getString(
-            if (username == match.winner)
-                R.string.match_win
-            else
-                R.string.match_loss
-        )
+        if (match.matchType == "FFA") {
+            result.text = resources.getString(
+                if (username == match.winnerName)
+                    R.string.match_win
+                else
+                    R.string.match_loss
+            )
+        } else {
+            result.text = "-"
+        }
 
         val winner: TextView = root.findViewById(R.id.match_winner_value)
-        winner.text = match.winner
+        winner.text = if (match.winnerName.isEmpty()) "-" else match.winnerName
 
         val duration: TextView = root.findViewById(R.id.match_duration_value)
-        duration.text = formatDuration(match.duration)
+        val durationDate = Date(match.duration)
+        duration.text = DateFormatter.formatFullTime(durationDate)
 
-//        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
-//        match.playerNames.forEach {
-//            playersLayout.addPlayer(it)
-//        }
+        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
+        match.players.forEach {
+            playersLayout.addPlayer(it)
+        }
 
         val closeButton: MaterialButton = root.findViewById(R.id.close_dialog_button)
         closeButton.setOnClickListener {
@@ -68,9 +74,9 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         }
     }
 
-    private fun LinearLayout.addPlayer(playerName: PlayerName) {
+    private fun LinearLayout.addPlayer(player: Player) {
         val nameView = TextView(activity)
-        nameView.text = playerName.name
+        nameView.text = player.name
         this.addView(nameView)
     }
 

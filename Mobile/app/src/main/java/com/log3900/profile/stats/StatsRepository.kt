@@ -2,6 +2,7 @@ package com.log3900.profile.stats
 
 import com.google.gson.JsonObject
 import com.log3900.profile.ProfileRestService
+import com.log3900.settings.language.LanguageManager
 import com.log3900.user.account.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -29,16 +30,18 @@ object StatsRepository {
      * Does a Rest call if not initialized.
      */
     private suspend fun getUserStats(): UserStats {
-        if (!StatsRepository::userStats.isInitialized) {
-            fetchUserStats()
-        }
+//        if (!StatsRepository::userStats.isInitialized) {
+//            fetchUserStats()
+//        }
+        fetchUserStats()
         return userStats
     }
 
     private suspend fun getHistoryStats(): HistoryStats {
-        if (!StatsRepository::historyStats.isInitialized) {
-            fetchHistoryStats()
-        }
+//        if (!StatsRepository::historyStats.isInitialized) {
+//            fetchHistoryStats()
+//        }
+        fetchHistoryStats()
         return historyStats
     }
 
@@ -56,9 +59,9 @@ object StatsRepository {
     }
 
     private suspend fun sendUserStatsRequest(): UserStats {
-        val userID = "" // TODO: get acutal ID
         val session = AccountRepository.getInstance().getAccount().sessionToken
-        val responseJson = ProfileRestService.service.getUserStats(session, "EN")   //TODO: get language
+        val language = LanguageManager.getCurrentLanguageCode()
+        val responseJson = ProfileRestService.service.getUserStats(session, language)   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
             val json = responseJson.body()!!
@@ -70,7 +73,8 @@ object StatsRepository {
 
     private suspend fun sendHistoryStatsRequest(): HistoryStats {
         val session = AccountRepository.getInstance().getAccount().sessionToken
-        val responseJson = ProfileRestService.service.getHistory(session, "EN")   //TODO: get language
+        val language = LanguageManager.getCurrentLanguageCode()
+        val responseJson = ProfileRestService.service.getHistory(session, language)
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
             val json = responseJson.body()!!

@@ -26,6 +26,10 @@ class DateFormatter {
 
         fun formatFullDate(date: Date): String = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date)
 
-        fun formatFullTime(date: Date): String = SimpleDateFormat("HH:mm:ss").format(date)
+        fun formatFullTime(date: Date): String {
+            val formatter = SimpleDateFormat("HH:mm:ss")
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            return formatter.format(date)
+        }
     }
 }

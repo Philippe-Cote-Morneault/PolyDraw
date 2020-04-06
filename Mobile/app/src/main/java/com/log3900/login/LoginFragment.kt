@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,8 @@ import com.google.android.material.textfield.TextInputLayout
 import com.log3900.R
 import com.log3900.login.register.RegisterFragment
 import com.log3900.settings.LocaleLanguageHelper
+import com.log3900.settings.language.LanguageManager
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.ui.KeyboardHelper
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -144,7 +147,11 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun showWelcomeBackMessage(username: String) {
-        Toast.makeText(context, "Welcome back, $username", Toast.LENGTH_LONG).show()
+        LocaleLanguageHelper.getLocalizedResources(
+            context!!,
+            LanguageManager.getCurrentLanguageCode()).apply {
+            Toast.makeText(context, getString(R.string.welcome_back_message, username), Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun showProgresBar() {

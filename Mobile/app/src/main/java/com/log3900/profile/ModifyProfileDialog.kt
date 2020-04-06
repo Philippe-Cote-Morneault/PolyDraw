@@ -212,8 +212,8 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
 
     fun onModifySuccess(updatedAccount: Account) {
         MaterialAlertDialogBuilder(context)
-            .setTitle("Info modified")
-            .setMessage("Account information modified with success!")
+            .setTitle(R.string.information_modified_title)
+            .setMessage(R.string.information_modified_description)
             .setPositiveButton("OK", null)
             .setCancelable(false)
             .show()
@@ -221,6 +221,7 @@ class ModifyProfileDialog(private val profileInfoFragment: ProfileInfoFragment)
         originalAccount = updatedAccount
         fillDefaultDialogFields(view!!)
         profileInfoFragment.updateProfileInfo(updatedAccount)
+        dismiss()
     }
 
     fun onModifyError(error: String) {

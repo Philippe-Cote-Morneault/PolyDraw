@@ -1,5 +1,6 @@
 package com.log3900.profile.stats
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ class ProfileStatsPresenter(val statsView: ProfileStatsFragment) {
     }
 
     private fun onStatsFetchError(error: String?) {
+        Log.d("STATS_PROFILE", "Error: $error")
         println("Error: $error")
     }
 }

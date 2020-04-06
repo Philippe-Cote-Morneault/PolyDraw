@@ -11,7 +11,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
+import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.DateFormatter
 import com.log3900.utils.format.formatDuration
+import java.util.*
 
 class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
                          private val username: String,
@@ -42,7 +45,22 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
 
         holder.matchType.text = match.matchType.toUpperCase()
 
-        val matchWon = (username == match.winner)
+        val matchDurationDate = Date(match.duration)
+        holder.matchDuration.text = DateFormatter.formatFullTime(matchDurationDate)
+
+        holder.itemView.setOnClickListener {
+            startMatchDetailsDialog(match)
+        }
+
+        if (match.matchType == "FFA") {
+            holder.setStyleFromMatchResult(match)
+        } else {
+            holder.matchResult.text = "-"
+        }
+    }
+
+    private fun ViewHolder.setStyleFromMatchResult(match: GamePlayed) {
+        val matchWon = (AccountRepository.getInstance().getAccount().ID.toString() == match.winnerID)
         val matchResultColorBackground = ContextCompat.getColor(context,
             if (matchWon)
                 R.color.color_win_background
@@ -56,25 +74,18 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
                 R.color.color_loss_text
         )
 
-        holder.matchResult.text =
+        matchResult.text = context.resources.getString(
             if (matchWon)
-                "WIN"
+                R.string.match_win
             else
-                "LOSS"
-        holder.matchResult.setTextColor(matchResultColorText)
+                R.string.match_loss
+        ).toUpperCase()
 
-        holder.matchDuration.text = formatDuration(match.duration)
-
-        holder.setBackgroundColor(matchResultColorBackground)
-
-        holder.itemView.setOnClickListener {
-            startMatchDetailsDialog(match)
-        }
+        matchResult.setTextColor(matchResultColorText)
+        setBackgroundColor(matchResultColorBackground)
     }
 
     override fun getItemCount(): Int = matchesPlayed.size
-
-
 
     private fun startMatchDetailsDialog(match: GamePlayed) {
         val activity = context as FragmentActivity

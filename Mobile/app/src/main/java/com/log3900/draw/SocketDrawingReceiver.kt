@@ -1,7 +1,6 @@
 package com.log3900.draw
 
 import android.os.Handler
-import android.util.Log
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonParser
 import com.log3900.game.match.MatchManager
@@ -54,7 +53,6 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
 //            return
 
         val socketMessage = message.obj as Message
-        Log.d("DRAW_CANVAS", "Received socket message!! type -> ${socketMessage.type}")
 
         when (socketMessage.type) {
             Event.STROKE_DATA_SERVER -> {
@@ -88,7 +86,6 @@ class SocketDrawingReceiver(private val drawView: DrawViewBase) {
             ?.players
             ?.find { it.ID == drawerID }
             ?.isCPU ?: false
-        Log.d("DRAW_CANVAS", "drawerIsCPU: $drawerIsCpu")
     }
 
     @Deprecated("Test purposes only")

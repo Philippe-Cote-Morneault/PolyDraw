@@ -2,6 +2,7 @@ package com.log3900.profile
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.ui.ProfilePresenter
 import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
@@ -34,7 +35,11 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
                 addProperty("FirstName", updatedAccount.firstname)
                 addProperty("LastName", updatedAccount.lastname)
             }
-            val call = ProfileRestService.service.modifyProfile(updatedAccount.sessionToken, "EN", modifiedUserJson)
+            val call = ProfileRestService.service.modifyProfile(
+                updatedAccount.sessionToken,
+                LanguageManager.getCurrentLanguageCode(),
+                modifiedUserJson
+            )
             call.enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                     println("${response.body()}")

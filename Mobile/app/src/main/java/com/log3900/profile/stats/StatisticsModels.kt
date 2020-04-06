@@ -6,9 +6,9 @@ import com.squareup.moshi.Json
 // TODO: Best score solo
 data class UserStats(
     @Json(name = "GamesPlayed")             val gamesPlayed:            Int,
-    @Json(name = "WinRatio")                val winRation:              Double,
-    @Json(name = "AvgGameDuration")         val averageGameDuration:    Int,
-    @Json(name = "TimePlayed")              val timePlayed:             Int,
+    @Json(name = "WinRatio")                val winRatio:              Double,
+    @Json(name = "AvgGameDuration")         val averageGameDuration:    Double,
+    @Json(name = "TimePlayed")              val timePlayed:             Long,
     @Json(name = "BestScoreSolo")           val bestScoreSolo:          Int
 )
 
@@ -19,10 +19,11 @@ data class HistoryStats(
 )
 
 data class GamePlayed(
-    @Json(name = "MatchDuration")   val duration:       Int,
-    @Json(name = "WinnerName")      val winner:         String,
-    @Json(name = "MatchType")       val matchType:      String
-//    @Json(name = "PlayersNames")    val playerNames:    List<PlayerName>
+    @Json(name = "MatchDuration")   val duration:       Long,
+    @Json(name = "WinnerName")      val winnerName:     String,
+    @Json(name = "WinnerID")        val winnerID:       String,
+    @Json(name = "MatchType")       val matchType:      String,
+    @Json(name = "Players")         val players:        List<Player>
 )
 
 data class Connection(
@@ -36,6 +37,7 @@ data class Achievement(
     @Json(name = "ObtainingDate")   val unlockDate:     Int
 )
 
-data class PlayerName(
-    @Json(name = "PlayerName") val name: String
+data class Player(
+    @Json(name = "Username") val name:  String,
+    @Json(name = "UserID")   val id:    String
 )
