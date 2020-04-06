@@ -18,6 +18,7 @@ import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.profile.PlayerProfileDialogFragment
 import com.log3900.shared.ui.ThemeUtils
 import com.log3900.user.UserRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.DateFormatter
 import com.log3900.utils.ui.getAvatarID
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -57,7 +58,7 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
         val constraintSet = ConstraintSet()
         constraintSet.clone(view)
 
-        if (this.message.username == username) {
+        if (this.message.userID == AccountRepository.getInstance().getAccount().ID) {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.START)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
             messageTextView.setBackgroundColor(ThemeUtils.resolveAttribute(R.attr.colorPrimary))
