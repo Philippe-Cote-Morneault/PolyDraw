@@ -15,16 +15,15 @@ import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.shared.ui.SmartEditText
 
 class WordGuessingView(context: Context) : ConstraintLayout(context) {
     private var layout: ConstraintLayout
     private var editTextContainer: LinearLayout
     private var guessButton: MaterialButton
     private var hintButton: MaterialButton
-    private var letterEditTexts: ArrayList<EditText> = ArrayList()
+    private var letterEditTexts: ArrayList<SmartEditText> = ArrayList()
     var listener: Listener? = null
-
-    var editTextEmpty = ArrayList<Boolean>()
 
     init {
         layout = View.inflate(context, R.layout.view_word_guessing, this) as ConstraintLayout
@@ -102,12 +101,12 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
         return text
     }
 
-    fun getEditTexts(): ArrayList<EditText> {
+    fun getEditTexts(): ArrayList<SmartEditText> {
         return letterEditTexts
     }
 
-    private fun generateEditText(): EditText {
-        val editText = EditText(context)
+    private fun generateEditText(): SmartEditText {
+        val editText = SmartEditText(context)
         editText.setEms(1)
         editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
         editText.filters += InputFilter.LengthFilter(1)
@@ -151,11 +150,19 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
 
                         if (editTextIndex > 0) {
                             letterEditTexts[editTextIndex - 1].requestFocus()
+                            letterEditTexts[editTextIndex - 1].setText("")
                         }
                     }
                 }
             }
             false
+        }
+        editText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                editText.post {
+                    editText.setSelection(editText.text.length)
+                }
+            }
         }
     }
 
