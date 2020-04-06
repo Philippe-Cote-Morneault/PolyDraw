@@ -27,7 +27,7 @@
     <fragment
         android:id="@+id/navigation_main_profile_fragment"
         android:name="com.log3900.profile.ProfileFragment"
-        android:label="Profile" >
+        android:label="@string/profile" >
         <action
             android:id="@+id/action_profileFragment_to_nav_home2"
             app:destination="@id/navigation_main_match_lobby_fragment"
