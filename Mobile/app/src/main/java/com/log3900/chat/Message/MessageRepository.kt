@@ -329,6 +329,10 @@ class MessageRepository : Service() {
         val jsonObject = JsonParser().parse(json).asJsonObject
         val usernameChanged = UserAdapter.jsonToUsernameChanged(jsonObject)
 
+        if (usernameChanged.userID == AccountRepository.getInstance().getAccount().ID) {
+            return
+        }
+
         if (usernameChanged.oldUsername!= "" && usernameChanged.newUsername != usernameChanged.oldUsername) {
             val messageEvent = EventMessage(EventMessage.Type.USERNAME_CHANGED, String.format(resources.getString(com.log3900.R.string.chat_username_changed), usernameChanged.oldUsername, usernameChanged.newUsername))
             val chatMessage = ChatMessage.fromEventMessage(messageEvent, Channel.GENERAL_CHANNEL_ID)
