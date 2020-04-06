@@ -2,10 +2,13 @@ package com.log3900.user.account
 
 import android.util.Log
 import com.log3900.MainApplication
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.database.AppDatabase
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.NoSuchElementException
 
@@ -71,6 +74,7 @@ class AccountRepository {
 
             if (currentAccount?.ID == account.ID) {
                 currentAccount = account
+                EventBus.getDefault().post(MessageEvent(EventType.CURRENT_USER_UPDATED, null))
             }
         }.subscribeOn(Schedulers.io())
     }

@@ -49,7 +49,7 @@ enum class EventType {
     LANGUAGE_CHANGED,
     THEME_CHANGED,
     // MISC
-    USER_UPDATED
-
+    USER_UPDATED,
+    CURRENT_USER_UPDATED
 }
 data class MessageEvent(var type: EventType, var data: Any?)

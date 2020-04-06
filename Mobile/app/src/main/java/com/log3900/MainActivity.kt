@@ -263,6 +263,17 @@ open class MainActivity : AppCompatActivity() {
         SimpleErrorDialog(this, message.title, message.message, message.positiveButtonListener, message.negativeButtonListener).show()
     }
 
+    private fun onCurrentUserUpdated() {
+        // Update nav header
+        val header = navigationView.getHeaderView(0)
+        val currentAccount = AccountRepository.getInstance().getAccount()
+        val avatar: ImageView = header.findViewById(R.id.nav_header_avatar)
+        avatar.setImageResource(getAvatarID(currentAccount.pictureID))
+
+        val username = header.findViewById<TextView>(R.id.nav_header_username)
+        username.text = currentAccount.username
+    }
+
     private fun setSoundEffectsIcon(enabled: Boolean) {
         if (enabled) {
             toggleSoundEffectsButton.setImageResource(R.drawable.ic_volume_up_black)
@@ -297,6 +308,9 @@ open class MainActivity : AppCompatActivity() {
             }
             EventType.SHOW_ERROR_MESSAGE -> {
                 onShowErrorMessage(event.data as DialogEventMessage)
+            }
+            EventType.CURRENT_USER_UPDATED -> {
+                onCurrentUserUpdated()
             }
         }
     }
