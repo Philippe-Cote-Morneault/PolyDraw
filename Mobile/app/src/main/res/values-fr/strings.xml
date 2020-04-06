@@ -196,4 +196,12 @@
     <string name="welcome_back_message">Content de te revoir, %1$s!</string>
     <string name="information_modified_title">Information modifiée</string>
     <string name="information_modified_description">Profil modifié avec succès!</string>
+    <string name="error_get_account_info">Erreur lors de la demande du compte. Veuillez attendre un moment avant de réessayer.</string>
+    <string name="error_connexion_refused">Connexion refusée. Veuillez attendre un moment avant de réessayer.</string>
+    <string name="error_connexion_timeout">Délai d\'attente de connexion écoulé. Veuillez attendre un moment avant de réessayer.</string>
+    <string name="error_socket_connexion_timeout">Impossible d\'établir une connexion après 4 essais. L\'application va maintenant arrêter.</string>
+    <string name="error_auth">Erreur lors de l\'authentification. Veuillez attendre un moment avant de réessayer.</string>
+    <string name="registration_completed">Enregistrement terminé</string>
+    <string name="registration_completed_message">Compte créé avec succès! Bienvenue, %1$s!</string>
+    <string name="thanks">Merci!</string>
 </resources>

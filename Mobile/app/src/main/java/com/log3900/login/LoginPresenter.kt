@@ -12,6 +12,7 @@ import com.log3900.shared.ui.dialogs.ProgressDialog
 import com.log3900.socket.*
 import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.ServerErrorFormatter
 import io.reactivex.Completable
 import retrofit2.Call
 import retrofit2.Callback
@@ -83,12 +84,12 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                 UserPrefsManager.resetAll()
                 loginView?.hideProgressDialog(bearerLoginDialog)
                 loginView?.enableView()
-                loginView?.showErrorDialog(
-                    "Error",
-                    "Error during authentication (Bearer token)",
-                    null,
-                    null
-                )
+//                loginView?.showErrorDialog(
+//                    "Error",
+//                    "Error during authentication (Bearer token)",
+//                    null,
+//                    null
+//                )
             }
         })
     }
@@ -111,8 +112,13 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         handleSuccessAuth(bearerToken, sessionToken, userID, language)
                     }
                         else -> {
-                        handleErrorAuth(response.errorBody()?.string() ?: "Internal error")
-                    }
+                            val error = response.errorBody()?.string()
+                            if (error != null) {
+                                handleErrorAuth(ServerErrorFormatter.format(error))
+                            } else {
+                                handleErrorAuth(LoginErrorType.AUTH_ERROR)
+                            }
+                        }
                 }
             }
 
@@ -122,7 +128,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         "The connection took too long"
                     else
                         "Couldn't authenticate ($t)"
-                handleErrorAuth(errMessage)
+                handleErrorAuth(LoginErrorType.CONNECTION_TIMEOUT)
             }
         })
     }
@@ -141,7 +147,7 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                 onMainStart()
                 true
             } else {
-                handleErrorAuth("Connection refused.")
+                handleErrorAuth(LoginErrorType.CONNECTION_REFUSED)
                 false
             }
         })
@@ -176,14 +182,14 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                         }
 
                         else -> {
-                            handleErrorAuth("Error while getting account information.")
+                            handleErrorAuth(LoginErrorType.GET_ACCOUNT_INFO)
                             it.onComplete()
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                    handleErrorAuth(t.toString())
+                    handleErrorAuth(LoginErrorType.GET_ACCOUNT_INFO)
                 }
             })
         }
@@ -239,7 +245,12 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
     }
 
     private fun handleErrorAuth(error: String) {
-        loginView?.showErrorDialog("Authentication error", error, null, null)
+        loginView?.showErrorDialog("Authentication error", error, null, null, null)
+        loginView?.hideProgressBar()
+    }
+
+    private fun handleErrorAuth(errorType: LoginErrorType) {
+        loginView?.showErrorDialog("Authentication error", "", errorType, null, null)
         loginView?.hideProgressBar()
     }
 
@@ -290,10 +301,12 @@ class LoginPresenter(var loginView: LoginView?) : Presenter {
                     loginView?.hideProgressDialog(socketConnectionDialog)
                     loginView?.showErrorDialog("Connection Error",
                         "Could not establish connection to server after 4 attempts. The application will now close.",
-                        null,
+                        LoginErrorType.SOCKET_CONNECTION_TIMEOUT,
                         {_, _ ->
                             loginView?.closeView()
-                        })
+                        },
+                        null
+                    )
                 }
             }
             SocketService.instance?.subscribeToEvent(SocketEvent.CONNECTED, Handler{

@@ -11,6 +11,7 @@ import com.log3900.socket.Message
 import com.log3900.socket.SocketService
 import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.ServerErrorFormatter
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
@@ -32,7 +33,7 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                     firstName, lastName, language, tokenData)
             },
                 { err ->
-                    profileView.onRegisterError(err.toString())
+                    profileView.onRegisterError(err.message!!)
                 }
             )
     }
@@ -59,7 +60,12 @@ class RegisterPresenter(registerFragment: RegisterFragment) : ProfilePresenter(r
                         Log.d("REGISTER", response.body()!!.toString())
                         it.onSuccess(parseResponseJson(response.body()!!))
                     } else {
-                        it.onError(Throwable("(${response.code()}) ${response.errorBody()?.string()}"))
+                        val error = response.errorBody()?.string()
+                        if (error != null) {
+                            it.onError(Throwable(ServerErrorFormatter.format(error)))
+                        } else {
+                            it.onError(Throwable("Internal error"))
+                        }
                     }
                 }
 

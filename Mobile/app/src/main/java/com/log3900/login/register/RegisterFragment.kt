@@ -138,24 +138,28 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
 
     fun onRegisterSuccess() {
         val username = usernameInput.text.toString()
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Registration completed")
-            .setMessage("Account successfully created! Welcome, $username!")
-            .setPositiveButton("Thanks!") { _, _ ->
-                navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
-            .setCancelable(false)
-            .show()
+        LocaleLanguageHelper.getLocalizedResources(context!!, (activity as LoginActivity).currentLanguageCode).apply {
+            MaterialAlertDialogBuilder(context)
+                .setTitle(getString(R.string.registration_completed))
+                .setMessage(getString(R.string.registration_completed_message, username))
+                .setPositiveButton(getString(R.string.thanks)) { _, _ ->
+                    navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+                .setCancelable(false)
+                .show()
+        }
     }
 
     fun onRegisterError(error: String) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Error")
-            .setMessage("An error occurred: $error")
-            .setPositiveButton("OK", null)
-            .setCancelable(false)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show()
+        LocaleLanguageHelper.getLocalizedResources(context!!, (activity as LoginActivity).currentLanguageCode).apply {
+            MaterialAlertDialogBuilder(context)
+                .setTitle(getString(R.string.error))
+                .setMessage(error)
+                .setPositiveButton("OK", null)
+                .setCancelable(false)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+        }
     }
 
     override fun navigateTo(target: Class<*>, intentFlags: Int?) {

@@ -196,4 +196,12 @@
     <string name="welcome_back_message">Welcome back, %1$s!</string>
     <string name="information_modified_title">Information modified</string>
     <string name="information_modified_description">Account information modified with success!</string>
+    <string name="error_get_account_info">Error while getting account information. Please wait before retrying.</string>
+    <string name="error_connexion_refused">Connection refused. Please wait before retrying.</string>
+    <string name="error_connexion_timeout">Connection timeout. Please wait before retrying.</string>
+    <string name="error_socket_connexion_timeout">Could not establish connection to server after 4 attempts. The application will now close.</string>
+    <string name="error_auth">Error during authentication. Please wait before retrying.</string>
+    <string name="registration_completed">Registration completed</string>
+    <string name="registration_completed_message">Account successfully created! Welcome, %1$s!</string>
+    <string name="thanks">Thanks!</string>
 </resources>

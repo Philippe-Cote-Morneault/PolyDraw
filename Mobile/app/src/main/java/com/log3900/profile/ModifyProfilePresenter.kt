@@ -6,6 +6,7 @@ import com.log3900.settings.language.LanguageManager
 import com.log3900.shared.ui.ProfilePresenter
 import com.log3900.user.account.Account
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.ServerErrorFormatter
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import retrofit2.Call
@@ -21,7 +22,7 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
                 profileView.onModifySuccess(updatedAccount)
                 AccountRepository.getInstance().updateAccount(updatedAccount)
             },
-            { error -> profileView.onModifyError(error.toString()) }
+            { error -> profileView.onModifyError(error.message!!}
         )
     }
 
@@ -46,7 +47,12 @@ class ModifyProfilePresenter(modifyDialog: ModifyProfileDialog) : ProfilePresent
                     if (response.isSuccessful) {
                         it.onSuccess(true)
                     } else {
-                        it.onError(Throwable("(${response.code()}) ${response.errorBody()?.string()}"))
+                        val error = response.errorBody()?.string()
+                        if (error != null) {
+                            it.onError(Throwable(ServerErrorFormatter.format(error)))
+                        } else {
+                            it.onError(Throwable("Internal error"))
+                        }
                     }
                 }
 

@@ -180,15 +180,26 @@ class LoginFragment : Fragment(), LoginView {
         usernameTextInputLayout.error = null
     }
 
-    override fun showErrorDialog(title: String, message: String, positiveButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?,
+    override fun showErrorDialog(title: String, message: String, errorType: LoginErrorType?, positiveButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?,
                                  negativeButtonClickListener: ((dialog: DialogInterface, which: Int) -> Unit)?) {
-        MaterialAlertDialogBuilder(activity)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("OK", positiveButtonClickListener)
-            .setCancelable(false)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show()
+        LocaleLanguageHelper.getLocalizedResources(context!!, (activity as LoginActivity).currentLanguageCode).apply {
+            val errorMessage = errorType?.let {
+                getString(when(it) {
+                    LoginErrorType.GET_ACCOUNT_INFO -> R.string.error_get_account_info
+                    LoginErrorType.CONNECTION_REFUSED -> R.string.error_connexion_refused
+                    LoginErrorType.CONNECTION_TIMEOUT -> R.string.error_connexion_timeout
+                    LoginErrorType.SOCKET_CONNECTION_TIMEOUT -> R.string.error_socket_connexion_timeout
+                    LoginErrorType.AUTH_ERROR -> R.string.error_auth
+                })
+            } ?: message
+            MaterialAlertDialogBuilder(activity)
+                .setTitle(getString(R.string.error))
+                .setMessage(errorMessage)
+                .setPositiveButton("OK", positiveButtonClickListener)
+                .setCancelable(false)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+        }
     }
 
     override fun showProgressDialog(dialog: DialogFragment) {
