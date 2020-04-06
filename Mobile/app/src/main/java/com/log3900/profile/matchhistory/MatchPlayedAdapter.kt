@@ -42,7 +42,7 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
 
         holder.matchType.text = match.matchType.toUpperCase()
 
-        val matchWon = (username == match.winner)
+        val matchWon = (username == match.winnerName)
         val matchResultColorBackground = ContextCompat.getColor(context,
             if (matchWon)
                 R.color.color_win_background

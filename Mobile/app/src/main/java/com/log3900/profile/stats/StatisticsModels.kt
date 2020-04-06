@@ -20,9 +20,10 @@ data class HistoryStats(
 
 data class GamePlayed(
     @Json(name = "MatchDuration")   val duration:       Int,
-    @Json(name = "WinnerName")      val winner:         String,
-    @Json(name = "MatchType")       val matchType:      String
-//    @Json(name = "PlayersNames")    val playerNames:    List<PlayerName>
+    @Json(name = "WinnerName")      val winnerName:     String,
+    @Json(name = "WinnerID")        val winnerID:       String,
+    @Json(name = "MatchType")       val matchType:      String,
+    @Json(name = "Players")         val players:        List<Player>
 )
 
 data class Connection(
@@ -36,6 +37,7 @@ data class Achievement(
     @Json(name = "ObtainingDate")   val unlockDate:     Int
 )
 
-data class PlayerName(
-    @Json(name = "PlayerName") val name: String
+data class Player(
+    @Json(name = "Username") val name:  String,
+    @Json(name = "UserID")   val id:    String
 )

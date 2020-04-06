@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
-import com.log3900.profile.stats.PlayerName
+import com.log3900.profile.stats.Player
 import com.log3900.utils.format.formatDuration
 
 class MatchDetailsDialog(private val match: GamePlayed, private val username: String)
@@ -45,14 +45,14 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
 
         val result: TextView = root.findViewById(R.id.match_result_value)
         result.text = resources.getString(
-            if (username == match.winner)
+            if (username == match.winnerName)
                 R.string.match_win
             else
                 R.string.match_loss
         )
 
         val winner: TextView = root.findViewById(R.id.match_winner_value)
-        winner.text = match.winner
+        winner.text = match.winnerName
 
         val duration: TextView = root.findViewById(R.id.match_duration_value)
         duration.text = formatDuration(match.duration)
@@ -68,7 +68,7 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         }
     }
 
-    private fun LinearLayout.addPlayer(playerName: PlayerName) {
+    private fun LinearLayout.addPlayer(playerName: Player) {
         val nameView = TextView(activity)
         nameView.text = playerName.name
         this.addView(nameView)
