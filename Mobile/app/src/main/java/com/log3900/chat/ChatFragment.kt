@@ -187,6 +187,10 @@ class ChatFragment : Fragment(), ChatView {
         messagesViewAdapter.prependMessages(count)
     }
 
+    override fun notifyMessagesUpdated(userChanged: UUID) {
+        messagesViewAdapter.notifyDataSetChanged()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         chatPresenter?.destroy()

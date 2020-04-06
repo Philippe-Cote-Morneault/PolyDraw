@@ -7,8 +7,8 @@ import kotlin.collections.HashMap
 class UserCache {
     private var users: HashMap<UUID, User> = HashMap()
 
-    fun addUser(user: User) {
-        if (!users.containsKey(user.ID)) {
+    fun addUser(user: User, forceUpdate: Boolean = false) {
+        if (!users.containsKey(user.ID) || forceUpdate) {
             users[user.ID] = user
         }
     }
@@ -23,5 +23,9 @@ class UserCache {
 
     fun containsUser(userID: UUID): Boolean {
         return users.containsKey(userID)
+    }
+
+    fun clearCache() {
+        users.clear()
     }
 }

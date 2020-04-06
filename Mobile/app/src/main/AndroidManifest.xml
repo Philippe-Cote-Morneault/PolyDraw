@@ -53,5 +53,6 @@
         <service android:name=".game.group.GroupRepository"/>
         <service android:name=".game.group.GroupManager"/>
         <service android:name=".game.match.MatchRepository"/>
+        <service android:name=".user.UserRepository"/>
     </application>
 </manifest>
