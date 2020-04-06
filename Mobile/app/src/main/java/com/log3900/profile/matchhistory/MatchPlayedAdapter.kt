@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
 import com.log3900.user.account.AccountRepository
+import com.log3900.utils.format.DateFormatter
 import com.log3900.utils.format.formatDuration
+import java.util.*
 
 class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
                          private val username: String,
@@ -43,7 +45,8 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
 
         holder.matchType.text = match.matchType.toUpperCase()
 
-        holder.matchDuration.text = formatDuration(match.duration)
+        val matchDurationDate = Date(match.duration)
+        holder.matchDuration.text = DateFormatter.formatFullTime(matchDurationDate)
 
         holder.itemView.setOnClickListener {
             startMatchDetailsDialog(match)

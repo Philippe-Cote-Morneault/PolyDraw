@@ -12,7 +12,9 @@ import com.google.android.material.button.MaterialButton
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
 import com.log3900.profile.stats.Player
+import com.log3900.utils.format.DateFormatter
 import com.log3900.utils.format.formatDuration
+import java.util.*
 
 class MatchDetailsDialog(private val match: GamePlayed, private val username: String)
     : DialogFragment() {
@@ -55,7 +57,8 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         winner.text = match.winnerName
 
         val duration: TextView = root.findViewById(R.id.match_duration_value)
-        duration.text = formatDuration(match.duration)
+        val durationDate = Date(match.duration)
+        duration.text = DateFormatter.formatFullTime(durationDate)
 
 //        val playersLayout: LinearLayout = root.findViewById(R.id.match_players_container)
 //        match.playerNames.forEach {

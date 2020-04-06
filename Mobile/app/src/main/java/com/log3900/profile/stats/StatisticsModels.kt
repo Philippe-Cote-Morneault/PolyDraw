@@ -19,7 +19,7 @@ data class HistoryStats(
 )
 
 data class GamePlayed(
-    @Json(name = "MatchDuration")   val duration:       Int,
+    @Json(name = "MatchDuration")   val duration:       Long,
     @Json(name = "WinnerName")      val winnerName:     String,
     @Json(name = "WinnerID")        val winnerID:       String,
     @Json(name = "MatchType")       val matchType:      String,
