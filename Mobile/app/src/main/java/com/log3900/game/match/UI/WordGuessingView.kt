@@ -24,6 +24,8 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
     private var letterEditTexts: ArrayList<EditText> = ArrayList()
     var listener: Listener? = null
 
+    var editTextEmpty = ArrayList<Boolean>()
+
     init {
         layout = View.inflate(context, R.layout.view_word_guessing, this) as ConstraintLayout
         editTextContainer = layout.findViewById(R.id.view_word_guessing_edit_text_container)
@@ -78,6 +80,7 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
     fun setWordLength(wordLength: Int) {
         editTextContainer.removeAllViews()
         letterEditTexts.clear()
+        enableGuessButton(false)
 
         for (i in 0 until wordLength) {
             val newEditText = generateEditText()
@@ -124,6 +127,20 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
                 if (editTextIndex < letterEditTexts.size - 1) {
                     letterEditTexts[editTextIndex + 1].requestFocus()
                 }
+                var allFull = true
+                letterEditTexts.forEach {
+                    if (it.text.toString().isEmpty()) {
+                        allFull = false
+                    }
+                }
+
+                if (allFull) {
+                    enableGuessButton(true)
+                } else {
+                    enableGuessButton(false)
+                }
+            } else {
+                enableGuessButton(false)
             }
         }
         editText.setOnKeyListener { v, keyCode, event ->
