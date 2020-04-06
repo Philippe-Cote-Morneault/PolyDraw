@@ -25,6 +25,7 @@ namespace ClientLourd.Views.Controls.Game
         private Random _random;
         private DispatcherTimer _timer;
         private System.Timers.Timer _canvasAnimationsTimer;
+        private bool _isGameEnded;
 
         public EditorZone()
         {
@@ -37,6 +38,7 @@ namespace ClientLourd.Views.Controls.Game
 
         public void AfterLogin()
         {
+            _isGameEnded = false;
             InitEventHandler();
         }
 
@@ -50,6 +52,7 @@ namespace ClientLourd.Views.Controls.Game
             {
                 try
                 {
+                    _isGameEnded = false;
                     StopConfetti();
                     LeaderBoardGrid.Children.Clear();
                     LeaderBoardGrid.Visibility = Visibility.Collapsed;
@@ -179,6 +182,8 @@ namespace ClientLourd.Views.Controls.Game
         private void SocketClientOnMatchEnded(object source, EventArgs args)
         {
             var e = ((MatchEventArgs) args);
+            _isGameEnded = true;
+            Application.Current.Dispatcher.Invoke(() => { DrawingEditor.Canvas.Strokes.Clear(); });
             if (ViewModel.Mode == GameModes.FFA)
             {
                 Task.Run(() =>
@@ -207,6 +212,7 @@ namespace ClientLourd.Views.Controls.Game
                     StopConfetti();
                 });
             }
+            _isGameEnded = false;
         }
 
         private void ShowCanvasMessage(string message, int time = MatchTiming.ANNIMATION_TIMEOUT)
@@ -409,6 +415,8 @@ namespace ClientLourd.Views.Controls.Game
                 Task.Run(() =>
                 {
                     Thread.Sleep(MatchTiming.ROUND_END_TIMEOUT);
+                    if (_isGameEnded)
+                        return;
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Storyboard sb = (Storyboard) FindResource("NextRoundBegin");

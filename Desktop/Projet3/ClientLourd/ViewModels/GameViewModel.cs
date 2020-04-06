@@ -490,7 +490,12 @@ namespace ClientLourd.ViewModels
 
         private void ChangeCanvasStatus(bool isEnable)
         {
-            Application.Current.Dispatcher.Invoke(() => { Editor.IsEnabled = isEnable; });
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Editor.IsEnabled = isEnable; 
+                Editor.SelectPen();
+                StrokeDrawerService.Reset();
+            });
             if (isEnable)
             {
                 _stokesReader.Start(_drawingID);
@@ -501,12 +506,6 @@ namespace ClientLourd.ViewModels
                 _stokesReader.Stop();
                 Application.Current.Dispatcher.Invoke(() => { Editor.HideCursor(); });
             }
-
-            Task.Run(() =>
-            {
-                Thread.Sleep(200);
-                ClearCanvas();
-            });
         }
 
         private void PrepareMatch()
