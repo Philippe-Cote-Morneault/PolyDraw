@@ -81,7 +81,6 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.computeDifficulty()
 	c.computeOrder()
 
-	cbroadcast.Broadcast(match2.BGameStarts, c)
 }
 
 //Start the game and the game loop
@@ -94,6 +93,7 @@ func (c *Coop) Start() {
 	}
 	//We can start the game loop
 	log.Printf("[Match] [Coop] -> Starting gameloop Match: %s", c.info.ID)
+	cbroadcast.Broadcast(match2.BGameStarts, c)
 
 	timeOut := make(chan bool)
 	c.timeStart = time.Now()
@@ -766,4 +766,9 @@ func (c *Coop) sendRoundSummary() {
 		Guessed:      c.wordFound,
 	})
 	c.broadcast(&roundEnd)
+}
+
+//GetType returns the game type of the match
+func (c *Coop) GetType() int {
+	return c.info.GameType
 }

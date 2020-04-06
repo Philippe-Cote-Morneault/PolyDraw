@@ -40,6 +40,9 @@ type IMatch interface {
 	//GetGroupID return the group id
 	GetGroupID() uuid.UUID
 
+	//GetType returns the game type
+	GetType() int
+
 	//GetPlayers returns the list of the actual players.
 	GetPlayers() []Player
 
