@@ -54,6 +54,8 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
 
         if (match.matchType == "FFA") {
             holder.setStyleFromMatchResult(match)
+        } else {
+            holder.matchResult.text = "-"
         }
     }
 
@@ -72,11 +74,12 @@ class MatchPlayedAdapter(private val matchesPlayed: List<GamePlayed>,
                 R.color.color_loss_text
         )
 
-        matchResult.text =
+        matchResult.text = context.resources.getString(
             if (matchWon)
-                "WIN"
+                R.string.match_win
             else
-                "LOSS"
+                R.string.match_loss
+        ).toUpperCase()
 
         matchResult.setTextColor(matchResultColorText)
         setBackgroundColor(matchResultColorBackground)

@@ -46,15 +46,19 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
         type.text = match.matchType
 
         val result: TextView = root.findViewById(R.id.match_result_value)
-        result.text = resources.getString(
-            if (username == match.winnerName)
-                R.string.match_win
-            else
-                R.string.match_loss
-        )
-
+        if (match.matchType == "FFA") {
+            result.text = resources.getString(
+                if (username == match.winnerName)
+                    R.string.match_win
+                else
+                    R.string.match_loss
+            )
+        } else {
+            result.text = "-"
+        }
+        
         val winner: TextView = root.findViewById(R.id.match_winner_value)
-        winner.text = match.winnerName
+        winner.text = if (match.winnerName.isEmpty()) "-" else match.winnerName
 
         val duration: TextView = root.findViewById(R.id.match_duration_value)
         val durationDate = Date(match.duration)
