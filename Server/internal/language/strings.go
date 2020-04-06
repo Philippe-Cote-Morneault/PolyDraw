@@ -304,7 +304,7 @@ fr:
     winRatioAngry3: "Bon on peut kick-out {} svp ? Il a déjà gagné assez de parties comme ça !! (Ratio de victoire de : [])"
     
     winRatioFunny1: "{} c'est le MVP de la partie ! (MVP c'est pas le concept de dropbox evidemment) (Ratio de victoire de : [])"
-    winRatioFunny2: "C'est l'histoire de {} qui joue à une partie. Et qui l'a gagne. (mes blagues sont automatisés, c'est pas ma faute ...) (Ratio de victoire de : [])"
+    winRatioFunny2: "C'est l'histoire de {} qui joue à une partie. Et qui l'a gagne. (mes blagues sont automatisées, c'est pas ma faute ...) (Ratio de victoire de : [])"
     winRatioFunny3: "Quand je vois le nombre de partie que {} a gagné, j'en perds le fil. (par fil j'entends thread evidemment. On oublie pas que je suis qu'un simple joueur virtuel) (Ratio de victoire de : [])"
     
     winRatioMean1: "Hey {} C'est pas parce que ta gagné le plus de parties ici que tu vas gagner celle la. (Ratio de victoire de : [])"

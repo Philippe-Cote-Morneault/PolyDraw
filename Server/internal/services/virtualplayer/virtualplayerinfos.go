@@ -1,10 +1,16 @@
 package virtualplayer
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
 	"time"
+
+	"gitlab.com/jigsawcorp/log3900/internal/match"
+	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
+	"gitlab.com/jigsawcorp/log3900/internal/services/stats"
+	"gitlab.com/jigsawcorp/log3900/model"
 
 	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
@@ -23,8 +29,11 @@ type virtualPlayerInfos struct {
 	Language          int
 }
 
+const sendStatsDelay = 60 //Seconds
+
 func (v *virtualPlayerInfos) calculateDrawingTime() {
-	managerInstance.rand.Seed(time.Now().UnixNano())
+	resetRandSeed()
+
 	min := 0.0
 	max := 1.0
 	switch v.Personality {
@@ -49,10 +58,11 @@ func (v *virtualPlayerInfos) calculateDrawingTime() {
 		max = 0.9
 	}
 	v.DrawingTimeFactor = float64(min) + managerInstance.rand.Float64()*float64(max-min)
-
 }
 
 func generateVirtualPlayer(lang int) *virtualPlayerInfos {
+	resetRandSeed()
+
 	v := &virtualPlayerInfos{Language: lang, Personality: []string{"Angry", "Funny", "Mean", "Nice", "Supportive"}[managerInstance.rand.Intn(5)],
 		DrawingTimeFactor: 0, Username: randomdata.GenerateProfile(randomdata.RandomGender).Login.Username}
 
@@ -61,28 +71,106 @@ func generateVirtualPlayer(lang int) *virtualPlayerInfos {
 	return v
 }
 
-func (v *virtualPlayerInfos) speak(channelID uuid.UUID, interactionType string) {
-	log.Println("[VirtualPlayer] -> speak()")
-	interaction := v.getInteraction(interactionType)
-	log.Printf("[VirtualPlayer] -> getInteraction() returns = %v", interaction)
-
+func (v *virtualPlayerInfos) speak(channelID uuid.UUID, line string) {
 	cbroadcast.Broadcast(messenger.BBotMessage, messenger.MessageReceived{
 		ChannelID: channelID.String(),
 		UserID:    v.BotID.String(),
 		Username:  v.Username,
-		Message:   interaction,
+		Message:   line,
 		Timestamp: time.Now().Unix(),
 	})
 }
 
 func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
+	resetRandSeed()
 
 	lineNumber := strconv.Itoa(managerInstance.rand.Intn(2) + 1)
 	line := language.MustGet("botlines."+interactionType+v.Personality+lineNumber, v.Language)
 
-	if interactionType == "playerRef" || interactionType == "winRatio" {
-		line = strings.ReplaceAll(line, "{}", randomUsername(v.GroupID))
+	return line
+}
+
+func (v *virtualPlayerInfos) sendStatsInteraction(groupID uuid.UUID, match *match.IMatch) {
+	resetRandSeed()
+
+	interactionType := "playerRef"
+
+	if (*match).GetType() == 0 {
+		interactionType = "winRatio"
 	}
 
-	return line
+	lineNumber := strconv.Itoa(managerInstance.rand.Intn(2) + 1)
+	line := language.MustGet("botlines."+interactionType+v.Personality+lineNumber, v.Language)
+
+	userID := getRandomUserID(groupID)
+	if userID == uuid.Nil {
+		return
+	}
+	var user model.User
+	model.DB().Model(&model.User{}).Where("id = ?", userID).First(&user)
+	userStats, _ := stats.GetStats(userID)
+
+	line = strings.ReplaceAll(line, "{}", user.Username)
+	if interactionType == "winRatio" {
+		winRatio := fmt.Sprintf("%.2f", userStats.WinRatio)
+		line = strings.ReplaceAll(line, "[]", winRatio)
+	} else {
+		timePlayed := fmt.Sprintf("%v", userStats.TimePlayed)
+		line = strings.ReplaceAll(line, "[]", timePlayed)
+	}
+
+	managerInstance.mutex.Lock()
+	channelID, ok := managerInstance.Channels[groupID]
+	managerInstance.mutex.Unlock()
+
+	if !ok {
+		log.Printf("[Virtual Player -> [Error] Can't find channelID with groupID : %v. Aborting sendStatsInteraction...", groupID)
+	}
+	v.speak(channelID, line)
+}
+
+func getRandomUserID(groupID uuid.UUID) uuid.UUID {
+	managerInstance.mutex.Lock()
+
+	if match, ok := managerInstance.Matches[groupID]; ok {
+		managerInstance.mutex.Unlock()
+		connections := (*match).GetConnections()
+		i := managerInstance.rand.Intn(len(connections))
+		userID, isOk := auth.GetUserID(connections[i])
+		if isOk != nil {
+			log.Printf("[Virtual Player] [Error] Can't find userID of in game socketID : %v", userID)
+			return uuid.Nil
+		}
+		return userID
+	}
+
+	managerInstance.mutex.Unlock()
+	return uuid.Nil
+}
+
+func statsLinesLoop(groupID uuid.UUID) {
+	log.Println("[Virtual Player] Starting stats loop")
+	for {
+		time.Sleep(sendStatsDelay * time.Second)
+		managerInstance.mutex.Lock()
+		match, ok := managerInstance.Matches[groupID]
+		if !ok {
+			managerInstance.mutex.Unlock()
+			log.Println("[Virtual Player] Stopping statLinesLoop")
+			return
+		}
+
+		log.Println("[Virtual Player] Sending stat interaction")
+		for _, bot := range managerInstance.Bots {
+			go bot.sendStatsInteraction(groupID, match)
+			break
+		}
+		managerInstance.mutex.Unlock()
+	}
+}
+
+func resetRandSeed() {
+	managerInstance.mutex.Lock()
+	managerInstance.rand.Seed(time.Now().UnixNano())
+	managerInstance.mutex.Unlock()
 }

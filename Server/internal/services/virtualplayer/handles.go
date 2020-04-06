@@ -46,7 +46,6 @@ type Manager struct {
 	Matches         map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
 	HintsPerPlayers map[uuid.UUID]map[string]bool     //playerID -> []indices
 	Drawing         map[uuid.UUID]*abool.AtomicBool   //socketID -> stopDrawing
-
 }
 
 func (m *Manager) init() {
@@ -220,7 +219,7 @@ func startDrawing(round *match2.RoundStart) {
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
 	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
-	stopAllDrawingProcedures(connections)
+	stopAllDrawingProcedures(connections, false)
 	stopDrawings := initializeDrawingStates(connections)
 
 	wg.Add(1)
@@ -243,7 +242,7 @@ func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 	managerInstance.mutex.Unlock()
 	connections := (*match).GetConnections()
 
-	stopAllDrawingProcedures(connections)
+	stopAllDrawingProcedures(connections, true)
 
 	if makeBotSpeak {
 		makeBotsSpeak("endRound", groupID, uuid.Nil)
@@ -426,23 +425,6 @@ func respHintRequest(hintOk bool, hintRequest *match2.HintRequested, hint string
 	managerInstance.mutex.Unlock()
 }
 
-// randomUsername [Current Thread] return random username among players in match (virtualplayer)
-func randomUsername(groupID uuid.UUID) string {
-	//TODO temporary hack waiting for real stats
-	managerInstance.mutex.Lock()
-	match, ok := managerInstance.Matches[groupID]
-	managerInstance.mutex.Unlock()
-
-	if !ok {
-		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting randomUsername...", groupID)
-		return ""
-	}
-
-	players := (*match).GetPlayers()
-
-	return players[rand.Intn(len(players))].Username
-}
-
 //makeBotsSpeak [New Threads] sends bot interaction to all connected users (virtualplayer)
 func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 	managerInstance.mutex.Lock()
@@ -464,6 +446,7 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 
 	var wg sync.WaitGroup
 	wg.Add(len(group))
+	// If nil all bots will speak
 	if speakingBotID != uuid.Nil {
 		bot, botOk := managerInstance.Bots[speakingBotID]
 		if !botOk {
@@ -473,7 +456,7 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 		}
 		go func(chanID uuid.UUID) {
 			defer wg.Done()
-			bot.speak(chanID, interactionType)
+			bot.speak(chanID, bot.getInteraction(interactionType))
 		}(channelID)
 	} else {
 		for botID := range group {
@@ -485,7 +468,7 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 			}
 			go func(chanID uuid.UUID) {
 				defer wg.Done()
-				bot.speak(chanID, interactionType)
+				bot.speak(chanID, bot.getInteraction(interactionType))
 			}(channelID)
 		}
 	}
@@ -535,13 +518,13 @@ func stopDrawingOfSocket(socketID uuid.UUID) {
 	stopDrawing.Set()
 }
 
-func stopAllDrawingProcedures(connections []uuid.UUID) {
+func stopAllDrawingProcedures(connections []uuid.UUID, notifyNotFound bool) {
 	managerInstance.mutex.Lock()
 	for _, connection := range connections {
 		if stopDrawing, ok := managerInstance.Drawing[connection]; ok {
 			stopDrawing.Set()
-		} else {
-			log.Printf("[VirtualPlayer] -> [Error] Can't find socketID : %v. Can't stop drawing procdeure...", connection)
+		} else if notifyNotFound {
+			log.Printf("[VirtualPlayer] -> [Error] Can't find socketID : %v. Can't stop drawing procedure...", connection)
 		}
 	}
 	managerInstance.mutex.Unlock()
