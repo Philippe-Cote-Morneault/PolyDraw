@@ -83,7 +83,6 @@ func (f *FFA) Init(connections []uuid.UUID, info model.Group) {
 	f.timeImage *= 1000
 
 	drawing.RegisterGame(f)
-	cbroadcast.Broadcast(match2.BGameStarts, f)
 }
 
 //Start the game mode
@@ -103,6 +102,7 @@ func (f *FFA) Start() {
 
 	//We can start the game loop
 	log.Printf("[Match] [FFA] -> Starting gameloop Match: %s", f.info.ID)
+	cbroadcast.Broadcast(match2.BGameStarts, f)
 	f.timeStart = time.Now()
 	for f.isRunning {
 		f.GameLoop()
@@ -746,4 +746,9 @@ func (f *FFA) GetGroupID() uuid.UUID {
 	defer f.receiving.Unlock()
 	f.receiving.Lock()
 	return f.info.ID
+}
+
+//GetType returns the type of the match
+func (f *FFA) GetType() int {
+	return f.info.GameType
 }
