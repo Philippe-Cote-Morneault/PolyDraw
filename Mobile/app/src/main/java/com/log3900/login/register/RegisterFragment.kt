@@ -13,6 +13,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.MainActivity
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.login.LoginActivity
 import com.log3900.profile.ModifyAvatarDialog
@@ -138,8 +139,25 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
 
     fun onRegisterSuccess() {
         val username = usernameInput.text.toString()
-        LocaleLanguageHelper.getLocalizedResources(context!!, (activity as LoginActivity).currentLanguageCode).apply {
-            MaterialAlertDialogBuilder(context)
+
+        if (context == null) {
+            return
+        }
+        if (activity is LoginActivity) {
+            LocaleLanguageHelper.getLocalizedResources(
+                context ?: MainApplication.instance.getContext(),
+                (activity as LoginActivity).currentLanguageCode).apply {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(getString(R.string.registration_completed))
+                    .setMessage(getString(R.string.registration_completed_message, username))
+                    .setPositiveButton(getString(R.string.thanks)) { _, _ ->
+                        navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
+                    .setCancelable(false)
+                    .show()
+            }
+        } else {
+            MaterialAlertDialogBuilder(context ?: MainApplication.instance.getContext())
                 .setTitle(getString(R.string.registration_completed))
                 .setMessage(getString(R.string.registration_completed_message, username))
                 .setPositiveButton(getString(R.string.thanks)) { _, _ ->
