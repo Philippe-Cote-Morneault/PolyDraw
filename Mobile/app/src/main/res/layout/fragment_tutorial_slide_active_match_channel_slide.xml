@@ -14,7 +14,7 @@
             android:layout_width="0dp"
             android:layout_height="400dp"
             android:layout_margin="30dp"
-            android:src="@drawable/tutorial_slide_active_match_channel_picture_01_en"
+            android:src="@drawable/tutorial_slide_active_match_channel_picture_01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
