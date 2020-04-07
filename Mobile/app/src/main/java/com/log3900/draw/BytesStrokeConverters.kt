@@ -10,6 +10,8 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
 
+private val CUSTOM_GREEN = -16744448
+
 private enum class Offset(val value: Int) {
     STROKE_ID(1),
     USER_ID(17),
@@ -51,7 +53,7 @@ object BytesToStrokeConverter {
             0 -> Color.BLACK
             1 -> Color.WHITE
             2 -> Color.RED
-            3 -> Color.GREEN
+            3 -> CUSTOM_GREEN
             4 -> Color.BLUE
             5 -> Color.YELLOW
             6 -> Color.CYAN
@@ -132,7 +134,7 @@ object StrokeToBytesConverter {
             Color.BLACK     -> 0x0
             Color.WHITE     -> 0x1
             Color.RED       -> 0x2
-            -16744448       -> 0x3      // GREEN
+            CUSTOM_GREEN    -> 0x3
             Color.BLUE      -> 0x4
             Color.YELLOW    -> 0x5
             Color.CYAN      -> 0x6
