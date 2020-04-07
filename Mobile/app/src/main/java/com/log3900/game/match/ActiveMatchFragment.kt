@@ -48,6 +48,8 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         roundEndInfoView = rootView.findViewById(R.id.fragment_active_match_round_end_info_view)
         matchEndInfoView = rootView.findViewById(R.id.fragment_active_match_ffa_match_end_info_view)
         canvasMessageView = rootView.findViewById(R.id.fragment_active_match_canvas_message_view)
+
+        drawFragment.enableDrawFunctions(false, null)
     }
 
     protected open fun setupToolbar(rootView: View) {
