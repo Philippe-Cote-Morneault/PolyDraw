@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
@@ -65,7 +66,18 @@ class ChatFragment : Fragment(), ChatView {
 
         drawer = rootView.findViewById(R.id.fragment_chat_drawer_layout)
 
-        rootView.findViewById<TextInputEditText>(R.id.fragment_chat_new_message_input).setOnClickListener{ v -> onMessageTextInputClick(v)}
+        rootView.findViewById<TextInputEditText>(R.id.fragment_chat_new_message_input).apply {
+            setOnClickListener{ v -> onMessageTextInputClick(v)}
+            setOnEditorActionListener { textView, actionID, keyEvent ->
+                return@setOnEditorActionListener when (actionID) {
+                    EditorInfo.IME_ACTION_SEND -> {
+                        onSendMessageButtonClick(textView)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
 
         rootView.viewTreeObserver.addOnGlobalLayoutListener {
             val heightDiff = rootView.rootView.height - rootView.height
