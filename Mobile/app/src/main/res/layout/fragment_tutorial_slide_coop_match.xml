@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="400dp"
             android:layout_margin="30dp"
-            android:src="@drawable/tutorial_slide_ffa_match_picture_01"
+            android:src="@drawable/tutorial_slide_coop_match_picture_01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_slide_coop_match_text_view_01"/>
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="400dp"
             android:layout_margin="30dp"
-            android:src="@drawable/tutorial_slide_ffa_match_picture_02"
+            android:src="@drawable/tutorial_slide_coop_match_picture_02"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_slide_coop_match_player_header_separator"/>
@@ -108,7 +108,7 @@
             android:layout_width="0dp"
             android:layout_height="400dp"
             android:layout_margin="30dp"
-            android:src="@drawable/tutorial_slide_ffa_match_picture_03"
+            android:src="@drawable/tutorial_slide_coop_match_picture_03"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_slide_coop_match_top_bar_header_separator"/>
@@ -163,7 +163,7 @@
                 android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:src="@drawable/tutorial_slide_ffa_match_picture_05"
+                android:src="@drawable/tutorial_slide_coop_match_picture_04"
                 android:layout_gravity="start"/>
 
             <ImageView
@@ -171,7 +171,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:src="@drawable/tutorial_slide_ffa_match_picture_06"
+                android:src="@drawable/tutorial_slide_coop_match_picture_05"
                 android:layout_gravity="end"/>
         </LinearLayout>
 
