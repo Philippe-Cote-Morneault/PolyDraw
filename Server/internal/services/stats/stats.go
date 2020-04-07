@@ -51,7 +51,7 @@ func (s *Stats) listen() {
 				log.Println("[Stats] -> [Error] Error while parsing model.MatchPlayed struct")
 				break
 			}
-			go updateMatchesPlayed(match)
+			updateMatchesPlayed(match)
 
 		case data := <-s.setDeconnection:
 			log.Println("[Stats] -> Receives setDeconnection event")
@@ -61,7 +61,7 @@ func (s *Stats) listen() {
 				log.Println("[Stats] -> [Error] Error while parsing uuid")
 				break
 			}
-			go setDisconnection(socketID)
+			setDisconnection(socketID)
 
 		case data := <-s.createConnection:
 			log.Println("[Stats] -> Receives createConnection event")
@@ -70,7 +70,7 @@ func (s *Stats) listen() {
 				log.Println("[Stats] -> [Error] Error while parsing ChatNew struct")
 				break
 			}
-			go createConnection(socketID)
+			createConnection(socketID)
 
 		case <-s.shutdown:
 			return

@@ -2,7 +2,6 @@ package stats
 
 import (
 	"log"
-	"math"
 	"time"
 
 	"github.com/google/uuid"
@@ -64,10 +63,10 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 	nbWins := 0
 	nbFFA := 0
 	timePlayed := int64(0)
-	bestScoreSolo := int64(math.MaxInt64)
+	bestScoreSolo := int64(0)
 	for _, match := range matches {
 		//Cherche minimum score solo
-		if match.MatchType == 1 && match.PointsSoloCoop < bestScoreSolo {
+		if match.MatchType == 1 && match.PointsSoloCoop > bestScoreSolo {
 			bestScoreSolo = match.PointsSoloCoop
 		}
 		if match.MatchType == 0 {
@@ -77,10 +76,6 @@ func GetStats(userID uuid.UUID) (DataStats, string) {
 			}
 		}
 		timePlayed += match.MatchDuration
-	}
-	// Si on ne trouve pas de game solo
-	if bestScoreSolo == int64(math.MaxInt64) {
-		bestScoreSolo = 0
 	}
 
 	winRatio := float64(0)
