@@ -151,23 +151,23 @@ func statsLinesLoop(groupID uuid.UUID) {
 	log.Println("[VirtualPlayer] Starting stats loop")
 	count := 0
 	for count < 5 {
-		time.AfterFunc(sendStatsDelay*time.Second, func() {
+		time.Sleep(sendStatsDelay * time.Second)
 
-			managerInstance.mutex.Lock()
-			match, ok := managerInstance.Matches[groupID]
-			if !ok {
-				managerInstance.mutex.Unlock()
-				log.Println("[VirtualPlayer] Stopping statLinesLoop")
-				return
-			}
-
-			log.Println("[VirtualPlayer] Sending stat interaction")
-			for _, bot := range managerInstance.Bots {
-				go bot.sendStatsInteraction(groupID, match)
-				break
-			}
+		managerInstance.mutex.Lock()
+		match, ok := managerInstance.Matches[groupID]
+		if !ok {
 			managerInstance.mutex.Unlock()
-		})
+			log.Println("[VirtualPlayer] Stopping statLinesLoop")
+			return
+		}
+
+		log.Println("[VirtualPlayer] Sending stat interaction")
+		for _, bot := range managerInstance.Bots {
+			go bot.sendStatsInteraction(groupID, match)
+			break
+		}
+		managerInstance.mutex.Unlock()
+
 		count++
 	}
 }
