@@ -101,8 +101,7 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         }, 5000)
         leaveMatchHandler.postDelayed({
             activeMatchView?.quit()
-        }, 5000
-        )
+        }, 5000)
     }
 
     private fun onCheckpoint(checkPoint: CheckPoint) {

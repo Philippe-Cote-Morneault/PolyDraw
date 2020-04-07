@@ -101,18 +101,22 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         }
 
         Handler().postDelayed({
-            activeFFAMatchView?.hideCanvas()
-            activeFFAMatchView?.hideRoundEndInfoView()
-            activeFFAMatchView?.showCanvasMessageView(false)
-            Handler().postDelayed({
-                activeFFAMatchView?.clearCanvas()
-                activeFFAMatchView?.showCanvas()
-            }, 500)
+            if (!matchEnded) {
+                activeFFAMatchView?.hideCanvas()
+                activeFFAMatchView?.hideRoundEndInfoView()
+                activeFFAMatchView?.showCanvasMessageView(false)
+                Handler().postDelayed({
+                    activeFFAMatchView?.clearCanvas()
+                    activeFFAMatchView?.showCanvas()
+                }, 500)
+            }
         }, 2000)
     }
 
     override fun onMatchEnded(matchEnded: MatchEnded) {
         super.onMatchEnded(matchEnded)
+
+        activeFFAMatchView?.hideRoundEndInfoView()
 
         activeFFAMatchView?.showCanvasMessageView(false)
 

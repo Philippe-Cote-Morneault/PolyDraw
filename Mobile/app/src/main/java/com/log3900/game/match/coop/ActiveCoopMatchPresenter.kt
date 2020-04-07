@@ -53,13 +53,15 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
         }
 
         Handler().postDelayed({
-            activeCoopMatchView?.hideCanvas()
-            activeCoopMatchView?.hideRoundEndInfoView()
-            activeCoopMatchView?.showCanvasMessageView(false)
-            Handler().postDelayed({
-                activeCoopMatchView?.clearCanvas()
-                activeCoopMatchView?.showCanvas()
-            }, 500)
+            if (!matchEnded) {
+                activeCoopMatchView?.hideCanvas()
+                activeCoopMatchView?.hideRoundEndInfoView()
+                activeCoopMatchView?.showCanvasMessageView(false)
+                Handler().postDelayed({
+                    activeCoopMatchView?.clearCanvas()
+                    activeCoopMatchView?.showCanvas()
+                }, 500)
+            }
         }, 2000)
     }
 
@@ -95,13 +97,17 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
 
 
     override fun onMatchEnded(matchEnded: MatchEnded) {
+        this.matchEnded = true
         activeCoopMatchView?.showConfetti()
         val score = matchEnded.players.find { it.userID == AccountRepository.getInstance().getAccount().ID }!!.points
         activeCoopMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.solo_match_is_over_message, score))
         activeCoopMatchView?.showCanvasMessageView(true)
         Handler().postDelayed({
             activeCoopMatchView?.showCanvasMessageView(false)
-        }, 2000)
+        }, 5000)
+        leaveMatchHandler.postDelayed({
+            activeMatchView?.quit()
+        }, 5000)
     }
 
     private fun onCheckpoint(checkPoint: CheckPoint) {

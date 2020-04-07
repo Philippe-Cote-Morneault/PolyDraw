@@ -101,6 +101,7 @@ abstract class ActiveMatchPresenter : Presenter {
     }
 
     protected open fun onMatchEnded(matchEnded: MatchEnded) {
+        this.matchEnded = true
         activeMatchView?.enableGuessingView(false)
         if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
             activeMatchView?.showConfetti()
