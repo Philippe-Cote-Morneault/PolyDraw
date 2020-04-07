@@ -2,6 +2,7 @@ package com.log3900.tutorial
 
 import android.os.Bundle
 import android.view.Gravity
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,6 +20,7 @@ class TutorialActivity : AppCompatActivity() {
     private lateinit var skipTutorialButton: MaterialButton
     private lateinit var nextButton: MaterialButton
     private lateinit var viewPager: ViewPager
+    private lateinit var toolbarSlideTitle: TextView
 
     private lateinit var tutorialSlidesAdapter: TutorialFragmentPagerAdapter
 
@@ -30,6 +32,10 @@ class TutorialActivity : AppCompatActivity() {
         setupUI()
     }
 
+    fun setSlideTitle(title: Int) {
+        toolbarSlideTitle.setText(title)
+    }
+
     private fun setupUI() {
         toolbar = findViewById(R.id.activity_tutorial_toolbar)
         drawerLayout = findViewById(R.id.activity_tutorial_drawer_layout)
@@ -37,6 +43,7 @@ class TutorialActivity : AppCompatActivity() {
         skipTutorialButton = findViewById(R.id.activity_tutorial_footer_button_skip)
         nextButton = findViewById(R.id.activity_tutorial_footer_button_next)
         viewPager = findViewById(R.id.activity_tutorial_view_pager)
+        toolbarSlideTitle = findViewById(R.id.activity_tutorial_toolbar_fragment_title)
 
         togglePreviousButton(false)
 

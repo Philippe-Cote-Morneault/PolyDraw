@@ -8,18 +8,18 @@ import com.log3900.R
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.tutorial.TutorialSlideFragment
 
-class WelcomeFragment : TutorialSlideFragment() {
+class ActiveMatchChannelFragment : TutorialSlideFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_tutorial_slide_welcome, container, false)
+        val root = inflater.inflate(R.layout.fragment_tutorial_slide_active_match_channel_slide, container, false)
         return root
     }
 
     override fun onResume() {
         super.onResume()
-        (activity as TutorialActivity).setSlideTitle(R.string.tutorial_slide_welcome_title)
+        (activity as TutorialActivity).setSlideTitle(R.string.tutorial_slide_active_match_channel_title)
     }
 }
