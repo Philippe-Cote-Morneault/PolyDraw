@@ -120,9 +120,7 @@ func (v *virtualPlayerInfos) sendStatsInteraction(groupID uuid.UUID, match *matc
 		line = strings.ReplaceAll(line, "[]", secondsToHuman(userStats.TimePlayed))
 	}
 
-	managerInstance.mutex.Lock()
 	channelID, ok := managerInstance.Channels[groupID]
-	managerInstance.mutex.Unlock()
 
 	if !ok {
 		log.Printf("[VirtualPlayer -> [Error] Can't find channelID with groupID : %v. Aborting sendStatsInteraction...", groupID)
@@ -131,10 +129,7 @@ func (v *virtualPlayerInfos) sendStatsInteraction(groupID uuid.UUID, match *matc
 }
 
 func getRandomUserID(groupID uuid.UUID) uuid.UUID {
-	managerInstance.mutex.Lock()
-
 	if match, ok := managerInstance.Matches[groupID]; ok {
-		managerInstance.mutex.Unlock()
 		connections := (*match).GetConnections()
 		if len(connections) > 0 {
 			i := managerInstance.rand.Intn(len(connections))
@@ -149,8 +144,6 @@ func getRandomUserID(groupID uuid.UUID) uuid.UUID {
 
 		return uuid.Nil
 	}
-
-	managerInstance.mutex.Unlock()
 	return uuid.Nil
 }
 
@@ -158,29 +151,29 @@ func statsLinesLoop(groupID uuid.UUID) {
 	log.Println("[VirtualPlayer] Starting stats loop")
 	count := 0
 	for count < 5 {
-		time.Sleep(sendStatsDelay * time.Second)
-		managerInstance.mutex.Lock()
-		match, ok := managerInstance.Matches[groupID]
-		if !ok {
-			managerInstance.mutex.Unlock()
-			log.Println("[VirtualPlayer] Stopping statLinesLoop")
-			return
-		}
+		time.AfterFunc(sendStatsDelay*time.Second, func() {
 
-		log.Println("[VirtualPlayer] Sending stat interaction")
-		for _, bot := range managerInstance.Bots {
-			go bot.sendStatsInteraction(groupID, match)
-			break
-		}
-		managerInstance.mutex.Unlock()
+			managerInstance.mutex.Lock()
+			match, ok := managerInstance.Matches[groupID]
+			if !ok {
+				managerInstance.mutex.Unlock()
+				log.Println("[VirtualPlayer] Stopping statLinesLoop")
+				return
+			}
+
+			log.Println("[VirtualPlayer] Sending stat interaction")
+			for _, bot := range managerInstance.Bots {
+				go bot.sendStatsInteraction(groupID, match)
+				break
+			}
+			managerInstance.mutex.Unlock()
+		})
 		count++
 	}
 }
 
 func resetRandSeed() {
-	managerInstance.mutex.Lock()
 	managerInstance.rand.Seed(time.Now().UnixNano())
-	managerInstance.mutex.Unlock()
 }
 
 func stringify(count int64, unit string) string {
