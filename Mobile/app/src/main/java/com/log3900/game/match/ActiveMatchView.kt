@@ -32,4 +32,5 @@ interface ActiveMatchView {
     fun onBackButtonPressed()
     fun enableGuessingView(enable: Boolean)
     fun clearGuessingViewText()
+    fun quit()
 }

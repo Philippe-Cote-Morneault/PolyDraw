@@ -20,9 +20,10 @@ import kotlin.collections.ArrayList
 abstract class ActiveMatchPresenter : Presenter {
     protected var activeMatchView: ActiveMatchView? = null
     var matchManager: MatchManager
-        private set
     protected var lastShownTime: String? = null
     protected var canEnableGuessingView = false
+
+    protected var leaveMatchHandler: Handler = Handler()
 
     constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
         this.activeMatchView = activeMatchView
@@ -103,6 +104,10 @@ abstract class ActiveMatchPresenter : Presenter {
         if (matchEnded.winner == AccountRepository.getInstance().getAccount().ID) {
             activeMatchView?.showConfetti()
         }
+        leaveMatchHandler.postDelayed({
+             activeMatchView?.quit()
+            }, 5000
+        )
     }
 
     protected open fun onPlayerTurnToDraw(playerTurnToDraw: PlayerTurnToDraw) {
@@ -143,6 +148,13 @@ abstract class ActiveMatchPresenter : Presenter {
         }
     }
 
+    protected open fun leaveMatch() {
+        leaveMatchHandler.removeCallbacksAndMessages(null)
+        MainApplication.instance.mainActivity?.closeChat()
+        matchManager.leaveMatch()
+
+    }
+
     override fun resume() {
     }
 
@@ -150,8 +162,7 @@ abstract class ActiveMatchPresenter : Presenter {
     }
 
     override fun destroy() {
-        MainApplication.instance.mainActivity?.closeChat()
-        matchManager.leaveMatch()
+        leaveMatch()
         EventBus.getDefault().unregister(this)
         activeMatchView = null
     }

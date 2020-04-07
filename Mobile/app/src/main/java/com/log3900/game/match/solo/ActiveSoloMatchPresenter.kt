@@ -18,6 +18,7 @@ import kotlin.math.absoluteValue
 class ActiveSoloMatchPresenter : ActiveMatchPresenter {
     private var soloMatchManager: SoloMatchManager
     private var activeSoloMatchView: ActiveSoloMatchView? = null
+    private var matchEnded = false
 
     constructor(activeSoloMatchView: ActiveSoloMatchView) : super(activeSoloMatchView, SoloMatchManager()) {
         soloMatchManager = matchManager as SoloMatchManager
@@ -78,24 +79,31 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
         }
 
         Handler().postDelayed({
-            activeMatchView?.hideCanvas()
-            activeMatchView?.hideRoundEndInfoView()
-            activeSoloMatchView?.showCanvasMessageView(false)
-            Handler().postDelayed({
-                activeMatchView?.clearCanvas()
-                activeMatchView?.showCanvas()
-            }, 500)
+            if (!matchEnded) {
+                activeMatchView?.hideCanvas()
+                activeMatchView?.hideRoundEndInfoView()
+                activeSoloMatchView?.showCanvasMessageView(false)
+                Handler().postDelayed({
+                    activeMatchView?.clearCanvas()
+                    activeMatchView?.showCanvas()
+                }, 500)
+            }
         }, 2000)
     }
 
     override fun onMatchEnded(matchEnded: MatchEnded) {
+        this.matchEnded = true
         activeSoloMatchView?.showConfetti()
         val score = matchEnded.players.find { it.userID == AccountRepository.getInstance().getAccount().ID }!!.points
         activeSoloMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.solo_match_is_over_message, score))
         activeSoloMatchView?.showCanvasMessageView(true)
         Handler().postDelayed({
             activeSoloMatchView?.showCanvasMessageView(false)
-        }, 2000)
+        }, 5000)
+        leaveMatchHandler.postDelayed({
+            activeMatchView?.quit()
+        }, 5000
+        )
     }
 
     private fun onCheckpoint(checkPoint: CheckPoint) {

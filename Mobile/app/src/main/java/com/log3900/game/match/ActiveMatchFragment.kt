@@ -333,6 +333,10 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         ).show()
     }
 
+    override fun quit() {
+        findNavController().popBackStack()
+    }
+
     override fun onDestroy() {
         activeMatchPresenter?.destroy()
         activeMatchPresenter = null
