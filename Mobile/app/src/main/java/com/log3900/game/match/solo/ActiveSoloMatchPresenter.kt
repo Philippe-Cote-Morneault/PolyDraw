@@ -18,7 +18,6 @@ import kotlin.math.absoluteValue
 class ActiveSoloMatchPresenter : ActiveMatchPresenter {
     private var soloMatchManager: SoloMatchManager
     private var activeSoloMatchView: ActiveSoloMatchView? = null
-    private var matchEnded = false
 
     constructor(activeSoloMatchView: ActiveSoloMatchView) : super(activeSoloMatchView, SoloMatchManager()) {
         soloMatchManager = matchManager as SoloMatchManager

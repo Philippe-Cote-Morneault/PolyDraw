@@ -342,4 +342,12 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
         activeMatchPresenter = null
         super.onDestroy()
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (activeMatchPresenter != null && activeMatchPresenter!!.matchEnded) {
+            quit()
+        }
+
+    }
 }

@@ -24,6 +24,7 @@ abstract class ActiveMatchPresenter : Presenter {
     protected var canEnableGuessingView = false
 
     protected var leaveMatchHandler: Handler = Handler()
+    public var matchEnded = false
 
     constructor(activeMatchView: ActiveMatchView, matchManager: MatchManager) {
         this.activeMatchView = activeMatchView
