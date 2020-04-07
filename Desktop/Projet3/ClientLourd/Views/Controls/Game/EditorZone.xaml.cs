@@ -569,5 +569,12 @@ namespace ClientLourd.Views.Controls.Game
                 });
             });
         }
+
+        private void Textbox_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var tb = (TextBox) sender;
+            tb.SelectionStart = tb.Text.Length;
+            tb.SelectionLength = 0;
+        }
     }
 }

@@ -127,6 +127,7 @@
                                      PreviewMouseLeftButtonDown="SelectFirstEmptyTextBox"
                                      FontWeight="Bold"
                                      PreviewGotKeyboardFocus="Textbox_OnPreviewGotKeyboardFocus"
+                                     PreviewMouseUp="Textbox_OnPreviewMouseUp"
                                      Margin="3"
                                      Width="20"
                                      MaxLength="1"
