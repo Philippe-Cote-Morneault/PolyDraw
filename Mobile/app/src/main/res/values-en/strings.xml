@@ -204,4 +204,5 @@
     <string name="registration_completed">Registration completed</string>
     <string name="registration_completed_message">Account successfully created! Welcome, %1$s!</string>
     <string name="thanks">Thanks!</string>
+    <string name="best_score">"Best score: "</string>
 </resources>

@@ -228,4 +228,5 @@
     <string name="tutorial_slide_active_match_channel_text_01">"À chaque fois que l'on joint une partie, l'utilisateur sera automatiquement ajouté au canal \"Partie en cours\". C'est ici qu'il pourra clavarder avec les autres joueurs de la partie.         Quand l'utilisateur quittera la partie, il sera également automatiquement retiré du canal! "</string>
     <string name="tutorial_slide_active_match_channel_title">Canal Partie en cours</string>
     <string name="top_bar">Barre du haut</string>
+    <string name="best_score">"Meilleur score: "</string>
 </resources>

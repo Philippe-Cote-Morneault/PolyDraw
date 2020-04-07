@@ -10,4 +10,5 @@ interface ActiveSoloMatchView : ActiveMatchView {
     fun addRemainingLife()
     fun showScoreChangedAnimation(scoreChangedValue: String, isPositive: Boolean)
     fun setDrawer(player: Player)
+    fun setBestScore(bestScore: String)
 }

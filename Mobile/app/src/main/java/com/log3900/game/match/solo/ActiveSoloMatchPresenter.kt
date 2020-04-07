@@ -5,11 +5,16 @@ import android.util.Log
 import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.game.match.*
+import com.log3900.profile.stats.StatsRepository
 import com.log3900.settings.sound.SoundManager
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.DateFormatter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
@@ -29,6 +34,18 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
 
         val drawer = soloMatchManager.getCurrentMatch().players.find { it.isCPU }
         activeSoloMatchView.setDrawer(drawer!!)
+
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                try {
+                    val stats = StatsRepository.getAllUserStats()
+                    val bestScore = stats.bestScoreSolo
+                    activeSoloMatchView.setBestScore(MainApplication.instance.getContext().getString(R.string.best_score) + " " + bestScore)
+                } catch (e: Exception) {
+                    // nah
+                }
+            }
+        }
 
         matchManager.notifyReadyToPlay()
     }

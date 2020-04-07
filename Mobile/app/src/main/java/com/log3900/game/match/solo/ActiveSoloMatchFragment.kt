@@ -31,6 +31,7 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
     protected lateinit var teamPlayersRecyclerView: RecyclerView
     private lateinit var drawerViewHolder: DrawerHolderView
     private lateinit var remainingLivesContainer: LinearLayout
+    private lateinit var bestScoreTextView: TextView
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,6 +62,7 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
         scoreTextView = toolbar.findViewById(R.id.toolbar_active_solo_match_text_view_score)
         scoreChangedTextView = toolbar.findViewById(R.id.toolbar_active_solo_match_text_view_score_changed)
         remainingLivesContainer = toolbar.findViewById(R.id.toolbar_active_solo_match_container_lives)
+        bestScoreTextView = toolbar.findViewById(R.id.toolbar_active_solo_match_text_view_best_score)
     }
 
     override fun setupHumanPlayerRecyclerView(rootView: View) {
@@ -195,6 +197,10 @@ class ActiveSoloMatchFragment : ActiveMatchFragment(), ActiveSoloMatchView {
     override fun onDestroy() {
         activeSoloMatchPresenter = null
         super.onDestroy()
+    }
+
+    override fun setBestScore(bestScore: String) {
+        bestScoreTextView.setText(bestScore)
     }
 
     private fun createHeartImage(): ImageView {
