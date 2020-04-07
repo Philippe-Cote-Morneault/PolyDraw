@@ -22,7 +22,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type virtualPlayerInfos struct {
+type botInfos struct {
 	BotID             uuid.UUID
 	GroupID           uuid.UUID
 	Personality       string
@@ -33,7 +33,7 @@ type virtualPlayerInfos struct {
 
 const sendStatsDelay = 60 //Seconds
 
-func (v *virtualPlayerInfos) calculateDrawingTime() {
+func (v *botInfos) calculateDrawingTime() {
 	resetRandSeed()
 
 	min := 0.0
@@ -62,10 +62,10 @@ func (v *virtualPlayerInfos) calculateDrawingTime() {
 	v.DrawingTimeFactor = float64(min) + managerInstance.rand.Float64()*float64(max-min)
 }
 
-func generateVirtualPlayer(lang int) *virtualPlayerInfos {
+func generateVirtualPlayer(lang int) *botInfos {
 	resetRandSeed()
 
-	v := &virtualPlayerInfos{Language: lang, Personality: []string{"Angry", "Funny", "Mean", "Nice", "Supportive"}[managerInstance.rand.Intn(5)],
+	v := &botInfos{Language: lang, Personality: []string{"Angry", "Funny", "Mean", "Nice", "Supportive"}[managerInstance.rand.Intn(5)],
 		DrawingTimeFactor: 0, Username: randomdata.GenerateProfile(randomdata.RandomGender).Login.Username}
 
 	v.calculateDrawingTime()
@@ -73,7 +73,7 @@ func generateVirtualPlayer(lang int) *virtualPlayerInfos {
 	return v
 }
 
-func (v *virtualPlayerInfos) speak(channelID uuid.UUID, line string) {
+func (v *botInfos) speak(channelID uuid.UUID, line string) {
 	cbroadcast.Broadcast(messenger.BBotMessage, messenger.MessageReceived{
 		ChannelID: channelID.String(),
 		UserID:    v.BotID.String(),
@@ -83,7 +83,7 @@ func (v *virtualPlayerInfos) speak(channelID uuid.UUID, line string) {
 	})
 }
 
-func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
+func (v *botInfos) getInteraction(interactionType string) string {
 	resetRandSeed()
 
 	lineNumber := strconv.Itoa(managerInstance.rand.Intn(2) + 1)
@@ -92,7 +92,7 @@ func (v *virtualPlayerInfos) getInteraction(interactionType string) string {
 	return line
 }
 
-func (v *virtualPlayerInfos) sendStatsInteraction(groupID uuid.UUID, match *match.IMatch) {
+func (v *botInfos) sendStatsInteraction(groupID uuid.UUID, match *match.IMatch) {
 	resetRandSeed()
 
 	interactionType := "playerRef"
