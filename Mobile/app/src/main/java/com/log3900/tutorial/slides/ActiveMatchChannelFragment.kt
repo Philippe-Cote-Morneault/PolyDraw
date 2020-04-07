@@ -8,7 +8,7 @@ import com.log3900.R
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.tutorial.TutorialSlideFragment
 
-class ActiveMatchChannelFragment : TutorialSlideFragment() {
+class ActiveMatchChannelFragment : TutorialSlideFragment(R.string.tutorial_slide_active_match_channel_title) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

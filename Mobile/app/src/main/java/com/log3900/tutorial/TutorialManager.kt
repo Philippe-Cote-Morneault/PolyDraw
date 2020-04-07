@@ -9,15 +9,24 @@ object TutorialManager {
     private var activeTutorialTab: Int = 0
 
     private var slideChangedListeners: ArrayList<((oldPos: Int, newPos: Int) -> Unit)> = arrayListOf()
+    var tutorialSlides = arrayListOf<Class<*>>(
+        WelcomeFragment::class.java,
+        HomeViewFragment::class.java,
+        ActiveMatchChannelFragment::class.java,
+        VirtualPlayersFragment::class.java,
+        FFAMatchFragment::class.java,
+        SoloMatchFragment::class.java,
+        CoopMatchFragment::class.java
+    )
 
-    var tutorialSlides: HashMap<Int, Class<*>> = hashMapOf(
-        R.string.tutorial_slide_welcome_01_title to WelcomeFragment::class.java,
-        R.string.tutorial_slide_home_view_title to HomeViewFragment::class.java,
-        R.string.tutorial_slide_active_match_channel_title to ActiveMatchChannelFragment::class.java,
-        R.string.tutorial_slide_virtual_players_title to VirtualPlayersFragment::class.java,
-        R.string.tutorial_ffa_match_title to FFAMatchFragment::class.java,
-        R.string.tutorial_slide_solo_match_title to SoloMatchFragment::class.java,
-        R.string.tutorial_slide_coop_match_title to CoopMatchFragment::class.java
+    var tutorialSlideTitles = arrayListOf<Int>(
+        R.string.tutorial_slide_welcome_title,
+        R.string.tutorial_slide_home_view_title,
+        R.string.tutorial_slide_active_match_channel_title,
+        R.string.tutorial_slide_virtual_players_title,
+        R.string.tutorial_ffa_match_title,
+        R.string.tutorial_slide_solo_match_title,
+        R.string.tutorial_slide_coop_match_title
     )
 
     fun addSlideChangedListener(listener: ((oldPos: Int, newPos: Int) -> Unit)) {
@@ -34,26 +43,6 @@ object TutorialManager {
 
     fun getActiveTutorialSlide(): Int {
         return activeTutorialTab
-    }
-
-    fun getSlidesAsArrayList(): ArrayList<Class<*>> {
-        var arrayList = arrayListOf<Class<*>>()
-
-        tutorialSlides.forEach {
-            arrayList.add(it.value)
-        }
-
-        return arrayList
-    }
-
-    fun getSlidesTitlesAsArrayList(): ArrayList<Int> {
-        val arrayList = arrayListOf<Int>()
-
-        tutorialSlides.forEach {
-            arrayList.add(it.key)
-        }
-
-        return arrayList
     }
 
     fun setAccountFinishedTutorial(): Completable {

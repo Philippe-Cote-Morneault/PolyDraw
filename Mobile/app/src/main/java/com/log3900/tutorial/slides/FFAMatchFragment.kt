@@ -8,7 +8,7 @@ import com.log3900.R
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.tutorial.TutorialSlideFragment
 
-class FFAMatchFragment : TutorialSlideFragment() {
+class FFAMatchFragment : TutorialSlideFragment(R.string.tutorial_ffa_match_title) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

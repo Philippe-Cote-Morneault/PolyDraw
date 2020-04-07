@@ -65,7 +65,7 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        tutorialSlidesAdapter = TutorialFragmentPagerAdapter(supportFragmentManager, TutorialManager.getSlidesAsArrayList())
+        tutorialSlidesAdapter = TutorialFragmentPagerAdapter(supportFragmentManager, TutorialManager.tutorialSlides)
         viewPager.adapter = tutorialSlidesAdapter
 
         viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {

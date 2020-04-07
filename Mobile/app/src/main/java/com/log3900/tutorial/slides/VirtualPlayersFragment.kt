@@ -8,7 +8,7 @@ import com.log3900.R
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.tutorial.TutorialSlideFragment
 
-class VirtualPlayersFragment : TutorialSlideFragment() {
+class VirtualPlayersFragment : TutorialSlideFragment(R.string.tutorial_slide_virtual_players_title) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

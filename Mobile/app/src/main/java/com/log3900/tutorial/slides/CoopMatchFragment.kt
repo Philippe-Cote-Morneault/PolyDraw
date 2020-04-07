@@ -8,7 +8,7 @@ import com.log3900.R
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.tutorial.TutorialSlideFragment
 
-class CoopMatchFragment : TutorialSlideFragment() {
+class CoopMatchFragment : TutorialSlideFragment(R.string.tutorial_slide_coop_match_title) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

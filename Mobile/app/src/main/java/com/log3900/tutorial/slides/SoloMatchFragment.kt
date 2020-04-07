@@ -8,7 +8,7 @@ import com.log3900.R
 import com.log3900.tutorial.TutorialActivity
 import com.log3900.tutorial.TutorialSlideFragment
 
-class SoloMatchFragment : TutorialSlideFragment() {
+class SoloMatchFragment : TutorialSlideFragment(R.string.tutorial_slide_solo_match_title) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

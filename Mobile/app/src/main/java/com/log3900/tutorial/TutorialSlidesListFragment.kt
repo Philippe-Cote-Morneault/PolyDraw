@@ -33,7 +33,7 @@ class TutorialSlidesListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        tutorialSlidesAdapter = TutorialSlideAdapter(TutorialManager.getSlidesTitlesAsArrayList())
+        tutorialSlidesAdapter = TutorialSlideAdapter(TutorialManager.tutorialSlideTitles)
         tutorialSlidesRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
