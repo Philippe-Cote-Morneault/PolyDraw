@@ -35,7 +35,9 @@ func updateMatchesPlayed(stats match.StatsData) {
 func setDisconnection(socketID uuid.UUID) {
 	var c model.Connection
 	model.DB().Model(&model.Connection{}).Where("socket_id = ?", socketID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
-	model.DB().Model(&model.Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
+	if c.ID != uuid.Nil {
+		model.DB().Model(&model.Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
+	}
 }
 
 func createConnection(socketID uuid.UUID) {
