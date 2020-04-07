@@ -54,8 +54,9 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.IMatch struct")
 				break
 			}
-			go handleStartGame(match)
-			go statsLinesLoop(match.GetGroupID())
+			groupID := match.GetGroupID()
+			handleStartGame(match, groupID)
+			go statsLinesLoop(groupID)
 
 		case data := <-v.gameEnds:
 			log.Println("[VirtualPlayer] -> Receives gameEnds event")
@@ -65,7 +66,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
-			go handleEndGame(groupID)
+			handleEndGame(groupID)
 
 		case data := <-v.roundStarts:
 			log.Println("[VirtualPlayer] -> Receives roundStarts event")
@@ -86,7 +87,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid")
 				break
 			}
-			go handleRoundEnds(groupID, true)
+			handleRoundEnds(groupID, true)
 
 		case data := <-v.chatNew:
 			log.Println("[VirtualPlayer] -> Receives chatNew event")
@@ -95,7 +96,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing match.ChatNew struct")
 				break
 			}
-			go registerChannelGroup(chat.MatchID, chat.ChatID)
+			registerChannelGroup(chat.MatchID, chat.ChatID)
 
 		case data := <-v.playerLeft:
 			log.Println("[VirtualPlayer] -> Receives playerLeft event")
@@ -104,7 +105,7 @@ func (v *VirtualPlayer) listen() {
 				log.Println("[VirtualPlayer] -> [Error] Error while parsing uuid.UUID struct")
 				break
 			}
-			go stopDrawingOfSocket(socketID)
+			stopDrawingOfSocket(socketID)
 
 		case <-v.shutdown:
 			return

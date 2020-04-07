@@ -179,8 +179,7 @@ func KickVirtualPlayer(userID uuid.UUID) (uuid.UUID, string) {
 }
 
 // handleStartGame [New Threads] does the startGame routine for a bot in match (match ->)
-func handleStartGame(match match2.IMatch) {
-	groupID := match.GetGroupID()
+func handleStartGame(match match2.IMatch, groupID uuid.UUID) {
 	managerInstance.mutex.Lock()
 	managerInstance.Matches[groupID] = &match
 	managerInstance.mutex.Unlock()
@@ -217,17 +216,11 @@ func startDrawing(round *match2.RoundStart) {
 	time.Sleep(1700 * time.Millisecond)
 
 	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
-	var wg sync.WaitGroup
 	connections := (*match).GetConnections()
 	stopAllDrawingProcedures(connections, false)
 	stopDrawings := initializeDrawingStates(connections)
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTime: bot.DrawingTimeFactor * drawingTimeBot, Mode: round.Game.Image.Mode}, stopDrawings)
-	}()
-	wg.Wait()
+	drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTime: bot.DrawingTimeFactor * drawingTimeBot, Mode: round.Game.Image.Mode}, stopDrawings)
 }
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
@@ -444,8 +437,6 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 		return
 	}
 
-	var wg sync.WaitGroup
-	wg.Add(len(group))
 	// If nil all bots will speak
 	if speakingBotID != uuid.Nil {
 		bot, botOk := managerInstance.Bots[speakingBotID]
@@ -454,10 +445,7 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 			log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", speakingBotID)
 			return
 		}
-		go func(chanID uuid.UUID) {
-			defer wg.Done()
-			bot.speak(chanID, bot.getInteraction(interactionType))
-		}(channelID)
+		bot.speak(channelID, bot.getInteraction(interactionType))
 	} else {
 		for botID := range group {
 			bot, botOk := managerInstance.Bots[botID]
@@ -466,14 +454,10 @@ func makeBotsSpeak(interactionType string, groupID, speakingBotID uuid.UUID) {
 				log.Printf("[VirtualPlayer] -> [Error] Can't find botID : %v.", botID)
 				return
 			}
-			go func(chanID uuid.UUID) {
-				defer wg.Done()
-				bot.speak(chanID, bot.getInteraction(interactionType))
-			}(channelID)
+			bot.speak(channelID, bot.getInteraction(interactionType))
 		}
 	}
 	managerInstance.mutex.Unlock()
-	wg.Wait()
 }
 
 // Only called in hitRequest
