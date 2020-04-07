@@ -3,6 +3,7 @@ package virtualplayer
 import (
 	"fmt"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -116,8 +117,7 @@ func (v *virtualPlayerInfos) sendStatsInteraction(groupID uuid.UUID, match *matc
 		winRatio := fmt.Sprintf("%.2f", userStats.WinRatio)
 		line = strings.ReplaceAll(line, "[]", winRatio)
 	} else {
-		timePlayed := fmt.Sprintf("%v", userStats.TimePlayed)
-		line = strings.ReplaceAll(line, "[]", timePlayed)
+		line = strings.ReplaceAll(line, "[]", secondsToHuman(userStats.TimePlayed))
 	}
 
 	managerInstance.mutex.Lock()
@@ -156,7 +156,8 @@ func getRandomUserID(groupID uuid.UUID) uuid.UUID {
 
 func statsLinesLoop(groupID uuid.UUID) {
 	log.Println("[VirtualPlayer] Starting stats loop")
-	for {
+	count := 0
+	for count < 5 {
 		time.Sleep(sendStatsDelay * time.Second)
 		managerInstance.mutex.Lock()
 		match, ok := managerInstance.Matches[groupID]
@@ -172,6 +173,7 @@ func statsLinesLoop(groupID uuid.UUID) {
 			break
 		}
 		managerInstance.mutex.Unlock()
+		count++
 	}
 }
 
@@ -179,4 +181,27 @@ func resetRandSeed() {
 	managerInstance.mutex.Lock()
 	managerInstance.rand.Seed(time.Now().UnixNano())
 	managerInstance.mutex.Unlock()
+}
+
+func stringify(count int64, unit string) string {
+	return fmt.Sprintf("%v %v ", count, unit)
+}
+
+func secondsToHuman(input int64) string {
+	input = input / 1000
+	hours := math.Floor(float64(input) / 60 / 60)
+	seconds := input % (60 * 60)
+	minutes := math.Floor(float64(seconds) / 60)
+	seconds = input % 60
+	result := ""
+
+	if hours > 0 {
+		result = stringify(int64(hours), "h") + stringify(int64(minutes), "min") + stringify(int64(seconds), "s")
+	} else if minutes > 0 {
+		result = stringify(int64(minutes), "min") + stringify(int64(seconds), "s")
+	} else {
+		result = stringify(int64(seconds), "s")
+	}
+
+	return result
 }
