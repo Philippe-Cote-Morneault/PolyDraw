@@ -556,5 +556,18 @@ namespace ClientLourd.Views.Controls.Game
                 }
             }
         }
+
+        private void Textbox_OnPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            var tb = (TextBox) sender;
+            Task.Delay(50).ContinueWith((t) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    tb.SelectionStart = tb.Text.Length;
+                    tb.SelectionLength = 0;
+                });
+            });
+        }
     }
 }

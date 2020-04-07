@@ -126,6 +126,7 @@
                                      TextChanged="TextBoxBase_OnTextChanged"
                                      PreviewMouseLeftButtonDown="SelectFirstEmptyTextBox"
                                      FontWeight="Bold"
+                                     PreviewGotKeyboardFocus="Textbox_OnPreviewGotKeyboardFocus"
                                      Margin="3"
                                      Width="20"
                                      MaxLength="1"
