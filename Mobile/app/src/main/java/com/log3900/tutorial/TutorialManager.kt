@@ -17,8 +17,7 @@ object TutorialManager {
         R.string.tutorial_slide_virtual_players_title to VirtualPlayersFragment::class.java,
         R.string.tutorial_ffa_match_title to FFAMatchFragment::class.java,
         R.string.tutorial_slide_solo_match_title to SoloMatchFragment::class.java,
-        R.string.tutorial_slide_coop_match_title to CoopMatchFragment::class.java,
-        R.string.tutorial_slide_chat_01_title to ChatFragment01::class.java
+        R.string.tutorial_slide_coop_match_title to CoopMatchFragment::class.java
     )
 
     fun addSlideChangedListener(listener: ((oldPos: Int, newPos: Int) -> Unit)) {
