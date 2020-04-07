@@ -163,7 +163,7 @@ func statsLinesLoop(groupID uuid.UUID) {
 
 		log.Println("[VirtualPlayer] Sending stat interaction")
 		for _, bot := range managerInstance.Bots {
-			go bot.sendStatsInteraction(groupID, match)
+			bot.sendStatsInteraction(groupID, match)
 			break
 		}
 		managerInstance.mutex.Unlock()
