@@ -15,7 +15,6 @@ import com.log3900.shared.ui.ThemeUtils
 class TutorialActivity : AppCompatActivity() {
     // UI Elements
     private lateinit var toolbar: Toolbar
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var previousButton: MaterialButton
     private lateinit var skipTutorialButton: MaterialButton
     private lateinit var nextButton: MaterialButton
@@ -38,7 +37,6 @@ class TutorialActivity : AppCompatActivity() {
 
     private fun setupUI() {
         toolbar = findViewById(R.id.activity_tutorial_toolbar)
-        drawerLayout = findViewById(R.id.activity_tutorial_drawer_layout)
         previousButton = findViewById(R.id.activity_tutorial_footer_button_prev)
         skipTutorialButton = findViewById(R.id.activity_tutorial_footer_button_skip)
         nextButton = findViewById(R.id.activity_tutorial_footer_button_next)
@@ -51,11 +49,18 @@ class TutorialActivity : AppCompatActivity() {
 
         addButtonListeners()
 
-        setupToolbar()
-
         TutorialManager.addSlideChangedListener { oldPos, newPos ->
             onSlideChanged(oldPos, newPos)
         }
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun addButtonListeners() {
@@ -81,12 +86,6 @@ class TutorialActivity : AppCompatActivity() {
                 TutorialManager.changeActiveTutorialSlide(position)
             }
         })
-    }
-
-    private fun setupToolbar() {
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger_menu)
-
-        toolbar.setNavigationOnClickListener { handleNavigationDrawerClick() }
     }
 
     private fun onSlideChanged(oldPos: Int, newPos: Int) {
@@ -140,22 +139,6 @@ class TutorialActivity : AppCompatActivity() {
         } else {
             finishTutorial()
         }
-    }
-
-    private fun handleNavigationDrawerClick() {
-        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-            closeNavigationDrawer()
-        } else {
-            openNavigationDrawer()
-        }
-    }
-
-    private fun openNavigationDrawer() {
-        drawerLayout.openDrawer(Gravity.LEFT)
-    }
-
-    private fun closeNavigationDrawer() {
-        drawerLayout.closeDrawer(Gravity.LEFT)
     }
 
     private fun finishTutorial() {
