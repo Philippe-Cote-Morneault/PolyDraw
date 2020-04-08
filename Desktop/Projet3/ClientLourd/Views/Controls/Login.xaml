@@ -22,7 +22,7 @@
 
     </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Right" FontSize="15" Margin="0 -80 50 0">
+        <TextBlock HorizontalAlignment="Right" FontSize="15" Margin="0 0 100 0">
             <Hyperlink Command="{Binding ChangeLangCommand}">
                 <TextBlock Text="{Binding Language, Converter={StaticResource LanguageInverseConverter}}" />
             </Hyperlink>
