@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
+import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.ui.ThemeUtils
@@ -104,13 +105,13 @@ class TutorialActivity : AppCompatActivity() {
     }
 
     private fun setNextButtonToFinish() {
-        nextButton.text = "Finish Tutorial"
+        nextButton.text = MainApplication.instance.getContext().getString(R.string.finish_tutorial)
         nextButton.setBackgroundColor(ThemeUtils.resolveAttribute(R.attr.colorPrimaryDark))
         nextButton.setTextColor(ThemeUtils.resolveAttribute(R.attr.colorOnPrimaryDark))
     }
 
     private fun setFinishButtonToNext() {
-        nextButton.text = "Next"
+        nextButton.text = MainApplication.instance.getContext().getText(R.string.tutorial_button_next)
         nextButton.setBackgroundColor(ThemeUtils.resolveAttribute(R.attr.colorPrimary))
         nextButton.setTextColor(ThemeUtils.resolveAttribute(R.attr.colorOnPrimary))
     }
