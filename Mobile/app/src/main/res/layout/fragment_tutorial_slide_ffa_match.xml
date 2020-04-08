@@ -106,7 +106,7 @@
         <ImageView
             android:id="@+id/fragment_tutorial_slide_ffa_match_image_view_03"
             android:layout_width="0dp"
-            android:layout_height="400dp"
+            android:layout_height="100dp"
             android:layout_margin="30dp"
             android:src="@drawable/tutorial_slide_ffa_match_picture_03"
             app:layout_constraintStart_toStartOf="parent"
@@ -201,6 +201,7 @@
             android:id="@+id/fragment_tutorial_ffa_match_image_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_ffa_match_guess_header_separator">
@@ -208,7 +209,7 @@
             <ImageView
                 android:id="@+id/fragment_tutorial_slide_ffa_match_image_view_05"
                 android:layout_width="500dp"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_margin="30dp"
                 android:src="@drawable/tutorial_slide_ffa_match_picture_05"
                 android:layout_gravity="start"/>
@@ -216,7 +217,7 @@
             <ImageView
                 android:id="@+id/fragment_tutorial_slide_ffa_match_image_view_06"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_margin="30dp"
                 android:src="@drawable/tutorial_slide_ffa_match_picture_06"
                 android:layout_gravity="end"/>
@@ -229,7 +230,6 @@
             android:text="@string/tutorial_ffa_match_text_05"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:layout_marginTop="30dp"
             android:textSize="24sp"
             android:textColor="@color/color_black"
             app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_ffa_match_image_container"

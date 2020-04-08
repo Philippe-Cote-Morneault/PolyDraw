@@ -106,7 +106,7 @@
         <ImageView
             android:id="@+id/fragment_tutorial_slide_coop_match_image_view_03"
             android:layout_width="0dp"
-            android:layout_height="400dp"
+            android:layout_height="50dp"
             android:layout_margin="30dp"
             android:src="@drawable/tutorial_slide_coop_match_picture_03"
             app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +161,7 @@
             <ImageView
                 android:id="@+id/fragment_tutorial_slide_coop_match_image_view_04"
                 android:layout_width="500dp"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_margin="30dp"
                 android:src="@drawable/tutorial_slide_coop_match_picture_04"
                 android:layout_gravity="start"/>
@@ -169,7 +169,7 @@
             <ImageView
                 android:id="@+id/fragment_tutorial_slide_coop_match_image_view_05"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_margin="30dp"
                 android:src="@drawable/tutorial_slide_coop_match_picture_05"
                 android:layout_gravity="end"/>
