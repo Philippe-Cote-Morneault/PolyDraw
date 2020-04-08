@@ -35,6 +35,7 @@ namespace ClientLourd.Views.Controls
         {
             InitializeComponent();
             Loaded += OnLoad;
+            ShowCursor();
         }
 
         public void HideCursor()
