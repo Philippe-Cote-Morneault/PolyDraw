@@ -104,7 +104,7 @@ class ActiveSoloMatchPresenter : ActiveMatchPresenter {
                     activeMatchView?.showCanvas()
                 }, 500)
             }
-        }, 2000)
+        }, 3000)
     }
 
     override fun onMatchEnded(matchEnded: MatchEnded) {

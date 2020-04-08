@@ -62,7 +62,7 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
                     activeCoopMatchView?.showCanvas()
                 }, 500)
             }
-        }, 2000)
+        }, 3000)
     }
 
     override fun onTeamateGuessedWordProperly(teamateGuessedWordProperly: TeamateGuessedWordProperly) {

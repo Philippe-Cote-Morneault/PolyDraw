@@ -110,7 +110,7 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
                     activeFFAMatchView?.showCanvas()
                 }, 500)
             }
-        }, 2000)
+        }, 3000)
     }
 
     override fun onMatchEnded(matchEnded: MatchEnded) {
