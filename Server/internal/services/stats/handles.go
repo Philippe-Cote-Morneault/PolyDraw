@@ -31,16 +31,16 @@ func updateMatchesPlayed(stats match.StatsData) {
 	}
 }
 
-func setDisconnection(socketID uuid.UUID) {
+func setDisconnection(userID uuid.UUID) {
 	var c model.Connection
-	model.DB().Model(&model.Connection{}).Where("socket_id = ?", socketID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
+	model.DB().Model(&model.Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(0).Limit(1).Find(&c)
 	if c.ID != uuid.Nil {
 		model.DB().Model(&model.Connection{}).Where("id = ?", c.ID).Update("disconnected_at", time.Now().Unix())
 	}
 }
 
-func createConnection(socketID uuid.UUID) {
-	model.DB().Create(&model.Connection{SocketID: socketID, ConnectedAt: time.Now().Unix()})
+func createConnection(userID uuid.UUID) {
+	model.DB().Create(&model.Connection{UserID: userID, ConnectedAt: time.Now().Unix()})
 }
 
 // GetStats find in BD all stats of user

@@ -7,7 +7,7 @@ import (
 //Connection represents the information of a connection
 type Connection struct {
 	Base
-	SocketID       uuid.UUID
+	UserID         uuid.UUID
 	ConnectedAt    int64
 	DisconnectedAt int64
 }

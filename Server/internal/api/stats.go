@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/internal/services/stats"
 
 	"gitlab.com/jigsawcorp/log3900/internal/context"
@@ -57,10 +56,7 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 // GetHistory returns the history
 func GetHistory(w http.ResponseWriter, r *http.Request) {
 	var userID uuid.UUID = uuid.MustParse(fmt.Sprintf("%v", r.Context().Value(context.CtxUserID)))
-	socketID, err := auth.GetSocketID(userID)
-	if err != nil {
-		//TODO messsage erreur
-	}
+
 	offset := 0
 	limit := 100
 	start, startOk := r.URL.Query()["start"]
@@ -91,7 +87,7 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 	var h history
 
 	var connectionHistory []connection
-	model.DB().Model(&model.Connection{}).Where("socket_id = ?", socketID).Order("created_at desc").Offset(offset).Limit(limit).Find(&connectionHistory)
+	model.DB().Model(&model.Connection{}).Where("user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&connectionHistory)
 	h.ConnectionHistory = connectionHistory
 
 	for i := len(h.ConnectionHistory)/2 - 1; i >= 0; i-- {
