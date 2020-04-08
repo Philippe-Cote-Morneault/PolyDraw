@@ -88,6 +88,8 @@ class ActiveFFAMatchPresenter : ActiveMatchPresenter {
         activeFFAMatchView?.showCanvasMessageView(false)
         activeFFAMatchView?.enableDrawFunctions(false, null)
         activeMatchView?.showRoundEndInfoView(roundEnded.word, scores)
+        //activeFFAMatchView?.setTimeValue()
+        changeRemainingTime(0)
 
         roundEnded.players.forEach {
             if (playerScores[it.userID] != it.points) {
