@@ -76,7 +76,7 @@ abstract class ActiveMatchPresenter : Presenter {
     }
 
     protected open fun onGuessedWordWrong() {
-        activeMatchView?.setCanvasMessage("Try again!")
+        activeMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.try_again))
         activeMatchView?.showCanvasMessageView(true)
         activeMatchView?.enableGuessingView(false)
         activeMatchView?.animateWordGuessedWrong()

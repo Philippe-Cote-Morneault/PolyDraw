@@ -33,6 +33,7 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
     private lateinit var teamScoreTextView: TextView
     private lateinit var teamScoreChangedTextView: TextView
     private lateinit var remainingLivesContainer: LinearLayout
+    private lateinit var teamateBadGuessTextView: TextView
     private lateinit var drawerViewHolder: DrawerHolderView
     private var remainingLivesHearts: ArrayList<ImageView> = arrayListOf()
     protected lateinit var teamPlayersRecyclerView: RecyclerView
@@ -56,6 +57,7 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
 
     override fun setupUI(rootView: View) {
         drawerViewHolder = rootView.findViewById(R.id.fragment_active_coop_match_drawer_holder_view)
+        teamateBadGuessTextView = rootView.findViewById(R.id.fragment_active_coop_match_text_view_teamate_bad_guess_warning)
         super.setupUI(rootView)
     }
 
@@ -193,6 +195,18 @@ class ActiveCoopMatchFragment : ActiveMatchFragment(), ActiveCoopMatchView {
 
     override fun setDrawer(player: Player) {
         drawerViewHolder.setDrawer(player)
+    }
+
+    override fun animateBadTeamateGuessWarning() {
+        teamateBadGuessTextView.setTextColor(Color.RED)
+        val alphaChangeAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            teamateBadGuessTextView,
+            PropertyValuesHolder.ofFloat(View.ALPHA, 0f, 1f)
+        )
+        alphaChangeAnimator.repeatCount = 1
+        alphaChangeAnimator.repeatMode = ObjectAnimator.REVERSE
+        alphaChangeAnimator.duration = 1000
+        alphaChangeAnimator.start()
     }
 
     override fun onDestroy() {
