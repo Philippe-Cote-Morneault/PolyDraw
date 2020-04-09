@@ -15,6 +15,7 @@
         <converter:BoolToVisibilityConverter x:Key="CollapsedIfTrue" TrueValue="Collapsed" FalseValue="Visible" />
         <converter:BoolToVisibilityConverter x:Key="VisibleIfTrue" TrueValue="Visible" FalseValue="Collapsed" />
         <converter:ModeAndIsCPUToVisibility x:Key="ModeAndIsCPUToVisibility" />
+        <converter:BoolToHiddenConverter x:Key="BoolToHiddenConverter"/>
 
 
         <Storyboard x:Key="PointsAnimations">
@@ -76,10 +77,10 @@
                                     <!-- Icon -->
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"
                                                              VerticalAlignment="Center"
-                                                             Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                             Visibility="{Binding Path=IsDrawing, Converter={StaticResource BoolToHiddenConverter}}" />
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"
                                                              VerticalAlignment="Center"
-                                                             Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                             Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BoolToHiddenConverter}}" />
                                 </StackPanel>
                                 <Separator />
 
@@ -142,10 +143,10 @@
                                     <!-- Icon -->
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Pencil"
                                                              VerticalAlignment="Center"
-                                                             Visibility="{Binding Path=IsDrawing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                             Visibility="{Binding Path=IsDrawing, Converter={StaticResource BoolToHiddenConverter}}" />
                                     <materialDesign:PackIcon Height="24" Width="24" Kind="Check" Foreground="Green"
                                                              VerticalAlignment="Center"
-                                                             Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                             Visibility="{Binding Path=GuessedTheWord, Converter={StaticResource BoolToHiddenConverter}}" />
                                 </StackPanel>
                                 <StackPanel Height="30" Orientation="Horizontal" HorizontalAlignment="Center">
                                     <TextBlock
