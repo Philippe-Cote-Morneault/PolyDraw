@@ -33,7 +33,11 @@ class ConnectionAdapter(val connections: List<Connection>)
         holder.connectionTimeText.text = DateFormatter.formatFullDate(connectionDate)//DateFormatter.formatDate(connectionDate)
 
         val disconnectionDate = Date(connection.disconnectedAt.toLong()*1000)
-        holder.disconnectionTimeText.text = DateFormatter.formatFullDate(disconnectionDate)
+        holder.disconnectionTimeText.text = if (connection.disconnectedAt != 0) {
+            DateFormatter.formatFullDate(disconnectionDate)
+        } else {
+            "-"
+        }
 
         val timePlayedDate = Date(disconnectionDate.time - connectionDate.time)
         holder.timePlayedText.text = DateFormatter.formatFullTime(timePlayedDate)
