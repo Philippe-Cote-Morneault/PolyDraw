@@ -71,6 +71,18 @@
         app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <TextView
+        android:id="@+id/fragment_active_coop_match_text_view_teamate_bad_guess_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="25dp"
+        android:text="@string/teamate_bad_guess_warning"
+        android:alpha="0"
+        app:layout_constraintBottom_toTopOf="@id/fragment_active_match_footer_container"
+        app:layout_constraintStart_toStartOf="@id/fragment_active_match_footer_container"
+        app:layout_constraintEnd_toEndOf="@id/fragment_active_match_footer_container"/>
+
     <LinearLayout
         android:id="@+id/fragment_active_match_footer_container"
         android:layout_width="0dp"

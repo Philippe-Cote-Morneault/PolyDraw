@@ -230,4 +230,5 @@
     <string name="top_bar">Barre du haut</string>
     <string name="best_score">"Meilleur score: "</string>
     <string name="finish_tutorial">Terminer le tutoriel</string>
+    <string name="teamate_bad_guess_warning">Votre coéquipier a deviné incorrectement!</string>
 </resources>

@@ -78,6 +78,13 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
         }
     }
 
+    override fun onTeamateGuessedWordInproperly(teamateGuessWordIncorrectly: TeamateGuessWordIncorrectly) {
+        super.onTeamateGuessedWordInproperly(teamateGuessWordIncorrectly)
+        if (teamateGuessWordIncorrectly.userID != AccountRepository.getInstance().getAccount().ID) {
+            activeCoopMatchView?.animateBadTeamateGuessWarning()
+        }
+    }
+
     override fun onGuessedWordWrong() {
         if (coopMatchManager.getCurrentMatch().lives > 1) {
             activeCoopMatchView?.setCanvasMessage(MainApplication.instance.getContext().getString(R.string.try_again))
