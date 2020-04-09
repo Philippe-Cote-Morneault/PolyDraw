@@ -89,6 +89,9 @@
     <system:String x:Key="UploadImage">Téléversez une image</system:String>
     <system:String x:Key="Upload">Téléverser</system:String>
     <system:String x:Key="DrawingMode">Sélectionnez la façon dont le dessin sera affiché</system:String>
+    <system:String x:Key="BlackLevel">Seuil de niveau de noir</system:String>
+    <system:String x:Key="BrushSize">Taille de la brosse</system:String>
+    
 
 
     <!-- LobbyViewModel -->

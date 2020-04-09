@@ -251,8 +251,11 @@
                             <StackPanel IsEnabled="{Binding Path=DataContext.IsWaiting, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Converter={StaticResource InverseBooleanConverter}}" HorizontalAlignment="Center" Orientation="Vertical">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
                                     <StackPanel Margin="10" Orientation="Vertical">
-                                        <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                                   Text="Black level threshold (%)" />
+                                        <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold">
+                                           <Run Text="{DynamicResource BlackLevel}"/>
+                                           <Run Text="(%)"/>
+                                        </TextBlock>
+                                                    
                                         <Slider
                                             Minimum="0"
                                             Maximum="100"
@@ -260,8 +263,9 @@
                                             Value="{Binding BlackLevelThreshold}" />
                                     </StackPanel>
                                     <StackPanel Margin="10" Orientation="Vertical">
-                                        <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold"
-                                                   Text="Brush size" />
+                                        <TextBlock FontSize="24" HorizontalAlignment="Center" FontWeight="Bold">
+                                            <Run Text="{DynamicResource BrushSize}"/>
+                                        </TextBlock>
                                         <Slider
                                             Minimum="1"
                                             Maximum="100"
