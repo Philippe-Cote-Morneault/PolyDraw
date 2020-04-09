@@ -65,7 +65,7 @@
     <string name="login_password_help">Au moin 8 caractères</string>
     <string name="login_password_hint">Mot de passe</string>
     <string name="login_reenter_password_hint">Confirmer le mot de passe</string>
-    <string name="login_remember_me">Mémoriser</string>
+    <string name="login_remember_me">Se souvenir de moi</string>
     <string name="login_signup_now">Créez-en un!</string>
     <string name="login_signup_question">Pas de compte?</string>
     <string name="login_username_error">Le nom d\'utilisateur ne peut être vide</string>
