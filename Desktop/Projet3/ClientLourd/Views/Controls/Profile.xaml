@@ -18,8 +18,9 @@
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
         <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
         <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
-        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
+        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/> 
         <converter:ListViewColumnWidthConverter x:Key="ListViewColumnWidthConverter"/>
+        <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="40 10 40 10">
@@ -155,7 +156,7 @@
                                 <GridViewColumn
                                         Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}" 
                                         Header="{DynamicResource GameMode}"
-                                        DisplayMemberBinding="{Binding MatchType}">
+                                        DisplayMemberBinding="{Binding MatchType, Converter={StaticResource EnumTranslationConverter}}">
 
                                 </GridViewColumn>
 
