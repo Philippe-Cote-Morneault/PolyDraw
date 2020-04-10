@@ -78,7 +78,7 @@
     <system:String x:Key="WordDifficulty">Sélectionnez le niveau de difficulté du mot</system:String>
     <system:String x:Key="DrawingWay">Sélectionnez la façon dont le jeu sera créé</system:String>
     <system:String x:Key="ManualDraw">Dessiner le mot</system:String>
-    <system:String x:Key="ImageUploaded">Télécharger une image du mot</system:String>
+    <system:String x:Key="ImageUploaded">Téléverser une image du mot</system:String>
     <system:String x:Key="Next">Suivant</system:String>
     <system:String x:Key="Previous">Précédent</system:String>
     <system:String x:Key="Confirm">Confirmer</system:String>
@@ -86,9 +86,12 @@
     <system:String x:Key="Hint">Indice</system:String>
     <system:String x:Key="DrawRepresentation">Dessinez une représentation du mot</system:String>
     <system:String x:Key="PlayPreview">Jouer la prévisualisation</system:String>
-    <system:String x:Key="UploadImage">Téléchargez une image</system:String>
-    <system:String x:Key="Upload">Télécharger</system:String>
+    <system:String x:Key="UploadImage">Téléversez une image</system:String>
+    <system:String x:Key="Upload">Téléverser</system:String>
     <system:String x:Key="DrawingMode">Sélectionnez la façon dont le dessin sera affiché</system:String>
+    <system:String x:Key="BlackLevel">Seuil de niveau de noir</system:String>
+    <system:String x:Key="BrushSize">Taille de la brosse</system:String>
+    
 
 
     <!-- LobbyViewModel -->
@@ -163,7 +166,7 @@
     <system:String x:Key="Delete">Supprimer</system:String>
     <system:String x:Key="UserLeft">a quitté le canal</system:String>
     <system:String x:Key="UserChanged">a changé son nom d'utilisateur pour</system:String>
-    <system:String x:Key="UserJoined">a rejoin le canal</system:String>
+    <system:String x:Key="UserJoined">a rejoint le canal</system:String>
     <system:String x:Key="HintResponse">a demandé un indice</system:String>
 
     <!-- MainWindow -->

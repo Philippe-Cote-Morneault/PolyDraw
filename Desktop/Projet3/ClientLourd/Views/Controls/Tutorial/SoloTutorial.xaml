@@ -12,15 +12,17 @@
         <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
     </UserControl.Resources>
     <DockPanel>
+        <Button DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
+            <materialDesign:PackIcon Kind="NavigateBefore"/>
+        </Button>
         <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="{DynamicResource SoloGame}"/>
+        <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Chat"/>
         <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
-            <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
-                <materialDesign:PackIcon Kind="NavigateBefore"/>
-            </Button>
-            <Button Margin="5"  Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
-                <materialDesign:PackIcon Kind="NavigateNext"/>
+            <Button Margin="5" Content="{DynamicResource EndTutorial}" HorizontalAlignment="Center" Command="materialDesign:DialogHost.CloseDialogCommand">
             </Button>
         </StackPanel>
+        
+        
         <ScrollViewer>
             <StackPanel Orientation="Vertical" Margin="15 15 20 15">
                 <!-- General description -->

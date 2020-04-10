@@ -35,7 +35,7 @@
           </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
+          <e p="Release" t="Include">
             <e p="App.g.cs" t="Include" />
             <e p="ClientLourd_Content.g.cs" t="Include" />
             <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
@@ -234,6 +234,7 @@
             <e p="StrokeMessageOffsets.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
+            <e p="BoolToHiddenConverter.cs" t="Include" />
             <e p="BoolToVisibilityConverter.cs" t="Include" />
             <e p="ChannelSelectionBorderConverter.cs" t="Include" />
             <e p="ChannelSelectionToIconConverter.cs" t="Include" />

@@ -89,6 +89,8 @@
     <system:String x:Key="PlayPreview">Play the preview</system:String>
     <system:String x:Key="UploadImage">Upload an image</system:String>
     <system:String x:Key="Upload">Upload</system:String>
+    <system:String x:Key="BlackLevel">Black level threshold</system:String>
+    <system:String x:Key="BrushSize">Brush size</system:String>
 
 
     <system:String x:Key="DrawingMode">Select the way the drawing will be displayed</system:String>
