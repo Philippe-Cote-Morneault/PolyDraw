@@ -173,10 +173,10 @@ namespace ClientLourd
         /// <summary>
         /// Return the chat to the mainwindow if the parent is null or a grid
         /// </summary>
-        public void ReturnTheChat()
+        public void ReturnTheChat(bool returnHome = false)
         {
             ((Grid) ChatBox.Parent)?.Children.Clear();
-            if (ViewModel.ContainedView == Utilities.Enums.Views.Lobby.ToString())
+            if (!returnHome && ViewModel.ContainedView == Utilities.Enums.Views.Lobby.ToString())
             {
                 Lobby.ChatContainer.Children.Add(ChatBox);
             }

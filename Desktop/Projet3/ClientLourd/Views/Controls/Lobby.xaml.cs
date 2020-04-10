@@ -107,7 +107,7 @@ namespace ClientLourd.Views.Controls
                 if (ChatContainer.Children.Count > 0)
                 {
                     //Remove the chat
-                    MainWindow.ReturnTheChat();
+                    MainWindow.ReturnTheChat(true);
                 }
             });
         }
