@@ -10,6 +10,7 @@ using System.Windows.Input;
 using ClientLourd.Services.RestService;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using System.Collections.ObjectModel;
 
 namespace ClientLourd.ViewModels
 {
@@ -19,11 +20,39 @@ namespace ClientLourd.ViewModels
         private User _user;
         private Stats _stats;
         private StatsHistory _statsHistory;
-        private int _end;
+        public int _end;
 
         public ProfileViewModel()
         {
             _end = 20;
+            ((MainWindow)Application.Current.MainWindow).ViewModel.LanguageChangedEvent += ViewModelOnLanguageChangedEvent;
+        }
+
+        public void AddStatsHistory(StatsHistory sh)
+        {
+            var tmpMatches = new ObservableCollection<MatchPlayed>(StatsHistory.MatchesPlayedHistory);
+            StatsHistory.MatchesPlayedHistory.Clear();
+
+            for (int i = 0; i < sh.MatchesPlayedHistory.Count; i++)
+            {
+                StatsHistory.MatchesPlayedHistory.Add(sh.MatchesPlayedHistory[i]);
+            }
+
+            for (int i = 0; i < tmpMatches.Count; i++)
+            {
+                StatsHistory.MatchesPlayedHistory.Add(tmpMatches[i]);
+            }
+
+            NotifyPropertyChanged(nameof(StatsHistory));
+        }
+
+        private void ViewModelOnLanguageChangedEvent(object source, EventArgs args)
+        {
+            if (StatsHistory != null)
+            {
+                NotifyPropertyChanged(nameof(StatsHistory));
+                NotifyPropertyChanged(nameof(StatsHistory.MatchesPlayedHistory));
+            }
         }
 
         public override void AfterLogOut()
@@ -59,8 +88,21 @@ namespace ClientLourd.ViewModels
 
         private async Task GetUserStats(int start, int end)
         {
-            _statsHistory = await RestClient.GetStats(start, end);
+            StatsHistory = await RestClient.GetStats(start, end);
         }
+
+
+        public StatsHistory StatsHistory
+        {
+            get => _statsHistory;
+            set
+            {
+                NotifyPropertyChanged();
+                _statsHistory = value;
+            }
+        }
+
+
 
         public RestClient RestClient
         {
@@ -69,7 +111,10 @@ namespace ClientLourd.ViewModels
 
         public SessionInformations SessionInformations
         {
-            get { return _sessionInformations; }
+            get {
+                return
+               (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as
+             SessionInformations; }
         }
 
         public User User
@@ -145,7 +190,7 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(_statsHistory, _end);
+            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(StatsHistory, _end);
 
             await DialogHost.Show(connectionDialog,
                 (object o, DialogClosingEventArgs closingEventHandler) =>
@@ -156,25 +201,5 @@ namespace ClientLourd.ViewModels
         }
 
 
-        private RelayCommand<object> _openGamesPlayedCommand;
-
-        public ICommand OpenGamesPlayedCommand
-        {
-            get
-            {
-                return _openGamesPlayedCommand ?? (_openGamesPlayedCommand =
-                    new RelayCommand<object>(obj => OpenGamesPlayedHistory(obj)));
-            }
-        }
-
-        private async Task OpenGamesPlayedHistory(object obj)
-        {
-            await DialogHost.Show(new GamesPlayedHistoryDialog(_statsHistory, _end),
-                (object o, DialogClosingEventArgs closingEventHandler) =>
-                {
-                    (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost)
-                        .CloseOnClickAway = false;
-                });
-        }
     }
 }

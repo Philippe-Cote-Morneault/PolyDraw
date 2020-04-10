@@ -26,6 +26,10 @@ namespace ClientLourd.Utilities.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string enumStr = value.ToString();
+            if (enumStr == "FFA")
+            {
+                var x = 1;
+            }
             if (Language == Languages.FR.GetDescription())
             {
                 //langue 

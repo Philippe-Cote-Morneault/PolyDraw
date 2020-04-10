@@ -53,6 +53,9 @@
     <system:String x:Key="AverageGameDuration">Temps moyen d'une partie:</system:String>
     <system:String x:Key="BestSoloScore">Meilleur score solo:</system:String>
     <system:String x:Key="Achievements">Trophés</system:String>
+    <system:String x:Key="ProfileInfo">Informations du profil</system:String>
+    <system:String x:Key="MatchHistory">Historique de partie</system:String>
+
 
     <!--Edit Profile-->
     <system:String x:Key="EditProfileTitle">Modifier mon profil</system:String>
@@ -210,7 +213,7 @@
 
     <!-- Game history -->
     <system:String x:Key="GameMode">Mode de la partie</system:String>
-    <system:String x:Key="Winner">Gagnant</system:String>
+    <system:String x:Key="Winner">Gagnant/Points</system:String>
     <system:String x:Key="GameDuration">Durée de la partie</system:String>
     
     <!-- FFA tutorial -->

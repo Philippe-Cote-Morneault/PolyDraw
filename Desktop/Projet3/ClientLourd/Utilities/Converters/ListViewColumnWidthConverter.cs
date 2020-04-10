@@ -8,11 +8,13 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class WinnerNameConverter : IValueConverter
+    class ListViewColumnWidthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (String.IsNullOrEmpty(value.ToString())) ? "-" : value.ToString();
+            int nColumns = int.Parse((string)parameter);
+
+            return (double)value / nColumns;   
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

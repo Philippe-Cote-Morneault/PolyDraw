@@ -22,9 +22,19 @@ namespace ClientLourd.Utilities.Converters
                 {
                     if (Enum.TryParse(param, out GameModes res))
                     {
-                        if (res == (GameModes) value)
+                        try
                         {
-                            return Visibility.Visible;
+                            if (res == (GameModes)value)
+                            {
+                                return Visibility.Visible;
+                            }
+                        }
+                        catch
+                        {
+                            if (res == (GameModes)Enum.Parse(typeof(GameModes), (string)value))
+                            {
+                                return Visibility.Visible;
+                            }
                         }
                     }
                 }
