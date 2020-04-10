@@ -50,9 +50,7 @@ namespace ClientLourd.ViewModels
         {
             if (StatsHistory != null)
             {
-                
                 NotifyPropertyChanged(nameof(StatsHistory));
-                NotifyPropertyChanged(nameof(StatsHistory.MatchesPlayedHistory));
             }
         }
 

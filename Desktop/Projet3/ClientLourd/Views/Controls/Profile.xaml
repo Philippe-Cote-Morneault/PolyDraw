@@ -158,7 +158,7 @@
                                         Header="{DynamicResource GameMode}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding MatchType, Converter={StaticResource EnumTranslationConverter}}"></TextBlock>
+                                            <TextBlock Text="{Binding MatchType}"></TextBlock>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
 
