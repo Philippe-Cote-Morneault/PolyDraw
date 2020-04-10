@@ -357,8 +357,6 @@ namespace ClientLourd.ViewModels
         {
             ConfirmationDialog confirmationDialog = new ConfirmationDialog($"{CurrentDictionary["RemovePlayerTitle"]}",
                 $"{CurrentDictionary["RemovePlayerBody"]} {player.User.Username}?");
-            confirmationDialog.Height = 300;
-            confirmationDialog.MessageTextBlock.Margin = new Thickness(30, 0, 30, 0);
             var response = await DialogHost.Show(confirmationDialog, "Default");
             if (bool.Parse(response.ToString()))
             {

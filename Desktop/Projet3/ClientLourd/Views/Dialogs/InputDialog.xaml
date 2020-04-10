@@ -11,9 +11,9 @@
         <converter:StringEmptyToBooleanConverter x:Key="StringEmptyToBooleanConverter" />
     </UserControl.Resources>
     <DockPanel Margin="10">
-        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock"
+        <TextBlock Margin="5 10 5 10" DockPanel.Dock="Top" Name="MessageTextBlock"
                    Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
-        <UniformGrid DockPanel.Dock="Bottom" Columns="2">
+        <UniformGrid Margin="10" DockPanel.Dock="Bottom" Columns="2">
             <Button Margin="5"
                     IsEnabled="{Binding ElementName=FieldTextBox, Path=Text, Converter={StaticResource StringEmptyToBooleanConverter}}"
                     CommandParameter="true" Command="materialDesign:DialogHost.CloseDialogCommand"
@@ -21,7 +21,7 @@
             <Button Margin="5" CommandParameter="false" Command="materialDesign:DialogHost.CloseDialogCommand"
                     Content="{DynamicResource Cancel}" />
         </UniformGrid>
-        <TextBox Text="{Binding Result, Mode=TwoWay}" Name="FieldTextBox"
+        <TextBox Margin="5 10 5 10" Text="{Binding Result, Mode=TwoWay}" Name="FieldTextBox"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </DockPanel>
 </UserControl>

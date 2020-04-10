@@ -40,6 +40,11 @@
                 ScaleY="{Binding ElementName=PolyDraw, Path=ScaleValue}" />
         </materialDesign:DialogHost.LayoutTransform>
         <Grid>
+            <WrapPanel ZIndex="10" Margin="5" HorizontalAlignment="Center"
+                       VerticalAlignment="Top">
+                        <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
+                               Source="Resources/WhiteLogo.png" />
+            </WrapPanel>
             <WrapPanel ZIndex="1"
                        Visibility="{Binding IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}"
                        HorizontalAlignment="Center"
@@ -201,9 +206,7 @@
                                 </materialDesign:PackIcon>
                             </StackPanel>
                         </Grid>
-
-                        <Image Stretch="Uniform" HorizontalAlignment="Center" Height="60"
-                               Source="Resources/WhiteLogo.png" />
+                        <Grid/>
                     </DockPanel>
                 </materialDesign:ColorZone>
 
