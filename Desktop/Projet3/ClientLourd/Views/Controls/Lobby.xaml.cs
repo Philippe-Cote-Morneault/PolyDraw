@@ -115,11 +115,14 @@ namespace ClientLourd.Views.Controls
         public void ExportChat()
         {
             var chat = MainWindow.GetChat();
-            ChatContainer.Children.Add(chat);
-            Task.Delay(50).ContinueWith(_ =>
+            if (chat != null)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() => { chat.MessageTextBox.Focus(); }));
-            });
+                ChatContainer.Children.Add(chat);
+                Task.Delay(50).ContinueWith(_ =>
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() => { chat.MessageTextBox.Focus(); }));
+                });
+            }
         }
     }
 }

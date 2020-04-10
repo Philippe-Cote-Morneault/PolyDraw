@@ -148,22 +148,26 @@ namespace ClientLourd
         public Chat GetChat()
         {
             //Close the chat window
-            ChatWindow?.Close();
-            //Close the chat
-            Drawer.IsRightDrawerOpen = false;
-            //Hide the chat button
-            ChatToggleButton.IsEnabled = false;
-            //Remove the chat from his parent
-            ((Grid) ChatBox.Parent)?.Children.Clear();
-            //Disable notification for the current channel
-            Task.Delay(100).ContinueWith((t) =>
+            if (ChatWindow == null || !ChatWindow.IsVisible)
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                //Close the chat
+                Drawer.IsRightDrawerOpen = false;
+                //Hide the chat button
+                ChatToggleButton.IsEnabled = false;
+                //Remove the chat from his parent
+                ((Grid) ChatBox.Parent)?.Children.Clear();
+                //Disable notification for the current channel
+                Task.Delay(100).ContinueWith((t) =>
                 {
-                    ((ChatViewModel) ChatBox.DataContext).OnChatToggle(true);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ((ChatViewModel) ChatBox.DataContext).OnChatToggle(true);
+                    });
                 });
-            });
-            return ChatBox;
+                return ChatBox;
+            }
+            return null;
+
         }
 
         /// <summary>
@@ -172,8 +176,15 @@ namespace ClientLourd
         public void ReturnTheChat()
         {
             ((Grid) ChatBox.Parent)?.Children.Clear();
-            MainWindowChatContainer.Children.Add(ChatBox);
-            ChatToggleButton.IsEnabled = true;
+            if (ViewModel.ContainedView == Utilities.Enums.Views.Lobby.ToString())
+            {
+                Lobby.ChatContainer.Children.Add(ChatBox);
+            }
+            else
+            {
+                MainWindowChatContainer.Children.Add(ChatBox);
+                ChatToggleButton.IsEnabled = true;
+            }
             //Close the chat
             Drawer.IsRightDrawerOpen = false;
             //enable notification for the current channel
