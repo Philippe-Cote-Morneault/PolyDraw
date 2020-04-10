@@ -342,9 +342,6 @@
     <Compile Include="Views\Dialogs\GameCreationDialog.xaml.cs">
       <DependentUpon>GameCreationDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml.cs">
-      <DependentUpon>GamesPlayedHistoryDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -444,10 +441,6 @@
     </Page>
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
     <Page Include="Views\Dialogs\GameCreationDialog.xaml" />
-    <Page Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Dialogs\LobbyCreationDialog.xaml">
       <SubType>Designer</SubType>

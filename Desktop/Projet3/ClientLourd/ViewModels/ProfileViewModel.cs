@@ -10,6 +10,7 @@ using System.Windows.Input;
 using ClientLourd.Services.RestService;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using System.Collections.ObjectModel;
 
 namespace ClientLourd.ViewModels
 {
@@ -23,7 +24,35 @@ namespace ClientLourd.ViewModels
 
         public ProfileViewModel()
         {
-            _end = 40;
+            _end = 20;
+            ((MainWindow)Application.Current.MainWindow).ViewModel.LanguageChangedEvent += ViewModelOnLanguageChangedEvent;
+        }
+
+        public void AddStatsHistory(StatsHistory sh)
+        {
+            var tmpMatches = new ObservableCollection<MatchPlayed>(StatsHistory.MatchesPlayedHistory);
+            StatsHistory.MatchesPlayedHistory.Clear();
+
+            for (int i = 0; i < sh.MatchesPlayedHistory.Count; i++)
+            {
+                StatsHistory.MatchesPlayedHistory.Add(sh.MatchesPlayedHistory[i]);
+            }
+
+            for (int i = 0; i < tmpMatches.Count; i++)
+            {
+                StatsHistory.MatchesPlayedHistory.Add(tmpMatches[i]);
+            }
+
+            NotifyPropertyChanged(nameof(StatsHistory));
+        }
+
+        private void ViewModelOnLanguageChangedEvent(object source, EventArgs args)
+        {
+            if (StatsHistory != null)
+            {
+                NotifyPropertyChanged(nameof(StatsHistory));
+                NotifyPropertyChanged(nameof(StatsHistory.MatchesPlayedHistory));
+            }
         }
 
         public override void AfterLogOut()
@@ -170,30 +199,6 @@ namespace ClientLourd.ViewModels
                         .CloseOnClickAway = false;
                 });
         }
-
-
-        private RelayCommand<object> _openGamesPlayedCommand;
-
-        public ICommand OpenGamesPlayedCommand
-        {
-            get
-            {
-                return _openGamesPlayedCommand ?? (_openGamesPlayedCommand =
-                    new RelayCommand<object>(obj => OpenGamesPlayedHistory(obj)));
-            }
-        }
-
-        private async Task OpenGamesPlayedHistory(object obj)
-        {
-            await DialogHost.Show(new GamesPlayedHistoryDialog(StatsHistory, _end),
-                (object o, DialogClosingEventArgs closingEventHandler) =>
-                {
-                    (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost)
-                        .CloseOnClickAway = false;
-                });
-        }
-
-
 
 
     }

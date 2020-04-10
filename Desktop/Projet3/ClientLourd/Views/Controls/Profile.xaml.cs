@@ -3,6 +3,7 @@ using ClientLourd.Services.RestService;
 using ClientLourd.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,28 +71,15 @@ namespace ClientLourd.Views.Controls
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
                 StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
+
                 if (sh.MatchesPlayedHistory != null && sh.MatchesPlayedHistory.Count > 0)
                 {
-                    _lastMessageIndex += 20;
-                    AddStatsHistory(sh);
+                    _lastMessageIndex += 21;
+                    (DataContext as ProfileViewModel).AddStatsHistory(sh);
                     scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
                 }
             }
         }
-
-        private void AddStatsHistory(StatsHistory sh)
-        {
-            foreach (MatchPlayed matchPlayedlayed in sh.MatchesPlayedHistory)
-            {
-
-                (DataContext as ProfileViewModel).StatsHistory.MatchesPlayedHistory.AddFirst(matchPlayedlayed);
-            }
-
-            // Needed to trigger INotifyProperty
-            (DataContext as ProfileViewModel).StatsHistory.MatchesPlayedHistory = new LinkedList<MatchPlayed>((DataContext as ProfileViewModel).StatsHistory.MatchesPlayedHistory);
-        }
-
-
 
         private childItem FindVisualChild<childItem>(DependencyObject obj)
                where childItem : DependencyObject

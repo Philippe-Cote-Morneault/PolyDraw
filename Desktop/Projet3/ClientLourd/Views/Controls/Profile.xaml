@@ -150,13 +150,13 @@
                     </StackPanel>
 
 
-                    <ListView Name="gamesHistoryListView" ItemsSource="{Binding StatsHistory.MatchesPlayedHistory}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="ScrollViewer_OnScrollChanged">
+                    <ListView  Name="gamesHistoryListView" ItemsSource="{Binding StatsHistory.MatchesPlayedHistory}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="ScrollViewer_OnScrollChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
                                         Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}" 
                                         Header="{DynamicResource GameMode}"
-                                        DisplayMemberBinding="{Binding MatchType, Converter={StaticResource EnumTranslationConverter}}">
+                                        DisplayMemberBinding="{Binding MatchType, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged}">
 
                                 </GridViewColumn>
 
@@ -171,7 +171,7 @@
                                                 </TextBlock>
 
                                                 <StackPanel Visibility="{Binding MatchType, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
-                                                    <TextBlock Text="{Binding WinnerName}" FontWeight="Bold" Foreground="Red">
+                                                    <TextBlock Text="{Binding WinnerName}" FontWeight="Bold" Foreground="#E91E63">
                                                         <TextBlock.Visibility>
                                                             <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="0">
                                                                 <Binding Path="WinnerID"></Binding>
@@ -181,7 +181,7 @@
                                                     </TextBlock>
 
 
-                                                    <TextBlock Text="{Binding WinnerName}" FontWeight="Bold" Foreground="Green">
+                                                    <TextBlock Text="{Binding WinnerName}" FontWeight="Bold" Foreground="#4CAF50">
                                                         <TextBlock.Visibility>
                                                             <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
                                                                 <Binding Path="WinnerID"></Binding>

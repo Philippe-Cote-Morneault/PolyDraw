@@ -10,12 +10,12 @@ namespace ClientLourd.Models.Bindable
     public class StatsHistory : ModelBase
     {
         private LinkedList<ConnectionDisconnection> _connectionHistory;
-        private LinkedList<MatchPlayed> _matchesPlayed;
+        private ObservableCollection<MatchPlayed> _matchesPlayed;
 
         public StatsHistory()
         {
             _connectionHistory = new LinkedList<ConnectionDisconnection>();
-            _matchesPlayed = new LinkedList<MatchPlayed>();
+            _matchesPlayed = new ObservableCollection<MatchPlayed>();
             
         }
 
@@ -32,7 +32,7 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
-        public LinkedList<MatchPlayed> MatchesPlayedHistory
+        public ObservableCollection<MatchPlayed> MatchesPlayedHistory
         {
             get { return _matchesPlayed; }
             set
