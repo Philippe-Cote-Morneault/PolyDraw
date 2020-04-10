@@ -16,162 +16,220 @@
     <UserControl.Resources>
         <converter:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter" />
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
-
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
+        <converter:ModeToVisibilityConverter x:Key="ModeToVisibilityConverter"/>
+        <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
+        <converter:ListViewColumnWidthConverter x:Key="ListViewColumnWidthConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="40 10 40 10">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="7*" />
+                <RowDefinition Height="4*" />
+                <RowDefinition Height="4*" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
                 <TextBlock FontSize="30" VerticalAlignment="Center" Text="{DynamicResource WelcomeProfile}" />
                 <Separator Margin="0 10 0 0" Style="{StaticResource MaterialDesignDarkSeparator}" />
             </StackPanel>
+            
+                <materialDesign:Card Grid.Row="1" Grid.Column="0" Name="UserCard" Margin="0 0 0 30">
+                    <Grid>
+                        <StackPanel  Margin="20">
 
-            <!-- Left side -->
-            <Grid Grid.Column="0" Grid.Row="1" Margin="0 0 20 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="23*" />
-                    <RowDefinition Height="9*" />
-                </Grid.RowDefinitions>
-
-
-                <Image Grid.Row="0" Stretch="UniformToFill" Margin="4"
-                       Source="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
-
-                <StackPanel Grid.Row="1">
-                    <TextBlock FontWeight="Bold" FontSize="30"
-                               Text="{Binding Path=User.Username, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock FontSize="18">
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} {1}">
-                                <Binding Path="User.FirstName" UpdateSourceTrigger="PropertyChanged" />
-                                <Binding Path="User.LastName" UpdateSourceTrigger="PropertyChanged" />
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock FontSize="13" Text="{Binding Path=User.Email, UpdateSourceTrigger=PropertyChanged}" />
-                    <Separator Margin="0 10 0 0" Style="{StaticResource MaterialDesignDarkSeparator}" />
-                    <Button Margin="10" Command="{Binding EditProfileCommand}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Margin="0 0 20 0" Text="{DynamicResource EditProfile}" />
-                            <materialDesign:PackIcon Kind="AccountEditOutline" />
-                        </StackPanel>
-                    </Button>
-
-
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Margin="0 0 5 0" Grid.Column="0" Command="{Binding OpenConnectionsCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource ViewConnections}" />
+                                <materialDesign:PackIcon Margin="0 0 10 0" Height="34" Width="34" Kind="User" />
+                                <TextBlock FontWeight="Bold" FontSize="25">Profile information</TextBlock>
                             </StackPanel>
-                        </Button>
 
-                        <Button Margin="5 0 0 0" Grid.Column="1" Command="{Binding OpenGamesPlayedCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource ViewGamesPlayed}" />
-                            </StackPanel>
-                        </Button>
-                    </Grid>
-                </StackPanel>
+                                <Ellipse Margin="20" Width="270" Stroke="LightGray" Height="270">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding User.Avatar, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
 
-            </Grid>
+                                <StackPanel Margin="0 0 0 0" VerticalAlignment="Center">
+                                    <TextBlock Margin="40 0 40 0" FontWeight="Bold" FontSize="30" Text="{Binding Path=User.Username, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Margin="40 0 40 0" Foreground="Gray" FontSize="28">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="User.FirstName" UpdateSourceTrigger="PropertyChanged" />
+                                                <Binding Path="User.LastName" UpdateSourceTrigger="PropertyChanged" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
 
-            <!-- Right side (stats and achievements)-->
-            <Grid Grid.Row="1" Grid.Column="1">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                                    <TextBlock FontSize="28" Foreground="Gray" Margin="40 0 40 0" Text="{Binding Path=User.Email, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <materialDesign:Card Grid.Row="0" Margin="0 0 0 30">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="48" />
-                                <RowDefinition Height="6*" />
-                            </Grid.RowDefinitions>
-
-                            <StackPanel Grid.Row="0">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="ShowChart" Height="24" Width="24" VerticalAlignment="Center" Margin="25 10 0 0"/>
-                                    <TextBlock Margin="0 10 0 0" Grid.Row="0" FontSize="20" FontWeight="Bold"
-                                               Text="{DynamicResource Statistics}" />
                                 </StackPanel>
-                                <Separator Style="{StaticResource MaterialDesignDarkSeparator}" />
+                                
                             </StackPanel>
-
-                            <ScrollViewer Grid.Row="1">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="4*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
+                            
+                        </StackPanel>
 
 
-                                    <TextBlock Margin="0 15 0 15" Grid.Row="0" HorizontalAlignment="Right"
-                                               FontSize="20" Text="{DynamicResource NumberGamesPlayed}" />
-                                    <TextBlock Margin="0 0 0 15" Grid.Row="1" HorizontalAlignment="Right" FontSize="20"
-                                               Text="{DynamicResource WinPercentage}" />
 
-                                    <StackPanel Grid.Row="2">
-                                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Right" FontSize="20"
-                                                   Text="{DynamicResource AverageGameDuration}" />
-                                        <TextBlock Margin="0 0 0 15" HorizontalAlignment="Right" FontSize="20">[HH:MM:SS]</TextBlock>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="3">
-                                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Right" FontSize="20"
-                                                   Text="{DynamicResource TimePlayed}" />
-                                        <TextBlock Margin="0 0 0 15" HorizontalAlignment="Right" FontSize="20">[HH:MM:SS]</TextBlock>
-                                    </StackPanel>
-                                    <TextBlock Margin="0 0 0 15" Grid.Row="4" HorizontalAlignment="Right" FontSize="20"
-                                               Text="{DynamicResource BestSoloScore}" />
+                    <materialDesign:PackIcon 
+                                Background="White"
+                                Margin="20" 
+                                Cursor="Hand"
+                                Height="60"
+                                Width="60" 
+                                Foreground="{StaticResource PrimaryHueMidBrush}" 
+                                HorizontalAlignment="Right"
+                                Kind="PencilCircle">
+                        <materialDesign:PackIcon.InputBindings>
+                            <MouseBinding Gesture="LeftClick"
+                                                      Command="{Binding Path=EditProfileCommand}" />
+                            <MouseBinding Gesture="LeftDoubleClick"
+                                                      Command="{Binding Path=EditProfileCommand}" />
+                        </materialDesign:PackIcon.InputBindings>
+                    </materialDesign:PackIcon>
+                    </Grid>
 
-
-                                    <TextBlock Margin="15 15 0 15" Grid.Row="0" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.GamesPlayed}" />
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="1" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.WinRatio, StringFormat=P2}" />
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="2" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.AvgGameDuration, Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="3" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.TimePlayed, Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
-                                    <TextBlock Margin="15 0 0 15" Grid.Row="4" Grid.Column="1" FontSize="20"
-                                               Text="{Binding Path=Stats.BestScoreSolo}" />
-
-                                </Grid>
-                            </ScrollViewer>
-
-                        </Grid>
-                    </materialDesign:Card>
+                </materialDesign:Card>
 
 
-                </Grid>
-            </Grid>
+                <materialDesign:Card  Grid.Row="2" Grid.Column="0" Margin="0 0 0 30">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Margin="20" Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ShowChart" Height="34" Width="34" />
+                        <TextBlock FontSize="25" FontWeight="Bold" Text="{DynamicResource Statistics}" />
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                    
+                        
+                        <StackPanel HorizontalAlignment="Center" Margin="40 0 0 0" Grid.Column="0">
+                            <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource NumberGamesPlayed}" />
+                            <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource WinPercentage}" />
+                            <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource AverageGameDuration}" />
+                            <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource TimePlayed}" />
+                            <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource BestSoloScore}" />
+                            <TextBlock FontStyle="Italic" Margin="0 40 0 10" FontSize="20" Text="Connection history:" />
+
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Margin="0 0 0 10" FontWeight="Bold" FontSize="20" Text="{Binding Path=Stats.GamesPlayed}" />
+                            <TextBlock Margin="0 0 0 10" FontWeight="Bold" FontSize="20" Text="{Binding Path=Stats.WinRatio, StringFormat=P2}" />
+                            <TextBlock Margin="0 0 0 10" FontWeight="Bold" FontSize="20" Text="{Binding Path=Stats.AvgGameDuration, Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
+                            <TextBlock Margin="0 0 0 10" FontWeight="Bold" FontSize="20" Text="{Binding Path=Stats.TimePlayed, Converter={StaticResource MillisecondsToTimeSpanConverter}}" />
+                            <TextBlock Margin="0 0 0 10" FontWeight="Bold" FontSize="20" Text="{Binding Path=Stats.BestScoreSolo}" />
+                            <Button HorizontalAlignment="Left" Margin="0 40 0 0" Width="200" Command="{Binding OpenConnectionsCommand}">
+                                    <TextBlock Text="{DynamicResource ViewConnections}" />
+                            </Button>
+                        </StackPanel>
+
+
+                    </Grid>
+                </DockPanel>
+            </materialDesign:Card>
+
+            <materialDesign:Card Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"  Margin="30 0 0 30">
+                <DockPanel>
+                    <StackPanel Margin="20" DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Image VerticalAlignment="Top" Margin="0 0 10 0" Height="40" Width="40">
+                            <Image.Source>
+                                <BitmapImage UriSource="/ClientLourd;component/Resources/GamesHistory.png" />
+                            </Image.Source>
+                        </Image>
+                        <TextBlock FontSize="28" FontWeight="Bold">Match History</TextBlock>
+                    </StackPanel>
+
+
+                    <ListView Name="gamesHistoryListView" ItemsSource="{Binding StatsHistory.MatchesPlayedHistory}" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.ScrollChanged="ScrollViewer_OnScrollChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                        Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}" 
+                                        Header="{DynamicResource GameMode}"
+                                        DisplayMemberBinding="{Binding MatchType}">
+
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                        Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}" 
+                                        Header="{DynamicResource Winner}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBlock Text="{Binding WinnerName, StringFormat={}{0} pts}" Visibility="{Binding MatchType, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=Solo|Coop, UpdateSourceTrigger=PropertyChanged}">
+
+                                                </TextBlock>
+
+                                                <StackPanel Visibility="{Binding MatchType, Converter={StaticResource ModeToVisibilityConverter}, ConverterParameter=FFA, UpdateSourceTrigger=PropertyChanged}">
+                                                    <TextBlock Text="{Binding WinnerName}" FontWeight="Bold" Foreground="Red">
+                                                        <TextBlock.Visibility>
+                                                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="0">
+                                                                <Binding Path="WinnerID"></Binding>
+                                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.SessionInformations.User.ID"></Binding>
+                                                            </MultiBinding>
+                                                        </TextBlock.Visibility>
+                                                    </TextBlock>
+
+
+                                                    <TextBlock Text="{Binding WinnerName}" FontWeight="Bold" Foreground="Green">
+                                                        <TextBlock.Visibility>
+                                                            <MultiBinding Converter="{StaticResource ComparatorToVisibilityConverter}" ConverterParameter="1">
+                                                                <Binding Path="WinnerID"></Binding>
+                                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" Path="DataContext.SessionInformations.User.ID"></Binding>
+                                                            </MultiBinding>
+                                                        </TextBlock.Visibility>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn
+                                        Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}"
+                                        Header="{DynamicResource Players}"
+                                        >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ListView ItemsSource="{Binding Players}">
+                                                <ListView.ItemContainerStyle>
+                                                    <Style TargetType="ListViewItem">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate >
+                                                        <TextBlock  Text="{Binding Username}"></TextBlock>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+
+
+                                </GridViewColumn>
+
+                                <GridViewColumn 
+                                        Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}"
+                                        Header="{DynamicResource GameDuration}"
+                                        DisplayMemberBinding="{Binding MatchDuration,  Converter={StaticResource MillisecondsToTimeSpanConverter}}">
+                                </GridViewColumn>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </DockPanel>
+
+            </materialDesign:Card>
         </Grid>
     </Grid>
 

@@ -198,6 +198,7 @@
     <Compile Include="Utilities\Constants\MatchTiming.cs" />
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
     <Compile Include="Utilities\Converters\EditingModeToVisibility.cs" />
+    <Compile Include="Utilities\Converters\ListViewColumnWidthConverter.cs" />
     <Compile Include="Utilities\Converters\LongChannelNameConverter.cs" />
     <Compile Include="Utilities\Converters\ChannelSelectionBorderConverter.cs" />
     <Compile Include="Utilities\Converters\ChannelSelectionToIconConverter.cs" />
@@ -224,7 +225,6 @@
     <Compile Include="Utilities\Converters\StringLengthConverter.cs" />
     <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
     <Compile Include="Utilities\Converters\WidthToLeftMarginConverter.cs" />
-    <Compile Include="Utilities\Converters\WinnerNameConverter.cs" />
     <Compile Include="Utilities\Enums\DifficultyLevel.cs" />
     <Compile Include="Utilities\Enums\GameModes.cs" />
     <Compile Include="Utilities\Enums\Languages.cs" />
@@ -556,6 +556,7 @@
     <None Include="Resources\PointEraser.cur" />
     <None Include="Resources\Message.wav" />
     <Resource Include="Resources\pen.cur" />
+    <Resource Include="Resources\GamesHistory.png" />
     <Content Include="Resources\poly.png" />
   </ItemGroup>
   <ItemGroup>

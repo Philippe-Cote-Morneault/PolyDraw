@@ -164,6 +164,7 @@ namespace ClientLourd.Services.RestService
             request.AddParameter("start", start, ParameterType.QueryString);
             request.AddParameter("end", end, ParameterType.QueryString);
             var response = await Execute(request);
+
             return JsonConvert.DeserializeObject<StatsHistory>(response.Content);
 
         }

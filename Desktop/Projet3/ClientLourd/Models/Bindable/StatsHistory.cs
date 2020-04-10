@@ -88,6 +88,8 @@ namespace ClientLourd.Models.Bindable
         // TODO: Add other attributes
         private long _matchDuration;
         private string _winnerName;
+        private string _winnerID;
+
         private string _matchType;
         private string[] _playersName;
 
@@ -118,6 +120,19 @@ namespace ClientLourd.Models.Bindable
                 if (value != _winnerName)
                 {
                     _winnerName = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public string WinnerID
+        {
+            get { return _winnerID; }
+            set
+            {
+                if (value != _winnerID)
+                {
+                    _winnerID = value;
                     NotifyPropertyChanged();
                 }
             }

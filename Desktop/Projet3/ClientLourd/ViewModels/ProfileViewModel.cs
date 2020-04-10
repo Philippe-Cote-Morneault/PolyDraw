@@ -19,11 +19,11 @@ namespace ClientLourd.ViewModels
         private User _user;
         private Stats _stats;
         private StatsHistory _statsHistory;
-        private int _end;
+        public int _end;
 
         public ProfileViewModel()
         {
-            _end = 20;
+            _end = 40;
         }
 
         public override void AfterLogOut()
@@ -59,8 +59,21 @@ namespace ClientLourd.ViewModels
 
         private async Task GetUserStats(int start, int end)
         {
-            _statsHistory = await RestClient.GetStats(start, end);
+            StatsHistory = await RestClient.GetStats(start, end);
         }
+
+
+        public StatsHistory StatsHistory
+        {
+            get => _statsHistory;
+            set
+            {
+                NotifyPropertyChanged();
+                _statsHistory = value;
+            }
+        }
+
+
 
         public RestClient RestClient
         {
@@ -69,7 +82,10 @@ namespace ClientLourd.ViewModels
 
         public SessionInformations SessionInformations
         {
-            get { return _sessionInformations; }
+            get {
+                return
+               (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as
+             SessionInformations; }
         }
 
         public User User
@@ -145,7 +161,7 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenConnectionHistory(object obj)
         {
-            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(_statsHistory, _end);
+            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(StatsHistory, _end);
 
             await DialogHost.Show(connectionDialog,
                 (object o, DialogClosingEventArgs closingEventHandler) =>
@@ -169,12 +185,16 @@ namespace ClientLourd.ViewModels
 
         private async Task OpenGamesPlayedHistory(object obj)
         {
-            await DialogHost.Show(new GamesPlayedHistoryDialog(_statsHistory, _end),
+            await DialogHost.Show(new GamesPlayedHistoryDialog(StatsHistory, _end),
                 (object o, DialogClosingEventArgs closingEventHandler) =>
                 {
                     (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost)
                         .CloseOnClickAway = false;
                 });
         }
+
+
+
+
     }
 }

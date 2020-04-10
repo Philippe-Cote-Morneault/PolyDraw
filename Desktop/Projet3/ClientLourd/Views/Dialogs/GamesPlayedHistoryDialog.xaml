@@ -13,7 +13,6 @@
         <converter:LongToUnixTimeStampConverter x:Key="LongToUnixTimeStampConverter" />
         <converter:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter" />
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/>
-        <converter:WinnerNameConverter x:Key="WinnerNameConverter"/>
 
     </UserControl.Resources>
     <DockPanel>
