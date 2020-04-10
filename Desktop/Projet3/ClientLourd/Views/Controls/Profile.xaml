@@ -155,8 +155,12 @@
                             <GridView>
                                 <GridViewColumn
                                         Width="{Binding ElementName=gamesHistoryListView, Path=ActualWidth, Converter={StaticResource ListViewColumnWidthConverter}, ConverterParameter=4}" 
-                                        Header="{DynamicResource GameMode}"
-                                        DisplayMemberBinding="{Binding MatchType, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                        Header="{DynamicResource GameMode}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding MatchType, Converter={StaticResource EnumTranslationConverter}}"></TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
 
                                 </GridViewColumn>
 
