@@ -43,7 +43,8 @@
     <!--Profile-->
     <system:String x:Key="WelcomeProfile">Welcome to your profile!</system:String>
     <system:String x:Key="EditProfile">Edit my profile</system:String>
-    <system:String x:Key="ViewConnections">View connection history</system:String>
+    <system:String x:Key="ViewConnections">Open history</system:String>
+    <system:String x:Key="ConnectionsHistory">Connections history</system:String>
     <system:String x:Key="ViewGamesPlayed">View games played history</system:String>
     <system:String x:Key="Statistics">Statistics</system:String>
     <system:String x:Key="NumberGamesPlayed">Number of games played:</system:String>

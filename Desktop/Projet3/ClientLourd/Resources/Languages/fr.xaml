@@ -44,7 +44,8 @@
     <!--Profile-->
     <system:String x:Key="WelcomeProfile">Bienvenue sur votre profil!</system:String>
     <system:String x:Key="EditProfile">Modifier mon profil</system:String>
-    <system:String x:Key="ViewConnections">Historique des connexions</system:String>
+    <system:String x:Key="ViewConnections">Ouvrir l'historique</system:String>
+    <system:String x:Key="ConnectionsHistory">Historique des connexions</system:String>
     <system:String x:Key="ViewGamesPlayed">Historique des parties jouées</system:String>
     <system:String x:Key="Statistics">Statistiques</system:String>
     <system:String x:Key="NumberGamesPlayed">Nombre de parties jouées:</system:String>

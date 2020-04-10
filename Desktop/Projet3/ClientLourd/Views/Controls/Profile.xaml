@@ -119,7 +119,7 @@
                             <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource AverageGameDuration}" />
                             <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource TimePlayed}" />
                             <TextBlock FontStyle="Italic" Margin="0 0 0 10" FontSize="20" Text="{DynamicResource BestSoloScore}" />
-                            <TextBlock FontStyle="Italic" Margin="0 40 0 10" FontSize="20" Text="Connection history:" />
+                            <TextBlock FontStyle="Italic" Margin="0 40 0 10" FontSize="20" Text="{DynamicResource ConnectionsHistory}" />
 
                         </StackPanel>
 
