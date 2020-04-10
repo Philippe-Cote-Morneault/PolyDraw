@@ -49,8 +49,11 @@ func Register(token string, userID uuid.UUID, lang int) {
 //UnRegisterSocket removes the session from the socketID
 func UnRegisterSocket(socketID uuid.UUID) {
 	defer mutex.Unlock()
+	userID, err := GetUserID(socketID)
+	if err == nil {
+		cbroadcast.Broadcast(broadcast.BSetDeconnection, userID)
+	}
 	mutex.Lock()
-	cbroadcast.Broadcast(broadcast.BSetDeconnection, socketID)
 	var session model.Session
 	if removingSessions.IsSet() {
 		return
@@ -137,7 +140,7 @@ func IsAuthenticated(messageReceived socket.RawMessageReceived) bool {
 				SocketID:     messageReceived.SocketID,
 			})
 
-			cbroadcast.Broadcast(broadcast.BCreateConnection, messageReceived.SocketID)
+			cbroadcast.Broadcast(broadcast.BCreateConnection, session.userID)
 
 			sessionCache[messageReceived.SocketID] = session //Set the value in the cache so pacquets are routed fast
 			userCache[session.userID] = messageReceived.SocketID

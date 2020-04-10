@@ -97,20 +97,25 @@ func GetHistory(w http.ResponseWriter, r *http.Request) {
 
 	var matchesPlayedHistory []model.MatchPlayed
 	model.DB().Model(&model.MatchPlayed{}).Joins("JOIN match_played_memberships ON match_played_memberships.match_id = match_playeds.id AND match_played_memberships.user_id = ?", userID).Order("created_at desc").Offset(offset).Limit(limit).Find(&matchesPlayedHistory)
-
+	var matchType string
+	var winnerField string
 	for _, match := range matchesPlayedHistory {
-		var matchType string
-
+		matchType = ""
+		winnerField = ""
 		switch match.MatchType {
 		case 0:
 			matchType = "FFA"
+			winnerField = match.WinnerName
 		case 1:
 			matchType = "Solo"
+			winnerField = fmt.Sprintf("%v", match.PointsSoloCoop)
+
 		case 2:
 			matchType = "Coop"
+			winnerField = fmt.Sprintf("%v", match.PointsSoloCoop)
 		}
 		h.MatchesPlayedHistory = append(h.MatchesPlayedHistory, matchPlayed{MatchDuration: match.MatchDuration,
-			WinnerName: match.WinnerName, WinnerID: match.WinnerID, MatchType: matchType, Players: getPlayersInMatch(match.ID)})
+			WinnerName: winnerField, WinnerID: match.WinnerID, MatchType: matchType, Players: getPlayersInMatch(match.ID)})
 	}
 
 	for i := len(h.MatchesPlayedHistory)/2 - 1; i >= 0; i-- {

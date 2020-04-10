@@ -39,18 +39,18 @@ type gameHints struct {
 type Manager struct {
 	mutex           sync.Mutex
 	rand            *rand.Rand
-	Bots            map[uuid.UUID]*virtualPlayerInfos //botID -> virtualPlayerInfos
-	Channels        map[uuid.UUID]uuid.UUID           //groupID -> channelID
-	HintsInGames    map[uuid.UUID]*gameHints          //groupID -> gameHints
-	Groups          map[uuid.UUID]map[uuid.UUID]bool  //groupID -> []botID
-	Matches         map[uuid.UUID]*match2.IMatch      //groupID -> IMatch
-	HintsPerPlayers map[uuid.UUID]map[string]bool     //playerID -> []indices
-	Drawing         map[uuid.UUID]*abool.AtomicBool   //socketID -> stopDrawing
+	Bots            map[uuid.UUID]*botInfos          //botID -> botInfos
+	Channels        map[uuid.UUID]uuid.UUID          //groupID -> channelID
+	HintsInGames    map[uuid.UUID]*gameHints         //groupID -> gameHints
+	Groups          map[uuid.UUID]map[uuid.UUID]bool //groupID -> []botID
+	Matches         map[uuid.UUID]*match2.IMatch     //groupID -> IMatch
+	HintsPerPlayers map[uuid.UUID]map[string]bool    //playerID -> []indices
+	Drawing         map[uuid.UUID]*abool.AtomicBool  //socketID -> stopDrawing
 }
 
 func (m *Manager) init() {
 	m.rand = rand.New(rand.NewSource(time.Now().UnixNano()))
-	m.Bots = make(map[uuid.UUID]*virtualPlayerInfos)
+	m.Bots = make(map[uuid.UUID]*botInfos)
 	m.Channels = make(map[uuid.UUID]uuid.UUID)
 	m.Groups = make(map[uuid.UUID]map[uuid.UUID]bool)
 	m.Matches = make(map[uuid.UUID]*match2.IMatch)

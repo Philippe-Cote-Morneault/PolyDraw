@@ -56,21 +56,21 @@ func (s *Stats) listen() {
 		case data := <-s.setDeconnection:
 			log.Println("[Stats] -> Receives setDeconnection event")
 
-			socketID, ok := data.(uuid.UUID)
+			userID, ok := data.(uuid.UUID)
 			if !ok {
 				log.Println("[Stats] -> [Error] Error while parsing uuid")
 				break
 			}
-			setDisconnection(socketID)
+			setDisconnection(userID)
 
 		case data := <-s.createConnection:
 			log.Println("[Stats] -> Receives createConnection event")
-			socketID, ok := data.(uuid.UUID)
+			userID, ok := data.(uuid.UUID)
 			if !ok {
 				log.Println("[Stats] -> [Error] Error while parsing ChatNew struct")
 				break
 			}
-			createConnection(socketID)
+			createConnection(userID)
 
 		case <-s.shutdown:
 			return
