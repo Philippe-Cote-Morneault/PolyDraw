@@ -30,7 +30,6 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setCanceledOnTouchOutside(false)
         return dialog
     }
 
@@ -54,6 +53,7 @@ class MatchDetailsDialog(private val match: GamePlayed, private val username: St
             )
         } else {
             result.text = "-"
+            root.findViewById<TextView>(R.id.match_winner_title).setText(R.string.points_title)
         }
 
         val winner: TextView = root.findViewById(R.id.match_winner_value)

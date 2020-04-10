@@ -231,4 +231,6 @@
     <string name="best_score">"Meilleur score: "</string>
     <string name="finish_tutorial">Terminer le tutoriel</string>
     <string name="teamate_bad_guess_warning">Votre coéquipier a deviné incorrectement!</string>
+    <string name="points_title">Points:</string>
+    <string name="match_played_type_ffa">FFA</string>
 </resources>

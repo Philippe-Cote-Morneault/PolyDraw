@@ -208,4 +208,6 @@
     <string name="next">Next</string>
     <string name="finish_tutorial">Finish tutorial</string>
     <string name="teamate_bad_guess_warning">Your teamate has guessed incorrectly</string>
+    <string name="points_title">Points:</string>
+    <string name="match_played_type_ffa">FFA</string>
 </resources>
