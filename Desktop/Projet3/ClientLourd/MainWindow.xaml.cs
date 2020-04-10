@@ -137,7 +137,8 @@ namespace ClientLourd
             {
                 return _exportChatCommand ??
                        (_exportChatCommand = new RelayCommand<object>(param => ExportChatAsNewWindow(this, null),
-                           o => ChatToggleButton.IsEnabled));
+                           o => (ChatToggleButton.IsEnabled || ViewModel.ContainedView == Utilities.Enums.Views.Lobby.ToString()) && 
+                                !(ChatWindow != null && ChatWindow.IsVisible)));
             }
         }
 

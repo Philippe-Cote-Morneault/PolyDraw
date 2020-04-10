@@ -73,7 +73,6 @@
                 <e p="EditProfileDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
                 <e p="GameCreationDialog.g.cs" t="Include" />
-                <e p="GamesPlayedHistoryDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
                 <e p="LobbyCreationDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
@@ -117,6 +116,7 @@
           </e>
           <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
+          <e p="GamesHistory.png" t="Include" />
           <e p="Languages" t="Include">
             <e p="en.xaml" t="Include" />
             <e p="fr.xaml" t="Include" />
@@ -251,6 +251,7 @@
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LanguageInverseConverter.cs" t="Include" />
+            <e p="ListViewColumnWidthConverter.cs" t="Include" />
             <e p="LongChannelNameConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
             <e p="MillisecondsToTimeSpanConverter.cs" t="Include" />
@@ -271,7 +272,6 @@
             <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
             <e p="WidthToLeftMarginConverter.cs" t="Include" />
-            <e p="WinnerNameConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
             <e p="DifficultyLevel.cs" t="Include" />
@@ -368,8 +368,6 @@
             <e p="ErrorDialog.xaml.cs" t="Include" />
             <e p="GameCreationDialog.xaml" t="Include" />
             <e p="GameCreationDialog.xaml.cs" t="Include" />
-            <e p="GamesPlayedHistoryDialog.xaml" t="Include" />
-            <e p="GamesPlayedHistoryDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />
             <e p="InputDialog.xaml.cs" t="Include" />
             <e p="LobbyCreationDialog.xaml" t="Include" />
