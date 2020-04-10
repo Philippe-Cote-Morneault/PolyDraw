@@ -99,7 +99,7 @@
     <string name="profile_stats_title">Statistiques</string>
     <string name="quit_app">Quitter</string>
     <string name="quit_app_confirm">Vous êtes sur le point de quitter l\'application. Est-ce que vous voulez continuer?</string>
-    <string name="register">Créer un compte</string>
+    <string name="register">S\'inscrire</string>
     <string name="restore_default">Restaurer les défauts</string>
     <string name="so_far_message">Trophés à date</string>
     <string name="so_far_message_singular">Trophé à date</string>
