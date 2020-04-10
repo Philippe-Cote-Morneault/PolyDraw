@@ -45,7 +45,7 @@
 
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Margin="0 0 10 0" Height="34" Width="34" Kind="User" />
-                                <TextBlock FontWeight="Bold" FontSize="25">Profile information</TextBlock>
+                            <TextBlock FontWeight="Bold" FontSize="25" Text="{DynamicResource ProfileInfo}"></TextBlock>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
@@ -84,6 +84,7 @@
                                 Width="60" 
                                 Foreground="{StaticResource PrimaryHueMidBrush}" 
                                 HorizontalAlignment="Right"
+                                ToolTip="{DynamicResource EditProfileTitle}"
                                 Kind="PencilCircle">
                         <materialDesign:PackIcon.InputBindings>
                             <MouseBinding Gesture="LeftClick"
@@ -144,7 +145,7 @@
                                 <BitmapImage UriSource="/ClientLourd;component/Resources/GamesHistory.png" />
                             </Image.Source>
                         </Image>
-                        <TextBlock FontSize="28" FontWeight="Bold">Match History</TextBlock>
+                        <TextBlock FontSize="28" FontWeight="Bold" Text="{DynamicResource MatchHistory}"></TextBlock>
                     </StackPanel>
 
 
