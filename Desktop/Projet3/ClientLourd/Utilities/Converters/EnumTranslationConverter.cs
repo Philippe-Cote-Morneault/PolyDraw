@@ -26,7 +26,7 @@ namespace ClientLourd.Utilities.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string enumStr = value.ToString();
-            if (enumStr == "FFA")
+            if (enumStr == "FFA" || enumStr == "Mêlée générale")
             {
                 var x = 1;
             }
