@@ -248,6 +248,7 @@
             <e p="EditingModeToVisibility.cs" t="Include" />
             <e p="EnumTranslationConverter.cs" t="Include" />
             <e p="GameModeToImageConverter.cs" t="Include" />
+            <e p="GameModeTranslationConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
             <e p="LanguageInverseConverter.cs" t="Include" />

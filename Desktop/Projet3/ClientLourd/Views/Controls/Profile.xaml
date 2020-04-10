@@ -21,6 +21,7 @@
         <converter:ComparatorToBooleanConverter x:Key="ComparatorToBooleanConverter"/> 
         <converter:ListViewColumnWidthConverter x:Key="ListViewColumnWidthConverter"/>
         <converter:EnumTranslationConverter x:Key="EnumTranslationConverter"/>
+        <converter:GameModeTranslationConverter x:Key="GameModeTranslationConverter"/>
     </UserControl.Resources>
 
     <Grid Margin="40 10 40 10">
@@ -158,7 +159,17 @@
                                         Header="{DynamicResource GameMode}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding MatchType}"></TextBlock>
+                                            <TextBlock>
+                                             <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource GameModeTranslationConverter}"
+                                                              ConverterParameter="8">
+                                                    <Binding Path="MatchType" />
+                                                    <Binding
+                                                        RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}"
+                                                        Path="DataContext.CurrentLanguage" />
+                                                </MultiBinding>
+                                             </TextBlock.Text>   
+                                            </TextBlock>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
 

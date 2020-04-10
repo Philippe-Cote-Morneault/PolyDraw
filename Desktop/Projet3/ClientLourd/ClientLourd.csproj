@@ -199,6 +199,7 @@
     <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
     <Compile Include="Utilities\Converters\BoolToHiddenConverter.cs" />
     <Compile Include="Utilities\Converters\EditingModeToVisibility.cs" />
+    <Compile Include="Utilities\Converters\GameModeTranslationConverter.cs" />
     <Compile Include="Utilities\Converters\ListViewColumnWidthConverter.cs" />
     <Compile Include="Utilities\Converters\LongChannelNameConverter.cs" />
     <Compile Include="Utilities\Converters\ChannelSelectionBorderConverter.cs" />
