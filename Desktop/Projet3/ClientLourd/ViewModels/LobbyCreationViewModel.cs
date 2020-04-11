@@ -20,10 +20,11 @@ namespace ClientLourd.ViewModels
 {
     public class LobbyCreationViewModel : ViewModelBase
     {
+        public const int MAX_NUMBER_PLAYERS = 5;
         public LobbyCreationViewModel()
         {
             SelectedMode = GameModes.FFA.GetDescription();
-            SelectedNumberOfPlayers = 8;
+            SelectedNumberOfPlayers = MAX_NUMBER_PLAYERS;
             SelectedDifficulty = DifficultyLevel.Easy.GetDescription();
             SelectedNumberOfRounds = 3;
         }
@@ -92,7 +93,7 @@ namespace ClientLourd.ViewModels
 
                     if (_selectedMode == GameModes.FFA)
                     {
-                        SelectedNumberOfPlayers = 8;
+                        SelectedNumberOfPlayers = MAX_NUMBER_PLAYERS;
                     }
 
                     NotifyPropertyChanged();
@@ -130,7 +131,7 @@ namespace ClientLourd.ViewModels
                     return new List<int>() {1};
 
                 if (SelectedMode == GameModes.FFA.GetDescription())
-                    return new List<int>() {8, 7, 6, 5, 4, 3, 2};
+                    return new List<int>() {5, 4, 3, 2};
 
                 if (SelectedMode == GameModes.Coop.GetDescription())
                     return new List<int>() {4, 3, 2};
