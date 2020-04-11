@@ -187,6 +187,7 @@
             <e p="EnumManager.cs" t="Include" />
           </e>
           <e p="InkCanvas" t="Include">
+            <e p="ServerStrokeDrawerService.cs" t="Include" />
             <e p="StrokesReader.cs" t="Include" />
           </e>
           <e p="ProfileViewerService" t="Include">
@@ -201,9 +202,6 @@
               <e p="RestUnauthorizedException.cs" t="Include" />
             </e>
             <e p="RestClient.cs" t="Include" />
-          </e>
-          <e p="ServerStrokeDrawerService" t="Include">
-            <e p="ServerStrokeDrawerService.cs" t="Include" />
           </e>
           <e p="SocketService" t="Include">
             <e p="ChatEventArgs.cs" t="Include" />
