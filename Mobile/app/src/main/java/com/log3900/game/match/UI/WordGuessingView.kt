@@ -8,6 +8,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -114,7 +115,27 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
 
         setTextChangedListener(editText)
 
+        editText.imeOptions = EditorInfo.IME_ACTION_SEND
+        editText.setOnEditorActionListener { textView, actionID, keyEvent ->
+            return@setOnEditorActionListener when (actionID) {
+                EditorInfo.IME_ACTION_SEND -> {
+                    if (listener != null) {
+                        val text = getText()
+                        if (text.length == letterEditTexts.size) {
+                            listener?.onGuessPressed(text)
+                        }
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+
         return editText
+    }
+
+    private fun generateLastEditText(): SmartEditText {
+        return generateEditText()
     }
 
     private fun setTextChangedListener(editText: EditText) {
