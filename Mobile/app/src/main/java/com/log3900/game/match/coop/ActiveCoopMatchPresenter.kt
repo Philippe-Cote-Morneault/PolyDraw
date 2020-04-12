@@ -52,6 +52,8 @@ class ActiveCoopMatchPresenter : ActiveMatchPresenter {
             activeCoopMatchView?.showCanvasMessageView(true)
         }
 
+        activeCoopMatchView?.setTeamScore(MainApplication.instance.getContext().resources.getString(R.string.team_score_title, roundEnded.players[0].points))
+
         Handler().postDelayed({
             if (!matchEnded) {
                 activeCoopMatchView?.hideCanvas()
