@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -38,7 +39,16 @@ namespace ClientLourd
             InitializeComponent();
             ((MainViewModel) DataContext).UserLogout += OnUserLogout;
             ((LoginViewModel) LoginScreen.DataContext).LoggedIn += OnLoggedIn;
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             SetLanguageDictionary();
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.ContainedView))
+            {
+                MenuToggleButton.IsChecked = false;
+            }
         }
 
         private void SocketClientOnConnectionLost(object source, EventArgs args)

@@ -17,7 +17,7 @@ namespace ClientLourd.Models.Bindable
             LastName = "";
             Email = "";
             ID = "";
-            Avatar = null;
+            PictureID = 1;
             CreatedAt = "";
             UpdatedAt = "";
         }
