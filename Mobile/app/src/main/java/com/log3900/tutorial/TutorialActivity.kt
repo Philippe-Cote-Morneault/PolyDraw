@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
 import com.log3900.MainApplication
 import com.log3900.R
+import com.log3900.settings.language.LanguageManager
 import com.log3900.settings.theme.ThemeManager
 import com.log3900.shared.ui.ThemeUtils
 
@@ -26,6 +27,7 @@ class TutorialActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.applyTheme(this)
+        LanguageManager.applySavedLanguage(baseContext)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
 
