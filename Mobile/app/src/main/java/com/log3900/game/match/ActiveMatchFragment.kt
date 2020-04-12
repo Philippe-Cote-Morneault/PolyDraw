@@ -329,13 +329,15 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             context!!,
             getString(R.string.quit_match),
             getString(R.string.quit_match_confirm),
-            {_, _ -> {
-                try {
-                    findNavController().popBackStack()
-                } catch (e: Exception) {
+            {_, _ ->
+                run {
+                    try {
+                        findNavController().popBackStack()
+                    } catch (e: Exception) {
 
+                    }
                 }
-            }},
+            },
             null
         ).show()
     }
