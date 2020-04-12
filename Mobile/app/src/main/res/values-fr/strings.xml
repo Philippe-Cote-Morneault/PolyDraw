@@ -233,4 +233,5 @@
     <string name="teamate_bad_guess_warning">Votre coéquipier a deviné incorrectement!</string>
     <string name="points_title">Points:</string>
     <string name="match_played_type_ffa">FFA</string>
+    <string name="draw">Dessiner</string>
 </resources>
