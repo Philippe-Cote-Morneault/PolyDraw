@@ -13,7 +13,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.login.LoginActivity
+import com.log3900.settings.LocaleLanguageHelper
 import com.log3900.utils.ui.getAvatarID
+import kotlinx.android.synthetic.main.dialog_modify_avatar.*
 
 
 interface ModifyAvatarDialogLauncher {
@@ -61,6 +64,12 @@ class ModifyAvatarDialog(private val launcher: ModifyAvatarDialogLauncher) : Dia
         return rootView
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (activity is LoginActivity) {
+            changeResLanguage((activity as LoginActivity).currentLanguageCode)
+        }
+    }
+
     private fun setUpUi(root: View) {
         val closeButton: MaterialButton = root.findViewById(R.id.close_dialog_button)
         closeButton.setOnClickListener {
@@ -92,5 +101,14 @@ class ModifyAvatarDialog(private val launcher: ModifyAvatarDialogLauncher) : Dia
 
         selectedAvatarID = index + 1
         selectedAvatarView.setImageResource(getAvatarID(selectedAvatarID))
+    }
+
+    private fun changeResLanguage(language: String) {
+        LocaleLanguageHelper.getLocalizedResources(context!!, language).apply {
+            modify_avatar_title.text = getString(R.string.avatar_choose)
+            selected_title.text = getString(R.string.avatar_selected)
+            confirm_dialog_button.text = getString(R.string.confirm)
+            close_dialog_button.text = getString(R.string.close)
+        }
     }
 }

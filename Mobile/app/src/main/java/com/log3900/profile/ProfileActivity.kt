@@ -1,7 +1,6 @@
 package com.log3900.profile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.log3900.MainActivity
 
 class ProfileActivity : MainActivity() {

@@ -6,18 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ConnectionHistoryDialog : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
+            1200,
+            1000
         )
     }
 
@@ -49,9 +53,15 @@ class ConnectionHistoryDialog : DialogFragment() {
 //                    val connections = StatsRepository.getConnectionHistory()
                 val connections = getConnectionHistory()
                 val connectionAdapter = ConnectionAdapter(connections)
+
                 rvConnections.apply {
                     adapter = connectionAdapter
-                    layoutManager = LinearLayoutManager(activity)
+                    layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+                    // Divider between items
+                    val divItem = DividerItemDecoration(rvConnections.context,
+                        (layoutManager as LinearLayoutManager).orientation)
+                    divItem.setDrawable(context.getDrawable(R.drawable.divider)!!)
+                    addItemDecoration(divItem)
                 }
             }
         }

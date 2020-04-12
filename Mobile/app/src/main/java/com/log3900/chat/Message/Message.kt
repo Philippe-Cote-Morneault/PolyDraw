@@ -9,4 +9,10 @@ data class ReceivedMessage(@Json(name = "Message") var message: String, @Json(na
 
 data class SentMessage(@Json(name = "Message")var message: String, @Json(name = "ChannelID") var channelID: UUID)
 
-data class EventMessage(var message: String)
+class EventMessage(var type: Type, var message: String) {
+    enum class Type {
+        USER_LEFT_CHANNEL,
+        USER_JOINED_CHANNEL,
+        USERNAME_CHANGED
+    }
+}

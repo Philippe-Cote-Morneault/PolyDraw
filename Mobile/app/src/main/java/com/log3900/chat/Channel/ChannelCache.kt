@@ -1,28 +1,43 @@
 package com.log3900.chat.Channel
 
-import com.log3900.user.AccountRepository
+import com.log3900.MainApplication
+import com.log3900.R
+import com.log3900.user.account.AccountRepository
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ChannelCache {
+    private var gameChannel: Channel? = null
     var joinedChannels: ArrayList<Channel> = arrayListOf()
     var availableChannels: ArrayList<Channel> = arrayListOf()
 
     fun reloadChannels(channels: ArrayList<Channel>) {
-        val username = AccountRepository.getAccount().username
-
         joinedChannels.clear()
         availableChannels.clear()
 
         for (channel in channels) {
             if (channel.users.find {
-                    it.ID == AccountRepository.getAccount().userID
+                    it.ID == AccountRepository.getInstance().getAccount().ID
                 } != null) {
                 addJoinedChannel(channel)
             } else {
                 addAvailableChannel(channel)
             }
         }
+    }
+
+    fun getChannel(channelID: UUID): Channel? {
+        var channel = availableChannels.find {
+            it.ID == channelID
+        }
+
+        if (channel == null) {
+            channel = joinedChannels.find {
+                it.ID == channelID
+            }
+
+        }
+
+        return channel
     }
 
     fun addJoinedChannel(channel: Channel) {
@@ -33,9 +48,21 @@ class ChannelCache {
             }
             joinedChannels.add(index, channel)
         }
+
+        if (channel.isGame) {
+            gameChannel = channel
+        }
+        
+        if (channel.ID == Channel.GENERAL_CHANNEL_ID) {
+            channel.name = MainApplication.instance.resources.getString(R.string.general_channel_name)
+        }
     }
 
     fun removeJoinedChannel(channel: Channel) {
+        if (hasGameChannel() && gameChannel?.ID == channel.ID) {
+            gameChannel = null
+        }
+
         joinedChannels.remove(channel)
     }
 
@@ -47,9 +74,17 @@ class ChannelCache {
             }
             availableChannels.add(index, channel)
         }
+
+        if (channel.isGame) {
+            gameChannel = channel
+        }
     }
 
     fun removeAvailableChannel(channel: Channel) {
+        if (hasGameChannel() && gameChannel?.ID == channel.ID) {
+            gameChannel = null
+        }
+
         availableChannels.remove(channel)
     }
 
@@ -71,6 +106,14 @@ class ChannelCache {
             removeJoinedChannel(channelToRemove)
             return
         }
+    }
+
+    fun hasGameChannel(): Boolean {
+        return gameChannel != null
+    }
+
+    fun getGameChannel(): Channel? {
+        return gameChannel
     }
 
     inner class ChannelAlphabeticalComparator : Comparator<Channel> {

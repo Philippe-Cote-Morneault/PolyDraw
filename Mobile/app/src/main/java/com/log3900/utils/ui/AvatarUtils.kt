@@ -1,10 +1,7 @@
 package com.log3900.utils.ui
 
-import android.content.res.Resources
-import androidx.core.content.res.ResourcesCompat
 import com.log3900.R
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.Account
 
 /**
  * Returns the ID of the pictureID from the corresponding index
@@ -12,11 +9,11 @@ import com.log3900.user.AccountRepository
  * @return avatar_1 if index out of range
  */
 fun getAvatarID(index: Int): Int {
-    if (index > 0 && index < 17) {
-        return R.mipmap::class.java.getField("avatar_${index}").getInt(null)
+    return when(index) {
+        0           -> R.drawable.ic_robot  // Virtual player
+        in 1..16    -> R.mipmap::class.java.getField("avatar_${index}").getInt(null)
+        else        -> R.mipmap.avatar_1
     }
-
-    return R.mipmap.avatar_1
 }
 
 /**
@@ -24,11 +21,3 @@ fun getAvatarID(index: Int): Int {
  * @sample avatarView.setImageResource(getAccountAvatarID(myAccount))
  */
 fun getAccountAvatarID(account: Account): Int = getAvatarID(account.pictureID)
-
-/**
- * Returns the ID of the current [Account]'s avatar
- */
-fun getCurrentAccountAvatarID(): Int {
-    val current = AccountRepository.getAccount()
-    return getAccountAvatarID(current)
-}

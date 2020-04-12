@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background="#F0FCFCFC">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/fragment_chat_top_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/color_primary_light_brush"
+        android:background="?colorPrimaryLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -51,7 +52,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="0.7"
                     android:background="@drawable/rounded_shape"
                     android:gravity="center">
@@ -60,17 +61,20 @@
                         android:id="@+id/fragment_chat_new_message_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Type your message..."/>
+                        android:inputType="text"
+                        android:imeOptions="actionSend"
+                        android:hint="@string/chat_box_enter_message_title"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
+                <ImageView
                     android:id="@+id/fragment_chat_send_message_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="0.1"
-                    android:text="@string/fragment_chat_send_message_button_text" />
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_send_black"
+                    android:tint="?attr/colorPrimary"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0.1"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

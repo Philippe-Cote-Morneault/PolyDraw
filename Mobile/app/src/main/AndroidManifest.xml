@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.log3900">
 
@@ -9,11 +10,10 @@
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_application_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyTheme.DayNight"
+        android:theme="@style/MyTheme.IndigoOrange"
         android:name=".MainApplication"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
@@ -29,20 +29,30 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
         <activity
             android:name=".login.LoginActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
 
-        <activity android:name=".shared.ui.ErrorDialog" />
+        <activity android:name=".shared.ui.dialogs.ErrorDialog" />
+
+        <activity android:name=".settings.SettingsActivity"/>
+
+        <activity
+            android:name=".tutorial.TutorialActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
 
         <service android:name=".socket.SocketService"/>
         <service android:name=".session.MonitoringService"/>
         <service android:name=".chat.Message.MessageRepository"/>
         <service android:name=".chat.Channel.ChannelRepository"/>
         <service android:name=".chat.ChatManager"/>
+        <service android:name=".game.group.GroupRepository"/>
+        <service android:name=".game.group.GroupManager"/>
+        <service android:name=".game.match.MatchRepository"/>
+        <service android:name=".user.UserRepository"/>
     </application>
 </manifest>

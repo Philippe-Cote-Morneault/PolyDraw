@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -68,12 +67,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="0dp"
             android:hint="@string/login_password_hint"
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
 
-            app:layout_constraintBottom_toTopOf="@+id/activity_login_login_button"
+            app:layout_constraintBottom_toTopOf="@+id/activity_login_remember_me_checkbox"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -85,6 +84,15 @@
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/activity_login_remember_me_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_remember_me"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/activity_login_login_button"
+            app:layout_constraintStart_toStartOf="@+id/activity_login_text_input_layout_password" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/activity_login_login_button"
@@ -121,7 +129,7 @@
 
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/register_question_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -137,7 +145,7 @@
                 android:id="@+id/register_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/color_primary_light_brush"
+                android:backgroundTint="?colorPrimaryLight"
                 android:padding="0dp"
                 android:text="@string/login_signup_now"
                 android:textSize="10sp"

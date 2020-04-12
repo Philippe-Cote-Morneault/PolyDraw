@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.log3900.R
 import com.log3900.profile.stats.GamePlayed
 import com.log3900.profile.stats.StatsRepository
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class ProfileMatchHistoryFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 val rvMatches: RecyclerView = root.findViewById(R.id.rv_matches)
                 val matches = getMatchesPlayed()
-                val matchesAdapter = MatchPlayedAdapter(matches, AccountRepository.getAccount().username, rvMatches)
+                val matchesAdapter = MatchPlayedAdapter(matches, AccountRepository.getInstance().getAccount().username, rvMatches)
 
                 rvMatches.apply {
                     adapter = matchesAdapter

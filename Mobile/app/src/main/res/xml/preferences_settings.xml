@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="theme"
+        app:title="@string/settings_theme_title"
+        app:summary="Select a theme" />
+    <Preference
+        app:key="language"
+        app:title="Language"
+        app:summary="Select a language"/>
+
+
+</PreferenceScreen>

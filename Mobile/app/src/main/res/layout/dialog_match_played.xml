@@ -4,15 +4,17 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <TextView
         android:id="@+id/match_info_title"
+        style="@style/MyTheme.DayNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/match_details"
         android:textSize="30sp"
-        style="@style/MyTheme.DayNight"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/match_type_title"
@@ -126,12 +128,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/close_dialog_button"
+        style="@style/MyTheme.DayNight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/MyTheme.DayNight"
-        android:text="@string/close"
         android:layout_marginTop="24dp"
+        android:text="@string/close"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/match_players_title"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/match_players_container"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

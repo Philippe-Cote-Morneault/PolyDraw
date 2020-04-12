@@ -1,10 +1,6 @@
 package com.log3900.utils.format
 
-import android.app.Activity
 import android.text.format.DateUtils
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,5 +19,17 @@ class DateFormatter {
             return dateString
         }
 
+        fun formatDateToTime(date: Date): String {
+            var dateFormat: SimpleDateFormat = SimpleDateFormat("mm:ss")
+            return dateFormat.format(date)
+        }
+
+        fun formatFullDate(date: Date): String = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date)
+
+        fun formatFullTime(date: Date): String {
+            val formatter = SimpleDateFormat("HH:mm:ss")
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            return formatter.format(date)
+        }
     }
 }

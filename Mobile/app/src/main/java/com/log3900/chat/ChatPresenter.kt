@@ -7,24 +7,30 @@ import com.log3900.chat.Message.SentMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
-import com.log3900.shared.ui.ProgressDialog
-import com.log3900.user.AccountRepository
+import com.log3900.socket.Message
+import com.log3900.user.account.Account
+import com.log3900.user.account.AccountRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 class ChatPresenter : Presenter {
-    private var chatView: ChatView
+    private var chatView: ChatView?
     private lateinit var messageRepository: MessageRepository
     private lateinit var chatManager: ChatManager
     private var keyboardOpened: Boolean = false
     private var loadingMessages: Boolean
 
+    lateinit var account: Account
+
     constructor(chatView: ChatView) {
         this.chatView = chatView
-        loadingMessages = false
+        loadingMessages = true
+        account = AccountRepository.getInstance().getAccount()
+
         ChatManager.getInstance()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -45,14 +51,20 @@ class ChatPresenter : Presenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    chatView.setChatMessages(it)
-                    chatView.scrollMessage()
+                    chatView?.setChatMessages(it)
+                    chatView?.scrollMessage(false)
+                    loadingMessages = false
                 },
                 {
 
                 }
             )
-        chatView.setCurrentChannnelName(chatManager.getActiveChannel().name)
+
+        if (chatManager.getActiveChannel() == null) {
+            chatView?.setCurrentChannnelName("")
+        } else {
+            chatView?.setCurrentChannnelName(chatManager.getActiveChannel()!!.name)
+        }
         messageRepository = MessageRepository.instance!!
 
         subscribeToEvents()
@@ -67,10 +79,10 @@ class ChatPresenter : Presenter {
     }
 
     fun handleNavigationDrawerClick() {
-        if (chatView.isNavigationDrawerOpened()) {
-            chatView.closeNavigationDrawer()
+        if (chatView!!.isNavigationDrawerOpened()) {
+            chatView?.closeNavigationDrawer()
         } else {
-            chatView.openNavigationDrawer()
+            chatView?.openNavigationDrawer()
         }
     }
 
@@ -78,7 +90,7 @@ class ChatPresenter : Presenter {
         if (opened != keyboardOpened) {
             keyboardOpened = opened
             if (keyboardOpened) {
-                chatView.scrollMessage()
+                chatView?.scrollMessage(true)
             }
         }
     }
@@ -90,7 +102,7 @@ class ChatPresenter : Presenter {
                 chatManager.loadMoreMessages().subscribe(
                     {
                         if (it > 0) {
-                            chatView.notifyMessagesPrepended(it)
+                            chatView?.notifyMessagesPrepended(it)
                         }
                         loadingMessages = false
                     },
@@ -109,31 +121,45 @@ class ChatPresenter : Presenter {
     fun onMessageEvent(event: MessageEvent) {
         when(event.type) {
             EventType.ACTIVE_CHANNEL_CHANGED -> {
-                onChannelChanged(event.data as Channel)
+                onChannelChanged(event.data as Channel?)
             }
             EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED -> {
                 onActiveChannelMessageReceived(event.data as ChatMessage)
             }
+            EventType.ALL_MESSAGES_CHANGED -> {
+
+            }
+            EventType.USER_UPDATED -> {
+                onUserUpdated(event.data as UUID)
+            }
         }
     }
 
-    private fun onChannelChanged(channel: Channel) {
-        chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread()).subscribe(
-            { messages ->
-                chatView.setCurrentChannnelName(channel.name)
-                chatView.setChatMessages(messages)
-                chatView.scrollMessage()
-            },
-            { error ->
-            }
-        )
+    private fun onChannelChanged(channel: Channel?) {
+        if (channel != null) {
+            loadingMessages = true
+            chatManager.getCurrentChannelMessages().observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { messages ->
+                        chatView?.setCurrentChannnelName(channel.name)
+                        chatView?.setChatMessages(messages)
+                        chatView?.scrollMessage(false)
+                        loadingMessages = false
+                    },
+                    { error ->
+                    }
+                )
+        }
     }
 
     private fun onActiveChannelMessageReceived(message: ChatMessage) {
-        chatView.notifyNewMessage()
-        if (message.type == ChatMessage.Type.RECEIVED_MESSAGE && AccountRepository.getAccount().username != (message.message as ReceivedMessage).username) {
-            chatView.playNewMessageNotification()
+        if (!loadingMessages) {
+            chatView?.notifyNewMessage()
         }
+    }
+
+    private fun onUserUpdated(userID: UUID) {
+        chatView?.notifyMessagesUpdated(userID)
     }
 
     override fun resume() {
@@ -145,6 +171,7 @@ class ChatPresenter : Presenter {
     }
 
     override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        EventBus.getDefault().unregister(this)
+        chatView = null
     }
 }

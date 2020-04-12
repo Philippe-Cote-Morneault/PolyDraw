@@ -52,7 +52,7 @@ class ChannelSection : Section, Filterable {
         itemHolder.buttonAction2.setOnClickListener {
             listener.onChannelActionButton2Click(this.channelGroup.filteredChannels.get(position), channelGroup.type)
         }
-        if (this.channelGroup.filteredChannels.get(position).ID.toString() == "00000000-0000-0000-0000-000000000000") {
+        if (this.channelGroup.filteredChannels.get(position).ID == Channel.GENERAL_CHANNEL_ID || channelGroup.filteredChannels[position].isGame) {
             itemHolder.buttonAction1.visibility = View.GONE
             itemHolder.buttonAction2.visibility = View.GONE
         } else {
@@ -65,6 +65,9 @@ class ChannelSection : Section, Filterable {
         } else {
             itemHolder.buttonAction1.setImageResource(R.drawable.ic_add_black_24dp)
         }
+
+        itemHolder.setActive(channelGroup.activeChannel == channelGroup.filteredChannels.get(position))
+        itemHolder.setUnreadCounter(channelGroup.unreadMessages.getOrDefault( channelGroup.filteredChannels.get(position).ID, 0))
         itemHolder.bind(this.channelGroup.filteredChannels.get(position))
     }
 
@@ -90,7 +93,7 @@ class ChannelSection : Section, Filterable {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val query = constraint.toString()
                 if (query.isEmpty()) {
-                    channelGroup.filteredChannels = channelGroup.channels
+                    channelGroup.filteredChannels = channelGroup.channels.clone() as ArrayList<Channel>
                 } else {
                     val filteredList = arrayListOf<Channel>()
                     channelGroup.channels.forEach {

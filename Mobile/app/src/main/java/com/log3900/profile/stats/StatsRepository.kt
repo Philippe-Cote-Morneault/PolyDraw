@@ -2,11 +2,11 @@ package com.log3900.profile.stats
 
 import com.google.gson.JsonObject
 import com.log3900.profile.ProfileRestService
-import com.log3900.user.AccountRepository
+import com.log3900.settings.language.LanguageManager
+import com.log3900.user.account.AccountRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import java.lang.Exception
 
 // Service?
 /**
@@ -30,23 +30,25 @@ object StatsRepository {
      * Does a Rest call if not initialized.
      */
     private suspend fun getUserStats(): UserStats {
-        if (!StatsRepository::userStats.isInitialized) {
-            fetchUserStats()
-        }
+//        if (!StatsRepository::userStats.isInitialized) {
+//            fetchUserStats()
+//        }
+        fetchUserStats()
         return userStats
     }
 
     private suspend fun getHistoryStats(): HistoryStats {
-        if (!StatsRepository::historyStats.isInitialized) {
-            fetchHistoryStats()
-        }
+//        if (!StatsRepository::historyStats.isInitialized) {
+//            fetchHistoryStats()
+//        }
+        fetchHistoryStats()
         return historyStats
     }
 
     suspend fun getAllUserStats(): UserStats = getUserStats()
-    suspend fun getGamesPlayedHistory(): List<GamePlayed> = getHistoryStats().gamesPlayedHistory
+    suspend fun getGamesPlayedHistory(): List<GamePlayed> = getHistoryStats().gamesPlayedHistory ?: listOf()
     suspend fun getConnectionHistory(): List<Connection> = getHistoryStats().connectionHistory
-    suspend fun getAchievements(): List<Achievement> = getHistoryStats().achievements
+    suspend fun getAchievements(): List<Achievement> = listOf() //getHistoryStats().achievements
 
     private suspend fun fetchUserStats() {
         userStats = sendUserStatsRequest()
@@ -57,9 +59,9 @@ object StatsRepository {
     }
 
     private suspend fun sendUserStatsRequest(): UserStats {
-        val userID = "" // TODO: get acutal userID
-        val session = AccountRepository.getAccount().sessionToken
-        val responseJson = ProfileRestService.service.getUserStats(session, "EN")   //TODO: get language
+        val session = AccountRepository.getInstance().getAccount().sessionToken
+        val language = LanguageManager.getCurrentLanguageCode()
+        val responseJson = ProfileRestService.service.getUserStats(session, language)   //TODO: get language
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
             val json = responseJson.body()!!
@@ -70,8 +72,9 @@ object StatsRepository {
     }
 
     private suspend fun sendHistoryStatsRequest(): HistoryStats {
-        val session = AccountRepository.getAccount().sessionToken
-        val responseJson = ProfileRestService.service.getHistory(session, "EN")   //TODO: get language
+        val session = AccountRepository.getInstance().getAccount().sessionToken
+        val language = LanguageManager.getCurrentLanguageCode()
+        val responseJson = ProfileRestService.service.getHistory(session, language)
 
         if (responseJson.isSuccessful && responseJson.body() != null) {
             val json = responseJson.body()!!

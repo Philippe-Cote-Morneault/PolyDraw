@@ -2,6 +2,7 @@ package com.log3900.login.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +13,16 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.log3900.MainActivity
+import com.log3900.MainApplication
 import com.log3900.R
-import com.log3900.login.LoginFragment
+import com.log3900.login.LoginActivity
 import com.log3900.profile.ModifyAvatarDialog
 import com.log3900.profile.ModifyAvatarDialogLauncher
+import com.log3900.settings.LocaleLanguageHelper
 import com.log3900.shared.architecture.ViewNavigator
 import com.log3900.shared.ui.ProfileView
-import com.log3900.user.Account
 import com.log3900.utils.ui.getAvatarID
+import kotlinx.android.synthetic.main.fragment_register.*
 import kotlin.random.Random
 
 class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, ViewNavigator {
@@ -47,6 +50,9 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        changeResLanguage((activity as LoginActivity).currentLanguageCode)
+    }
 
     fun setUpUi(root: View) {
         registerBtn = root.findViewById(R.id.register_button)
@@ -120,7 +126,8 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
             avatarIndex,
             emailInput.text.toString(),
             firstnameInput.text.toString(),
-            lastnameInput.text.toString()
+            lastnameInput.text.toString(),
+            (activity as LoginActivity).currentLanguageCode
         )
     }
 
@@ -132,24 +139,45 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
 
     fun onRegisterSuccess() {
         val username = usernameInput.text.toString()
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Registration completed")
-            .setMessage("Account successfully created! Welcome, $username!")
-            .setPositiveButton("Thanks!") { _, _ ->
-                navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        if (context == null) {
+            return
+        }
+        if (activity is LoginActivity) {
+            LocaleLanguageHelper.getLocalizedResources(
+                context ?: MainApplication.instance.getContext(),
+                (activity as LoginActivity).currentLanguageCode).apply {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(getString(R.string.registration_completed))
+                    .setMessage(getString(R.string.registration_completed_message, username))
+                    .setPositiveButton(getString(R.string.thanks)) { _, _ ->
+                        navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
+                    .setCancelable(false)
+                    .show()
             }
-            .setCancelable(false)
-            .show()
+        } else {
+            MaterialAlertDialogBuilder(context ?: MainApplication.instance.getContext())
+                .setTitle(getString(R.string.registration_completed))
+                .setMessage(getString(R.string.registration_completed_message, username))
+                .setPositiveButton(getString(R.string.thanks)) { _, _ ->
+                    navigateTo(MainActivity::class.java, Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+                .setCancelable(false)
+                .show()
+        }
     }
 
     fun onRegisterError(error: String) {
-        MaterialAlertDialogBuilder(context)
-            .setTitle("Error")
-            .setMessage("An error occurred: $error")
-            .setPositiveButton("OK", null)
-            .setCancelable(false)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show()
+        LocaleLanguageHelper.getLocalizedResources(context!!, (activity as LoginActivity).currentLanguageCode).apply {
+            MaterialAlertDialogBuilder(context)
+                .setTitle(getString(R.string.error))
+                .setMessage(error)
+                .setPositiveButton("OK", null)
+                .setCancelable(false)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+        }
     }
 
     override fun navigateTo(target: Class<*>, intentFlags: Int?) {
@@ -185,26 +213,69 @@ class RegisterFragment : Fragment(), ProfileView, ModifyAvatarDialogLauncher, Vi
     }
 
     override fun setUsernameError(error: String?) {
-        usernameInput.error = error
+        usernameInput.error = error?.let { getStringLocale(R.string.profile_form_error_username) }
     }
 
     override fun setPasswordError(error: String?) {
-        passwordInput.error = error
+        passwordInput.error = error?.let { getStringLocale(R.string.profile_form_error_password) }
     }
 
     override fun setEmailError(error: String?) {
-        emailInput.error = error
+        emailInput.error = error?.let { getStringLocale(R.string.profile_form_error_email) }
     }
 
     override fun setFirstnameError(error: String?) {
-        firstnameInput.error = error
+        firstnameInput.error = error?.let { getStringLocale(R.string.profile_form_error_first_name) }
     }
 
     override fun setLastnameError(error: String?) {
-        lastnameInput.error = error
+        lastnameInput.error = error?.let { getStringLocale(R.string.profile_form_error_last_name) }
     }
 
     fun setConfirmPasswordError(error: String?) {
-        confirmPasswordInput.error = error
+        confirmPasswordInput.error = error?.let { getStringLocale(R.string.profile_form_error_password_confirm) }
+    }
+
+    private fun getStringLocale(id: Int): String {
+        return LocaleLanguageHelper.getLocalizedResources(context!!,
+            (activity as LoginActivity).currentLanguageCode).getString(id)
+    }
+
+    fun changeResLanguage(language: String) {
+        LocaleLanguageHelper.getLocalizedResources(context!!, language).apply {
+            register_text.text = getString(R.string.register)
+            modify_avatar_button.text = getString(R.string.modify)
+            username_input_layout.hint = getString(R.string.login_username_hint)
+            password_input_layout.hint = getString(R.string.login_password_hint)
+            password_input_verify_layout.hint = getString(R.string.login_reenter_password_hint)
+            email_input_layout.hint = getString(R.string.email_hint)
+            name_input_layout.hint = getString(R.string.firstname)
+            surname_input_layout.hint = getString(R.string.lastname)
+            backBtn.text = getString(R.string.back)
+            registerBtn.text = getString(R.string.register)
+            all_required_text.text = getString(R.string.all_required)
+
+            if (usernameInput.error != null) {
+                usernameInput.error = getString(R.string.profile_form_error_username)
+            }
+            if (passwordInput.error != null) {
+                passwordInput.error = getString(R.string.profile_form_error_password)
+            }
+            if (confirmPasswordInput.error != null) {
+                confirmPasswordInput.error = getString(R.string.profile_form_error_password_confirm)
+            }
+            if (emailInput.error != null) {
+                emailInput.error = getString(R.string.profile_form_error_email)
+            }
+            if (firstnameInput.error != null) {
+                firstnameInput.error = getString(R.string.profile_form_error_first_name)
+            }
+            if (lastnameInput.error != null) {
+                lastnameInput.error = getString(R.string.profile_form_error_last_name)
+            }
+            if (usernameInput.error != null) {
+                usernameInput.error = getString(R.string.profile_form_error_username)
+            }
+        }
     }
 }

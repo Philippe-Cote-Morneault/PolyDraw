@@ -1,10 +1,12 @@
 package com.log3900.chat.Channel
 
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.ChatManager
+import com.log3900.chat.ChatMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
 import com.log3900.shared.architecture.Presenter
-import com.log3900.shared.ui.ProgressDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -14,6 +16,9 @@ import java.util.*
 class ChannelListPresenter : Presenter {
     private var channelListView: ChannelListView
     private lateinit var chatManager: ChatManager
+
+    lateinit var availableChannelsGroup: ChannelGroup
+    lateinit var joinedChannelsGroup: ChannelGroup
 
     constructor(channelListView: ChannelListView) {
         this.channelListView = channelListView
@@ -33,19 +38,22 @@ class ChannelListPresenter : Presenter {
     private fun init() {
         chatManager.getJoinedChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
             { channels ->
-                channelListView.setJoinedChannels(channels)
+                joinedChannelsGroup = ChannelGroup(GroupType.JOINED, channels, chatManager.getUnreadMessages(),  channels.clone() as ArrayList<Channel>, chatManager.getActiveChannel())
+                channelListView.addChannelSection(joinedChannelsGroup)
+
+                chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
+                    { channels ->
+                        availableChannelsGroup = ChannelGroup(GroupType.AVAILABLE, channels, chatManager.getUnreadMessages(), channels.clone() as ArrayList<Channel>)
+                        channelListView.addChannelSection(availableChannelsGroup)
+                    },
+                    { _ ->
+                    }
+                )
+                EventBus.getDefault().register(this)
             },
             { _ ->
             }
         )
-        chatManager.getAvailableChannels().observeOn(AndroidSchedulers.mainThread()).subscribe(
-            { channels ->
-                channelListView.setAvailableChannels(channels)
-            },
-            { _ ->
-            }
-        )
-        EventBus.getDefault().register(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -63,11 +71,29 @@ class ChannelListPresenter : Presenter {
             EventType.CHANNEL_DELETED -> {
                 onChannelDeleted(event.data as UUID)
             }
+            EventType.ACTIVE_CHANNEL_CHANGED -> {
+                onActiveChannelChanged(event.data as Channel?)
+            }
+            EventType.RECEIVED_MESSAGE -> {
+                onMessageReceived(event.data as ChatMessage)
+            }
         }
     }
 
     fun onChannelClicked(channel: Channel) {
-        chatManager.setActiveChannel(channel)
+        try {
+            chatManager.onChannelClicked(channel)
+        } catch (e: IllegalArgumentException) {
+            channelListView.showConfirmationDialog(MainApplication.instance.getContext().getString(R.string.unsubscribed_channel),
+                MainApplication.instance.getContext().getString(R.string.subscribe_to_channel_confirmation_text, channel.name),
+                { _, _ ->
+                    chatManager.changeSubscriptionStatus(channel)
+                    chatManager.setActiveChannel(channel)
+                },
+                { dialog, _ ->
+                    dialog.dismiss()
+                })
+        }
     }
 
     fun onChannelActionButton1Click(channel: Channel, channelState: GroupType) {
@@ -75,7 +101,15 @@ class ChannelListPresenter : Presenter {
     }
 
     fun onChannelActionButton2Click(channel: Channel, channelState: GroupType) {
-        chatManager.deleteChannel(channel)
+        channelListView.showConfirmationDialog(
+            MainApplication.instance.getContext().getString(R.string.delete_channel_title),
+            MainApplication.instance.getContext().getString(R.string.delete_channel_confirmation, channel.name),
+            { _, _ ->
+                chatManager.deleteChannel(channel)
+            },
+            { dialog, _ ->
+                dialog.dismiss()
+            })
     }
 
     fun onCreateChannelButtonClick() {
@@ -107,6 +141,15 @@ class ChannelListPresenter : Presenter {
         channelListView.notifyChannelsChange()
     }
 
+    private fun onActiveChannelChanged(channel: Channel?) {
+        joinedChannelsGroup.activeChannel = channel
+        channelListView.notifyChannelsChange()
+    }
+
+    private fun onMessageReceived(message: ChatMessage) {
+        channelListView.notifyChannelsChange()
+    }
+
     override fun resume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -116,6 +159,7 @@ class ChannelListPresenter : Presenter {
     }
 
     override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        EventBus.getDefault().unregister(this)
+
     }
 }

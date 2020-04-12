@@ -1,57 +1,43 @@
 package com.log3900.chat.Channel
 
-import com.log3900.chat.ChatManager
 import com.log3900.chat.ChatMessage
-import com.log3900.chat.Message.ReceivedMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
-import com.log3900.user.Account
-import com.log3900.user.AccountRepository
+import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ChannelManager {
-    private var account: Account
-    lateinit var activeChannel: Channel
+    var activeChannel: Channel? = null
     lateinit var availableChannels: ArrayList<Channel>
     lateinit var joinedChannels: ArrayList<Channel>
-    var unreadMessages: HashMap<UUID, Int> = hashMapOf()
-    var unreadMessagesTotal: Int = 0
+    private var unreadMessages: HashMap<UUID, Int> = hashMapOf()
+    private var unreadMessagesTotal: Int = 0
+    var previousChannel: Channel? = null
 
     constructor() {
-        account = AccountRepository.getAccount()
     }
 
     fun init() {
-        joinedChannels = ChannelRepository.instance?.getJoinedChannels(account.sessionToken)?.blockingGet()!!
-        availableChannels = ChannelRepository.instance?.getAvailableChannels(account.sessionToken)?.blockingGet()!!
+        joinedChannels = ChannelRepository.instance?.getJoinedChannels(AccountRepository.getInstance().getAccount().sessionToken)?.blockingGet()!!
+        availableChannels = ChannelRepository.instance?.getAvailableChannels(AccountRepository.getInstance().getAccount().sessionToken)?.blockingGet()!!
         activeChannel = joinedChannels.find {
-            it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+            it.ID == Channel.GENERAL_CHANNEL_ID
         }!!
         EventBus.getDefault().register(this)
     }
 
     fun changeSubscriptionStatus(channel: Channel) {
-        if (channel.ID.toString() == "00000000-0000-0000-0000-000000000000") {
+        if (channel.ID == Channel.GENERAL_CHANNEL_ID) {
             return
         }
 
         if (availableChannels.contains(channel)) {
             ChannelRepository.instance?.subscribeToChannel(channel)
-            EventBus.getDefault().post(MessageEvent(EventType.SUBSCRIBED_TO_CHANNEL, channel))
         } else if (joinedChannels.contains(channel)){
-            if (activeChannel == channel) {
-                val newActiveChannel = joinedChannels.find {
-                    it.ID.toString() == "00000000-0000-0000-0000-000000000000"
-                }!!
-                changeActiveChannel(newActiveChannel)
-            }
             ChannelRepository.instance?.unsubscribeFromChannel(channel)
-            EventBus.getDefault().post(MessageEvent(EventType.UNSUBSCRIBED_FROM_CHANNEL, channel))
         } else {
             // TODO: Handle this incoherent state
         }
@@ -59,17 +45,6 @@ class ChannelManager {
     }
 
     fun createChannel(channelName: String): Boolean {
-        var foundChannel: Channel? = joinedChannels.find { it.name == channelName }
-        if (foundChannel != null) {
-            return false
-        }
-
-        foundChannel = availableChannels.find { it.name == channelName }
-
-        if (foundChannel != null) {
-            return false
-        }
-
         ChannelRepository.instance?.createChannel(channelName)
 
         return true
@@ -91,22 +66,33 @@ class ChannelManager {
             EventType.RECEIVED_MESSAGE -> {
                 onMessageReceived(event.data as ChatMessage)
             }
+            EventType.SUBSCRIBED_TO_CHANNEL -> {
+                onSubscribedToChannel(event.data as Channel)
+            }
+            EventType.UNSUBSCRIBED_FROM_CHANNEL -> {
+                onUnsubscribedFromChannel(event.data as Channel)
+            }
         }
     }
 
     fun onChannelCreated(channel: Channel) {
-        if (channel.users.get(0).ID == account.userID) {
+        if (channel.users.get(0).ID == AccountRepository.getInstance().getAccount().ID) {
             changeSubscriptionStatus(channel)
             changeActiveChannel(channel)
         }
     }
 
     fun onChannelDeleted(channelID: UUID) {
-        if (activeChannel.ID == channelID) {
+        if (activeChannel?.ID == channelID) {
             val newActiveChannel = joinedChannels.find {
-                it.ID.toString() == "00000000-0000-0000-0000-000000000000"
+                it.ID == Channel.GENERAL_CHANNEL_ID
             }!!
+            previousChannel = newActiveChannel
             changeActiveChannel(newActiveChannel)
+        } else if (activeChannel == null && previousChannel?.ID == channelID) {
+            previousChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
         }
 
         if (unreadMessages.containsKey(channelID)) {
@@ -116,26 +102,73 @@ class ChannelManager {
         }
     }
 
-    private fun changeActiveChannel(channel: Channel) {
+    fun changeActiveChannel(channel: Channel?) {
         activeChannel = channel
-        if (unreadMessages.containsKey(channel.ID)) {
+        if (channel != null && unreadMessages.containsKey(channel.ID)) {
             unreadMessagesTotal -= unreadMessages.get(channel.ID)!!
             unreadMessages[channel.ID] = 0
+
+            EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         }
         EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_CHANGED, activeChannel))
     }
 
+    fun getUnreadMessage(): HashMap<UUID, Int> {
+        return unreadMessages
+    }
+
+    fun getDefaultChannel(): Channel {
+        return joinedChannels.find {
+            it.ID == Channel.GENERAL_CHANNEL_ID
+        }!!
+    }
+
+    fun delete() {
+        EventBus.getDefault().unregister(this)
+    }
+
     private fun onMessageReceived(message: ChatMessage) {
-        if (message.channelID != activeChannel.ID) {
+        if (message.channelID != activeChannel?.ID) {
             if (!unreadMessages.containsKey(message.channelID)) {
                 unreadMessages.put(message.channelID, 0)
             }
 
-            unreadMessages[message.channelID]?.plus(1)
+            unreadMessages.put(message.channelID, unreadMessages[message.channelID]!! + 1)
             unreadMessagesTotal += 1
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         } else {
             EventBus.getDefault().post(MessageEvent(EventType.ACTIVE_CHANNEL_MESSAGE_RECEIVED, message))
+        }
+    }
+
+    private fun onSubscribedToChannel(channel: Channel) {
+        if (channel.isGame) {
+            if (activeChannel != null) {
+                changeActiveChannel(channel)
+            } else {
+                previousChannel = channel
+            }
+        }
+    }
+
+    private fun onUnsubscribedFromChannel(channel: Channel) {
+        if (activeChannel == channel) {
+            val newActiveChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
+            changeActiveChannel(newActiveChannel)
+            previousChannel = newActiveChannel
+        } else if (activeChannel == null && previousChannel?.ID == channel.ID) {
+            previousChannel = joinedChannels.find {
+                it.ID == Channel.GENERAL_CHANNEL_ID
+            }!!
+        }
+
+        if (unreadMessages.containsKey(channel.ID)) {
+            unreadMessagesTotal -= unreadMessages.get(channel.ID)!!
+            unreadMessages[channel.ID] = 0
+
+            EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         }
     }
 

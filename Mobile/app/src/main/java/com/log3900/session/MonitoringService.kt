@@ -3,24 +3,38 @@ package com.log3900.session
 import android.app.LauncherActivity
 import android.app.Service
 import android.content.Intent
-import android.os.Binder
-import android.os.Handler
-import android.os.IBinder
-import android.os.Looper
-import android.os.Message
+import android.os.*
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.daveanthonythomas.moshipack.MoshiPack
+import com.google.gson.JsonParser
 import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.Channel.ChannelRepository
 import com.log3900.chat.ChatManager
 import com.log3900.chat.Message.MessageRepository
-import com.log3900.shared.ui.ErrorDialog
-import com.log3900.socket.*
+import com.log3900.game.group.GroupManager
+import com.log3900.game.group.GroupRepository
+import com.log3900.game.match.MatchRepository
+import com.log3900.settings.language.LanguageManager
+import com.log3900.shared.architecture.DialogEventMessage
+import com.log3900.shared.architecture.EventType
+import com.log3900.shared.architecture.MessageEvent
+import com.log3900.shared.ui.dialogs.ErrorDialog
+import com.log3900.socket.Event
+import com.log3900.socket.SocketEvent
+import com.log3900.socket.SocketService
+import com.log3900.user.UserRepository
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 
 class MonitoringService : Service() {
     private val binder = MonitoringBinder()
     private var socketService: SocketService? = null
+    private var socketEventHandler: Handler? = null
+    private var socketMessageHandler: Handler? = null
 
     companion object {
         var instance: MonitoringService? = null
@@ -36,27 +50,37 @@ class MonitoringService : Service() {
         socketService = SocketService.instance
         Thread(Runnable {
             Looper.prepare()
-            socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, Handler {
+            socketEventHandler = Handler {
                 handleEvent(it)
                 true
-            })
+            }
 
-            socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, Handler {
+            socketMessageHandler = Handler {
                 handleMessage(it)
                 true
-            })
-
-            socketService?.subscribeToMessage(Event.SERVER_RESPONSE, Handler {
-                handleMessage(it)
-                true
-            })
+            }
+            socketService?.subscribeToEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
+            socketService?.subscribeToMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.SERVER_RESPONSE, socketMessageHandler!!)
+            socketService?.subscribeToMessage(Event.SERVER_ERROR, socketMessageHandler!!)
             Looper.loop()
         }).start()
+
+        EventBus.getDefault().register(this)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+        socketService?.unsubscribeFromMessage(Event.SERVER_ERROR, socketMessageHandler!!)
+        socketService?.unsubscribeFromEvent(SocketEvent.CONNECTION_ERROR, socketEventHandler!!)
+        socketService?.unsubscribeFromMessage(Event.HEALTH_CHECK_SERVER, socketMessageHandler!!)
+        socketService?.unsubscribeFromMessage(Event.SERVER_RESPONSE, socketMessageHandler!!)
+
+        socketMessageHandler = null
+        socketEventHandler = null
+
         socketService = null
+        super.onDestroy()
     }
 
     fun handleEvent(message: android.os.Message) {
@@ -78,10 +102,20 @@ class MonitoringService : Service() {
                     onAuthentication()
                 }
             }
+            Event.SERVER_ERROR.eventType -> {
+                val json = MoshiPack.msgpackToJson((message.obj as com.log3900.socket.Message).data)
+                val jsonObject = JsonParser().parse(json).asJsonObject
+                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                    MainApplication.instance.getContext().getString(R.string.error),
+                    jsonObject.get("Message").asString,
+                    null,
+                    null)))
+            }
         }
     }
 
     fun onConnectionError() {
+        shutdownServices()
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             val intent = Intent(this, ErrorDialog::class.java)
             intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -95,13 +129,74 @@ class MonitoringService : Service() {
     }
 
     fun onAuthentication() {
+        LanguageManager.applySavedLanguage(MainApplication.instance.baseContext)
+        MainApplication.instance.startService(UserRepository::class.java)
         MainApplication.instance.startService(MessageRepository::class.java)
         MainApplication.instance.startService(ChannelRepository::class.java)
         MainApplication.instance.startService(ChatManager::class.java)
+
+        MainApplication.instance.startService(GroupRepository::class.java)
+        MainApplication.instance.startService(GroupManager::class.java)
+    }
+
+    private fun onLogout(){
+        shutdownServices()
+    }
+
+    private fun onLeaveGroup() {
+        GroupRepository.instance?.refreshRepository()
+    }
+
+    private fun onGroupJoined() {
+        MainApplication.instance.startService(MatchRepository::class.java)
+    }
+
+    private fun onGroupLeft() {
+        MainApplication.instance.stopService(MatchRepository::class.java)
+    }
+
+    private fun onMatchEnded() {
+        MainApplication.instance.stopService(MatchRepository::class.java)
+    }
+
+    private fun shutdownServices() {
+        MainApplication.instance.stopService(GroupManager::class.java)
+        MainApplication.instance.stopService(GroupRepository::class.java)
+
+        MainApplication.instance.stopService(ChatManager::class.java)
+        MainApplication.instance.stopService(ChannelRepository::class.java)
+        MainApplication.instance.stopService(MessageRepository::class.java)
+        MainApplication.instance.stopService(UserRepository::class.java)
+    }
+
+    private fun restartService(service: Class<*>) {
+        MainApplication.instance.stopService(service)
+        MainApplication.instance.startService(service)
     }
 
     fun displayErro() {
 
+    }
+
+    @Subscribe
+    fun onMessageEvent(event: MessageEvent) {
+        when(event.type) {
+            EventType.LOGOUT -> {
+                onLogout()
+            }
+            EventType.LEAVE_GROUP -> {
+                onLeaveGroup()
+            }
+            EventType.GROUP_JOINED -> {
+                onGroupJoined()
+            }
+            EventType.GROUP_LEFT -> {
+                onGroupLeft()
+            }
+            EventType.MATCH_ENDED -> {
+                onMatchEnded()
+            }
+        }
     }
 
     inner class MonitoringBinder : Binder() {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/fragment_tutorial_slide_active_match_channel_image_view_01"
+            android:layout_width="0dp"
+            android:layout_height="400dp"
+            android:layout_margin="30dp"
+            android:src="@drawable/tutorial_slide_active_match_channel_picture_01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/fragment_tutorial_slide_active_match_channel_text_view_01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tutorial_slide_active_match_channel_text_01"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="30dp"
+            android:textSize="26sp"
+            android:textColor="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_slide_active_match_channel_image_view_01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

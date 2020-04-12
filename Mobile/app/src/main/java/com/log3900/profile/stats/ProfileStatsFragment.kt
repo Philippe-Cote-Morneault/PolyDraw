@@ -1,6 +1,7 @@
 package com.log3900.profile.stats
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.log3900.R
+import com.log3900.utils.format.DateFormatter
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.util.*
+import kotlin.math.round
 
 class ProfileStatsFragment : Fragment() {
 
@@ -48,9 +54,17 @@ class ProfileStatsFragment : Fragment() {
             val bestSoloScore: TextView     = it.findViewById(R.id.best_solo_score_stat)
 
             gamesPlayed.text = userStats.gamesPlayed.toString()
-            winRatio.text = userStats.winRation.toString()
-            avgGameDuration.text = userStats.averageGameDuration.toString()
-            timePlayed.text = userStats.timePlayed.toString()
+
+            val winRatioValue = BigDecimal(round(userStats.winRatio * 10000) / 100)
+                .setScale(2, RoundingMode.HALF_EVEN)
+            winRatio.text = "$winRatioValue%"
+
+            val avgGameDurationDate = Date(round(userStats.averageGameDuration).toLong())
+            avgGameDuration.text = DateFormatter.formatDateToTime(avgGameDurationDate)
+
+            val timePlayedDate = Date(userStats.timePlayed)
+            timePlayed.text = DateFormatter.formatFullTime(timePlayedDate)
+
             bestSoloScore.text = userStats.bestScoreSolo.toString()
         }
     }

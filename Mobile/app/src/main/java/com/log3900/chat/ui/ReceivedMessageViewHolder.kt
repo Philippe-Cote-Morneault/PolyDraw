@@ -1,6 +1,5 @@
 package com.log3900.chat.ui
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
@@ -16,7 +15,10 @@ import com.log3900.MainApplication
 import com.log3900.R
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.Message.ReceivedMessage
+import com.log3900.profile.PlayerProfileDialogFragment
+import com.log3900.shared.ui.ThemeUtils
 import com.log3900.user.UserRepository
+import com.log3900.user.account.AccountRepository
 import com.log3900.utils.format.DateFormatter
 import com.log3900.utils.ui.getAvatarID
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,6 +43,10 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
         messageBoxCardView = itemView.findViewById(R.id.list_item_message_text_card_view)
         messageHeader = itemView.findViewById(R.id.list_item_message_header)
         this.username = username
+
+        usernameTextView.setOnClickListener {
+            PlayerProfileDialogFragment.show(itemView.context, message.userID)
+        }
     }
 
     fun bind(message: ChatMessage) {
@@ -52,11 +58,11 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
         val constraintSet = ConstraintSet()
         constraintSet.clone(view)
 
-        if (this.message.username == username) {
+        if (this.message.userID == AccountRepository.getInstance().getAccount().ID) {
             constraintSet.clear(R.id.list_item_message_inner_layout, ConstraintSet.START)
             constraintSet.connect(R.id.list_item_message_inner_layout, ConstraintSet.END, R.id.list_item_message_outer_layout, ConstraintSet.END, 15)
-            messageTextView.setBackgroundColor(Color.parseColor("#3F51B5"))
-            messageTextView.setTextColor(Color.parseColor("#FFFFFF"))
+            messageTextView.setBackgroundColor(ThemeUtils.resolveAttribute(R.attr.colorPrimary))
+            messageTextView.setTextColor(ThemeUtils.resolveAttribute(R.attr.colorOnPrimary))
             messageTextView.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
             view.findViewById<LinearLayout>(R.id.list_item_message_inner_layout).gravity = Gravity.END
             usernameTextView.visibility = View.GONE
@@ -81,6 +87,7 @@ class ReceivedMessageViewHolder : RecyclerView.ViewHolder {
                 .subscribe(
                 {
                     messageHeader.chipIcon = ResourcesCompat.getDrawable(MainApplication.instance.resources, getAvatarID(it.pictureID), null)
+                    usernameTextView.text = it.username
                 },
                 {
                 }

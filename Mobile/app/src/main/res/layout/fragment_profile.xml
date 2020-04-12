@@ -66,19 +66,19 @@
                     tools:layout="@layout/fragment_profile_stats" />
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="true">
-                <fragment
-                    android:id="@+id/profile_achievements_container"
-                    android:name="com.log3900.profile.achievements.ProfileAchievementsFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    tools:layout="@layout/fragment_profile_achievements" />
-            </com.google.android.material.card.MaterialCardView>
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:cardElevation="4dp"-->
+<!--                app:cardUseCompatPadding="true">-->
+<!--                <fragment-->
+<!--                    android:id="@+id/profile_achievements_container"-->
+<!--                    android:name="com.log3900.profile.achievements.ProfileAchievementsFragment"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="16dp"-->
+<!--                    tools:layout="@layout/fragment_profile_achievements" />-->
+<!--            </com.google.android.material.card.MaterialCardView>-->
 
         </LinearLayout>
     </ScrollView>
@@ -89,7 +89,7 @@
         android:layout_width="2dp"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        android:background="@color/colorPrimary"
+        android:background="?colorPrimary"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,14 +2,14 @@ package com.log3900.socket
 
 import android.app.Service
 import android.content.Intent
-import android.os.*
+import android.os.Binder
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
 import com.daveanthonythomas.moshipack.MoshiPack
 import com.log3900.utils.format.moshi.TimeStampAdapter
 import com.log3900.utils.format.moshi.UUIDAdapter
-import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CountDownLatch
-import kotlin.collections.ArrayList
 
 enum class SocketEvent {
     CONNECTION_ERROR,
@@ -46,12 +46,14 @@ class SocketService : Service() {
         sendMessage(event, MoshiPack().jsonToMsgpack(data).readByteArray())
     }
 
-    fun subscribeToMessage(event: Event, handler: Handler) {
+    fun subscribeToMessage(event: Event, handler: Handler): Handler {
         if (!messageSubscribers.containsKey(event)) {
             messageSubscribers[event] = ArrayList()
         }
 
         messageSubscribers[event]?.add(handler)
+
+        return handler
     }
 
     fun subscribeToEvent(event: SocketEvent, handler: Handler) {
@@ -98,8 +100,18 @@ class SocketService : Service() {
         }
     }
 
-    fun unsubscribeFromEvent(event: SocketEvent, handler: Handler) {
+    fun unsubscribeFromMessage(messageType: Event, handler: Handler) {
+        messageSubscribers[messageType]?.removeIf {
+            it == handler
+        }
+    }
 
+    fun unsubscribeFromEvent(eventType: SocketEvent, handler: Handler) {
+        eventSubscribers[eventType]?.forEach {
+            if (it == handler) {
+                eventSubscribers[eventType]?.remove(it)
+            }
+        }
     }
 
     private fun onMessageRead(message: android.os.Message) {
