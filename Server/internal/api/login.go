@@ -2,6 +2,8 @@ package api
 
 import (
 	"encoding/json"
+	"gitlab.com/jigsawcorp/log3900/internal/context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"net/http"
 	"strings"
 
@@ -23,6 +25,7 @@ type authRegisterRequest struct {
 
 type authRequest struct {
 	Username string
+	Password string
 }
 
 type authBearerRequest struct {
@@ -49,7 +52,7 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 	username := strings.ToLower(request.Username)
 
 	if len(username) < 4 || len(username) > 12 {
-		rbody.JSONError(w, http.StatusBadRequest, "The username must be between 4 and 12 characters")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.usernameInvalid", r))
 		return
 	}
 
@@ -57,13 +60,12 @@ func PostAuth(w http.ResponseWriter, r *http.Request) {
 	//Get the user if not create it.
 	var user model.User
 	if !model.FindUserByName(username, &user) {
-		//The user does not already exists create it
-		user = model.User{}
-		if user.NewFakeUser(username) != nil {
-			rbody.JSONError(w, http.StatusBadRequest, "The user could not be created!")
-			return
-		}
-		model.AddUser(&user)
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.userNotFound", r))
+		return
+	}
+	if !secureb.CheckPasswordHash(request.Password, user.HashedPassword) {
+		rbody.JSONError(w, http.StatusForbidden, language.MustGetRest("error.passwordWrong", r))
+		return
 	}
 	registerSession(&user, w, r)
 
@@ -77,6 +79,10 @@ func PostAuthToken(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	if request.Username == "" || request.Bearer == "" {
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.loginBearer", r))
 		return
 	}
 	var user model.User
@@ -101,14 +107,14 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) {
 	}
 	username := strings.ToLower(request.Username)
 	if !regexUsername.MatchString(username) {
-		rbody.JSONError(w, http.StatusBadRequest, "Invalid username, it must have between 4 and 12.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.usernameInvalid", r))
 		return
 	}
 
 	var count int64
 	model.DB().Model(&model.User{}).Where("username = ?", username).Count(&count)
 	if count > 0 {
-		rbody.JSONError(w, http.StatusConflict, "The username already exists. Please choose a diffrent username.")
+		rbody.JSONError(w, http.StatusConflict, language.MustGetRest("error.usernameExists", r))
 		return
 	}
 
@@ -116,12 +122,12 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) {
 	lastName := strings.TrimSpace(request.LastName)
 
 	if firstName == "" || lastName == "" {
-		rbody.JSONError(w, http.StatusBadRequest, "Invalid first name or last name, it should not be empty.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.firstNameInvalid", r))
 		return
 	}
 
 	if !regexEmail.MatchString(request.Email) {
-		rbody.JSONError(w, http.StatusBadRequest, "Invalid email, it must respect the typical email format.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.emailInvalid", r))
 		return
 	}
 
@@ -132,20 +138,20 @@ func PostAuthRegister(w http.ResponseWriter, r *http.Request) {
 
 	//Hash the password
 	if len(request.Password) < 8 {
-		rbody.JSONError(w, http.StatusBadRequest, "Invalid password, it must have a minimum of 8 characters.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.passwordInvalid", r))
 		return
 	}
 
 	hash, err := secureb.HashPassword(request.Password)
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The user could not be created.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.usernameFail", r))
 		return
 	}
 
 	var user model.User
 	err = user.New(username, firstName, lastName, request.Email, hash, request.PictureID)
 	if err != nil {
-		rbody.JSONError(w, http.StatusBadRequest, "The user could not be created.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.usernameFail", r))
 		return
 	}
 	model.AddUser(&user)
@@ -158,7 +164,7 @@ func registerSession(user *model.User, w http.ResponseWriter, r *http.Request) {
 	//Check if there is already a session
 	if auth.HasUserSession(user.ID) {
 		//There is already a session we abort the creation of a new session
-		rbody.JSONError(w, http.StatusConflict, "The user already has an other session tied to this account. Please disconnect the other session before connecting.")
+		rbody.JSONError(w, http.StatusConflict, language.MustGetRest("error.sessionExists", r))
 		return
 	}
 
@@ -171,7 +177,7 @@ func registerSession(user *model.User, w http.ResponseWriter, r *http.Request) {
 		for !auth.IsTokenAvailable(sessionToken) {
 			sessionToken, _ = secureb.GenerateToken()
 		}
-		auth.Register(sessionToken, user.ID)
+		auth.Register(sessionToken, user.ID, r.Context().Value(context.CtxLang).(int))
 		rbody.JSON(w, http.StatusOK, authResponse{Bearer: user.Bearer, SessionToken: sessionToken, UserID: user.ID.String()})
 	}
 }

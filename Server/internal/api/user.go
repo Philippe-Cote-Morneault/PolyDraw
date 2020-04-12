@@ -5,6 +5,11 @@ import (
 	"net/http"
 	"strings"
 
+	"gitlab.com/jigsawcorp/log3900/internal/context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
+	"gitlab.com/jigsawcorp/log3900/internal/services/messenger"
+	"gitlab.com/jigsawcorp/log3900/internal/socket"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"gitlab.com/jigsawcorp/log3900/model"
@@ -21,6 +26,15 @@ type singleUserResponse struct {
 	PictureID int
 	CreatedAt int64
 	UpdatedAt int64
+	IsCPU     bool
+}
+
+type socketUserChange struct {
+	UserID    string
+	NewName   string
+	PictureID int
+	IsCPU     bool
+	OldName   string
 }
 
 // GetUsers returns all users
@@ -43,11 +57,12 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 			Username:  user.Username,
 			Email:     user.Email,
 			PictureID: user.PictureID,
+			IsCPU:     user.IsCPU,
 			CreatedAt: user.CreatedAt.Unix(),
 			UpdatedAt: user.CreatedAt.Unix(),
 		})
 	} else {
-		rbody.JSONError(w, http.StatusNotFound, "The specified user cannot be found.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.userNotFound", r))
 	}
 }
 
@@ -61,15 +76,16 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 		rbody.JSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	userid := r.Context().Value(CtxUserID)
+	userid := r.Context().Value(context.CtxUserID)
 	var user model.User
+	var oldUsername string
 	model.DB().Where("id = ?", userid).First(&user)
 	if user.ID != uuid.Nil {
 		updated := false
 		if request.Email != "" {
 			//Validate email
 			if !regexEmail.MatchString(request.Email) {
-				rbody.JSONError(w, http.StatusBadRequest, "Invalid email, it must respect the typical email format.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.emailInvalid", r))
 				return
 			}
 			user.Email = request.Email
@@ -80,16 +96,17 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 			//Validate username
 			username := strings.ToLower(request.Username)
 			if !regexUsername.MatchString(username) {
-				rbody.JSONError(w, http.StatusBadRequest, "Invalid username, it must have between 4 and 12.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.usernameInvalid", r))
 				return
 			}
 
 			var count int64
 			model.DB().Model(&model.User{}).Where("username = ?", username).Count(&count)
 			if count > 0 {
-				rbody.JSONError(w, http.StatusConflict, "The username already exists. Please choose a diffrent username.")
+				rbody.JSONError(w, http.StatusConflict, language.MustGetRest("error.usernameExists", r))
 				return
 			}
+			oldUsername = user.Username
 			user.Username = request.Username
 			updated = true
 		}
@@ -106,13 +123,13 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 
 		if request.Password != "" {
 			if len(request.Password) < 8 {
-				rbody.JSONError(w, http.StatusBadRequest, "Invalid password, it must have a minimum of 8 characters.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.passwordInvalid", r))
 				return
 			}
 
 			hash, err := secureb.HashPassword(request.Password)
 			if err != nil {
-				rbody.JSONError(w, http.StatusBadRequest, "The user could not be updated.")
+				rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.userUpdate", r))
 				return
 			}
 			user.HashedPassword = hash
@@ -131,11 +148,24 @@ func PutUser(w http.ResponseWriter, r *http.Request) {
 		if updated {
 			model.DB().Save(&user)
 			json.NewEncoder(w).Encode("ok")
+
+			if request.Username != "" || request.PictureID != 0 {
+				//Broadcast to all users
+				message := socket.RawMessage{}
+				message.ParseMessagePack(byte(socket.MessageType.UsernameChange), socketUserChange{
+					UserID:    user.ID.String(),
+					PictureID: user.PictureID,
+					OldName:   oldUsername,
+					NewName:   user.Username,
+					IsCPU:     user.IsCPU,
+				})
+				messenger.BroadcastAll(message)
+			}
 		} else {
-			rbody.JSONError(w, http.StatusBadRequest, "No modifications are found")
+			rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.modifications", r))
 		}
 
 	} else {
-		rbody.JSONError(w, http.StatusNotFound, "The specified user cannot be found.")
+		rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.userNotFound", r))
 	}
 }

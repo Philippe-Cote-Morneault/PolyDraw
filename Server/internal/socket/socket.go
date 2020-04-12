@@ -91,12 +91,24 @@ func SendRawMessageToSocketID(message RawMessage, id uuid.UUID) error {
 	if clientConnection, ok := m.clients[id]; ok {
 		_, err := clientConnection.socket.Write(message.ToBytesSlice())
 		if err != nil {
-			// TODO: Handle error when writing
 			return err
 		}
 	}
 
 	return nil
+}
+
+//SendQueueMessageSocketID send a message to a socket by a queue
+func SendQueueMessageSocketID(message RawMessage, id uuid.UUID) {
+	m := clientSocketManagerInstance
+	if m == nil {
+		panic("The clientSocketManger was not instanced")
+	}
+	defer m.mutexMap.Unlock()
+	m.mutexMap.Lock()
+	if clientConnection, ok := m.clients[id]; ok && !clientConnection.isClosed.IsSet() {
+		clientConnection.queue <- message
+	}
 }
 
 //SendErrorToSocketID send an error message to the client
@@ -121,6 +133,5 @@ func RemoveClientFromID(clientID uuid.UUID) error {
 		return fmt.Errorf("The clientSocketManger was not instanced")
 	}
 	m.unregisterClient(clientID)
-	//TODO error management
 	return nil
 }

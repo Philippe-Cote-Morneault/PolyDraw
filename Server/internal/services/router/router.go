@@ -95,7 +95,7 @@ func (r *Router) handle(messageType int, broadcastName string) {
 }
 
 func (r *Router) subscribe() {
-	r.receiveChan, _, _ = cbroadcast.Subscribe(socket.BSocketReceive)
-	r.closingSocketChan, _, _ = cbroadcast.Subscribe(socket.BSocketClose)
-	r.closingChan, _, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
+	r.receiveChan, _ = cbroadcast.Subscribe(socket.BSocketReceive)
+	r.closingSocketChan, _ = cbroadcast.Subscribe(socket.BSocketClose)
+	r.closingChan, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
 }

@@ -1,2 +1,4 @@
 dist/
 config.yaml
+*.rdb
+.idea/inspectionProfiles/Project_Default.xml

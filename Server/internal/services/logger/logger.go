@@ -55,8 +55,6 @@ func (l *Logger) listen() {
 			if ok {
 				log.Printf("[Logger] -> Socket data received: %s | %d | %d | %#x", message.SocketID, message.Payload.MessageType, message.Payload.Length, message.Payload.Bytes)
 			}
-
-			//fmt.Printf("data: %s | %#x\n", data, data)
 		case id := <-l.connected:
 			log.Printf("[Logger] -> connected id: %s", id)
 		case id := <-l.close:
@@ -69,8 +67,8 @@ func (l *Logger) listen() {
 }
 
 func (l *Logger) subscribe() {
-	l.ready, _, _ = cbroadcast.Subscribe(socket.BSocketReady)
-	l.receiver, _, _ = cbroadcast.Subscribe(socket.BSocketReceive)
-	l.connected, _, _ = cbroadcast.Subscribe(socket.BSocketConnected)
-	l.close, _, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
+	l.ready, _ = cbroadcast.Subscribe(socket.BSocketReady)
+	l.receiver, _ = cbroadcast.Subscribe(socket.BSocketReceive)
+	l.connected, _ = cbroadcast.Subscribe(socket.BSocketConnected)
+	l.close, _ = cbroadcast.Subscribe(socket.BSocketCloseClient)
 }

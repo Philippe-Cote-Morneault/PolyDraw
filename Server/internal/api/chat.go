@@ -7,14 +7,16 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"gitlab.com/jigsawcorp/log3900/model"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
 
 type channelResponse struct {
-	ID    string
-	Name  string
-	Users []userResponse
+	ID     string
+	Name   string
+	Users  []userResponse
+	IsGame bool
 }
 
 type userResponse struct {
@@ -39,13 +41,14 @@ func GetChatChannel(w http.ResponseWriter, r *http.Request) {
 	var channels []model.ChatChannel
 	var channelsResponse []channelResponse
 	model.DB().Model(&channels).Related(&model.User{}, "Users")
-	model.DB().Preload("Users").Find(&channels)
+	model.DB().Preload("Users").Where("is_game_chat = false").Find(&channels)
 
 	for _, channel := range channels {
 		if channel.ID != uuid.Nil {
 			channelResponse := channelResponse{
-				ID:   channel.ID.String(),
-				Name: channel.Name,
+				ID:     channel.ID.String(),
+				Name:   channel.Name,
+				IsGame: channel.IsGameChat,
 			}
 
 			users := []userResponse{}
@@ -76,8 +79,9 @@ func GetChatChannelID(w http.ResponseWriter, r *http.Request) {
 			//Simplify user output
 			users := []userResponse{}
 			channelResponse := channelResponse{
-				ID:   channel.ID.String(),
-				Name: channel.Name,
+				ID:     channel.ID.String(),
+				Name:   channel.Name,
+				IsGame: channel.IsGameChat,
 			}
 
 			for _, user := range channel.Users {
@@ -89,7 +93,7 @@ func GetChatChannelID(w http.ResponseWriter, r *http.Request) {
 			channelResponse.Users = users
 			json.NewEncoder(w).Encode(&channelResponse)
 		} else {
-			rbody.JSONError(w, http.StatusNotFound, "The specified channel cannot be found.")
+			rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.channelNotFound", r))
 		}
 	}
 }
@@ -122,11 +126,11 @@ func GetChatMessages(w http.ResponseWriter, r *http.Request) {
 								limit = newLimit
 							}
 						} else {
-							rbody.JSONError(w, http.StatusBadRequest, "Invalid parameters, start must be the lowest parameter.")
+							rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidStart", r))
 							return
 						}
 					} else {
-						rbody.JSONError(w, http.StatusBadRequest, "Invalid parameters, the url parameters must be a number.")
+						rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidUrl", r))
 						return
 					}
 				}
@@ -156,10 +160,10 @@ func GetChatMessages(w http.ResponseWriter, r *http.Request) {
 			}
 			json.NewEncoder(w).Encode(&response)
 		} else {
-			rbody.JSONError(w, http.StatusNotFound, "The channel ID could not be found.")
+			rbody.JSONError(w, http.StatusNotFound, language.MustGetRest("error.channelNotFound", r))
 		}
 	} else {
-		rbody.JSONError(w, http.StatusBadRequest, "Invalid channel ID. It must respect the UUID format.")
+		rbody.JSONError(w, http.StatusBadRequest, language.MustGetRest("error.channelInvalidUUID", r))
 	}
 
 }
@@ -182,9 +186,10 @@ func getChatGeneralChannel() channelResponse {
 	}
 
 	channel := channelResponse{
-		ID:    uuid.Nil.String(),
-		Name:  "General",
-		Users: users,
+		ID:     uuid.Nil.String(),
+		Name:   "General",
+		IsGame: false,
+		Users:  users,
 	}
 	return channel
 }
