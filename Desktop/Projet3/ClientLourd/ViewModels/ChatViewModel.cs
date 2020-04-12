@@ -578,13 +578,13 @@ namespace ClientLourd.ViewModels
                     SocketClient.SendMessage(new Tlv(SocketMessageTypes.MessageSent, data));
                     //Clear the chat textbox
                     tBox.Clear();
-                    tBox.Focus();
                 }
                 catch (Exception e)
                 {
                     DialogHost.Show(new ClosableErrorDialog(e));
                 }
             }
+            tBox.Focus();
         }
 
         private string _channelFilter;
