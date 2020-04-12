@@ -86,7 +86,7 @@ class Group(@Json(name = "ID") var ID: UUID, @Json(name = "GroupName") var group
             when (matchMode) {
                 MatchMode.SOLO -> return 1
                 MatchMode.COOP -> return 4
-                MatchMode.FFA -> return 8
+                MatchMode.FFA -> return 5
             }
         }
     }
