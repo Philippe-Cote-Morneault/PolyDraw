@@ -60,7 +60,14 @@ namespace ClientLourd.ViewModels
             User user = _users.FirstOrDefault(u => u.ID == id);
             if (user == null)
             {
-                user = (await RestClient.GetUserInfo(id));
+                try
+                {
+                    user = (await RestClient.GetUserInfo(id));
+                }
+                catch
+                {
+                    //
+                }
                 _users.Add(user);
             }
 

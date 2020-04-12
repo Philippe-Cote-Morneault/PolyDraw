@@ -60,8 +60,15 @@ namespace ClientLourd.ViewModels
 
         public void GetAllStats()
         {
-            Task task2 = GetUserStats();
-            Task task3 = GetUserStats(0, _end);
+            try
+            {
+                Task task2 = GetUserStats();
+                Task task3 = GetUserStats(0, _end);
+            }
+            catch
+            {
+                //
+            }
         }
 
 

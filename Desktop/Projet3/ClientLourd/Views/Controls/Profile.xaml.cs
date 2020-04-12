@@ -61,23 +61,30 @@ namespace ClientLourd.Views.Controls
 
         private async void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ScrollViewer scroll = FindVisualChild<ScrollViewer>(gamesHistoryListView);
-            if (scroll == null)
+            try
             {
-                throw new InvalidOperationException(
-                    "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
-            }
-
-            if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
-            {
-                StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
-
-                if (sh.MatchesPlayedHistory != null && sh.MatchesPlayedHistory.Count > 0)
+                ScrollViewer scroll = FindVisualChild<ScrollViewer>(gamesHistoryListView);
+                if (scroll == null)
                 {
-                    _lastMessageIndex += 21;
-                    (DataContext as ProfileViewModel).AddStatsHistory(sh);
-                    scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
+                    throw new InvalidOperationException(
+                        "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
                 }
+
+                if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
+                {
+                    StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 20);
+
+                    if (sh.MatchesPlayedHistory != null && sh.MatchesPlayedHistory.Count > 0)
+                    {
+                        _lastMessageIndex += 21;
+                        (DataContext as ProfileViewModel).AddStatsHistory(sh);
+                        scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
+                    }
+                }
+            }
+            catch
+            {
+                //
             }
         }
 

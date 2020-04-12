@@ -525,7 +525,14 @@ namespace ClientLourd.ViewModels
 
                 if (Mode == GameModes.Solo)
                 {
-                    BestSoloScore = (int)(await RestClient.GetStats()).BestScoreSolo;
+                    try
+                    {
+                        BestSoloScore = (int) (await RestClient.GetStats()).BestScoreSolo;
+                    }
+                    catch
+                    {
+                        //
+                    }
                 }           
 
                 SocketClient.SendMessage(new Tlv(SocketMessageTypes.ReadyToStart));

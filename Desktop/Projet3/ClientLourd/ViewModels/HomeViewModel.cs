@@ -110,7 +110,14 @@ namespace ClientLourd.ViewModels
 
         public async void FetchLobbies()
         {
-            Lobbies = await RestClient.GetGroup();
+            try
+            {
+                Lobbies = await RestClient.GetGroup();
+            }
+            catch
+            {
+                //
+            }
         }
 
 
