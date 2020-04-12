@@ -133,11 +133,7 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
 
         return editText
     }
-
-    private fun generateLastEditText(): SmartEditText {
-        return generateEditText()
-    }
-
+    
     private fun setTextChangedListener(editText: EditText) {
         editText.doAfterTextChanged {
             val newValue = it?.toString()
