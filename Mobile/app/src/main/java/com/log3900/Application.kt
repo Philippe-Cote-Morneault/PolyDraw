@@ -41,9 +41,11 @@ class MainApplication : Application() {
         navigationManager.currentActivity = activity
     }
 
-    fun unregisterMainActivity() {
-        navigationManager.currentActivity = null
-        mainActivity = null
+    fun unregisterMainActivity(activity: MainActivity) {
+        if (activity == mainActivity) {
+            navigationManager.currentActivity = null
+            mainActivity = null
+        }
     }
 
     fun getContext(): Context {

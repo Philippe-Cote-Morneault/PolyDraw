@@ -186,7 +186,9 @@ open class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (ThemeManager.hasActivityThemeChanged(this) || LanguageManager.hasContextLanguageChanged(baseContext)) {
-            this.recreate()
+            startActivity(intent)
+            finish()
+            overridePendingTransition(0, 0)
         }
     }
 
@@ -317,7 +319,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         EventBus.getDefault().unregister(this)
-        MainApplication.instance.unregisterMainActivity()
+        MainApplication.instance.unregisterMainActivity(this)
         super.onDestroy()
     }
 }

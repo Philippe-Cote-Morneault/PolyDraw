@@ -26,7 +26,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             ThemePickerFragment{
                 Handler().postDelayed({
                     if (ThemeManager.hasActivityThemeChanged(activity!!)) {
-                        activity?.recreate()
+                        activity?.startActivity(activity?.intent)
+                        activity?.finish()
+                        activity?.overridePendingTransition(0, 0)
                     }
                 }, 500)
             }.show(fragmentManager!! , "ThemePickerFragment")
@@ -37,7 +39,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             LanguagePickerDialog{
                 Handler().postDelayed({
                     if (LanguageManager.hasContextLanguageChanged(activity!!.baseContext)) {
-                        activity?.recreate()
+                        activity?.startActivity(activity?.intent)
+                        activity?.finish()
+                        activity?.overridePendingTransition(0, 0)
                     }
                 }, 500)
             }.show(fragmentManager!!, "LanguagePickerDialog")
