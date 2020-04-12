@@ -88,6 +88,7 @@ namespace ClientLourd.ViewModels
         private async Task GetUserStats(int start, int end)
         {
             StatsHistory = await RestClient.GetStats(start, end);
+            NotifyPropertyChanged(nameof(StatsHistory));
         }
 
 
