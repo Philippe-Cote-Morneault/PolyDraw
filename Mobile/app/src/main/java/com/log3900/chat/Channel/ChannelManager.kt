@@ -129,6 +129,9 @@ class ChannelManager {
 
     private fun onMessageReceived(message: ChatMessage) {
         if (message.channelID != activeChannel?.ID) {
+            if (joinedChannels.find { it.ID == message.channelID } == null) {
+                return
+            }
             if (!unreadMessages.containsKey(message.channelID)) {
                 unreadMessages.put(message.channelID, 0)
             }
