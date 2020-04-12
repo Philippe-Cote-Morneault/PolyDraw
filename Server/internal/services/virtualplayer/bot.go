@@ -198,3 +198,12 @@ func secondsToHuman(input int64) string {
 
 	return result
 }
+
+func isThereBotInGame(match match.IMatch) bool {
+	for _, player := range match.GetPlayers() {
+		if player.IsCPU {
+			return true
+		}
+	}
+	return false
+}

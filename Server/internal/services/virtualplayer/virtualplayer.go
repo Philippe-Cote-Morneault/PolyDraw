@@ -56,7 +56,7 @@ func (v *VirtualPlayer) listen() {
 			}
 			groupID := match.GetGroupID()
 			handleStartGame(match, groupID)
-			if match.GetType() != 0 {
+			if isThereBotInGame(match) {
 				go statsLinesLoop(groupID)
 			}
 
