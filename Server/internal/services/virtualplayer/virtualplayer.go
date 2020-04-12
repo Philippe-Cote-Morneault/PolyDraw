@@ -56,7 +56,9 @@ func (v *VirtualPlayer) listen() {
 			}
 			groupID := match.GetGroupID()
 			handleStartGame(match, groupID)
-			go statsLinesLoop(groupID)
+			if match.GetType() != 0 {
+				go statsLinesLoop(groupID)
+			}
 
 		case data := <-v.gameEnds:
 			log.Println("[VirtualPlayer] -> Receives gameEnds event")
