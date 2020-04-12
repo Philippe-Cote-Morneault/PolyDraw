@@ -180,7 +180,7 @@ class ChannelRepository : Service() {
         })
         val channelCreated = moshi.unpack<ChannelDeletedMessage>(message.data)
         channelCache.removeChannel(channelCreated.channelID)
-        EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_DELETED, channelCreated.channelID))
+        EventBus.getDefault().post(MessageEvent(EventType.CHANNEL_DELETED, channelCreated))
     }
 
     private fun onChannelJoined(message: Message) {

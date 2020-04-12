@@ -265,4 +265,5 @@
     <string name="teamate_bad_guess_warning">Your teamate has guessed incorrectly!</string>
     <string name="points_title">Points:</string>
     <string name="match_played_type_ffa">FFA</string>
+    <string name="current_channel_got_deleted">%1$s had deleted the channel \'%2$s\'!</string>
 </resources>

@@ -234,4 +234,5 @@
     <string name="points_title">Points:</string>
     <string name="match_played_type_ffa">FFA</string>
     <string name="draw">Dessiner</string>
+    <string name="current_channel_got_deleted">%1$s a supprimé le canal \'%2$s\'!</string>
 </resources>
