@@ -42,7 +42,8 @@
             android:layout_marginStart="24dp"
             app:layout_constraintTop_toTopOf="@id/current_avatar"
             app:layout_constraintBottom_toBottomOf="@id/current_avatar"
-            app:layout_constraintStart_toEndOf="@id/current_avatar"/>
+            app:layout_constraintStart_toEndOf="@id/current_avatar"
+            android:textAllCaps="false"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username_input_layout"
@@ -197,7 +198,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/register_button"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAllCaps="false"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/register_button"
@@ -208,7 +210,8 @@
                 android:text="@string/register"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAllCaps="false"/>
 
             <TextView
                 android:id="@+id/all_required_text"

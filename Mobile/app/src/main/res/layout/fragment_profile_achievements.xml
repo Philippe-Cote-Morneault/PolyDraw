@@ -63,6 +63,7 @@
         android:text="@string/view_all"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unlocked_text" />
+        app:layout_constraintTop_toBottomOf="@+id/unlocked_text"
+        android:textAllCaps="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

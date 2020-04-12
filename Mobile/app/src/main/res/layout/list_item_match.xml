@@ -77,7 +77,8 @@
         android:text="@string/join_match_button_title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/list_item_match_text_view_match_player_count"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="false"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

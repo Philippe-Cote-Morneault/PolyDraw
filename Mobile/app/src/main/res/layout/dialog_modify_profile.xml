@@ -36,7 +36,8 @@
         android:layout_marginStart="24dp"
         app:layout_constraintTop_toTopOf="@id/current_avatar"
         app:layout_constraintBottom_toBottomOf="@id/current_avatar"
-        app:layout_constraintStart_toEndOf="@id/current_avatar"/>
+        app:layout_constraintStart_toEndOf="@id/current_avatar"
+        android:textAllCaps="false"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username_input_layout"
@@ -156,7 +157,8 @@
             android:text="@string/cancel"
             app:iconGravity="end"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAllCaps="false"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/default_button"
@@ -165,7 +167,8 @@
             android:layout_marginStart="24dp"
             android:text="@string/restore_default"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cancel_modify_button"/>
+            app:layout_constraintStart_toEndOf="@id/cancel_modify_button"
+            android:textAllCaps="false"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/update_button"
@@ -175,7 +178,8 @@
             android:text="@string/apply_changes"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAllCaps="false"/>
 
         <TextView
             android:id="@+id/all_required_text"
