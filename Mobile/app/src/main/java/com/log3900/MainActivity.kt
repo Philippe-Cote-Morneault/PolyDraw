@@ -128,19 +128,26 @@ open class MainActivity : AppCompatActivity() {
                 R.id.navigation_main_active_ffa_match_fragment -> {
                     switchToolbar(R.layout.toolbar_active_ffa_match)
                     openChat()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 R.id.navigation_main_active_solo_match_fragment -> {
                     switchToolbar(R.layout.toolbar_active_solo_match)
                     openChat()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 R.id.navigation_main_active_coop_match_fragment -> {
                     switchToolbar(R.layout.toolbar_active_coop_match)
                     openChat()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 R.id.navigation_main_match_waiting_room_fragment -> {
                     openChat()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
-                else -> switchToolbar(R.layout.toolbar_activity_main)
+                else -> {
+                    switchToolbar(R.layout.toolbar_activity_main)
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                }
             }
         }
 
