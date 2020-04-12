@@ -21,7 +21,6 @@ namespace ClientLourd.Views.Dialogs
         public RegisterDialog(User user)
         {
             User = user;
-            User.PictureID = 1;
             InitializeComponent();
         }
 
