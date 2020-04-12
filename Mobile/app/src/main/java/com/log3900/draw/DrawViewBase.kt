@@ -76,7 +76,7 @@ class DrawViewBase @JvmOverloads constructor(
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
             strokeWidth = mPaintOptions.strokeWidth
-            isAntiAlias = true
+            isAntiAlias = false
         }
 
 
@@ -241,7 +241,7 @@ class DrawViewBase @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
+//        super.onDraw(canvas)
 
         mPaths
             .toSortedMap(compareBy { it.positionIndex })
