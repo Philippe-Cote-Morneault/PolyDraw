@@ -18,7 +18,7 @@ private const val LOGIN_FRAGMENT_TAG = "LOGIN_FRAGMENT"
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var languageButton: MaterialButton
-    var currentLanguageCode = MainApplication.instance.getContext().resources.configuration.locales.get(0).language.also { Log.d("LANGUAGE", "Start: $it") }
+    var currentLanguageCode = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.instance.startService(SocketService::class.java)
@@ -53,7 +53,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun getTextFromLanguageCode(): String {
-        return if (currentLanguageCode == "en") {
+        val language = if (currentLanguageCode == "") {
+            MainApplication.instance.getContext().resources.configuration.locales.get(0).language
+        } else {
+            currentLanguageCode
+        }
+        return if (language == "en") {
             "Français"
         } else {
             "English"
@@ -62,7 +67,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun swapLanguageCode() {
         Log.d("LANGUAGE", "CURRENT: $currentLanguageCode")
-        currentLanguageCode = if (currentLanguageCode == "en") {
+        val language = if (currentLanguageCode == "") {
+            MainApplication.instance.getContext().resources.configuration.locales.get(0).language
+        } else {
+            currentLanguageCode
+        }
+        currentLanguageCode = if (language == "en") {
             "fr"
         } else {
             "en"
