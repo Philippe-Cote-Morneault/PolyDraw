@@ -11,6 +11,7 @@ import com.daveanthonythomas.moshipack.MoshiPack
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.log3900.chat.Channel.Channel
+import com.log3900.chat.Channel.ChannelDeletedMessage
 import com.log3900.chat.ChatMessage
 import com.log3900.chat.ChatRestService
 import com.log3900.game.match.HintResponse
@@ -351,9 +352,9 @@ class MessageRepository : Service() {
         }
     }
 
-    private fun onChannelDeleted(channelID: UUID) {
-        if (matchChannel != null && matchChannel!!.ID == channelID) {
-            messageCache.removeEntry(channelID)
+    private fun onChannelDeleted(channelDeleted: ChannelDeletedMessage) {
+        if (matchChannel != null && matchChannel!!.ID == channelDeleted.channelID) {
+            messageCache.removeEntry(channelDeleted.channelID)
             matchChannel = null
         }
     }
@@ -370,7 +371,7 @@ class MessageRepository : Service() {
                 onChannelCreated(event.data as Channel)
             }
             EventType.CHANNEL_DELETED -> {
-                onChannelDeleted(event.data as UUID)
+                onChannelDeleted(event.data as ChannelDeletedMessage)
             }
             EventType.LANGUAGE_CHANGED -> {
                 onLanguageChanged()

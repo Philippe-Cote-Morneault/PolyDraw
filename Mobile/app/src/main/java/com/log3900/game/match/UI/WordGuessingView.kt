@@ -8,6 +8,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -113,6 +114,22 @@ class WordGuessingView(context: Context) : ConstraintLayout(context) {
         editText.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
         setTextChangedListener(editText)
+
+        editText.imeOptions = EditorInfo.IME_ACTION_SEND
+        editText.setOnEditorActionListener { textView, actionID, keyEvent ->
+            return@setOnEditorActionListener when (actionID) {
+                EditorInfo.IME_ACTION_SEND -> {
+                    if (listener != null) {
+                        val text = getText()
+                        if (text.length == letterEditTexts.size) {
+                            listener?.onGuessPressed(text)
+                        }
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
 
         return editText
     }

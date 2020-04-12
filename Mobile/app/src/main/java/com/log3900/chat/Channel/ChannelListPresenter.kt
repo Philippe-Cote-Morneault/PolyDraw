@@ -69,7 +69,7 @@ class ChannelListPresenter : Presenter {
                 onChannelCreated(event.data as Channel)
             }
             EventType.CHANNEL_DELETED -> {
-                onChannelDeleted(event.data as UUID)
+                onChannelDeleted(event.data as ChannelDeletedMessage)
             }
             EventType.ACTIVE_CHANNEL_CHANGED -> {
                 onActiveChannelChanged(event.data as Channel?)
@@ -137,7 +137,7 @@ class ChannelListPresenter : Presenter {
         channelListView.notifyChannelsChange()
     }
 
-    private fun onChannelDeleted(channel: UUID) {
+    private fun onChannelDeleted(channelDeleted: ChannelDeletedMessage) {
         channelListView.notifyChannelsChange()
     }
 

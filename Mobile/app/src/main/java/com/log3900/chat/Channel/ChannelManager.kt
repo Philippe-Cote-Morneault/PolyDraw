@@ -1,8 +1,13 @@
 package com.log3900.chat.Channel
 
+import com.log3900.MainActivity
+import com.log3900.MainApplication
+import com.log3900.R
 import com.log3900.chat.ChatMessage
+import com.log3900.shared.architecture.DialogEventMessage
 import com.log3900.shared.architecture.EventType
 import com.log3900.shared.architecture.MessageEvent
+import com.log3900.user.UserRepository
 import com.log3900.user.account.AccountRepository
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -61,7 +66,7 @@ class ChannelManager {
                 onChannelCreated(event.data as Channel)
             }
             EventType.CHANNEL_DELETED -> {
-                onChannelDeleted(event.data as UUID)
+                onChannelDeleted(event.data as ChannelDeletedMessage)
             }
             EventType.RECEIVED_MESSAGE -> {
                 onMessageReceived(event.data as ChatMessage)
@@ -82,22 +87,28 @@ class ChannelManager {
         }
     }
 
-    fun onChannelDeleted(channelID: UUID) {
-        if (activeChannel?.ID == channelID) {
+    fun onChannelDeleted(channelDeleted: ChannelDeletedMessage) {
+        if (activeChannel?.ID == channelDeleted.channelID) {
             val newActiveChannel = joinedChannels.find {
                 it.ID == Channel.GENERAL_CHANNEL_ID
             }!!
             previousChannel = newActiveChannel
             changeActiveChannel(newActiveChannel)
-        } else if (activeChannel == null && previousChannel?.ID == channelID) {
+            EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                MainApplication.instance.getContext().getString(R.string.warning),
+                MainApplication.instance.getContext().getString(R.string.current_channel_got_deleted, channelDeleted.username, activeChannel?.name),
+                null,
+                null
+            )))
+        } else if (activeChannel == null && previousChannel?.ID == channelDeleted.channelID) {
             previousChannel = joinedChannels.find {
                 it.ID == Channel.GENERAL_CHANNEL_ID
             }!!
         }
 
-        if (unreadMessages.containsKey(channelID)) {
-            unreadMessagesTotal -= unreadMessages.get(channelID)!!
-            unreadMessages.remove(channelID)
+        if (unreadMessages.containsKey(channelDeleted.channelID)) {
+            unreadMessagesTotal -= unreadMessages.get(channelDeleted.channelID)!!
+            unreadMessages.remove(channelDeleted.channelID)
             EventBus.getDefault().post(MessageEvent(EventType.UNREAD_MESSAGES_CHANGED, unreadMessagesTotal))
         }
     }
@@ -129,6 +140,9 @@ class ChannelManager {
 
     private fun onMessageReceived(message: ChatMessage) {
         if (message.channelID != activeChannel?.ID) {
+            if (joinedChannels.find { it.ID == message.channelID } == null) {
+                return
+            }
             if (!unreadMessages.containsKey(message.channelID)) {
                 unreadMessages.put(message.channelID, 0)
             }
