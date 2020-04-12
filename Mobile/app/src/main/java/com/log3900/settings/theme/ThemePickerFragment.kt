@@ -21,7 +21,7 @@ class ThemePickerFragment(val themeChangedCallback: () -> Unit) : DialogFragment
         val dialogBuilder = AlertDialog.Builder(activity)
             .setTitle(MainApplication.instance.getContext().getString(R.string.theme_selection_instruction))
             .setPositiveButton(MainApplication.instance.getContext().getString(R.string.save)) { _, _ ->
-                ThemeManager.changeTheme(themesAdapter.selectedTheme).subscribe()
+                ThemeManager.changeTheme(themAnimesAdapter.selectedTheme).subscribe()
             }
             .setNegativeButton(MainApplication.instance.getContext().getString(R.string.cancel)) { _, _ ->
 

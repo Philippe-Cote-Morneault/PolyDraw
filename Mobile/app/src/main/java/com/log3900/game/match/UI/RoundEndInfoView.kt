@@ -65,14 +65,13 @@ class RoundEndInfoView(context: Context, attributeSet: AttributeSet) : Constrain
         }
 
         override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
-            holder.bind(players[position], position + 1)
+            holder.bind(players[position])
         }
     }
 
 
     class PlayerViewHolder : RecyclerView.ViewHolder {
         private var rootView: View
-        private var positionTextView: TextView
         private var nameTextView: TextView
         private var scoreTextView: TextView
 
@@ -80,14 +79,12 @@ class RoundEndInfoView(context: Context, attributeSet: AttributeSet) : Constrain
 
         constructor(itemView: View) : super(itemView) {
             rootView = itemView
-            positionTextView = itemView.findViewById(R.id.list_item_round_end_info_text_view_position)
             nameTextView = itemView.findViewById(R.id.list_item_round_end_info_text_view_name)
             scoreTextView = itemView.findViewById(R.id.list_item_round_end_info_text_view_points)
         }
 
-        fun bind(player: Pair<String, Int>, position: Int) {
+        fun bind(player: Pair<String, Int>) {
             this.player = player
-            positionTextView.text = "#$position"
             nameTextView.text = player.first
 
             if (player.second > 0) {
