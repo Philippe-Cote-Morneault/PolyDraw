@@ -2,6 +2,7 @@ package socket
 
 import (
 	"encoding/binary"
+	"github.com/tevino/abool"
 	"net"
 	"sync"
 
@@ -9,10 +10,15 @@ import (
 	"gitlab.com/jigsawcorp/log3900/pkg/cbroadcast"
 )
 
+//QueueSize size for the queue for the messages to be sent
+const QueueSize = 100
+
 // ClientSocket is a client connected to the socket
 type ClientSocket struct {
-	socket net.Conn
-	id     uuid.UUID
+	socket   net.Conn
+	id       uuid.UUID
+	queue    chan RawMessage
+	isClosed *abool.AtomicBool
 }
 
 // ClientSocketManager manages all client sockets connected and subscribers
@@ -71,6 +77,21 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 		}
 	}()
 
+	clientSocket.queue = make(chan RawMessage, QueueSize)
+	clientSocket.isClosed = abool.New()
+	clientSocket.isClosed.UnSet()
+	//Start a thread for the message queue for the messages
+	go func() {
+		for {
+			select {
+			case message := <-clientSocket.queue:
+				clientSocket.socket.Write(message.ToBytesSlice())
+			case <-cancel:
+				clientSocket.isClosed.Set()
+				return
+			}
+		}
+	}()
 	cbroadcast.Broadcast(BSocketConnected, clientSocket.id) //Broadcast to all the services that a new connection is made
 	const buffSize = 4096
 	const minPacketLength = 3
@@ -152,5 +173,6 @@ func (manager *ClientSocketManager) receive(clientSocket *ClientSocket, closing 
 
 func (manager *ClientSocketManager) close(clientSocket *ClientSocket) {
 	clientSocket.socket.Close()
+	clientSocket.isClosed.Set()
 	cbroadcast.Broadcast(BSocketCloseClient, clientSocket.id) //Broadcast to all the services that the connection is closed
 }

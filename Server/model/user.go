@@ -17,6 +17,7 @@ type User struct {
 	Email          string
 	HashedPassword string
 	Bearer         string
+	IsCPU          bool `gorm:"default:'false'"`
 }
 
 //Session represents a session in the database
@@ -26,27 +27,6 @@ type Session struct {
 	UserID       uuid.UUID
 	SocketID     uuid.UUID
 	SessionToken string
-}
-
-//NewFakeUser Generate a new user with a bearer token used to bypass auth. Will be removed
-//TODO remove this method
-func (u *User) NewFakeUser(Username string) error {
-	u.Username = Username
-	u.FirstName = "Serge"
-	u.LastName = "Paquette"
-	u.Email = "serge.paquette@veryrealemail.com"
-	u.HashedPassword = "random crap for now"
-	u.PictureID = 0
-
-	bearer, err := secureb.GenerateToken()
-	if err != nil {
-		log.Println("Cannot create user bearer")
-		log.Println(err)
-		return err
-	}
-	u.Bearer = bearer
-
-	return err
 }
 
 //New Generate a new user with a bearer token
@@ -78,7 +58,4 @@ func FindUserByName(username string, user *User) bool {
 // AddUser add user in DB
 func AddUser(user *User) {
 	DB().Create(&user)
-
-	var stats Stats = Stats{UserID: user.ID}
-	DB().Create(&stats)
 }

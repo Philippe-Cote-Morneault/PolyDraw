@@ -26,7 +26,7 @@ func (base *Base) BeforeCreate(scope *gorm.Scope) error {
 }
 
 //DB used for assignement
-var dbVariable *gorm.DB
+var dbVar *gorm.DB
 
 //DBConnect connect to the database
 func DBConnect() {
@@ -35,7 +35,7 @@ func DBConnect() {
 		log.Println(err)
 		log.Fatal("failed to connect database")
 	}
-	dbVariable = db
+	dbVar = db
 
 	migrate()
 	log.Println("Migration complete!")
@@ -43,16 +43,16 @@ func DBConnect() {
 
 //DB Return the database object
 func DB() *gorm.DB {
-	if dbVariable != nil {
-		return dbVariable
+	if dbVar != nil {
+		return dbVar
 	}
 	return nil
 }
 
 //DBClose disconnect the database
 func DBClose() {
-	if dbVariable != nil {
-		dbVariable.Close()
+	if dbVar != nil {
+		dbVar.Close()
 	}
 }
 
@@ -60,24 +60,32 @@ func DBClose() {
 func migrate() {
 	log.Println("Migrating database")
 	//Users
-	dbVariable.AutoMigrate(&User{})
+	dbVar.AutoMigrate(&User{})
 
-	dbVariable.AutoMigrate(&Session{})
-	dbVariable.Model(&Session{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
+	dbVar.AutoMigrate(&Session{})
+	dbVar.Model(&Session{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
 
 	//Chat
-	dbVariable.AutoMigrate(&ChatChannel{})
-	dbVariable.Exec("INSERT INTO chat_channels (id,name) values('00000000-0000-0000-0000-000000000000', 'Général') ON CONFLICT DO NOTHING;")
+	dbVar.AutoMigrate(&ChatChannel{})
+	dbVar.Exec("INSERT INTO chat_channels (id,name) values('00000000-0000-0000-0000-000000000000', 'Général') ON CONFLICT DO NOTHING;")
 
-	dbVariable.AutoMigrate(&ChatMessage{})
-	dbVariable.Model(&ChatMessage{}).AddForeignKey("channel_id", "chat_channels(id)", "CASCADE", "RESTRICT")
-	dbVariable.Model(&ChatMessage{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
+	dbVar.AutoMigrate(&ChatMessage{})
+	dbVar.Model(&ChatMessage{}).AddForeignKey("channel_id", "chat_channels(id)", "CASCADE", "RESTRICT")
+	dbVar.Model(&ChatMessage{}).AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT")
 
-	//Messenger
-	dbVariable.AutoMigrate(&Stats{})
-	dbVariable.AutoMigrate(&Connection{})
-	dbVariable.AutoMigrate(&MatchPlayed{})
-	dbVariable.AutoMigrate(&PlayerName{})
-	dbVariable.AutoMigrate(&Achievement{})
+	//Stats
+	dbVar.AutoMigrate(&Connection{})
+	dbVar.AutoMigrate(&MatchPlayed{})
+	dbVar.AutoMigrate(&MatchPlayedMembership{})
 
+	//Game
+	dbVar.AutoMigrate(&Game{})
+	dbVar.AutoMigrate(&GameHint{})
+	dbVar.Model(&GameHint{}).AddForeignKey("game_id", "games(id)", "CASCADE", "RESTRICT")
+	dbVar.AutoMigrate(&GameImage{})
+	dbVar.Model(&GameImage{}).AddForeignKey("game_id", "games(id)", "CASCADE", "RESTRICT")
+
+	//Group
+	dbVar.AutoMigrate(&Group{})
+	dbVar.Model(&Group{}).AddForeignKey("owner_id", "users(id)", "CASCADE", "RESTRICT")
 }

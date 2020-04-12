@@ -17,6 +17,9 @@ const BLeaveChannel = "messenger:chanleave"
 //BDestroyChannel broadcast message when the client wants to destroy a channel
 const BDestroyChannel = "messenger:chandestroy"
 
+//BBotMessage broadcast message when a bot wants to speak
+const BBotMessage = "messenger:botmessage"
+
 //BSize buffer size for the messenger service
 const BSize = 5
 
@@ -27,4 +30,5 @@ func (m *Messenger) Register() {
 	cbroadcast.Register(BJoinChannel, BSize)
 	cbroadcast.Register(BLeaveChannel, BSize)
 	cbroadcast.Register(BDestroyChannel, BSize)
+	cbroadcast.Register(BBotMessage, BSize)
 }

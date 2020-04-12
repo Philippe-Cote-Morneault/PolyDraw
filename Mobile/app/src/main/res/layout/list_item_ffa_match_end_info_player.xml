@@ -30,6 +30,7 @@
         android:id="@+id/list_item_ffa_match_end_info_text_view_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/color_white"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

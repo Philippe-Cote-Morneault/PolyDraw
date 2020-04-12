@@ -2,10 +2,12 @@ package rest
 
 import (
 	"context"
+	"gitlab.com/jigsawcorp/log3900/internal/language"
 	"log"
 	"net/http"
+	"strings"
 
-	"gitlab.com/jigsawcorp/log3900/internal/api"
+	context2 "gitlab.com/jigsawcorp/log3900/internal/context"
 	"gitlab.com/jigsawcorp/log3900/internal/services/auth"
 	"gitlab.com/jigsawcorp/log3900/pkg/rbody"
 )
@@ -40,8 +42,15 @@ func logMiddleware(next http.Handler) http.Handler {
 
 func authMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		langStr := r.Header.Get("Language")
+		lang := language.EN
+		if strings.ToLower(langStr) == "fr" {
+			lang = language.FR
+		}
+		ctx := context.WithValue(r.Context(), context2.CtxLang, lang)
+
 		if val, ok := authExceptions[r.URL.Path]; ok && val {
-			next.ServeHTTP(w, r)
+			next.ServeHTTP(w, r.WithContext(ctx))
 		} else {
 			sessionToken := r.Header.Get("SessionToken")
 			if sessionToken != "" {
@@ -50,7 +59,7 @@ func authMiddleware(next http.Handler) http.Handler {
 				if !ok {
 					rbody.JSONError(w, http.StatusForbidden, "The header SessionToken is invalid.")
 				} else {
-					ctx := context.WithValue(r.Context(), api.CtxUserID, userID)
+					ctx = context.WithValue(ctx, context2.CtxUserID, userID)
 					next.ServeHTTP(w, r.WithContext(ctx))
 				}
 			} else {

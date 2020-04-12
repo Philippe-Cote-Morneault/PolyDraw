@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.log3900.game.match.UI.*
 import com.log3900.shared.ui.ThemeUtils
 import com.log3900.shared.ui.dialogs.SimpleConfirmationDialog
+import java.lang.Exception
 
 
 abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
@@ -328,7 +329,13 @@ abstract class ActiveMatchFragment : Fragment(), ActiveMatchView {
             context!!,
             getString(R.string.quit_match),
             getString(R.string.quit_match_confirm),
-            {_, _ -> findNavController().popBackStack()},
+            {_, _ -> {
+                try {
+                    findNavController().popBackStack()
+                } catch (e: Exception) {
+
+                }
+            }},
             null
         ).show()
     }

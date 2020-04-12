@@ -78,7 +78,6 @@ Server deploy DEV:
   stage: deploy
   script:
     - cd Server && make deploy
-    - curl "http://172.20.1.31/cgi-bin/deploy-dev.sh?key=$TOKEN_DEV"
   only:
     refs:
       - dev-server
@@ -92,10 +91,10 @@ Server deploy PROD:
   script:
     - export RELEASE=True
     - cd Server && make deploy
-    - curl "http://172.20.1.31/cgi-bin/deploy-prod.sh?key=$TOKEN_PROD"
   only:
     refs:
       - release
       - master
     changes:
       - Server/**/*
+      
