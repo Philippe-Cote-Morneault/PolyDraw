@@ -36,7 +36,7 @@ type FFA struct {
 	//We can get the position with the field order
 	orderPos       int
 	curLap         int
-	curDrawer      *players
+	curDrawer      players
 	lapsTotal      int
 	realPlayers    int
 	rand           *rand.Rand
@@ -128,7 +128,7 @@ func (f *FFA) GameLoop() {
 		return
 	}
 	//Choose a user.
-	f.curDrawer = &f.players[f.order[f.orderPos]]
+	f.curDrawer = f.players[f.order[f.orderPos]]
 	drawingID := uuid.New()
 
 	var game *model.Game
@@ -251,7 +251,7 @@ func (f *FFA) Disconnect(socketID uuid.UUID) {
 	f.broadcast(&leaveMessage)
 
 	//Check if drawing
-	if f.curDrawer != nil && f.curDrawer.socketID == socketID {
+	if f.curDrawer.socketID == socketID {
 		if f.cancelWait != nil {
 			f.cancelWait() //We cancel the wait and finish the drawing for the client to see
 		}

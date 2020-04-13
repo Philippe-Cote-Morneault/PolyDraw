@@ -28,13 +28,11 @@ import (
 //Coop represent a cooperative game mode
 type Coop struct {
 	base
-	orderVirtual []*players
-	curDrawer    *players
-	orderPos     int
-	chances      int
-	currentWord  string
-	realPlayers  int
-	commonScore  score
+	curDrawer   players
+	chances     int
+	currentWord string
+	realPlayers int
+	commonScore score
 
 	gameTime              int64
 	checkPointTime        int64
@@ -62,7 +60,6 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 	c.init(connections, info)
 
 	c.isRunning = true
-	c.orderPos = 0
 	c.nbWaitingResponses = 1
 	c.curLap = 1
 	c.wordFound = false
@@ -72,7 +69,6 @@ func (c *Coop) Init(connections []uuid.UUID, info model.Group) {
 
 	c.checkPointTime = 0
 	c.commonScore.init()
-	c.orderVirtual = make([]*players, info.VirtualPlayers)
 	c.closingTimeKeeper = make(chan struct{})
 
 	c.receivingGuesses = abool.New()
@@ -128,7 +124,6 @@ func (c *Coop) GameLoop() {
 	c.receiving.Lock()
 	c.lastLoop = make(chan struct{})
 	defer close(c.lastLoop)
-	c.curDrawer = c.orderVirtual[c.orderPos]
 	drawingID := uuid.New()
 
 	game := c.findGame()
@@ -198,9 +193,7 @@ func (c *Coop) GameLoop() {
 	//Prepare next round
 	c.sendRoundSummary()
 
-	c.orderPos++
 	c.curLap++
-	c.orderPos = c.orderPos % c.nbVirtualPlayers
 	c.commonScore.reset()
 	c.currentWord = ""
 	c.wordFound = false
@@ -576,7 +569,7 @@ func (c *Coop) computeOrder() {
 	//Count the number of virtualplayers
 	for i := range c.players {
 		if c.players[i].IsCPU {
-			c.orderVirtual[c.nbVirtualPlayers] = &c.players[i]
+			c.curDrawer = c.players[i]
 			c.nbVirtualPlayers++
 		} else {
 			c.realPlayers++
