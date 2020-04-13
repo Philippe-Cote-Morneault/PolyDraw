@@ -1,8 +1,0 @@
-<!-- From https://www.flaticon.com/authors/smashicons -->
-<vector android:height="24dp" android:viewportHeight="512"
-    android:viewportWidth="512" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#F0C419" android:pathData="M414.897,203.034c0,-87.755 -71.142,-158.897 -158.897,-158.897S97.103,115.279 97.103,203.034S168.245,361.931 256,361.931S414.897,290.79 414.897,203.034"/>
-    <path android:fillColor="#E64C3C" android:pathData="M256,44.138c36.608,0 70.232,12.509 97.103,33.315V0H158.897v77.453C185.768,56.647 219.392,44.138 256,44.138"/>
-    <path android:fillColor="#E64C3C" android:pathData="M256,361.931c-36.608,0 -70.232,-12.509 -97.103,-33.315V512L256,414.897L353.103,512V328.616C326.232,349.422 292.608,361.931 256,361.931"/>
-    <path android:fillColor="#FFE69F" android:pathData="M256,88.276l33.827,68.202l72.104,11.246l-51.2,53.098l15.89,70.488l-70.621,-30.728l-70.621,30.728l15.89,-70.488l-51.2,-53.098l72.104,-11.246z"/>
-</vector>
