@@ -2,6 +2,8 @@ package com.log3900.chat
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -36,6 +38,7 @@ class ChatFragment : Fragment(), ChatView {
     private lateinit var sendMessageButton: ImageView
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
+    private lateinit var messageEditText: TextInputEditText
 
     private var autoScroll = true
 
@@ -61,6 +64,10 @@ class ChatFragment : Fragment(), ChatView {
 
         sendMessageButton = rootView.findViewById(R.id.fragment_chat_send_message_button)
         sendMessageButton.setOnClickListener { v -> onSendMessageButtonClick(v) }
+
+        messageEditText = rootView.findViewById(R.id.fragment_chat_new_message_input)
+        messageEditText.filters += InputFilter.LengthFilter(1000)
+        messageEditText.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
         setupToolbar(rootView)
 

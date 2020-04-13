@@ -64,7 +64,12 @@ class GroupManager : Service() {
             {
             },
             {
-                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage("Error", it.message!!, null, null)))
+                EventBus.getDefault().post(MessageEvent(EventType.SHOW_ERROR_MESSAGE, DialogEventMessage(
+                    MainApplication.instance.getContext().getString(R.string.error),
+                    it.message!!,
+                    null,
+                    null)
+                ))
             }
         )
     }

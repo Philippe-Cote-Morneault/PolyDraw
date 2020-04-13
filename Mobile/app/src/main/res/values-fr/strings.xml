@@ -121,7 +121,7 @@
     <string name="channel_list_title">Canaux</string>
     <string name="chat_box_enter_message_title">Entrez votre message...</string>
     <string name="match_waiting_room_host_title">Hôte</string>
-    <string name="match_waiting_room_leave_match_title">Quitter le match</string>
+    <string name="match_waiting_room_leave_match_title">Quitter la partie</string>
     <string name="match_waiting_room_match_mode_title">Mode</string>
     <string name="match_waiting_room_match_name_title">Nom de la partie</string>
     <string name="match_waiting_room_players_title">Joueurs</string>
@@ -153,7 +153,7 @@
     <string name="ffa_match_end_info_winner_is">Le vainqueur est %1$s!</string>
     <string name="turn">Tour</string>
     <string name="team_score_title">Score d\'équipe: %1$d</string>
-    <string name="empty_slot">Place vide</string>
+    <string name="empty_slot">Place libre</string>
     <string name="match_lobby_duration_title">Durée (minutes)</string>
     <string name="logout_lobby_confirm">Vous êtes sur le point d\'être déconnecté. Voulez-vous continuer?</string>
     <string name="yes">Oui</string>
