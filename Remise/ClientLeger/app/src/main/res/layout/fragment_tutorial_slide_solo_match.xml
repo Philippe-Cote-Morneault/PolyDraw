@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/fragment_tutorial_solo_match_text_view_01"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tutorial_slide_solo_match_text_01"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="30dp"
+            android:textSize="24sp"
+            android:textColor="@color/color_black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/fragment_tutorial_slide_solo_match_image_view_01"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_margin="30dp"
+            android:src="@drawable/tutorial_slide_solo_match_01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_solo_match_text_view_01"/>
+
+        <TextView
+            android:id="@+id/fragment_tutorial_solo_match_text_view_header_top_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_black"
+            android:text="@string/top_bar"
+            android:textSize="28sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_slide_solo_match_image_view_01"/>
+
+        <View
+            android:id="@+id/fragment_tutorial_solo_match_top_bar_header_separator"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_solo_match_text_view_header_top_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/fragment_tutorial_slide_solo_match_image_view_02"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="30dp"
+            android:src="@drawable/tutorial_slide_solo_match_02"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_solo_match_top_bar_header_separator"/>
+
+        <TextView
+            android:id="@+id/fragment_tutorial_solo_match_text_view_02"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tutorial_slide_solo_match_text_02"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="30dp"
+            android:textSize="24sp"
+            android:textColor="@color/color_black"
+            app:layout_constraintTop_toBottomOf="@id/fragment_tutorial_slide_solo_match_image_view_02"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

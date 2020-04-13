@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginEnd="10dp">
+
+<!--    <TextView-->
+<!--        android:id="@+id/connected_at"-->
+<!--        style="@style/MyTheme.DayNight"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center"-->
+<!--        android:drawableStart="@drawable/ic_green_check"-->
+<!--        android:paddingEnd="8dp"-->
+<!--        android:text="@string/connected_at"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <TextView
+        android:id="@+id/connected_time"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020-01-01 00:00:00"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/disconnected_at"-->
+<!--        style="@style/MyTheme.DayNight"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center"-->
+<!--        android:drawableStart="@drawable/ic_close_red"-->
+<!--        android:paddingEnd="8dp"-->
+<!--        android:text="@string/disconnected_at"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/disconnected_time"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <TextView
+        android:id="@+id/disconnected_time"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020-01-01 00:00:00"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/connected_time"
+        app:layout_constraintEnd_toStartOf="@id/time_played"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/time_played"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textColor="@color/color_on_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
