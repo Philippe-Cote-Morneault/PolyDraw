@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/match_info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_details"
+        android:textSize="30sp"
+        style="@style/MyTheme.DayNight"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/match_type_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_type_title"
+        style="@style/MyTheme.DayNight"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/match_info_title"
+        app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/match_type_value"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/match_type_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/match_type_title"
+        app:layout_constraintTop_toTopOf="@+id/match_type_title" />
+
+    <TextView
+        android:id="@+id/match_result_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_result_title"
+        style="@style/MyTheme.DayNight"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/match_type_title"
+        app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/match_result_value"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/match_result_title"
+        app:layout_constraintEnd_toEndOf="@+id/match_type_value"
+        app:layout_constraintStart_toStartOf="@+id/match_type_value"
+        app:layout_constraintTop_toTopOf="@+id/match_result_title" />
+
+    <TextView
+        android:id="@+id/match_winner_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_winner_title"
+        style="@style/MyTheme.DayNight"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/match_result_title"
+        app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/match_winner_value"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/match_winner_title"
+        app:layout_constraintEnd_toEndOf="@+id/match_type_value"
+        app:layout_constraintStart_toStartOf="@+id/match_type_value"
+        app:layout_constraintTop_toTopOf="@+id/match_winner_title" />
+
+    <TextView
+        android:id="@+id/match_duration_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_duration_title"
+        style="@style/MyTheme.DayNight"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/match_winner_title"
+        app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/match_duration_value"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/match_duration_title"
+        app:layout_constraintEnd_toEndOf="@+id/match_type_value"
+        app:layout_constraintStart_toStartOf="@+id/match_type_value"
+        app:layout_constraintTop_toTopOf="@+id/match_duration_title" />
+
+    <TextView
+        android:id="@+id/match_players_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_players_title"
+        style="@style/MyTheme.DayNight"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@id/match_duration_title"
+        app:layout_constraintStart_toStartOf="parent" />
+    <LinearLayout
+        android:id="@+id/match_players_container"
+        style="@style/MyTheme.DayNight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/match_type_value"
+        app:layout_constraintStart_toStartOf="@+id/match_type_value"
+        app:layout_constraintTop_toTopOf="@+id/match_players_title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/close_dialog_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MyTheme.DayNight"
+        android:text="@string/close"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/match_players_title"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

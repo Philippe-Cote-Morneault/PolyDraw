@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background="#fcfcfc">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/fragment_chat_top_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/color_primary_light_brush"
+        android:background="?colorPrimaryLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -80,10 +81,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="start">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <fragment
+                android:id="@+id/fragment_chat_fragment_channel_list"
+                android:name="com.log3900.chat.Channel.ChannelListFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#AA2020" />
+                android:layout_height="match_parent"/>
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

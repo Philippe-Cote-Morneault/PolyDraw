@@ -9,7 +9,7 @@
 
     <stroke
         android:width="2dp"
-        android:color="@color/color_primary_mid_brush" >
+        android:color="?colorPrimary" >
     </stroke>
 
     <padding
