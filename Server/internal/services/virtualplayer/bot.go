@@ -162,7 +162,20 @@ func statsLinesLoop(groupID uuid.UUID) {
 		}
 
 		log.Println("[VirtualPlayer] Sending stat interaction")
-		for _, bot := range managerInstance.Bots {
+
+		group, groupOK := managerInstance.Groups[groupID]
+
+		if !groupOK {
+			managerInstance.mutex.Unlock()
+			log.Println("[VirtualPlayer] Stopping statLinesLoop")
+			return
+		}
+
+		for botID := range group {
+			bot, botOK := managerInstance.Bots[botID]
+			if !botOK {
+				continue
+			}
 			bot.sendStatsInteraction(groupID, match)
 			break
 		}

@@ -22,6 +22,7 @@ using System.Timers;
 using ClientLourd.Models.Bindable;
 using ClientLourd.ViewModels;
 using ClientLourd.Services.RestService;
+using System.Collections.ObjectModel;
 
 namespace ClientLourd.Views.Dialogs
 {
@@ -37,10 +38,10 @@ namespace ClientLourd.Views.Dialogs
 
         public ConnectionHistoryDialog(StatsHistory statsHistory, int lastMessageIndex)
         {
-
-            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
+            (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = true;
 
             StatsHistory = statsHistory;
+
             _lastMessageIndex = lastMessageIndex;
 
             InitializeComponent();
@@ -52,7 +53,7 @@ namespace ClientLourd.Views.Dialogs
 
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public void ScrollToBottom(object sender, ElapsedEventArgs e)
@@ -63,7 +64,6 @@ namespace ClientLourd.Views.Dialogs
                 ScrollViewerElement.ScrollToBottom();
                 ScrollViewerElement.ScrollChanged += ScrollViewer_OnScrollChanged;
             });
-            
         }
 
 
@@ -88,10 +88,11 @@ namespace ClientLourd.Views.Dialogs
                 throw new InvalidOperationException(
                     "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
             }
+
             if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
             {
                 //TODO: Dont load messages if messageIndex is greater than the array length
-               
+
                 StatsHistory sh = await RestClient.GetStats(_lastMessageIndex, _lastMessageIndex + 100);
                 _nReturned += 100;
                 if (sh.ConnectionHistory.Count > 0)
@@ -100,11 +101,8 @@ namespace ClientLourd.Views.Dialogs
                     AddStatsHistory(sh);
                     scroll.ScrollToVerticalOffset(scroll.ScrollableHeight / 10);
                 }
-                
             }
-
         }
-
 
 
         private void AddStatsHistory(StatsHistory sh)
@@ -121,16 +119,14 @@ namespace ClientLourd.Views.Dialogs
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             ScrollViewer scrollviewer = sender as ScrollViewer;
-            
-            
-                if (e.Delta > 0)    
-                    scrollviewer.PageUp();
-                else
-                    scrollviewer.PageDown();
-                e.Handled = true;
-            
-        }
 
+
+            if (e.Delta > 0)
+                scrollviewer.PageUp();
+            else
+                scrollviewer.PageDown();
+            e.Handled = true;
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

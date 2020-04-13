@@ -21,7 +21,7 @@ namespace ClientLourd.Services.CredentialsService
                 using (CriticalCredentialHandle critCred = new CriticalCredentialHandle(nCredPtr))
                 {
                     CREDENTIAL cred = critCred.GetCredential();
-                    var credential= ReadCredential(cred);
+                    var credential = ReadCredential(cred);
                     if (string.IsNullOrWhiteSpace(credential.Password) ||
                         string.IsNullOrWhiteSpace(credential.UserName))
                     {
@@ -42,7 +42,7 @@ namespace ClientLourd.Services.CredentialsService
             string secret = null;
             if (credential.CredentialBlob != IntPtr.Zero)
             {
-                secret = Marshal.PtrToStringUni(credential.CredentialBlob, (int)credential.CredentialBlobSize / 2);
+                secret = Marshal.PtrToStringUni(credential.CredentialBlob, (int) credential.CredentialBlobSize / 2);
             }
 
             return new Credential(credential.Type, applicationName, userName, secret);
@@ -60,8 +60,8 @@ namespace ClientLourd.Services.CredentialsService
             credential.Comment = IntPtr.Zero;
             credential.TargetAlias = IntPtr.Zero;
             credential.Type = CredentialType.Generic;
-            credential.Persist = (UInt32)CredentialPersistence.Session;
-            credential.CredentialBlobSize = (UInt32)Encoding.Unicode.GetBytes(secret).Length;
+            credential.Persist = (UInt32) CredentialPersistence.Session;
+            credential.CredentialBlobSize = (UInt32) Encoding.Unicode.GetBytes(secret).Length;
             credential.TargetName = Marshal.StringToCoTaskMemUni(applicationName);
             credential.CredentialBlob = Marshal.StringToCoTaskMemUni(secret);
             credential.UserName = Marshal.StringToCoTaskMemUni(userName ?? Environment.UserName);
@@ -91,7 +91,7 @@ namespace ClientLourd.Services.CredentialsService
                 for (int n = 0; n < count; n++)
                 {
                     IntPtr credential = Marshal.ReadIntPtr(pCredentials, n * Marshal.SizeOf(typeof(IntPtr)));
-                    result.Add(ReadCredential((CREDENTIAL)Marshal.PtrToStructure(credential, typeof(CREDENTIAL))));
+                    result.Add(ReadCredential((CREDENTIAL) Marshal.PtrToStructure(credential, typeof(CREDENTIAL))));
                 }
             }
             else
@@ -114,7 +114,6 @@ namespace ClientLourd.Services.CredentialsService
 
         [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
         static extern bool CredFree([In] IntPtr cred);
-
 
 
         private enum CredentialPersistence : uint
@@ -152,7 +151,7 @@ namespace ClientLourd.Services.CredentialsService
             {
                 if (!IsInvalid)
                 {
-                    CREDENTIAL credential = (CREDENTIAL)Marshal.PtrToStructure(handle, typeof(CREDENTIAL));
+                    CREDENTIAL credential = (CREDENTIAL) Marshal.PtrToStructure(handle, typeof(CREDENTIAL));
                     return credential;
                 }
 
@@ -222,7 +221,8 @@ namespace ClientLourd.Services.CredentialsService
 
         public override string ToString()
         {
-            return string.Format("CredentialType: {0}, ApplicationName: {1}, UserName: {2}, Password: {3}", CredentialType, ApplicationName, UserName, Password);
+            return string.Format("CredentialType: {0}, ApplicationName: {1}, UserName: {2}, Password: {3}",
+                CredentialType, ApplicationName, UserName, Password);
         }
     }
 }

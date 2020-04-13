@@ -18,6 +18,21 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,9 +53,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>windows.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
+    </Reference>
+    <Reference Include="Fizzler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4ebff4844e382110, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fizzler.1.2.0\lib\netstandard2.0\Fizzler.dll</HintPath>
     </Reference>
     <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587">
       <HintPath>..\packages\gong-wpf-dragdrop.2.2.0\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
@@ -65,9 +86,12 @@
     <Reference Include="RestSharp, Version=106.0.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.10.1\lib\net452\RestSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Svg, Version=3.0.0.0, Culture=neutral, PublicKeyToken=12a0bac221edeae2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Svg.3.0.102\lib\net452\Svg.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -75,11 +99,11 @@
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -128,44 +152,105 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Bindable\Channel.cs" />
-    <Compile Include="Models\Bindable\Editor.cs" />
+    <Compile Include="Models\Bindable\EditorInformation.cs" />
+    <Compile Include="Models\Bindable\Game.cs" />
+    <Compile Include="Models\Bindable\Hint.cs" />
+    <Compile Include="Models\Bindable\Lobby.cs" />
     <Compile Include="Models\Bindable\Message.cs" />
     <Compile Include="Models\Bindable\ModelBase.cs" />
+    <Compile Include="Models\Bindable\Player.cs" />
     <Compile Include="Models\Bindable\SessionInformations.cs" />
     <Compile Include="Models\Bindable\StatsHistory.cs" />
     <Compile Include="Models\Bindable\User.cs" />
     <Compile Include="Models\NonBindable\NetworkInformations.cs" />
+    <Compile Include="Models\NonBindable\StrokeInfo.cs" />
     <Compile Include="Models\NonBindable\TLV.cs" />
     <Compile Include="Models\NonBindable\TokenPair.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Services\CredentialsService\CredentialManager.cs" />
     <Compile Include="Models\Bindable\Stats.cs" />
     <Compile Include="Services\DateService\Timestamp.cs" />
+    <Compile Include="Services\EnumService\EnumManager.cs" />
+    <Compile Include="Services\InkCanvas\ServerStrokeDrawerService.cs" />
+    <Compile Include="Services\InkCanvas\StrokesReader.cs" />
+    <Compile Include="Services\ProfileViewerService\ProfileViewer.cs" />
     <Compile Include="Services\RestService\Exceptions\RestBadRequestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestConflictException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestNotFoundException.cs" />
     <Compile Include="Services\RestService\Exceptions\RestUnauthorizedException.cs" />
-    <Compile Include="Services\SocketService\MessageReceivedEventArgs.cs" />
+    <Compile Include="Services\SocketService\DrawingEventArgs.cs" />
+    <Compile Include="Services\SocketService\LobbyEventArgs.cs" />
+    <Compile Include="Services\SocketService\MatchEventArgs.cs" />
+    <Compile Include="Services\SocketService\ChatEventArgs.cs" />
     <Compile Include="Services\SocketService\SocketErrorEventArgs.cs" />
+    <Compile Include="Services\SocketService\StrokeSentEventArgs.cs" />
+    <Compile Include="Services\SoundService\SoundService.cs" />
+    <Compile Include="Services\UserSettingsManagerService\UserManagerService.cs" />
     <Compile Include="Utilities\Constants\ApplicationInformations.cs" />
+    <Compile Include="Utilities\Constants\GameDurations.cs" />
+    <Compile Include="Utilities\Constants\GUIDs.cs" />
+    <Compile Include="Utilities\Constants\MatchTiming.cs" />
+    <Compile Include="Utilities\Constants\StrokeMessageOffsets.cs" />
+    <Compile Include="Utilities\Converters\BoolToHiddenConverter.cs" />
+    <Compile Include="Utilities\Converters\EditingModeToVisibility.cs" />
+    <Compile Include="Utilities\Converters\GameModeTranslationConverter.cs" />
+    <Compile Include="Utilities\Converters\ListViewColumnWidthConverter.cs" />
+    <Compile Include="Utilities\Converters\LongChannelNameConverter.cs" />
+    <Compile Include="Utilities\Converters\ChannelSelectionBorderConverter.cs" />
+    <Compile Include="Utilities\Converters\ChannelSelectionToIconConverter.cs" />
+    <Compile Include="Utilities\Converters\ChannelTypeToButtonVisibility.cs" />
+    <Compile Include="Utilities\Converters\ComparatorToOpacity.cs" />
+    <Compile Include="Utilities\Converters\EditingModeConverter.cs" />
+    <Compile Include="Utilities\Converters\EnumTranslationConverter.cs" />
+    <Compile Include="Utilities\Converters\GameModeToImageConverter.cs" />
+    <Compile Include="Utilities\Converters\LanguageInverseConverter.cs" />
+    <Compile Include="Utilities\Converters\ModeAndIsCPUToVisibility.cs" />
+    <Compile Include="Utilities\Converters\ModeToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\NumberOfHeartsToVisibilityConverter.cs" />
+    <Compile Include="Utilities\Converters\PlayerToPositionConverter.cs" />
     <Compile Include="Utilities\Converters\LongToUnixTimeStampConverter.cs" />
+    <Compile Include="Utilities\Converters\MinimumEraserSizeToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\NotificationConverter.cs" />
-    <Compile Include="Utilities\Converters\SecondsToTimeSpanConverter.cs" />
+    <Compile Include="Utilities\Converters\NumberToPlaceholder.cs" />
+    <Compile Include="Utilities\Converters\PointsToColorConverter.cs" />
+    <Compile Include="Utilities\Converters\MillisecondsToTimeSpanConverter.cs" />
+    <Compile Include="Utilities\Converters\ShortChannelNameConverter.cs" />
     <Compile Include="Utilities\Converters\SingleCompartorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\SingleComparatorToVisibility.cs" />
     <Compile Include="Utilities\Converters\StringEmptyToBooleanConverter.cs" />
+    <Compile Include="Utilities\Converters\StringLengthConverter.cs" />
     <Compile Include="Utilities\Converters\TimeDifferenceConverter.cs" />
+    <Compile Include="Utilities\Converters\WidthToLeftMarginConverter.cs" />
+    <Compile Include="Utilities\Enums\DifficultyLevel.cs" />
+    <Compile Include="Utilities\Enums\GameModes.cs" />
+    <Compile Include="Utilities\Enums\Languages.cs" />
+    <Compile Include="Utilities\Enums\PotraceMode.cs" />
     <Compile Include="Utilities\Enums\SocketMessageTypes.cs" />
     <Compile Include="Utilities\Enums\Views.cs" />
     <Compile Include="Utilities\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\ContainedViewVisibilityConverter.cs" />
     <Compile Include="Utilities\Converters\InverseAndBooleansToBooleanConverter.cs" />
+    <Compile Include="Utilities\Extensions\CursorHelper.cs" />
+    <Compile Include="Utilities\Extensions\InkCanvasExtension.cs" />
     <Compile Include="Utilities\ValidationRules\EmailRule.cs" />
+    <Compile Include="Utilities\ValidationRules\HintRules.cs" />
+    <Compile Include="Utilities\ValidationRules\LobbyNameRule.cs" />
     <Compile Include="Utilities\ValidationRules\NameRule.cs" />
+    <Compile Include="Utilities\ValidationRules\WordRules.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
+    <Compile Include="ViewModels\GameCreationViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
+    <Compile Include="ViewModels\LobbyCreationViewModel.cs" />
+    <Compile Include="ViewModels\LobbyViewModel.cs" />
+    <Compile Include="ViewModels\GameViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Services\RestService\RestClient.cs" />
@@ -173,12 +258,10 @@
     <Compile Include="Services\SocketService\SocketEventsPublisher.cs" />
     <Compile Include="Utilities\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\PublicProfileViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Utilities\Converters\BackgroundColorConverter.cs" />
-    <Compile Include="Utilities\Converters\BorderConverter.cs" />
     <Compile Include="Utilities\Converters\ComparatorToBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\DateConverter.cs" />
-    <Compile Include="Utilities\Converters\EditorModeConverter.cs" />
     <Compile Include="Utilities\Converters\InverseBooleanConverter.cs" />
     <Compile Include="Utilities\Converters\MultiBindingConverter.cs" />
     <Compile Include="Utilities\Converters\ToggleVisibilityConverter.cs" />
@@ -197,6 +280,30 @@
     <Compile Include="Views\Controls\Editor.xaml.cs">
       <DependentUpon>Editor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Game\Confetti.xaml.cs">
+      <DependentUpon>Confetti.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\LeaderBoard.xaml.cs">
+      <DependentUpon>LeaderBoard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Home.xaml.cs">
+      <DependentUpon>Home.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Lobby.xaml.cs">
+      <DependentUpon>Lobby.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\EditorZone.xaml.cs">
+      <DependentUpon>EditorZone.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\GamePanel.xaml.cs">
+      <DependentUpon>GamePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\GameStatus.xaml.cs">
+      <DependentUpon>GameStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Game\TopBar.xaml.cs">
+      <DependentUpon>TopBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -205,6 +312,15 @@
     </Compile>
     <Compile Include="Views\Controls\Tutorial\ChatTutorial.xaml.cs">
       <DependentUpon>ChatTutorial.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Tutorial\CoopTutorial.xaml.cs">
+      <DependentUpon>CoopTutorial.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Tutorial\FFATutorial.xaml.cs">
+      <DependentUpon>FFATutorial.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Tutorial\SoloTutorial.xaml.cs">
+      <DependentUpon>SoloTutorial.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\AvatarSelectionDialog.xaml.cs">
       <DependentUpon>AvatarSelectionDialog.xaml</DependentUpon>
@@ -224,14 +340,20 @@
     <Compile Include="Views\Dialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml.cs">
-      <DependentUpon>GamesPlayedHistoryDialog.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\GameCreationDialog.xaml.cs">
+      <DependentUpon>GameCreationDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\LobbyCreationDialog.xaml.cs">
+      <DependentUpon>LobbyCreationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\PublicProfileDialog.xaml.cs">
+      <DependentUpon>PublicProfileDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\RegisterDialog.xaml.cs">
       <DependentUpon>RegisterDialog.xaml</DependentUpon>
@@ -254,6 +376,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Languages\en.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Languages\fr.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\ChannelSection.xaml" />
     <Page Include="Views\Controls\Chat.xaml" />
     <Page Include="Views\Controls\Conversation.xaml" />
@@ -261,6 +391,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Controls\Game\Confetti.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Game\LeaderBoard.xaml" />
+    <Page Include="Views\Controls\Home.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Lobby.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Game\EditorZone.xaml" />
+    <Page Include="Views\Controls\Game\GamePanel.xaml" />
+    <Page Include="Views\Controls\Game\GameStatus.xaml" />
+    <Page Include="Views\Controls\Game\TopBar.xaml" />
     <Page Include="Views\Controls\Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -270,6 +417,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\Tutorial\ChatTutorial.xaml" />
+    <Page Include="Views\Controls\Tutorial\CoopTutorial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Tutorial\FFATutorial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Controls\Tutorial\SoloTutorial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\AvatarSelectionDialog.xaml" />
     <Page Include="Views\Dialogs\ClosableErrorDialog.xaml" />
     <Page Include="Views\Dialogs\ConfirmationDialog.xaml" />
@@ -282,12 +441,17 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\ErrorDialog.xaml" />
-    <Page Include="Views\Dialogs\GamesPlayedHistoryDialog.xaml">
+    <Page Include="Views\Dialogs\GameCreationDialog.xaml" />
+    <Page Include="Views\Dialogs\InputDialog.xaml" />
+    <Page Include="Views\Dialogs\LobbyCreationDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dialogs\InputDialog.xaml" />
     <Page Include="Views\Dialogs\MessageDialog.xaml" />
+    <Page Include="Views\Dialogs\PublicProfileDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\RegisterDialog.xaml" />
     <Page Include="Views\Dialogs\Tutorial.xaml" />
     <Page Include="Views\Windows\ChatWindow.xaml">
@@ -304,14 +468,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -330,6 +490,47 @@
     <Resource Include="Resources\WhiteLogo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Tutorial\HomeButtonsEN.PNG" />
+    <Resource Include="Resources\Tutorial\HomeButtonsFR.PNG" />
+    <Resource Include="Resources\Tutorial\HomeViewEN.PNG" />
+    <Resource Include="Resources\Tutorial\HomeViewFR.PNG" />
+    <Resource Include="Resources\Tutorial\Bot.PNG" />
+    <Resource Include="Resources\Tutorial\bot2.PNG" />
+    <Resource Include="Resources\Tutorial\GameChatEN.PNG" />
+    <Resource Include="Resources\Tutorial\GameChatFR.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloGameEN.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloGameFR.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloTopBarEN.PNG" />
+    <Resource Include="Resources\Tutorial\Solo\SoloTopBarFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGameEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopPlayersEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopTopBarEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGuessEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\HintEN.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGuessFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopGameFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopPlayersFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\CoopTopBarFR.PNG" />
+    <Resource Include="Resources\Tutorial\Coop\HintFR.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFATopBarFR.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFAGuessFR.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFADrawerFR.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFADrawerEN.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFAGameEN.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFAPlayersEN.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFAGuessEN.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFATopBarEN.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFAPlayersFR.PNG" />
+    <Resource Include="Resources\Tutorial\FFA\FFAGameFR.PNG" />
+    <Resource Include="windows.ico" />
+    <Resource Include="Resources\windows.ico" />
+    <Resource Include="Resources\robot.png" />
+    <None Include="Resources\TimerWarning.wav" />
+    <None Include="Resources\WordGuessRight.wav" />
+    <None Include="Resources\WordGuessedWrong.wav" />
+    <Resource Include="Resources\treasure.png" />
+    <Resource Include="Resources\swords.png" />
+    <Resource Include="Resources\sword.png" />
     <Resource Include="Resources\avatar.jpg" />
     <Resource Include="Resources\Avatar\1.jpg" />
     <Resource Include="Resources\Avatar\10.jpg" />
@@ -347,7 +548,23 @@
     <Resource Include="Resources\Avatar\8.jpg" />
     <Resource Include="Resources\Avatar\9.jpg" />
     <Resource Include="Resources\Avatar\16.jpg" />
+    <None Include="Resources\PointEraser.cur" />
+    <None Include="Resources\Message.wav" />
+    <Resource Include="Resources\pen.cur" />
+    <Resource Include="Resources\GamesHistory.png" />
     <Content Include="Resources\poly.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />

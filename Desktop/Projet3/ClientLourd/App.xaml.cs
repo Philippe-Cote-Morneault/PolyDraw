@@ -22,11 +22,12 @@ namespace ClientLourd
             e.Handled = true;
             try
             {
-                await DialogHost.Show(new ClosableErrorDialog($"{e.Exception.Message} The application will close."));
+                var d =  ((MainWindow) Application.Current.MainWindow).ViewModel.CurrentDictionary;
+                await DialogHost.Show(new ClosableErrorDialog($"{e.Exception.Message} {d["ApplicationClose"]}"));
             }
             catch
             {
-                MessageBox.Show($"{e.Exception.Message} The application will close.", String.Empty, MessageBoxButton.OK,
+                MessageBox.Show($"{e.Exception.Message} The application will close / l'application va fermer.", String.Empty, MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
 

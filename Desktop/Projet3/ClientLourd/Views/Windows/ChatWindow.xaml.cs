@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
 using ClientLourd.ViewModels;
 using ClientLourd.Views.Controls;
 
@@ -11,20 +13,36 @@ namespace ClientLourd.Views.Windows
     {
         Chat _chatBox;
 
+        public ResourceDictionary CurrentDictionary
+        {
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
+        }
+
+        public MainViewModel MainViewModel
+        {
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
+        }
+
+
         public ChatWindow(Chat ChatBox)
         {
             _chatBox = ChatBox;
             InitializeComponent();
-            MainStackPanel.Children.Add(ChatBox);
-            ((ChatViewModel)ChatBox.DataContext).OnChatToggle(true);
+            MainPanel.Children.Add(ChatBox);
+            Resources.MergedDictionaries.Add(CurrentDictionary);
+            MainViewModel.LanguageChangedEvent += OnLangChanged;
             Closing += OnWindowClosing;
+        }
+
+        private void OnLangChanged(object source, EventArgs args)
+        {
+            Resources.MergedDictionaries[0] = CurrentDictionary;
         }
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            MainStackPanel.Children.Clear();
-            ((MainWindow) Owner).RightDrawerContent.Children.Add(_chatBox);
-            ((MainWindow) Owner).ChatToggleButton.IsEnabled = true;
+            MainPanel.Children.Clear();
+            ((MainWindow) Owner).ReturnTheChat();
         }
     }
 }

@@ -41,7 +41,6 @@ namespace ClientLourd.Views.Dialogs
 
             // Password junk
             (PasswordField as PasswordBox).Password = PasswordJunk;
-            
         }
 
         public string PasswordJunk
@@ -49,26 +48,28 @@ namespace ClientLourd.Views.Dialogs
             get { return _passwordJunk; }
             set
             {
-                
-                 _passwordJunk = value;
+                _passwordJunk = value;
                 NotifyPropertyChanged();
-        
             }
         }
 
 
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         private RelayCommand<object> _editProfileCommand;
 
         public ICommand EditProfileCommand
         {
-            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj), obj => CanUpdateProfile(obj))); }
+            get
+            {
+                return _editProfileCommand ?? (_editProfileCommand =
+                    new RelayCommand<object>(obj => EditProfile(obj), obj => CanUpdateProfile(obj)));
+            }
         }
-        
+
         RelayCommand<Channel> _changeAvatarCommand;
 
         public ICommand ChangeAvatarCommand
@@ -85,8 +86,7 @@ namespace ClientLourd.Views.Dialogs
             var result = await DialogHost.Show(new AvatarSelectionDialog(), "EditProfileHost");
             UserClone.Avatar = (BitmapImage) result;
         }
-        
-        
+
 
         private bool CanUpdateProfile(object obj)
         {
@@ -103,6 +103,7 @@ namespace ClientLourd.Views.Dialogs
             try
             {
                 await RestClient.PutProfile(GetModifiedObj());
+                
                 // Update infos
                 User.Username = UserClone.Username;
                 User.Avatar = UserClone.Avatar;
@@ -111,10 +112,12 @@ namespace ClientLourd.Views.Dialogs
                 User.Email = UserClone.Email;
                 User = UserClone;
                 // Update de credentials store
-                if (CredentialManager.ReadCredential(ApplicationInformations.Name) != null)
+                var cred = CredentialManager.ReadCredential(ApplicationInformations.Name);
+                if (cred != null)
                 {
-                    CredentialManager.WriteCredential(ApplicationInformations.Name, User.Username, NewPassword);
+                    CredentialManager.WriteCredential(ApplicationInformations.Name, User.Username,cred.Password);
                 }
+
                 DialogHost.CloseDialogCommand.Execute(null, null);
             }
             catch (Exception e)
@@ -165,12 +168,15 @@ namespace ClientLourd.Views.Dialogs
         }
 
 
-
         private RelayCommand<string> _revertToOriginalCommand;
 
         public ICommand RevertToOriginalCommand
         {
-            get { return _revertToOriginalCommand ?? (_revertToOriginalCommand = new RelayCommand<string>(obj => RevertToOriginalField(obj))); }
+            get
+            {
+                return _revertToOriginalCommand ?? (_revertToOriginalCommand =
+                    new RelayCommand<string>(obj => RevertToOriginalField(obj)));
+            }
         }
 
         private void RevertToOriginalField(string fieldType)
@@ -194,21 +200,21 @@ namespace ClientLourd.Views.Dialogs
                     break;
                 default:
                     throw new Exception("Input field " + fieldType + " does not exist");
-
-            }            
+            }
         }
 
         public User User
         {
             get
             {
-                return (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SessionInformations.User;
+                return (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SessionInformations
+                    .User;
             }
             set
             {
                 (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SessionInformations.User =
                     value;
-                    NotifyPropertyChanged();
+                NotifyPropertyChanged();
             }
         }
 
@@ -218,12 +224,11 @@ namespace ClientLourd.Views.Dialogs
             get { return _userClone; }
             set
             {
-                if (value != _userClone) 
-                { 
+                if (value != _userClone)
+                {
                     _userClone = value;
                     NotifyPropertyChanged();
                 }
-
             }
         }
 
@@ -246,7 +251,7 @@ namespace ClientLourd.Views.Dialogs
         {
             return User.FirstName != UserClone.FirstName;
         }
-        
+
         private bool AvatarHasChanged()
         {
             return User.Avatar != UserClone.Avatar;
@@ -258,13 +263,14 @@ namespace ClientLourd.Views.Dialogs
         }
 
         private string _newPassword;
+
         public string NewPassword
         {
             get { return _newPassword; }
             set
             {
-                if (value != _newPassword) 
-                { 
+                if (value != _newPassword)
+                {
                     _newPassword = value;
                     NotifyPropertyChanged();
                 }

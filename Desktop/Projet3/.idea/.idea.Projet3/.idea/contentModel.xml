@@ -15,9 +15,13 @@
         <e p="Models" t="Include">
           <e p="Bindable" t="Include">
             <e p="Channel.cs" t="Include" />
-            <e p="Editor.cs" t="Include" />
+            <e p="EditorInformation.cs" t="Include" />
+            <e p="Game.cs" t="Include" />
+            <e p="Hint.cs" t="Include" />
+            <e p="Lobby.cs" t="Include" />
             <e p="Message.cs" t="Include" />
             <e p="ModelBase.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
             <e p="SessionInformations.cs" t="Include" />
             <e p="Stats.cs" t="Include" />
             <e p="StatsHistory.cs" t="Include" />
@@ -25,12 +29,13 @@
           </e>
           <e p="NonBindable" t="Include">
             <e p="NetworkInformations.cs" t="Include" />
+            <e p="StrokeInfo.cs" t="Include" />
             <e p="TLV.cs" t="Include" />
             <e p="TokenPair.cs" t="Include" />
           </e>
         </e>
         <e p="obj" t="ExcludeRecursive">
-          <e p="Debug" t="Include">
+          <e p="Release" t="Include">
             <e p="App.g.cs" t="Include" />
             <e p="ClientLourd_Content.g.cs" t="Include" />
             <e p="GeneratedInternalTypeHelper.g.cs" t="Include" />
@@ -41,8 +46,24 @@
                 <e p="Chat.g.cs" t="Include" />
                 <e p="Conversation.g.cs" t="Include" />
                 <e p="Editor.g.cs" t="Include" />
+                <e p="Game" t="Include">
+                  <e p="Confetti.g.cs" t="Include" />
+                  <e p="EditorZone.g.cs" t="Include" />
+                  <e p="GamePanel.g.cs" t="Include" />
+                  <e p="GameStatus.g.cs" t="Include" />
+                  <e p="LeaderBoard.g.cs" t="Include" />
+                  <e p="TopBar.g.cs" t="Include" />
+                </e>
+                <e p="Home.g.cs" t="Include" />
+                <e p="Lobby.g.cs" t="Include" />
                 <e p="Login.g.cs" t="Include" />
                 <e p="Profile.g.cs" t="Include" />
+                <e p="Tutorial" t="Include">
+                  <e p="ChatTutorial.g.cs" t="Include" />
+                  <e p="CoopTutorial.g.cs" t="Include" />
+                  <e p="FFATutorial.g.cs" t="Include" />
+                  <e p="SoloTutorial.g.cs" t="Include" />
+                </e>
               </e>
               <e p="Dialogs" t="Include">
                 <e p="AvatarSelectionDialog.g.cs" t="Include" />
@@ -51,9 +72,11 @@
                 <e p="ConnectionHistoryDialog.g.cs" t="Include" />
                 <e p="EditProfileDialog.g.cs" t="Include" />
                 <e p="ErrorDialog.g.cs" t="Include" />
-                <e p="GamesPlayedHistoryDialog.g.cs" t="Include" />
+                <e p="GameCreationDialog.g.cs" t="Include" />
                 <e p="InputDialog.g.cs" t="Include" />
+                <e p="LobbyCreationDialog.g.cs" t="Include" />
                 <e p="MessageDialog.g.cs" t="Include" />
+                <e p="PublicProfileDialog.g.cs" t="Include" />
                 <e p="RegisterDialog.g.cs" t="Include" />
                 <e p="Tutorial.g.cs" t="Include" />
               </e>
@@ -93,9 +116,65 @@
           </e>
           <e p="avatar.jpg" t="Include" />
           <e p="blacklogo.png" t="Include" />
+          <e p="GamesHistory.png" t="Include" />
+          <e p="Languages" t="Include">
+            <e p="en.xaml" t="Include" />
+            <e p="fr.xaml" t="Include" />
+          </e>
           <e p="LogoMakr_4YSBb4.png" t="Include" />
+          <e p="Message.wav" t="Include" />
+          <e p="pen.cur" t="Include" />
+          <e p="PointEraser.cur" t="Include" />
           <e p="poly.png" t="Include" />
+          <e p="robot.png" t="Include" />
+          <e p="sword.png" t="Include" />
+          <e p="swords.png" t="Include" />
+          <e p="TimerWarning.wav" t="Include" />
+          <e p="treasure.png" t="Include" />
+          <e p="Tutorial" t="Include">
+            <e p="Bot.PNG" t="Include" />
+            <e p="bot2.PNG" t="Include" />
+            <e p="Coop" t="Include">
+              <e p="CoopGameEN.PNG" t="Include" />
+              <e p="CoopGameFR.PNG" t="Include" />
+              <e p="CoopGuessEN.PNG" t="Include" />
+              <e p="CoopGuessFR.PNG" t="Include" />
+              <e p="CoopPlayersEN.PNG" t="Include" />
+              <e p="CoopPlayersFR.PNG" t="Include" />
+              <e p="CoopTopBarEN.PNG" t="Include" />
+              <e p="CoopTopBarFR.PNG" t="Include" />
+              <e p="HintEN.PNG" t="Include" />
+              <e p="HintFR.PNG" t="Include" />
+            </e>
+            <e p="FFA" t="Include">
+              <e p="FFADrawerEN.PNG" t="Include" />
+              <e p="FFADrawerFR.PNG" t="Include" />
+              <e p="FFAGameEN.PNG" t="Include" />
+              <e p="FFAGameFR.PNG" t="Include" />
+              <e p="FFAGuessEN.PNG" t="Include" />
+              <e p="FFAGuessFR.PNG" t="Include" />
+              <e p="FFAPlayersEN.PNG" t="Include" />
+              <e p="FFAPlayersFR.PNG" t="Include" />
+              <e p="FFATopBarEN.PNG" t="Include" />
+              <e p="FFATopBarFR.PNG" t="Include" />
+            </e>
+            <e p="GameChatEN.PNG" t="Include" />
+            <e p="GameChatFR.PNG" t="Include" />
+            <e p="HomeButtonsEN.PNG" t="Include" />
+            <e p="HomeButtonsFR.PNG" t="Include" />
+            <e p="HomeViewEN.PNG" t="Include" />
+            <e p="HomeViewFR.PNG" t="Include" />
+            <e p="Solo" t="Include">
+              <e p="SoloGameEN.PNG" t="Include" />
+              <e p="SoloGameFR.PNG" t="Include" />
+              <e p="SoloTopBarEN.PNG" t="Include" />
+              <e p="SoloTopBarFR.PNG" t="Include" />
+            </e>
+          </e>
           <e p="WhiteLogo.png" t="Include" />
+          <e p="windows.ico" t="Include" />
+          <e p="WordGuessedWrong.wav" t="Include" />
+          <e p="WordGuessRight.wav" t="Include" />
         </e>
         <e p="Services" t="Include">
           <e p="CredentialsService" t="Include">
@@ -103,6 +182,16 @@
           </e>
           <e p="DateService" t="Include">
             <e p="Timestamp.cs" t="Include" />
+          </e>
+          <e p="EnumService" t="Include">
+            <e p="EnumManager.cs" t="Include" />
+          </e>
+          <e p="InkCanvas" t="Include">
+            <e p="ServerStrokeDrawerService.cs" t="Include" />
+            <e p="StrokesReader.cs" t="Include" />
+          </e>
+          <e p="ProfileViewerService" t="Include">
+            <e p="ProfileViewer.cs" t="Include" />
           </e>
           <e p="RestService" t="Include">
             <e p="Exceptions" t="Include">
@@ -115,10 +204,20 @@
             <e p="RestClient.cs" t="Include" />
           </e>
           <e p="SocketService" t="Include">
-            <e p="MessageReceivedEventArgs.cs" t="Include" />
+            <e p="ChatEventArgs.cs" t="Include" />
+            <e p="DrawingEventArgs.cs" t="Include" />
+            <e p="LobbyEventArgs.cs" t="Include" />
+            <e p="MatchEventArgs.cs" t="Include" />
             <e p="SocketClient.cs" t="Include" />
             <e p="SocketErrorEventArgs.cs" t="Include" />
             <e p="SocketEventsPublisher.cs" t="Include" />
+            <e p="StrokeSentEventArgs.cs" t="Include" />
+          </e>
+          <e p="SoundService" t="Include">
+            <e p="SoundService.cs" t="Include" />
+          </e>
+          <e p="UserSettingsManagerService" t="Include">
+            <e p="UserManagerService.cs" t="Include" />
           </e>
         </e>
         <e p="Utilities" t="Include">
@@ -127,47 +226,87 @@
           </e>
           <e p="Constants" t="Include">
             <e p="ApplicationInformations.cs" t="Include" />
+            <e p="GameDurations.cs" t="Include" />
+            <e p="GUIDs.cs" t="Include" />
+            <e p="MatchTiming.cs" t="Include" />
+            <e p="StrokeMessageOffsets.cs" t="Include" />
           </e>
           <e p="Converters" t="Include">
-            <e p="BackgroundColorConverter.cs" t="Include" />
+            <e p="BoolToHiddenConverter.cs" t="Include" />
             <e p="BoolToVisibilityConverter.cs" t="Include" />
-            <e p="BorderConverter.cs" t="Include" />
+            <e p="ChannelSelectionBorderConverter.cs" t="Include" />
+            <e p="ChannelSelectionToIconConverter.cs" t="Include" />
+            <e p="ChannelTypeToButtonVisibility.cs" t="Include" />
             <e p="ComparatorToBooleanConverter.cs" t="Include" />
+            <e p="ComparatorToOpacity.cs" t="Include" />
             <e p="ComparatorToVisibilityConverter.cs" t="Include" />
             <e p="ContainedViewVisibilityConverter.cs" t="Include" />
             <e p="DateConverter.cs" t="Include" />
-            <e p="EditorModeConverter.cs" t="Include" />
+            <e p="EditingModeConverter.cs" t="Include" />
+            <e p="EditingModeToVisibility.cs" t="Include" />
+            <e p="EnumTranslationConverter.cs" t="Include" />
+            <e p="GameModeToImageConverter.cs" t="Include" />
+            <e p="GameModeTranslationConverter.cs" t="Include" />
             <e p="InverseAndBooleansToBooleanConverter.cs" t="Include" />
             <e p="InverseBooleanConverter.cs" t="Include" />
+            <e p="LanguageInverseConverter.cs" t="Include" />
+            <e p="ListViewColumnWidthConverter.cs" t="Include" />
+            <e p="LongChannelNameConverter.cs" t="Include" />
             <e p="LongToUnixTimeStampConverter.cs" t="Include" />
+            <e p="MillisecondsToTimeSpanConverter.cs" t="Include" />
+            <e p="MinimumEraserSizeToVisibilityConverter.cs" t="Include" />
+            <e p="ModeAndIsCPUToVisibility.cs" t="Include" />
+            <e p="ModeToVisibilityConverter.cs" t="Include" />
             <e p="MultiBindingConverter.cs" t="Include" />
             <e p="NotificationConverter.cs" t="Include" />
+            <e p="NumberOfHeartsToVisibilityConverter.cs" t="Include" />
+            <e p="NumberToPlaceholder.cs" t="Include" />
+            <e p="PlayerToPositionConverter.cs" t="Include" />
+            <e p="PointsToColorConverter.cs" t="Include" />
+            <e p="ShortChannelNameConverter.cs" t="Include" />
             <e p="SingleComparatorToVisibility.cs" t="Include" />
             <e p="SingleCompartorToBooleanConverter.cs" t="Include" />
             <e p="StringEmptyToBooleanConverter.cs" t="Include" />
+            <e p="StringLengthConverter.cs" t="Include" />
             <e p="TimeDifferenceConverter.cs" t="Include" />
             <e p="ToggleVisibilityConverter.cs" t="Include" />
+            <e p="WidthToLeftMarginConverter.cs" t="Include" />
           </e>
           <e p="Enums" t="Include">
+            <e p="DifficultyLevel.cs" t="Include" />
+            <e p="GameModes.cs" t="Include" />
+            <e p="Languages.cs" t="Include" />
+            <e p="PotraceMode.cs" t="Include" />
             <e p="SocketMessageTypes.cs" t="Include" />
             <e p="Views.cs" t="Include" />
           </e>
           <e p="Extensions" t="Include">
+            <e p="CursorHelper.cs" t="Include" />
+            <e p="InkCanvasExtension.cs" t="Include" />
             <e p="ScrollViewerExtensions.cs" t="Include" />
           </e>
           <e p="ValidationRules" t="Include">
             <e p="EmailRule.cs" t="Include" />
+            <e p="HintRules.cs" t="Include" />
+            <e p="LobbyNameRule.cs" t="Include" />
             <e p="LoginInputRules.cs" t="Include" />
             <e p="NameRule.cs" t="Include" />
             <e p="UsernameRule.cs" t="Include" />
+            <e p="WordRules.cs" t="Include" />
           </e>
         </e>
         <e p="ViewModels" t="Include">
           <e p="ChatViewModel.cs" t="Include" />
           <e p="EditorViewModel.cs" t="Include" />
+          <e p="GameCreationViewModel.cs" t="Include" />
+          <e p="GameViewModel.cs" t="Include" />
+          <e p="HomeViewModel.cs" t="Include" />
+          <e p="LobbyCreationViewModel.cs" t="Include" />
+          <e p="LobbyViewModel.cs" t="Include" />
           <e p="LoginViewModel.cs" t="Include" />
           <e p="MainViewModel.cs" t="Include" />
           <e p="ProfileViewModel.cs" t="Include" />
+          <e p="PublicProfileViewModel.cs" t="Include" />
           <e p="ViewModelBase.cs" t="Include" />
         </e>
         <e p="Views" t="Include">
@@ -180,6 +319,24 @@
             <e p="Conversation.xaml.cs" t="Include" />
             <e p="Editor.xaml" t="Include" />
             <e p="Editor.xaml.cs" t="Include" />
+            <e p="Game" t="Include">
+              <e p="Confetti.xaml" t="Include" />
+              <e p="Confetti.xaml.cs" t="Include" />
+              <e p="EditorZone.xaml" t="Include" />
+              <e p="EditorZone.xaml.cs" t="Include" />
+              <e p="GamePanel.xaml" t="Include" />
+              <e p="GamePanel.xaml.cs" t="Include" />
+              <e p="GameStatus.xaml" t="Include" />
+              <e p="GameStatus.xaml.cs" t="Include" />
+              <e p="LeaderBoard.xaml" t="Include" />
+              <e p="LeaderBoard.xaml.cs" t="Include" />
+              <e p="TopBar.xaml" t="Include" />
+              <e p="TopBar.xaml.cs" t="Include" />
+            </e>
+            <e p="Home.xaml" t="Include" />
+            <e p="Home.xaml.cs" t="Include" />
+            <e p="Lobby.xaml" t="Include" />
+            <e p="Lobby.xaml.cs" t="Include" />
             <e p="Login.xaml" t="Include" />
             <e p="Login.xaml.cs" t="Include" />
             <e p="Profile.xaml" t="Include" />
@@ -187,6 +344,12 @@
             <e p="Tutorial" t="Include">
               <e p="ChatTutorial.xaml" t="Include" />
               <e p="ChatTutorial.xaml.cs" t="Include" />
+              <e p="CoopTutorial.xaml" t="Include" />
+              <e p="CoopTutorial.xaml.cs" t="Include" />
+              <e p="FFATutorial.xaml" t="Include" />
+              <e p="FFATutorial.xaml.cs" t="Include" />
+              <e p="SoloTutorial.xaml" t="Include" />
+              <e p="SoloTutorial.xaml.cs" t="Include" />
             </e>
           </e>
           <e p="Dialogs" t="Include">
@@ -202,12 +365,16 @@
             <e p="EditProfileDialog.xaml.cs" t="Include" />
             <e p="ErrorDialog.xaml" t="Include" />
             <e p="ErrorDialog.xaml.cs" t="Include" />
-            <e p="GamesPlayedHistoryDialog.xaml" t="Include" />
-            <e p="GamesPlayedHistoryDialog.xaml.cs" t="Include" />
+            <e p="GameCreationDialog.xaml" t="Include" />
+            <e p="GameCreationDialog.xaml.cs" t="Include" />
             <e p="InputDialog.xaml" t="Include" />
             <e p="InputDialog.xaml.cs" t="Include" />
+            <e p="LobbyCreationDialog.xaml" t="Include" />
+            <e p="LobbyCreationDialog.xaml.cs" t="Include" />
             <e p="MessageDialog.xaml" t="Include" />
             <e p="MessageDialog.xaml.cs" t="Include" />
+            <e p="PublicProfileDialog.xaml" t="Include" />
+            <e p="PublicProfileDialog.xaml.cs" t="Include" />
             <e p="RegisterDialog.xaml" t="Include" />
             <e p="RegisterDialog.xaml.cs" t="Include" />
             <e p="Tutorial.xaml" t="Include" />
@@ -218,6 +385,7 @@
             <e p="ChatWindow.xaml.cs" t="Include" />
           </e>
         </e>
+        <e p="windows.ico" t="Include" />
       </e>
       <e p="packages" t="ExcludeRecursive" />
       <e p="Projet3.sln" t="IncludeFlat" />

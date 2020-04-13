@@ -15,18 +15,17 @@ namespace ClientLourd.Services.SocketService
 
         public SocketMessageTypes Type
         {
-            get { return (SocketMessageTypes)_data["Type"]; }
+            get { return (SocketMessageTypes) _data["Type"]; }
         }
-        
+
         public SocketMessageTypes Code
         {
             get { return _data["ErrorCode"]; }
         }
+
         public string Message
         {
             get { return _data["Message"]; }
         }
-
-
     }
 }

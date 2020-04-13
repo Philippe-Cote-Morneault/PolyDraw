@@ -8,146 +8,143 @@
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
              xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters">
-             
-        <UserControl.Resources>
-            <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
-            <converter:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
-            <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter"/>
-        </UserControl.Resources>
-        
-        <materialDesign:DialogHost CloseOnClickAway="False" Identifier="RegisterDialogHost">
-    <Grid>
-        <StackPanel x:Name="StackPanel" Height="800" Width="500" Margin="10">
-            
-            
-            <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35">Sign up</TextBlock>
 
-            <StackPanel Margin="0 20 0 20">
-                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center" Height="100" Width="100">
-                    <Image Source="{Binding User.Avatar}"/>
-                </materialDesign:Card>
-                <TextBlock HorizontalAlignment="Center">
-                    <Hyperlink Command="{Binding ChangeAvatarCommand}">
-                        Change avatar
-                    </Hyperlink>
-                </TextBlock>                
-            </StackPanel>
+    <UserControl.Resources>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <converter:InverseAndBooleansToBooleanConverter x:Key="InverseAndBooleansToBooleanConverter" />
+        <converter:ComparatorToVisibilityConverter x:Key="ComparatorToVisibilityConverter" />
+    </UserControl.Resources>
 
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Username</TextBlock>
-                </StackPanel>
-                <TextBox x:Name="UsernameField" MaxLength="12">
-                    <TextBox.Text>
-                        <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:UsernameRule ValidatesOnTargetUpdated="True" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
+    <materialDesign:DialogHost CloseOnClickAway="False" Identifier="RegisterDialogHost">
+        <Grid>
+            <StackPanel x:Name="StackPanel" Height="800" Width="500" Margin="10">
 
 
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Password</TextBlock>
+                <TextBlock FontWeight="Bold" Margin="20" HorizontalAlignment="Center" FontSize="35"
+                           Text="{DynamicResource SignUp}" />
+
+                <StackPanel Margin="0 20 0 20">
+                    <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth3" HorizontalAlignment="Center"
+                                         Height="100" Width="100">
+                        <Image Source="{Binding User.Avatar}" />
+                    </materialDesign:Card>
+                    <TextBlock HorizontalAlignment="Center">
+                        <Hyperlink Command="{Binding ChangeAvatarCommand}">
+                            <TextBlock Text="{DynamicResource ChangeAvatar}" />
+                        </Hyperlink>
+                    </TextBlock>
                 </StackPanel>
 
-                <PasswordBox x:Name="PasswordField1"
-                             PasswordChanged="OnPasswordChanged"
-                             materialDesign:HintAssist.HelperText="At least 8 characters"
-                             MaxLength="64">
-                             
-                </PasswordBox>
-            </StackPanel>
-
-            <StackPanel Margin="0 20 0 20">
-                <PasswordBox x:Name="PasswordField2"
-                             PasswordChanged="OnPasswordChanged"
-                             materialDesign:HintAssist.HelperText="Retype the password"
-                             MaxLength="64">
-                             
-                </PasswordBox>
-            </StackPanel>
-            
-            
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Email</TextBlock>
+                <StackPanel Margin="0 20 0 20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource Username}" />
+                    </StackPanel>
+                    <TextBox x:Name="UsernameField" TextChanged="OnFieldChanged" MaxLength="12">
+                        <TextBox.Text>
+                            <Binding Path="User.Username" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <rules:UsernameRule ValidatesOnTargetUpdated="False" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
-                <TextBox x:Name="EmailField" MaxLength="60">
-                    <TextBox.Text>
-                        <Binding Path="User.Email" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:EmailRule ValidatesOnTargetUpdated="True" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
-            
 
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">First name</TextBlock>
+
+                <StackPanel Margin="0 20 0 20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource Password}" />
+                    </StackPanel>
+
+                    <PasswordBox x:Name="PasswordField1"
+                                 PasswordChanged="OnFieldChanged"
+                                 materialDesign:HintAssist.HelperText="{DynamicResource PasswordValidator}"
+                                 MaxLength="64" />
                 </StackPanel>
-                <TextBox x:Name="FirstNameField" MaxLength="64">
-                    <TextBox.Text>
-                        <Binding Path="User.FirstName" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:NameRule ValidatesOnTargetUpdated="True" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
-            
 
-            <StackPanel Margin="0 20 0 20">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold">Last name</TextBlock>
+                <StackPanel Margin="0 20 0 20">
+                    <PasswordBox x:Name="PasswordField2"
+                                 PasswordChanged="OnFieldChanged"
+                                 materialDesign:HintAssist.HelperText="{DynamicResource PasswordRetype}"
+                                 MaxLength="64" />
                 </StackPanel>
-                <TextBox x:Name="LastNameField" MaxLength="64">
-                    <TextBox.Text>
-                        <Binding Path="User.LastName" UpdateSourceTrigger="PropertyChanged">
-                            <Binding.ValidationRules>
-                                <rules:NameRule ValidatesOnTargetUpdated="True" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+
+
+                <StackPanel Margin="0 20 0 20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource Email}" />
+                    </StackPanel>
+                    <TextBox x:Name="EmailField" TextChanged="OnFieldChanged" MaxLength="60">
+                        <TextBox.Text>
+                            <Binding Path="User.Email" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <rules:EmailRule ValidatesOnTargetUpdated="False" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+
+
+                <StackPanel Margin="0 20 0 20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource FirstName}" />
+                    </StackPanel>
+                    <TextBox x:Name="FirstNameField" TextChanged="OnFieldChanged" MaxLength="64">
+                        <TextBox.Text>
+                            <Binding Path="User.FirstName" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <rules:NameRule ValidatesOnTargetUpdated="False" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+
+
+                <StackPanel Margin="0 20 0 20">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontWeight="Bold" Text="{DynamicResource LastName}" />
+                    </StackPanel>
+                    <TextBox x:Name="LastNameField" TextChanged="OnFieldChanged" MaxLength="64">
+                        <TextBox.Text>
+                            <Binding Path="User.LastName" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <rules:NameRule ValidatesOnTargetUpdated="False" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+
             </StackPanel>
 
-        </StackPanel>
+            <Grid Margin="0 0 0 5" VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Margin="10" Grid.Column="0" Content="{DynamicResource SignUp}" HorizontalAlignment="Center"
+                        Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
+                        Click="Register"
+                        IsDefault="True">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
+                            <Binding ElementName="FirstNameField" Path="(Validation.HasError)" />
+                            <Binding ElementName="LastNameField" Path="(Validation.HasError)" />
+                            <Binding ElementName="EmailField" Path="(Validation.HasError)" />
+                            <Binding ElementName="UsernameField" Path="(Validation.HasError)" />
+                            <Binding Path="AreFieldsEmpty" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
 
-        <Grid Margin="0 0 0 5" VerticalAlignment="Bottom">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Button Margin="10" Grid.Column="0" Content="Sign up" HorizontalAlignment="Center"
-                    Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
-                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="true" DockPanel.Dock="Bottom"
-                    IsDefault="True">
-                <Button.IsEnabled>
-                    <MultiBinding Converter="{StaticResource InverseAndBooleansToBooleanConverter}" Mode="TwoWay">
-                        <Binding ElementName="FirstNameField" Path="(Validation.HasError)" />
-                        <Binding ElementName="LastNameField" Path="(Validation.HasError)" />
-                        <Binding ElementName="EmailField" Path="(Validation.HasError)" />
-                        <Binding ElementName="UsernameField" Path="(Validation.HasError)" />
-                        <Binding Path="IsPasswordInvalid" />
-                    </MultiBinding>
-                </Button.IsEnabled>
-            </Button>
-
-            <Button Margin="10" Grid.Column="1" Content="Cancel" HorizontalAlignment="Center"
-                    Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
-                    Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false" DockPanel.Dock="Bottom">
-
-            </Button>
+                <Button Margin="10" Grid.Column="1" Content="{DynamicResource Cancel}" HorizontalAlignment="Center"
+                        Width="{Binding ElementName=StackPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
+                        Command="materialDesign:DialogHost.CloseDialogCommand" CommandParameter="false"
+                        DockPanel.Dock="Bottom" />
+            </Grid>
         </Grid>
-    </Grid>
-        </materialDesign:DialogHost>
+    </materialDesign:DialogHost>
 
 </UserControl>

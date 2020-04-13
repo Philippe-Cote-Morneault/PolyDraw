@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Tutorial.SoloTutorial"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls.Tutorial"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
+    </UserControl.Resources>
+    <DockPanel>
+        <Button DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
+            <materialDesign:PackIcon Kind="NavigateBefore"/>
+        </Button>
+        <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="{DynamicResource SoloGame}"/>
+        <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="Chat"/>
+        <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
+            <Button Margin="5" Content="{DynamicResource EndTutorial}" HorizontalAlignment="Center" Command="materialDesign:DialogHost.CloseDialogCommand">
+            </Button>
+        </StackPanel>
+        
+        
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical" Margin="15 15 20 15">
+                <!-- General description -->
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 0 0 20" Text="{DynamicResource SoloDescription}"/>
+
+
+                <Image  
+                    Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                    Stretch="Fill"
+                    Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/Solo/SoloGameFR.png" />
+                    </Image.Source>
+                </Image>
+                <Image  Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                        Stretch="Fill" 
+                        Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/Solo/SoloGameEN.png" />
+                    </Image.Source>
+                </Image>
+
+
+                <!-- Top bar -->
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource TopBar}"/>
+                <Separator/>
+
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                       Margin="0 15 0 0" 
+                       Height="40" Source="/ClientLourd;component/Resources/Tutorial/Solo/SoloTopBarFR.png"/>
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                       Margin="0 15 0 0"
+                       Height="40">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/Solo/SoloTopBarEN.png" />
+                    </Image.Source>
+                </Image>
+
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource SoloTopBar}"/>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </DockPanel>
+</UserControl>

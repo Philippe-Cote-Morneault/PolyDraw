@@ -87,7 +87,7 @@ en:
     endRoundMean2: "Your battery made it through this round, but it will crash the next one? I sure hope so!"
     endRoundMean3: "What was this round guys? I have rarely seen players that bad."
 
-    endRoundNice1: "This round was so cool, wasn'it? Let's go to the next!!"
+    endRoundNice1: "This round was so cool, wasn't it? Let's go to the next!!"
     endRoundNice2: "Wow what round. I really enjoyed it! We should do it again."
     endRoundNice3: "This round was good, but I'm sure the next one will be even better!"
 

@@ -1,0 +1,365 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--Exception-->
+    <system:String x:Key="ApplicationClose">L'application va fermer</system:String>
+    <system:String x:Key="RequestFailed">La requête n'a pas pu être acheminée au serveur</system:String>
+    
+    <system:String x:Key="test">Salut</system:String>
+
+    <!--Common-->
+    <system:String x:Key="Username">Nom d'utilisateur</system:String>
+    <system:String x:Key="Password">Mot de passe</system:String>
+    <system:String x:Key="Email">Courriel</system:String>
+    <system:String x:Key="FirstName">Prénom</system:String>
+    <system:String x:Key="LastName">Nom</system:String>
+    <system:String x:Key="Close">Fermer</system:String>
+
+    <!--Hamburger menu-->
+    <system:String x:Key="Home">Accueil</system:String>
+    <system:String x:Key="MyProfile">Mon profil</system:String>
+    <system:String x:Key="Editor">Editeur</system:String>
+    <system:String x:Key="Logout">Déconnexion</system:String>
+
+    <!--Home.xaml-->
+    <system:String x:Key="Mode">Mode</system:String>
+    <system:String x:Key="LobbyName">Nom de la salle d'attente</system:String>
+    <system:String x:Key="Language">Langue</system:String>
+    <system:String x:Key="Difficulty">Difficulté</system:String>
+    <system:String x:Key="Host">Hôte</system:String>
+    <system:String x:Key="Rounds">Rondes</system:String>
+    <system:String x:Key="Duration">Durée (minutes)</system:String>
+
+    <system:String x:Key="CreateLobby">Créer une partie</system:String>
+    <system:String x:Key="CreateGame">Créer un jeu</system:String>
+
+    <system:String x:Key="FilterMode">Filtrer le mode</system:String>
+    <system:String x:Key="FilterGameName">Filtrer le nom</system:String>
+    <system:String x:Key="FilterLanguage">Filtrer la langue</system:String>
+    <system:String x:Key="FilterDifficulty">Filtrer la difficulté</system:String>
+    <system:String x:Key="FilterHost">Filtrer l'hôte</system:String>
+    <system:String x:Key="FilterDuration">Filtrer par la durée</system:String>
+    <system:String x:Key="FilterPlayers">Filtrer le nombre de joueurs</system:String>
+
+    <!--Profile-->
+    <system:String x:Key="WelcomeProfile">Bienvenue sur votre profil!</system:String>
+    <system:String x:Key="EditProfile">Modifier mon profil</system:String>
+    <system:String x:Key="ViewConnections">Ouvrir l'historique</system:String>
+    <system:String x:Key="ConnectionsHistory">Historique des connexions</system:String>
+    <system:String x:Key="ViewGamesPlayed">Historique des parties jouées</system:String>
+    <system:String x:Key="Statistics">Statistiques</system:String>
+    <system:String x:Key="NumberGamesPlayed">Nombre de parties jouées:</system:String>
+    <system:String x:Key="WinPercentage">Pourcentage de victoires:</system:String>
+    <system:String x:Key="TimePlayed">Temps joué:</system:String>
+    <system:String x:Key="AverageGameDuration">Temps moyen d'une partie:</system:String>
+    <system:String x:Key="BestSoloScore">Meilleur score solo:</system:String>
+    <system:String x:Key="Achievements">Trophés</system:String>
+    <system:String x:Key="ProfileInfo">Informations du profil</system:String>
+    <system:String x:Key="MatchHistory">Historique de partie</system:String>
+
+
+    <!--Edit Profile-->
+    <system:String x:Key="EditProfileTitle">Modifier mon profil</system:String>
+    <system:String x:Key="ChangeAvatar">Changer mon avatar</system:String>
+    <system:String x:Key="Update">Modifier</system:String>
+    <system:String x:Key="RevertOriginal">[Retourner à l'original]</system:String>
+    <system:String x:Key="PasswordValidator">Au moins 8 caractères</system:String>
+
+    <!-- Waiting room -->
+    <system:String x:Key="AddVirtualPlayer">Ajouter un joueur virtuel</system:String>
+    <system:String x:Key="RemovePlayer">Retirer le joueur</system:String>
+    <system:String x:Key="WaitingRoom">Salle d'attente</system:String>
+    <system:String x:Key="Players">Joueurs</system:String>
+    <system:String x:Key="StartGame">Commencer la partie</system:String>
+    <system:String x:Key="QuitLobby">Quitter la partie</system:String>
+    <system:String x:Key="EmptySlot">Place libre</system:String>
+
+    <!-- Game creation -->
+    <system:String x:Key="CreateNewGame">Crée un jeu</system:String>
+    <system:String x:Key="TypeWord">Entrez le mot à deviner</system:String>
+    <system:String x:Key="WriteHints1">Écrivez</system:String>
+    <system:String x:Key="WriteHints2">indice(s) liées au mot</system:String>
+    <system:String x:Key="WordDifficulty">Sélectionnez le niveau de difficulté du mot</system:String>
+    <system:String x:Key="DrawingWay">Sélectionnez la façon dont le jeu sera créé</system:String>
+    <system:String x:Key="ManualDraw">Dessiner le mot</system:String>
+    <system:String x:Key="ImageUploaded">Téléverser une image du mot</system:String>
+    <system:String x:Key="Next">Suivant</system:String>
+    <system:String x:Key="Previous">Précédent</system:String>
+    <system:String x:Key="Confirm">Confirmer</system:String>
+    <system:String x:Key="Word">Mot</system:String>
+    <system:String x:Key="Hint">Indice</system:String>
+    <system:String x:Key="DrawRepresentation">Dessinez une représentation du mot</system:String>
+    <system:String x:Key="PlayPreview">Jouer la prévisualisation</system:String>
+    <system:String x:Key="UploadImage">Téléversez une image</system:String>
+    <system:String x:Key="Upload">Téléverser</system:String>
+    <system:String x:Key="DrawingMode">Sélectionnez la façon dont le dessin sera affiché</system:String>
+    <system:String x:Key="BlackLevel">Seuil de niveau de noir</system:String>
+    <system:String x:Key="BrushSize">Taille de la brosse</system:String>
+    
+
+
+    <!-- LobbyViewModel -->
+    <system:String x:Key="Kicked">Vous avez été expulsé de la partie</system:String>
+    <system:String x:Key="GameCancel">La partie a été annulée</system:String>
+
+
+    <!-- Lobby creation -->
+    <system:String x:Key="CreateNewLobby">Créer une la partie</system:String>
+    <system:String x:Key="EnterLobbyName">Entrer le nom de la partie</system:String>
+    <system:String x:Key="LobbyNamePlaceHolder">Nom de la partie</system:String>
+    <system:String x:Key="SelectLobbyMode">Sélectionner le mode de la partie</system:String>
+    <system:String x:Key="SelectDifficulty">Sélectionner le niveau de difficulté de la partie</system:String>
+    <system:String x:Key="SelectPlayers">Sélectionner le nombre de joueurs</system:String>
+    <system:String x:Key="SelectRounds">Sélectionner le nombre de rondes</system:String>
+    <system:String x:Key="CreateLobbyButton">Créer la partie</system:String>
+
+    <!-- EditorZone -->
+    <system:String x:Key="WordIs">Le mot est</system:String>
+    <system:String x:Key="Guess">Deviner</system:String>
+    <system:String x:Key="TypeGuess">Devinez ici</system:String>
+    <system:String x:Key="TeamateWrongGuess">Votre coéquipier a deviné incorrectement!</system:String>
+    <system:String x:Key="CoopSoloEnding">La partie est terminée ! Ton score est :</system:String>
+
+    <!-- TopBar -->
+    <system:String x:Key="TeamScore">Score de l'équipe: </system:String>
+    <system:String x:Key="BestScore">Meilleur score:</system:String>
+    <system:String x:Key="Turn">Tour</system:String>
+
+    <!-- GameViewModel -->
+    <system:String x:Key="IsDrawingNext">dessine le prochain mot!</system:String>
+    <system:String x:Key="YourTurnDraw">C'est à ton tour de dessiner le mot</system:String>
+    <system:String x:Key="TryAgain">Essaye encore!</system:String>
+    <system:String x:Key="RightGuessCoop">a deviné correctement! Le mot était</system:String>
+    <system:String x:Key="RightGuessSolo">Tu as deviné correctement !</system:String>
+    <system:String x:Key="RightGuessFFA">Tu as deviné correctement ! En attente des autres joueurs</system:String>
+
+    <!--GameStatus -->
+    <system:String x:Key="Drawer">Dessinateur</system:String>
+
+    <!-- Leaderboard -->
+    <system:String x:Key="WinnerIs">Le gagnant est</system:String>
+    <system:String x:Key="WordWas">Le mot était</system:String>
+
+    <!-- Login page -->
+    <system:String x:Key="Welcome">Bienvenue!</system:String>
+    <system:String x:Key="Login">Se connecter</system:String>
+    <system:String x:Key="RememberMe">Se souvenir de moi</system:String>
+    <system:String x:Key="Register">S'enregistrer!</system:String>
+
+    <!-- Register dialog -->
+    <system:String x:Key="SignUp">S'inscrire</system:String>
+    <system:String x:Key="Cancel">Annuler</system:String>
+    <system:String x:Key="PasswordRetype">Retaper le mot de passe</system:String>
+    <system:String x:Key="InvalidPassword">Vos deux mots de passe sont différents</system:String>
+    <system:String x:Key="InvalidLenghtPassword">Votre mot de passe doit être d'au moins 8 caractères</system:String>
+    <system:String x:Key="SelectAvatar">Sélectionnez votre avatar</system:String>
+
+    <!-- Chat -->
+    <system:String x:Key="TypeMessage">Entrez votre message...</system:String>
+    <system:String x:Key="SendMessage">Envoyer le message</system:String>
+    <system:String x:Key="ExportChat">Exporter le chat comme une nouvelle fenêtre</system:String>
+
+    <!-- ChannelSection -->
+    <system:String x:Key="Channels">Canaux</system:String>
+    <system:String x:Key="CreateChannel">Créer un nouveau canal</system:String>
+    <system:String x:Key="SearchChannel">Rechercher un canal</system:String>
+    <system:String x:Key="Joined">Canaux joints</system:String>
+    <system:String x:Key="Leave">Quitter</system:String>
+    <system:String x:Key="Available">Canaux disponibles</system:String>
+    <system:String x:Key="Join">Rejoindre</system:String>
+    <system:String x:Key="Delete">Supprimer</system:String>
+    <system:String x:Key="UserLeft">a quitté le canal</system:String>
+    <system:String x:Key="UserChanged">a changé son nom d'utilisateur pour</system:String>
+    <system:String x:Key="UserJoined">a rejoint le canal</system:String>
+    <system:String x:Key="HintResponse">a demandé un indice</system:String>
+
+    <!-- MainWindow -->
+    <system:String x:Key="OpenChat">Ouvrir le chat</system:String>
+    <system:String x:Key="OpenTutorial">Ouvrir le tutoriel</system:String>
+    <system:String x:Key="LeaveLobby">Quitter la salle d'attente</system:String>
+
+    <!-- Error messages -->
+    <system:String x:Key="LostConnection">Vous avez perdu connexion au serveur! Retournons à la page de connexion...</system:String>
+    <system:String x:Key="Error">Erreur!</system:String>
+    <system:String x:Key="LeaveGeneral">Vous ne pouvez pas quitter le canal General</system:String>
+    <system:String x:Key="LeaveGame">Vous ne pouvez pas quitter le canal Game</system:String>
+    <system:String x:Key="FileSize">Vous ne pouvez pas télécharger un fichier de plus de 5MB</system:String>
+    <system:String x:Key="PreviewRefused">La requête de prévisualisation a été refusée.</system:String>
+    <system:String x:Key="HostLeft">L'hôte a quitté la salle d'attente!</system:String>
+
+    <system:String x:Key="UploadFirst">Veuillez téléchargez une image</system:String>
+    <system:String x:Key="CanvasEmpty">Le canevas ne peut pas être vide</system:String>
+
+    <!-- Confirmation Dialogs-->
+    <system:String x:Key="RemovePlayerTitle">Retirer le joueur</system:String>
+    <system:String x:Key="RemovePlayerBody">Êtes-vous certain de vouloir retirer le joueur</system:String>
+
+    <system:String x:Key="Warning">Avertissement</system:String>
+    <system:String x:Key="WarningLeaveChannel">Êtes-vous certain de vouloir quitter le canal</system:String>
+    <system:String x:Key="WarningDeleteChannel">Êtes-vous certain de vouloir supprimer le canal</system:String>
+
+    <system:String x:Key="JoinChannelWarning1">Vous devez joindre le canal</system:String>
+    <system:String x:Key="JoinChannelWarning2">d'abord!</system:String>
+
+    <!-- Message Dialogs-->
+    <system:String x:Key="DeleteChannel">a supprimé le canal</system:String>
+
+    <!-- Input Dialogs-->
+    <system:String x:Key="ChannelName">Entrez le nom du canal</system:String>
+
+    <!-- Connection history -->
+    <system:String x:Key="Connection">Connexion</system:String>
+    <system:String x:Key="Disconnection">Déconnexion</system:String>
+    <system:String x:Key="TimePlayer">Temps joué</system:String>
+
+    <!-- Game history -->
+    <system:String x:Key="GameMode">Mode de la partie</system:String>
+    <system:String x:Key="Winner">Gagnant/Points</system:String>
+    <system:String x:Key="GameDuration">Durée de la partie</system:String>
+    
+    <!-- FFA tutorial -->
+
+    <system:String x:Key="FFAGame">
+        Partie FFA
+    </system:String>
+    <system:String x:Key="FFADescription">
+        Pour ce mode de partie, tous les joueurs s'affrontent afin obtenir le meilleur score.
+        Ils peuvent gagner des points en devinant correctement le mot dessiné par le dessinateur.
+        Le nombre de points gagnés dépend du temps restant et du nombre de joueurs ayant déjà deviné le mot.
+        De plus, ils peuvent gagner des points lorsque d'autres joueurs devinent correctement leur dessin.
+        Voici l'interface d'une partie de mêlée générale.
+    </system:String>
+    <system:String x:Key="FFAPlayersSection">
+        Dans la section gauche de l'interface, on retrouve les joueurs et leur score. Ils sont classés en ordre décroissant en fonction de leur score.
+        Les joueurs virtuels sont représentés par une icône de robot. Pour mettre le dessinateur en évidence, une icône de crayon est placée à droite de son nom.
+    </system:String>
+
+    <system:String x:Key="FFATopBar">
+        En haut de la zone de dessin, une horloge affiche le temps restant au tour. Dépendemmant des difficultés facile, moyen et difficile, les tours durent 1 minute, 45 secondes et 30 secondes respectivement.
+        Une fois le temps expiré, on passe au prochain tour.
+        Le tour courant et le nombre de tours total sont affichés à droite de l'horloge. Le nombre de tours total est calculé en fonction du nombre
+        de joueurs et du nombre de rondes choisi à la création de la partie. Une partie de deux rondes et de 3 joueurs aura, par exemple, 6 tours.
+    </system:String>
+
+    <system:String x:Key="FFADrawer">
+        Dans une partie de mêlée générale, le mot que le dessinateur doit dessiner est affiché en bas de la zone de dessin. C'est à partir de 
+        mot que le joueur devra montrer ses talents de dessinateur!
+    </system:String>
+
+    <system:String x:Key="FFAGuess">
+        Les autres joueurs de la partie auront, quant à eux, la possibilité de deviner le mot à l'aide du champ de texte en bas de la zone
+        de dessin. Si jamais le dessinateur est un joueur virtuel, ces joueurs auront aussi la possibilité de demander un indice. L'indice sera affiché dans le chat de la partie, mais seulement celui qui a demandé l'indice pourra la voir.
+        Les joueurs devront par contre faire attention, car demander un indice coûte des points!
+    </system:String>
+
+    <system:String x:Key="TopBar">
+        Barre du haut
+    </system:String>
+
+    <system:String x:Key="Draw">
+        Dessiner
+    </system:String>
+
+    <!-- Coop tutorial -->
+
+    <system:String x:Key="CoopGame">
+        Partie Coop
+    </system:String>
+
+    <system:String x:Key="CoopDescription">
+        Dans ce mode de jeux, un groupe de joueurs humains essayent de deviner le plus de mots possible avant que le temps expire. Les joueurs récoltent des points
+        pour chaque dessin deviné correctement. De même, lorsque l'équipe devine correctement, elle est allouée du temps supplémentaire.
+        Les mots sont tous dessinés par un joueur virtuel aléatoire. Les joueurs humains n'ont pas la possibilité de dessiner. 
+        Pour chaque dessin,l'équipe dispose d'un nombre de tentatives collectives (coeurs). Ce nombre de tentatives varie en fonction de la difficulté de la partie.
+        Si jamais l'équipe épuise ses tentatives, alors elle est pénalisée par un retrait de temps et le joueur virtuel passe au dessin prochain. 
+    </system:String>
+
+    <system:String x:Key="CoopPlayersSection">
+        Dans la section gauche de l'interface, on retrouve l'équipe de joueurs humains et le joueur virtuel qui se charge de dessiner les mots à deviner.
+    </system:String>
+
+    <system:String x:Key="CoopTopBar">
+        En haut de la zone de dessin, on retrouve d'abord le score de l'équipe. Le score est collectif et les joueurs doivent travailler ensemble pour l'améliorer.
+        Ensuite, les coeurs affichent à l'équipe combien de tentatives il reste. Ces coeurs sont réinitialisés à chaque nouveau dessin du joueur virtuel. Par contre, si le nombre de tentatives
+        tombe à zéro, l'équipe est pénalisée par un retrait de temps. Puis, l'horloge montre combien de temps il reste à la partie. Contrairement aux parties FFA, le temps n'est pas réinitialisé 
+        à chaque dessin. 
+    </system:String>
+
+    <system:String x:Key="CoopGuess">
+        Au-dessous de la zone de dessin, il est possible d'essayer de deviner un mot ou de deviner un indice. Dans les parties Coop, demander un indice coûte du temps. Si un joueur demande un indice,
+        tous les joueurs pourront la visionner, contrairement en FFA.
+    </system:String>
+
+
+    <!-- Solo tutorial -->
+
+    <system:String x:Key="SoloGame">
+        Partie Solo
+    </system:String>
+
+    <system:String x:Key="SoloDescription">
+        Les parties solo sont presque identiques aux parties Coop. Par contre, il n'est pas possible de jouer à plusieurs. Le joueur joue avec un joueur virtuel pour deviner le plus de mots possible
+        durant un certain temps qui varie en fonction de la difficulté. Tout comme les parties Coop, le joueur est alloué un nombre de tentatives au départ en fonction de la difficulté du jeu. 
+        Dans ce mode de jeu, le joueur peut jouer afin de battre son record personnel.
+
+    </system:String>
+
+
+    <system:String x:Key="SoloTopBar">
+        La barre du haut est similaire à celle des parties Coop. En revanche, le record personnel du joueur en mode solo est affiché à gauche de l'horloge.
+    </system:String>
+
+    <!-- Tutorial -->
+    <system:String x:Key="Tutorial">Tutoriel</system:String>
+    <system:String x:Key="TutorialText1">
+        Bienvenue sur PolyDraw! PolyDraw est une application qui permet à ses utilisateurs de faire plusieurs choses.
+        Puisque l'aspect le plus important de l'application est celui des parties que l'on peut jouer, ce tutoriel tentera de vous aider à mieux comprendre comment
+        les différents modes de parties qu'offre PolyDraw fonctionnent. L'application offre trois différents modes de parties, soit mêlée générale (FFA), coop et solo.
+        Les modes sont tous un peu similaires. Ils orbitent autour du même concept: un joueur doit correctement deviner le mot dessiné par autre utilisateur, qu'il soit humain ou virtuel.
+        Avant de commencer, passons sur des aspects qui seront importants à la compréhension des différents modes de parties.
+      
+    </system:String>
+
+    <system:String x:Key="TutorialText2">
+        À chaque fois que l'on joint une partie, l'utilisateur sera automatiquement ajouté au canal "Partie en cours". C'est ici qu'il pourra clavarder avec les autres joueurs de la partie.
+        Quand l'utilisateur quittera la partie, il sera également automatiquement retiré du canal!
+         
+    </system:String>
+
+
+    <system:String x:Key="TutorialText3">
+        Ces joueurs sont appelés des joueurs virtuels. Ils ont comme particularité une icône de robot et ils peuvent parler! Dans les parties FFA, l'hôte peut ajouter ou retirer des
+        joueurs virtuels s'il le désire. En coop et en solo, les joueurs virtuels se joindront automatiquement à vos parties. Ces joueurs peuvent seulement dessiner. Ils ne peuvent
+        pas deviner. Utilisez-les à votre avantage, ils peuvent être utiles lorsqu'on a besoin d'un indice!
+       
+    </system:String>
+
+    <system:String x:Key="VirtualPlayers">
+        Joueurs Virtuels
+    </system:String>
+
+    <system:String x:Key="ActiveMatch">
+        Canal de la Partie Active
+    </system:String>
+    <system:String x:Key="HomeView">
+        Vue d'accueil
+    </system:String>
+
+    <system:String x:Key="HomeViewText1">
+        Dans cette vue, un utilisateur peut joindre une des parties existantes. Pour joindre une partie, un utilisateur n'a qu'à cliquer dessus.
+        Une fois avoir rejoint le groupe, l'hôte peut commencer la partie si assez de joueurs sont présents.
+        Au-dessous de cette vue, deux boutons sont affichés.
+   
+
+    </system:String>
+
+    <system:String x:Key="HomeViewText2">
+        Le premier bouton permet à un utilisateur de créer une partie. Une partie est une salle d'attente
+        contenant les joueurs voulant jouer ensemble. Le deuxième bouton permet de créer un jeu. Un jeu
+        est l'ensemble d'un mot, ses indices et son dessin. Quand un joueur crée un jeu, il permet au joueur virtuel
+        d'utiliser le jeu lors d'une partie.
+    </system:String>
+
+    <system:String x:Key="EndTutorial">Commencer à jouer</system:String>
+
+</ResourceDictionary>
