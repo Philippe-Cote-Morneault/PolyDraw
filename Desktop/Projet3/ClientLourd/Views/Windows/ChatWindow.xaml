@@ -6,5 +6,5 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="SimpleWindow" Height="450" Width="800">
-    <DockPanel Name="MainStackPanel" />
+    <Grid Name="MainPanel" />
 </Window>

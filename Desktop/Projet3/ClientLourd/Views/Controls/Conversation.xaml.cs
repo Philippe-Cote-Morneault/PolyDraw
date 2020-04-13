@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using ClientLourd.ViewModels;
+using ClientLourd.Models.Bindable;
 
 namespace ClientLourd.Views.Controls
 {
@@ -35,12 +36,19 @@ namespace ClientLourd.Views.Controls
                 throw new InvalidOperationException(
                     "The attached AlwaysScrollToEnd property can only be applied to ScrollViewer instances.");
             }
-            if (e.ExtentHeightChange == 0 && scroll.VerticalOffset == 0)
+
+            if (e.ExtentHeightChange == 0 && e.ViewportHeightChange == 0 && scroll.VerticalOffset == 0)
             {
-                ((ChatViewModel) DataContext).LoadHistoryCommand.Execute(10);
+                ICommand loadHistory = ((ChatViewModel) DataContext).LoadHistoryCommand;
+                if (loadHistory.CanExecute(10))
+                {
+                    loadHistory.Execute(10);
+                }
+            }
+            else if (e.ExtentHeightChange > 0)
+            {
                 scroll.ScrollToVerticalOffset(scroll.ViewportHeight);
             }
- 
         }
     }
 }

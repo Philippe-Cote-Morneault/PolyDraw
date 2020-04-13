@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using ClientLourd.Annotations;
 using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
+using ClientLourd.ViewModels;
 using MaterialDesignThemes.Wpf;
 
 namespace ClientLourd.Views.Dialogs
@@ -16,26 +17,38 @@ namespace ClientLourd.Views.Dialogs
     public partial class RegisterDialog : UserControl, INotifyPropertyChanged
     {
         public User User { get; set; }
+
         public RegisterDialog(User user)
         {
             User = user;
             InitializeComponent();
         }
-        public bool IsPasswordInvalid
+
+        public ResourceDictionary CurrentDictionary
         {
-            get { return CheckInvalidPassword(); }
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.CurrentDictionary;
         }
 
-        private bool CheckInvalidPassword()
+        public bool AreFieldsEmpty
         {
-            if (PasswordField1.Password != PasswordField2.Password)
-                return true;
-            if (String.IsNullOrWhiteSpace(PasswordField1.Password) || PasswordField1.Password.Length < 8)
-                return true;
-            if (String.IsNullOrWhiteSpace(PasswordField2.Password) || PasswordField2.Password.Length < 8)
-                return true;
-            return false;
+            get
+            {
+                if (String.IsNullOrWhiteSpace(PasswordField1.Password))
+                    return true;
+                if (String.IsNullOrWhiteSpace(PasswordField2.Password))
+                    return true;
+                if (String.IsNullOrWhiteSpace(FirstNameField.Text))
+                    return true;
+                if (String.IsNullOrWhiteSpace(LastNameField.Text))
+                    return true;
+                if (String.IsNullOrWhiteSpace(EmailField.Text))
+                    return true;
+                if (String.IsNullOrWhiteSpace(UsernameField.Text))
+                    return true;
+                return false;
+            }
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -45,9 +58,9 @@ namespace ClientLourd.Views.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnPasswordChanged(object sender, RoutedEventArgs e)
+        private void OnFieldChanged(object sender, RoutedEventArgs e)
         {
-            OnPropertyChanged(nameof(IsPasswordInvalid));
+            OnPropertyChanged(nameof(AreFieldsEmpty));
         }
 
         RelayCommand<Channel> _changeAvatarCommand;
@@ -67,5 +80,22 @@ namespace ClientLourd.Views.Dialogs
             User.Avatar = (BitmapImage) result;
         }
 
+        private async void Register(object sender, RoutedEventArgs e)
+        {
+            if (PasswordField1.Password != PasswordField2.Password)
+            {
+                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidPassword"]),
+                    "RegisterDialogHost");
+            }
+            else if (PasswordField1.Password.Length < 8)
+            {
+                await DialogHost.Show(new ClosableErrorDialog((string) CurrentDictionary["InvalidLenghtPassword"]),
+                    "RegisterDialogHost");
+            }
+            else
+            {
+                DialogHost.CloseDialogCommand.Execute(true, this);
+            }
+        }
     }
 }

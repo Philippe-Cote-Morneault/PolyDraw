@@ -1,0 +1,197 @@
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Home"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls"
+             xmlns:converters="clr-namespace:ClientLourd.Utilities.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
+    <UserControl.DataContext>
+        <viewModels:HomeViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <converters:GameModeToImageConverter x:Key="GameModeToImageConverter" />
+        <converters:WidthToLeftMarginConverter x:Key="WidthToLeftMarginConverter" />
+        <converters:EnumTranslationConverter x:Key="EnumTranslationConverter" />
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="6*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Margin="10" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" x:Name="modeIcon" />
+            <Grid Grid.Column="1" x:Name="mode" />
+            <Grid Grid.Column="2" x:Name="language" />
+            <Grid Grid.Column="3" x:Name="host" />
+            <Grid Grid.Column="4" x:Name="players" />
+            <Grid Grid.Column="5" x:Name="rounds" />
+            <Grid Grid.Column="6" x:Name="difficulty" />
+        </Grid>
+
+
+        <Border Grid.Row="0" Margin="50" BorderBrush="LightGray" BorderThickness="1"
+                Height="{Binding ElementName=firstRow, Path=ActualHeight}">
+            <ListView ItemsSource="{Binding Lobbies}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="{Binding ElementName=modeIcon, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Stretch="Uniform" Height="40" x:Name="image"
+                                           Source="{Binding Mode, Converter={StaticResource GameModeToImageConverter}}">
+                                        <Image.Margin>
+                                            <MultiBinding Converter="{StaticResource WidthToLeftMarginConverter}">
+                                                <Binding ElementName="image" Path="ActualWidth" />
+                                                <Binding ElementName="modeIcon" Path="ActualWidth" />
+                                            </MultiBinding>
+                                        </Image.Margin>
+                                    </Image>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn
+                            DisplayMemberBinding="{Binding Mode, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Width="{Binding ElementName=mode, Path=ActualWidth}" Header="Mode">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Cursor="Hand"
+                                           Content="{DynamicResource Mode}" ToolTip="{DynamicResource FilterMode}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick"
+                                                          Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}"
+                                                          CommandParameter="Mode" />
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+
+                        </GridViewColumn>
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Host}"
+                                        Width="{Binding ElementName=host, Path=ActualWidth}" Header="Host">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Host}"
+                                           Cursor="Hand" ToolTip="{DynamicResource FilterHost}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick"
+                                                          Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}"
+                                                          CommandParameter="Host" />
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Language}"
+                                        Width="{Binding ElementName=language, Path=ActualWidth}">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Language}"
+                                           Cursor="Hand" ToolTip="{DynamicResource FilterLanguage}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick"
+                                                          Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}"
+                                                          CommandParameter="Language" />
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn
+                            DisplayMemberBinding="{Binding Difficulty, Converter={StaticResource EnumTranslationConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Width="{Binding ElementName=difficulty, Path=ActualWidth}">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Difficulty}"
+                                           Cursor="Hand" ToolTip="{DynamicResource FilterDifficulty}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick"
+                                                          Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}"
+                                                          CommandParameter="Difficulty" />
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+
+                        <GridViewColumn DisplayMemberBinding="{Binding Duration, StringFormat={}{0:mm:ss}}"
+                                        Width="{Binding ElementName=rounds, Path=ActualWidth}" Header="Duration (min)">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <Label Margin="-7 0 0 0" FontWeight="Bold" Content="{DynamicResource Duration}"
+                                           Cursor="Hand" ToolTip="{DynamicResource FilterDuration}">
+                                        <Label.InputBindings>
+                                            <MouseBinding Gesture="LeftClick"
+                                                          Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}"
+                                                          CommandParameter="Duration" />
+                                        </Label.InputBindings>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+
+
+                        <GridViewColumn>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <MultiBinding StringFormat="{}{0}/{1}">
+                                    <Binding Path="PlayersCount" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" />
+                                    <Binding Path="PlayersMax" />
+                                </MultiBinding>
+                            </GridViewColumn.DisplayMemberBinding>
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="UserGroup" Cursor="Hand"
+                                                                 ToolTip="{DynamicResource FilterPlayers}"
+                                                                 Background="White">
+                                            <materialDesign:PackIcon.InputBindings>
+                                                <MouseBinding Gesture="LeftClick"
+                                                              Command="{Binding ElementName=ViewModel, Path=FilterLobbiesCommand}"
+                                                              CommandParameter="Players" />
+                                            </materialDesign:PackIcon.InputBindings>
+                                        </materialDesign:PackIcon>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+                <ListView.ItemContainerStyle>
+
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnLobbySelection" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+        </Border>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+            <Button Click="CreateLobby" Width="300" Margin="0 0 20 0" Content="{DynamicResource CreateLobby}" />
+            <Button Click="CreateGame" Width="300" Margin="20 0 0 0" Content="{DynamicResource CreateGame}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

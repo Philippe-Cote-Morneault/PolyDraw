@@ -13,6 +13,8 @@ using ClientLourd.Utilities.ValidationRules;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Constants;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Services.EnumService;
 
 namespace ClientLourd.ViewModels
 {
@@ -21,8 +23,19 @@ namespace ClientLourd.ViewModels
         public LoginViewModel()
         {
             AfterLogOut();
+            MainViewModel.LanguageChangedEvent += OnLanguageChanged;
         }
 
+
+        private void OnLanguageChanged(object source, EventArgs args)
+        {
+            NotifyPropertyChanged(nameof(Language));
+        }
+
+        public MainViewModel MainViewModel
+        {
+            get => (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel);
+        }
 
         public override void AfterLogin()
         {
@@ -44,6 +57,18 @@ namespace ClientLourd.ViewModels
         public SocketClient SocketClient
         {
             get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SocketClient; }
+        }
+
+        public string Language
+        {
+            get
+            {
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SelectedLanguage;
+            }
+            set
+            {
+                (((MainWindow) Application.Current.MainWindow).DataContext as MainViewModel).SelectedLanguage = value;
+            }
         }
 
         RelayCommand<object[]> _loginCommand;
@@ -87,6 +112,7 @@ namespace ClientLourd.ViewModels
 
             set
             {
+                Console.WriteLine((value as TokenPair).SessionToken);
                 if (value != _tokens)
                 {
                     _tokens = value;
@@ -102,7 +128,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _signUpCommand ?? (_signUpCommand =
-                           new RelayCommand<object>(param => SignUp()));
+                    new RelayCommand<object>(param => SignUp()));
             }
         }
 
@@ -112,6 +138,7 @@ namespace ClientLourd.ViewModels
             {
                 user = new User();
             }
+
             var dialog = new RegisterDialog(user);
             var result = await DialogHost.Show(dialog);
             if (bool.Parse(result.ToString()))
@@ -121,14 +148,13 @@ namespace ClientLourd.ViewModels
                     dynamic data = await RestClient.Register(user, dialog.PasswordField1.Password);
                     StartLogin(user.Username, data, false);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     await DialogHost.Show(new ClosableErrorDialog(e), "Default");
                     IsLoggedIn = false;
                     SignUp(user);
                 }
             }
-
         }
 
         public ICommand LoginCommand
@@ -136,7 +162,7 @@ namespace ClientLourd.ViewModels
             get
             {
                 return _loginCommand ?? (_loginCommand =
-                           new RelayCommand<object[]>(param => Authentify(param), param => CredentialsValid(param)));
+                    new RelayCommand<object[]>(param => Authentify(param), param => CredentialsValid(param)));
             }
         }
 
@@ -147,7 +173,7 @@ namespace ClientLourd.ViewModels
                 SessionToken = data["SessionToken"],
                 Bearer = data["Bearer"],
             };
-            User = new User(username, data["UserID"]);
+            User = new User(username, data["UserID"], false);
             await SocketClient.InitializeConnection(Tokens.SessionToken);
             if (rememberMeIsActive)
             {
@@ -157,6 +183,7 @@ namespace ClientLourd.ViewModels
             {
                 CredentialManager.WriteCredential(ApplicationInformations.Name, "", "");
             }
+
             OnLogin(this);
         }
 
@@ -177,6 +204,7 @@ namespace ClientLourd.ViewModels
                 {
                     data = await RestClient.Login(username, password);
                 }
+
                 await StartLogin(username, data, rememberMeIsActive);
             }
             catch (Exception e)
@@ -201,6 +229,7 @@ namespace ClientLourd.ViewModels
             return (loginInputValidator.UsernameLengthIsOk(username) &&
                     loginInputValidator.PasswordLengthIsOk(password) &&
                     !loginInputValidator.StringIsWhiteSpace(username) &&
+                    loginInputValidator.IsAlphaNumeric(username) &&
                     !loginInputValidator.StringIsWhiteSpace(password));
         }
 
@@ -212,6 +241,20 @@ namespace ClientLourd.ViewModels
         protected virtual void OnLogin(object source)
         {
             LoggedIn?.Invoke(source, EventArgs.Empty);
+        }
+
+        private RelayCommand<object> _changeLangCommand;
+
+        public ICommand ChangeLangCommand
+        {
+            get { return _changeLangCommand ?? (_changeLangCommand = new RelayCommand<object>(obj => ChangeLang())); }
+        }
+
+        private void ChangeLang()
+        {
+            Language = (Language == Languages.EN.GetDescription())
+                ? Languages.FR.GetDescription()
+                : Language = Languages.EN.GetDescription();
         }
     }
 }

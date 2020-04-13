@@ -9,26 +9,30 @@
              mc:Ignorable="d"
              xmlns:rules="clr-namespace:ClientLourd.Utilities.ValidationRules"
              xmlns:controls="clr-namespace:ClientLourd.Views.Controls"
+             Name="Control"
              xmlns:viewModels="clr-namespace:ClientLourd.ViewModels">
     <UserControl.Resources>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter" />
+        <converter:ChannelSelectionToIconConverter x:Key="ChannelSelectionToIconConverter" />
+        <converter:LongChannelNameConverter x:Key="ChannelNameConverter" />
         <viewModels:MainViewModel x:Key="MainViewModel" />
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewModels:ChatViewModel />
     </UserControl.DataContext>
     <DockPanel>
+
         <!-- ChannelSection -->
         <local:ChannelSection DockPanel.Dock="Left" />
         <!--Chat bottom section-->
-        <DockPanel Background="White" DockPanel.Dock="Bottom"
-                   FocusManager.FocusedElement="{Binding ElementName=MessageTextBox}">
+        <DockPanel Background="White" DockPanel.Dock="Bottom">
 
             <StackPanel DockPanel.Dock="Right" Margin="0 5 10 0">
                 <!--send button-->
                 <Button Margin="5"
-                        IsDefault="True"
-                        ToolTip="Send the message"
+                        IsDefault="{Binding ElementName=MessageTextBox, Path=IsFocused}"
+                        
+                        ToolTip="{DynamicResource SendMessage}"
                         Style="{DynamicResource MaterialDesignToolForegroundButton}"
 
                         Command="{Binding SendMessageCommand}">
@@ -45,7 +49,7 @@
                 <!--export button-->
                 <Button
                     Name="ExportButton"
-                    ToolTip="Export the chat as a new window"
+                    ToolTip="{DynamicResource ExportChat}"
                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ExportChatCommand}"
                     Style="{DynamicResource MaterialDesignToolForegroundButton}">
                     <materialDesign:PackIcon Kind="ApplicationExport"
@@ -58,12 +62,14 @@
                     <TextBox
                         Background="White"
                         Margin="10 10 10 5"
-                        materialDesign:HintAssist.Hint="Type your message..."
+                        materialDesign:HintAssist.Hint="{DynamicResource TypeMessage}"
                         TextWrapping="Wrap"
                         Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
                         MaxLines="2"
                         MinLines="2"
                         Name="MessageTextBox"
+                        GotFocus="OnFocus"
+                        LostFocus="OnFocusLost"
                         MaxLength="1000" />
 
                     <!--Character counter-->
@@ -82,11 +88,29 @@
                 <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryLight" BorderBrush="Gray"
                                           BorderThickness="0 0 0 1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <materialDesign:PackIcon Kind="UsersGroup" Height="24" Width="24" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding SelectedChannel.Name}"
-                                   Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
+                        <materialDesign:PackIcon
+                            Kind="{Binding Path=SelectedChannel, Converter={StaticResource ChannelSelectionToIconConverter}}"
+                            Height="24" Width="24" VerticalAlignment="Center" />
+                        <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource ChannelNameConverter}">
+                                    <Binding Path="SelectedChannel" />
+                                    <Binding Path="DataContext.CurrentLanguage"
+                                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </StackPanel>
                 </materialDesign:ColorZone>
+                <Grid DockPanel.Dock="Top"
+                      Visibility="{Binding ElementName=Control, Path=IsWaiting, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ProgressBar
+                        Height="24"
+                        Width="24"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Value="0"
+                        IsIndeterminate="True" />
+                </Grid>
                 <controls:Conversation />
             </DockPanel>
         </Border>

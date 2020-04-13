@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace ClientLourd.Utilities.Converters
 {
-    public class NotificationConverter: IValueConverter
+    public class NotificationConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -17,6 +17,7 @@ namespace ClientLourd.Utilities.Converters
             {
                 return "99+";
             }
+
             return notification.ToString();
         }
 

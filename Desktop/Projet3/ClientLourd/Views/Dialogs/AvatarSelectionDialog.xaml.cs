@@ -46,8 +46,10 @@ namespace ClientLourd.Views.Dialogs
         {
             for (int i = 1; i <= 16; i++)
             {
-                Avatars.Add(new BitmapImage(new Uri($"/ClientLourd;component/Resources/Avatar/{i}.jpg", UriKind.Relative)));
+                Avatars.Add(new BitmapImage(new Uri($"/ClientLourd;component/Resources/Avatar/{i}.jpg",
+                    UriKind.Relative)));
             }
+
             OnPropertyChanged(nameof(Avatars));
         }
 
@@ -64,7 +66,7 @@ namespace ClientLourd.Views.Dialogs
                 }
 
                 _selectedButton = value;
-                _selectedButton.Background =(Brush)Application.Current.Resources["PrimaryHueLightBrush"];
+                _selectedButton.Background = (Brush) Application.Current.Resources["PrimaryHueLightBrush"];
             }
         }
 
@@ -72,6 +74,7 @@ namespace ClientLourd.Views.Dialogs
         {
             SelectedButton = ((Button) sender);
         }
+
         RelayCommand<object> _quitCommand;
 
         public ICommand QuitCommand
@@ -87,7 +90,7 @@ namespace ClientLourd.Views.Dialogs
         {
             Card card = (Card) SelectedButton.Content;
             Image image = (Image) card.Content;
-            DialogHost.CloseDialogCommand.Execute(image.Source,this);
+            DialogHost.CloseDialogCommand.Execute(image.Source, this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -20,6 +21,11 @@ using ClientLourd.Utilities.Commands;
 using ClientLourd.ViewModels;
 using ClientLourd.Views.Dialogs;
 using ClientLourd.Views.Windows;
+using ClientLourd.Utilities.Enums;
+using ClientLourd.Services.EnumService;
+using ClientLourd.Services.SocketService;
+using ClientLourd.Views.Controls;
+using ClientLourd.Services.UserSettingsManagerService;
 
 namespace ClientLourd
 {
@@ -33,6 +39,27 @@ namespace ClientLourd
             InitializeComponent();
             ((MainViewModel) DataContext).UserLogout += OnUserLogout;
             ((LoginViewModel) LoginScreen.DataContext).LoggedIn += OnLoggedIn;
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+            SetLanguageDictionary();
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.ContainedView))
+            {
+                MenuToggleButton.IsChecked = false;
+            }
+        }
+
+        private void SocketClientOnConnectionLost(object source, EventArgs args)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                DialogHost.CloseDialogCommand.Execute(null, MainWindowDialogHost);
+
+                MainWindowDialogHost.ShowDialog(new ClosableErrorDialog(((MainViewModel) DataContext)
+                    .CurrentDictionary["LostConnection"].ToString()));
+            });
         }
 
         private void OnLoggedIn(object source, EventArgs args)
@@ -40,9 +67,13 @@ namespace ClientLourd
             var loginViewModel = (LoginViewModel) source;
             Dispatcher.Invoke(() =>
             {
+                (DataContext as MainViewModel).SocketClient.ConnectionLost += SocketClientOnConnectionLost;
                 AfterLogin(loginViewModel);
                 ChatBox.AfterLogin();
                 LoginScreen.AfterLogin();
+                Profile.AfterLogin();
+                Home.AfterLogin();
+                Lobby.AfterLogin();
             });
         }
 
@@ -52,8 +83,12 @@ namespace ClientLourd
             mainViewModel.SessionInformations.Tokens = loginViewModel.Tokens;
             mainViewModel.SessionInformations.User = loginViewModel.User;
             mainViewModel.AfterLogin();
-            (Profile.DataContext as ProfileViewModel).AfterLogin();
-            DialogHost.Show(new Tutorial(), "Default");
+
+            var userSettingsManager = new UserSettingsManagerService(mainViewModel.SessionInformations.User.ID);
+            if (!userSettingsManager.HasSeenTutorial())
+            {
+                DialogHost.Show(new Tutorial(), "Default");
+            }
         }
 
         private void OnUserLogout(object source, EventArgs args)
@@ -63,6 +98,9 @@ namespace ClientLourd
                 AfterLogout();
                 ChatBox.AfterLogout();
                 LoginScreen.AfterLogout();
+                Lobby.AfterLogout();
+                Home.AfterLogout();
+                Profile.AfterLogout();
             });
         }
 
@@ -70,10 +108,12 @@ namespace ClientLourd
         {
             ((ViewModelBase) DataContext).AfterLogOut();
             MenuToggleButton.IsChecked = false;
-            ChatToggleButton.IsChecked = false;
-            _chatWindow?.Close();
-            DevConfigButton.IsChecked = true;
+            if(ChatWindow != null)
+                ChatWindow.Close();
+            else
+                ReturnTheChat();
         }
+
 
         /// <summary>
         /// Called when the chat is open or close
@@ -88,14 +128,13 @@ namespace ClientLourd
                 Thread.Sleep(100);
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    ChatBox.OnChatToggle(ChatToggleButton.IsChecked != null && (bool)ChatToggleButton.IsChecked);
+                    ChatBox.OnChatToggle(ChatToggleButton.IsChecked != null && (bool) ChatToggleButton.IsChecked);
                 });
             });
         }
 
 
-
-        private ChatWindow _chatWindow;
+        public ChatWindow ChatWindow { get; set; }
 
         RelayCommand<object> _exportChatCommand;
 
@@ -107,46 +146,230 @@ namespace ClientLourd
             get
             {
                 return _exportChatCommand ??
-                       (_exportChatCommand = new RelayCommand<object>(param => ExportChat(this, null),
-                           o => ChatToggleButton.IsEnabled));
+                       (_exportChatCommand = new RelayCommand<object>(param => ExportChatAsNewWindow(this, null),
+                           o => (ChatWindow == null || !ChatWindow.IsVisible)));
             }
         }
 
-        public object MainDialogHost { get; internal set; }
-
-        private void ExportChat(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Remove the chat from his current parent
+        /// </summary>
+        /// <returns></returns>
+        public Chat GetChat()
         {
+            //Close the chat window
+            if (ChatWindow == null || !ChatWindow.IsVisible)
+            {
+                //Close the chat
+                Drawer.IsRightDrawerOpen = false;
+                //Hide the chat button
+                ChatToggleButton.IsEnabled = false;
+                //Remove the chat from his parent
+                ((Grid) ChatBox.Parent)?.Children.Clear();
+                //Disable notification for the current channel
+                Task.Delay(100).ContinueWith((t) =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ((ChatViewModel) ChatBox.DataContext).OnChatToggle(true);
+                    });
+                });
+                return ChatBox;
+            }
+            return null;
+
+        }
+
+        /// <summary>
+        /// Return the chat to the mainwindow if the parent is null or a grid
+        /// </summary>
+        public void ReturnTheChat(bool returnHome = false)
+        {
+            ((Grid) ChatBox.Parent)?.Children.Clear();
+            if (!returnHome && ViewModel.ContainedView == Utilities.Enums.Views.Lobby.ToString())
+            {
+                Lobby.ChatContainer.Children.Add(ChatBox);
+            }
+            else
+            {
+                MainWindowChatContainer.Children.Add(ChatBox);
+                ChatToggleButton.IsEnabled = true;
+            }
+            //Close the chat
             Drawer.IsRightDrawerOpen = false;
-            ChatToggleButton.IsEnabled = false;
-            RightDrawerContent.Children.Clear();
+            //enable notification for the current channel
+            Task.Delay(100).ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ((ChatViewModel) ChatBox.DataContext).OnChatToggle(false);
+                });
+            });
+        }
+
+        private void ExportChatAsNewWindow(object sender, RoutedEventArgs e)
+        {
+            Chat chat = GetChat();
             Task.Factory.StartNew(() =>
             {
                 //Wait until the drawer is close
                 Thread.Sleep(100);
                 Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    _chatWindow = new ChatWindow(ChatBox)
+                    ChatWindow = new ChatWindow(chat)
                     {
                         Title = "Chat",
                         DataContext = DataContext,
                         Owner = this,
                     };
-                    _chatWindow.Show();
+                    ChatWindow.Show();
                 });
             });
         }
 
-        private void ConfigButton_OnClick(object sender, RoutedEventArgs e)
+
+
+        private void CreateGame(object sender, RoutedEventArgs e)
         {
-            if (NetworkConfig.Visibility == Visibility.Hidden)
+            DialogHost.Show(new GameCreationDialog(), "Default");
+        }
+
+        private void LeaveLobby(object sender, RoutedEventArgs e)
+        {
+            (Lobby.DataContext as LobbyViewModel).LeaveLobby();
+        }
+
+
+        /// <summary>
+        /// Sets language based on system language
+        /// </summary>
+        private void SetLanguageDictionary()
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            switch (Thread.CurrentThread.CurrentCulture.ToString())
             {
-                NetworkConfig.Visibility = Visibility.Visible;
-                ConfigButton.Click -= ConfigButton_OnClick;
+                case "en-US":
+                    dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
+                    ((MainViewModel) DataContext).SelectedLanguage = Languages.EN.GetDescription();
+                    break;
+                case "fr-CA":
+                    dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
+                    ((MainViewModel) DataContext).SelectedLanguage = Languages.FR.GetDescription();
+                    break;
+                default:
+                    dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
+                    ((MainViewModel) DataContext).SelectedLanguage = Languages.EN.GetDescription();
+                    break;
             }
+
+
+            Resources.MergedDictionaries.Add(dict);
+            (DataContext as MainViewModel).CurrentDictionary = dict;
+            (DataContext as MainViewModel).TriggerLangChangedEvent();
+            (DataContext as MainViewModel).IsSystemLanguage = true;
+            LanguageSelector.SelectionChanged += ChangeLang;
+        }
+
+        public void ChangeLang(object sender, EventArgs e)
+        {
+            ViewModel.OldDictionary = ViewModel.CurrentDictionary;                
+            ComboBox cmb = sender as ComboBox;
+            string languageSelected = cmb.SelectedItem.ToString();
+            ResourceDictionary dict = new ResourceDictionary();
+
+            if (languageSelected == Languages.EN.GetDescription())
+                dict.Source = new Uri("..\\Resources\\Languages\\en.xaml", UriKind.Relative);
+
+            if (languageSelected == Languages.FR.GetDescription())
+                dict.Source = new Uri("..\\Resources\\Languages\\fr.xaml", UriKind.Relative);
+            (DataContext as MainViewModel).CurrentDictionary = dict;
+            Resources.MergedDictionaries[0] = dict;
+            (DataContext as MainViewModel).IsSystemLanguage = false;
+            (DataContext as MainViewModel).TriggerLangChangedEvent();
+        }
+
+        public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register("ScaleValue",
+            typeof(double), typeof(MainWindow),
+            new UIPropertyMetadata(1.0, new PropertyChangedCallback(OnScaleValueChanged),
+                new CoerceValueCallback(OnCoerceScaleValue)));
+
+        private static object OnCoerceScaleValue(DependencyObject o, object value)
+        {
+            MainWindow mainWindow = o as MainWindow;
+            if (mainWindow != null)
+                return mainWindow.OnCoerceScaleValue((double) value);
             else
+                return value;
+        }
+
+        private static void OnScaleValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            MainWindow mainWindow = o as MainWindow;
+            if (mainWindow != null)
+                mainWindow.OnScaleValueChanged((double) e.OldValue, (double) e.NewValue);
+        }
+
+        protected virtual double OnCoerceScaleValue(double value)
+        {
+            if (double.IsNaN(value))
+                return 1.0f;
+
+            value = Math.Max(0.1, value);
+            return value;
+        }
+
+        protected virtual void OnScaleValueChanged(double oldValue, double newValue)
+        {
+        }
+
+        public double ScaleValue
+        {
+            get => (double) GetValue(ScaleValueProperty);
+            set { SetValue(ScaleValueProperty, value); }
+        }
+
+        private void MainGrid_SizeChanged(object sender, EventArgs e)
+        {
+            CalculateScale();
+        }
+
+        private void CalculateScale()
+        {
+            double yScale = ActualHeight / 1080;
+            double xScale = ActualWidth / 1920;
+            double value = Math.Min(xScale, yScale);
+            ScaleValue = (double) OnCoerceScaleValue(PolyDraw, value);
+        }
+
+        private void LogoutItem_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.LogoutCommand.CanExecute(LoginScreen.DataContext))
             {
-                NetworkConfig.Visibility = Visibility.Hidden;
+                ViewModel.LogoutCommand.Execute(LoginScreen.DataContext);
             }
+        }
+
+        private void ProfileItem_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.MyProfileCommand.CanExecute(null))
+            {
+                Profile.UpdateStats();
+                ViewModel.MyProfileCommand.Execute(null);
+            }
+        }
+
+        private void HomeItem_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ViewModel.HomeCommand.CanExecute(null))
+            {
+                ViewModel.HomeCommand.Execute(null);
+            }
+        }
+
+        private void OpenTutorial(object sender, MouseButtonEventArgs e)
+        {
+            // For some reason, binding SelectedLanguage in 
+            DialogHost.Show(new Tutorial(), "Default");
         }
     }
 }

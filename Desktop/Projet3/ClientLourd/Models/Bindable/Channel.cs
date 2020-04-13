@@ -1,6 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Timers;
 
 namespace ClientLourd.Models.Bindable
 {
@@ -8,14 +10,38 @@ namespace ClientLourd.Models.Bindable
     {
         public Channel()
         {
+            InitTimer();
         }
-        public Channel(string name, string id)
+
+        public Channel(string name, string id, bool isGame)
         {
+            InitTimer();
             Name = name;
             ID = id;
+            IsGame = isGame;
+            IsFullyLoaded = false;
             Users = new ObservableCollection<User>();
             Messages = new ObservableCollection<Message>();
         }
+
+        private Timer _clearMessageTimer;
+
+        private void InitTimer()
+        {
+            IsFullyLoaded = false;
+            _clearMessageTimer = new Timer(10000);
+            _clearMessageTimer.AutoReset = false;
+            _clearMessageTimer.Elapsed += (sender, args) =>
+            {
+                if (Messages.Count > 50)
+                {
+                    Messages = new ObservableCollection<Message>(Messages.Skip(Messages.Count - 50));
+                    IsFullyLoaded = false;
+                }
+            };
+        }
+
+        public bool IsFullyLoaded { get; set; }
 
         public ObservableCollection<User> Users
         {
@@ -60,6 +86,11 @@ namespace ClientLourd.Models.Bindable
             }
         }
 
+        public bool IsGeneral
+        {
+            get => ID == Guid.Empty.ToString();
+        }
+
         private string _name;
 
         public ObservableCollection<Message> Messages
@@ -69,12 +100,13 @@ namespace ClientLourd.Models.Bindable
             {
                 if (value != _messages)
                 {
-                    _messages = new ObservableCollection<Message>(value.OrderBy(m => m.Date).ToList());
+                    _messages = value;
                     Messages.CollectionChanged += MessagesOnCollectionChanged;
                     NotifyPropertyChanged();
                 }
             }
         }
+
         private ObservableCollection<Message> _messages;
 
         private void MessagesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -85,11 +117,18 @@ namespace ClientLourd.Models.Bindable
                 {
                     Notification++;
                 }
+
                 if (Messages.Count > 1 && Messages[Messages.Count - 1].Date < Messages[Messages.Count - 2].Date)
                 {
                     Messages = new ObservableCollection<Message>(Messages.OrderBy(m => m.Date));
                 }
             }
+        }
+
+
+        public int UserMessageCount
+        {
+            get { return Messages.Count(m => m.User.ID != "-1"); }
         }
 
 
@@ -105,6 +144,7 @@ namespace ClientLourd.Models.Bindable
                 }
             }
         }
+
         private int _notification;
 
         public bool IsSelected
@@ -117,10 +157,33 @@ namespace ClientLourd.Models.Bindable
                     _isSelected = value;
                     Notification = 0;
                     NotifyPropertyChanged();
+                    if (_isSelected)
+                    {
+                        _clearMessageTimer.Stop();
+                    }
+                    else
+                    {
+                        _clearMessageTimer.Start();
+                    }
                 }
             }
         }
+
         private bool _isSelected;
 
+        public bool IsGame
+        {
+            get => _isGame;
+            set
+            {
+                if (value != _isGame)
+                {
+                    _isGame = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        private bool _isGame;
     }
 }

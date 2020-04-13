@@ -10,17 +10,27 @@ using ClientLourd.Utilities.Commands;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
 using ClientLourd.Utilities.Enums;
+using System.Media;
+using ClientLourd.Services.SoundService;
+using ClientLourd.Services.EnumService;
+using System.Collections.Generic;
+using ClientLourd.Services.UserSettingsManagerService;
 
 namespace ClientLourd.ViewModels
 {
-    class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
     {
         string _containedView;
-       
+
         public RestClient RestClient { get; set; }
         public SocketClient SocketClient { get; set; }
+
+        public Lobby CurrentLobby { get; set; }
+
         public NetworkInformations NetworkInformations { get; set; }
         private SessionInformations _sessionInformations;
+
+        public bool IsSystemLanguage { get; set; }
 
         public SessionInformations SessionInformations
         {
@@ -39,19 +49,39 @@ namespace ClientLourd.ViewModels
         public MainViewModel()
         {
             AfterLogOut();
+            SoundService = new SoundService();
         }
+
+        public SoundService SoundService { get; set; }
+
+        private UserSettingsManagerService _userManager;
 
         public override void AfterLogin()
         {
             //TODO
 
+            _userManager = new UserSettingsManagerService(SessionInformations.User.ID);
+
+            if (!IsSystemLanguage)
+            {
+                _userManager.SetLanguage(SelectedLanguage);
+            }
+
+            else if (IsSystemLanguage && _userManager.GetLanguage() != "System")
+            {
+                SelectedLanguage = _userManager.GetLanguage();
+            }
+
+            SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN)
+                ? new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 0})
+                : new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 1}));
         }
 
         public override void AfterLogOut()
         {
             NetworkInformations = new NetworkInformations();
             SessionInformations = new SessionInformations();
-            ContainedView = Utilities.Enums.Views.Editor.ToString();
+            ContainedView = Utilities.Enums.Views.Home.ToString();
             RestClient = new RestClient(NetworkInformations);
             RestClient.StartWaiting += (source, args) => { IsWaiting = true; };
             RestClient.StopWaiting += (source, args) => { IsWaiting = false; };
@@ -66,7 +96,14 @@ namespace ClientLourd.ViewModels
         {
             Application.Current.Dispatcher.Invoke(delegate
             {
-                DialogHost.Show(new ClosableErrorDialog(((SocketErrorEventArgs)args).Message));
+                try
+                {
+                    DialogHost.Show(new ClosableErrorDialog(((SocketErrorEventArgs) args).Message));
+                }
+                catch
+                {
+                    //The message will be ignore
+                }
             });
         }
 
@@ -84,18 +121,19 @@ namespace ClientLourd.ViewModels
                 NotifyPropertyChanged();
             }
         }
-        
+
         private RelayCommand<string> _changeNetworkCommand;
+
         public ICommand ChangeNetworkCommand
         {
             get
             {
                 return _changeNetworkCommand ??
-                       (_changeNetworkCommand = new RelayCommand<string>(config => NetworkInformations.Config = int.Parse(config)));
+                       (_changeNetworkCommand =
+                           new RelayCommand<string>(config => NetworkInformations.Config = int.Parse(config)));
             }
         }
-        
-        
+
 
         private RelayCommand<LoginViewModel> _logoutCommand;
 
@@ -140,12 +178,6 @@ namespace ClientLourd.ViewModels
 
         private void SocketClientOnConnectionLost(object source, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(delegate
-            {
-                DialogHost.Show(
-                    new ClosableErrorDialog(
-                        "You have lost connection to the server! Returning to the login page..."));
-            });
             Logout();
         }
 
@@ -153,10 +185,7 @@ namespace ClientLourd.ViewModels
 
         public ICommand MyProfileCommand
         {
-            get
-            {
-                return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile()));
-            }
+            get { return _myProfileCommand ?? (_myProfileCommand = new RelayCommand<object>(obj => MyProfile())); }
         }
 
         private void MyProfile()
@@ -168,17 +197,85 @@ namespace ClientLourd.ViewModels
 
         public ICommand HomeCommand
         {
-            get
-            {
-                return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home()));
-            }
+            get { return _homeCommand ?? (_homeCommand = new RelayCommand<object>(obj => Home())); }
         }
 
         private void Home()
         {
-            // TODO: Change to home view
+            ContainedView = Utilities.Enums.Views.Home.ToString();
+        }
+
+        // TODO: Delete this
+        private RelayCommand<object> _editorCommand;
+
+        public ICommand EditorCommand
+        {
+            get { return _editorCommand ?? (_editorCommand = new RelayCommand<object>(obj => Editor())); }
+        }
+
+        private void Editor()
+        {
             ContainedView = Utilities.Enums.Views.Editor.ToString();
         }
 
+
+        private RelayCommand<object> _toggleSoundCommand;
+
+        public ICommand ToggleSoundCommand
+        {
+            get
+            {
+                return _toggleSoundCommand ?? (_toggleSoundCommand = new RelayCommand<object>(obj => ToggleSound()));
+            }
+        }
+
+        private void ToggleSound()
+        {
+            SoundService.ToggleSound();
+        }
+
+        private Languages _selectedLanguage;
+
+        public Languages CurrentLanguage
+        {
+            get => _selectedLanguage;
+        }
+
+        public string SelectedLanguage
+        {
+            get { return _selectedLanguage.GetDescription(); }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value) && _selectedLanguage.GetDescription() != value)
+                {
+                    _selectedLanguage = value.GetEnumFromDescription<Languages>();
+                    SocketClient?.SendMessage((_selectedLanguage == Utilities.Enums.Languages.EN)
+                        ? new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 0})
+                        : new Tlv(SocketMessageTypes.ChangeLanguage, new {Language = 1}));
+                    NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(Languages));
+                    NotifyPropertyChanged(nameof(CurrentLanguage));
+                    _userManager?.SetLanguage(_selectedLanguage.GetDescription());
+                    LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        public void TriggerLangChangedEvent()
+        {
+            LanguageChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        public List<string> Languages
+        {
+            get { return EnumManager.GetAllDescriptions<Languages>(); }
+        }
+
+        public ResourceDictionary CurrentDictionary { get; set; }
+        public ResourceDictionary OldDictionary { get; set; }
+        public delegate void LanguageChangedHandler(object source, EventArgs args);
+
+        public event LanguageChangedHandler LanguageChangedEvent;
     }
 }

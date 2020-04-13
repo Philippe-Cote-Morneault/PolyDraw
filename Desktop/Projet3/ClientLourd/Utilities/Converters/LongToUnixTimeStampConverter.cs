@@ -9,19 +9,17 @@ using ClientLourd.Services.DateService;
 
 namespace ClientLourd.Utilities.Converters
 {
-    class LongToUnixTimeStampConverter: IValueConverter
+    class LongToUnixTimeStampConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double time = System.Convert.ToDouble(value);
-            return Timestamp.UnixTimeStampToDateTime(time).ToString();
+            return (time == 0)? "-" : Timestamp.UnixTimeStampToDateTime(time).ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null && !(bool)value;
+            return value != null && !(bool) value;
         }
-
     }
 }
-

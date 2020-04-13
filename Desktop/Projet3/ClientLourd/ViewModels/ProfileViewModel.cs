@@ -1,6 +1,5 @@
 ﻿using ClientLourd.Models.Bindable;
 using ClientLourd.Utilities.Commands;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,34 +10,75 @@ using System.Windows.Input;
 using ClientLourd.Services.RestService;
 using ClientLourd.Views.Dialogs;
 using MaterialDesignThemes.Wpf;
+using System.Collections.ObjectModel;
 
 namespace ClientLourd.ViewModels
 {
-    class ProfileViewModel: ViewModelBase
+    class ProfileViewModel : ViewModelBase
     {
         private SessionInformations _sessionInformations;
         private User _user;
         private Stats _stats;
         private StatsHistory _statsHistory;
-        private int _end;
+        public int _end;
 
         public ProfileViewModel()
         {
             _end = 20;
+            ((MainWindow)Application.Current.MainWindow).ViewModel.LanguageChangedEvent += ViewModelOnLanguageChangedEvent;
+        }
+
+        public void AddStatsHistory(StatsHistory sh)
+        {
+            var tmpMatches = new ObservableCollection<MatchPlayed>(StatsHistory.MatchesPlayedHistory);
+            StatsHistory.MatchesPlayedHistory.Clear();
+
+            for (int i = 0; i < sh.MatchesPlayedHistory.Count; i++)
+            {
+                StatsHistory.MatchesPlayedHistory.Add(sh.MatchesPlayedHistory[i]);
+            }
+
+            for (int i = 0; i < tmpMatches.Count; i++)
+            {
+                StatsHistory.MatchesPlayedHistory.Add(tmpMatches[i]);
+            }
+
+            NotifyPropertyChanged(nameof(StatsHistory));
+        }
+
+        private void ViewModelOnLanguageChangedEvent(object source, EventArgs args)
+        {
+            if (StatsHistory != null)
+            {
+                NotifyPropertyChanged(nameof(StatsHistory));
+            }
         }
 
         public override void AfterLogOut()
         {
-        
+        }
+
+        public void GetAllStats()
+        {
+            try
+            {
+                Task task2 = GetUserStats();
+                Task task3 = GetUserStats(0, _end);
+            }
+            catch
+            {
+                //
+            }
         }
 
 
         public override void AfterLogin()
         {
-            _sessionInformations = (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as SessionInformations;
+            _sessionInformations =
+                (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as
+                SessionInformations;
             Task task1 = GetUserInfo(_sessionInformations.User.ID);
-            Task task2 = GetUserStats();
-            Task task3 = GetUserStats(0, _end);
+            GetAllStats();
         }
 
         private async Task GetUserInfo(string userID)
@@ -54,25 +94,47 @@ namespace ClientLourd.ViewModels
 
         private async Task GetUserStats(int start, int end)
         {
-            _statsHistory = await RestClient.GetStats(start, end);
+            StatsHistory = await RestClient.GetStats(start, end);
+            NotifyPropertyChanged(nameof(StatsHistory));
         }
+
+
+        public StatsHistory StatsHistory
+        {
+            get => _statsHistory;
+            set
+            {
+                NotifyPropertyChanged();
+                _statsHistory = value;
+            }
+        }
+
+
 
         public RestClient RestClient
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
+            get { return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)?.RestClient; }
         }
 
         public SessionInformations SessionInformations
         {
-            get { return _sessionInformations; }
+            get {
+                return
+               (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations as
+             SessionInformations; }
         }
 
         public User User
         {
-            get { return (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel)?.SessionInformations.User; }
-            set 
-            { 
-                (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).SessionInformations.User = value;
+            get
+            {
+                return (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel)
+                    ?.SessionInformations.User;
+            }
+            set
+            {
+                (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel).SessionInformations.User =
+                    value;
                 NotifyPropertyChanged();
             }
         }
@@ -94,19 +156,27 @@ namespace ClientLourd.ViewModels
 
         public ICommand CloseProfileCommand
         {
-            get { return _closeProfileCommand ?? (_closeProfileCommand = new RelayCommand<object>(obj => CloseProfile(obj))); }
+            get
+            {
+                return _closeProfileCommand ??
+                       (_closeProfileCommand = new RelayCommand<object>(obj => CloseProfile(obj)));
+            }
         }
 
         private async Task CloseProfile(object obj)
         {
-            (((MainWindow)Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView = Utilities.Enums.Views.Editor.ToString();
+            (((MainWindow) Application.Current.MainWindow)?.DataContext as MainViewModel).ContainedView =
+                Utilities.Enums.Views.Editor.ToString();
         }
 
         private RelayCommand<object> _editProfileCommand;
 
         public ICommand EditProfileCommand
         {
-            get { return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj))); }
+            get
+            {
+                return _editProfileCommand ?? (_editProfileCommand = new RelayCommand<object>(obj => EditProfile(obj)));
+            }
         }
 
         private async Task EditProfile(object obj)
@@ -118,39 +188,24 @@ namespace ClientLourd.ViewModels
 
         public ICommand OpenConnectionsCommand
         {
-            get { return _openConnectionsCommand ?? (_openConnectionsCommand = new RelayCommand<object>(obj => OpenConnectionHistory(obj))); }
+            get
+            {
+                return _openConnectionsCommand ??
+                       (_openConnectionsCommand = new RelayCommand<object>(obj => OpenConnectionHistory(obj)));
+            }
         }
 
         private async Task OpenConnectionHistory(object obj)
         {
-                        
-            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(_statsHistory, _end);
+            ConnectionHistoryDialog connectionDialog = new ConnectionHistoryDialog(StatsHistory, _end);
 
-            await DialogHost.Show(connectionDialog, (object o, DialogClosingEventArgs closingEventHandler) =>
+            await DialogHost.Show(connectionDialog,
+                (object o, DialogClosingEventArgs closingEventHandler) =>
                 {
-                    (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
+                    (((MainWindow) Application.Current.MainWindow).MainWindowDialogHost as DialogHost)
+                        .CloseOnClickAway = false;
                 });
         }
-
-
-        private RelayCommand<object> _openGamesPlayedCommand;
-
-        public ICommand OpenGamesPlayedCommand
-        {
-            get { return _openGamesPlayedCommand ?? (_openGamesPlayedCommand = new RelayCommand<object>(obj => OpenGamesPlayedHistory(obj))); }
-        }
-
-        private async Task OpenGamesPlayedHistory(object obj)
-        {
-
-            await DialogHost.Show(new GamesPlayedHistoryDialog(_statsHistory, _end), (object o, DialogClosingEventArgs closingEventHandler) =>
-            {
-                            (((MainWindow)Application.Current.MainWindow).MainWindowDialogHost as DialogHost).CloseOnClickAway = false;
-            });
-
-        }
-
-
 
 
     }

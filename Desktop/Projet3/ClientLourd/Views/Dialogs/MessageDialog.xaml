@@ -11,7 +11,9 @@
         <Button Margin="10" Content="Ok" HorizontalAlignment="Center"
                 Width="{Binding ElementName=DockPanel, Path=ActualWidth, Converter={StaticResource DivisionMathConverter}, ConverterParameter=2}"
                 Command="materialDesign:DialogHost.CloseDialogCommand" DockPanel.Dock="Bottom" />
-        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"  Style="{StaticResource MaterialDesignHeadline4TextBlock}"></TextBlock>
-        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" TextAlignment="Center"  Style="{StaticResource MaterialDesignHeadline5TextBlock}"></TextBlock>
+        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" TextAlignment="Center" Name="TitleTextBlock"
+                   Style="{StaticResource MaterialDesignHeadline4TextBlock}" />
+        <TextBlock DockPanel.Dock="Top" Name="MessageTextBlock" HorizontalAlignment="Center" TextAlignment="Center"
+                   Style="{StaticResource MaterialDesignHeadline5TextBlock}" />
     </DockPanel>
 </UserControl>

@@ -1,0 +1,153 @@
+﻿<UserControl x:Class="ClientLourd.Views.Controls.Tutorial.FFATutorial"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientLourd.Views.Controls.Tutorial"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            xmlns:converter="clr-namespace:ClientLourd.Utilities.Converters"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:SingleComparatorToVisibility x:Key="SingleComparatorToVisibility"/>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top" FontWeight="Bold" FontSize="32" Text="{DynamicResource FFAGame}"/>
+        <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center"  Orientation="Horizontal">
+            <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}">
+                <materialDesign:PackIcon Kind="NavigateBefore"/>
+            </Button>
+            <Button Margin="5" Command="{x:Static materialDesign:Transitioner.MoveNextCommand}">
+                <materialDesign:PackIcon Kind="NavigateNext"/>
+            </Button>
+        </StackPanel>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical" Margin="15 15 20 15">
+                <!-- General description -->
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 0 0 20" Text="{DynamicResource FFADescription}"/>
+
+
+                <Image  
+                    Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                    Stretch="Fill"
+                    Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGameFR.png" />
+                    </Image.Source>
+                </Image>
+                <Image  Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                        Stretch="Fill" 
+                        Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGameEN.png" />
+                    </Image.Source>
+                </Image>
+
+                <!-- Players  -->
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource Players}"/>
+                <Separator/>
+
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                       Margin="0 15 0 0"
+                       Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAPlayersFR.png" />
+                    </Image.Source>
+                </Image>
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                       Margin="0 15 0 0" 
+                       Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAPlayersEN.png" />
+                    </Image.Source>
+                </Image>
+
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFAPlayersSection}"/>
+
+                <!-- Top bar -->
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource TopBar}"/>
+                <Separator/>
+
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                       Margin="0 15 0 0" 
+                       Height="40" Source="/ClientLourd;component/Resources/Tutorial/FFA/FFATopBarFR.png"/>
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                       Margin="0 15 0 0"
+                       Height="40">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFATopBarEN.png" />
+                    </Image.Source>
+                </Image>
+
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFATopBar}"/>
+
+                <!-- Draw -->
+
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource Draw}"/>
+                <Separator/>
+            
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                       Margin="0 15 0 0" 
+                       Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFADrawerFR.png" />
+                    </Image.Source>
+                </Image>
+                <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                    Margin="0 15 0 0" Height="400">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFADrawerEN.png" />
+                    </Image.Source>
+                </Image>
+
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFADrawer}"/>
+
+
+                <!-- Guess -->
+
+                <TextBlock HorizontalAlignment="Center" Margin="0 20 0 0" FontWeight="Bold" FontSize="24" Text="{DynamicResource Guess}"/>
+                <Separator/>
+
+                <StackPanel Orientation="Horizontal">
+                    <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                       Margin="0 15 0 0"
+                       Height="50">
+                        <Image.Source>
+                            <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGuessFR.png" />
+                        </Image.Source>
+                    </Image>
+
+                    <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=FR}"
+                       Margin="40 15 0 0"
+                       Height="150">
+                        <Image.Source>
+                            <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/Coop/HintFR.png" />
+                        </Image.Source>
+                    </Image>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+
+                    <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                       Margin="0 15 0 0" 
+                       Height="35">
+                    <Image.Source>
+                        <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/FFA/FFAGuessEN.png" />
+                    </Image.Source>
+                </Image>
+
+                    <Image Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CurrentLanguage, Converter={StaticResource SingleComparatorToVisibility}, ConverterParameter=EN}"
+                       Margin="40 15 0 0"
+                       Height="110">
+                        <Image.Source>
+                            <BitmapImage UriSource="/ClientLourd;component/Resources/Tutorial/Coop/HintEN.png" />
+                        </Image.Source>
+                    </Image>
+                </StackPanel>
+
+                <TextBlock TextAlignment="Justify" TextWrapping="Wrap" FontSize="16" Margin="0 15 0 20" Text="{DynamicResource FFAGuess}"/>
+            </StackPanel>
+        </ScrollViewer>
+
+    </DockPanel>
+</UserControl>
