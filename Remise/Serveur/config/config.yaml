@@ -1,0 +1,21 @@
+# Example configuration file for the server
+
+# The config file can be located in the following paths
+# - ./config.yaml
+# - $HOME/.polydraw/config.yaml
+# - /etc/polydraw/config.yaml
+
+database:
+    engine: postgres
+    connection: "host=postgres-prod port=5432 user=postgres dbname=postgres password=123456 sslmode=disable"
+redis:
+    address: "redis-prod:6379"
+    password: ""
+    database: 0
+datastore: "/data/"
+rest:
+    port: 3000
+    address: 0.0.0.0
+socket:
+    port: 3001
+    address: 0.0.0.0
