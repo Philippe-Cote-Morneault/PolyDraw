@@ -69,6 +69,23 @@ namespace ClientLourd.ViewModels
             SocketClient.ServerStrokeSent += SocketClientOnServerStrokeSent;
             SocketClient.UserDeleteStroke += SocketClientOnUserDeleteStroke;
             SocketClient.CoopWordGuessed += SocketClientCoopWordGuessed;
+            SocketClient.PlayerLeftMatch += SocketClientOnPlayerLeftMatch;
+        }
+
+        private void SocketClientOnPlayerLeftMatch(object source, EventArgs args)
+        {
+            var e = (MatchEventArgs) args;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    Players.Remove(Players.FirstOrDefault(p => p.User.ID == e.UserID));
+                }
+                catch
+                {
+                    //
+                }
+            });
         }
 
         public void GuessChanged()
