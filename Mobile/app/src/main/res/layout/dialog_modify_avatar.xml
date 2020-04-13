@@ -180,7 +180,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/selected_avatar"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        android:textAllCaps="false"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/close_dialog_button"
@@ -192,5 +193,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/selected_avatar"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        android:textAllCaps="false"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

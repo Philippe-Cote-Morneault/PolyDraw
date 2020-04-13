@@ -105,7 +105,8 @@
             android:text="@string/login_button"
             app:layout_constraintBottom_toTopOf="@id/register_question_container"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAllCaps="false"/>
 
         <ProgressBar
             android:id="@+id/activity_login_progressbar_login"
@@ -148,6 +149,7 @@
                 android:backgroundTint="?colorPrimaryLight"
                 android:padding="0dp"
                 android:text="@string/login_signup_now"
+                android:textAllCaps="false"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

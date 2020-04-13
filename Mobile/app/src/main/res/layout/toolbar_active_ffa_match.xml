@@ -35,6 +35,9 @@
         android:layout_marginStart="80dp"
         android:textSize="18sp"
         android:textColor="?attr/colorOnPrimary"
+        android:drawableStart="@drawable/ic_draw"
+        android:drawableTint="?attr/colorOnPrimary"
+        android:drawablePadding="10dp"
         app:layout_constraintStart_toEndOf="@id/toolbar_active_match_text_view_remaining_time"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

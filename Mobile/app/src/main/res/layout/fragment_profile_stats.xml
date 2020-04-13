@@ -145,6 +145,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/connection_history_text"
         app:layout_constraintEnd_toEndOf="@+id/win_ratio_stat"
         app:layout_constraintStart_toStartOf="@+id/win_ratio_stat"
-        app:layout_constraintTop_toTopOf="@+id/connection_history_text" />
+        app:layout_constraintTop_toTopOf="@+id/connection_history_text"
+        android:textAllCaps="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

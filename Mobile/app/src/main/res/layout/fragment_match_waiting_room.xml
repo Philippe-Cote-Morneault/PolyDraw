@@ -116,7 +116,8 @@
         android:layout_height="wrap_content"
         android:text="@string/match_waiting_room_start_match_title"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAllCaps="false"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fragment_match_waiting_room_button_leave_match"
@@ -125,5 +126,6 @@
         android:text="@string/match_waiting_room_leave_match_title"
         android:layout_marginStart="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/fragment_match_waiting_room_button_start_match"/>
+        app:layout_constraintStart_toEndOf="@id/fragment_match_waiting_room_button_start_match"
+        android:textAllCaps="false"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
