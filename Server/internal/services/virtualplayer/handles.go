@@ -37,15 +37,16 @@ type gameHints struct {
 
 // Manager represents a struct that manage all virtual players
 type Manager struct {
-	mutex           sync.Mutex
-	rand            *rand.Rand
-	Bots            map[uuid.UUID]*botInfos          //botID -> botInfos
-	Channels        map[uuid.UUID]uuid.UUID          //groupID -> channelID
-	HintsInGames    map[uuid.UUID]*gameHints         //groupID -> gameHints
-	Groups          map[uuid.UUID]map[uuid.UUID]bool //groupID -> []botID
-	Matches         map[uuid.UUID]*match2.IMatch     //groupID -> IMatch
-	HintsPerPlayers map[uuid.UUID]map[string]bool    //playerID -> []indices
-	Drawing         map[uuid.UUID]*abool.AtomicBool  //socketID -> stopDrawing
+	mutex              sync.Mutex
+	rand               *rand.Rand
+	Bots               map[uuid.UUID]*botInfos          //botID -> botInfos
+	Channels           map[uuid.UUID]uuid.UUID          //groupID -> channelID
+	HintsInGames       map[uuid.UUID]*gameHints         //groupID -> gameHints
+	Groups             map[uuid.UUID]map[uuid.UUID]bool //groupID -> []botID
+	Matches            map[uuid.UUID]*match2.IMatch     //groupID -> IMatch
+	CancelRoundDrawing map[uuid.UUID]chan struct{}      //groupID -> cancelRoundDrawing
+	HintsPerPlayers    map[uuid.UUID]map[string]bool    //playerID -> []indices
+	Drawing            map[uuid.UUID]*abool.AtomicBool  //socketID -> stopDrawing
 }
 
 func (m *Manager) init() {
@@ -56,6 +57,7 @@ func (m *Manager) init() {
 	m.Matches = make(map[uuid.UUID]*match2.IMatch)
 	m.HintsInGames = make(map[uuid.UUID]*gameHints)
 	m.HintsPerPlayers = make(map[uuid.UUID]map[string]bool)
+	m.CancelRoundDrawing = make(map[uuid.UUID]chan struct{})
 	m.Drawing = make(map[uuid.UUID]*abool.AtomicBool)
 }
 
@@ -191,6 +193,10 @@ func handleStartGame(match match2.IMatch, groupID uuid.UUID) {
 func startDrawing(round *match2.RoundStart) {
 	log.Printf("[VirtualPlayer] Round start begin of startDrawing round:%v", *round.Game.Image)
 	managerInstance.mutex.Lock()
+	managerInstance.CancelRoundDrawing[round.MatchID] = make(chan struct{})
+
+	cancel := managerInstance.CancelRoundDrawing[round.MatchID]
+
 	//Save All Hints from game
 	g := gameHints{GameID: (*round).Game.ID, Hints: make(map[string]bool)}
 	for _, h := range (*round).Game.Hints {
@@ -213,14 +219,22 @@ func startDrawing(round *match2.RoundStart) {
 	}
 	managerInstance.mutex.Unlock()
 
-	time.Sleep(1700 * time.Millisecond)
+	select {
+	case <-time.After(1700 * time.Millisecond):
+		uuidBytes, _ := (*round).Game.ID.MarshalBinary()
+		connections := (*match).GetConnections()
+		stopAllDrawingProcedures(connections, false)
+		stopDrawings := initializeDrawingStates(connections)
 
-	uuidBytes, _ := (*round).Game.ID.MarshalBinary()
-	connections := (*match).GetConnections()
-	stopAllDrawingProcedures(connections, false)
-	stopDrawings := initializeDrawingStates(connections)
-
-	drawing.StartDrawing(connections, uuidBytes, &drawing.Draw{SVGFile: round.Game.Image.SVGFile, DrawingTime: bot.DrawingTimeFactor * drawingTimeBot, Mode: round.Game.Image.Mode}, stopDrawings)
+		drawing.StartDrawing(connections, uuidBytes,
+			&drawing.Draw{
+				SVGFile:     round.Game.Image.SVGFile,
+				DrawingTime: bot.DrawingTimeFactor * drawingTimeBot,
+				Mode:        round.Game.Image.Mode},
+			stopDrawings)
+	case <-cancel:
+	}
+	delete(managerInstance.CancelRoundDrawing, round.MatchID)
 }
 
 // handleRoundEnds [New Threads] does the roundEnd routine for a bot in match (match ->)
@@ -232,6 +246,12 @@ func handleRoundEnds(groupID uuid.UUID, makeBotSpeak bool) {
 		log.Printf("[VirtualPlayer] -> [Error] Can't find match with groupID : %v. Aborting handleRoundEnds...", groupID)
 		return
 	}
+
+	//Cancel the drawing if we need to remove the group
+	if _, ok := managerInstance.CancelRoundDrawing[groupID]; ok {
+		close(managerInstance.CancelRoundDrawing[groupID])
+	}
+
 	managerInstance.mutex.Unlock()
 	connections := (*match).GetConnections()
 
